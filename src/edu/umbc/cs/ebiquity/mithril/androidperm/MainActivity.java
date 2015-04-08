@@ -83,7 +83,7 @@ public class MainActivity extends Activity {
 							case PermissionInfo.PROTECTION_SIGNATURE_OR_SYSTEM : protectionLevel = "signatureOrSystem"; break;
 							default : protectionLevel = "<unknown>"; break;
 					}
-					String logInfo = "Permission: " + permission.name + " with protection level: " + protectionLevel;
+					String logInfo = permission.name + "," + protectionLevel + "\n";
 					tempPerm.append(logInfo);
 					Log.i("AndroidPerm", logInfo);
 				}
