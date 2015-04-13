@@ -9,16 +9,15 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
-import android.widget.ImageView;
 import android.widget.TextView;
 import edu.umbc.cs.ebiquity.mithril.androidperm.R;
 
-public class AppPermInfoAdapter extends ArrayAdapter<PermissionInfo> {
+public class AppPermListAdapter extends ArrayAdapter<PermissionInfo> {
 	private List<PermissionInfo> permList;
 	private Context context;
 	private PackageManager packageManager;
 	
-	public AppPermInfoAdapter(Context context, int resource, 
+	public AppPermListAdapter(Context context, int resource, 
 			List<PermissionInfo> objects) {
 		super(context, resource, objects);
 
@@ -49,19 +48,17 @@ public class AppPermInfoAdapter extends ArrayAdapter<PermissionInfo> {
 		if(view == null) {
 			LayoutInflater layoutInflater = (LayoutInflater) context
 					.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-			view = layoutInflater.inflate(R.layout.app_list_item, null);
+			view = layoutInflater.inflate(R.layout.app_detail_list_item, null);
 		}
 		
 		PermissionInfo data = permList.get(position);
 		
 		if(data != null) {
-			TextView appName = (TextView) view.findViewById(R.id.app_name);
-			TextView packageName = (TextView) view.findViewById(R.id.app_package);
-			ImageView iconView = (ImageView) view.findViewById(R.id.app_icon);
+			TextView appName = (TextView) view.findViewById(R.id.permisssion_name);
+			TextView packageName = (TextView) view.findViewById(R.id.protection_level);
 			
-			appName.setText(data.loadLabel(packageManager));
-			packageName.setText(data.packageName);
-			iconView.setImageDrawable(data.loadIcon(packageManager));
+			appName.setText(data.loadDescription(packageManager));
+			packageName.setText(data.protectionLevel);
 		}
 		return view;
 	}

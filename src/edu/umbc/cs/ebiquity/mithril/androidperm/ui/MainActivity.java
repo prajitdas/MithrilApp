@@ -59,9 +59,9 @@ public class MainActivity extends ListActivity {
 		super.onListItemClick(l, v, position, id);
 		ApplicationInfo app = appsList.get(position);
 		try {
-			Intent intent = packageManager.getLaunchIntentForPackage(app.packageName);
-			if(intent != null)
-				startActivity(intent);
+			Intent intent = new Intent(this, ViewPermissionsActivity.class);
+			intent.putExtra("app.packageName", app.packageName);
+			startActivity(intent);
 		} catch(ActivityNotFoundException e) {
 			Toast.makeText(this, e.getMessage(), Toast.LENGTH_LONG).show();
 		} catch(Exception e) {
