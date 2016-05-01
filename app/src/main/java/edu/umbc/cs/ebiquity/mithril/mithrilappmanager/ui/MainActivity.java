@@ -14,11 +14,15 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 
+import java.util.List;
+
 import edu.umbc.cs.ebiquity.mithril.mithrilappmanager.R;
 import edu.umbc.cs.ebiquity.mithril.mithrilappmanager.data.model.AppMetadata;
 
 public class MainActivity extends AppCompatActivity
-        implements NavigationView.OnNavigationItemSelectedListener, ShowAppsFragment.OnListFragmentInteractionListener {
+        implements  NavigationView.OnNavigationItemSelectedListener,
+                    ShowAppsFragment.OnListFragmentInteractionListener,
+                    ShowAppsFragment.OnListFragmentLongInteractionListener {
 
 //    private SharedPreferences sharedPreferences;
     private Toolbar toolbar;
@@ -26,6 +30,7 @@ public class MainActivity extends AppCompatActivity
     private ActionBarDrawerToggle toggle;
     private NavigationView navigationView;
     private AppMetadata appMetadataItemSelected = null;
+    private List<AppMetadata> appMetadataItemsSelected = null;
     private FloatingActionButton fab;
 
     @Override
@@ -122,10 +127,17 @@ public class MainActivity extends AppCompatActivity
         drawer.closeDrawer(GravityCompat.START);
         return true;
     }
+
     @Override
     public void onListFragmentInteraction(AppMetadata item) {
         //TODO Do something with the item selected
         appMetadataItemSelected = item;
+    }
+
+    @Override
+    public void onListFragmentLongInteraction(List<AppMetadata> items) {
+        //TODO Do something with the item selected
+        appMetadataItemsSelected = items;
     }
 
 //

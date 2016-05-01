@@ -51,12 +51,12 @@
             android:layout_toEndOf="@id/app_icon"
             android:textAppearance="@android:style/TextAppearance.Holo.Small" />
 
-        <CheckBox
+        <!--CheckBox
                 android:id="@+id/app_selected"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_alignParentEnd="true"
                 android:layout_centerVertical="true"
-                android:enabled="true" />
+                android:enabled="true" /-->
     </RelativeLayout>
 </LinearLayout>

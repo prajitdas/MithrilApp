@@ -37,6 +37,7 @@ public class ShowAppsFragment extends Fragment {
     // TODO: Customize parameters
     private int mColumnCount = 1;
     private OnListFragmentInteractionListener mListener;
+    private OnListFragmentLongInteractionListener mListenerLongInteraction;
 
     /**
      * An array of violation items.
@@ -92,7 +93,7 @@ public class ShowAppsFragment extends Fragment {
             } else {
                 recyclerView.setLayoutManager(new GridLayoutManager(context, mColumnCount));
             }
-            recyclerView.setAdapter(new InstalledAppsRecyclerViewAdapter(appMetadataItems, mListener));
+            recyclerView.setAdapter(new InstalledAppsRecyclerViewAdapter(appMetadataItems, mListener, mListenerLongInteraction));
         }
         return view;
     }
@@ -160,5 +161,8 @@ public class ShowAppsFragment extends Fragment {
      */
     public interface OnListFragmentInteractionListener {
         void onListFragmentInteraction(AppMetadata item);
+    }
+    public interface OnListFragmentLongInteractionListener {
+        void onListFragmentLongInteraction(List<AppMetadata> items);
     }
 }

@@ -4,15 +4,15 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.CheckBox;
-import android.widget.CompoundButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 
 import edu.umbc.cs.ebiquity.mithril.mithrilappmanager.R;
 import edu.umbc.cs.ebiquity.mithril.mithrilappmanager.data.model.AppMetadata;
+import edu.umbc.cs.ebiquity.mithril.mithrilappmanager.ui.ShowAppsFragment.OnListFragmentLongInteractionListener;
 import edu.umbc.cs.ebiquity.mithril.mithrilappmanager.ui.ShowAppsFragment.OnListFragmentInteractionListener;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -24,10 +24,13 @@ public class InstalledAppsRecyclerViewAdapter extends RecyclerView.Adapter<Insta
 
     private final List<AppMetadata> mValues;
     private final OnListFragmentInteractionListener mListener;
+    private final OnListFragmentLongInteractionListener mListenerLongInteraction;
+    private List<AppMetadata> appsSelected = new ArrayList<>();
 
-    public InstalledAppsRecyclerViewAdapter(List<AppMetadata> items, OnListFragmentInteractionListener listener) {
+    public InstalledAppsRecyclerViewAdapter(List<AppMetadata> items, OnListFragmentInteractionListener listener, OnListFragmentLongInteractionListener listenerLongInteraction) {
         mValues = items;
         mListener = listener;
+        mListenerLongInteraction = listenerLongInteraction;
     }
 
     @Override
@@ -43,16 +46,29 @@ public class InstalledAppsRecyclerViewAdapter extends RecyclerView.Adapter<Insta
         holder.mAppIcon.setImageBitmap(mValues.get(position).getIcon());
         holder.mAppName.setText(mValues.get(position).getAppName());
         holder.mAppVersion.setText(mValues.get(position).getVersionInfo());
-        holder.mAppSelected.setChecked(false);
+//        holder.mAppSelected.setChecked(false);
 
         holder.mView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-            if (null != mListener) {
-                // Notify the active callbacks interface (the activity, if the
-                // fragment is attached to one) that an item has been selected.
-                mListener.onListFragmentInteraction(holder.mItem);
+                if (null != mListener) {
+                    // Notify the active callbacks interface (the activity, if the
+                    // fragment is attached to one) that an item has been selected.
+                    mListener.onListFragmentInteraction(holder.mItem);
+                }
             }
+        });
+
+        holder.mView.setOnLongClickListener(new View.OnLongClickListener() {
+            @Override
+            public boolean onLongClick(View v) {
+                if (null != mListenerLongInteraction) {
+                    appsSelected.add(holder.mItem);
+                    // Notify the active callbacks interface (the activity, if the
+                    // fragment is attached to one) that an item has been selected.
+                    mListenerLongInteraction.onListFragmentLongInteraction(appsSelected);
+                }
+                return false;
             }
         });
     }
@@ -67,7 +83,7 @@ public class InstalledAppsRecyclerViewAdapter extends RecyclerView.Adapter<Insta
         public final ImageView mAppIcon;
         public final TextView mAppName;
         public final TextView mAppVersion;
-        public final CheckBox mAppSelected;
+//        public final CheckBox mAppSelected;
         public AppMetadata mItem;
 
         public ViewHolder(View view) {
@@ -76,14 +92,14 @@ public class InstalledAppsRecyclerViewAdapter extends RecyclerView.Adapter<Insta
             mAppIcon = (ImageView) view.findViewById(R.id.app_icon);
             mAppName = (TextView) view.findViewById(R.id.app_name);
             mAppVersion = (TextView) view.findViewById(R.id.app_version);
-            mAppSelected = (CheckBox) view.findViewById(R.id.app_selected);
-
-            mAppSelected.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-                @Override
-                public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                    //TODO When checked the app should be sent
-                }
-            });
+//            mAppSelected = (CheckBox) view.findViewById(R.id.app_selected);
+//
+//            mAppSelected.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+//                @Override
+//                public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+//                    //TODO When checked the app should be sent
+//                }
+//            });
         }
 
         @Override
