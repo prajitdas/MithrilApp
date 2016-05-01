@@ -1,6 +1,8 @@
 package edu.umbc.cs.ebiquity.mithril.mithrilappmanager.ui;
 
 import android.app.FragmentManager;
+import android.content.Context;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
@@ -13,9 +15,11 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.TextView;
 
 import java.util.List;
 
+import edu.umbc.cs.ebiquity.mithril.mithrilappmanager.MithrilApplication;
 import edu.umbc.cs.ebiquity.mithril.mithrilappmanager.R;
 import edu.umbc.cs.ebiquity.mithril.mithrilappmanager.data.model.AppMetadata;
 
@@ -24,7 +28,7 @@ public class MainActivity extends AppCompatActivity
                     ShowAppsFragment.OnListFragmentInteractionListener,
                     ShowAppsFragment.OnListFragmentLongInteractionListener {
 
-//    private SharedPreferences sharedPreferences;
+    private SharedPreferences sharedPreferences;
     private Toolbar toolbar;
     private DrawerLayout drawer;
     private ActionBarDrawerToggle toggle;
@@ -32,18 +36,26 @@ public class MainActivity extends AppCompatActivity
     private AppMetadata appMetadataItemSelected = null;
     private List<AppMetadata> appMetadataItemsSelected = null;
     private FloatingActionButton fab;
+    private TextView mAppCountTextView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 //        createShortCut();
+        initData();
         initViews();
+    }
+
+    private void initData() {
+        sharedPreferences = this.getSharedPreferences(MithrilApplication.getSharedPreferencesName(), Context.MODE_PRIVATE);
     }
 
     private void initViews() {
         setContentView(R.layout.activity_main);
         toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+
+        mAppCountTextView = (TextView) findViewById(R.id.app_count);
 
         fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
@@ -69,6 +81,9 @@ public class MainActivity extends AppCompatActivity
         FragmentManager fragmentManager = getFragmentManager();
         fragmentManager.beginTransaction().replace(R.id.container, new ShowAppsFragment())
                 .commit();
+        //TODO this won't work because call to ShowAppsFragment is asynchronous and sharedPreferences doesn't have the value of appCount at the moment
+        mAppCountTextView.setText(mAppCountTextView.getText()
+                + Integer.toString(sharedPreferences.getInt(MithrilApplication.getSharedPreferenceAppCount(),0)));
     }
 
     @Override

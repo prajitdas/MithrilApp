@@ -2,6 +2,7 @@ package edu.umbc.cs.ebiquity.mithril.mithrilappmanager.ui;
 
 import android.app.Fragment;
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
@@ -20,6 +21,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import edu.umbc.cs.ebiquity.mithril.mithrilappmanager.MithrilApplication;
 import edu.umbc.cs.ebiquity.mithril.mithrilappmanager.R;
 import edu.umbc.cs.ebiquity.mithril.mithrilappmanager.data.model.AppMetadata;
 import edu.umbc.cs.ebiquity.mithril.mithrilappmanager.ui.adapters.InstalledAppsRecyclerViewAdapter;
@@ -32,6 +34,7 @@ import edu.umbc.cs.ebiquity.mithril.mithrilappmanager.ui.adapters.InstalledAppsR
  */
 public class ShowAppsFragment extends Fragment {
 
+    private SharedPreferences sharedPreferences;
     // TODO: Customize parameter argument names
     private static final String ARG_COLUMN_COUNT = "column-count";
     // TODO: Customize parameters
@@ -77,13 +80,13 @@ public class ShowAppsFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         view = inflater.inflate(R.layout.fragment_apps_list, container, false);
-
         packageManager = view.getContext().getPackageManager();
         initData();
+        initView();
+        return view;
+    }
 
-        for(AppMetadata info : appMetadataItems)
-            Log.d("AppItems: ",info.toString());
-
+    private void initView() {
         // Set the adapter
         if (view instanceof RecyclerView) {
             Context context = view.getContext();
@@ -95,13 +98,13 @@ public class ShowAppsFragment extends Fragment {
             }
             recyclerView.setAdapter(new InstalledAppsRecyclerViewAdapter(appMetadataItems, mListener, mListenerLongInteraction));
         }
-        return view;
     }
 
     /**
      * Finds all the applications on the phone and stores them in a database accessible to the whole app
      */
     private void initData() {
+        sharedPreferences = view.getContext().getSharedPreferences(MithrilApplication.getSharedPreferencesName(), Context.MODE_PRIVATE);
         /**
          * Data loading
          */
@@ -126,10 +129,13 @@ public class ShowAppsFragment extends Fragment {
             }
         }
 
+        int appCount = 0;
         for(Map.Entry<String, AppMetadata> entry : appMetadataMap.entrySet()) {
-            Log.d("MithrilAppManager", entry.toString());
+//            Log.d("MithrilAppManager", entry.toString());
             appMetadataItems.add(entry.getValue());
+            appCount++;
         }
+        sharedPreferences.edit().putInt(MithrilApplication.getSharedPreferenceAppCount(), appCount);
     }
 
     @Override
