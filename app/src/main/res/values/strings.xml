@@ -1,0 +1,14 @@
+<resources>
+    <string name="short_app_name">MithrilAM</string>
+    <string name="app_name">Mithril App Manager</string>
+    <string name="mithril_app_icon_description">This is Mithril\'s icon</string>
+
+    <string name="app_icon_description">This is an app\'s icon</string>
+    <string name="app_name_placeholder_text">Some app</string>
+    <string name="app_version_placeholder_text">App\'s version</string>
+
+    <string name="navigation_drawer_open">Open navigation drawer</string>
+    <string name="navigation_drawer_close">Close navigation drawer</string>
+
+    <string name="action_settings">Settings</string>
+</resources>
