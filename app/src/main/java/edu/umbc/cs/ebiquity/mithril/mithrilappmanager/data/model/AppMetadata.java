@@ -1,12 +1,9 @@
 package edu.umbc.cs.ebiquity.mithril.mithrilappmanager.data.model;
 
 import android.graphics.Bitmap;
-import android.widget.ImageView;
-import java.util.Arrays;
 
 /**
-* Helper class for providing sample content for user interfaces created by
-* Android template wizards.
+* Helper class for managing content
 */
 public class AppMetadata {
     private String appDescription;
@@ -18,6 +15,17 @@ public class AppMetadata {
     private String packageName;
     private String versionInfo;
 
+    public boolean isSelected() {
+        return selected;
+    }
+
+    public AppMetadata setSelected(boolean selected) {
+        this.selected = selected;
+        return this;
+    }
+
+    private boolean selected;
+
     public AppMetadata(String packageName) {
         setPackageName(packageName);
     }
@@ -27,7 +35,8 @@ public class AppMetadata {
                        int targetSdkVersion,
                        Bitmap icon, String appName,
                        String packageName,
-                       String versionInfo) {
+                       String versionInfo,
+                       boolean selected) {
         setAppDescription(appDescription);
         setPermissions(permissions);
         setAssociatedProcessName(associatedProcessName);
@@ -36,6 +45,7 @@ public class AppMetadata {
         setAppName(appName);
         setPackageName(packageName);
         setVersionInfo(versionInfo);
+        setSelected(selected);
     }
 
     public String getAppDescription() {
@@ -108,5 +118,33 @@ public class AppMetadata {
     public AppMetadata setVersionInfo(String versionInfo) {
         this.versionInfo = versionInfo;
         return this;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof AppMetadata)) return false;
+
+        AppMetadata that = (AppMetadata) o;
+
+        if (!getPackageName().equals(that.getPackageName())) return false;
+        return getVersionInfo().equals(that.getVersionInfo());
+
+    }
+
+    @Override
+    public int hashCode() {
+        int result = getPackageName().hashCode();
+        result = 31 * result + getVersionInfo().hashCode();
+        return result;
+    }
+
+    @Override
+    public String toString() {
+        return "AppMetadata{" +
+                "packageName='" + packageName + '\'' +
+                ", versionInfo='" + versionInfo + '\'' +
+                ", appName='" + appName + '\'' +
+                '}';
     }
 }

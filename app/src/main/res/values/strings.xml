@@ -7,6 +7,8 @@
     <string name="app_name_placeholder_text">Some app</string>
     <string name="app_version_placeholder_text">App\'s version</string>
 
+    <string name="all_app_info_placeholder_text">Total number of apps installed is: </string>
+
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>
 

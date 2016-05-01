@@ -10,12 +10,15 @@ import android.os.Bundle;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import edu.umbc.cs.ebiquity.mithril.mithrilappmanager.R;
 import edu.umbc.cs.ebiquity.mithril.mithrilappmanager.data.model.AppMetadata;
@@ -38,8 +41,8 @@ public class ShowAppsFragment extends Fragment {
     /**
      * An array of violation items.
      */
-    public List<AppMetadata> appMetadataItems = new ArrayList<>();
-
+    private List<AppMetadata> appMetadataItems = new ArrayList<>();
+    private Map<String, AppMetadata> appMetadataMap = new HashMap<>();
     private PackageManager packageManager;
     private View view;
 
@@ -77,6 +80,9 @@ public class ShowAppsFragment extends Fragment {
         packageManager = view.getContext().getPackageManager();
         initData();
 
+        for(AppMetadata info : appMetadataItems)
+            Log.d("AppItems: ",info.toString());
+
         // Set the adapter
         if (view instanceof RecyclerView) {
             Context context = view.getContext();
@@ -102,21 +108,26 @@ public class ShowAppsFragment extends Fragment {
                 PackageManager.GET_SHARED_LIBRARY_FILES |
 //                PackageManager.GET_UNINSTALLED_PACKAGES |
                 PackageManager.GET_PERMISSIONS;
-        AppMetadata tempAppMetaData = new AppMetadata("dummyApp");
         for(PackageInfo pack : packageManager.getInstalledPackages(flags)) {
             if ((pack.applicationInfo.flags & ApplicationInfo.FLAG_SYSTEM) != 1) {
                 try {
+                    AppMetadata tempAppMetaData = new AppMetadata("dummyApp");
                     if (pack.packageName != null) {
                         tempAppMetaData.setPackageName(pack.packageName);
                         tempAppMetaData.setAppName(pack.applicationInfo.loadLabel(packageManager).toString());
                         tempAppMetaData.setVersionInfo(pack.versionName);
                         tempAppMetaData.setIcon(((BitmapDrawable) pack.applicationInfo.loadIcon(packageManager)).getBitmap());
                     }
+                    appMetadataMap.put(tempAppMetaData.getPackageName(), tempAppMetaData);
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
             }
-            appMetadataItems.add(tempAppMetaData);
+        }
+
+        for(Map.Entry<String, AppMetadata> entry : appMetadataMap.entrySet()) {
+            Log.d("MithrilAppManager", entry.toString());
+            appMetadataItems.add(entry.getValue());
         }
     }
 
@@ -148,7 +159,6 @@ public class ShowAppsFragment extends Fragment {
      * >Communicating with Other Fragments</a> for more information.
      */
     public interface OnListFragmentInteractionListener {
-        // TODO: Update argument type and name
         void onListFragmentInteraction(AppMetadata item);
     }
 }
