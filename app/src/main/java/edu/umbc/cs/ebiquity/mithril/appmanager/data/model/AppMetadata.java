@@ -1,11 +1,11 @@
-package edu.umbc.cs.ebiquity.mithril.mithrilappmanager.data.model;
+package edu.umbc.cs.ebiquity.mithril.appmanager.data.model;
 
 import android.graphics.Bitmap;
 
 /**
 * Helper class for managing content
 */
-public class AppMetadata {
+public class AppMetadata implements Comparable<AppMetadata>{
     private String appDescription;
     private String[] permissions;
     private String associatedProcessName;
@@ -146,5 +146,10 @@ public class AppMetadata {
                 ", versionInfo='" + versionInfo + '\'' +
                 ", appName='" + appName + '\'' +
                 '}';
+    }
+
+    @Override
+    public int compareTo(AppMetadata another) {
+        return this.getAppName().compareTo(another.getAppName());
     }
 }

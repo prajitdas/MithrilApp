@@ -1,4 +1,4 @@
-package edu.umbc.cs.ebiquity.mithril.mithrilappmanager.ui.adapters;
+package edu.umbc.cs.ebiquity.mithril.appmanager.ui.adapters;
 
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -7,27 +7,26 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import edu.umbc.cs.ebiquity.mithril.appmanager.data.model.AppMetadata;
+import edu.umbc.cs.ebiquity.mithril.appmanager.ui.ShowAllAppsFragment;
 import edu.umbc.cs.ebiquity.mithril.mithrilappmanager.R;
-import edu.umbc.cs.ebiquity.mithril.mithrilappmanager.data.model.AppMetadata;
-import edu.umbc.cs.ebiquity.mithril.mithrilappmanager.ui.ShowAppsFragment.OnListFragmentLongInteractionListener;
-import edu.umbc.cs.ebiquity.mithril.mithrilappmanager.ui.ShowAppsFragment.OnListFragmentInteractionListener;
 
 import java.util.ArrayList;
 import java.util.List;
 
 /**
  * {@link RecyclerView.Adapter} that can display a {@link AppMetadata} and makes a call to the
- * specified {@link OnListFragmentInteractionListener}.
+ * specified {@link ShowAllAppsFragment.OnListFragmentInteractionListener}.
  * TODO: Replace the implementation with code for your data type.
  */
 public class InstalledAppsRecyclerViewAdapter extends RecyclerView.Adapter<InstalledAppsRecyclerViewAdapter.ViewHolder> {
 
     private final List<AppMetadata> mValues;
-    private final OnListFragmentInteractionListener mListener;
-    private final OnListFragmentLongInteractionListener mListenerLongInteraction;
+    private final ShowAllAppsFragment.OnListFragmentInteractionListener mListener;
+    private final ShowAllAppsFragment.OnListFragmentLongInteractionListener mListenerLongInteraction;
     private List<AppMetadata> appsSelected = new ArrayList<>();
 
-    public InstalledAppsRecyclerViewAdapter(List<AppMetadata> items, OnListFragmentInteractionListener listener, OnListFragmentLongInteractionListener listenerLongInteraction) {
+    public InstalledAppsRecyclerViewAdapter(List<AppMetadata> items, ShowAllAppsFragment.OnListFragmentInteractionListener listener, ShowAllAppsFragment.OnListFragmentLongInteractionListener listenerLongInteraction) {
         mValues = items;
         mListener = listener;
         mListenerLongInteraction = listenerLongInteraction;

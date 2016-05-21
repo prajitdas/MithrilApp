@@ -1,4 +1,4 @@
-package edu.umbc.cs.ebiquity.mithril.mithrilappmanager.ui;
+package edu.umbc.cs.ebiquity.mithril.appmanager.ui;
 
 import android.app.FragmentManager;
 import android.content.Context;
@@ -19,14 +19,14 @@ import android.widget.TextView;
 
 import java.util.List;
 
-import edu.umbc.cs.ebiquity.mithril.mithrilappmanager.MithrilApplication;
+import edu.umbc.cs.ebiquity.mithril.appmanager.MithrilApplication;
 import edu.umbc.cs.ebiquity.mithril.mithrilappmanager.R;
-import edu.umbc.cs.ebiquity.mithril.mithrilappmanager.data.model.AppMetadata;
+import edu.umbc.cs.ebiquity.mithril.appmanager.data.model.AppMetadata;
 
 public class MainActivity extends AppCompatActivity
         implements  NavigationView.OnNavigationItemSelectedListener,
-                    ShowAppsFragment.OnListFragmentInteractionListener,
-                    ShowAppsFragment.OnListFragmentLongInteractionListener {
+                    ShowAllAppsFragment.OnListFragmentInteractionListener,
+                    ShowAllAppsFragment.OnListFragmentLongInteractionListener {
 
     private SharedPreferences sharedPreferences;
     private Toolbar toolbar;
@@ -79,9 +79,8 @@ public class MainActivity extends AppCompatActivity
 
     private void defaultFragmentLoad() {
         FragmentManager fragmentManager = getFragmentManager();
-        fragmentManager.beginTransaction().replace(R.id.container, new ShowAppsFragment())
+        fragmentManager.beginTransaction().replace(R.id.container, new ShowAllAppsFragment())
                 .commit();
-        //TODO this won't work because call to ShowAppsFragment is asynchronous and sharedPreferences doesn't have the value of appCount at the moment
         mAppCountTextView.setText(mAppCountTextView.getText()
                 + Integer.toString(sharedPreferences.getInt(MithrilApplication.getSharedPreferenceAppCount(),0)));
     }

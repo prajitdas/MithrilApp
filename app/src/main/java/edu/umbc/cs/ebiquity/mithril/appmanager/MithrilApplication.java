@@ -1,4 +1,4 @@
-package edu.umbc.cs.ebiquity.mithril.mithrilappmanager;
+package edu.umbc.cs.ebiquity.mithril.appmanager;
 
 import android.app.Application;
 import android.hardware.camera2.params.StreamConfigurationMap;

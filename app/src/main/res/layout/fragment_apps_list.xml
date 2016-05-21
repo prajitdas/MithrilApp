@@ -7,5 +7,5 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     app:layoutManager="LinearLayoutManager"
-    tools:context="edu.umbc.cs.ebiquity.mithril.mithrilappmanager.ui.ShowAppsFragment"
+    tools:context="edu.umbc.cs.ebiquity.mithril.appmanager.ui.ShowAllAppsFragment"
     tools:listitem="@layout/fragment_apps" />

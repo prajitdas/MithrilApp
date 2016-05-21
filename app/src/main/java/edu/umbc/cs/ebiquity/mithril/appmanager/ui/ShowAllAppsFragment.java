@@ -1,30 +1,31 @@
-package edu.umbc.cs.ebiquity.mithril.mithrilappmanager.ui;
+package edu.umbc.cs.ebiquity.mithril.appmanager.ui;
 
 import android.app.Fragment;
 import android.content.Context;
 import android.content.SharedPreferences;
-import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.graphics.drawable.BitmapDrawable;
 import android.os.Bundle;
+import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import edu.umbc.cs.ebiquity.mithril.mithrilappmanager.MithrilApplication;
+import edu.umbc.cs.ebiquity.mithril.appmanager.MithrilApplication;
 import edu.umbc.cs.ebiquity.mithril.mithrilappmanager.R;
-import edu.umbc.cs.ebiquity.mithril.mithrilappmanager.data.model.AppMetadata;
-import edu.umbc.cs.ebiquity.mithril.mithrilappmanager.ui.adapters.InstalledAppsRecyclerViewAdapter;
+import edu.umbc.cs.ebiquity.mithril.appmanager.data.model.AppMetadata;
+import edu.umbc.cs.ebiquity.mithril.appmanager.ui.adapters.InstalledAppsRecyclerViewAdapter;
+import edu.umbc.cs.ebiquity.mithril.appmanager.ui.specialFeatures.DividerItemDecoration;
 
 /**
  * A fragment representing a list of Items.
@@ -32,7 +33,7 @@ import edu.umbc.cs.ebiquity.mithril.mithrilappmanager.ui.adapters.InstalledAppsR
  * Activities containing this fragment MUST implement the {@link OnListFragmentInteractionListener}
  * interface.
  */
-public class ShowAppsFragment extends Fragment {
+public class ShowAllAppsFragment extends Fragment {
 
     private SharedPreferences sharedPreferences;
     // TODO: Customize parameter argument names
@@ -54,13 +55,13 @@ public class ShowAppsFragment extends Fragment {
      * Mandatory empty constructor for the fragment manager to instantiate the
      * fragment (e.g. upon screen orientation changes).
      */
-    public ShowAppsFragment() {
+    public ShowAllAppsFragment() {
     }
 
     // TODO: Customize parameter initialization
     @SuppressWarnings("unused")
-    public static ShowAppsFragment newInstance(int columnCount) {
-        ShowAppsFragment fragment = new ShowAppsFragment();
+    public static ShowAllAppsFragment newInstance(int columnCount) {
+        ShowAllAppsFragment fragment = new ShowAllAppsFragment();
         Bundle args = new Bundle();
         args.putInt(ARG_COLUMN_COUNT, columnCount);
         fragment.setArguments(args);
@@ -83,6 +84,7 @@ public class ShowAppsFragment extends Fragment {
         packageManager = view.getContext().getPackageManager();
         initData();
         initView();
+        sharedPreferences.edit().putInt(MithrilApplication.getSharedPreferenceAppCount(), appMetadataItems.size());
         return view;
     }
 
@@ -97,6 +99,14 @@ public class ShowAppsFragment extends Fragment {
                 recyclerView.setLayoutManager(new GridLayoutManager(context, mColumnCount));
             }
             recyclerView.setAdapter(new InstalledAppsRecyclerViewAdapter(appMetadataItems, mListener, mListenerLongInteraction));
+
+            /**
+             * Item decoration added
+             */
+            recyclerView.addItemDecoration(new DividerItemDecoration(getActivity(), DividerItemDecoration.VERTICAL_LIST));
+
+            recyclerView.setHasFixedSize(true);
+            recyclerView.setItemAnimator(new DefaultItemAnimator());
         }
     }
 
@@ -106,14 +116,25 @@ public class ShowAppsFragment extends Fragment {
     private void initData() {
         sharedPreferences = view.getContext().getSharedPreferences(MithrilApplication.getSharedPreferencesName(), Context.MODE_PRIVATE);
         /**
-         * Data loading
+         * Data loading: get all apps
          */
+
+        getAllApps();
+
+        for(Map.Entry<String, AppMetadata> entry : appMetadataMap.entrySet()) {
+//            Log.d("MithrilAppManager", entry.toString());
+            appMetadataItems.add(entry.getValue());
+        }
+        Collections.sort(appMetadataItems);
+    }
+
+    private void getAllApps() {
         int flags = PackageManager.GET_META_DATA |
                 PackageManager.GET_SHARED_LIBRARY_FILES |
-//                PackageManager.GET_UNINSTALLED_PACKAGES |
                 PackageManager.GET_PERMISSIONS;
         for(PackageInfo pack : packageManager.getInstalledPackages(flags)) {
-            if ((pack.applicationInfo.flags & ApplicationInfo.FLAG_SYSTEM) != 1) {
+//            if ((pack.applicationInfo.flags & ApplicationInfo.FLAG_SYSTEM) != 1) {
+            if ((pack.applicationInfo.flags) != 1) {
                 try {
                     AppMetadata tempAppMetaData = new AppMetadata("dummyApp");
                     if (pack.packageName != null) {
@@ -129,13 +150,6 @@ public class ShowAppsFragment extends Fragment {
             }
         }
 
-        int appCount = 0;
-        for(Map.Entry<String, AppMetadata> entry : appMetadataMap.entrySet()) {
-//            Log.d("MithrilAppManager", entry.toString());
-            appMetadataItems.add(entry.getValue());
-            appCount++;
-        }
-        sharedPreferences.edit().putInt(MithrilApplication.getSharedPreferenceAppCount(), appCount);
     }
 
     @Override
