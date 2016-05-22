@@ -25,8 +25,8 @@ import edu.umbc.cs.ebiquity.mithril.appmanager.data.model.AppMetadata;
 
 public class MainActivity extends AppCompatActivity
         implements  NavigationView.OnNavigationItemSelectedListener,
-                    ShowAllAppsFragment.OnListFragmentInteractionListener,
-                    ShowAllAppsFragment.OnListFragmentLongInteractionListener {
+                    ShowAppsFragment.OnListFragmentInteractionListener,
+                    ShowAppsFragment.OnListFragmentLongInteractionListener {
 
     private SharedPreferences sharedPreferences;
     private Toolbar toolbar;
@@ -78,8 +78,46 @@ public class MainActivity extends AppCompatActivity
     }
 
     private void defaultFragmentLoad() {
+        loadAllAppsFragment();
+    }
+
+    private void loadAllAppsFragment() {
+        Bundle data = new Bundle();
+        data.putString(MithrilApplication.getAppDisplayTypeTag(), MithrilApplication.getAllAppsDisplayTag());
+
+        ShowAppsFragment aShowappsFragment = new ShowAppsFragment();
+        aShowappsFragment.setArguments(data);
+
         FragmentManager fragmentManager = getFragmentManager();
-        fragmentManager.beginTransaction().replace(R.id.container, new ShowAllAppsFragment())
+        fragmentManager.beginTransaction().replace(R.id.container, aShowappsFragment)
+                .commit();
+        mAppCountTextView.setText(mAppCountTextView.getText()
+                + Integer.toString(sharedPreferences.getInt(MithrilApplication.getSharedPreferenceAppCount(),0)));
+    }
+
+    private void loadSystemAppsFragment() {
+        Bundle data = new Bundle();
+        data.putString(MithrilApplication.getAppDisplayTypeTag(), MithrilApplication.getSystemAppsDisplayTag());
+
+        ShowAppsFragment aShowappsFragment = new ShowAppsFragment();
+        aShowappsFragment.setArguments(data);
+
+        FragmentManager fragmentManager = getFragmentManager();
+        fragmentManager.beginTransaction().replace(R.id.container, aShowappsFragment)
+                .commit();
+        mAppCountTextView.setText(mAppCountTextView.getText()
+                + Integer.toString(sharedPreferences.getInt(MithrilApplication.getSharedPreferenceAppCount(),0)));
+    }
+
+    private void loadUserAppsFragment() {
+        Bundle data = new Bundle();
+        data.putString(MithrilApplication.getAppDisplayTypeTag(), MithrilApplication.getUserAppsDisplayTag());
+
+        ShowAppsFragment aShowappsFragment = new ShowAppsFragment();
+        aShowappsFragment.setArguments(data);
+
+        FragmentManager fragmentManager = getFragmentManager();
+        fragmentManager.beginTransaction().replace(R.id.container, aShowappsFragment)
                 .commit();
         mAppCountTextView.setText(mAppCountTextView.getText()
                 + Integer.toString(sharedPreferences.getInt(MithrilApplication.getSharedPreferenceAppCount(),0)));
@@ -124,11 +162,11 @@ public class MainActivity extends AppCompatActivity
         int id = item.getItemId();
 
         if (id == R.id.nav_camera) {
-            // Handle the camera action
+            loadAllAppsFragment();
         } else if (id == R.id.nav_gallery) {
-
+            loadSystemAppsFragment();
         } else if (id == R.id.nav_slideshow) {
-
+            loadUserAppsFragment();
         } else if (id == R.id.nav_manage) {
 
         } else if (id == R.id.nav_share) {

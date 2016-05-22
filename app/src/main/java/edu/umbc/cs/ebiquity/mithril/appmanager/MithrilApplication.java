@@ -10,6 +10,29 @@ public class MithrilApplication extends Application{
     private static final String sharedPreferencesName = "edu.umbc.cs.ebiquity.mithril.mithrilappmanager";
     private static final String debugTag = "MithrilAppManagerDebugTag";
 
+    public static String getAllAppsDisplayTag() {
+        return allAppsDisplayTag;
+    }
+
+    private static final String allAppsDisplayTag = "allApps";
+
+    public static String getSystemAppsDisplayTag() {
+        return systemAppsDisplayTag;
+    }
+
+    public static String getUserAppsDisplayTag() {
+        return userAppsDisplayTag;
+    }
+
+    private static final String systemAppsDisplayTag = "systemApps";
+    private static final String userAppsDisplayTag = "userApps";
+
+    public static String getAppDisplayTypeTag() {
+        return appDisplayTypeTag;
+    }
+
+    private static final String appDisplayTypeTag = "AppDisplayTypeTag";
+
     public static String getSharedPreferenceAppCount() {
         return sharedPreferenceAppCount;
     }

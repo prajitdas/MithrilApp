@@ -8,7 +8,8 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import edu.umbc.cs.ebiquity.mithril.appmanager.data.model.AppMetadata;
-import edu.umbc.cs.ebiquity.mithril.appmanager.ui.ShowAllAppsFragment;
+import edu.umbc.cs.ebiquity.mithril.appmanager.ui.ShowAppsFragment.OnListFragmentInteractionListener;
+import edu.umbc.cs.ebiquity.mithril.appmanager.ui.ShowAppsFragment.OnListFragmentLongInteractionListener;
 import edu.umbc.cs.ebiquity.mithril.mithrilappmanager.R;
 
 import java.util.ArrayList;
@@ -16,17 +17,17 @@ import java.util.List;
 
 /**
  * {@link RecyclerView.Adapter} that can display a {@link AppMetadata} and makes a call to the
- * specified {@link ShowAllAppsFragment.OnListFragmentInteractionListener}.
+ * specified {@link OnListFragmentInteractionListener}.
  * TODO: Replace the implementation with code for your data type.
  */
 public class InstalledAppsRecyclerViewAdapter extends RecyclerView.Adapter<InstalledAppsRecyclerViewAdapter.ViewHolder> {
 
     private final List<AppMetadata> mValues;
-    private final ShowAllAppsFragment.OnListFragmentInteractionListener mListener;
-    private final ShowAllAppsFragment.OnListFragmentLongInteractionListener mListenerLongInteraction;
+    private final OnListFragmentInteractionListener mListener;
+    private final OnListFragmentLongInteractionListener mListenerLongInteraction;
     private List<AppMetadata> appsSelected = new ArrayList<>();
 
-    public InstalledAppsRecyclerViewAdapter(List<AppMetadata> items, ShowAllAppsFragment.OnListFragmentInteractionListener listener, ShowAllAppsFragment.OnListFragmentLongInteractionListener listenerLongInteraction) {
+    public InstalledAppsRecyclerViewAdapter(List<AppMetadata> items, OnListFragmentInteractionListener listener, OnListFragmentLongInteractionListener listenerLongInteraction) {
         mValues = items;
         mListener = listener;
         mListenerLongInteraction = listenerLongInteraction;
