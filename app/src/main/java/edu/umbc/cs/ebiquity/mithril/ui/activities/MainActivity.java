@@ -1,12 +1,14 @@
-package edu.umbc.cs.ebiquity.mithril.appmanager.ui;
+package edu.umbc.cs.ebiquity.mithril.ui.activities;
 
 import android.app.FragmentManager;
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.NavigationView;
 import android.support.design.widget.Snackbar;
+import android.view.View;
+import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
@@ -14,19 +16,26 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.View;
 import android.widget.TextView;
 
 import java.util.List;
 
-import edu.umbc.cs.ebiquity.mithril.appmanager.MithrilApplication;
-import edu.umbc.cs.ebiquity.mithril.mithrilappmanager.R;
-import edu.umbc.cs.ebiquity.mithril.appmanager.data.model.AppMetadata;
+import edu.umbc.cs.ebiquity.mithril.MithrilApplication;
+import edu.umbc.cs.ebiquity.mithril.data.model.AppMetadata;
+import edu.umbc.cs.ebiquity.mithril.ui.fragments.ViolationFragment;
+import edu.umbc.cs.ebiquity.mithril.ui.fragments.appmanager.ShowAppsFragment;
+import edu.umbc.cs.ebiquity.mithril.R;
+import edu.umbc.cs.ebiquity.mithril.data.helpers.MithrilDBHelper;
+import edu.umbc.cs.ebiquity.mithril.data.model.Violation;
 
 public class MainActivity extends AppCompatActivity
         implements  NavigationView.OnNavigationItemSelectedListener,
                     ShowAppsFragment.OnListFragmentInteractionListener,
-                    ShowAppsFragment.OnListFragmentLongInteractionListener {
+                    ShowAppsFragment.OnListFragmentLongInteractionListener{
+
+    private static MithrilDBHelper mithrilDBHelper;
+    private static SQLiteDatabase mithrilDB;
+    private Violation violationItemSelected = null;
 
     private SharedPreferences sharedPreferences;
     private Toolbar toolbar;
@@ -37,49 +46,6 @@ public class MainActivity extends AppCompatActivity
     private List<AppMetadata> appMetadataItemsSelected = null;
     private FloatingActionButton fab;
     private TextView mAppCountTextView;
-
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-//        createShortCut();
-        initData();
-        initViews();
-    }
-
-    private void initData() {
-        sharedPreferences = this.getSharedPreferences(MithrilApplication.getSharedPreferencesName(), Context.MODE_PRIVATE);
-    }
-
-    private void initViews() {
-        setContentView(R.layout.activity_main);
-        toolbar = (Toolbar) findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
-
-        mAppCountTextView = (TextView) findViewById(R.id.app_count);
-
-        fab = (FloatingActionButton) findViewById(R.id.fab);
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Snackbar.make(view, "Once clicked, apps will be sent to server!", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
-            }
-        });
-
-        drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
-        toggle = new ActionBarDrawerToggle(
-                this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
-        drawer.setDrawerListener(toggle);
-        toggle.syncState();
-
-        navigationView = (NavigationView) findViewById(R.id.nav_view);
-        navigationView.setNavigationItemSelectedListener(this);
-        defaultFragmentLoad();
-    }
-
-    private void defaultFragmentLoad() {
-        loadAllAppsFragment();
-    }
 
     private void loadAllAppsFragment() {
         Bundle data = new Bundle();
@@ -121,23 +87,6 @@ public class MainActivity extends AppCompatActivity
                 .commit();
         mAppCountTextView.setText(mAppCountTextView.getText()
                 + Integer.toString(sharedPreferences.getInt(MithrilApplication.getSharedPreferenceAppCount(),0)));
-    }
-
-    @Override
-    public void onBackPressed() {
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
-        if (drawer.isDrawerOpen(GravityCompat.START)) {
-            drawer.closeDrawer(GravityCompat.START);
-        } else {
-            super.onBackPressed();
-        }
-    }
-
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.main, menu);
-        return true;
     }
 
     @Override
@@ -192,7 +141,7 @@ public class MainActivity extends AppCompatActivity
         appMetadataItemsSelected = items;
     }
 
-//
+    //
 //    public void createShortCut(){
 //        Intent shortcutintent = new Intent("com.android.launcher.action.INSTALL_SHORTCUT");
 //        shortcutintent.putExtra("duplicate", false);
@@ -202,4 +151,72 @@ public class MainActivity extends AppCompatActivity
 //        shortcutintent.putExtra(Intent.EXTRA_SHORTCUT_INTENT, new Intent(getApplicationContext(), EnterActivity.class));
 //        sendBroadcast(shortcutintent);
 //    }
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+//        createShortCut();
+        initData();
+        initViews();
+    }
+
+    private void initData() {
+        /**
+         * Database creation and default data insertion, happens only once.
+         */
+        mithrilDBHelper = new MithrilDBHelper(this);
+        mithrilDB = mithrilDBHelper.getWritableDatabase();
+        sharedPreferences = this.getSharedPreferences(MithrilApplication.getSharedPreferencesName(), Context.MODE_PRIVATE);
+    }
+
+    private void initViews() {
+        setContentView(R.layout.activity_main);
+        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
+
+        mAppCountTextView = (TextView) findViewById(R.id.app_count);
+
+        fab = (FloatingActionButton) findViewById(R.id.fab);
+        fab.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Snackbar.make(view, "Once clicked, apps will be sent to server!", Snackbar.LENGTH_LONG)
+                        .setAction("Action", null).show();
+            }
+        });
+
+        drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+        toggle = new ActionBarDrawerToggle(
+                this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
+        drawer.setDrawerListener(toggle);
+        toggle.syncState();
+
+        navigationView = (NavigationView) findViewById(R.id.nav_view);
+        navigationView.setNavigationItemSelectedListener(this);
+        defaultFragmentLoad();
+    }
+
+    private void defaultFragmentLoad() {
+        FragmentManager fragmentManager = getFragmentManager();
+        fragmentManager.beginTransaction().replace(R.id.container, new ViolationFragment())
+                .commit();
+        loadAllAppsFragment();
+    }
+
+    @Override
+    public void onBackPressed() {
+        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+        if (drawer.isDrawerOpen(GravityCompat.START)) {
+            drawer.closeDrawer(GravityCompat.START);
+        } else {
+            super.onBackPressed();
+        }
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        // Inflate the menu; this adds items to the action bar if it is present.
+        getMenuInflater().inflate(R.menu.main, menu);
+        return true;
+    }
 }

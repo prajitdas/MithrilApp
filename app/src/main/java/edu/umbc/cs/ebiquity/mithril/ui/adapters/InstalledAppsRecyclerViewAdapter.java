@@ -1,4 +1,4 @@
-package edu.umbc.cs.ebiquity.mithril.appmanager.ui.adapters;
+package edu.umbc.cs.ebiquity.mithril.ui.adapters;
 
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -7,10 +7,10 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import edu.umbc.cs.ebiquity.mithril.appmanager.data.model.AppMetadata;
-import edu.umbc.cs.ebiquity.mithril.appmanager.ui.ShowAppsFragment.OnListFragmentInteractionListener;
-import edu.umbc.cs.ebiquity.mithril.appmanager.ui.ShowAppsFragment.OnListFragmentLongInteractionListener;
-import edu.umbc.cs.ebiquity.mithril.mithrilappmanager.R;
+import edu.umbc.cs.ebiquity.mithril.data.model.AppMetadata;
+import edu.umbc.cs.ebiquity.mithril.ui.fragments.appmanager.ShowAppsFragment.OnListFragmentInteractionListener;
+import edu.umbc.cs.ebiquity.mithril.ui.fragments.appmanager.ShowAppsFragment.OnListFragmentLongInteractionListener;
+import edu.umbc.cs.ebiquity.mithril.R;
 
 import java.util.ArrayList;
 import java.util.List;

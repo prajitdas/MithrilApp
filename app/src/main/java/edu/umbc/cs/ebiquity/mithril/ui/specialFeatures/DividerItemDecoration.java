@@ -1,4 +1,4 @@
-package edu.umbc.cs.ebiquity.mithril.appmanager.ui.specialFeatures;
+package edu.umbc.cs.ebiquity.mithril.ui.specialFeatures;
 
 import android.content.Context;
 import android.content.res.TypedArray;

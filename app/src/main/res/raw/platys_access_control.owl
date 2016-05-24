@@ -1,0 +1,1452 @@
+<?xml version="1.0"?>
+
+
+<!DOCTYPE rdf:RDF [
+    <!ENTITY owl "http://www.w3.org/2002/07/owl#" >
+    <!ENTITY xsd "http://www.w3.org/2001/XMLSchema#" >
+    <!ENTITY rdfs "http://www.w3.org/2000/01/rdf-schema#" >
+    <!ENTITY rdf "http://www.w3.org/1999/02/22-rdf-syntax-ns#" >
+]>
+
+
+<rdf:RDF xmlns="http://www.semanticweb.org/ontologies/2013/11/Ontology1388396980991.owl#"
+     xml:base="http://www.semanticweb.org/ontologies/2013/11/Ontology1388396980991.owl"
+     xmlns:rdfs="http://www.w3.org/2000/01/rdf-schema#"
+     xmlns:owl="http://www.w3.org/2002/07/owl#"
+     xmlns:xsd="http://www.w3.org/2001/XMLSchema#"
+     xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#">
+    <owl:Ontology rdf:about="http://www.semanticweb.org/ontologies/2013/11/Ontology1388396980991.owl"/>
+    
+
+
+    <!-- 
+    ///////////////////////////////////////////////////////////////////////////////////////
+    //
+    // Object Properties
+    //
+    ///////////////////////////////////////////////////////////////////////////////////////
+     -->
+
+    
+
+
+    <!-- http://www.semanticweb.org/ontologies/2013/11/Ontology1388396980991.owl#contains -->
+
+    <owl:ObjectProperty rdf:about="http://www.semanticweb.org/ontologies/2013/11/Ontology1388396980991.owl#contains">
+        <owl:inverseOf rdf:resource="http://www.semanticweb.org/ontologies/2013/11/Ontology1388396980991.owl#isIn"/>
+    </owl:ObjectProperty>
+    
+
+
+    <!-- http://www.semanticweb.org/ontologies/2013/11/Ontology1388396980991.owl#hasActivity -->
+
+    <owl:ObjectProperty rdf:about="http://www.semanticweb.org/ontologies/2013/11/Ontology1388396980991.owl#hasActivity">
+        <rdfs:range rdf:resource="http://www.semanticweb.org/ontologies/2013/11/Ontology1388396980991.owl#Activity"/>
+        <rdfs:domain rdf:resource="http://www.semanticweb.org/ontologies/2013/11/Ontology1388396980991.owl#User"/>
+        <owl:inverseOf rdf:resource="http://www.semanticweb.org/ontologies/2013/11/Ontology1388396980991.owl#isPerformedBy"/>
+    </owl:ObjectProperty>
+    
+
+
+    <!-- http://www.semanticweb.org/ontologies/2013/11/Ontology1388396980991.owl#hasLocation -->
+
+    <owl:ObjectProperty rdf:about="http://www.semanticweb.org/ontologies/2013/11/Ontology1388396980991.owl#hasLocation">
+        <rdf:type rdf:resource="&owl;FunctionalProperty"/>
+        <rdfs:range rdf:resource="http://www.semanticweb.org/ontologies/2013/11/Ontology1388396980991.owl#Location"/>
+        <rdfs:domain rdf:resource="http://www.semanticweb.org/ontologies/2013/11/Ontology1388396980991.owl#User"/>
+    </owl:ObjectProperty>
+    
+
+
+    <!-- http://www.semanticweb.org/ontologies/2013/11/Ontology1388396980991.owl#hasLowLevelLocation -->
+
+    <owl:ObjectProperty rdf:about="http://www.semanticweb.org/ontologies/2013/11/Ontology1388396980991.owl#hasLowLevelLocation">
+        <rdfs:range rdf:resource="http://www.semanticweb.org/ontologies/2013/11/Ontology1388396980991.owl#Location"/>
+        <rdfs:domain rdf:resource="http://www.semanticweb.org/ontologies/2013/11/Ontology1388396980991.owl#User"/>
+    </owl:ObjectProperty>
+    
+
+
+    <!-- http://www.semanticweb.org/ontologies/2013/11/Ontology1388396980991.owl#hasSupervisor -->
+
+    <owl:ObjectProperty rdf:about="http://www.semanticweb.org/ontologies/2013/11/Ontology1388396980991.owl#hasSupervisor">
+        <rdfs:range rdf:resource="http://www.semanticweb.org/ontologies/2013/11/Ontology1388396980991.owl#Professor"/>
+        <rdfs:domain rdf:resource="http://www.semanticweb.org/ontologies/2013/11/Ontology1388396980991.owl#Student"/>
+    </owl:ObjectProperty>
+    
+
+
+    <!-- http://www.semanticweb.org/ontologies/2013/11/Ontology1388396980991.owl#holds -->
+
+    <owl:ObjectProperty rdf:about="http://www.semanticweb.org/ontologies/2013/11/Ontology1388396980991.owl#holds">
+        <rdf:type rdf:resource="&owl;InverseFunctionalProperty"/>
+        <owl:inverseOf rdf:resource="http://www.semanticweb.org/ontologies/2013/11/Ontology1388396980991.owl#hasLocation"/>
+    </owl:ObjectProperty>
+    
+
+
+    <!-- http://www.semanticweb.org/ontologies/2013/11/Ontology1388396980991.owl#isIn -->
+
+    <owl:ObjectProperty rdf:about="http://www.semanticweb.org/ontologies/2013/11/Ontology1388396980991.owl#isIn">
+        <rdf:type rdf:resource="&owl;TransitiveProperty"/>
+        <rdfs:domain rdf:resource="http://www.semanticweb.org/ontologies/2013/11/Ontology1388396980991.owl#Location"/>
+        <rdfs:range rdf:resource="http://www.semanticweb.org/ontologies/2013/11/Ontology1388396980991.owl#Location"/>
+    </owl:ObjectProperty>
+    
+
+
+    <!-- http://www.semanticweb.org/ontologies/2013/11/Ontology1388396980991.owl#isPerformedBy -->
+
+    <owl:ObjectProperty rdf:about="http://www.semanticweb.org/ontologies/2013/11/Ontology1388396980991.owl#isPerformedBy"/>
+    
+
+
+    <!-- 
+    ///////////////////////////////////////////////////////////////////////////////////////
+    //
+    // Classes
+    //
+    ///////////////////////////////////////////////////////////////////////////////////////
+     -->
+
+    
+
+
+    <!-- http://www.semanticweb.org/ontologies/2013/11/Ontology1388396980991.owl#Academic_Role -->
+
+    <owl:Class rdf:about="http://www.semanticweb.org/ontologies/2013/11/Ontology1388396980991.owl#Academic_Role">
+        <rdfs:subClassOf rdf:resource="http://www.semanticweb.org/ontologies/2013/11/Ontology1388396980991.owl#Role"/>
+    </owl:Class>
+    
+
+
+    <!-- http://www.semanticweb.org/ontologies/2013/11/Ontology1388396980991.owl#Accelerometer -->
+
+    <owl:Class rdf:about="http://www.semanticweb.org/ontologies/2013/11/Ontology1388396980991.owl#Accelerometer">
+        <rdfs:subClassOf rdf:resource="http://www.semanticweb.org/ontologies/2013/11/Ontology1388396980991.owl#Motion_Sensor"/>
+    </owl:Class>
+    
+
+
+    <!-- http://www.semanticweb.org/ontologies/2013/11/Ontology1388396980991.owl#Access_Level -->
+
+    <owl:Class rdf:about="http://www.semanticweb.org/ontologies/2013/11/Ontology1388396980991.owl#Access_Level">
+        <rdfs:subClassOf rdf:resource="http://www.semanticweb.org/ontologies/2013/11/Ontology1388396980991.owl#PlatMobile"/>
+    </owl:Class>
+    
+
+
+    <!-- http://www.semanticweb.org/ontologies/2013/11/Ontology1388396980991.owl#Access_Type -->
+
+    <owl:Class rdf:about="http://www.semanticweb.org/ontologies/2013/11/Ontology1388396980991.owl#Access_Type">
+        <rdfs:subClassOf rdf:resource="http://www.semanticweb.org/ontologies/2013/11/Ontology1388396980991.owl#PlatMobile"/>
+    </owl:Class>
+    
+
+
+    <!-- http://www.semanticweb.org/ontologies/2013/11/Ontology1388396980991.owl#Activity -->
+
+    <owl:Class rdf:about="http://www.semanticweb.org/ontologies/2013/11/Ontology1388396980991.owl#Activity">
+        <rdfs:subClassOf rdf:resource="http://www.semanticweb.org/ontologies/2013/11/Ontology1388396980991.owl#Platys"/>
+    </owl:Class>
+    
+
+
+    <!-- http://www.semanticweb.org/ontologies/2013/11/Ontology1388396980991.owl#Adjunct -->
+
+    <owl:Class rdf:about="http://www.semanticweb.org/ontologies/2013/11/Ontology1388396980991.owl#Adjunct">
+        <rdfs:subClassOf rdf:resource="http://www.semanticweb.org/ontologies/2013/11/Ontology1388396980991.owl#Faculty"/>
+    </owl:Class>
+    
+
+
+    <!-- http://www.semanticweb.org/ontologies/2013/11/Ontology1388396980991.owl#Allow -->
+
+    <owl:Class rdf:about="http://www.semanticweb.org/ontologies/2013/11/Ontology1388396980991.owl#Allow">
+        <rdfs:subClassOf rdf:resource="http://www.semanticweb.org/ontologies/2013/11/Ontology1388396980991.owl#Access_Type"/>
+    </owl:Class>
+    
+
+
+    <!-- http://www.semanticweb.org/ontologies/2013/11/Ontology1388396980991.owl#Allow_Anonymized -->
+
+    <owl:Class rdf:about="http://www.semanticweb.org/ontologies/2013/11/Ontology1388396980991.owl#Allow_Anonymized">
+        <rdfs:subClassOf rdf:resource="http://www.semanticweb.org/ontologies/2013/11/Ontology1388396980991.owl#Allow"/>
+    </owl:Class>
+    
+
+
+    <!-- http://www.semanticweb.org/ontologies/2013/11/Ontology1388396980991.owl#Allow_Fake -->
+
+    <owl:Class rdf:about="http://www.semanticweb.org/ontologies/2013/11/Ontology1388396980991.owl#Allow_Fake">
+        <rdfs:subClassOf rdf:resource="http://www.semanticweb.org/ontologies/2013/11/Ontology1388396980991.owl#Allow"/>
+    </owl:Class>
+    
+
+
+    <!-- http://www.semanticweb.org/ontologies/2013/11/Ontology1388396980991.owl#Allow_Normal -->
+
+    <owl:Class rdf:about="http://www.semanticweb.org/ontologies/2013/11/Ontology1388396980991.owl#Allow_Normal">
+        <rdfs:subClassOf rdf:resource="http://www.semanticweb.org/ontologies/2013/11/Ontology1388396980991.owl#Allow"/>
+    </owl:Class>
+    
+
+
+    <!-- http://www.semanticweb.org/ontologies/2013/11/Ontology1388396980991.owl#AndroidVersionRequired -->
+
+    <owl:Class rdf:about="http://www.semanticweb.org/ontologies/2013/11/Ontology1388396980991.owl#AndroidVersionRequired">
+        <rdfs:subClassOf rdf:resource="http://www.semanticweb.org/ontologies/2013/11/Ontology1388396980991.owl#PlatMobileLOD"/>
+    </owl:Class>
+    
+
+
+    <!-- http://www.semanticweb.org/ontologies/2013/11/Ontology1388396980991.owl#App -->
+
+    <owl:Class rdf:about="http://www.semanticweb.org/ontologies/2013/11/Ontology1388396980991.owl#App">
+        <rdfs:subClassOf rdf:resource="http://www.semanticweb.org/ontologies/2013/11/Ontology1388396980991.owl#Requester"/>
+    </owl:Class>
+    
+
+
+    <!-- http://www.semanticweb.org/ontologies/2013/11/Ontology1388396980991.owl#AppCategory -->
+
+    <owl:Class rdf:about="http://www.semanticweb.org/ontologies/2013/11/Ontology1388396980991.owl#AppCategory">
+        <rdfs:subClassOf rdf:resource="http://www.semanticweb.org/ontologies/2013/11/Ontology1388396980991.owl#PlatMobileLOD"/>
+    </owl:Class>
+    
+
+
+    <!-- http://www.semanticweb.org/ontologies/2013/11/Ontology1388396980991.owl#AppContentRating -->
+
+    <owl:Class rdf:about="http://www.semanticweb.org/ontologies/2013/11/Ontology1388396980991.owl#AppContentRating">
+        <rdfs:subClassOf rdf:resource="http://www.semanticweb.org/ontologies/2013/11/Ontology1388396980991.owl#PlatMobileLOD"/>
+    </owl:Class>
+    
+
+
+    <!-- http://www.semanticweb.org/ontologies/2013/11/Ontology1388396980991.owl#AppDescription -->
+
+    <owl:Class rdf:about="http://www.semanticweb.org/ontologies/2013/11/Ontology1388396980991.owl#AppDescription">
+        <rdfs:subClassOf rdf:resource="http://www.semanticweb.org/ontologies/2013/11/Ontology1388396980991.owl#PlatMobileLOD"/>
+    </owl:Class>
+    
+
+
+    <!-- http://www.semanticweb.org/ontologies/2013/11/Ontology1388396980991.owl#AppDeveloper -->
+
+    <owl:Class rdf:about="http://www.semanticweb.org/ontologies/2013/11/Ontology1388396980991.owl#AppDeveloper">
+        <rdfs:subClassOf rdf:resource="http://www.semanticweb.org/ontologies/2013/11/Ontology1388396980991.owl#PlatMobileLOD"/>
+    </owl:Class>
+    
+
+
+    <!-- http://www.semanticweb.org/ontologies/2013/11/Ontology1388396980991.owl#AppInstallCount -->
+
+    <owl:Class rdf:about="http://www.semanticweb.org/ontologies/2013/11/Ontology1388396980991.owl#AppInstallCount">
+        <rdfs:subClassOf rdf:resource="http://www.semanticweb.org/ontologies/2013/11/Ontology1388396980991.owl#PlatMobileLOD"/>
+    </owl:Class>
+    
+
+
+    <!-- http://www.semanticweb.org/ontologies/2013/11/Ontology1388396980991.owl#AppName -->
+
+    <owl:Class rdf:about="http://www.semanticweb.org/ontologies/2013/11/Ontology1388396980991.owl#AppName">
+        <rdfs:subClassOf rdf:resource="http://www.semanticweb.org/ontologies/2013/11/Ontology1388396980991.owl#PlatMobileLOD"/>
+    </owl:Class>
+    
+
+
+    <!-- http://www.semanticweb.org/ontologies/2013/11/Ontology1388396980991.owl#AppPackageName -->
+
+    <owl:Class rdf:about="http://www.semanticweb.org/ontologies/2013/11/Ontology1388396980991.owl#AppPackageName">
+        <rdfs:subClassOf rdf:resource="http://www.semanticweb.org/ontologies/2013/11/Ontology1388396980991.owl#PlatMobileLOD"/>
+    </owl:Class>
+    
+
+
+    <!-- http://www.semanticweb.org/ontologies/2013/11/Ontology1388396980991.owl#AppReviewCount -->
+
+    <owl:Class rdf:about="http://www.semanticweb.org/ontologies/2013/11/Ontology1388396980991.owl#AppReviewCount">
+        <rdfs:subClassOf rdf:resource="http://www.semanticweb.org/ontologies/2013/11/Ontology1388396980991.owl#PlatMobileLOD"/>
+    </owl:Class>
+    
+
+
+    <!-- http://www.semanticweb.org/ontologies/2013/11/Ontology1388396980991.owl#AppReviewRating -->
+
+    <owl:Class rdf:about="http://www.semanticweb.org/ontologies/2013/11/Ontology1388396980991.owl#AppReviewRating">
+        <rdfs:subClassOf rdf:resource="http://www.semanticweb.org/ontologies/2013/11/Ontology1388396980991.owl#PlatMobileLOD"/>
+    </owl:Class>
+    
+
+
+    <!-- http://www.semanticweb.org/ontologies/2013/11/Ontology1388396980991.owl#AppUpdateDate -->
+
+    <owl:Class rdf:about="http://www.semanticweb.org/ontologies/2013/11/Ontology1388396980991.owl#AppUpdateDate">
+        <rdfs:subClassOf rdf:resource="http://www.semanticweb.org/ontologies/2013/11/Ontology1388396980991.owl#PlatMobileLOD"/>
+    </owl:Class>
+    
+
+
+    <!-- http://www.semanticweb.org/ontologies/2013/11/Ontology1388396980991.owl#AppVersion -->
+
+    <owl:Class rdf:about="http://www.semanticweb.org/ontologies/2013/11/Ontology1388396980991.owl#AppVersion">
+        <rdfs:subClassOf rdf:resource="http://www.semanticweb.org/ontologies/2013/11/Ontology1388396980991.owl#PlatMobileLOD"/>
+    </owl:Class>
+    
+
+
+    <!-- http://www.semanticweb.org/ontologies/2013/11/Ontology1388396980991.owl#AppWhatsNew -->
+
+    <owl:Class rdf:about="http://www.semanticweb.org/ontologies/2013/11/Ontology1388396980991.owl#AppWhatsNew">
+        <rdfs:subClassOf rdf:resource="http://www.semanticweb.org/ontologies/2013/11/Ontology1388396980991.owl#PlatMobileLOD"/>
+    </owl:Class>
+    
+
+
+    <!-- http://www.semanticweb.org/ontologies/2013/11/Ontology1388396980991.owl#Attending_Lecture -->
+
+    <owl:Class rdf:about="http://www.semanticweb.org/ontologies/2013/11/Ontology1388396980991.owl#Attending_Lecture">
+        <rdfs:subClassOf rdf:resource="http://www.semanticweb.org/ontologies/2013/11/Ontology1388396980991.owl#Professional_Activity"/>
+    </owl:Class>
+    
+
+
+    <!-- http://www.semanticweb.org/ontologies/2013/11/Ontology1388396980991.owl#Audio -->
+
+    <owl:Class rdf:about="http://www.semanticweb.org/ontologies/2013/11/Ontology1388396980991.owl#Audio">
+        <rdfs:subClassOf rdf:resource="http://www.semanticweb.org/ontologies/2013/11/Ontology1388396980991.owl#Media"/>
+    </owl:Class>
+    
+
+
+    <!-- http://www.semanticweb.org/ontologies/2013/11/Ontology1388396980991.owl#Audio_Visual -->
+
+    <owl:Class rdf:about="http://www.semanticweb.org/ontologies/2013/11/Ontology1388396980991.owl#Audio_Visual">
+        <rdfs:subClassOf rdf:resource="http://www.semanticweb.org/ontologies/2013/11/Ontology1388396980991.owl#Hardware_Component"/>
+    </owl:Class>
+    
+
+
+    <!-- http://www.semanticweb.org/ontologies/2013/11/Ontology1388396980991.owl#Bluetooth -->
+
+    <owl:Class rdf:about="http://www.semanticweb.org/ontologies/2013/11/Ontology1388396980991.owl#Bluetooth">
+        <rdfs:subClassOf rdf:resource="http://www.semanticweb.org/ontologies/2013/11/Ontology1388396980991.owl#Network"/>
+    </owl:Class>
+    
+
+
+    <!-- http://www.semanticweb.org/ontologies/2013/11/Ontology1388396980991.owl#Building -->
+
+    <owl:Class rdf:about="http://www.semanticweb.org/ontologies/2013/11/Ontology1388396980991.owl#Building">
+        <rdfs:subClassOf rdf:resource="http://www.semanticweb.org/ontologies/2013/11/Ontology1388396980991.owl#Location"/>
+    </owl:Class>
+    
+
+
+    <!-- http://www.semanticweb.org/ontologies/2013/11/Ontology1388396980991.owl#CEO -->
+
+    <owl:Class rdf:about="http://www.semanticweb.org/ontologies/2013/11/Ontology1388396980991.owl#CEO">
+        <rdfs:subClassOf rdf:resource="http://www.semanticweb.org/ontologies/2013/11/Ontology1388396980991.owl#Professional_Role"/>
+    </owl:Class>
+    
+
+
+    <!-- http://www.semanticweb.org/ontologies/2013/11/Ontology1388396980991.owl#Calendar -->
+
+    <owl:Class rdf:about="http://www.semanticweb.org/ontologies/2013/11/Ontology1388396980991.owl#Calendar">
+        <rdfs:subClassOf rdf:resource="http://www.semanticweb.org/ontologies/2013/11/Ontology1388396980991.owl#Software_Component"/>
+    </owl:Class>
+    
+
+
+    <!-- http://www.semanticweb.org/ontologies/2013/11/Ontology1388396980991.owl#Call_Logs -->
+
+    <owl:Class rdf:about="http://www.semanticweb.org/ontologies/2013/11/Ontology1388396980991.owl#Call_Logs">
+        <rdfs:subClassOf rdf:resource="http://www.semanticweb.org/ontologies/2013/11/Ontology1388396980991.owl#Software_Component"/>
+    </owl:Class>
+    
+
+
+    <!-- http://www.semanticweb.org/ontologies/2013/11/Ontology1388396980991.owl#Camera -->
+
+    <owl:Class rdf:about="http://www.semanticweb.org/ontologies/2013/11/Ontology1388396980991.owl#Camera">
+        <rdfs:subClassOf rdf:resource="http://www.semanticweb.org/ontologies/2013/11/Ontology1388396980991.owl#Audio_Visual"/>
+    </owl:Class>
+    
+
+
+    <!-- http://www.semanticweb.org/ontologies/2013/11/Ontology1388396980991.owl#Cellular -->
+
+    <owl:Class rdf:about="http://www.semanticweb.org/ontologies/2013/11/Ontology1388396980991.owl#Cellular">
+        <rdfs:subClassOf rdf:resource="http://www.semanticweb.org/ontologies/2013/11/Ontology1388396980991.owl#Internet"/>
+    </owl:Class>
+    
+
+
+    <!-- http://www.semanticweb.org/ontologies/2013/11/Ontology1388396980991.owl#City -->
+
+    <owl:Class rdf:about="http://www.semanticweb.org/ontologies/2013/11/Ontology1388396980991.owl#City">
+        <rdfs:subClassOf rdf:resource="http://www.semanticweb.org/ontologies/2013/11/Ontology1388396980991.owl#Location"/>
+    </owl:Class>
+    
+
+
+    <!-- http://www.semanticweb.org/ontologies/2013/11/Ontology1388396980991.owl#Classroom -->
+
+    <owl:Class rdf:about="http://www.semanticweb.org/ontologies/2013/11/Ontology1388396980991.owl#Classroom">
+        <rdfs:subClassOf rdf:resource="http://www.semanticweb.org/ontologies/2013/11/Ontology1388396980991.owl#Place"/>
+    </owl:Class>
+    
+
+
+    <!-- http://www.semanticweb.org/ontologies/2013/11/Ontology1388396980991.owl#Coarse_Localization_Component -->
+
+    <owl:Class rdf:about="http://www.semanticweb.org/ontologies/2013/11/Ontology1388396980991.owl#Coarse_Localization_Component">
+        <rdfs:subClassOf rdf:resource="http://www.semanticweb.org/ontologies/2013/11/Ontology1388396980991.owl#Localization_Component"/>
+    </owl:Class>
+    
+
+
+    <!-- http://www.semanticweb.org/ontologies/2013/11/Ontology1388396980991.owl#Colleague -->
+
+    <owl:Class rdf:about="http://www.semanticweb.org/ontologies/2013/11/Ontology1388396980991.owl#Colleague">
+        <rdfs:subClassOf rdf:resource="http://www.semanticweb.org/ontologies/2013/11/Ontology1388396980991.owl#Professional_Network"/>
+    </owl:Class>
+    
+
+
+    <!-- http://www.semanticweb.org/ontologies/2013/11/Ontology1388396980991.owl#Contacts -->
+
+    <owl:Class rdf:about="http://www.semanticweb.org/ontologies/2013/11/Ontology1388396980991.owl#Contacts">
+        <rdfs:subClassOf rdf:resource="http://www.semanticweb.org/ontologies/2013/11/Ontology1388396980991.owl#Software_Component"/>
+    </owl:Class>
+    
+
+
+    <!-- http://www.semanticweb.org/ontologies/2013/11/Ontology1388396980991.owl#Country -->
+
+    <owl:Class rdf:about="http://www.semanticweb.org/ontologies/2013/11/Ontology1388396980991.owl#Country">
+        <rdfs:subClassOf rdf:resource="http://www.semanticweb.org/ontologies/2013/11/Ontology1388396980991.owl#Location"/>
+    </owl:Class>
+    
+
+
+    <!-- http://www.semanticweb.org/ontologies/2013/11/Ontology1388396980991.owl#County -->
+
+    <owl:Class rdf:about="http://www.semanticweb.org/ontologies/2013/11/Ontology1388396980991.owl#County">
+        <rdfs:subClassOf rdf:resource="http://www.semanticweb.org/ontologies/2013/11/Ontology1388396980991.owl#Location"/>
+    </owl:Class>
+    
+
+
+    <!-- http://www.semanticweb.org/ontologies/2013/11/Ontology1388396980991.owl#Course_Work -->
+
+    <owl:Class rdf:about="http://www.semanticweb.org/ontologies/2013/11/Ontology1388396980991.owl#Course_Work">
+        <rdfs:subClassOf rdf:resource="http://www.semanticweb.org/ontologies/2013/11/Ontology1388396980991.owl#Studying"/>
+    </owl:Class>
+    
+
+
+    <!-- http://www.semanticweb.org/ontologies/2013/11/Ontology1388396980991.owl#Date -->
+
+    <owl:Class rdf:about="http://www.semanticweb.org/ontologies/2013/11/Ontology1388396980991.owl#Date">
+        <rdfs:subClassOf rdf:resource="http://www.semanticweb.org/ontologies/2013/11/Ontology1388396980991.owl#Personal_Activity"/>
+    </owl:Class>
+    
+
+
+    <!-- http://www.semanticweb.org/ontologies/2013/11/Ontology1388396980991.owl#Delivering_Lecture -->
+
+    <owl:Class rdf:about="http://www.semanticweb.org/ontologies/2013/11/Ontology1388396980991.owl#Delivering_Lecture">
+        <rdfs:subClassOf rdf:resource="http://www.semanticweb.org/ontologies/2013/11/Ontology1388396980991.owl#Professional_Activity"/>
+    </owl:Class>
+    
+
+
+    <!-- http://www.semanticweb.org/ontologies/2013/11/Ontology1388396980991.owl#Deny -->
+
+    <owl:Class rdf:about="http://www.semanticweb.org/ontologies/2013/11/Ontology1388396980991.owl#Deny">
+        <rdfs:subClassOf rdf:resource="http://www.semanticweb.org/ontologies/2013/11/Ontology1388396980991.owl#Access_Type"/>
+    </owl:Class>
+    
+
+
+    <!-- http://www.semanticweb.org/ontologies/2013/11/Ontology1388396980991.owl#Department_Office -->
+
+    <owl:Class rdf:about="http://www.semanticweb.org/ontologies/2013/11/Ontology1388396980991.owl#Department_Office">
+        <rdfs:subClassOf rdf:resource="http://www.semanticweb.org/ontologies/2013/11/Ontology1388396980991.owl#Office"/>
+    </owl:Class>
+    
+
+
+    <!-- http://www.semanticweb.org/ontologies/2013/11/Ontology1388396980991.owl#Developer -->
+
+    <owl:Class rdf:about="http://www.semanticweb.org/ontologies/2013/11/Ontology1388396980991.owl#Developer">
+        <rdfs:subClassOf rdf:resource="http://www.semanticweb.org/ontologies/2013/11/Ontology1388396980991.owl#Professional_Role"/>
+    </owl:Class>
+    
+
+
+    <!-- http://www.semanticweb.org/ontologies/2013/11/Ontology1388396980991.owl#DeveloperCountry -->
+
+    <owl:Class rdf:about="http://www.semanticweb.org/ontologies/2013/11/Ontology1388396980991.owl#DeveloperCountry">
+        <rdfs:subClassOf rdf:resource="http://www.semanticweb.org/ontologies/2013/11/Ontology1388396980991.owl#PlatMobileLOD"/>
+    </owl:Class>
+    
+
+
+    <!-- http://www.semanticweb.org/ontologies/2013/11/Ontology1388396980991.owl#DeveloperEmail -->
+
+    <owl:Class rdf:about="http://www.semanticweb.org/ontologies/2013/11/Ontology1388396980991.owl#DeveloperEmail">
+        <rdfs:subClassOf rdf:resource="http://www.semanticweb.org/ontologies/2013/11/Ontology1388396980991.owl#PlatMobileLOD"/>
+    </owl:Class>
+    
+
+
+    <!-- http://www.semanticweb.org/ontologies/2013/11/Ontology1388396980991.owl#DeveloperWebsite -->
+
+    <owl:Class rdf:about="http://www.semanticweb.org/ontologies/2013/11/Ontology1388396980991.owl#DeveloperWebsite">
+        <rdfs:subClassOf rdf:resource="http://www.semanticweb.org/ontologies/2013/11/Ontology1388396980991.owl#PlatMobileLOD"/>
+    </owl:Class>
+    
+
+
+    <!-- http://www.semanticweb.org/ontologies/2013/11/Ontology1388396980991.owl#Device -->
+
+    <owl:Class rdf:about="http://www.semanticweb.org/ontologies/2013/11/Ontology1388396980991.owl#Device">
+        <rdfs:subClassOf rdf:resource="http://www.semanticweb.org/ontologies/2013/11/Ontology1388396980991.owl#Platys"/>
+    </owl:Class>
+    
+
+
+    <!-- http://www.semanticweb.org/ontologies/2013/11/Ontology1388396980991.owl#Device_Id -->
+
+    <owl:Class rdf:about="http://www.semanticweb.org/ontologies/2013/11/Ontology1388396980991.owl#Device_Id">
+        <rdfs:subClassOf rdf:resource="http://www.semanticweb.org/ontologies/2013/11/Ontology1388396980991.owl#Software_Component"/>
+    </owl:Class>
+    
+
+
+    <!-- http://www.semanticweb.org/ontologies/2013/11/Ontology1388396980991.owl#Email -->
+
+    <owl:Class rdf:about="http://www.semanticweb.org/ontologies/2013/11/Ontology1388396980991.owl#Email">
+        <rdfs:subClassOf rdf:resource="http://www.semanticweb.org/ontologies/2013/11/Ontology1388396980991.owl#Software_Component"/>
+    </owl:Class>
+    
+
+
+    <!-- http://www.semanticweb.org/ontologies/2013/11/Ontology1388396980991.owl#Entertainment -->
+
+    <owl:Class rdf:about="http://www.semanticweb.org/ontologies/2013/11/Ontology1388396980991.owl#Entertainment">
+        <rdfs:subClassOf rdf:resource="http://www.semanticweb.org/ontologies/2013/11/Ontology1388396980991.owl#Personal_Activity"/>
+    </owl:Class>
+    
+
+
+    <!-- http://www.semanticweb.org/ontologies/2013/11/Ontology1388396980991.owl#Environmental_Sensor -->
+
+    <owl:Class rdf:about="http://www.semanticweb.org/ontologies/2013/11/Ontology1388396980991.owl#Environmental_Sensor">
+        <rdfs:subClassOf rdf:resource="http://www.semanticweb.org/ontologies/2013/11/Ontology1388396980991.owl#Hardware_Component"/>
+    </owl:Class>
+    
+
+
+    <!-- http://www.semanticweb.org/ontologies/2013/11/Ontology1388396980991.owl#Exercising -->
+
+    <owl:Class rdf:about="http://www.semanticweb.org/ontologies/2013/11/Ontology1388396980991.owl#Exercising">
+        <rdfs:subClassOf rdf:resource="http://www.semanticweb.org/ontologies/2013/11/Ontology1388396980991.owl#Personal_Activity"/>
+    </owl:Class>
+    
+
+
+    <!-- http://www.semanticweb.org/ontologies/2013/11/Ontology1388396980991.owl#Faculty -->
+
+    <owl:Class rdf:about="http://www.semanticweb.org/ontologies/2013/11/Ontology1388396980991.owl#Faculty">
+        <rdfs:subClassOf rdf:resource="http://www.semanticweb.org/ontologies/2013/11/Ontology1388396980991.owl#Academic_Role"/>
+    </owl:Class>
+    
+
+
+    <!-- http://www.semanticweb.org/ontologies/2013/11/Ontology1388396980991.owl#Family -->
+
+    <owl:Class rdf:about="http://www.semanticweb.org/ontologies/2013/11/Ontology1388396980991.owl#Family">
+        <rdfs:subClassOf rdf:resource="http://www.semanticweb.org/ontologies/2013/11/Ontology1388396980991.owl#Personal_Network"/>
+    </owl:Class>
+    
+
+
+    <!-- http://www.semanticweb.org/ontologies/2013/11/Ontology1388396980991.owl#Files -->
+
+    <owl:Class rdf:about="http://www.semanticweb.org/ontologies/2013/11/Ontology1388396980991.owl#Files">
+        <rdfs:subClassOf rdf:resource="http://www.semanticweb.org/ontologies/2013/11/Ontology1388396980991.owl#Media"/>
+    </owl:Class>
+    
+
+
+    <!-- http://www.semanticweb.org/ontologies/2013/11/Ontology1388396980991.owl#Fine_Localization_Component -->
+
+    <owl:Class rdf:about="http://www.semanticweb.org/ontologies/2013/11/Ontology1388396980991.owl#Fine_Localization_Component">
+        <rdfs:subClassOf rdf:resource="http://www.semanticweb.org/ontologies/2013/11/Ontology1388396980991.owl#Localization_Component"/>
+    </owl:Class>
+    
+
+
+    <!-- http://www.semanticweb.org/ontologies/2013/11/Ontology1388396980991.owl#Friends -->
+
+    <owl:Class rdf:about="http://www.semanticweb.org/ontologies/2013/11/Ontology1388396980991.owl#Friends">
+        <rdfs:subClassOf rdf:resource="http://www.semanticweb.org/ontologies/2013/11/Ontology1388396980991.owl#Personal_Network"/>
+    </owl:Class>
+    
+
+
+    <!-- http://www.semanticweb.org/ontologies/2013/11/Ontology1388396980991.owl#GPS -->
+
+    <owl:Class rdf:about="http://www.semanticweb.org/ontologies/2013/11/Ontology1388396980991.owl#GPS">
+        <rdfs:subClassOf rdf:resource="http://www.semanticweb.org/ontologies/2013/11/Ontology1388396980991.owl#Fine_Localization_Component"/>
+    </owl:Class>
+    
+
+
+    <!-- http://www.semanticweb.org/ontologies/2013/11/Ontology1388396980991.owl#General_Manager -->
+
+    <owl:Class rdf:about="http://www.semanticweb.org/ontologies/2013/11/Ontology1388396980991.owl#General_Manager">
+        <rdfs:subClassOf rdf:resource="http://www.semanticweb.org/ontologies/2013/11/Ontology1388396980991.owl#Professional_Role"/>
+    </owl:Class>
+    
+
+
+    <!-- http://www.semanticweb.org/ontologies/2013/11/Ontology1388396980991.owl#Geomagnetic_Field -->
+
+    <owl:Class rdf:about="http://www.semanticweb.org/ontologies/2013/11/Ontology1388396980991.owl#Geomagnetic_Field">
+        <rdfs:subClassOf rdf:resource="http://www.semanticweb.org/ontologies/2013/11/Ontology1388396980991.owl#Positional_Sensor"/>
+    </owl:Class>
+    
+
+
+    <!-- http://www.semanticweb.org/ontologies/2013/11/Ontology1388396980991.owl#Government_Office -->
+
+    <owl:Class rdf:about="http://www.semanticweb.org/ontologies/2013/11/Ontology1388396980991.owl#Government_Office">
+        <rdfs:subClassOf rdf:resource="http://www.semanticweb.org/ontologies/2013/11/Ontology1388396980991.owl#Office"/>
+    </owl:Class>
+    
+
+
+    <!-- http://www.semanticweb.org/ontologies/2013/11/Ontology1388396980991.owl#Graduate_Student -->
+
+    <owl:Class rdf:about="http://www.semanticweb.org/ontologies/2013/11/Ontology1388396980991.owl#Graduate_Student">
+        <rdfs:subClassOf rdf:resource="http://www.semanticweb.org/ontologies/2013/11/Ontology1388396980991.owl#Student"/>
+    </owl:Class>
+    
+
+
+    <!-- http://www.semanticweb.org/ontologies/2013/11/Ontology1388396980991.owl#Gravity -->
+
+    <owl:Class rdf:about="http://www.semanticweb.org/ontologies/2013/11/Ontology1388396980991.owl#Gravity">
+        <rdfs:subClassOf rdf:resource="http://www.semanticweb.org/ontologies/2013/11/Ontology1388396980991.owl#Motion_Sensor"/>
+    </owl:Class>
+    
+
+
+    <!-- http://www.semanticweb.org/ontologies/2013/11/Ontology1388396980991.owl#Gyroscope -->
+
+    <owl:Class rdf:about="http://www.semanticweb.org/ontologies/2013/11/Ontology1388396980991.owl#Gyroscope">
+        <rdfs:subClassOf rdf:resource="http://www.semanticweb.org/ontologies/2013/11/Ontology1388396980991.owl#Motion_Sensor"/>
+    </owl:Class>
+    
+
+
+    <!-- http://www.semanticweb.org/ontologies/2013/11/Ontology1388396980991.owl#Hardware_Component -->
+
+    <owl:Class rdf:about="http://www.semanticweb.org/ontologies/2013/11/Ontology1388396980991.owl#Hardware_Component">
+        <rdfs:subClassOf rdf:resource="http://www.semanticweb.org/ontologies/2013/11/Ontology1388396980991.owl#Resource"/>
+    </owl:Class>
+    
+
+
+    <!-- http://www.semanticweb.org/ontologies/2013/11/Ontology1388396980991.owl#Home -->
+
+    <owl:Class rdf:about="http://www.semanticweb.org/ontologies/2013/11/Ontology1388396980991.owl#Home">
+        <rdfs:subClassOf rdf:resource="http://www.semanticweb.org/ontologies/2013/11/Ontology1388396980991.owl#Place"/>
+    </owl:Class>
+    
+
+
+    <!-- http://www.semanticweb.org/ontologies/2013/11/Ontology1388396980991.owl#Images -->
+
+    <owl:Class rdf:about="http://www.semanticweb.org/ontologies/2013/11/Ontology1388396980991.owl#Images">
+        <rdfs:subClassOf rdf:resource="http://www.semanticweb.org/ontologies/2013/11/Ontology1388396980991.owl#Media"/>
+    </owl:Class>
+    
+
+
+    <!-- http://www.semanticweb.org/ontologies/2013/11/Ontology1388396980991.owl#Instant -->
+
+    <owl:Class rdf:about="http://www.semanticweb.org/ontologies/2013/11/Ontology1388396980991.owl#Instant">
+        <rdfs:subClassOf rdf:resource="http://www.semanticweb.org/ontologies/2013/11/Ontology1388396980991.owl#Time"/>
+    </owl:Class>
+    
+
+
+    <!-- http://www.semanticweb.org/ontologies/2013/11/Ontology1388396980991.owl#Internet -->
+
+    <owl:Class rdf:about="http://www.semanticweb.org/ontologies/2013/11/Ontology1388396980991.owl#Internet">
+        <rdfs:subClassOf rdf:resource="http://www.semanticweb.org/ontologies/2013/11/Ontology1388396980991.owl#Network"/>
+    </owl:Class>
+    
+
+
+    <!-- http://www.semanticweb.org/ontologies/2013/11/Ontology1388396980991.owl#Interval -->
+
+    <owl:Class rdf:about="http://www.semanticweb.org/ontologies/2013/11/Ontology1388396980991.owl#Interval">
+        <rdfs:subClassOf rdf:resource="http://www.semanticweb.org/ontologies/2013/11/Ontology1388396980991.owl#Time"/>
+    </owl:Class>
+    
+
+
+    <!-- http://www.semanticweb.org/ontologies/2013/11/Ontology1388396980991.owl#Lab -->
+
+    <owl:Class rdf:about="http://www.semanticweb.org/ontologies/2013/11/Ontology1388396980991.owl#Lab">
+        <rdfs:subClassOf rdf:resource="http://www.semanticweb.org/ontologies/2013/11/Ontology1388396980991.owl#Office"/>
+    </owl:Class>
+    
+
+
+    <!-- http://www.semanticweb.org/ontologies/2013/11/Ontology1388396980991.owl#Lab_Meeting -->
+
+    <owl:Class rdf:about="http://www.semanticweb.org/ontologies/2013/11/Ontology1388396980991.owl#Lab_Meeting">
+        <rdfs:subClassOf rdf:resource="http://www.semanticweb.org/ontologies/2013/11/Ontology1388396980991.owl#Meeting"/>
+    </owl:Class>
+    
+
+
+    <!-- http://www.semanticweb.org/ontologies/2013/11/Ontology1388396980991.owl#Lecturer -->
+
+    <owl:Class rdf:about="http://www.semanticweb.org/ontologies/2013/11/Ontology1388396980991.owl#Lecturer">
+        <rdfs:subClassOf rdf:resource="http://www.semanticweb.org/ontologies/2013/11/Ontology1388396980991.owl#Faculty"/>
+    </owl:Class>
+    
+
+
+    <!-- http://www.semanticweb.org/ontologies/2013/11/Ontology1388396980991.owl#Library -->
+
+    <owl:Class rdf:about="http://www.semanticweb.org/ontologies/2013/11/Ontology1388396980991.owl#Library">
+        <rdfs:subClassOf rdf:resource="http://www.semanticweb.org/ontologies/2013/11/Ontology1388396980991.owl#Place"/>
+    </owl:Class>
+    
+
+
+    <!-- http://www.semanticweb.org/ontologies/2013/11/Ontology1388396980991.owl#Light -->
+
+    <owl:Class rdf:about="http://www.semanticweb.org/ontologies/2013/11/Ontology1388396980991.owl#Light">
+        <rdfs:subClassOf rdf:resource="http://www.semanticweb.org/ontologies/2013/11/Ontology1388396980991.owl#Environmental_Sensor"/>
+    </owl:Class>
+    
+
+
+    <!-- http://www.semanticweb.org/ontologies/2013/11/Ontology1388396980991.owl#Localization_Component -->
+
+    <owl:Class rdf:about="http://www.semanticweb.org/ontologies/2013/11/Ontology1388396980991.owl#Localization_Component">
+        <rdfs:subClassOf rdf:resource="http://www.semanticweb.org/ontologies/2013/11/Ontology1388396980991.owl#Hardware_Component"/>
+    </owl:Class>
+    
+
+
+    <!-- http://www.semanticweb.org/ontologies/2013/11/Ontology1388396980991.owl#Location -->
+
+    <owl:Class rdf:about="http://www.semanticweb.org/ontologies/2013/11/Ontology1388396980991.owl#Location">
+        <rdfs:subClassOf rdf:resource="http://www.semanticweb.org/ontologies/2013/11/Ontology1388396980991.owl#Platys"/>
+    </owl:Class>
+    
+
+
+    <!-- http://www.semanticweb.org/ontologies/2013/11/Ontology1388396980991.owl#Media -->
+
+    <owl:Class rdf:about="http://www.semanticweb.org/ontologies/2013/11/Ontology1388396980991.owl#Media">
+        <rdfs:subClassOf rdf:resource="http://www.semanticweb.org/ontologies/2013/11/Ontology1388396980991.owl#Software_Component"/>
+    </owl:Class>
+    
+
+
+    <!-- http://www.semanticweb.org/ontologies/2013/11/Ontology1388396980991.owl#Meeting -->
+
+    <owl:Class rdf:about="http://www.semanticweb.org/ontologies/2013/11/Ontology1388396980991.owl#Meeting">
+        <rdfs:subClassOf rdf:resource="http://www.semanticweb.org/ontologies/2013/11/Ontology1388396980991.owl#Professional_Activity"/>
+    </owl:Class>
+    
+
+
+    <!-- http://www.semanticweb.org/ontologies/2013/11/Ontology1388396980991.owl#Messages -->
+
+    <owl:Class rdf:about="http://www.semanticweb.org/ontologies/2013/11/Ontology1388396980991.owl#Messages">
+        <rdfs:subClassOf rdf:resource="http://www.semanticweb.org/ontologies/2013/11/Ontology1388396980991.owl#Software_Component"/>
+    </owl:Class>
+    
+
+
+    <!-- http://www.semanticweb.org/ontologies/2013/11/Ontology1388396980991.owl#Microphone -->
+
+    <owl:Class rdf:about="http://www.semanticweb.org/ontologies/2013/11/Ontology1388396980991.owl#Microphone">
+        <rdfs:subClassOf rdf:resource="http://www.semanticweb.org/ontologies/2013/11/Ontology1388396980991.owl#Audio_Visual"/>
+    </owl:Class>
+    
+
+
+    <!-- http://www.semanticweb.org/ontologies/2013/11/Ontology1388396980991.owl#Mobile -->
+
+    <owl:Class rdf:about="http://www.semanticweb.org/ontologies/2013/11/Ontology1388396980991.owl#Mobile">
+        <rdfs:subClassOf rdf:resource="http://www.semanticweb.org/ontologies/2013/11/Ontology1388396980991.owl#Device"/>
+    </owl:Class>
+    
+
+
+    <!-- http://www.semanticweb.org/ontologies/2013/11/Ontology1388396980991.owl#Motion_Sensor -->
+
+    <owl:Class rdf:about="http://www.semanticweb.org/ontologies/2013/11/Ontology1388396980991.owl#Motion_Sensor">
+        <rdfs:subClassOf rdf:resource="http://www.semanticweb.org/ontologies/2013/11/Ontology1388396980991.owl#Hardware_Component"/>
+    </owl:Class>
+    
+
+
+    <!-- http://www.semanticweb.org/ontologies/2013/11/Ontology1388396980991.owl#Movie_Theatre -->
+
+    <owl:Class rdf:about="http://www.semanticweb.org/ontologies/2013/11/Ontology1388396980991.owl#Movie_Theatre">
+        <rdfs:subClassOf rdf:resource="http://www.semanticweb.org/ontologies/2013/11/Ontology1388396980991.owl#Place"/>
+    </owl:Class>
+    
+
+
+    <!-- http://www.semanticweb.org/ontologies/2013/11/Ontology1388396980991.owl#Network -->
+
+    <owl:Class rdf:about="http://www.semanticweb.org/ontologies/2013/11/Ontology1388396980991.owl#Network">
+        <rdfs:subClassOf rdf:resource="http://www.semanticweb.org/ontologies/2013/11/Ontology1388396980991.owl#Hardware_Component"/>
+    </owl:Class>
+    
+
+
+    <!-- http://www.semanticweb.org/ontologies/2013/11/Ontology1388396980991.owl#Network_Location -->
+
+    <owl:Class rdf:about="http://www.semanticweb.org/ontologies/2013/11/Ontology1388396980991.owl#Network_Location">
+        <rdfs:subClassOf rdf:resource="http://www.semanticweb.org/ontologies/2013/11/Ontology1388396980991.owl#Coarse_Localization_Component"/>
+    </owl:Class>
+    
+
+
+    <!-- http://www.semanticweb.org/ontologies/2013/11/Ontology1388396980991.owl#Off_Hours -->
+
+    <owl:Class rdf:about="http://www.semanticweb.org/ontologies/2013/11/Ontology1388396980991.owl#Off_Hours">
+        <rdfs:subClassOf rdf:resource="http://www.semanticweb.org/ontologies/2013/11/Ontology1388396980991.owl#Interval"/>
+    </owl:Class>
+    
+
+
+    <!-- http://www.semanticweb.org/ontologies/2013/11/Ontology1388396980991.owl#Office -->
+
+    <owl:Class rdf:about="http://www.semanticweb.org/ontologies/2013/11/Ontology1388396980991.owl#Office">
+        <rdfs:subClassOf rdf:resource="http://www.semanticweb.org/ontologies/2013/11/Ontology1388396980991.owl#Place"/>
+    </owl:Class>
+    
+
+
+    <!-- http://www.semanticweb.org/ontologies/2013/11/Ontology1388396980991.owl#Optical_Head_Mounted_Display -->
+
+    <owl:Class rdf:about="http://www.semanticweb.org/ontologies/2013/11/Ontology1388396980991.owl#Optical_Head_Mounted_Display">
+        <rdfs:subClassOf rdf:resource="http://www.semanticweb.org/ontologies/2013/11/Ontology1388396980991.owl#Wearable"/>
+    </owl:Class>
+    
+
+
+    <!-- http://www.semanticweb.org/ontologies/2013/11/Ontology1388396980991.owl#Orientation -->
+
+    <owl:Class rdf:about="http://www.semanticweb.org/ontologies/2013/11/Ontology1388396980991.owl#Orientation">
+        <rdfs:subClassOf rdf:resource="http://www.semanticweb.org/ontologies/2013/11/Ontology1388396980991.owl#Positional_Sensor"/>
+    </owl:Class>
+    
+
+
+    <!-- http://www.semanticweb.org/ontologies/2013/11/Ontology1388396980991.owl#Partying -->
+
+    <owl:Class rdf:about="http://www.semanticweb.org/ontologies/2013/11/Ontology1388396980991.owl#Partying">
+        <rdfs:subClassOf rdf:resource="http://www.semanticweb.org/ontologies/2013/11/Ontology1388396980991.owl#Entertainment"/>
+    </owl:Class>
+    
+
+
+    <!-- http://www.semanticweb.org/ontologies/2013/11/Ontology1388396980991.owl#Person -->
+
+    <owl:Class rdf:about="http://www.semanticweb.org/ontologies/2013/11/Ontology1388396980991.owl#Person">
+        <rdfs:subClassOf rdf:resource="http://www.semanticweb.org/ontologies/2013/11/Ontology1388396980991.owl#Requester"/>
+    </owl:Class>
+    
+
+
+    <!-- http://www.semanticweb.org/ontologies/2013/11/Ontology1388396980991.owl#Personal -->
+
+    <owl:Class rdf:about="http://www.semanticweb.org/ontologies/2013/11/Ontology1388396980991.owl#Personal">
+        <rdfs:subClassOf rdf:resource="http://www.semanticweb.org/ontologies/2013/11/Ontology1388396980991.owl#Access_Level"/>
+    </owl:Class>
+    
+
+
+    <!-- http://www.semanticweb.org/ontologies/2013/11/Ontology1388396980991.owl#Personal_Activity -->
+
+    <owl:Class rdf:about="http://www.semanticweb.org/ontologies/2013/11/Ontology1388396980991.owl#Personal_Activity">
+        <rdfs:subClassOf rdf:resource="http://www.semanticweb.org/ontologies/2013/11/Ontology1388396980991.owl#Activity"/>
+    </owl:Class>
+    
+
+
+    <!-- http://www.semanticweb.org/ontologies/2013/11/Ontology1388396980991.owl#Personal_Network -->
+
+    <owl:Class rdf:about="http://www.semanticweb.org/ontologies/2013/11/Ontology1388396980991.owl#Personal_Network">
+        <rdfs:subClassOf rdf:resource="http://www.semanticweb.org/ontologies/2013/11/Ontology1388396980991.owl#Public"/>
+    </owl:Class>
+    
+
+
+    <!-- http://www.semanticweb.org/ontologies/2013/11/Ontology1388396980991.owl#Place -->
+
+    <owl:Class rdf:about="http://www.semanticweb.org/ontologies/2013/11/Ontology1388396980991.owl#Place">
+        <rdfs:subClassOf rdf:resource="http://www.semanticweb.org/ontologies/2013/11/Ontology1388396980991.owl#Location"/>
+    </owl:Class>
+    
+
+
+    <!-- http://www.semanticweb.org/ontologies/2013/11/Ontology1388396980991.owl#PlatMobile -->
+
+    <owl:Class rdf:about="http://www.semanticweb.org/ontologies/2013/11/Ontology1388396980991.owl#PlatMobile"/>
+    
+
+
+    <!-- http://www.semanticweb.org/ontologies/2013/11/Ontology1388396980991.owl#PlatMobileLOD -->
+
+    <owl:Class rdf:about="http://www.semanticweb.org/ontologies/2013/11/Ontology1388396980991.owl#PlatMobileLOD"/>
+    
+
+
+    <!-- http://www.semanticweb.org/ontologies/2013/11/Ontology1388396980991.owl#Platys -->
+
+    <owl:Class rdf:about="http://www.semanticweb.org/ontologies/2013/11/Ontology1388396980991.owl#Platys"/>
+    
+
+
+    <!-- http://www.semanticweb.org/ontologies/2013/11/Ontology1388396980991.owl#Playing -->
+
+    <owl:Class rdf:about="http://www.semanticweb.org/ontologies/2013/11/Ontology1388396980991.owl#Playing">
+        <rdfs:subClassOf rdf:resource="http://www.semanticweb.org/ontologies/2013/11/Ontology1388396980991.owl#Entertainment"/>
+    </owl:Class>
+    
+
+
+    <!-- http://www.semanticweb.org/ontologies/2013/11/Ontology1388396980991.owl#Point -->
+
+    <owl:Class rdf:about="http://www.semanticweb.org/ontologies/2013/11/Ontology1388396980991.owl#Point">
+        <rdfs:subClassOf rdf:resource="http://www.semanticweb.org/ontologies/2013/11/Ontology1388396980991.owl#Location"/>
+    </owl:Class>
+    
+
+
+    <!-- http://www.semanticweb.org/ontologies/2013/11/Ontology1388396980991.owl#Positional_Sensor -->
+
+    <owl:Class rdf:about="http://www.semanticweb.org/ontologies/2013/11/Ontology1388396980991.owl#Positional_Sensor">
+        <rdfs:subClassOf rdf:resource="http://www.semanticweb.org/ontologies/2013/11/Ontology1388396980991.owl#Hardware_Component"/>
+    </owl:Class>
+    
+
+
+    <!-- http://www.semanticweb.org/ontologies/2013/11/Ontology1388396980991.owl#PostDoc -->
+
+    <owl:Class rdf:about="http://www.semanticweb.org/ontologies/2013/11/Ontology1388396980991.owl#PostDoc">
+        <rdfs:subClassOf rdf:resource="http://www.semanticweb.org/ontologies/2013/11/Ontology1388396980991.owl#Student"/>
+    </owl:Class>
+    
+
+
+    <!-- http://www.semanticweb.org/ontologies/2013/11/Ontology1388396980991.owl#Post_Office -->
+
+    <owl:Class rdf:about="http://www.semanticweb.org/ontologies/2013/11/Ontology1388396980991.owl#Post_Office">
+        <rdfs:subClassOf rdf:resource="http://www.semanticweb.org/ontologies/2013/11/Ontology1388396980991.owl#Government_Office"/>
+    </owl:Class>
+    
+
+
+    <!-- http://www.semanticweb.org/ontologies/2013/11/Ontology1388396980991.owl#Pressure -->
+
+    <owl:Class rdf:about="http://www.semanticweb.org/ontologies/2013/11/Ontology1388396980991.owl#Pressure">
+        <rdfs:subClassOf rdf:resource="http://www.semanticweb.org/ontologies/2013/11/Ontology1388396980991.owl#Environmental_Sensor"/>
+    </owl:Class>
+    
+
+
+    <!-- http://www.semanticweb.org/ontologies/2013/11/Ontology1388396980991.owl#Private -->
+
+    <owl:Class rdf:about="http://www.semanticweb.org/ontologies/2013/11/Ontology1388396980991.owl#Private">
+        <rdfs:subClassOf rdf:resource="http://www.semanticweb.org/ontologies/2013/11/Ontology1388396980991.owl#Personal_Network"/>
+    </owl:Class>
+    
+
+
+    <!-- http://www.semanticweb.org/ontologies/2013/11/Ontology1388396980991.owl#Professional -->
+
+    <owl:Class rdf:about="http://www.semanticweb.org/ontologies/2013/11/Ontology1388396980991.owl#Professional">
+        <rdfs:subClassOf rdf:resource="http://www.semanticweb.org/ontologies/2013/11/Ontology1388396980991.owl#Access_Level"/>
+    </owl:Class>
+    
+
+
+    <!-- http://www.semanticweb.org/ontologies/2013/11/Ontology1388396980991.owl#Professional_Activity -->
+
+    <owl:Class rdf:about="http://www.semanticweb.org/ontologies/2013/11/Ontology1388396980991.owl#Professional_Activity">
+        <rdfs:subClassOf rdf:resource="http://www.semanticweb.org/ontologies/2013/11/Ontology1388396980991.owl#Activity"/>
+    </owl:Class>
+    
+
+
+    <!-- http://www.semanticweb.org/ontologies/2013/11/Ontology1388396980991.owl#Professional_Network -->
+
+    <owl:Class rdf:about="http://www.semanticweb.org/ontologies/2013/11/Ontology1388396980991.owl#Professional_Network">
+        <rdfs:subClassOf rdf:resource="http://www.semanticweb.org/ontologies/2013/11/Ontology1388396980991.owl#Public"/>
+    </owl:Class>
+    
+
+
+    <!-- http://www.semanticweb.org/ontologies/2013/11/Ontology1388396980991.owl#Professional_Role -->
+
+    <owl:Class rdf:about="http://www.semanticweb.org/ontologies/2013/11/Ontology1388396980991.owl#Professional_Role">
+        <rdfs:subClassOf rdf:resource="http://www.semanticweb.org/ontologies/2013/11/Ontology1388396980991.owl#Role"/>
+    </owl:Class>
+    
+
+
+    <!-- http://www.semanticweb.org/ontologies/2013/11/Ontology1388396980991.owl#Professor -->
+
+    <owl:Class rdf:about="http://www.semanticweb.org/ontologies/2013/11/Ontology1388396980991.owl#Professor">
+        <rdfs:subClassOf rdf:resource="http://www.semanticweb.org/ontologies/2013/11/Ontology1388396980991.owl#Faculty"/>
+    </owl:Class>
+    
+
+
+    <!-- http://www.semanticweb.org/ontologies/2013/11/Ontology1388396980991.owl#Professor_Meeting -->
+
+    <owl:Class rdf:about="http://www.semanticweb.org/ontologies/2013/11/Ontology1388396980991.owl#Professor_Meeting">
+        <rdfs:subClassOf rdf:resource="http://www.semanticweb.org/ontologies/2013/11/Ontology1388396980991.owl#Meeting"/>
+    </owl:Class>
+    
+
+
+    <!-- http://www.semanticweb.org/ontologies/2013/11/Ontology1388396980991.owl#Project_Manager -->
+
+    <owl:Class rdf:about="http://www.semanticweb.org/ontologies/2013/11/Ontology1388396980991.owl#Project_Manager">
+        <rdfs:subClassOf rdf:resource="http://www.semanticweb.org/ontologies/2013/11/Ontology1388396980991.owl#Professional_Role"/>
+    </owl:Class>
+    
+
+
+    <!-- http://www.semanticweb.org/ontologies/2013/11/Ontology1388396980991.owl#Project_Meeting -->
+
+    <owl:Class rdf:about="http://www.semanticweb.org/ontologies/2013/11/Ontology1388396980991.owl#Project_Meeting">
+        <rdfs:subClassOf rdf:resource="http://www.semanticweb.org/ontologies/2013/11/Ontology1388396980991.owl#Meeting"/>
+    </owl:Class>
+    
+
+
+    <!-- http://www.semanticweb.org/ontologies/2013/11/Ontology1388396980991.owl#Project_Work -->
+
+    <owl:Class rdf:about="http://www.semanticweb.org/ontologies/2013/11/Ontology1388396980991.owl#Project_Work">
+        <rdfs:subClassOf rdf:resource="http://www.semanticweb.org/ontologies/2013/11/Ontology1388396980991.owl#Studying"/>
+    </owl:Class>
+    
+
+
+    <!-- http://www.semanticweb.org/ontologies/2013/11/Ontology1388396980991.owl#Proximity -->
+
+    <owl:Class rdf:about="http://www.semanticweb.org/ontologies/2013/11/Ontology1388396980991.owl#Proximity">
+        <rdfs:subClassOf rdf:resource="http://www.semanticweb.org/ontologies/2013/11/Ontology1388396980991.owl#Positional_Sensor"/>
+    </owl:Class>
+    
+
+
+    <!-- http://www.semanticweb.org/ontologies/2013/11/Ontology1388396980991.owl#Public -->
+
+    <owl:Class rdf:about="http://www.semanticweb.org/ontologies/2013/11/Ontology1388396980991.owl#Public">
+        <rdfs:subClassOf rdf:resource="http://www.semanticweb.org/ontologies/2013/11/Ontology1388396980991.owl#Visibility"/>
+    </owl:Class>
+    
+
+
+    <!-- http://www.semanticweb.org/ontologies/2013/11/Ontology1388396980991.owl#Relative_Humidity -->
+
+    <owl:Class rdf:about="http://www.semanticweb.org/ontologies/2013/11/Ontology1388396980991.owl#Relative_Humidity">
+        <rdfs:subClassOf rdf:resource="http://www.semanticweb.org/ontologies/2013/11/Ontology1388396980991.owl#Environmental_Sensor"/>
+    </owl:Class>
+    
+
+
+    <!-- http://www.semanticweb.org/ontologies/2013/11/Ontology1388396980991.owl#Requester -->
+
+    <owl:Class rdf:about="http://www.semanticweb.org/ontologies/2013/11/Ontology1388396980991.owl#Requester">
+        <rdfs:subClassOf rdf:resource="http://www.semanticweb.org/ontologies/2013/11/Ontology1388396980991.owl#PlatMobile"/>
+    </owl:Class>
+    
+
+
+    <!-- http://www.semanticweb.org/ontologies/2013/11/Ontology1388396980991.owl#Resource -->
+
+    <owl:Class rdf:about="http://www.semanticweb.org/ontologies/2013/11/Ontology1388396980991.owl#Resource">
+        <rdfs:subClassOf rdf:resource="http://www.semanticweb.org/ontologies/2013/11/Ontology1388396980991.owl#PlatMobile"/>
+    </owl:Class>
+    
+
+
+    <!-- http://www.semanticweb.org/ontologies/2013/11/Ontology1388396980991.owl#Role -->
+
+    <owl:Class rdf:about="http://www.semanticweb.org/ontologies/2013/11/Ontology1388396980991.owl#Role">
+        <rdfs:subClassOf rdf:resource="http://www.semanticweb.org/ontologies/2013/11/Ontology1388396980991.owl#Platys"/>
+    </owl:Class>
+    
+
+
+    <!-- http://www.semanticweb.org/ontologies/2013/11/Ontology1388396980991.owl#Room -->
+
+    <owl:Class rdf:about="http://www.semanticweb.org/ontologies/2013/11/Ontology1388396980991.owl#Room">
+        <rdfs:subClassOf rdf:resource="http://www.semanticweb.org/ontologies/2013/11/Ontology1388396980991.owl#Location"/>
+    </owl:Class>
+    
+
+
+    <!-- http://www.semanticweb.org/ontologies/2013/11/Ontology1388396980991.owl#Rotation -->
+
+    <owl:Class rdf:about="http://www.semanticweb.org/ontologies/2013/11/Ontology1388396980991.owl#Rotation">
+        <rdfs:subClassOf rdf:resource="http://www.semanticweb.org/ontologies/2013/11/Ontology1388396980991.owl#Motion_Sensor"/>
+    </owl:Class>
+    
+
+
+    <!-- http://www.semanticweb.org/ontologies/2013/11/Ontology1388396980991.owl#Running -->
+
+    <owl:Class rdf:about="http://www.semanticweb.org/ontologies/2013/11/Ontology1388396980991.owl#Running">
+        <rdfs:subClassOf rdf:resource="http://www.semanticweb.org/ontologies/2013/11/Ontology1388396980991.owl#Exercising"/>
+    </owl:Class>
+    
+
+
+    <!-- http://www.semanticweb.org/ontologies/2013/11/Ontology1388396980991.owl#Secure_Government_Office -->
+
+    <owl:Class rdf:about="http://www.semanticweb.org/ontologies/2013/11/Ontology1388396980991.owl#Secure_Government_Office">
+        <rdfs:subClassOf rdf:resource="http://www.semanticweb.org/ontologies/2013/11/Ontology1388396980991.owl#Government_Office"/>
+    </owl:Class>
+    
+
+
+    <!-- http://www.semanticweb.org/ontologies/2013/11/Ontology1388396980991.owl#Sleeping -->
+
+    <owl:Class rdf:about="http://www.semanticweb.org/ontologies/2013/11/Ontology1388396980991.owl#Sleeping">
+        <rdfs:subClassOf rdf:resource="http://www.semanticweb.org/ontologies/2013/11/Ontology1388396980991.owl#Personal_Activity"/>
+    </owl:Class>
+    
+
+
+    <!-- http://www.semanticweb.org/ontologies/2013/11/Ontology1388396980991.owl#Smart_Watch -->
+
+    <owl:Class rdf:about="http://www.semanticweb.org/ontologies/2013/11/Ontology1388396980991.owl#Smart_Watch">
+        <rdfs:subClassOf rdf:resource="http://www.semanticweb.org/ontologies/2013/11/Ontology1388396980991.owl#Wearable"/>
+    </owl:Class>
+    
+
+
+    <!-- http://www.semanticweb.org/ontologies/2013/11/Ontology1388396980991.owl#Software_Component -->
+
+    <owl:Class rdf:about="http://www.semanticweb.org/ontologies/2013/11/Ontology1388396980991.owl#Software_Component">
+        <rdfs:subClassOf rdf:resource="http://www.semanticweb.org/ontologies/2013/11/Ontology1388396980991.owl#Resource"/>
+    </owl:Class>
+    
+
+
+    <!-- http://www.semanticweb.org/ontologies/2013/11/Ontology1388396980991.owl#State -->
+
+    <owl:Class rdf:about="http://www.semanticweb.org/ontologies/2013/11/Ontology1388396980991.owl#State">
+        <rdfs:subClassOf rdf:resource="http://www.semanticweb.org/ontologies/2013/11/Ontology1388396980991.owl#Location"/>
+    </owl:Class>
+    
+
+
+    <!-- http://www.semanticweb.org/ontologies/2013/11/Ontology1388396980991.owl#Student -->
+
+    <owl:Class rdf:about="http://www.semanticweb.org/ontologies/2013/11/Ontology1388396980991.owl#Student">
+        <rdfs:subClassOf rdf:resource="http://www.semanticweb.org/ontologies/2013/11/Ontology1388396980991.owl#Academic_Role"/>
+    </owl:Class>
+    
+
+
+    <!-- http://www.semanticweb.org/ontologies/2013/11/Ontology1388396980991.owl#Studying -->
+
+    <owl:Class rdf:about="http://www.semanticweb.org/ontologies/2013/11/Ontology1388396980991.owl#Studying">
+        <rdfs:subClassOf rdf:resource="http://www.semanticweb.org/ontologies/2013/11/Ontology1388396980991.owl#Professional_Activity"/>
+    </owl:Class>
+    
+
+
+    <!-- http://www.semanticweb.org/ontologies/2013/11/Ontology1388396980991.owl#Subordinate -->
+
+    <owl:Class rdf:about="http://www.semanticweb.org/ontologies/2013/11/Ontology1388396980991.owl#Subordinate">
+        <rdfs:subClassOf rdf:resource="http://www.semanticweb.org/ontologies/2013/11/Ontology1388396980991.owl#Professional_Network"/>
+    </owl:Class>
+    
+
+
+    <!-- http://www.semanticweb.org/ontologies/2013/11/Ontology1388396980991.owl#Superior -->
+
+    <owl:Class rdf:about="http://www.semanticweb.org/ontologies/2013/11/Ontology1388396980991.owl#Superior">
+        <rdfs:subClassOf rdf:resource="http://www.semanticweb.org/ontologies/2013/11/Ontology1388396980991.owl#Professional_Network"/>
+    </owl:Class>
+    
+
+
+    <!-- http://www.semanticweb.org/ontologies/2013/11/Ontology1388396980991.owl#Supervisor_Office -->
+
+    <owl:Class rdf:about="http://www.semanticweb.org/ontologies/2013/11/Ontology1388396980991.owl#Supervisor_Office">
+        <rdfs:subClassOf rdf:resource="http://www.semanticweb.org/ontologies/2013/11/Ontology1388396980991.owl#Office"/>
+    </owl:Class>
+    
+
+
+    <!-- http://www.semanticweb.org/ontologies/2013/11/Ontology1388396980991.owl#Team_Lead -->
+
+    <owl:Class rdf:about="http://www.semanticweb.org/ontologies/2013/11/Ontology1388396980991.owl#Team_Lead">
+        <rdfs:subClassOf rdf:resource="http://www.semanticweb.org/ontologies/2013/11/Ontology1388396980991.owl#Professional_Role"/>
+    </owl:Class>
+    
+
+
+    <!-- http://www.semanticweb.org/ontologies/2013/11/Ontology1388396980991.owl#Temperature -->
+
+    <owl:Class rdf:about="http://www.semanticweb.org/ontologies/2013/11/Ontology1388396980991.owl#Temperature">
+        <rdfs:subClassOf rdf:resource="http://www.semanticweb.org/ontologies/2013/11/Ontology1388396980991.owl#Environmental_Sensor"/>
+    </owl:Class>
+    
+
+
+    <!-- http://www.semanticweb.org/ontologies/2013/11/Ontology1388396980991.owl#Time -->
+
+    <owl:Class rdf:about="http://www.semanticweb.org/ontologies/2013/11/Ontology1388396980991.owl#Time">
+        <rdfs:subClassOf rdf:resource="http://www.semanticweb.org/ontologies/2013/11/Ontology1388396980991.owl#Platys"/>
+    </owl:Class>
+    
+
+
+    <!-- http://www.semanticweb.org/ontologies/2013/11/Ontology1388396980991.owl#Undergraduate_Student -->
+
+    <owl:Class rdf:about="http://www.semanticweb.org/ontologies/2013/11/Ontology1388396980991.owl#Undergraduate_Student">
+        <rdfs:subClassOf rdf:resource="http://www.semanticweb.org/ontologies/2013/11/Ontology1388396980991.owl#Student"/>
+    </owl:Class>
+    
+
+
+    <!-- http://www.semanticweb.org/ontologies/2013/11/Ontology1388396980991.owl#University_Staff -->
+
+    <owl:Class rdf:about="http://www.semanticweb.org/ontologies/2013/11/Ontology1388396980991.owl#University_Staff">
+        <rdfs:subClassOf rdf:resource="http://www.semanticweb.org/ontologies/2013/11/Ontology1388396980991.owl#Academic_Role"/>
+    </owl:Class>
+    
+
+
+    <!-- http://www.semanticweb.org/ontologies/2013/11/Ontology1388396980991.owl#User -->
+
+    <owl:Class rdf:about="http://www.semanticweb.org/ontologies/2013/11/Ontology1388396980991.owl#User">
+        <rdfs:subClassOf rdf:resource="http://www.semanticweb.org/ontologies/2013/11/Ontology1388396980991.owl#Platys"/>
+    </owl:Class>
+    
+
+
+    <!-- http://www.semanticweb.org/ontologies/2013/11/Ontology1388396980991.owl#User_Dictionary -->
+
+    <owl:Class rdf:about="http://www.semanticweb.org/ontologies/2013/11/Ontology1388396980991.owl#User_Dictionary">
+        <rdfs:subClassOf rdf:resource="http://www.semanticweb.org/ontologies/2013/11/Ontology1388396980991.owl#Software_Component"/>
+    </owl:Class>
+    
+
+
+    <!-- http://www.semanticweb.org/ontologies/2013/11/Ontology1388396980991.owl#Video -->
+
+    <owl:Class rdf:about="http://www.semanticweb.org/ontologies/2013/11/Ontology1388396980991.owl#Video">
+        <rdfs:subClassOf rdf:resource="http://www.semanticweb.org/ontologies/2013/11/Ontology1388396980991.owl#Media"/>
+    </owl:Class>
+    
+
+
+    <!-- http://www.semanticweb.org/ontologies/2013/11/Ontology1388396980991.owl#Visibility -->
+
+    <owl:Class rdf:about="http://www.semanticweb.org/ontologies/2013/11/Ontology1388396980991.owl#Visibility">
+        <rdfs:subClassOf rdf:resource="http://www.semanticweb.org/ontologies/2013/11/Ontology1388396980991.owl#PlatMobile"/>
+    </owl:Class>
+    
+
+
+    <!-- http://www.semanticweb.org/ontologies/2013/11/Ontology1388396980991.owl#Wearable -->
+
+    <owl:Class rdf:about="http://www.semanticweb.org/ontologies/2013/11/Ontology1388396980991.owl#Wearable">
+        <rdfs:subClassOf rdf:resource="http://www.semanticweb.org/ontologies/2013/11/Ontology1388396980991.owl#Device"/>
+    </owl:Class>
+    
+
+
+    <!-- http://www.semanticweb.org/ontologies/2013/11/Ontology1388396980991.owl#Week_Day -->
+
+    <owl:Class rdf:about="http://www.semanticweb.org/ontologies/2013/11/Ontology1388396980991.owl#Week_Day">
+        <rdfs:subClassOf rdf:resource="http://www.semanticweb.org/ontologies/2013/11/Ontology1388396980991.owl#Interval"/>
+    </owl:Class>
+    
+
+
+    <!-- http://www.semanticweb.org/ontologies/2013/11/Ontology1388396980991.owl#Weekend -->
+
+    <owl:Class rdf:about="http://www.semanticweb.org/ontologies/2013/11/Ontology1388396980991.owl#Weekend">
+        <rdfs:subClassOf rdf:resource="http://www.semanticweb.org/ontologies/2013/11/Ontology1388396980991.owl#Interval"/>
+    </owl:Class>
+    
+
+
+    <!-- http://www.semanticweb.org/ontologies/2013/11/Ontology1388396980991.owl#WiFi -->
+
+    <owl:Class rdf:about="http://www.semanticweb.org/ontologies/2013/11/Ontology1388396980991.owl#WiFi">
+        <rdfs:subClassOf rdf:resource="http://www.semanticweb.org/ontologies/2013/11/Ontology1388396980991.owl#Internet"/>
+    </owl:Class>
+    
+
+
+    <!-- http://www.semanticweb.org/ontologies/2013/11/Ontology1388396980991.owl#WiFi_Location -->
+
+    <owl:Class rdf:about="http://www.semanticweb.org/ontologies/2013/11/Ontology1388396980991.owl#WiFi_Location">
+        <rdfs:subClassOf rdf:resource="http://www.semanticweb.org/ontologies/2013/11/Ontology1388396980991.owl#Coarse_Localization_Component"/>
+    </owl:Class>
+    
+
+
+    <!-- http://www.semanticweb.org/ontologies/2013/11/Ontology1388396980991.owl#Working_Hours -->
+
+    <owl:Class rdf:about="http://www.semanticweb.org/ontologies/2013/11/Ontology1388396980991.owl#Working_Hours">
+        <rdfs:subClassOf rdf:resource="http://www.semanticweb.org/ontologies/2013/11/Ontology1388396980991.owl#Interval"/>
+    </owl:Class>
+    
+
+
+    <!-- 
+    ///////////////////////////////////////////////////////////////////////////////////////
+    //
+    // Individuals
+    //
+    ///////////////////////////////////////////////////////////////////////////////////////
+     -->
+
+    
+
+
+    <!-- http://www.semanticweb.org/ontologies/2013/11/Ontology1388396980991.owl#Abed -->
+
+    <owl:NamedIndividual rdf:about="http://www.semanticweb.org/ontologies/2013/11/Ontology1388396980991.owl#Abed">
+        <rdf:type rdf:resource="http://www.semanticweb.org/ontologies/2013/11/Ontology1388396980991.owl#User"/>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- http://www.semanticweb.org/ontologies/2013/11/Ontology1388396980991.owl#Annie -->
+
+    <owl:NamedIndividual rdf:about="http://www.semanticweb.org/ontologies/2013/11/Ontology1388396980991.owl#Annie">
+        <rdf:type rdf:resource="http://www.semanticweb.org/ontologies/2013/11/Ontology1388396980991.owl#User"/>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- http://www.semanticweb.org/ontologies/2013/11/Ontology1388396980991.owl#GCC -->
+
+    <owl:NamedIndividual rdf:about="http://www.semanticweb.org/ontologies/2013/11/Ontology1388396980991.owl#GCC">
+        <rdf:type rdf:resource="http://www.semanticweb.org/ontologies/2013/11/Ontology1388396980991.owl#Location"/>
+        <isIn rdf:resource="http://www.semanticweb.org/ontologies/2013/11/Ontology1388396980991.owl#USA"/>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- http://www.semanticweb.org/ontologies/2013/11/Ontology1388396980991.owl#Home -->
+
+    <owl:NamedIndividual rdf:about="http://www.semanticweb.org/ontologies/2013/11/Ontology1388396980991.owl#Home">
+        <rdf:type rdf:resource="http://www.semanticweb.org/ontologies/2013/11/Ontology1388396980991.owl#Location"/>
+        <isIn rdf:resource="http://www.semanticweb.org/ontologies/2013/11/Ontology1388396980991.owl#USA"/>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- http://www.semanticweb.org/ontologies/2013/11/Ontology1388396980991.owl#Jeff -->
+
+    <owl:NamedIndividual rdf:about="http://www.semanticweb.org/ontologies/2013/11/Ontology1388396980991.owl#Jeff">
+        <rdf:type rdf:resource="http://www.semanticweb.org/ontologies/2013/11/Ontology1388396980991.owl#User"/>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- http://www.semanticweb.org/ontologies/2013/11/Ontology1388396980991.owl#Library -->
+
+    <owl:NamedIndividual rdf:about="http://www.semanticweb.org/ontologies/2013/11/Ontology1388396980991.owl#Library">
+        <rdf:type rdf:resource="http://www.semanticweb.org/ontologies/2013/11/Ontology1388396980991.owl#Location"/>
+        <isIn rdf:resource="http://www.semanticweb.org/ontologies/2013/11/Ontology1388396980991.owl#GCC"/>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- http://www.semanticweb.org/ontologies/2013/11/Ontology1388396980991.owl#MeetingInd -->
+
+    <owl:NamedIndividual rdf:about="http://www.semanticweb.org/ontologies/2013/11/Ontology1388396980991.owl#MeetingInd">
+        <rdf:type rdf:resource="http://www.semanticweb.org/ontologies/2013/11/Ontology1388396980991.owl#Meeting"/>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- http://www.semanticweb.org/ontologies/2013/11/Ontology1388396980991.owl#Pierce -->
+
+    <owl:NamedIndividual rdf:about="http://www.semanticweb.org/ontologies/2013/11/Ontology1388396980991.owl#Pierce">
+        <rdf:type rdf:resource="http://www.semanticweb.org/ontologies/2013/11/Ontology1388396980991.owl#User"/>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- http://www.semanticweb.org/ontologies/2013/11/Ontology1388396980991.owl#ReadingInd -->
+
+    <owl:NamedIndividual rdf:about="http://www.semanticweb.org/ontologies/2013/11/Ontology1388396980991.owl#ReadingInd"/>
+    
+
+
+    <!-- http://www.semanticweb.org/ontologies/2013/11/Ontology1388396980991.owl#RunningInd -->
+
+    <owl:NamedIndividual rdf:about="http://www.semanticweb.org/ontologies/2013/11/Ontology1388396980991.owl#RunningInd">
+        <rdf:type rdf:resource="http://www.semanticweb.org/ontologies/2013/11/Ontology1388396980991.owl#Running"/>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- http://www.semanticweb.org/ontologies/2013/11/Ontology1388396980991.owl#StudyGroupInd -->
+
+    <owl:NamedIndividual rdf:about="http://www.semanticweb.org/ontologies/2013/11/Ontology1388396980991.owl#StudyGroupInd">
+        <rdf:type rdf:resource="http://www.semanticweb.org/ontologies/2013/11/Ontology1388396980991.owl#Meeting"/>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- http://www.semanticweb.org/ontologies/2013/11/Ontology1388396980991.owl#StudyRoomF -->
+
+    <owl:NamedIndividual rdf:about="http://www.semanticweb.org/ontologies/2013/11/Ontology1388396980991.owl#StudyRoomF">
+        <rdf:type rdf:resource="http://www.semanticweb.org/ontologies/2013/11/Ontology1388396980991.owl#Location"/>
+        <isIn rdf:resource="http://www.semanticweb.org/ontologies/2013/11/Ontology1388396980991.owl#Library"/>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- http://www.semanticweb.org/ontologies/2013/11/Ontology1388396980991.owl#USA -->
+
+    <owl:NamedIndividual rdf:about="http://www.semanticweb.org/ontologies/2013/11/Ontology1388396980991.owl#USA">
+        <rdf:type rdf:resource="http://www.semanticweb.org/ontologies/2013/11/Ontology1388396980991.owl#Location"/>
+    </owl:NamedIndividual>
+</rdf:RDF>
+
+
+
+<!-- Generated by the OWL API (version 3.2.3.1824) http://owlapi.sourceforge.net -->
+

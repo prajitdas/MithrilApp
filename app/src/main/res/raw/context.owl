@@ -1,0 +1,294 @@
+<?xml version="1.0"?>
+
+
+<!DOCTYPE rdf:RDF [
+    <!ENTITY owl "http://www.w3.org/2002/07/owl#" >
+    <!ENTITY xsd "http://www.w3.org/2001/XMLSchema#" >
+    <!ENTITY rdfs "http://www.w3.org/2000/01/rdf-schema#" >
+    <!ENTITY rdf "http://www.w3.org/1999/02/22-rdf-syntax-ns#" >
+    <!ENTITY Fresher "http://www.semanticweb.org/prajit/ontologies/2014/2/Ontology1395608296417.owl#Fresher&#39;" >
+]>
+
+
+<rdf:RDF xmlns="http://www.semanticweb.org/prajit/ontologies/2014/2/Ontology1395608296417.owl#"
+     xml:base="http://www.semanticweb.org/prajit/ontologies/2014/2/Ontology1395608296417.owl"
+     xmlns:rdfs="http://www.w3.org/2000/01/rdf-schema#"
+     xmlns:Fresher="http://www.semanticweb.org/prajit/ontologies/2014/2/Ontology1395608296417.owl#Fresher&#39;"
+     xmlns:owl="http://www.w3.org/2002/07/owl#"
+     xmlns:xsd="http://www.w3.org/2001/XMLSchema#"
+     xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#">
+    <owl:Ontology rdf:about="http://www.semanticweb.org/prajit/ontologies/2014/2/Ontology1395608296417.owl"/>
+    
+
+
+    <!-- 
+    ///////////////////////////////////////////////////////////////////////////////////////
+    //
+    // Classes
+    //
+    ///////////////////////////////////////////////////////////////////////////////////////
+     -->
+
+    
+
+
+    <!-- http://www.semanticweb.org/prajit/ontologies/2014/2/Ontology1395608296417.owl#Activity -->
+
+    <owl:Class rdf:about="http://www.semanticweb.org/prajit/ontologies/2014/2/Ontology1395608296417.owl#Activity"/>
+    
+
+
+    <!-- http://www.semanticweb.org/prajit/ontologies/2014/2/Ontology1395608296417.owl#Advisor -->
+
+    <owl:Class rdf:about="http://www.semanticweb.org/prajit/ontologies/2014/2/Ontology1395608296417.owl#Advisor">
+        <rdfs:subClassOf rdf:resource="http://www.semanticweb.org/prajit/ontologies/2014/2/Ontology1395608296417.owl#Professor"/>
+    </owl:Class>
+    
+
+
+    <!-- http://www.semanticweb.org/prajit/ontologies/2014/2/Ontology1395608296417.owl#AppProvenance -->
+
+    <owl:Class rdf:about="http://www.semanticweb.org/prajit/ontologies/2014/2/Ontology1395608296417.owl#AppProvenance"/>
+    
+
+
+    <!-- http://www.semanticweb.org/prajit/ontologies/2014/2/Ontology1395608296417.owl#City -->
+
+    <owl:Class rdf:about="http://www.semanticweb.org/prajit/ontologies/2014/2/Ontology1395608296417.owl#City">
+        <rdfs:subClassOf rdf:resource="http://www.semanticweb.org/prajit/ontologies/2014/2/Ontology1395608296417.owl#Location"/>
+    </owl:Class>
+    
+
+
+    <!-- http://www.semanticweb.org/prajit/ontologies/2014/2/Ontology1395608296417.owl#Country -->
+
+    <owl:Class rdf:about="http://www.semanticweb.org/prajit/ontologies/2014/2/Ontology1395608296417.owl#Country">
+        <rdfs:subClassOf rdf:resource="http://www.semanticweb.org/prajit/ontologies/2014/2/Ontology1395608296417.owl#Location"/>
+    </owl:Class>
+    
+
+
+    <!-- http://www.semanticweb.org/prajit/ontologies/2014/2/Ontology1395608296417.owl#Entertainment -->
+
+    <owl:Class rdf:about="http://www.semanticweb.org/prajit/ontologies/2014/2/Ontology1395608296417.owl#Entertainment">
+        <rdfs:subClassOf rdf:resource="http://www.semanticweb.org/prajit/ontologies/2014/2/Ontology1395608296417.owl#Activity"/>
+    </owl:Class>
+    
+
+
+    <!-- http://www.semanticweb.org/prajit/ontologies/2014/2/Ontology1395608296417.owl#GraduateStudent -->
+
+    <owl:Class rdf:about="http://www.semanticweb.org/prajit/ontologies/2014/2/Ontology1395608296417.owl#GraduateStudent">
+        <rdfs:subClassOf rdf:resource="http://www.semanticweb.org/prajit/ontologies/2014/2/Ontology1395608296417.owl#Student"/>
+    </owl:Class>
+    
+
+
+    <!-- http://www.semanticweb.org/prajit/ontologies/2014/2/Ontology1395608296417.owl#Location -->
+
+    <owl:Class rdf:about="http://www.semanticweb.org/prajit/ontologies/2014/2/Ontology1395608296417.owl#Location"/>
+    
+
+
+    <!-- http://www.semanticweb.org/prajit/ontologies/2014/2/Ontology1395608296417.owl#MealHall -->
+
+    <owl:Class rdf:about="http://www.semanticweb.org/prajit/ontologies/2014/2/Ontology1395608296417.owl#MealHall">
+        <rdfs:subClassOf rdf:resource="http://www.semanticweb.org/prajit/ontologies/2014/2/Ontology1395608296417.owl#Location"/>
+    </owl:Class>
+    
+
+
+    <!-- http://www.semanticweb.org/prajit/ontologies/2014/2/Ontology1395608296417.owl#Meeting -->
+
+    <owl:Class rdf:about="http://www.semanticweb.org/prajit/ontologies/2014/2/Ontology1395608296417.owl#Meeting">
+        <rdfs:subClassOf rdf:resource="http://www.semanticweb.org/prajit/ontologies/2014/2/Ontology1395608296417.owl#Work"/>
+    </owl:Class>
+    
+
+
+    <!-- http://www.semanticweb.org/prajit/ontologies/2014/2/Ontology1395608296417.owl#Movies -->
+
+    <owl:Class rdf:about="http://www.semanticweb.org/prajit/ontologies/2014/2/Ontology1395608296417.owl#Movies">
+        <rdfs:subClassOf rdf:resource="http://www.semanticweb.org/prajit/ontologies/2014/2/Ontology1395608296417.owl#Entertainment"/>
+    </owl:Class>
+    
+
+
+    <!-- http://www.semanticweb.org/prajit/ontologies/2014/2/Ontology1395608296417.owl#Party -->
+
+    <owl:Class rdf:about="http://www.semanticweb.org/prajit/ontologies/2014/2/Ontology1395608296417.owl#Party">
+        <rdfs:subClassOf rdf:resource="http://www.semanticweb.org/prajit/ontologies/2014/2/Ontology1395608296417.owl#Entertainment"/>
+    </owl:Class>
+    
+
+
+    <!-- http://www.semanticweb.org/prajit/ontologies/2014/2/Ontology1395608296417.owl#Person -->
+
+    <owl:Class rdf:about="http://www.semanticweb.org/prajit/ontologies/2014/2/Ontology1395608296417.owl#Person"/>
+    
+
+
+    <!-- http://www.semanticweb.org/prajit/ontologies/2014/2/Ontology1395608296417.owl#Professor -->
+
+    <owl:Class rdf:about="http://www.semanticweb.org/prajit/ontologies/2014/2/Ontology1395608296417.owl#Professor">
+        <rdfs:subClassOf rdf:resource="http://www.semanticweb.org/prajit/ontologies/2014/2/Ontology1395608296417.owl#Person"/>
+    </owl:Class>
+    
+
+
+    <!-- http://www.semanticweb.org/prajit/ontologies/2014/2/Ontology1395608296417.owl#ResearchMeeting -->
+
+    <owl:Class rdf:about="http://www.semanticweb.org/prajit/ontologies/2014/2/Ontology1395608296417.owl#ResearchMeeting">
+        <rdfs:subClassOf rdf:resource="http://www.semanticweb.org/prajit/ontologies/2014/2/Ontology1395608296417.owl#Meeting"/>
+    </owl:Class>
+    
+
+
+    <!-- http://www.semanticweb.org/prajit/ontologies/2014/2/Ontology1395608296417.owl#Source -->
+
+    <owl:Class rdf:about="http://www.semanticweb.org/prajit/ontologies/2014/2/Ontology1395608296417.owl#Source">
+        <rdfs:subClassOf rdf:resource="http://www.semanticweb.org/prajit/ontologies/2014/2/Ontology1395608296417.owl#AppProvenance"/>
+    </owl:Class>
+    
+
+
+    <!-- http://www.semanticweb.org/prajit/ontologies/2014/2/Ontology1395608296417.owl#State -->
+
+    <owl:Class rdf:about="http://www.semanticweb.org/prajit/ontologies/2014/2/Ontology1395608296417.owl#State">
+        <rdfs:subClassOf rdf:resource="http://www.semanticweb.org/prajit/ontologies/2014/2/Ontology1395608296417.owl#Location"/>
+    </owl:Class>
+    
+
+
+    <!-- http://www.semanticweb.org/prajit/ontologies/2014/2/Ontology1395608296417.owl#Student -->
+
+    <owl:Class rdf:about="http://www.semanticweb.org/prajit/ontologies/2014/2/Ontology1395608296417.owl#Student">
+        <rdfs:subClassOf rdf:resource="http://www.semanticweb.org/prajit/ontologies/2014/2/Ontology1395608296417.owl#Person"/>
+    </owl:Class>
+    
+
+
+    <!-- http://www.semanticweb.org/prajit/ontologies/2014/2/Ontology1395608296417.owl#Talk -->
+
+    <owl:Class rdf:about="http://www.semanticweb.org/prajit/ontologies/2014/2/Ontology1395608296417.owl#Talk">
+        <rdfs:subClassOf rdf:resource="http://www.semanticweb.org/prajit/ontologies/2014/2/Ontology1395608296417.owl#Meeting"/>
+    </owl:Class>
+    
+
+
+    <!-- http://www.semanticweb.org/prajit/ontologies/2014/2/Ontology1395608296417.owl#UndergraduateStudent -->
+
+    <owl:Class rdf:about="http://www.semanticweb.org/prajit/ontologies/2014/2/Ontology1395608296417.owl#UndergraduateStudent">
+        <rdfs:subClassOf rdf:resource="http://www.semanticweb.org/prajit/ontologies/2014/2/Ontology1395608296417.owl#Student"/>
+    </owl:Class>
+    
+
+
+    <!-- http://www.semanticweb.org/prajit/ontologies/2014/2/Ontology1395608296417.owl#University -->
+
+    <owl:Class rdf:about="http://www.semanticweb.org/prajit/ontologies/2014/2/Ontology1395608296417.owl#University">
+        <rdfs:subClassOf rdf:resource="http://www.semanticweb.org/prajit/ontologies/2014/2/Ontology1395608296417.owl#Location"/>
+    </owl:Class>
+    
+
+
+    <!-- http://www.semanticweb.org/prajit/ontologies/2014/2/Ontology1395608296417.owl#Work -->
+
+    <owl:Class rdf:about="http://www.semanticweb.org/prajit/ontologies/2014/2/Ontology1395608296417.owl#Work">
+        <rdfs:subClassOf rdf:resource="http://www.semanticweb.org/prajit/ontologies/2014/2/Ontology1395608296417.owl#Activity"/>
+    </owl:Class>
+    
+
+
+    <!-- 
+    ///////////////////////////////////////////////////////////////////////////////////////
+    //
+    // Individuals
+    //
+    ///////////////////////////////////////////////////////////////////////////////////////
+     -->
+
+    
+
+
+    <!-- http://www.semanticweb.org/prajit/ontologies/2014/2/Ontology1395608296417.owl#Advanced_Topics_in_American_History -->
+
+    <owl:NamedIndividual rdf:about="http://www.semanticweb.org/prajit/ontologies/2014/2/Ontology1395608296417.owl#Advanced_Topics_in_American_History"/>
+    
+
+
+    <!-- http://www.semanticweb.org/prajit/ontologies/2014/2/Ontology1395608296417.owl#Becker_Hall -->
+
+    <owl:NamedIndividual rdf:about="http://www.semanticweb.org/prajit/ontologies/2014/2/Ontology1395608296417.owl#Becker_Hall"/>
+    
+
+
+    <!-- http://www.semanticweb.org/prajit/ontologies/2014/2/Ontology1395608296417.owl#Bedford -->
+
+    <owl:NamedIndividual rdf:about="http://www.semanticweb.org/prajit/ontologies/2014/2/Ontology1395608296417.owl#Bedford"/>
+    
+
+
+    <!-- http://www.semanticweb.org/prajit/ontologies/2014/2/Ontology1395608296417.owl#Connecticut -->
+
+    <owl:NamedIndividual rdf:about="http://www.semanticweb.org/prajit/ontologies/2014/2/Ontology1395608296417.owl#Connecticut"/>
+    
+
+
+    <!-- http://www.semanticweb.org/prajit/ontologies/2014/2/Ontology1395608296417.owl#Fresher&#39;s_Welcome -->
+
+    <owl:NamedIndividual rdf:about="http://www.semanticweb.org/prajit/ontologies/2014/2/Ontology1395608296417.owl#Fresher&#39;s_Welcome"/>
+    
+
+
+    <!-- http://www.semanticweb.org/prajit/ontologies/2014/2/Ontology1395608296417.owl#Helen -->
+
+    <owl:NamedIndividual rdf:about="http://www.semanticweb.org/prajit/ontologies/2014/2/Ontology1395608296417.owl#Helen"/>
+    
+
+
+    <!-- http://www.semanticweb.org/prajit/ontologies/2014/2/Ontology1395608296417.owl#Henry_Williams -->
+
+    <owl:NamedIndividual rdf:about="http://www.semanticweb.org/prajit/ontologies/2014/2/Ontology1395608296417.owl#Henry_Williams"/>
+    
+
+
+    <!-- http://www.semanticweb.org/prajit/ontologies/2014/2/Ontology1395608296417.owl#Indiana_Jones -->
+
+    <owl:NamedIndividual rdf:about="http://www.semanticweb.org/prajit/ontologies/2014/2/Ontology1395608296417.owl#Indiana_Jones"/>
+    
+
+
+    <!-- http://www.semanticweb.org/prajit/ontologies/2014/2/Ontology1395608296417.owl#Marshall_college -->
+
+    <owl:NamedIndividual rdf:about="http://www.semanticweb.org/prajit/ontologies/2014/2/Ontology1395608296417.owl#Marshall_college"/>
+    
+
+
+    <!-- http://www.semanticweb.org/prajit/ontologies/2014/2/Ontology1395608296417.owl#Prof._Jones -->
+
+    <owl:NamedIndividual rdf:about="http://www.semanticweb.org/prajit/ontologies/2014/2/Ontology1395608296417.owl#Prof._Jones"/>
+    
+
+
+    <!-- http://www.semanticweb.org/prajit/ontologies/2014/2/Ontology1395608296417.owl#Prof._McHale -->
+
+    <owl:NamedIndividual rdf:about="http://www.semanticweb.org/prajit/ontologies/2014/2/Ontology1395608296417.owl#Prof._McHale"/>
+    
+
+
+    <!-- http://www.semanticweb.org/prajit/ontologies/2014/2/Ontology1395608296417.owl#USA -->
+
+    <owl:NamedIndividual rdf:about="http://www.semanticweb.org/prajit/ontologies/2014/2/Ontology1395608296417.owl#USA"/>
+    
+
+
+    <!-- http://www.semanticweb.org/prajit/ontologies/2014/2/Ontology1395608296417.owl#Weekly_Research_Meeting -->
+
+    <owl:NamedIndividual rdf:about="http://www.semanticweb.org/prajit/ontologies/2014/2/Ontology1395608296417.owl#Weekly_Research_Meeting"/>
+</rdf:RDF>
+
+
+
+<!-- Generated by the OWL API (version 3.2.3.1824) http://owlapi.sourceforge.net -->
+

@@ -1,6 +1,5 @@
 <resources>
-    <string name="short_app_name">MithrilAM</string>
-    <string name="app_name">Mithril App Manager</string>
+    <string name="short_app_name">MithrilAC</string>
     <string name="mithril_app_icon_description">This is Mithril\'s icon</string>
 
     <string name="app_icon_description">This is an app\'s icon</string>
@@ -9,8 +8,69 @@
 
     <string name="all_app_info_placeholder_text">Total number of apps installed is: </string>
 
+    <string name="app_name">Mithril Access Control</string>
+
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>
 
     <string name="action_settings">Settings</string>
+
+    <string name="place_holder_for_data_to_be_displayed">Some placeholder for data to be displayed</string>
+
+    <string name="title_activity_user_feedback">User Policy Control</string>
+    <string name="title_activity_change_rule">Change Rule</string>
+    <string name="title_activity_create_new_rule">Create New Rule</string>
+
+    <string name="button_true_violation">"That's a violation"</string>
+    <string name="button_false_violation">"Nah, that's fine"</string>
+
+    <string name="action_delete_rule">Delete Rule</string>
+    <string name="action_rule_ok">Rule is okay</string>
+    <string name="action_reload_database">Reload Database</string>
+
+    <string name="dialog_reload_data">Do you really want to delete all data from the database and reload default data?</string>
+    <string name="dialog_resp_delete">Yes</string>
+    <string name="dialog_resp_NO">No</string>
+
+    <string name="policy_tbl_policy_rule_info">Policy Rule Info</string>
+    <string name="policy_tbl_lbl_policy_name">Policy Name: </string>
+    <string name="policy_tbl_lbl_rule_name">Rule Name: </string>
+    <string name="policy_tbl_lbl_requester_info">Requester Info</string>
+    <string name="policy_tbl_lbl_app_name">App Name: </string>
+    <string name="policy_tbl_lbl_app_content_maturity">Content Maturity: </string>
+    <string name="policy_tbl_lbl_app_developer">App Developer: </string>
+    <string name="policy_tbl_lbl_app_origin_country">App Origin Country: </string>
+    <string name="policy_tbl_lbl_app_rating">App Rating: </string>
+    <string name="policy_tbl_lbl_app_install_count">App Install Count: </string>
+    <string name="policy_tbl_lbl_violation_info">Violation Info</string>
+    <string name="policy_tbl_lbl_requester">Requester: </string>
+    <string name="policy_tbl_lbl_rule_description">Description: </string>
+
+    <string name="policy_tbl_data_policy_name">Graduate Student Policy</string>
+    <string name="policy_tbl_data_rule_name">SocialMediaCameraAccessRule</string>
+    <string name="policy_tbl_data_app_name">Instagram</string>
+    <string name="policy_tbl_app_content_maturity">Everyone</string>
+    <string name="policy_tbl_data_app_developer">Instagram</string>
+    <string name="policy_tbl_data_app_origin_country">United States</string>
+    <string name="policy_tbl_data_app_rating">4.5</string>
+    <string name="policy_tbl_data_app_install_count">1 &#8211; 5 million</string> <!-- Replace "-" with an "en dash" character (–, &&;#8211;) ? -->
+    <string name="policy_tbl_data_requester">Camera</string>
+    <string name="policy_tbl_data_rule_description">At school</string>
+
+    <string name="pol_rule_del_btn_label">Delete Rule</string>
+    <string name="pol_rule_change_btn_label">Change Rule Conditions</string>
+    <string name="pol_rule_ok_btn_label">Rule OK</string>
+    <string name="pol_rule_create_new_btn_label">Create New Rule</string>
+
+    <string name="pol_rule_changing_done_btn_label">Done with changes</string>
+    <string name="pol_rule_changing_add_more_consequents_label">Add more consequents</string>
+
+    <string name="pol_rule_cond_heading_text">Choose the desired policy rule conditions</string>
+    <string name="pol_rule_cond_time_context_text">Time</string>
+    <string name="pol_rule_cond_location_context_text">Location</string>
+    <string name="pol_rule_cond_activity_context_text">Activity</string>
+    <string name="pol_rule_cond_presence_info_context_text">Presence</string>
+
+    <string name="placeholder_text_violation_info">Violation Info</string>
+
 </resources>

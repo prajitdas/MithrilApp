@@ -1,4 +1,4 @@
-package edu.umbc.cs.ebiquity.mithril.appmanager.data.model;
+package edu.umbc.cs.ebiquity.mithril.data.model;
 
 import android.graphics.Bitmap;
 

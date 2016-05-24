@@ -1,4 +1,4 @@
-package edu.umbc.cs.ebiquity.mithril.appmanager.ui;
+package edu.umbc.cs.ebiquity.mithril.ui.fragments.appmanager;
 
 import android.app.Fragment;
 import android.content.Context;
@@ -22,11 +22,11 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import edu.umbc.cs.ebiquity.mithril.appmanager.MithrilApplication;
-import edu.umbc.cs.ebiquity.mithril.mithrilappmanager.R;
-import edu.umbc.cs.ebiquity.mithril.appmanager.data.model.AppMetadata;
-import edu.umbc.cs.ebiquity.mithril.appmanager.ui.adapters.InstalledAppsRecyclerViewAdapter;
-import edu.umbc.cs.ebiquity.mithril.appmanager.ui.specialFeatures.DividerItemDecoration;
+import edu.umbc.cs.ebiquity.mithril.MithrilApplication;
+import edu.umbc.cs.ebiquity.mithril.R;
+import edu.umbc.cs.ebiquity.mithril.data.model.AppMetadata;
+import edu.umbc.cs.ebiquity.mithril.ui.adapters.InstalledAppsRecyclerViewAdapter;
+import edu.umbc.cs.ebiquity.mithril.ui.specialFeatures.DividerItemDecoration;
 
 /**
  * A fragment representing a list of Items.
