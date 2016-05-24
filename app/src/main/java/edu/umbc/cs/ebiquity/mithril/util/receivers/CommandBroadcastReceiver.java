@@ -1,4 +1,4 @@
-package edu.umbc.cs.ebiquity.mithril.broadcastreceiver;
+package edu.umbc.cs.ebiquity.mithril.util.receivers;
 
 import android.content.BroadcastReceiver;
 import android.content.Context;

@@ -16,9 +16,9 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import edu.umbc.ebiquity.mithril.R;
-import edu.umbc.ebiquity.mithril.data.helpers.MithrilDBHelper;
-import edu.umbc.ebiquity.mithril.data.model.Violation;
+import edu.umbc.cs.ebiquity.mithril.R;
+import edu.umbc.cs.ebiquity.mithril.data.helpers.MithrilDBHelper;
+import edu.umbc.cs.ebiquity.mithril.data.model.Violation;
 import edu.umbc.cs.ebiquity.mithril.ui.adapters.ViolationRecyclerViewAdapter;
 
 /**

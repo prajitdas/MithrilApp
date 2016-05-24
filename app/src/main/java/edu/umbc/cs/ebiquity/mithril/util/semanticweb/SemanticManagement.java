@@ -1,4 +1,4 @@
-package edu.umbc.ebiquity.mithril.util.semanticweb;
+package edu.umbc.cs.ebiquity.mithril.util.semanticweb;
 
 import java.util.ArrayList;
 import java.util.Comparator;
@@ -34,12 +34,13 @@ import org.semanticweb.owlapi.util.BidirectionalShortFormProvider;
 import org.semanticweb.owlapi.util.BidirectionalShortFormProviderAdapter;
 import org.semanticweb.owlapi.util.SimpleShortFormProvider;
 
+import edu.umbc.cs.ebiquity.mithril.MithrilApplication;
 import uk.ac.manchester.cs.jfact.JFactFactory;
 import android.content.Context;
 import android.content.res.Resources.NotFoundException;
 import android.util.Log;
 
-import edu.umbc.ebiquity.mithril.R;
+import edu.umbc.cs.ebiquity.mithril.R;
 import es.unizar.semantic.DLQueryEngine;
 
 /**
