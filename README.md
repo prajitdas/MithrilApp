@@ -1,5 +1,5 @@
-# Mithril App Manager
-### Also known as MithrilAM
+# Mithril App
+### Also known as MithrilAC
 This is a multi purpose app. It will eventually merge into the main Mithril project.
 Following are the goals of the app:
 * Let users explore app installed on their phones.
