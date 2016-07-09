@@ -156,8 +156,8 @@ public class MainActivity extends AppCompatActivity
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 //        createShortCut();
-        initData();
         initViews();
+        initData();
     }
 
     private void initData() {
@@ -167,6 +167,7 @@ public class MainActivity extends AppCompatActivity
         mithrilDBHelper = new MithrilDBHelper(this);
         mithrilDB = mithrilDBHelper.getWritableDatabase();
         sharedPreferences = this.getSharedPreferences(MithrilApplication.getSharedPreferencesName(), Context.MODE_PRIVATE);
+        defaultFragmentLoad();
     }
 
     private void initViews() {
@@ -193,7 +194,6 @@ public class MainActivity extends AppCompatActivity
 
         navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
-        defaultFragmentLoad();
     }
 
     private void defaultFragmentLoad() {
