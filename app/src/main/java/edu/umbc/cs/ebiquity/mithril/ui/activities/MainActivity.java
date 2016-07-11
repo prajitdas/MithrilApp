@@ -31,7 +31,8 @@ import edu.umbc.cs.ebiquity.mithril.data.model.Violation;
 public class MainActivity extends AppCompatActivity
         implements  NavigationView.OnNavigationItemSelectedListener,
                     ShowAppsFragment.OnListFragmentInteractionListener,
-                    ShowAppsFragment.OnListFragmentLongInteractionListener{
+                    ShowAppsFragment.OnListFragmentLongInteractionListener,
+                    ViolationFragment.OnListFragmentInteractionListener {
 
     private static MithrilDBHelper mithrilDBHelper;
     private static SQLiteDatabase mithrilDB;
@@ -133,6 +134,12 @@ public class MainActivity extends AppCompatActivity
     public void onListFragmentInteraction(AppMetadata item) {
         //TODO Do something with the item selected
         appMetadataItemSelected = item;
+    }
+
+    @Override
+    public void onListFragmentInteraction(Violation item) {
+        //TODO Do something with the item selected
+        violationItemSelected = item;
     }
 
     @Override
