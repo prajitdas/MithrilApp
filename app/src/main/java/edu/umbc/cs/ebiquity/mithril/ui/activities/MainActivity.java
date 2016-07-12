@@ -21,7 +21,7 @@ import android.widget.TextView;
 import java.util.List;
 
 import edu.umbc.cs.ebiquity.mithril.MithrilApplication;
-import edu.umbc.cs.ebiquity.mithril.data.model.AppMetadata;
+import edu.umbc.cs.ebiquity.mithril.data.model.AppData;
 import edu.umbc.cs.ebiquity.mithril.ui.fragments.ViolationFragment;
 import edu.umbc.cs.ebiquity.mithril.ui.fragments.appmanager.ShowAppsFragment;
 import edu.umbc.cs.ebiquity.mithril.R;
@@ -43,8 +43,8 @@ public class MainActivity extends AppCompatActivity
     private DrawerLayout drawer;
     private ActionBarDrawerToggle toggle;
     private NavigationView navigationView;
-    private AppMetadata appMetadataItemSelected = null;
-    private List<AppMetadata> appMetadataItemsSelected = null;
+    private AppData appDataItemSelected = null;
+    private List<AppData> appDataItemsSelected = null;
     private FloatingActionButton fab;
     private TextView mAppCountTextView;
 
@@ -131,9 +131,9 @@ public class MainActivity extends AppCompatActivity
     }
 
     @Override
-    public void onListFragmentInteraction(AppMetadata item) {
+    public void onListFragmentInteraction(AppData item) {
         //TODO Do something with the item selected
-        appMetadataItemSelected = item;
+        appDataItemSelected = item;
     }
 
     @Override
@@ -143,9 +143,9 @@ public class MainActivity extends AppCompatActivity
     }
 
     @Override
-    public void onListFragmentLongInteraction(List<AppMetadata> items) {
+    public void onListFragmentLongInteraction(List<AppData> items) {
         //TODO Do something with the item selected
-        appMetadataItemsSelected = items;
+        appDataItemsSelected = items;
     }
 
     //

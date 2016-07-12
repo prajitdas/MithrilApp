@@ -24,7 +24,7 @@ import java.util.Map;
 
 import edu.umbc.cs.ebiquity.mithril.MithrilApplication;
 import edu.umbc.cs.ebiquity.mithril.R;
-import edu.umbc.cs.ebiquity.mithril.data.model.AppMetadata;
+import edu.umbc.cs.ebiquity.mithril.data.model.AppData;
 import edu.umbc.cs.ebiquity.mithril.ui.adapters.InstalledAppsRecyclerViewAdapter;
 import edu.umbc.cs.ebiquity.mithril.ui.specialFeatures.DividerItemDecoration;
 
@@ -48,10 +48,10 @@ public class ShowAppsFragment extends Fragment {
     /**
      * An array of violation items.
      */
-    private List<AppMetadata> allAppMetadataItems = new ArrayList<>();
-    private List<AppMetadata> systemAppMetadataItems = new ArrayList<>();
-    private List<AppMetadata> userAppMetadataItems = new ArrayList<>();
-    private Map<String, AppMetadata> appMetadataMap = new HashMap<>();
+    private List<AppData> allAppDataItems = new ArrayList<>();
+    private List<AppData> systemAppDataItems = new ArrayList<>();
+    private List<AppData> userAppDataItems = new ArrayList<>();
+    private Map<String, AppData> appMetadataMap = new HashMap<>();
     private PackageManager packageManager;
     private View view;
 
@@ -90,7 +90,7 @@ public class ShowAppsFragment extends Fragment {
         packageManager = view.getContext().getPackageManager();
         initData();
         initView();
-        sharedPreferences.edit().putInt(MithrilApplication.getSharedPreferenceAppCount(), allAppMetadataItems.size());
+        sharedPreferences.edit().putInt(MithrilApplication.getSharedPreferenceAppCount(), allAppDataItems.size());
         return view;
     }
 
@@ -106,11 +106,11 @@ public class ShowAppsFragment extends Fragment {
                 recyclerView.setLayoutManager(new GridLayoutManager(context, mColumnCount));
 
             if (mAppDisplayType.equals(MithrilApplication.getAllAppsDisplayTag()))
-                recyclerView.setAdapter(new InstalledAppsRecyclerViewAdapter(allAppMetadataItems, mListener, mListenerLongInteraction));
+                recyclerView.setAdapter(new InstalledAppsRecyclerViewAdapter(allAppDataItems, mListener, mListenerLongInteraction));
             else if (mAppDisplayType.equals(MithrilApplication.getSystemAppsDisplayTag()))
-                recyclerView.setAdapter(new InstalledAppsRecyclerViewAdapter(systemAppMetadataItems, mListener, mListenerLongInteraction));
+                recyclerView.setAdapter(new InstalledAppsRecyclerViewAdapter(systemAppDataItems, mListener, mListenerLongInteraction));
             else if (mAppDisplayType.equals(MithrilApplication.getUserAppsDisplayTag()))
-                recyclerView.setAdapter(new InstalledAppsRecyclerViewAdapter(userAppMetadataItems, mListener, mListenerLongInteraction));
+                recyclerView.setAdapter(new InstalledAppsRecyclerViewAdapter(userAppDataItems, mListener, mListenerLongInteraction));
 
             /**
              * Item decoration added
@@ -132,11 +132,11 @@ public class ShowAppsFragment extends Fragment {
          */
         getAllApps();
 
-        for(Map.Entry<String, AppMetadata> entry : appMetadataMap.entrySet()) {
+        for(Map.Entry<String, AppData> entry : appMetadataMap.entrySet()) {
 //            Log.d("MithrilAppManager", entry.toString());
-            allAppMetadataItems.add(entry.getValue());
+            allAppDataItems.add(entry.getValue());
         }
-        Collections.sort(allAppMetadataItems);
+        Collections.sort(allAppDataItems);
         appMetadataMap.clear();
 
         /**
@@ -144,11 +144,11 @@ public class ShowAppsFragment extends Fragment {
          */
         getSystemApps();
 
-        for(Map.Entry<String, AppMetadata> entry : appMetadataMap.entrySet()) {
+        for(Map.Entry<String, AppData> entry : appMetadataMap.entrySet()) {
 //            Log.d("MithrilAppManager", entry.toString());
-            systemAppMetadataItems.add(entry.getValue());
+            systemAppDataItems.add(entry.getValue());
         }
-        Collections.sort(allAppMetadataItems);
+        Collections.sort(allAppDataItems);
         appMetadataMap.clear();
 
         /**
@@ -156,11 +156,11 @@ public class ShowAppsFragment extends Fragment {
          */
         getUserApps();
 
-        for(Map.Entry<String, AppMetadata> entry : appMetadataMap.entrySet()) {
+        for(Map.Entry<String, AppData> entry : appMetadataMap.entrySet()) {
 //            Log.d("MithrilAppManager", entry.toString());
-            userAppMetadataItems.add(entry.getValue());
+            userAppDataItems.add(entry.getValue());
         }
-        Collections.sort(allAppMetadataItems);
+        Collections.sort(allAppDataItems);
         appMetadataMap.clear();
     }
 
@@ -171,7 +171,7 @@ public class ShowAppsFragment extends Fragment {
         for(PackageInfo pack : packageManager.getInstalledPackages(flags)) {
             if ((pack.applicationInfo.flags) != 1) {
                 try {
-                    AppMetadata tempAppMetaData = new AppMetadata("dummyApp");
+                    AppData tempAppMetaData = new AppData("dummyApp");
                     if (pack.packageName != null) {
                         tempAppMetaData.setPackageName(pack.packageName);
                         tempAppMetaData.setAppName(pack.applicationInfo.loadLabel(packageManager).toString());
@@ -194,7 +194,7 @@ public class ShowAppsFragment extends Fragment {
         for(PackageInfo pack : packageManager.getInstalledPackages(flags)) {
             if ((pack.applicationInfo.flags & ApplicationInfo.FLAG_SYSTEM) == 1) {
                 try {
-                    AppMetadata tempAppMetaData = new AppMetadata("dummyApp");
+                    AppData tempAppMetaData = new AppData("dummyApp");
                     if (pack.packageName != null) {
                         tempAppMetaData.setPackageName(pack.packageName);
                         tempAppMetaData.setAppName(pack.applicationInfo.loadLabel(packageManager).toString());
@@ -217,7 +217,7 @@ public class ShowAppsFragment extends Fragment {
         for(PackageInfo pack : packageManager.getInstalledPackages(flags)) {
             if ((pack.applicationInfo.flags & ApplicationInfo.FLAG_SYSTEM) != 1) {
                 try {
-                    AppMetadata tempAppMetaData = new AppMetadata("dummyApp");
+                    AppData tempAppMetaData = new AppData("dummyApp");
                     if (pack.packageName != null) {
                         tempAppMetaData.setPackageName(pack.packageName);
                         tempAppMetaData.setAppName(pack.applicationInfo.loadLabel(packageManager).toString());
@@ -261,9 +261,9 @@ public class ShowAppsFragment extends Fragment {
      * >Communicating with Other Fragments</a> for more information.
      */
     public interface OnListFragmentInteractionListener {
-        void onListFragmentInteraction(AppMetadata item);
+        void onListFragmentInteraction(AppData item);
     }
     public interface OnListFragmentLongInteractionListener {
-        void onListFragmentLongInteraction(List<AppMetadata> items);
+        void onListFragmentLongInteraction(List<AppData> items);
     }
 }

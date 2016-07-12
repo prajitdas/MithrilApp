@@ -5,7 +5,7 @@ import android.graphics.Bitmap;
 /**
 * Helper class for managing content
 */
-public class AppMetadata implements Comparable<AppMetadata>{
+public class AppData implements Comparable<AppData>{
     private String appDescription;
     private String[] permissions;
     private String associatedProcessName;
@@ -19,24 +19,24 @@ public class AppMetadata implements Comparable<AppMetadata>{
         return selected;
     }
 
-    public AppMetadata setSelected(boolean selected) {
+    public AppData setSelected(boolean selected) {
         this.selected = selected;
         return this;
     }
 
     private boolean selected;
 
-    public AppMetadata(String packageName) {
+    public AppData(String packageName) {
         setPackageName(packageName);
     }
 
-    public AppMetadata(String appDescription, String[] permissions,
-                       String associatedProcessName,
-                       int targetSdkVersion,
-                       Bitmap icon, String appName,
-                       String packageName,
-                       String versionInfo,
-                       boolean selected) {
+    public AppData(String appDescription, String[] permissions,
+                   String associatedProcessName,
+                   int targetSdkVersion,
+                   Bitmap icon, String appName,
+                   String packageName,
+                   String versionInfo,
+                   boolean selected) {
         setAppDescription(appDescription);
         setPermissions(permissions);
         setAssociatedProcessName(associatedProcessName);
@@ -52,7 +52,7 @@ public class AppMetadata implements Comparable<AppMetadata>{
         return appDescription;
     }
 
-    public AppMetadata setAppDescription(String appDescription) {
+    public AppData setAppDescription(String appDescription) {
         this.appDescription = appDescription;
         return this;
     }
@@ -61,7 +61,7 @@ public class AppMetadata implements Comparable<AppMetadata>{
         return permissions;
     }
 
-    public AppMetadata setPermissions(String[] permissions) {
+    public AppData setPermissions(String[] permissions) {
         this.permissions = permissions;
         return this;
     }
@@ -70,7 +70,7 @@ public class AppMetadata implements Comparable<AppMetadata>{
         return associatedProcessName;
     }
 
-    public AppMetadata setAssociatedProcessName(String associatedProcessName) {
+    public AppData setAssociatedProcessName(String associatedProcessName) {
         this.associatedProcessName = associatedProcessName;
         return this;
     }
@@ -79,7 +79,7 @@ public class AppMetadata implements Comparable<AppMetadata>{
         return targetSdkVersion;
     }
 
-    public AppMetadata setTargetSdkVersion(int targetSdkVersion) {
+    public AppData setTargetSdkVersion(int targetSdkVersion) {
         this.targetSdkVersion = targetSdkVersion;
         return this;
     }
@@ -88,7 +88,7 @@ public class AppMetadata implements Comparable<AppMetadata>{
         return icon;
     }
 
-    public AppMetadata setIcon(Bitmap icon) {
+    public AppData setIcon(Bitmap icon) {
         this.icon = icon;
         return this;
     }
@@ -97,7 +97,7 @@ public class AppMetadata implements Comparable<AppMetadata>{
         return appName;
     }
 
-    public AppMetadata setAppName(String appName) {
+    public AppData setAppName(String appName) {
         this.appName = appName;
         return this;
     }
@@ -106,7 +106,7 @@ public class AppMetadata implements Comparable<AppMetadata>{
         return packageName;
     }
 
-    public AppMetadata setPackageName(String packageName) {
+    public AppData setPackageName(String packageName) {
         this.packageName = packageName;
         return this;
     }
@@ -115,7 +115,7 @@ public class AppMetadata implements Comparable<AppMetadata>{
         return versionInfo;
     }
 
-    public AppMetadata setVersionInfo(String versionInfo) {
+    public AppData setVersionInfo(String versionInfo) {
         this.versionInfo = versionInfo;
         return this;
     }
@@ -123,9 +123,9 @@ public class AppMetadata implements Comparable<AppMetadata>{
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
-        if (!(o instanceof AppMetadata)) return false;
+        if (!(o instanceof AppData)) return false;
 
-        AppMetadata that = (AppMetadata) o;
+        AppData that = (AppData) o;
 
         if (!getPackageName().equals(that.getPackageName())) return false;
         return getVersionInfo().equals(that.getVersionInfo());
@@ -141,7 +141,7 @@ public class AppMetadata implements Comparable<AppMetadata>{
 
     @Override
     public String toString() {
-        return "AppMetadata{" +
+        return "AppData{" +
                 "packageName='" + packageName + '\'' +
                 ", versionInfo='" + versionInfo + '\'' +
                 ", appName='" + appName + '\'' +
@@ -149,7 +149,7 @@ public class AppMetadata implements Comparable<AppMetadata>{
     }
 
     @Override
-    public int compareTo(AppMetadata another) {
+    public int compareTo(AppData another) {
         return this.getAppName().compareTo(another.getAppName());
     }
 }

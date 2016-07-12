@@ -7,7 +7,7 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import edu.umbc.cs.ebiquity.mithril.data.model.AppMetadata;
+import edu.umbc.cs.ebiquity.mithril.data.model.AppData;
 import edu.umbc.cs.ebiquity.mithril.ui.fragments.appmanager.ShowAppsFragment.OnListFragmentInteractionListener;
 import edu.umbc.cs.ebiquity.mithril.ui.fragments.appmanager.ShowAppsFragment.OnListFragmentLongInteractionListener;
 import edu.umbc.cs.ebiquity.mithril.R;
@@ -16,18 +16,18 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * {@link RecyclerView.Adapter} that can display a {@link AppMetadata} and makes a call to the
+ * {@link RecyclerView.Adapter} that can display a {@link AppData} and makes a call to the
  * specified {@link OnListFragmentInteractionListener}.
  * TODO: Replace the implementation with code for your data type.
  */
 public class InstalledAppsRecyclerViewAdapter extends RecyclerView.Adapter<InstalledAppsRecyclerViewAdapter.ViewHolder> {
 
-    private final List<AppMetadata> mValues;
+    private final List<AppData> mValues;
     private final OnListFragmentInteractionListener mListener;
     private final OnListFragmentLongInteractionListener mListenerLongInteraction;
-    private List<AppMetadata> appsSelected = new ArrayList<>();
+    private List<AppData> appsSelected = new ArrayList<>();
 
-    public InstalledAppsRecyclerViewAdapter(List<AppMetadata> items, OnListFragmentInteractionListener listener, OnListFragmentLongInteractionListener listenerLongInteraction) {
+    public InstalledAppsRecyclerViewAdapter(List<AppData> items, OnListFragmentInteractionListener listener, OnListFragmentLongInteractionListener listenerLongInteraction) {
         mValues = items;
         mListener = listener;
         mListenerLongInteraction = listenerLongInteraction;
@@ -84,7 +84,7 @@ public class InstalledAppsRecyclerViewAdapter extends RecyclerView.Adapter<Insta
         public final TextView mAppName;
         public final TextView mAppVersion;
 //        public final CheckBox mAppSelected;
-        public AppMetadata mItem;
+        public AppData mItem;
 
         public ViewHolder(View view) {
             super(view);

@@ -9,6 +9,7 @@ import android.database.Cursor;
 import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
+import android.graphics.Bitmap;
 import android.util.Log;
 
 import edu.umbc.cs.ebiquity.mithril.MithrilApplication;
@@ -56,7 +57,23 @@ public class MithrilDBHelper extends SQLiteOpenHelper {
 	private final static String VIOLATIONDESC = "description";
 	private final static String VIOLATIONOFRULID = "ruleid";
 	private final static String VIOLATIONMARKER = "marker";
-	
+
+    private final static String APPDESCRIPTION = "description";
+    private final static String APPASSOCIATEDPROCNAME = "assocprocname";
+    private final static String APPTARGETSDKVERSION = "targetSdkVersion";
+    private final static String APPICON = "icon";
+    private final static String APPNAME = "appName";
+    private final static String APPPACKAGENAME = "packageName";
+    private final static String APPVERSIONINFO = "versionInfo";
+
+    private final static String PERMNAME = "name";
+    private final static String PERMPROTECTIONLEVEL = "protectionlevel";
+    private final static String PERMGROUP = "permissiongroup";
+    private final static String PERMFLAG = "permissionflag";
+
+    private final static String APPPERMAPPID = "appid";
+    private final static String APPPERMPERMID = "permid";
+
 	// database declarations
 	private final static int DATABASE_VERSION = 1;
 
@@ -66,7 +83,10 @@ public class MithrilDBHelper extends SQLiteOpenHelper {
 	private final static String ACTION_TABLE_NAME = "actions";
 	private final static String POLICY_RULES_TABLE_NAME = "policyrules";
 	private final static String VIOLATIONS_TABLE_NAME = "violations";
-	
+	private final static String APP_DATA_TABLE_NAME = "appdata";
+    private final static String PERMISSIONS_TABLE_NAME = "permissions";
+    private final static String APP_PERMISSIONS_TABLE_NAME = "appperm";
+
 	private Context context;
 	
 	/**
