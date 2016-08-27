@@ -31,6 +31,7 @@ import edu.umbc.cs.ebiquity.mithril.ui.fragments.appmanager.ShowAppsFragment;
 import edu.umbc.cs.ebiquity.mithril.R;
 import edu.umbc.cs.ebiquity.mithril.data.helpers.MithrilDBHelper;
 import edu.umbc.cs.ebiquity.mithril.data.model.Violation;
+import edu.umbc.cs.ebiquity.mithril.util.RootAccess;
 
 public class MainActivity extends AppCompatActivity
         implements  NavigationView.OnNavigationItemSelectedListener,
@@ -51,6 +52,7 @@ public class MainActivity extends AppCompatActivity
     private List<AppData> appDataItemsSelected = null;
     private FloatingActionButton fab;
     private TextView mAppCountTextView;
+    private RootAccess rootAccess;
 
     private void loadAllAppsFragment() {
         Bundle data = new Bundle();
@@ -172,19 +174,11 @@ public class MainActivity extends AppCompatActivity
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        rootAccess = new RootAccess(getApplicationContext());
+        rootAccess.checkAccess();
         createShortCut();
         initViews();
         initData();
-    }
-
-    private void initData() {
-        /**
-         * Database creation and default data insertion, happens only once.
-         */
-        mithrilDBHelper = new MithrilDBHelper(this);
-        mithrilDB = mithrilDBHelper.getWritableDatabase();
-        sharedPreferences = this.getSharedPreferences(MithrilApplication.getSharedPreferencesName(), Context.MODE_PRIVATE);
-        defaultFragmentLoad();
     }
 
     private void initViews() {
@@ -211,6 +205,16 @@ public class MainActivity extends AppCompatActivity
 
         navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
+    }
+
+    private void initData() {
+        /**
+         * Database creation and default data insertion, happens only once.
+         */
+        mithrilDBHelper = new MithrilDBHelper(this);
+        mithrilDB = mithrilDBHelper.getWritableDatabase();
+        sharedPreferences = this.getSharedPreferences(MithrilApplication.getSharedPreferencesName(), Context.MODE_PRIVATE);
+        defaultFragmentLoad();
     }
 
     private void defaultFragmentLoad() {
