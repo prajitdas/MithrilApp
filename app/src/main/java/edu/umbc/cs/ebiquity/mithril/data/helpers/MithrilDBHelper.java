@@ -29,35 +29,46 @@ import edu.umbc.cs.ebiquity.mithril.data.model.rules.requesters.Requester;
 
 public class MithrilDBHelper extends SQLiteOpenHelper {
 	
-	//fields for the database tables
-	private final static String REQID = "id";
-	private final static String REQNAME = "name";
+	// Fields for the database tables
+	// Table for Requester information
+	private final static String REQID = "id"; // ID of a request
+	private final static String REQNAME = "name"; // ID from App table from which a request was received
 
-	private final static String RESID = "id";
-	private final static String RESNAME = "name";
+    // Table for Resource requested information
+	private final static String RESID = "id"; // ID of a resource on the device
+	private final static String RESNAME = "name"; // Meaningful name of the resource on the device
 
-	private final static String CONTEXTID = "id";
-	private final static String LOCATION = "location";
-	private final static String IDENTITY = "identity";
-	private final static String ACTIVITY = "activity";
-	private final static String PRESENCEINFO = "presenceinfo";
-	private final static String TIME = "time";
-	
-	private final static String ACTIONID = "id";
-	private final static String ACTION = "action";
-	
-	private final static String POLRULID = "id";
-	private final static String POLRULNAME = "name";
-	private final static String POLRULREQID = "reqtrid";
-	private final static String POLRULRESID = "resrcid";
-	private final static String POLRULCNTID = "contxtid";
-	private final static String POLRULACTID = "actionid";
-	
-	private final static String VIOLATIONID = "id";
-	private final static String VIOLATIONDESC = "description";
+    // Table for User Context information
+	private final static String CONTEXTID = "id"; // ID of the context instance
+	private final static String LOCATION = "location"; // Location context
+	private final static String IDENTITY = "identity"; // Identity context; this is redundant as because we are working on a single device
+	private final static String ACTIVITY = "activity"; // Activity context
+	private final static String PRESENCEINFO = "presenceinfo"; // If we could get presence information of others then we can do relationship based privacy solutions
+	private final static String TIME = "time"; // Temporal information; the time instance when the current context was captured
+
+    // Table for Action taken information
+    // 0 for denied, 1 for allowed
+	private final static String ACTIONID = "id"; // ID of an action taken
+	private final static String ACTION = "action"; // Action taken for a certain scenario
+    private final static String ACTIONRESID = "resrcid"; // Resource that was requested
+    private final static String ACTIONREQID = "reqtrid"; // Requester that sent the request
+    private final static String ACTIONCONID = "contxtid"; // Context in which the request was made
+
+    // Table for Policy information
+	private final static String POLRULID = "id"; // ID of policy defined
+	private final static String POLRULNAME = "name"; // Policy short name
+	private final static String POLRULREQID = "reqtrid"; // Requester that sent the request
+	private final static String POLRULRESID = "resrcid"; // Resource that was requested
+	private final static String POLRULCNTID = "contxtid"; // Context in which the request was made
+	private final static String POLRULACTID = "actionid"; // Action will be denoted as: 0 for to deny, 1 for allow
+
+    // Table for Violation information
+	private final static String VIOLATIONID = "id"; // ID of violation captured
+	private final static String VIOLATIONDESC = "description"; //
 	private final static String VIOLATIONOFRULID = "ruleid";
 	private final static String VIOLATIONMARKER = "marker";
 
+    // Table for Installed application information
     private final static String APPDESCRIPTION = "description";
     private final static String APPASSOCIATEDPROCNAME = "assocprocname";
     private final static String APPTARGETSDKVERSION = "targetSdkVersion";
@@ -66,11 +77,13 @@ public class MithrilDBHelper extends SQLiteOpenHelper {
     private final static String APPPACKAGENAME = "packageName";
     private final static String APPVERSIONINFO = "versionInfo";
 
+    // Table for Permission information
     private final static String PERMNAME = "name";
     private final static String PERMPROTECTIONLEVEL = "protectionlevel";
     private final static String PERMGROUP = "permissiongroup";
     private final static String PERMFLAG = "permissionflag";
 
+    // Table for App permission
     private final static String APPPERMAPPID = "appid";
     private final static String APPPERMPERMID = "permid";
 

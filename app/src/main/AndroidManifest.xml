@@ -26,6 +26,11 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="edu.umbc.cs.ebiquity.mithril.ui.activities.MainActivity" />
         </activity>
+
+        <receiver
+            android:name=".util.receivers.AppInstallBroadcastReceiver"
+            android:enabled="true"
+            android:exported="true"></receiver>
     </application>
 
 </manifest>
