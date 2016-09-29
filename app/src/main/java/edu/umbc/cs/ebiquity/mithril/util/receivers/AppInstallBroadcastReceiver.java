@@ -3,13 +3,33 @@ package edu.umbc.cs.ebiquity.mithril.util.receivers;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.ApplicationInfo;
+import android.content.pm.PackageInfo;
+import android.content.pm.PackageManager;
+import android.database.sqlite.SQLiteDatabase;
+import android.graphics.drawable.BitmapDrawable;
+
+import edu.umbc.cs.ebiquity.mithril.MithrilApplication;
+import edu.umbc.cs.ebiquity.mithril.data.helpers.MithrilDBHelper;
+import edu.umbc.cs.ebiquity.mithril.data.model.AppData;
 
 public class AppInstallBroadcastReceiver extends BroadcastReceiver {
+    private PackageManager packageManager;
+    private int flags = PackageManager.GET_META_DATA |
+            PackageManager.GET_SHARED_LIBRARY_FILES |
+            PackageManager.GET_PERMISSIONS;
+    private static MithrilDBHelper mithrilDBHelper;
+    private static SQLiteDatabase mithrilDB;
+
     public AppInstallBroadcastReceiver() {
     }
 
     @Override
     public void onReceive(Context context, Intent intent) {
+        packageManager = context.getPackageManager();
+        mithrilDBHelper = new MithrilDBHelper(context);
+        mithrilDB = mithrilDBHelper.getWritableDatabase();
+
         String message = new String();
         /**
          * Broadcast Action: A new application package has been installed on the device. The data contains the name of the package. Note that the newly installed package does not receive this broadcast.
@@ -20,11 +40,31 @@ public class AppInstallBroadcastReceiver extends BroadcastReceiver {
          * Constant Value: "android.intent.action.PACKAGE_ADDED"
          */
         if(intent.getAction() == "android.intent.action.PACKAGE_ADDED") {
-            message = "App installed: " + webserviceSendDataHelper.findNewlyInstalledApp(Intent.EXTRA_UID);
-//			Log.d(HeimdallApplication.getDebugTag(), "Installation complete!\n"+message);
-            webserviceSendDataHelper.collectTheData();
-            webserviceSendDataHelper.sendTheData();
-            Notification(context, message);
+            String[] pakcagesInstalled = packageManager.getPackagesForUid(intent.getIntExtra(intent.EXTRA_UID, 0));
+            for (String pkgName : pakcagesInstalled) {
+                try {
+                    PackageInfo packageInfo = packageManager.getPackageInfo(pkgName, flags);
+                    AppData tempAppData = new AppData("dummyApp");
+                    if (packageInfo.packageName != null) {
+                        tempAppData.setAppDescription(packageInfo.applicationInfo.loadDescription(packageManager).toString());
+                        tempAppData.setAssociatedProcessName(packageInfo.applicationInfo.processName);
+                        tempAppData.setTargetSdkVersion(packageInfo.applicationInfo.targetSdkVersion);
+                        tempAppData.setIcon(((BitmapDrawable) packageInfo.applicationInfo.loadIcon(packageManager)).getBitmap());
+                        tempAppData.setAppName(packageInfo.applicationInfo.loadLabel(packageManager).toString());
+                        tempAppData.setPackageName(packageInfo.packageName);
+                        tempAppData.setVersionInfo(packageInfo.versionName);
+                        tempAppData.setInstalled(true);
+                        if((packageInfo.applicationInfo.flags & ApplicationInfo.FLAG_SYSTEM) == 1)
+                            tempAppData.setAppType(MithrilApplication.getSystemAppsDisplayTag());
+                        else
+                            tempAppData.setAppType(MithrilApplication.getUserAppsDisplayTag());
+                    }
+                    //Find all apps and insert into database
+                    mithrilDBHelper.addAppData(mithrilDB, tempAppData);
+                } catch (PackageManager.NameNotFoundException e) {
+                    e.printStackTrace();
+                }
+            }
         }
         /**
          * Broadcast Action: An existing application package has been changed (e.g. a component has been enabled or disabled). The data contains the name of the package.
@@ -38,10 +78,6 @@ public class AppInstallBroadcastReceiver extends BroadcastReceiver {
             /**
              * Don't send data on update for now
              */
-//			Log.d(HeimdallApplication.getDebugTag(), "package changed, nothing to do");
-//			message = "An existing application package has been changed (e.g. a component has been enabled or disabled): " + webserviceSendDataHelper.findPackageChanged(Intent.EXTRA_UID);
-//			webserviceSendDataHelper.collectTheData();
-//			webserviceSendDataHelper.sendTheData();
         }
         /**
          * Broadcast Action: An existing application package has been removed from the device. The data contains the name of the package. The package that is being installed does not receive this Intent.
@@ -55,11 +91,6 @@ public class AppInstallBroadcastReceiver extends BroadcastReceiver {
             /**
              * Don't send data on uninstall app for now
              */
-            message = "App uninstalled: " + webserviceSendDataHelper.findPackageRemoved(Intent.EXTRA_UID);
-//			Log.d(HeimdallApplication.getDebugTag(), "Uninstallation complete!\n"+message);
-            webserviceSendDataHelper.collectTheData();
-            webserviceSendDataHelper.sendTheData();
-            Notification(context, message);
         }
         /**
          * Broadcast Action: A new version of an application package has been installed, replacing an existing version that was previously installed. The data contains the name of the package.
@@ -72,10 +103,6 @@ public class AppInstallBroadcastReceiver extends BroadcastReceiver {
             /**
              * Don't send data on update for now
              */
-//			Log.d(HeimdallApplication.getDebugTag(), "package replaced, nothing to do");
-//			message = "New app installed is: " + webserviceSendDataHelper.findPackageReplaced(Intent.EXTRA_UID);
-//			webserviceSendDataHelper.collectTheData();
-//			webserviceSendDataHelper.sendTheData();
         }
     }
 }

@@ -5,14 +5,11 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.database.sqlite.SQLiteDatabase;
-import android.os.Build;
 import android.os.Bundle;
 import android.os.Parcelable;
-import android.preference.PreferenceActivity;
 import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
-import android.view.View;
 import android.support.design.widget.NavigationView;
+import android.support.design.widget.Snackbar;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
@@ -20,18 +17,18 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.TextView;
 
 import java.util.List;
 
 import edu.umbc.cs.ebiquity.mithril.MithrilApplication;
-import edu.umbc.cs.ebiquity.mithril.data.model.AppData;
-import edu.umbc.cs.ebiquity.mithril.ui.fragments.ViolationFragment;
-import edu.umbc.cs.ebiquity.mithril.ui.fragments.appmanager.ShowAppsFragment;
 import edu.umbc.cs.ebiquity.mithril.R;
 import edu.umbc.cs.ebiquity.mithril.data.helpers.MithrilDBHelper;
+import edu.umbc.cs.ebiquity.mithril.data.model.AppData;
 import edu.umbc.cs.ebiquity.mithril.data.model.Violation;
-import edu.umbc.cs.ebiquity.mithril.util.RootAccess;
+import edu.umbc.cs.ebiquity.mithril.ui.fragments.ShowAppsFragment;
+import edu.umbc.cs.ebiquity.mithril.ui.fragments.ViolationFragment;
 
 public class MainActivity extends AppCompatActivity
         implements  NavigationView.OnNavigationItemSelectedListener,
@@ -52,7 +49,6 @@ public class MainActivity extends AppCompatActivity
     private List<AppData> appDataItemsSelected = null;
     private FloatingActionButton fab;
     private TextView mAppCountTextView;
-    private RootAccess rootAccess;
 
     private void loadAllAppsFragment() {
         Bundle data = new Bundle();
@@ -174,8 +170,6 @@ public class MainActivity extends AppCompatActivity
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        rootAccess = new RootAccess(getApplicationContext());
-        rootAccess.checkAccess();
         createShortCut();
         initViews();
         initData();
@@ -219,7 +213,7 @@ public class MainActivity extends AppCompatActivity
 
     private void defaultFragmentLoad() {
         FragmentManager fragmentManager = getFragmentManager();
-        fragmentManager.beginTransaction().replace(R.id.container, new ViolationFragment())
+        fragmentManager.beginTransaction().replace(R.id.container, new ShowAppsFragment())
                 .commit();
         loadAllAppsFragment();
     }

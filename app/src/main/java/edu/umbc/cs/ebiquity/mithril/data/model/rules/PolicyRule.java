@@ -19,7 +19,7 @@ public class PolicyRule {
 	private String name;
 	private Requester requester;
 	private Resource resource;
-	private UserContext context;
+	private String context;
 	private RuleAction action;
 	public PolicyRule() {
 		super();
@@ -27,12 +27,11 @@ public class PolicyRule {
 		this.name = MithrilApplication.getConstPolRulDefaultRule();
 		this.requester = new Requester();
 		this.resource = new Resource();
-		this.context = new UserContext(new PresenceInfo(new ArrayList<Identity>()),
-				new InferredActivity(), new Identity(), new InferredLocation(), new DeviceTime());
+		this.context = new String();
 		this.action = new RuleAction(Action.DENY);
 	}
 	public PolicyRule(int policyRuleId, String name, Requester requester, Resource resource,
-			UserContext context, RuleAction action) {
+			String context, RuleAction action) {
 		super();
 		this.id = policyRuleId;
 		this.name = name;
@@ -42,7 +41,7 @@ public class PolicyRule {
 		this.action = action;
 	}
 	public PolicyRule(String name, Requester requester, Resource resource,
-			UserContext context, RuleAction action) {
+			String context, RuleAction action) {
 		super();
 		this.id = -1;
 		this.name = name;
@@ -51,96 +50,91 @@ public class PolicyRule {
 		this.context = context;
 		this.action = action;
 	}
+
 	@Override
-	public boolean equals(Object obj) {
-		if (this == obj)
-			return true;
-		if (obj == null)
-			return false;
-		if (getClass() != obj.getClass())
-			return false;
-		PolicyRule other = (PolicyRule) obj;
-		if (action == null) {
-			if (other.action != null)
-				return false;
-		} else if (!action.equals(other.action))
-			return false;
-		if (context == null) {
-			if (other.context != null)
-				return false;
-		} else if (!context.equals(other.context))
-			return false;
-		if (id != other.id)
-			return false;
-		if (name == null) {
-			if (other.name != null)
-				return false;
-		} else if (!name.equals(other.name))
-			return false;
-		if (requester == null) {
-			if (other.requester != null)
-				return false;
-		} else if (!requester.equals(other.requester))
-			return false;
-		if (resource == null) {
-			if (other.resource != null)
-				return false;
-		} else if (!resource.equals(other.resource))
-			return false;
-		return true;
+	public String toString() {
+		return "PolicyRule{" +
+				"id=" + id +
+				", name='" + name + '\'' +
+				", requester=" + requester +
+				", resource=" + resource +
+				", context='" + context + '\'' +
+				", action=" + action +
+				'}';
 	}
-	public RuleAction getAction() {
-		return action;
+
+	@Override
+	public boolean equals(Object o) {
+		if (this == o) return true;
+		if (!(o instanceof PolicyRule)) return false;
+
+		PolicyRule that = (PolicyRule) o;
+
+		if (getId() != that.getId()) return false;
+		if (!getName().equals(that.getName())) return false;
+		if (!getRequester().equals(that.getRequester())) return false;
+		if (!getResource().equals(that.getResource())) return false;
+		if (!getContext().equals(that.getContext())) return false;
+		return getAction().equals(that.getAction());
+
 	}
-	public UserContext getContext() {
-		return context;
+
+	@Override
+	public int hashCode() {
+		int result = getId();
+		result = 31 * result + getName().hashCode();
+		result = 31 * result + getRequester().hashCode();
+		result = 31 * result + getResource().hashCode();
+		result = 31 * result + getContext().hashCode();
+		result = 31 * result + getAction().hashCode();
+		return result;
 	}
+
 	public int getId() {
 		return id;
 	}
-	public String getName() {
-		return name;
-	}
-	public Requester getRequester() {
-		return requester;
-	}
-	public Resource getResource() {
-		return resource;
-	}
-	@Override
-	public int hashCode() {
-		final int prime = 31;
-		int result = 1;
-		result = prime * result + ((action == null) ? 0 : action.hashCode());
-		result = prime * result + ((context == null) ? 0 : context.hashCode());
-		result = prime * result + id;
-		result = prime * result + ((name == null) ? 0 : name.hashCode());
-		result = prime * result
-				+ ((requester == null) ? 0 : requester.hashCode());
-		result = prime * result
-				+ ((resource == null) ? 0 : resource.hashCode());
-		return result;
-	}
-	public void setAction(RuleAction action) {
-		this.action = action;
-	}
-	public void setContext(UserContext context) {
-		this.context = context;
-	}
+
 	public void setId(int id) {
 		this.id = id;
 	}
+
+	public String getName() {
+		return name;
+	}
+
 	public void setName(String name) {
 		this.name = name;
 	}
+
+	public Requester getRequester() {
+		return requester;
+	}
+
 	public void setRequester(Requester requester) {
 		this.requester = requester;
 	}
+
+	public Resource getResource() {
+		return resource;
+	}
+
 	public void setResource(Resource resource) {
 		this.resource = resource;
 	}
-	@Override
-	public String toString() {
-		return name;
+
+	public String getContext() {
+		return context;
+	}
+
+	public void setContext(String context) {
+		this.context = context;
+	}
+
+	public RuleAction getAction() {
+		return action;
+	}
+
+	public void setAction(RuleAction action) {
+		this.action = action;
 	}
 }

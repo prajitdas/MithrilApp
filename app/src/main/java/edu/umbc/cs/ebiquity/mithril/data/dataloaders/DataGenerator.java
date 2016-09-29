@@ -26,7 +26,7 @@ public class DataGenerator {
 	 * @param aRuleAction
 	 * @return
 	 */
-	public static PolicyRule generateSocialMediaCameraAccessRule(Requester aRequester, Resource aResource, UserContext aUserContext, RuleAction aRuleAction) {
+	public static PolicyRule generateSocialMediaCameraAccessRule(Requester aRequester, Resource aResource, String aUserContext, RuleAction aRuleAction) {
 		PolicyRule policyRule = new PolicyRule(MithrilApplication.getConstPolRulNameSocialMediaCameraAccessRule(), aRequester, aResource, aUserContext, aRuleAction);
 		return policyRule;
 	}

@@ -8,8 +8,8 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import edu.umbc.cs.ebiquity.mithril.data.model.AppData;
-import edu.umbc.cs.ebiquity.mithril.ui.fragments.appmanager.ShowAppsFragment.OnListFragmentInteractionListener;
-import edu.umbc.cs.ebiquity.mithril.ui.fragments.appmanager.ShowAppsFragment.OnListFragmentLongInteractionListener;
+import edu.umbc.cs.ebiquity.mithril.ui.fragments.ShowAppsFragment.OnListFragmentInteractionListener;
+import edu.umbc.cs.ebiquity.mithril.ui.fragments.ShowAppsFragment.OnListFragmentLongInteractionListener;
 import edu.umbc.cs.ebiquity.mithril.R;
 
 import java.util.ArrayList;

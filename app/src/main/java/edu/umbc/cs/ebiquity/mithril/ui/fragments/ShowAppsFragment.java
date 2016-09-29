@@ -1,4 +1,4 @@
-package edu.umbc.cs.ebiquity.mithril.ui.fragments.appmanager;
+package edu.umbc.cs.ebiquity.mithril.ui.fragments;
 
 import android.app.Fragment;
 import android.content.Context;
@@ -6,6 +6,7 @@ import android.content.SharedPreferences;
 import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
+import android.database.sqlite.SQLiteDatabase;
 import android.graphics.drawable.BitmapDrawable;
 import android.os.Bundle;
 import android.support.v7.widget.DefaultItemAnimator;
@@ -24,6 +25,7 @@ import java.util.Map;
 
 import edu.umbc.cs.ebiquity.mithril.MithrilApplication;
 import edu.umbc.cs.ebiquity.mithril.R;
+import edu.umbc.cs.ebiquity.mithril.data.helpers.MithrilDBHelper;
 import edu.umbc.cs.ebiquity.mithril.data.model.AppData;
 import edu.umbc.cs.ebiquity.mithril.ui.adapters.InstalledAppsRecyclerViewAdapter;
 import edu.umbc.cs.ebiquity.mithril.ui.specialFeatures.DividerItemDecoration;
@@ -52,7 +54,6 @@ public class ShowAppsFragment extends Fragment {
     private List<AppData> systemAppDataItems = new ArrayList<>();
     private List<AppData> userAppDataItems = new ArrayList<>();
     private Map<String, AppData> appMetadataMap = new HashMap<>();
-    private PackageManager packageManager;
     private View view;
 
     /**
@@ -87,7 +88,6 @@ public class ShowAppsFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         view = inflater.inflate(R.layout.fragment_apps_list, container, false);
-        packageManager = view.getContext().getPackageManager();
         initData();
         initView();
         sharedPreferences.edit().putInt(MithrilApplication.getSharedPreferenceAppCount(), allAppDataItems.size());
@@ -165,71 +165,14 @@ public class ShowAppsFragment extends Fragment {
     }
 
     private void getAllApps() {
-        int flags = PackageManager.GET_META_DATA |
-                PackageManager.GET_SHARED_LIBRARY_FILES |
-                PackageManager.GET_PERMISSIONS;
-        for(PackageInfo pack : packageManager.getInstalledPackages(flags)) {
-            if ((pack.applicationInfo.flags) != 1) {
-                try {
-                    AppData tempAppMetaData = new AppData("dummyApp");
-                    if (pack.packageName != null) {
-                        tempAppMetaData.setPackageName(pack.packageName);
-                        tempAppMetaData.setAppName(pack.applicationInfo.loadLabel(packageManager).toString());
-                        tempAppMetaData.setVersionInfo(pack.versionName);
-                        tempAppMetaData.setIcon(((BitmapDrawable) pack.applicationInfo.loadIcon(packageManager)).getBitmap());
-                    }
-                    appMetadataMap.put(tempAppMetaData.getPackageName(), tempAppMetaData);
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-            }
-        }
 
     }
 
     private void getSystemApps() {
-        int flags = PackageManager.GET_META_DATA |
-                PackageManager.GET_SHARED_LIBRARY_FILES |
-                PackageManager.GET_PERMISSIONS;
-        for(PackageInfo pack : packageManager.getInstalledPackages(flags)) {
-            if ((pack.applicationInfo.flags & ApplicationInfo.FLAG_SYSTEM) == 1) {
-                try {
-                    AppData tempAppMetaData = new AppData("dummyApp");
-                    if (pack.packageName != null) {
-                        tempAppMetaData.setPackageName(pack.packageName);
-                        tempAppMetaData.setAppName(pack.applicationInfo.loadLabel(packageManager).toString());
-                        tempAppMetaData.setVersionInfo(pack.versionName);
-                        tempAppMetaData.setIcon(((BitmapDrawable) pack.applicationInfo.loadIcon(packageManager)).getBitmap());
-                    }
-                    appMetadataMap.put(tempAppMetaData.getPackageName(), tempAppMetaData);
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-            }
-        }
 
     }
 
     private void getUserApps() {
-        int flags = PackageManager.GET_META_DATA |
-                PackageManager.GET_SHARED_LIBRARY_FILES |
-                PackageManager.GET_PERMISSIONS;
-        for(PackageInfo pack : packageManager.getInstalledPackages(flags)) {
-            if ((pack.applicationInfo.flags & ApplicationInfo.FLAG_SYSTEM) != 1) {
-                try {
-                    AppData tempAppMetaData = new AppData("dummyApp");
-                    if (pack.packageName != null) {
-                        tempAppMetaData.setPackageName(pack.packageName);
-                        tempAppMetaData.setAppName(pack.applicationInfo.loadLabel(packageManager).toString());
-                        tempAppMetaData.setVersionInfo(pack.versionName);
-                        tempAppMetaData.setIcon(((BitmapDrawable) pack.applicationInfo.loadIcon(packageManager)).getBitmap());
-                    }
-                    appMetadataMap.put(tempAppMetaData.getPackageName(), tempAppMetaData);
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-            }
-        }
 
     }
 

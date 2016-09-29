@@ -2,6 +2,8 @@ package edu.umbc.cs.ebiquity.mithril.data.model;
 
 import android.graphics.Bitmap;
 
+import java.util.Arrays;
+
 /**
 * Helper class for managing content
 */
@@ -14,17 +16,8 @@ public class AppData implements Comparable<AppData>{
     private String appName;
     private String packageName;
     private String versionInfo;
-
-    public boolean isSelected() {
-        return selected;
-    }
-
-    public AppData setSelected(boolean selected) {
-        this.selected = selected;
-        return this;
-    }
-
-    private boolean selected;
+    private boolean installed;
+    private String appType;
 
     public AppData(String packageName) {
         setPackageName(packageName);
@@ -33,10 +26,12 @@ public class AppData implements Comparable<AppData>{
     public AppData(String appDescription, String[] permissions,
                    String associatedProcessName,
                    int targetSdkVersion,
-                   Bitmap icon, String appName,
+                   Bitmap icon,
+                   String appName,
                    String packageName,
                    String versionInfo,
-                   boolean selected) {
+                   boolean installed,
+                   String appType) {
         setAppDescription(appDescription);
         setPermissions(permissions);
         setAssociatedProcessName(associatedProcessName);
@@ -45,79 +40,88 @@ public class AppData implements Comparable<AppData>{
         setAppName(appName);
         setPackageName(packageName);
         setVersionInfo(versionInfo);
-        setSelected(selected);
+        setInstalled(installed);
+        setAppType(appType);
     }
 
     public String getAppDescription() {
         return appDescription;
     }
 
-    public AppData setAppDescription(String appDescription) {
+    public void setAppDescription(String appDescription) {
         this.appDescription = appDescription;
-        return this;
     }
 
     public String[] getPermissions() {
         return permissions;
     }
 
-    public AppData setPermissions(String[] permissions) {
+    public void setPermissions(String[] permissions) {
         this.permissions = permissions;
-        return this;
     }
 
     public String getAssociatedProcessName() {
         return associatedProcessName;
     }
 
-    public AppData setAssociatedProcessName(String associatedProcessName) {
+    public void setAssociatedProcessName(String associatedProcessName) {
         this.associatedProcessName = associatedProcessName;
-        return this;
     }
 
     public int getTargetSdkVersion() {
         return targetSdkVersion;
     }
 
-    public AppData setTargetSdkVersion(int targetSdkVersion) {
+    public void setTargetSdkVersion(int targetSdkVersion) {
         this.targetSdkVersion = targetSdkVersion;
-        return this;
     }
 
     public Bitmap getIcon() {
         return icon;
     }
 
-    public AppData setIcon(Bitmap icon) {
+    public void setIcon(Bitmap icon) {
         this.icon = icon;
-        return this;
     }
 
     public String getAppName() {
         return appName;
     }
 
-    public AppData setAppName(String appName) {
+    public void setAppName(String appName) {
         this.appName = appName;
-        return this;
     }
 
     public String getPackageName() {
         return packageName;
     }
 
-    public AppData setPackageName(String packageName) {
+    public void setPackageName(String packageName) {
         this.packageName = packageName;
-        return this;
     }
 
     public String getVersionInfo() {
         return versionInfo;
     }
 
-    public AppData setVersionInfo(String versionInfo) {
+    public void setVersionInfo(String versionInfo) {
         this.versionInfo = versionInfo;
-        return this;
+    }
+
+    public boolean isInstalled() {
+        return installed;
+    }
+
+    public void setInstalled(boolean installed) {
+        this.installed = installed;
+    }
+
+    public String getAppType() {
+        return appType;
+    }
+
+    public void setAppType(String appType) {
+        this.appType = appType;
     }
 
     @Override
@@ -125,31 +129,55 @@ public class AppData implements Comparable<AppData>{
         if (this == o) return true;
         if (!(o instanceof AppData)) return false;
 
-        AppData that = (AppData) o;
+        AppData appData = (AppData) o;
 
-        if (!getPackageName().equals(that.getPackageName())) return false;
-        return getVersionInfo().equals(that.getVersionInfo());
+        if (getTargetSdkVersion() != appData.getTargetSdkVersion()) return false;
+        if (isInstalled() != appData.isInstalled()) return false;
+        if (!getAppDescription().equals(appData.getAppDescription())) return false;
+        // Probably incorrect - comparing Object[] arrays with Arrays.equals
+        if (!Arrays.equals(getPermissions(), appData.getPermissions())) return false;
+        if (!getAssociatedProcessName().equals(appData.getAssociatedProcessName())) return false;
+        if (!getIcon().equals(appData.getIcon())) return false;
+        if (!getAppName().equals(appData.getAppName())) return false;
+        if (!getPackageName().equals(appData.getPackageName())) return false;
+        if (!getVersionInfo().equals(appData.getVersionInfo())) return false;
+        return getAppType().equals(appData.getAppType());
 
     }
 
     @Override
     public int hashCode() {
-        int result = getPackageName().hashCode();
+        int result = getAppDescription().hashCode();
+        result = 31 * result + Arrays.hashCode(getPermissions());
+        result = 31 * result + getAssociatedProcessName().hashCode();
+        result = 31 * result + getTargetSdkVersion();
+        result = 31 * result + getIcon().hashCode();
+        result = 31 * result + getAppName().hashCode();
+        result = 31 * result + getPackageName().hashCode();
         result = 31 * result + getVersionInfo().hashCode();
+        result = 31 * result + (isInstalled() ? 1 : 0);
+        result = 31 * result + getAppType().hashCode();
         return result;
     }
 
     @Override
     public String toString() {
         return "AppData{" +
-                "packageName='" + packageName + '\'' +
-                ", versionInfo='" + versionInfo + '\'' +
+                "appDescription='" + appDescription + '\'' +
+                ", permissions=" + Arrays.toString(permissions) +
+                ", associatedProcessName='" + associatedProcessName + '\'' +
+                ", targetSdkVersion=" + targetSdkVersion +
+                ", icon=" + icon +
                 ", appName='" + appName + '\'' +
+                ", packageName='" + packageName + '\'' +
+                ", versionInfo='" + versionInfo + '\'' +
+                ", installed=" + installed +
+                ", appType='" + appType + '\'' +
                 '}';
     }
 
     @Override
     public int compareTo(AppData another) {
-        return this.getAppName().compareTo(another.getAppName());
+        return this.getPackageName().compareTo(another.getPackageName());
     }
 }
