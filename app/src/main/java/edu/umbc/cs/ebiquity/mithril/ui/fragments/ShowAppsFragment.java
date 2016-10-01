@@ -3,11 +3,6 @@ package edu.umbc.cs.ebiquity.mithril.ui.fragments;
 import android.app.Fragment;
 import android.content.Context;
 import android.content.SharedPreferences;
-import android.content.pm.ApplicationInfo;
-import android.content.pm.PackageInfo;
-import android.content.pm.PackageManager;
-import android.database.sqlite.SQLiteDatabase;
-import android.graphics.drawable.BitmapDrawable;
 import android.os.Bundle;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.GridLayoutManager;
@@ -25,7 +20,6 @@ import java.util.Map;
 
 import edu.umbc.cs.ebiquity.mithril.MithrilApplication;
 import edu.umbc.cs.ebiquity.mithril.R;
-import edu.umbc.cs.ebiquity.mithril.data.helpers.MithrilDBHelper;
 import edu.umbc.cs.ebiquity.mithril.data.model.AppData;
 import edu.umbc.cs.ebiquity.mithril.ui.adapters.InstalledAppsRecyclerViewAdapter;
 import edu.umbc.cs.ebiquity.mithril.ui.specialFeatures.DividerItemDecoration;
@@ -164,6 +158,9 @@ public class ShowAppsFragment extends Fragment {
         appMetadataMap.clear();
     }
 
+    /**
+     * Get all apps that are installed on the device by reading the MithrilDB
+     */
     private void getAllApps() {
 
     }

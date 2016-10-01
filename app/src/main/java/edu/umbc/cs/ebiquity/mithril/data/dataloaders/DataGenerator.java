@@ -15,7 +15,7 @@ import edu.umbc.cs.ebiquity.mithril.data.model.rules.context.contextpieces.Infer
 import edu.umbc.cs.ebiquity.mithril.data.model.rules.context.contextpieces.PresenceInfo;
 import edu.umbc.cs.ebiquity.mithril.data.model.rules.protectedresources.Resource;
 import edu.umbc.cs.ebiquity.mithril.data.model.rules.requesters.Requester;
-import edu.umbc.cs.ebiquity.mithril.data.helpers.MithrilDBHelper;
+import edu.umbc.cs.ebiquity.mithril.data.dbhelpers.MithrilDBHelper;
 
 public class DataGenerator {
 	/**

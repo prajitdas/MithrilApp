@@ -24,7 +24,7 @@ import java.util.List;
 
 import edu.umbc.cs.ebiquity.mithril.MithrilApplication;
 import edu.umbc.cs.ebiquity.mithril.R;
-import edu.umbc.cs.ebiquity.mithril.data.helpers.MithrilDBHelper;
+import edu.umbc.cs.ebiquity.mithril.data.dbhelpers.MithrilDBHelper;
 import edu.umbc.cs.ebiquity.mithril.data.model.AppData;
 import edu.umbc.cs.ebiquity.mithril.data.model.Violation;
 import edu.umbc.cs.ebiquity.mithril.ui.fragments.ShowAppsFragment;
@@ -212,10 +212,11 @@ public class MainActivity extends AppCompatActivity
     }
 
     private void defaultFragmentLoad() {
+        //For ViolationFragment() we will have to manage in a different manner
         FragmentManager fragmentManager = getFragmentManager();
-        fragmentManager.beginTransaction().replace(R.id.container, new ShowAppsFragment())
-                .commit();
-        loadAllAppsFragment();
+        fragmentManager.beginTransaction().replace(R.id.container, new ViolationFragment()).commit();
+        //If we are loading the app list we don't need the above two lines as we take care of that in the loadAllAppsFragment() method
+//        loadAllAppsFragment();
     }
 
     @Override

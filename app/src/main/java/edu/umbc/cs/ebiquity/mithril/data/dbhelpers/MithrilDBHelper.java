@@ -1,4 +1,4 @@
-package edu.umbc.cs.ebiquity.mithril.data.helpers;
+package edu.umbc.cs.ebiquity.mithril.data.dbhelpers;
 
 import java.io.ByteArrayOutputStream;
 import java.util.ArrayList;
@@ -1031,7 +1031,6 @@ public class MithrilDBHelper extends SQLiteOpenHelper {
                 }
             }
         }
-
     }
 
 //    private void getSystemApps() {
