@@ -8,7 +8,7 @@ import android.app.Application;
 public class MithrilApplication extends Application{
     private static final String CONST_COMMAND_APP_BROADCAST_INTENT = "edu.umbc.ebiquity.mithril.command.intent.action.DATA_REQUEST";
 
-    private final static String CONST_DATABASE_NAME = "MithrilDB";
+    private final static String CONST_DATABASE_NAME = "Mithril.db";
     private static final String CONST_DEBUG_TAG = "MITHRIL_DEBUG_TAG";
 
     /**

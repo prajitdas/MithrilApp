@@ -1,7 +1,6 @@
 package edu.umbc.cs.ebiquity.mithril.ui.activities;
 
 import android.app.FragmentManager;
-import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.database.sqlite.SQLiteDatabase;
@@ -207,8 +206,8 @@ public class MainActivity extends AppCompatActivity
          */
         mithrilDBHelper = new MithrilDBHelper(this);
         mithrilDB = mithrilDBHelper.getWritableDatabase();
-        sharedPreferences = this.getSharedPreferences(MithrilApplication.getSharedPreferencesName(), Context.MODE_PRIVATE);
-        defaultFragmentLoad();
+//        sharedPreferences = this.getSharedPreferences(MithrilApplication.getSharedPreferencesName(), Context.MODE_PRIVATE);
+//        defaultFragmentLoad();
     }
 
     private void defaultFragmentLoad() {

@@ -1,9 +1,5 @@
 package edu.umbc.cs.ebiquity.mithril.data.dbhelpers;
 
-import java.io.ByteArrayOutputStream;
-import java.util.ArrayList;
-import java.util.List;
-
 import android.content.ContentValues;
 import android.content.Context;
 import android.content.pm.ApplicationInfo;
@@ -18,7 +14,12 @@ import android.graphics.BitmapFactory;
 import android.graphics.drawable.BitmapDrawable;
 import android.util.Log;
 
+import java.io.ByteArrayOutputStream;
+import java.util.ArrayList;
+import java.util.List;
+
 import edu.umbc.cs.ebiquity.mithril.MithrilApplication;
+import edu.umbc.cs.ebiquity.mithril.R;
 import edu.umbc.cs.ebiquity.mithril.data.dataloaders.DataGenerator;
 import edu.umbc.cs.ebiquity.mithril.data.model.AppData;
 import edu.umbc.cs.ebiquity.mithril.data.model.Violation;
@@ -35,7 +36,13 @@ import edu.umbc.cs.ebiquity.mithril.data.model.rules.protectedresources.Resource
 import edu.umbc.cs.ebiquity.mithril.data.model.rules.requesters.Requester;
 
 public class MithrilDBHelper extends SQLiteOpenHelper {
-	
+
+    private Context context;
+    private PackageManager packageManager;
+    // database declarations
+    private final static int DATABASE_VERSION = 1;
+    private final static String DATABASE_NAME = MithrilApplication.getConstDatabaseName();
+
 	// Fields for the database tables
 	// Table for Requester information
     private final static String REQID = "id"; // ID of a request
@@ -112,9 +119,6 @@ public class MithrilDBHelper extends SQLiteOpenHelper {
     private final static String APPPERMRESPERID = "permid"; // ID from permission table
     private final static String APPPERMRESRESID = "rsrcid"; // ID from resource table
 
-	// database declarations
-	private final static int DATABASE_VERSION = 1;
-
 	private final static String REQUESTERS_TABLE_NAME = "requesters";
 	private final static String RESOURCES_TABLE_NAME = "resources";
 	private final static String CONTEXT_TABLE_NAME = "context";
@@ -125,10 +129,7 @@ public class MithrilDBHelper extends SQLiteOpenHelper {
     private final static String PERMISSIONS_TABLE_NAME = "permissions";
     private final static String APP_PERM_RSRC_TABLE_NAME = "apppermrsrc";
 
-	private Context context;
-    private PackageManager packageManager;
-
-	/**
+    /**
 	 * Table creation statements
 	 */
     private final static String CREATE_APP_DATA_TABLE =  " CREATE TABLE " + getAppDataTableName() + " (" +
@@ -203,12 +204,8 @@ public class MithrilDBHelper extends SQLiteOpenHelper {
 	 * @param context
 	 */
 	public MithrilDBHelper(Context context) {
-		super(context, MithrilApplication.getConstDatabaseName(), null, DATABASE_VERSION);
-		this.setContext(context); 
-	}
-
-	public String getDatabaseName() {
-		return MithrilApplication.getConstDatabaseName();
+		super(context, DATABASE_NAME, null, DATABASE_VERSION);
+		this.setContext(context);
 	}
 
 	public Context getContext() {
@@ -218,25 +215,27 @@ public class MithrilDBHelper extends SQLiteOpenHelper {
 	public void setContext(Context context) {
 		this.context = context;
 	}
-	
-	public static int getDatabaseVersion() {
-		return DATABASE_VERSION;
-	}
 
 	/**
 	 * Table creation happens in onCreate this method also loads the default data
 	 */
 	@Override
 	public void onCreate(SQLiteDatabase db) {
-        db.execSQL(CREATE_APP_DATA_TABLE);
-		db.execSQL(CREATE_REQUESTERS_TABLE);
-		db.execSQL(CREATE_RESOURCES_TABLE);
-		db.execSQL(CREATE_CONTEXT_TABLE);
-		db.execSQL(CREATE_POLICY_RULES_TABLE);
-        db.execSQL(CREATE_ACTION_TABLE);
-		db.execSQL(CREATE_VIOLATIONS_TABLE);
-        db.execSQL(CREATE_PERMISSIONS_TABLE);
-        db.execSQL(CREATE_APP_PERM_RSRC_TABLE);
+        try {
+            db.execSQL(CREATE_APP_DATA_TABLE);
+            db.execSQL(CREATE_REQUESTERS_TABLE);
+            db.execSQL(CREATE_RESOURCES_TABLE);
+            db.execSQL(CREATE_CONTEXT_TABLE);
+            db.execSQL(CREATE_POLICY_RULES_TABLE);
+            db.execSQL(CREATE_ACTION_TABLE);
+            db.execSQL(CREATE_VIOLATIONS_TABLE);
+            db.execSQL(CREATE_PERMISSIONS_TABLE);
+            db.execSQL(CREATE_APP_PERM_RSRC_TABLE);
+        } catch (SQLException sqlException) {
+            Log.e(MithrilApplication.getDebugTag(), "Following error occurred while inserting data in SQLite DB - "+sqlException.getMessage());
+        } catch (Exception e) {
+            Log.e(MithrilApplication.getDebugTag(), "Some other error occurred while inserting data in SQLite DB - "+e.getMessage());
+        }
         packageManager = getContext().getPackageManager();
 		//The following method loads the database with the default data on creation of the database
 		loadDefaultDataIntoDB(db);
@@ -942,26 +941,26 @@ public class MithrilDBHelper extends SQLiteOpenHelper {
 				" WHERE "  +   
 				getContextTableName() + "." + RESID + " = " + id + ";";
 
-		UserContext context = new UserContext();
+		UserContext userContext = new UserContext();
 		
 		try{
 			Cursor cursor = db.rawQuery(selectQuery, null);
 			if (cursor.moveToFirst()) {
-				context.setId(Integer.parseInt(cursor.getString(0)));
+                userContext.setId(Integer.parseInt(cursor.getString(0)));
 
 				ArrayList<Identity> presenceIdList = new ArrayList<Identity>();
 				presenceIdList.add(new Identity(cursor.getString(1)));
 				PresenceInfo presenceInfo = new PresenceInfo(presenceIdList);
-				context.setPresenceInfo(presenceInfo);
-				
-				context.setActivity(new InferredActivity(cursor.getString(2)));
-				context.setLocation(new InferredLocation(cursor.getString(3)));
-				context.setTime(new DeviceTime(cursor.getString(4)));
+                userContext.setPresenceInfo(presenceInfo);
+
+                userContext.setActivity(new InferredActivity(cursor.getString(2)));
+                userContext.setLocation(new InferredLocation(cursor.getString(3)));
+                userContext.setTime(new DeviceTime(cursor.getString(4)));
 			}
 		} catch(SQLException e) {
             throw new SQLException("Could not find " + e);
 		}
-		return context;
+		return userContext;
 	}
 	
 	/**
@@ -1160,7 +1159,11 @@ public class MithrilDBHelper extends SQLiteOpenHelper {
                             tempAppData.setAppDescription(MithrilApplication.getConstDefaultDescription());
                         tempAppData.setAssociatedProcessName(pack.applicationInfo.processName);
                         tempAppData.setTargetSdkVersion(pack.applicationInfo.targetSdkVersion);
-                        tempAppData.setIcon(((BitmapDrawable) pack.applicationInfo.loadIcon(packageManager)).getBitmap());
+                        if(pack.applicationInfo.loadIcon(packageManager) instanceof BitmapDrawable)
+                            tempAppData.setIcon(((BitmapDrawable) pack.applicationInfo.loadIcon(packageManager)).getBitmap());
+                        else {
+                            tempAppData.setIcon(BitmapFactory.decodeResource(getContext().getResources(), R.drawable.ic_launcher));
+                        }
                         tempAppData.setAppName(pack.applicationInfo.loadLabel(packageManager).toString());
                         tempAppData.setPackageName(pack.packageName);
                         tempAppData.setVersionInfo(pack.versionName);
@@ -1172,9 +1175,11 @@ public class MithrilDBHelper extends SQLiteOpenHelper {
                     }
                     //Find all apps and insert into database
                     addAppData(db, tempAppData);
+                } catch (ClassCastException e) {
+                    Log.d(MithrilApplication.getDebugTag(), e.getMessage());
                 } catch (Exception e) {
-                    e.printStackTrace();
-                }
+					Log.d(MithrilApplication.getDebugTag(), e.getMessage());
+				}
             }
         }
     }
