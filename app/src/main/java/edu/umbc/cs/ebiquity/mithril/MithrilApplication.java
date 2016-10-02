@@ -57,7 +57,7 @@ public class MithrilApplication extends Application{
 
     private static final String CONST_POL_RUL_DEFAULT_RULE = "Default policy rule name";
 
-    private static final String CONST_VIOLATION_DESCRIPTION = "Default description";
+    private static final String CONST_DEFAULT_DESCRIPTION = "Default description";
 
     private static final String CONST_KEY_POLICY_RULE_ID = "PolicyRuleId";
 
@@ -134,8 +134,8 @@ public class MithrilApplication extends Application{
         return CONST_POL_RUL_DEFAULT_RULE;
     }
 
-    public static String getConstViolationDescription() {
-        return CONST_VIOLATION_DESCRIPTION;
+    public static String getConstDefaultDescription() {
+        return CONST_DEFAULT_DESCRIPTION;
     }
 
     public static String getConstKeyPolicyRuleId() {

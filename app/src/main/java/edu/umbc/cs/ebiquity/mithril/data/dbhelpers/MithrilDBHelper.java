@@ -14,6 +14,7 @@ import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.drawable.BitmapDrawable;
 import android.util.Log;
 
@@ -38,7 +39,6 @@ public class MithrilDBHelper extends SQLiteOpenHelper {
 	// Fields for the database tables
 	// Table for Requester information
     private final static String REQID = "id"; // ID of a request
-    private final static String REQAPPID = "appid"; // ID of App from app table
 	private final static String REQNAME = "name"; // Name from App table from which a request was received
 
     // Table for Resource requested information
@@ -145,7 +145,6 @@ public class MithrilDBHelper extends SQLiteOpenHelper {
 
     private final static String CREATE_REQUESTERS_TABLE =  " CREATE TABLE " + getRequestersTableName() + " (" +
 			REQID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
-            REQAPPID + " INTEGER NOT NULL REFERENCES " + getAppDataTableName() + "(" + APPID + "), " +
 			REQNAME + " TEXT NOT NULL DEFAULT '*');";
 	
 	private final static String CREATE_RESOURCES_TABLE =  " CREATE TABLE " + getResourcesTableName() + " (" +
@@ -337,6 +336,16 @@ public class MithrilDBHelper extends SQLiteOpenHelper {
 	}
 
 	public long addAppData(SQLiteDatabase db, AppData anAppData) {
+        Log.d(MithrilApplication.getDebugTag()+"desc", anAppData.getAppDescription());
+        Log.d(MithrilApplication.getDebugTag()+"associatedProcName", anAppData.getAssociatedProcessName());
+        Log.d(MithrilApplication.getDebugTag()+"desc", Integer.toString(anAppData.getTargetSdkVersion()));
+        Log.d(MithrilApplication.getDebugTag()+"packageName", anAppData.getPackageName());
+        Log.d(MithrilApplication.getDebugTag()+"desc", anAppData.getVersionInfo());
+        Log.d(MithrilApplication.getDebugTag()+"desc", anAppData.getAppName());
+        Log.d(MithrilApplication.getDebugTag()+"desc", anAppData.getAppType());
+        Log.d(MithrilApplication.getDebugTag()+"desc", Boolean.toString(anAppData.isInstalled()));
+        Log.d(MithrilApplication.getDebugTag()+"desc", anAppData.getIcon().toString());
+
 		long insertedRowId;
 		ContentValues values = new ContentValues();
 		values.put(APPDESCRIPTION, anAppData.getAppDescription());
@@ -439,6 +448,137 @@ public class MithrilDBHelper extends SQLiteOpenHelper {
 	}
 
 	/**
+	 * Finds all apps
+	 * @param db
+	 * @return
+	 */
+	public List<AppData> findAllApps(SQLiteDatabase db) {
+		// Select AppData Query
+		String selectQuery = "SELECT " +
+                getAppDataTableName() + "." + APPDESCRIPTION + "," +
+                getAppDataTableName() + "." + APPASSOCIATEDPROCNAME + "," +
+                getAppDataTableName() + "." + APPTARGETSDKVERSION + "," +
+                getAppDataTableName() + "." + APPICON + "," +
+                getAppDataTableName() + "." + APPNAME + "," +
+                getAppDataTableName() + "." + APPPACKAGENAME + "," +
+                getAppDataTableName() + "." + APPVERSIONINFO + "," +
+                getAppDataTableName() + "." + APPINSTALLED + "," +
+                getAppDataTableName() + "." + APPTYPE +
+				" FROM " + getViolationsTableName() + ";";
+
+		List<AppData> apps = new ArrayList<AppData>();
+		try{
+			Cursor cursor = db.rawQuery(selectQuery, null);
+			if (cursor.moveToFirst()) {
+                do {
+                    apps.add(
+                            new AppData(
+                                    cursor.getString(0),
+                                    cursor.getString(1),
+                                    Integer.parseInt(cursor.getString(2)),
+                                    BitmapFactory.decodeByteArray(cursor.getBlob(3), 0, cursor.getBlob(3).length),
+                                    cursor.getString(4),
+                                    cursor.getString(5),
+                                    cursor.getString(6),
+                                    cursor.getString(8)
+                            )
+                    );
+                } while(cursor.moveToNext());
+            }
+		} catch(SQLException e) {
+			throw new SQLException("Could not find " + e);
+		}
+		return apps;
+	}
+
+    /**
+     * Finds app by name
+     * @param db
+     * @return AppData
+     */
+    public AppData findAppByName(SQLiteDatabase db, String appName) {
+        // Select AppData Query
+        String selectQuery = "SELECT " +
+                getAppDataTableName() + "." + APPDESCRIPTION + "," +
+                getAppDataTableName() + "." + APPASSOCIATEDPROCNAME + "," +
+                getAppDataTableName() + "." + APPTARGETSDKVERSION + "," +
+                getAppDataTableName() + "." + APPICON + "," +
+                getAppDataTableName() + "." + APPNAME + "," +
+                getAppDataTableName() + "." + APPPACKAGENAME + "," +
+                getAppDataTableName() + "." + APPVERSIONINFO + "," +
+                getAppDataTableName() + "." + APPINSTALLED + "," +
+                getAppDataTableName() + "." + APPINSTALLED + "," +
+                getAppDataTableName() + "." + APPTYPE +
+                " FROM " + getViolationsTableName() +
+                " WHERE " + getAppDataTableName() + "." + APPNAME +
+                " = " + appName +
+                ";";
+
+        AppData app = new AppData();
+        try{
+            Cursor cursor = db.rawQuery(selectQuery, null);
+            if (cursor.moveToFirst()) {
+                app = new AppData(
+                        cursor.getString(0),
+                        cursor.getString(1),
+                        Integer.parseInt(cursor.getString(2)),
+                        BitmapFactory.decodeByteArray(cursor.getBlob(3), 0, cursor.getBlob(3).length),
+                        cursor.getString(4),
+                        cursor.getString(5),
+                        cursor.getString(6),
+                        cursor.getString(8)
+                );
+            }
+        } catch(SQLException e) {
+            throw new SQLException("Could not find " + e);
+        }
+        return app;
+    }
+
+    /**
+     * Finds app by id
+     * @param db
+     * @return AppData
+     */
+    public AppData findAppById(SQLiteDatabase db, int appId) {
+        // Select AppData Query
+        String selectQuery = "SELECT " +
+                getAppDataTableName() + "." + APPDESCRIPTION + "," +
+                getAppDataTableName() + "." + APPASSOCIATEDPROCNAME + "," +
+                getAppDataTableName() + "." + APPTARGETSDKVERSION + "," +
+                getAppDataTableName() + "." + APPICON + "," +
+                getAppDataTableName() + "." + APPNAME + "," +
+                getAppDataTableName() + "." + APPPACKAGENAME + "," +
+                getAppDataTableName() + "." + APPVERSIONINFO + "," +
+                getAppDataTableName() + "." + APPINSTALLED + "," +
+                getAppDataTableName() + "." + APPTYPE +
+                " FROM " + getViolationsTableName() +
+                " WHERE " + getAppDataTableName() + "." + APPID +
+                " = " + appId +
+                ";";
+
+        AppData app = new AppData();
+        try{
+            Cursor cursor = db.rawQuery(selectQuery, null);
+            if (cursor.moveToFirst()) {
+                app = new AppData(
+                        cursor.getString(0),
+                        cursor.getString(1),
+                        Integer.parseInt(cursor.getString(2)),
+                        BitmapFactory.decodeByteArray(cursor.getBlob(3), 0, cursor.getBlob(3).length),
+                        cursor.getString(4),
+                        cursor.getString(5),
+                        cursor.getString(6),
+                        cursor.getString(8)
+                );
+            }
+        } catch(SQLException e) {
+            throw new SQLException("Could not find " + e);
+        }
+        return app;
+    }
+
+    /**
 	 * Finds all violations
 	 * @param db
 	 * @return
@@ -561,12 +701,12 @@ public class MithrilDBHelper extends SQLiteOpenHelper {
 					policyRule.setRequester(new Requester(cursor.getString(2)));
 					policyRule.setResource(new Resource(cursor.getString(3)));
 					
-					ArrayList<Identity> presenceInfoList = new ArrayList<Identity>();
-					presenceInfoList.add(new Identity(cursor.getString(4)));
+//					ArrayList<Identity> presenceInfoList = new ArrayList<Identity>();
+//					presenceInfoList.add(new Identity(cursor.getString(4)));
 					
-					policyRule.setContext(cursor.getString(5));
+					policyRule.setContext(cursor.getString(4));
 					
-					if(Integer.parseInt(cursor.getString(6)) == 1)
+					if(Integer.parseInt(cursor.getString(5)) == 1)
 						policyRule.setAction(new RuleAction(Action.ALLOW));
 					else
 						policyRule.setAction(new RuleAction(Action.DENY));
@@ -975,9 +1115,14 @@ public class MithrilDBHelper extends SQLiteOpenHelper {
 	 * @param db reference to the db instance
 	 */
 	private void loadDefaultDataIntoDB(SQLiteDatabase db) {
-		//loads requesters
-		for(Requester aRequester : DataGenerator.generateRequesters())
-			addRequester(db, aRequester);
+        loadAllInstalledAppsIntoDB(db);
+
+        Requester requester = new Requester(findAppById(db, 1).getAppName());
+        //load one requester
+        addRequester(db, requester);
+//		//loads requesters
+//		for(Requester aRequester : DataGenerator.generateRequesters())
+//			addRequester(db, aRequester);
 		//loads resources
 		for(Resource aResource : DataGenerator.generateResources())
 			addResource(db, aResource);
@@ -998,9 +1143,7 @@ public class MithrilDBHelper extends SQLiteOpenHelper {
 		//loads violations
 		for(PolicyRule policyRule : findAllPolicies(db))
 			addViolation(db, new Violation(policyRule.toString(), 1, policyRule.getId(), false));
-
-        loadAllInstalledAppsIntoDB(db);
-	}
+    }
 
     private void loadAllInstalledAppsIntoDB(SQLiteDatabase db) {
         int flags = PackageManager.GET_META_DATA |
@@ -1011,7 +1154,10 @@ public class MithrilDBHelper extends SQLiteOpenHelper {
                 try {
                     AppData tempAppData = new AppData("dummyApp");
                     if (pack.packageName != null) {
-                        tempAppData.setAppDescription(pack.applicationInfo.loadDescription(packageManager).toString());
+                        if(pack.applicationInfo.loadDescription(packageManager) != null)
+                            tempAppData.setAppDescription(pack.applicationInfo.loadDescription(packageManager).toString());
+                        else
+                            tempAppData.setAppDescription(MithrilApplication.getConstDefaultDescription());
                         tempAppData.setAssociatedProcessName(pack.applicationInfo.processName);
                         tempAppData.setTargetSdkVersion(pack.applicationInfo.targetSdkVersion);
                         tempAppData.setIcon(((BitmapDrawable) pack.applicationInfo.loadIcon(packageManager)).getBitmap());

@@ -11,7 +11,7 @@ public class Violation {
 
 	public Violation() {
 		this.Id = -1;
-		this.violationDescription = MithrilApplication.getConstViolationDescription();
+		this.violationDescription = MithrilApplication.getConstDefaultDescription();
 		this.policyId = -1;
 		this.ruleId = -1;
 		this.violationMarker = false;

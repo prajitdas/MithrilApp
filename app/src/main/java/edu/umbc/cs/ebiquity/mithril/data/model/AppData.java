@@ -19,8 +19,30 @@ public class AppData implements Comparable<AppData>{
     private boolean installed;
     private String appType;
 
+    public AppData(String appDescription,
+                   String associatedProcessName,
+                   int targetSdkVersion,
+                   Bitmap icon,
+                   String appName,
+                   String packageName,
+                   String versionInfo,
+                   String appType) {
+        setAppDescription(appDescription);
+        setAssociatedProcessName(associatedProcessName);
+        setTargetSdkVersion(targetSdkVersion);
+        setIcon(icon);
+        setAppName(appName);
+        setPackageName(packageName);
+        setVersionInfo(versionInfo);
+        setAppType(appType);
+    }
+
     public AppData(String packageName) {
         setPackageName(packageName);
+    }
+
+    public AppData() {
+
     }
 
     public AppData(String appDescription, String[] permissions,

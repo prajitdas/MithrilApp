@@ -3,6 +3,7 @@ package edu.umbc.cs.ebiquity.mithril.ui.fragments;
 import android.app.Fragment;
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.GridLayoutManager;
@@ -20,6 +21,7 @@ import java.util.Map;
 
 import edu.umbc.cs.ebiquity.mithril.MithrilApplication;
 import edu.umbc.cs.ebiquity.mithril.R;
+import edu.umbc.cs.ebiquity.mithril.data.dbhelpers.MithrilDBHelper;
 import edu.umbc.cs.ebiquity.mithril.data.model.AppData;
 import edu.umbc.cs.ebiquity.mithril.ui.adapters.InstalledAppsRecyclerViewAdapter;
 import edu.umbc.cs.ebiquity.mithril.ui.specialFeatures.DividerItemDecoration;
@@ -32,6 +34,8 @@ import edu.umbc.cs.ebiquity.mithril.ui.specialFeatures.DividerItemDecoration;
  */
 public class ShowAppsFragment extends Fragment {
 
+    private static MithrilDBHelper mithrilDBHelper;
+    private static SQLiteDatabase mithrilDB;
     private SharedPreferences sharedPreferences;
     // TODO: Customize parameter argument names
     private static final String ARG_COLUMN_COUNT = "column-count";
@@ -120,57 +124,74 @@ public class ShowAppsFragment extends Fragment {
      * Finds all the applications on the phone and stores them in a database accessible to the whole app
      */
     private void initData() {
+        mithrilDBHelper = new MithrilDBHelper(view.getContext());
+        mithrilDB = mithrilDBHelper.getWritableDatabase();
         sharedPreferences = view.getContext().getSharedPreferences(MithrilApplication.getSharedPreferencesName(), Context.MODE_PRIVATE);
-        /**
-         * Data loading: get all apps
-         */
-        getAllApps();
 
-        for(Map.Entry<String, AppData> entry : appMetadataMap.entrySet()) {
+        if (mAppDisplayType.equals(MithrilApplication.getAllAppsDisplayTag())) {
+            /**
+             * Data loading: get all apps
+             */
+            getAllApps();
+
+            for (Map.Entry<String, AppData> entry : appMetadataMap.entrySet()) {
 //            Log.d("MithrilAppManager", entry.toString());
-            allAppDataItems.add(entry.getValue());
-        }
-        Collections.sort(allAppDataItems);
-        appMetadataMap.clear();
+                allAppDataItems.add(entry.getValue());
+            }
+            Collections.sort(allAppDataItems);
+            appMetadataMap.clear();
+        } else if (mAppDisplayType.equals(MithrilApplication.getSystemAppsDisplayTag())) {
 
-        /**
-         * Data loading: get all system apps
-         */
-        getSystemApps();
+            /**
+             * Data loading: get all system apps
+             */
+            getSystemApps();
 
-        for(Map.Entry<String, AppData> entry : appMetadataMap.entrySet()) {
+            for (Map.Entry<String, AppData> entry : appMetadataMap.entrySet()) {
 //            Log.d("MithrilAppManager", entry.toString());
-            systemAppDataItems.add(entry.getValue());
-        }
-        Collections.sort(allAppDataItems);
-        appMetadataMap.clear();
+                systemAppDataItems.add(entry.getValue());
+            }
+            Collections.sort(allAppDataItems);
+            appMetadataMap.clear();
+        } else if (mAppDisplayType.equals(MithrilApplication.getUserAppsDisplayTag())) {
+            /**
+             * Data loading: get all user apps
+             */
+            getUserApps();
 
-        /**
-         * Data loading: get all user apps
-         */
-        getUserApps();
-
-        for(Map.Entry<String, AppData> entry : appMetadataMap.entrySet()) {
+            for (Map.Entry<String, AppData> entry : appMetadataMap.entrySet()) {
 //            Log.d("MithrilAppManager", entry.toString());
-            userAppDataItems.add(entry.getValue());
+                userAppDataItems.add(entry.getValue());
+            }
+            Collections.sort(allAppDataItems);
+            appMetadataMap.clear();
         }
-        Collections.sort(allAppDataItems);
-        appMetadataMap.clear();
     }
 
     /**
      * Get all apps that are installed on the device by reading the MithrilDB
      */
     private void getAllApps() {
-
+        for(AppData app : mithrilDBHelper.findAllApps(mithrilDB))
+            appMetadataMap.put(app.getPackageName(), app);
     }
 
+    /**
+     * Get system apps that are installed on the device by reading the MithrilDB
+     */
     private void getSystemApps() {
-
+        for(AppData app : mithrilDBHelper.findAllApps(mithrilDB))
+            if(app.getAppType().equals(MithrilApplication.getSystemAppsDisplayTag()))
+                appMetadataMap.put(app.getPackageName(), app);
     }
 
+    /**
+     * Get user apps that are installed on the device by reading the MithrilDB
+     */
     private void getUserApps() {
-
+        for(AppData app : mithrilDBHelper.findAllApps(mithrilDB))
+            if(app.getAppType().equals(MithrilApplication.getUserAppsDisplayTag()))
+                appMetadataMap.put(app.getPackageName(), app);
     }
 
     @Override

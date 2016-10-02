@@ -90,10 +90,10 @@ public class DataGenerator {
 	/**
 	 * Requesters generated
 	 */ 
-	public static List<Requester> generateRequesters() {
-		List<Requester> tempList = new ArrayList<Requester>();
-		for(String aRequesterString : MithrilApplication.getConstArrayRequesterCategory())
-			tempList.add(new Requester(aRequesterString));
-		return tempList;
-	}
+//	public static List<Requester> generateRequesters() {
+//		List<Requester> tempList = new ArrayList<Requester>();
+//		for(String aRequesterString : MithrilApplication.getConstArrayRequesterCategory())
+//			tempList.add(new Requester(aRequesterString));
+//		return tempList;
+//	}
 }
