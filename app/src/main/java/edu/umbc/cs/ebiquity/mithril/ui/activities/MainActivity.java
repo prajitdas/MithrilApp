@@ -130,35 +130,10 @@ public class MainActivity extends AppCompatActivity
         appDataItemsSelected = items;
     }
 
-    private void createShortCut() {
-        Intent shortcutIntent = new Intent(getApplicationContext(), MainActivity.class);
-        shortcutIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-        shortcutIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-
-        Intent addIntent = new Intent();
-        addIntent.putExtra(Intent.EXTRA_SHORTCUT_INTENT, shortcutIntent);
-        addIntent.putExtra("duplicate", false);
-        addIntent.putExtra(Intent.EXTRA_SHORTCUT_NAME, getResources().getString(R.string.short_app_name));
-        addIntent.putExtra(Intent.EXTRA_SHORTCUT_ICON_RESOURCE, Intent.ShortcutIconResource.fromContext(getApplicationContext(), R.drawable.ic_launcher));
-        addIntent.setAction("com.android.launcher.action.INSTALL_SHORTCUT");
-        getApplicationContext().sendBroadcast(addIntent);
-    }
-//
-//
-//    public void createShortCut(){
-//        Intent shortcutIntent = new Intent("com.android.launcher.action.INSTALL_SHORTCUT");
-//        shortcutIntent.putExtra("duplicate", false);
-//        shortcutIntent.putExtra(Intent.EXTRA_SHORTCUT_NAME, getString(R.string.app_name));
-//        Parcelable icon = Intent.ShortcutIconResource.fromContext(getApplicationContext(), R.mipmap.ic_launcher);
-//        shortcutIntent.putExtra(Intent.EXTRA_SHORTCUT_ICON_RESOURCE, icon);
-//        shortcutIntent.putExtra(Intent.EXTRA_SHORTCUT_INTENT, new Intent(getApplicationContext(), MainActivity.class));
-//        sendBroadcast(shortcutIntent);
-//    }
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        createShortCut();
+//        createShortCut();
         initData();
         initViews();
         defaultFragmentLoad();
@@ -167,7 +142,21 @@ public class MainActivity extends AppCompatActivity
                 Integer.toString(sharedPreferences.getInt(MithrilApplication.getSharedPreferenceAppCount(),0)));
     }
 
-    private void initViews() {
+//    private void createShortCut() {
+//        Intent shortcutIntent = new Intent(getApplicationContext(), MainActivity.class);
+//        shortcutIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+//        shortcutIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+//
+//        Intent addIntent = new Intent();
+//        addIntent.putExtra(Intent.EXTRA_SHORTCUT_INTENT, shortcutIntent);
+//        addIntent.putExtra("duplicate", false);
+//        addIntent.putExtra(Intent.EXTRA_SHORTCUT_NAME, getResources().getString(R.string.short_app_name));
+//        addIntent.putExtra(Intent.EXTRA_SHORTCUT_ICON_RESOURCE, Intent.ShortcutIconResource.fromContext(getApplicationContext(), R.drawable.ic_launcher));
+//        addIntent.setAction("com.android.launcher.action.INSTALL_SHORTCUT");
+//        getApplicationContext().sendBroadcast(addIntent);
+//    }
+
+   private void initViews() {
         setContentView(R.layout.activity_main);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
