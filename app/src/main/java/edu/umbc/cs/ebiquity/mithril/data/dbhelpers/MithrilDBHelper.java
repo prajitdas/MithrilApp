@@ -281,8 +281,9 @@ public class MithrilDBHelper extends SQLiteOpenHelper {
                             tempAppData.setAppType(MithrilApplication.getUserAppsDisplayTag());
                     }
                     //Insert an app into database
-                    long insertedRowId = addAppData(db, tempAppData);
-                    Log.d(MithrilApplication.getDebugTag(), "Inserted record id is: "+Long.toString(insertedRowId));
+                    addAppData(db, tempAppData);
+//                    long insertedRowId = addAppData(db, tempAppData);
+//                    Log.d(MithrilApplication.getDebugTag(), "Inserted record id is: "+Long.toString(insertedRowId));
                 } catch (ClassCastException e) {
                     Log.d(MithrilApplication.getDebugTag(), e.getMessage());
                 } catch (Exception e) {
@@ -1047,7 +1048,21 @@ public class MithrilDBHelper extends SQLiteOpenHelper {
 			throw new SQLException("Could not find " + e);
 		} 
 	}
-	
+
+    /**
+     * Given a certain package name deletes app from the database
+     * @param db
+     * @param packageName
+     */
+    public void deleteAppByPackageName(SQLiteDatabase db, String packageName) {
+        try {
+            db.delete(getAppDataTableName(), APPPACKAGENAME + " = ?",
+                    new String[] { packageName });
+        } catch(SQLException e) {
+            throw new SQLException("Could not find " + e);
+        }
+    }
+
 	/**
 	 * Given a certain policy id, deletes all violations related to that.
 	 * Used when a particular policy is being deleted or modified

@@ -7,11 +7,16 @@ import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.database.sqlite.SQLiteDatabase;
+import android.graphics.BitmapFactory;
 import android.graphics.drawable.BitmapDrawable;
 
 import edu.umbc.cs.ebiquity.mithril.MithrilApplication;
+import edu.umbc.cs.ebiquity.mithril.R;
 import edu.umbc.cs.ebiquity.mithril.data.dbhelpers.MithrilDBHelper;
 import edu.umbc.cs.ebiquity.mithril.data.model.AppData;
+
+import static android.content.Intent.EXTRA_DATA_REMOVED;
+import static android.content.Intent.EXTRA_REPLACING;
 
 public class AppInstallBroadcastReceiver extends BroadcastReceiver {
     private PackageManager packageManager;
@@ -40,16 +45,23 @@ public class AppInstallBroadcastReceiver extends BroadcastReceiver {
          * Constant Value: "android.intent.action.PACKAGE_ADDED"
          */
         if(intent.getAction() == "android.intent.action.PACKAGE_ADDED") {
-            String[] pakcagesInstalled = packageManager.getPackagesForUid(intent.getIntExtra(intent.EXTRA_UID, 0));
+            String[] pakcagesInstalled = packageManager.getPackagesForUid(intent.getIntExtra(Intent.EXTRA_UID, 0));
             for (String pkgName : pakcagesInstalled) {
                 try {
                     PackageInfo packageInfo = packageManager.getPackageInfo(pkgName, flags);
                     AppData tempAppData = new AppData("dummyApp");
                     if (packageInfo.packageName != null) {
-                        tempAppData.setAppDescription(packageInfo.applicationInfo.loadDescription(packageManager).toString());
+                        if(packageInfo.applicationInfo.loadDescription(packageManager) != null)
+                            tempAppData.setAppDescription(packageInfo.applicationInfo.loadDescription(packageManager).toString());
+                        else
+                            tempAppData.setAppDescription(MithrilApplication.getConstDefaultDescription());
                         tempAppData.setAssociatedProcessName(packageInfo.applicationInfo.processName);
                         tempAppData.setTargetSdkVersion(packageInfo.applicationInfo.targetSdkVersion);
-                        tempAppData.setIcon(((BitmapDrawable) packageInfo.applicationInfo.loadIcon(packageManager)).getBitmap());
+                        if(packageInfo.applicationInfo.loadIcon(packageManager) instanceof BitmapDrawable)
+                            tempAppData.setIcon(((BitmapDrawable) packageInfo.applicationInfo.loadIcon(packageManager)).getBitmap());
+                        else {
+                            tempAppData.setIcon(BitmapFactory.decodeResource(context.getResources(), R.drawable.ic_launcher));
+                        }
                         tempAppData.setAppName(packageInfo.applicationInfo.loadLabel(packageManager).toString());
                         tempAppData.setPackageName(packageInfo.packageName);
                         tempAppData.setVersionInfo(packageInfo.versionName);
@@ -89,8 +101,15 @@ public class AppInstallBroadcastReceiver extends BroadcastReceiver {
          */
         else if(intent.getAction() == "android.intent.action.PACKAGE_REMOVED") {
             /**
-             * Don't send data on uninstall app for now
+             * When app is uninstalled delete it from table
              */
+            String[] pakcagesUnistalled = packageManager.getPackagesForUid(intent.getIntExtra(Intent.EXTRA_UID, 0));
+            for (String pkgName : pakcagesUnistalled) {
+                if(intent.getBooleanExtra(EXTRA_DATA_REMOVED,false) && !intent.getBooleanExtra(EXTRA_REPLACING,true)) {
+                    //Find all apps that were uninstalled and remove them from database
+                    mithrilDBHelper.deleteAppByPackageName(mithrilDB, pkgName);
+                }
+            }
         }
         /**
          * Broadcast Action: A new version of an application package has been installed, replacing an existing version that was previously installed. The data contains the name of the package.
