@@ -3,6 +3,7 @@ package edu.umbc.cs.ebiquity.mithril.data.model;
 import android.graphics.Bitmap;
 
 import java.util.Arrays;
+import java.util.Comparator;
 
 /**
 * Helper class for managing content
