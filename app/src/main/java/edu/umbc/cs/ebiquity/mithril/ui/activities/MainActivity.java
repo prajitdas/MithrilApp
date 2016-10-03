@@ -1,6 +1,7 @@
 package edu.umbc.cs.ebiquity.mithril.ui.activities;
 
 import android.app.FragmentManager;
+import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.database.sqlite.SQLiteDatabase;
@@ -206,16 +207,16 @@ public class MainActivity extends AppCompatActivity
          */
         mithrilDBHelper = new MithrilDBHelper(this);
         mithrilDB = mithrilDBHelper.getWritableDatabase();
-//        sharedPreferences = this.getSharedPreferences(MithrilApplication.getSharedPreferencesName(), Context.MODE_PRIVATE);
-//        defaultFragmentLoad();
+        sharedPreferences = this.getSharedPreferences(MithrilApplication.getSharedPreferencesName(), Context.MODE_PRIVATE);
+        defaultFragmentLoad();
     }
 
     private void defaultFragmentLoad() {
         //For ViolationFragment() we will have to manage in a different manner
-        FragmentManager fragmentManager = getFragmentManager();
-        fragmentManager.beginTransaction().replace(R.id.container, new ViolationFragment()).commit();
+//        FragmentManager fragmentManager = getFragmentManager();
+//        fragmentManager.beginTransaction().replace(R.id.container, new ViolationFragment()).commit();
         //If we are loading the app list we don't need the above two lines as we take care of that in the loadAllAppsFragment() method
-//        loadAllAppsFragment();
+        loadUserAppsFragment();
     }
 
     @Override

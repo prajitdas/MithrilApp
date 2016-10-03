@@ -200,6 +200,6 @@ public class AppData implements Comparable<AppData>{
 
     @Override
     public int compareTo(AppData another) {
-        return this.getPackageName().compareTo(another.getPackageName());
+        return this.getAppName().compareTo(another.getAppName());
     }
 }

@@ -141,8 +141,8 @@ public class MithrilDBHelper extends SQLiteOpenHelper {
             APPNAME + " TEXT NOT NULL DEFAULT '*', " +
             APPPACKAGENAME + " TEXT NOT NULL DEFAULT '*', " +
             APPVERSIONINFO + " TEXT NOT NULL DEFAULT '*', " +
-            APPINSTALLED + " INTEGER NOT NULL DEFAULT 1," +
-            APPTYPE + "TEXT NOT NULL DEFAULT '*');";
+            APPINSTALLED + " INTEGER NOT NULL DEFAULT 1, " +
+            APPTYPE + " TEXT NOT NULL DEFAULT '*');";
 
     private final static String CREATE_REQUESTERS_TABLE =  " CREATE TABLE " + getRequestersTableName() + " (" +
 			REQID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
@@ -222,14 +222,23 @@ public class MithrilDBHelper extends SQLiteOpenHelper {
 	@Override
 	public void onCreate(SQLiteDatabase db) {
         try {
+            Log.d(MithrilApplication.getDebugTag(), CREATE_APP_DATA_TABLE);
             db.execSQL(CREATE_APP_DATA_TABLE);
+            Log.d(MithrilApplication.getDebugTag(), CREATE_REQUESTERS_TABLE);
             db.execSQL(CREATE_REQUESTERS_TABLE);
+            Log.d(MithrilApplication.getDebugTag(), CREATE_RESOURCES_TABLE);
             db.execSQL(CREATE_RESOURCES_TABLE);
+            Log.d(MithrilApplication.getDebugTag(), CREATE_CONTEXT_TABLE);
             db.execSQL(CREATE_CONTEXT_TABLE);
+            Log.d(MithrilApplication.getDebugTag(), CREATE_POLICY_RULES_TABLE);
             db.execSQL(CREATE_POLICY_RULES_TABLE);
+            Log.d(MithrilApplication.getDebugTag(), CREATE_ACTION_TABLE);
             db.execSQL(CREATE_ACTION_TABLE);
+            Log.d(MithrilApplication.getDebugTag(), CREATE_VIOLATIONS_TABLE);
             db.execSQL(CREATE_VIOLATIONS_TABLE);
+            Log.d(MithrilApplication.getDebugTag(), CREATE_PERMISSIONS_TABLE);
             db.execSQL(CREATE_PERMISSIONS_TABLE);
+            Log.d(MithrilApplication.getDebugTag(), CREATE_APP_PERM_RSRC_TABLE);
             db.execSQL(CREATE_APP_PERM_RSRC_TABLE);
         } catch (SQLException sqlException) {
             Log.e(MithrilApplication.getDebugTag(), "Following error occurred while inserting data in SQLite DB - "+sqlException.getMessage());
@@ -335,16 +344,6 @@ public class MithrilDBHelper extends SQLiteOpenHelper {
 	}
 
 	public long addAppData(SQLiteDatabase db, AppData anAppData) {
-        Log.d(MithrilApplication.getDebugTag()+"desc", anAppData.getAppDescription());
-        Log.d(MithrilApplication.getDebugTag()+"associatedProcName", anAppData.getAssociatedProcessName());
-        Log.d(MithrilApplication.getDebugTag()+"desc", Integer.toString(anAppData.getTargetSdkVersion()));
-        Log.d(MithrilApplication.getDebugTag()+"packageName", anAppData.getPackageName());
-        Log.d(MithrilApplication.getDebugTag()+"desc", anAppData.getVersionInfo());
-        Log.d(MithrilApplication.getDebugTag()+"desc", anAppData.getAppName());
-        Log.d(MithrilApplication.getDebugTag()+"desc", anAppData.getAppType());
-        Log.d(MithrilApplication.getDebugTag()+"desc", Boolean.toString(anAppData.isInstalled()));
-        Log.d(MithrilApplication.getDebugTag()+"desc", anAppData.getIcon().toString());
-
 		long insertedRowId;
 		ContentValues values = new ContentValues();
 		values.put(APPDESCRIPTION, anAppData.getAppDescription());
@@ -454,16 +453,16 @@ public class MithrilDBHelper extends SQLiteOpenHelper {
 	public List<AppData> findAllApps(SQLiteDatabase db) {
 		// Select AppData Query
 		String selectQuery = "SELECT " +
-                getAppDataTableName() + "." + APPDESCRIPTION + "," +
-                getAppDataTableName() + "." + APPASSOCIATEDPROCNAME + "," +
-                getAppDataTableName() + "." + APPTARGETSDKVERSION + "," +
-                getAppDataTableName() + "." + APPICON + "," +
-                getAppDataTableName() + "." + APPNAME + "," +
-                getAppDataTableName() + "." + APPPACKAGENAME + "," +
-                getAppDataTableName() + "." + APPVERSIONINFO + "," +
-                getAppDataTableName() + "." + APPINSTALLED + "," +
+                getAppDataTableName() + "." + APPDESCRIPTION + ", " +
+                getAppDataTableName() + "." + APPASSOCIATEDPROCNAME + ", " +
+                getAppDataTableName() + "." + APPTARGETSDKVERSION + ", " +
+                getAppDataTableName() + "." + APPICON + ", " +
+                getAppDataTableName() + "." + APPNAME + ", " +
+                getAppDataTableName() + "." + APPPACKAGENAME + ", " +
+                getAppDataTableName() + "." + APPVERSIONINFO + ", " +
+                getAppDataTableName() + "." + APPINSTALLED + ", " +
                 getAppDataTableName() + "." + APPTYPE +
-				" FROM " + getViolationsTableName() + ";";
+				" FROM " + getAppDataTableName() + ";";
 
 		List<AppData> apps = new ArrayList<AppData>();
 		try{
@@ -498,17 +497,17 @@ public class MithrilDBHelper extends SQLiteOpenHelper {
     public AppData findAppByName(SQLiteDatabase db, String appName) {
         // Select AppData Query
         String selectQuery = "SELECT " +
-                getAppDataTableName() + "." + APPDESCRIPTION + "," +
-                getAppDataTableName() + "." + APPASSOCIATEDPROCNAME + "," +
-                getAppDataTableName() + "." + APPTARGETSDKVERSION + "," +
-                getAppDataTableName() + "." + APPICON + "," +
-                getAppDataTableName() + "." + APPNAME + "," +
-                getAppDataTableName() + "." + APPPACKAGENAME + "," +
-                getAppDataTableName() + "." + APPVERSIONINFO + "," +
-                getAppDataTableName() + "." + APPINSTALLED + "," +
-                getAppDataTableName() + "." + APPINSTALLED + "," +
+                getAppDataTableName() + "." + APPDESCRIPTION + ", " +
+                getAppDataTableName() + "." + APPASSOCIATEDPROCNAME + ", " +
+                getAppDataTableName() + "." + APPTARGETSDKVERSION + ", " +
+                getAppDataTableName() + "." + APPICON + ", " +
+                getAppDataTableName() + "." + APPNAME + ", " +
+                getAppDataTableName() + "." + APPPACKAGENAME + ", " +
+                getAppDataTableName() + "." + APPVERSIONINFO + ", " +
+                getAppDataTableName() + "." + APPINSTALLED + ", " +
+                getAppDataTableName() + "." + APPINSTALLED + ", " +
                 getAppDataTableName() + "." + APPTYPE +
-                " FROM " + getViolationsTableName() +
+                " FROM " + getAppDataTableName() +
                 " WHERE " + getAppDataTableName() + "." + APPNAME +
                 " = " + appName +
                 ";";
@@ -542,16 +541,16 @@ public class MithrilDBHelper extends SQLiteOpenHelper {
     public AppData findAppById(SQLiteDatabase db, int appId) {
         // Select AppData Query
         String selectQuery = "SELECT " +
-                getAppDataTableName() + "." + APPDESCRIPTION + "," +
-                getAppDataTableName() + "." + APPASSOCIATEDPROCNAME + "," +
-                getAppDataTableName() + "." + APPTARGETSDKVERSION + "," +
-                getAppDataTableName() + "." + APPICON + "," +
-                getAppDataTableName() + "." + APPNAME + "," +
-                getAppDataTableName() + "." + APPPACKAGENAME + "," +
-                getAppDataTableName() + "." + APPVERSIONINFO + "," +
-                getAppDataTableName() + "." + APPINSTALLED + "," +
+                getAppDataTableName() + "." + APPDESCRIPTION + ", " +
+                getAppDataTableName() + "." + APPASSOCIATEDPROCNAME + ", " +
+                getAppDataTableName() + "." + APPTARGETSDKVERSION + ", " +
+                getAppDataTableName() + "." + APPICON + ", " +
+                getAppDataTableName() + "." + APPNAME + ", " +
+                getAppDataTableName() + "." + APPPACKAGENAME + ", " +
+                getAppDataTableName() + "." + APPVERSIONINFO + ", " +
+                getAppDataTableName() + "." + APPINSTALLED + ", " +
                 getAppDataTableName() + "." + APPTYPE +
-                " FROM " + getViolationsTableName() +
+                " FROM " + getAppDataTableName() +
                 " WHERE " + getAppDataTableName() + "." + APPID +
                 " = " + appId +
                 ";";
@@ -585,9 +584,9 @@ public class MithrilDBHelper extends SQLiteOpenHelper {
 	public List<Violation> findAllViolations(SQLiteDatabase db) {
 		// Select Violation Query
 		String selectQuery = "SELECT " +
-				getViolationsTableName() + "." + VIOLATIONID + "," +
-				getViolationsTableName() + "." + VIOLATIONDESC + "," +
-				getViolationsTableName() + "." + VIOLATIONOFRULID + "," +
+				getViolationsTableName() + "." + VIOLATIONID + ", " +
+				getViolationsTableName() + "." + VIOLATIONDESC + ", " +
+				getViolationsTableName() + "." + VIOLATIONOFRULID + ", " +
 				getViolationsTableName() + "." + VIOLATIONMARKER +
 					" FROM " + getViolationsTableName() + ";";
 
@@ -628,9 +627,9 @@ public class MithrilDBHelper extends SQLiteOpenHelper {
 	public List<Violation> findAllViolationsWithMarkerUnset(SQLiteDatabase db) {
 		// Select Violation Query
 		String selectQuery = "SELECT " +
-				getViolationsTableName() + "." + VIOLATIONID + "," +
-				getViolationsTableName() + "." + VIOLATIONDESC + "," +
-				getViolationsTableName() + "." + VIOLATIONOFRULID + "," +
+				getViolationsTableName() + "." + VIOLATIONID + ", " +
+				getViolationsTableName() + "." + VIOLATIONDESC + ", " +
+				getViolationsTableName() + "." + VIOLATIONOFRULID + ", " +
 				getViolationsTableName() + "." + VIOLATIONMARKER +
 				" FROM " + getViolationsTableName() + 
 				" WHERE " + getViolationsTableName() + "." + VIOLATIONMARKER + " = 0;";
@@ -673,11 +672,11 @@ public class MithrilDBHelper extends SQLiteOpenHelper {
 		ArrayList<PolicyRule> policyRules = new ArrayList<PolicyRule>();
 		// Select All Query
 		String selectQuery = "SELECT " +
-				getPolicyRulesTableName() + "." + POLRULID + "," +
-				getPolicyRulesTableName() + "." + POLRULNAME + "," +
-				getRequestersTableName() + "." + REQNAME + "," +
-				getResourcesTableName() + "." + RESNAME + "," +
-                getPolicyRulesTableName() + "." + POLRULCNTXT + "," +
+				getPolicyRulesTableName() + "." + POLRULID + ", " +
+				getPolicyRulesTableName() + "." + POLRULNAME + ", " +
+				getRequestersTableName() + "." + REQNAME + ", " +
+				getResourcesTableName() + "." + RESNAME + ", " +
+                getPolicyRulesTableName() + "." + POLRULCNTXT + ", " +
                 getPolicyRulesTableName() + "." + POLRULACTIN +
 				" FROM " + 
 				getPolicyRulesTableName() +
@@ -729,11 +728,11 @@ public class MithrilDBHelper extends SQLiteOpenHelper {
 	public PolicyRule findPolicyRuleByReqRes(SQLiteDatabase db, String requester, String resource) {
 		// Select Policy Query
 		String selectQuery = "SELECT " +
-				getPolicyRulesTableName() + "." + POLRULID + "," +
-				getPolicyRulesTableName() + "." + POLRULNAME + "," +
-				getRequestersTableName() + "." + REQNAME + "," +
-				getResourcesTableName() + "." + RESNAME + "," +
-                getPolicyRulesTableName() + "." + POLRULCNTXT + "," +
+				getPolicyRulesTableName() + "." + POLRULID + ", " +
+				getPolicyRulesTableName() + "." + POLRULNAME + ", " +
+				getRequestersTableName() + "." + REQNAME + ", " +
+				getResourcesTableName() + "." + RESNAME + ", " +
+                getPolicyRulesTableName() + "." + POLRULCNTXT + ", " +
                 getPolicyRulesTableName() + "." + POLRULACTIN +
                 " FROM " +
 				getPolicyRulesTableName() +
@@ -783,11 +782,11 @@ public class MithrilDBHelper extends SQLiteOpenHelper {
 	public PolicyRule findPolicyByID(SQLiteDatabase db, int id) {
 		// Select Policy Query
 		String selectQuery = "SELECT "+
-				getPolicyRulesTableName() + "." + POLRULID + "," +
-				getPolicyRulesTableName() + "." + POLRULNAME + "," +
-				getRequestersTableName() + "." + REQNAME + "," +
-				getResourcesTableName() + "." + RESNAME + "," +
-                getPolicyRulesTableName() + "." + POLRULCNTXT + "," +
+				getPolicyRulesTableName() + "." + POLRULID + ", " +
+				getPolicyRulesTableName() + "." + POLRULNAME + ", " +
+				getRequestersTableName() + "." + REQNAME + ", " +
+				getResourcesTableName() + "." + RESNAME + ", " +
+                getPolicyRulesTableName() + "." + POLRULCNTXT + ", " +
                 getPolicyRulesTableName() + "." + POLRULACTIN +
 				" FROM " + 
 				getPolicyRulesTableName() +
@@ -835,7 +834,7 @@ public class MithrilDBHelper extends SQLiteOpenHelper {
 	public Requester findRequesterByID(SQLiteDatabase db, int id) {
 		// Select Query
 		String selectQuery = "SELECT " +
-				getRequestersTableName() + "." + REQID + "," +
+				getRequestersTableName() + "." + REQID + ", " +
 				getRequestersTableName() + "." + REQNAME + 
 				" FROM " + 
 				getRequestersTableName() + 
@@ -865,7 +864,7 @@ public class MithrilDBHelper extends SQLiteOpenHelper {
 	public Resource findResourceByID(SQLiteDatabase db, int id) {
 		// Select Query
 		String selectQuery = "SELECT "+
-				getResourcesTableName() + "." + RESID + "," +
+				getResourcesTableName() + "." + RESID + ", " +
 				getResourcesTableName() + "." + RESNAME + 
 				" FROM " + 
 				getResourcesTableName() + 
@@ -895,7 +894,7 @@ public class MithrilDBHelper extends SQLiteOpenHelper {
 	public RuleAction findActionByID(SQLiteDatabase db, int id) {
 		// Select Query
 		String selectQuery = "SELECT "+
-				getActionTableName() + "." + ACTIONID + "," +
+				getActionTableName() + "." + ACTIONID + ", " +
 				getActionTableName() + "." + ACTION + 
 				" FROM " + 
 				getActionTableName() + 
@@ -930,11 +929,11 @@ public class MithrilDBHelper extends SQLiteOpenHelper {
 	public UserContext findContextByID(SQLiteDatabase db, int id) {
 		// Select Query
 		String selectQuery = "SELECT "+
-				getContextTableName() + "." + CONTEXTID + "," +
-				getContextTableName() + "." + PRESENCEINFO + "," +
-				getContextTableName() + "." + ACTIVITY + "," +
-				getContextTableName() + "." + LOCATION + "," +
-				getContextTableName() + "." + IDENTITY + "," +
+				getContextTableName() + "." + CONTEXTID + ", " +
+				getContextTableName() + "." + PRESENCEINFO + ", " +
+				getContextTableName() + "." + ACTIVITY + ", " +
+				getContextTableName() + "." + LOCATION + ", " +
+				getContextTableName() + "." + IDENTITY + ", " +
 				getContextTableName() + "." + TIME + 
 				" FROM " + 
 				getContextTableName() + 
@@ -1173,8 +1172,9 @@ public class MithrilDBHelper extends SQLiteOpenHelper {
                         else
                             tempAppData.setAppType(MithrilApplication.getUserAppsDisplayTag());
                     }
-                    //Find all apps and insert into database
-                    addAppData(db, tempAppData);
+                    //Insert an app into database
+                    long insertedRowId = addAppData(db, tempAppData);
+                    Log.d(MithrilApplication.getDebugTag(), "Inserted record id is: "+Long.toString(insertedRowId));
                 } catch (ClassCastException e) {
                     Log.d(MithrilApplication.getDebugTag(), e.getMessage());
                 } catch (Exception e) {
