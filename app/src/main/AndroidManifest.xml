@@ -12,7 +12,7 @@
         android:theme="@style/AppTheme">
         <activity
             android:name=".ui.activities.MainActivity"
-            android:label="@string/app_name"
+            android:label="@string/short_app_name"
             android:theme="@style/AppTheme.NoActionBar">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -28,16 +28,23 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="edu.umbc.cs.ebiquity.mithril.ui.activities.MainActivity" />
         </activity>
-
+        <activity
+            android:name=".ui.activities.AboutActivity"
+            android:label="@string/title_activity_about"
+            android:parentActivityName=".ui.activities.MainActivity"
+            android:theme="@style/AppTheme.NoActionBar">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="edu.umbc.cs.ebiquity.mithril.ui.activities.MainActivity" />
+        </activity>
         <receiver
             android:name=".util.receivers.CommandBroadcastReceiver"
             android:enabled="true"
-            android:exported="true">
-        </receiver>        <receiver
+            android:exported="true"></receiver>
+        <receiver
             android:name=".util.receivers.AppInstallBroadcastReceiver"
             android:enabled="true"
-            android:exported="true">
-        </receiver>
+            android:exported="true"></receiver>
     </application>
 
 </manifest>

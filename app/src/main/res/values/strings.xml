@@ -7,6 +7,10 @@
     <string name="systemApps">System apps</string>
     <string name="allApps">All apps</string>
 
+    <string name="help_text">Mithril Project: My PhD!</string>
+    <string name="help_feedback_menu_text">Help &amp; Feedback</string>
+    <string name="title_activity_help_feedback">Help &amp; Feedback</string>
+
     <string name="app_icon_description">This is an app\'s icon</string>
     <string name="app_name_placeholder_text">Some app</string>
     <string name="app_version_placeholder_text">App\'s version</string>
@@ -21,6 +25,7 @@
     <string name="app_website">https://mithril.online/</string>
 
     <string name="action_settings">Settings</string>
+    <string name="info">App information</string>
 
     <string name="place_holder_for_data_to_be_displayed">Some placeholder for data to be displayed</string>
 
@@ -152,5 +157,6 @@
     <string name="pref_ringtone_silent">Silent</string>
 
     <string name="pref_title_vibrate">Vibrate</string>
+    <string name="title_activity_about">About this app</string>
 
 </resources>
