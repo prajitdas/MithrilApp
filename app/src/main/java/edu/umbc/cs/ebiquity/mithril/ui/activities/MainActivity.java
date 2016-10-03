@@ -46,7 +46,7 @@ public class MainActivity extends AppCompatActivity
     private AppData appDataItemSelected = null;
     private List<AppData> appDataItemsSelected = null;
     private FloatingActionButton fab;
-    private TextView mAppCountTextView;
+//    private TextView mAppCountTextView;
 
     private void loadAllAppsFragment() {
         Bundle data = new Bundle();
@@ -137,9 +137,9 @@ public class MainActivity extends AppCompatActivity
         initData();
         initViews();
         defaultFragmentLoad();
-        mAppCountTextView.setText(getResources().getString(
-                R.string.all_app_info_placeholder_text) +
-                Integer.toString(sharedPreferences.getInt(MithrilApplication.getSharedPreferenceAppCount(),0)));
+//        mAppCountTextView.setText(getResources().getString(
+//                R.string.all_app_info_placeholder_text) +
+//                Integer.toString(sharedPreferences.getInt(MithrilApplication.getSharedPreferenceAppCount(),0)));
     }
 
 //    private void createShortCut() {
@@ -161,7 +161,7 @@ public class MainActivity extends AppCompatActivity
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        mAppCountTextView = (TextView) findViewById(R.id.app_count);
+//        mAppCountTextView = (TextView) findViewById(R.id.app_count);
 
         fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {

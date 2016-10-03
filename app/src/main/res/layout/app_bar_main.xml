@@ -23,22 +23,22 @@
 
     <include layout="@layout/content_main" />
 
-    <LinearLayout
-        android:layout_width="295dp"
-        android:layout_height="wrap_content"
-        android:layout_below="@layout/content_main"
-        android:layout_gravity="bottom|start"
-        android:layout_margin="@dimen/fab_margin">
-        <TextView
-            android:id="@+id/app_count"
-            android:text="@string/all_app_info_placeholder_text"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:textColor="@color/colorPrimaryDark"
-            android:textAlignment="center"
-            android:textAppearance="@android:style/TextAppearance.Holo.Large" />
-    </LinearLayout>
+    <!--<LinearLayout-->
+        <!--android:layout_width="295dp"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:layout_below="@layout/content_main"-->
+        <!--android:layout_gravity="bottom|start"-->
+        <!--android:layout_margin="@dimen/fab_margin">-->
+        <!--<TextView-->
+            <!--android:id="@+id/app_count"-->
+            <!--android:text="@string/all_app_info_placeholder_text"-->
+            <!--android:layout_width="wrap_content"-->
+            <!--android:layout_height="wrap_content"-->
+            <!--android:layout_gravity="center"-->
+            <!--android:textColor="@color/colorPrimaryDark"-->
+            <!--android:textAlignment="center"-->
+            <!--android:textAppearance="@android:style/TextAppearance.Holo.Large" />-->
+    <!--</LinearLayout>-->
 
     <android.support.design.widget.FloatingActionButton
         android:id="@+id/fab"
