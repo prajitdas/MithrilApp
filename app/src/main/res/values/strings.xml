@@ -2,6 +2,11 @@
     <string name="short_app_name">MithrilAC</string>
     <string name="mithril_app_icon_description">This is Mithril\'s icon</string>
 
+    <string name="violationsMenu">Policy violation list</string>
+    <string name="userApps">User apps</string>
+    <string name="systemApps">System apps</string>
+    <string name="allApps">All apps</string>
+
     <string name="app_icon_description">This is an app\'s icon</string>
     <string name="app_name_placeholder_text">Some app</string>
     <string name="app_version_placeholder_text">App\'s version</string>

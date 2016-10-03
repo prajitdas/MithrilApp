@@ -120,18 +120,15 @@ public class MainActivity extends AppCompatActivity
         // Handle navigation view item clicks here.
         int id = item.getItemId();
 
-        if (id == R.id.nav_camera) {
-            loadAllAppsFragment();
-        } else if (id == R.id.nav_gallery) {
-            loadSystemAppsFragment();
-        } else if (id == R.id.nav_slideshow) {
+        if (id == R.id.nav_violations) {
+            FragmentManager fragmentManager = getFragmentManager();
+            fragmentManager.beginTransaction().replace(R.id.container, new ViolationFragment()).commit();
+        } else if (id == R.id.nav_user) {
             loadUserAppsFragment();
-        } else if (id == R.id.nav_manage) {
-
-        } else if (id == R.id.nav_share) {
-
-        } else if (id == R.id.nav_send) {
-
+        } else if (id == R.id.nav_system) {
+            loadSystemAppsFragment();
+        } else if (id == R.id.nav_all) {
+            loadAllAppsFragment();
         }
 
         drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
