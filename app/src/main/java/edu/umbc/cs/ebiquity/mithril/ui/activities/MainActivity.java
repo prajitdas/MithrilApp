@@ -6,7 +6,6 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
-import android.os.Parcelable;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
 import android.support.design.widget.Snackbar;
@@ -131,15 +130,30 @@ public class MainActivity extends AppCompatActivity
         appDataItemsSelected = items;
     }
 
-    public void createShortCut(){
-        Intent shortcutIntent = new Intent("com.android.launcher.action.INSTALL_SHORTCUT");
-        shortcutIntent.putExtra("duplicate", false);
-        shortcutIntent.putExtra(Intent.EXTRA_SHORTCUT_NAME, getString(R.string.app_name));
-        Parcelable icon = Intent.ShortcutIconResource.fromContext(getApplicationContext(), R.mipmap.ic_launcher);
-        shortcutIntent.putExtra(Intent.EXTRA_SHORTCUT_ICON_RESOURCE, icon);
-        shortcutIntent.putExtra(Intent.EXTRA_SHORTCUT_INTENT, new Intent(getApplicationContext(), MainActivity.class));
-        sendBroadcast(shortcutIntent);
+    private void createShortCut() {
+        Intent shortcutIntent = new Intent(getApplicationContext(), MainActivity.class);
+        shortcutIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        shortcutIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+
+        Intent addIntent = new Intent();
+        addIntent.putExtra(Intent.EXTRA_SHORTCUT_INTENT, shortcutIntent);
+        addIntent.putExtra("duplicate", false);
+        addIntent.putExtra(Intent.EXTRA_SHORTCUT_NAME, getResources().getString(R.string.short_app_name));
+        addIntent.putExtra(Intent.EXTRA_SHORTCUT_ICON_RESOURCE, Intent.ShortcutIconResource.fromContext(getApplicationContext(), R.drawable.ic_launcher));
+        addIntent.setAction("com.android.launcher.action.INSTALL_SHORTCUT");
+        getApplicationContext().sendBroadcast(addIntent);
     }
+//
+//
+//    public void createShortCut(){
+//        Intent shortcutIntent = new Intent("com.android.launcher.action.INSTALL_SHORTCUT");
+//        shortcutIntent.putExtra("duplicate", false);
+//        shortcutIntent.putExtra(Intent.EXTRA_SHORTCUT_NAME, getString(R.string.app_name));
+//        Parcelable icon = Intent.ShortcutIconResource.fromContext(getApplicationContext(), R.mipmap.ic_launcher);
+//        shortcutIntent.putExtra(Intent.EXTRA_SHORTCUT_ICON_RESOURCE, icon);
+//        shortcutIntent.putExtra(Intent.EXTRA_SHORTCUT_INTENT, new Intent(getApplicationContext(), MainActivity.class));
+//        sendBroadcast(shortcutIntent);
+//    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
