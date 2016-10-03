@@ -246,11 +246,53 @@ public class MithrilDBHelper extends SQLiteOpenHelper {
             Log.e(MithrilApplication.getDebugTag(), "Some other error occurred while inserting data in SQLite DB - "+e.getMessage());
         }
         packageManager = getContext().getPackageManager();
-		//The following method loads the database with the default data on creation of the database
-		loadDefaultDataIntoDB(db);
+		//The following method loads the database with the default dummy data on creation of the database
+//		loadDefaultDataIntoDB(db);
+        loadRealAppDataIntoDB(db);
 	}
-	
-	@Override
+
+    private void loadRealAppDataIntoDB(SQLiteDatabase db) {
+        int flags = PackageManager.GET_META_DATA |
+                PackageManager.GET_SHARED_LIBRARY_FILES |
+                PackageManager.GET_PERMISSIONS;
+        for(PackageInfo pack : packageManager.getInstalledPackages(flags)) {
+            if ((pack.applicationInfo.flags) != 1) {
+                try {
+                    AppData tempAppData = new AppData("dummyApp");
+                    if (pack.packageName != null) {
+                        if(pack.applicationInfo.loadDescription(packageManager) != null)
+                            tempAppData.setAppDescription(pack.applicationInfo.loadDescription(packageManager).toString());
+                        else
+                            tempAppData.setAppDescription(MithrilApplication.getConstDefaultDescription());
+                        tempAppData.setAssociatedProcessName(pack.applicationInfo.processName);
+                        tempAppData.setTargetSdkVersion(pack.applicationInfo.targetSdkVersion);
+                        if(pack.applicationInfo.loadIcon(packageManager) instanceof BitmapDrawable)
+                            tempAppData.setIcon(((BitmapDrawable) pack.applicationInfo.loadIcon(packageManager)).getBitmap());
+                        else {
+                            tempAppData.setIcon(BitmapFactory.decodeResource(getContext().getResources(), R.drawable.ic_launcher));
+                        }
+                        tempAppData.setAppName(pack.applicationInfo.loadLabel(packageManager).toString());
+                        tempAppData.setPackageName(pack.packageName);
+                        tempAppData.setVersionInfo(pack.versionName);
+                        tempAppData.setInstalled(true);
+                        if((pack.applicationInfo.flags & ApplicationInfo.FLAG_SYSTEM) == 1)
+                            tempAppData.setAppType(MithrilApplication.getSystemAppsDisplayTag());
+                        else
+                            tempAppData.setAppType(MithrilApplication.getUserAppsDisplayTag());
+                    }
+                    //Insert an app into database
+                    long insertedRowId = addAppData(db, tempAppData);
+                    Log.d(MithrilApplication.getDebugTag(), "Inserted record id is: "+Long.toString(insertedRowId));
+                } catch (ClassCastException e) {
+                    Log.d(MithrilApplication.getDebugTag(), e.getMessage());
+                } catch (Exception e) {
+                    Log.d(MithrilApplication.getDebugTag(), e.getMessage());
+                }
+            }
+        }
+    }
+
+    @Override
 	public void onOpen(SQLiteDatabase db) {
 		db.execSQL("PRAGMA foreign_keys=ON");
 	}
@@ -265,7 +307,7 @@ public class MithrilDBHelper extends SQLiteOpenHelper {
 	
 	@Override
 	public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
-		Log.w(MithrilDBHelper.class.getName(), 
+		Log.w(MithrilDBHelper.class.getName(),
 				"Upgrading database from version " + oldVersion + " to "
 						+ newVersion + ". Old data will be destroyed");
 		dropDBObjects(db);
@@ -1113,14 +1155,12 @@ public class MithrilDBHelper extends SQLiteOpenHelper {
 	 * @param db reference to the db instance
 	 */
 	private void loadDefaultDataIntoDB(SQLiteDatabase db) {
-        loadAllInstalledAppsIntoDB(db);
-
         Requester requester = new Requester(findAppById(db, 1).getAppName());
         //load one requester
         addRequester(db, requester);
-//		//loads requesters
-//		for(Requester aRequester : DataGenerator.generateRequesters())
-//			addRequester(db, aRequester);
+		//loads requesters
+		for(Requester aRequester : DataGenerator.generateRequesters())
+			addRequester(db, aRequester);
 		//loads resources
 		for(Resource aResource : DataGenerator.generateResources())
 			addResource(db, aResource);
@@ -1142,91 +1182,4 @@ public class MithrilDBHelper extends SQLiteOpenHelper {
 		for(PolicyRule policyRule : findAllPolicies(db))
 			addViolation(db, new Violation(policyRule.toString(), 1, policyRule.getId(), false));
     }
-
-    private void loadAllInstalledAppsIntoDB(SQLiteDatabase db) {
-        int flags = PackageManager.GET_META_DATA |
-                PackageManager.GET_SHARED_LIBRARY_FILES |
-                PackageManager.GET_PERMISSIONS;
-        for(PackageInfo pack : packageManager.getInstalledPackages(flags)) {
-            if ((pack.applicationInfo.flags) != 1) {
-                try {
-                    AppData tempAppData = new AppData("dummyApp");
-                    if (pack.packageName != null) {
-                        if(pack.applicationInfo.loadDescription(packageManager) != null)
-                            tempAppData.setAppDescription(pack.applicationInfo.loadDescription(packageManager).toString());
-                        else
-                            tempAppData.setAppDescription(MithrilApplication.getConstDefaultDescription());
-                        tempAppData.setAssociatedProcessName(pack.applicationInfo.processName);
-                        tempAppData.setTargetSdkVersion(pack.applicationInfo.targetSdkVersion);
-                        if(pack.applicationInfo.loadIcon(packageManager) instanceof BitmapDrawable)
-                            tempAppData.setIcon(((BitmapDrawable) pack.applicationInfo.loadIcon(packageManager)).getBitmap());
-                        else {
-                            tempAppData.setIcon(BitmapFactory.decodeResource(getContext().getResources(), R.drawable.ic_launcher));
-                        }
-                        tempAppData.setAppName(pack.applicationInfo.loadLabel(packageManager).toString());
-                        tempAppData.setPackageName(pack.packageName);
-                        tempAppData.setVersionInfo(pack.versionName);
-                        tempAppData.setInstalled(true);
-                        if((pack.applicationInfo.flags & ApplicationInfo.FLAG_SYSTEM) == 1)
-                            tempAppData.setAppType(MithrilApplication.getSystemAppsDisplayTag());
-                        else
-                            tempAppData.setAppType(MithrilApplication.getUserAppsDisplayTag());
-                    }
-                    //Insert an app into database
-                    long insertedRowId = addAppData(db, tempAppData);
-                    Log.d(MithrilApplication.getDebugTag(), "Inserted record id is: "+Long.toString(insertedRowId));
-                } catch (ClassCastException e) {
-                    Log.d(MithrilApplication.getDebugTag(), e.getMessage());
-                } catch (Exception e) {
-					Log.d(MithrilApplication.getDebugTag(), e.getMessage());
-				}
-            }
-        }
-    }
-
-//    private void getSystemApps() {
-//        int flags = PackageManager.GET_META_DATA |
-//                PackageManager.GET_SHARED_LIBRARY_FILES |
-//                PackageManager.GET_PERMISSIONS;
-//        for(PackageInfo pack : packageManager.getInstalledPackages(flags)) {
-//            if ((pack.applicationInfo.flags & ApplicationInfo.FLAG_SYSTEM) == 1) {
-//                try {
-//                    AppData tempAppMetaData = new AppData("dummyApp");
-//                    if (pack.packageName != null) {
-//                        tempAppMetaData.setPackageName(pack.packageName);
-//                        tempAppMetaData.setAppName(pack.applicationInfo.loadLabel(packageManager).toString());
-//                        tempAppMetaData.setVersionInfo(pack.versionName);
-//                        tempAppMetaData.setIcon(((BitmapDrawable) pack.applicationInfo.loadIcon(packageManager)).getBitmap());
-//                    }
-//                    appMetadataMap.put(tempAppMetaData.getPackageName(), tempAppMetaData);
-//                } catch (Exception e) {
-//                    e.printStackTrace();
-//                }
-//            }
-//        }
-//
-//    }
-//
-//    private void getUserApps() {
-//        int flags = PackageManager.GET_META_DATA |
-//                PackageManager.GET_SHARED_LIBRARY_FILES |
-//                PackageManager.GET_PERMISSIONS;
-//        for(PackageInfo pack : packageManager.getInstalledPackages(flags)) {
-//            if ((pack.applicationInfo.flags & ApplicationInfo.FLAG_SYSTEM) != 1) {
-//                try {
-//                    AppData tempAppMetaData = new AppData("dummyApp");
-//                    if (pack.packageName != null) {
-//                        tempAppMetaData.setPackageName(pack.packageName);
-//                        tempAppMetaData.setAppName(pack.applicationInfo.loadLabel(packageManager).toString());
-//                        tempAppMetaData.setVersionInfo(pack.versionName);
-//                        tempAppMetaData.setIcon(((BitmapDrawable) pack.applicationInfo.loadIcon(packageManager)).getBitmap());
-//                    }
-//                    appMetadataMap.put(tempAppMetaData.getPackageName(), tempAppMetaData);
-//                } catch (Exception e) {
-//                    e.printStackTrace();
-//                }
-//            }
-//        }
-//
-//    }
 }

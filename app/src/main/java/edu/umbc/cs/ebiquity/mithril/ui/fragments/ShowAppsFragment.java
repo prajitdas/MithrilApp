@@ -89,12 +89,11 @@ public class ShowAppsFragment extends Fragment {
                              Bundle savedInstanceState) {
         view = inflater.inflate(R.layout.fragment_apps_list, container, false);
         initData();
-        initView();
-        sharedPreferences.edit().putInt(MithrilApplication.getSharedPreferenceAppCount(), allAppDataItems.size());
+        initViews();
         return view;
     }
 
-    private void initView() {
+    private void initViews() {
         // Set the adapter
         if (view instanceof RecyclerView) {
             Context context = view.getContext();
@@ -174,7 +173,11 @@ public class ShowAppsFragment extends Fragment {
      * Get all apps that are installed on the device by reading the MithrilDB
      */
     private void getAllApps() {
-        for(AppData app : mithrilDBHelper.findAllApps(mithrilDB))
+        List<AppData> tempList = mithrilDBHelper.findAllApps(mithrilDB);
+        SharedPreferences.Editor editor = view.getContext().getSharedPreferences(MithrilApplication.getSharedPreferencesName(), Context.MODE_PRIVATE).edit();
+        editor.putInt(MithrilApplication.getSharedPreferenceAppCount(), tempList.size());
+        editor.commit();
+        for(AppData app : tempList)
             appMetadataMap.put(app.getPackageName(), app);
     }
 

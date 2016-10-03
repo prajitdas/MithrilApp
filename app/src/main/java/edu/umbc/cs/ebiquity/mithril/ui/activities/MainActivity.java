@@ -60,8 +60,6 @@ public class MainActivity extends AppCompatActivity
         FragmentManager fragmentManager = getFragmentManager();
         fragmentManager.beginTransaction().replace(R.id.container, aShowappsFragment)
                 .commit();
-        mAppCountTextView.setText(mAppCountTextView.getText()
-                + Integer.toString(sharedPreferences.getInt(MithrilApplication.getSharedPreferenceAppCount(),0)));
     }
 
     private void loadSystemAppsFragment() {
@@ -74,8 +72,6 @@ public class MainActivity extends AppCompatActivity
         FragmentManager fragmentManager = getFragmentManager();
         fragmentManager.beginTransaction().replace(R.id.container, aShowappsFragment)
                 .commit();
-        mAppCountTextView.setText(mAppCountTextView.getText()
-                + Integer.toString(sharedPreferences.getInt(MithrilApplication.getSharedPreferenceAppCount(),0)));
     }
 
     private void loadUserAppsFragment() {
@@ -88,8 +84,6 @@ public class MainActivity extends AppCompatActivity
         FragmentManager fragmentManager = getFragmentManager();
         fragmentManager.beginTransaction().replace(R.id.container, aShowappsFragment)
                 .commit();
-        mAppCountTextView.setText(mAppCountTextView.getText()
-                + Integer.toString(sharedPreferences.getInt(MithrilApplication.getSharedPreferenceAppCount(),0)));
     }
 
     @Override
@@ -168,8 +162,12 @@ public class MainActivity extends AppCompatActivity
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         createShortCut();
-        initViews();
         initData();
+        initViews();
+        defaultFragmentLoad();
+        mAppCountTextView.setText(getResources().getString(
+                R.string.all_app_info_placeholder_text) +
+                Integer.toString(sharedPreferences.getInt(MithrilApplication.getSharedPreferenceAppCount(),0)));
     }
 
     private void initViews() {
@@ -204,8 +202,7 @@ public class MainActivity extends AppCompatActivity
          */
         mithrilDBHelper = new MithrilDBHelper(this);
         mithrilDB = mithrilDBHelper.getWritableDatabase();
-        sharedPreferences = this.getSharedPreferences(MithrilApplication.getSharedPreferencesName(), Context.MODE_PRIVATE);
-        defaultFragmentLoad();
+        sharedPreferences = getSharedPreferences(MithrilApplication.getSharedPreferencesName(), Context.MODE_PRIVATE);
     }
 
     private void defaultFragmentLoad() {

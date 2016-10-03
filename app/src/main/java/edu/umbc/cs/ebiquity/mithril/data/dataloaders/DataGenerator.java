@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import edu.umbc.cs.ebiquity.mithril.MithrilApplication;
+import edu.umbc.cs.ebiquity.mithril.data.dbhelpers.MithrilDBHelper;
 import edu.umbc.cs.ebiquity.mithril.data.model.rules.PolicyRule;
 import edu.umbc.cs.ebiquity.mithril.data.model.rules.actions.Action;
 import edu.umbc.cs.ebiquity.mithril.data.model.rules.actions.RuleAction;
@@ -15,7 +16,6 @@ import edu.umbc.cs.ebiquity.mithril.data.model.rules.context.contextpieces.Infer
 import edu.umbc.cs.ebiquity.mithril.data.model.rules.context.contextpieces.PresenceInfo;
 import edu.umbc.cs.ebiquity.mithril.data.model.rules.protectedresources.Resource;
 import edu.umbc.cs.ebiquity.mithril.data.model.rules.requesters.Requester;
-import edu.umbc.cs.ebiquity.mithril.data.dbhelpers.MithrilDBHelper;
 
 public class DataGenerator {
 	/**
@@ -90,10 +90,10 @@ public class DataGenerator {
 	/**
 	 * Requesters generated
 	 */ 
-//	public static List<Requester> generateRequesters() {
-//		List<Requester> tempList = new ArrayList<Requester>();
-//		for(String aRequesterString : MithrilApplication.getConstArrayRequesterCategory())
-//			tempList.add(new Requester(aRequesterString));
-//		return tempList;
-//	}
+	public static List<Requester> generateRequesters() {
+		List<Requester> tempList = new ArrayList<Requester>();
+		for(String aRequesterString : MithrilApplication.getConstArrayRequesterCategory())
+			tempList.add(new Requester(aRequesterString));
+		return tempList;
+	}
 }
