@@ -1,12 +1,12 @@
-package edu.umbc.cs.ebiquity.mithril.util.specialtasks.rooting;
+package edu.umbc.cs.ebiquity.mithril.util.specialtasks.root;
 
 /**
  * Created by Prajit on 10/3/2016.
  */
 
 import java.io.BufferedReader;
-        import java.io.IOException;
-        import java.io.InputStreamReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
 
 /**
  * This class will provide utility to read logs.

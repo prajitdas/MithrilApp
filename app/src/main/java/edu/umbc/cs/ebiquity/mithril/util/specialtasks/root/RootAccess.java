@@ -1,9 +1,8 @@
-package edu.umbc.cs.ebiquity.mithril.util.specialtasks.rooting;
+package edu.umbc.cs.ebiquity.mithril.util.specialtasks.root;
 
 import android.content.Context;
 import android.widget.Toast;
 
-import java.io.DataOutputStream;
 import java.io.IOException;
 
 /**

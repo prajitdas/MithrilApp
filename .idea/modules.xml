@@ -2,11 +2,8 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/MithrilApp.iml" filepath="$PROJECT_DIR$/MithrilApp.iml" />
       <module fileurl="file:///media/prajit/data/code/android/projects/MithrilApp/MithrilApp.iml" filepath="/media/prajit/data/code/android/projects/MithrilApp/MithrilApp.iml" />
-      <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />
       <module fileurl="file:///media/prajit/data/code/android/projects/MithrilApp/app/app.iml" filepath="/media/prajit/data/code/android/projects/MithrilApp/app/app.iml" />
-      <module fileurl="file://$PROJECT_DIR$/volley/volley.iml" filepath="$PROJECT_DIR$/volley/volley.iml" />
       <module fileurl="file:///media/prajit/data/code/android/projects/MithrilApp/volley/volley.iml" filepath="/media/prajit/data/code/android/projects/MithrilApp/volley/volley.iml" />
     </modules>
   </component>
