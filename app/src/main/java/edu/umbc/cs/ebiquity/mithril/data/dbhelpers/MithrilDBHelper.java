@@ -94,6 +94,7 @@ public class MithrilDBHelper extends SQLiteOpenHelper {
     // Table for Installed application information
     private final static String APPID = "id"; // ID of an installed app
     // Below columns store information colelcted on the phone about app
+	private final static String APPUID = "uid";
     private final static String APPDESCRIPTION = "description";
     private final static String APPASSOCIATEDPROCNAME = "assocprocname";
     private final static String APPTARGETSDKVERSION = "targetSdkVersion";
@@ -134,12 +135,13 @@ public class MithrilDBHelper extends SQLiteOpenHelper {
 	 */
     private final static String CREATE_APP_DATA_TABLE =  " CREATE TABLE " + getAppDataTableName() + " (" +
             APPID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
+            APPUID + " INTEGER NOT NULL, " +
             APPDESCRIPTION + " TEXT NOT NULL DEFAULT '*', " +
             APPASSOCIATEDPROCNAME + " TEXT, " +
             APPTARGETSDKVERSION + " TEXT NOT NULL DEFAULT '*', " +
             APPICON + " BLOB, " +
             APPNAME + " TEXT NOT NULL DEFAULT '*', " +
-            APPPACKAGENAME + " TEXT NOT NULL DEFAULT '*', " +
+            APPPACKAGENAME + " TEXT UNIQUE NOT NULL DEFAULT '*', " + // Only the package name is unique, rest may repeat
             APPVERSIONINFO + " TEXT NOT NULL DEFAULT '*', " +
             APPINSTALLED + " INTEGER NOT NULL DEFAULT 1, " +
             APPTYPE + " TEXT NOT NULL DEFAULT '*');";
@@ -258,7 +260,7 @@ public class MithrilDBHelper extends SQLiteOpenHelper {
         for(PackageInfo pack : packageManager.getInstalledPackages(flags)) {
             if ((pack.applicationInfo.flags) != 1) {
                 try {
-                    AppData tempAppData = new AppData("dummyApp");
+                    AppData tempAppData = new AppData();
                     if (pack.packageName != null) {
                         if(pack.applicationInfo.loadDescription(packageManager) != null)
                             tempAppData.setAppDescription(pack.applicationInfo.loadDescription(packageManager).toString());
@@ -279,6 +281,7 @@ public class MithrilDBHelper extends SQLiteOpenHelper {
                             tempAppData.setAppType(MithrilApplication.getSystemAppsDisplayTag());
                         else
                             tempAppData.setAppType(MithrilApplication.getUserAppsDisplayTag());
+                        tempAppData.setUid(pack.applicationInfo.uid);
                     }
                     //Insert an app into database
                     addAppData(db, tempAppData);
@@ -402,6 +405,7 @@ public class MithrilDBHelper extends SQLiteOpenHelper {
         else
             values.put(APPINSTALLED, 0);
         values.put(APPTYPE, anAppData.getAppType());
+        values.put(APPUID, anAppData.getUid());
 		try {
 			insertedRowId = db.insert(getAppDataTableName(), null, values);
 		} catch (SQLException e) {
@@ -503,8 +507,8 @@ public class MithrilDBHelper extends SQLiteOpenHelper {
                 getAppDataTableName() + "." + APPNAME + ", " +
                 getAppDataTableName() + "." + APPPACKAGENAME + ", " +
                 getAppDataTableName() + "." + APPVERSIONINFO + ", " +
-                getAppDataTableName() + "." + APPINSTALLED + ", " +
-                getAppDataTableName() + "." + APPTYPE +
+                getAppDataTableName() + "." + APPTYPE + ", " +
+                getAppDataTableName() + "." + APPUID +
 				" FROM " + getAppDataTableName() + ";";
 
 		List<AppData> apps = new ArrayList<AppData>();
@@ -521,7 +525,8 @@ public class MithrilDBHelper extends SQLiteOpenHelper {
                                     cursor.getString(4),
                                     cursor.getString(5),
                                     cursor.getString(6),
-                                    cursor.getString(8)
+                                    cursor.getString(7),
+                                    Integer.parseInt(cursor.getString(8))
                             )
                     );
                 } while(cursor.moveToNext());
@@ -549,7 +554,8 @@ public class MithrilDBHelper extends SQLiteOpenHelper {
                 getAppDataTableName() + "." + APPVERSIONINFO + ", " +
                 getAppDataTableName() + "." + APPINSTALLED + ", " +
                 getAppDataTableName() + "." + APPINSTALLED + ", " +
-                getAppDataTableName() + "." + APPTYPE +
+                getAppDataTableName() + "." + APPTYPE + ", " +
+                getAppDataTableName() + "." + APPUID +
                 " FROM " + getAppDataTableName() +
                 " WHERE " + getAppDataTableName() + "." + APPNAME +
                 " = " + appName +
@@ -567,7 +573,8 @@ public class MithrilDBHelper extends SQLiteOpenHelper {
                         cursor.getString(4),
                         cursor.getString(5),
                         cursor.getString(6),
-                        cursor.getString(8)
+                        cursor.getString(7),
+                        Integer.parseInt(cursor.getString(8))
                 );
             }
         } catch(SQLException e) {
@@ -592,7 +599,8 @@ public class MithrilDBHelper extends SQLiteOpenHelper {
                 getAppDataTableName() + "." + APPPACKAGENAME + ", " +
                 getAppDataTableName() + "." + APPVERSIONINFO + ", " +
                 getAppDataTableName() + "." + APPINSTALLED + ", " +
-                getAppDataTableName() + "." + APPTYPE +
+                getAppDataTableName() + "." + APPTYPE + ", " +
+                getAppDataTableName() + "." + APPUID +
                 " FROM " + getAppDataTableName() +
                 " WHERE " + getAppDataTableName() + "." + APPID +
                 " = " + appId +
@@ -610,7 +618,8 @@ public class MithrilDBHelper extends SQLiteOpenHelper {
                         cursor.getString(4),
                         cursor.getString(5),
                         cursor.getString(6),
-                        cursor.getString(8)
+                        cursor.getString(7),
+                        Integer.parseInt(cursor.getString(8))
                 );
             }
         } catch(SQLException e) {
@@ -1050,14 +1059,14 @@ public class MithrilDBHelper extends SQLiteOpenHelper {
 	}
 
     /**
-     * Given a certain package name deletes app from the database
+     * Given a certain app uid deletes app from the database
      * @param db
-     * @param packageName
+     * @param uid
      */
-    public void deleteAppByPackageName(SQLiteDatabase db, String packageName) {
+    public void deleteAppByUID(SQLiteDatabase db, int uid) {
         try {
-            db.delete(getAppDataTableName(), APPPACKAGENAME + " = ?",
-                    new String[] { packageName });
+            db.delete(getAppDataTableName(), APPUID + " = ?",
+                    new String[] { String.valueOf(uid) });
         } catch(SQLException e) {
             throw new SQLException("Could not find " + e);
         }

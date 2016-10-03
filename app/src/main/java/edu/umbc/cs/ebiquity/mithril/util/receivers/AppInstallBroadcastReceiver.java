@@ -9,6 +9,7 @@ import android.content.pm.PackageManager;
 import android.database.sqlite.SQLiteDatabase;
 import android.graphics.BitmapFactory;
 import android.graphics.drawable.BitmapDrawable;
+import android.util.Log;
 
 import edu.umbc.cs.ebiquity.mithril.MithrilApplication;
 import edu.umbc.cs.ebiquity.mithril.R;
@@ -34,8 +35,9 @@ public class AppInstallBroadcastReceiver extends BroadcastReceiver {
         packageManager = context.getPackageManager();
         mithrilDBHelper = new MithrilDBHelper(context);
         mithrilDB = mithrilDBHelper.getWritableDatabase();
+        Log.d(MithrilApplication.getDebugTag(), "Action: "+intent.getAction());
+        Log.d(MithrilApplication.getDebugTag(), "Uid: "+Integer.toString(intent.getIntExtra(Intent.EXTRA_UID, 0)));
 
-        String message = new String();
         /**
          * Broadcast Action: A new application package has been installed on the device. The data contains the name of the package. Note that the newly installed package does not receive this broadcast.
          * May include the following extras:
@@ -45,11 +47,12 @@ public class AppInstallBroadcastReceiver extends BroadcastReceiver {
          * Constant Value: "android.intent.action.PACKAGE_ADDED"
          */
         if(intent.getAction() == "android.intent.action.PACKAGE_ADDED") {
-            String[] pakcagesInstalled = packageManager.getPackagesForUid(intent.getIntExtra(Intent.EXTRA_UID, 0));
-            for (String pkgName : pakcagesInstalled) {
+            String[] packagesInstalled = packageManager.getPackagesForUid(intent.getIntExtra(Intent.EXTRA_UID, 0));
+            for (String pkgName : packagesInstalled) {
                 try {
+                    Log.d(MithrilApplication.getDebugTag(), "Package: "+pkgName);
                     PackageInfo packageInfo = packageManager.getPackageInfo(pkgName, flags);
-                    AppData tempAppData = new AppData("dummyApp");
+                    AppData tempAppData = new AppData();
                     if (packageInfo.packageName != null) {
                         if(packageInfo.applicationInfo.loadDescription(packageManager) != null)
                             tempAppData.setAppDescription(packageInfo.applicationInfo.loadDescription(packageManager).toString());
@@ -70,6 +73,7 @@ public class AppInstallBroadcastReceiver extends BroadcastReceiver {
                             tempAppData.setAppType(MithrilApplication.getSystemAppsDisplayTag());
                         else
                             tempAppData.setAppType(MithrilApplication.getUserAppsDisplayTag());
+                        tempAppData.setUid(packageInfo.applicationInfo.uid);
                     }
                     //Find all apps and insert into database
                     mithrilDBHelper.addAppData(mithrilDB, tempAppData);
@@ -86,30 +90,23 @@ public class AppInstallBroadcastReceiver extends BroadcastReceiver {
          * This is a protected intent that can only be sent by the system.
          * Constant Value: "android.intent.action.PACKAGE_CHANGED"
          */
-        else if(intent.getAction() == "android.intent.action.PACKAGE_CHANGED") {
+//        else if(intent.getAction() == "android.intent.action.PACKAGE_CHANGED") {
             /**
              * Don't send data on update for now
              */
-        }
+//        }
         /**
-         * Broadcast Action: An existing application package has been removed from the device. The data contains the name of the package. The package that is being installed does not receive this Intent.
+         * Broadcast Action: An existing application package has been completely removed from the device.
+         * The data contains the name of the package. This is like ACTION_PACKAGE_REMOVED, but only set when EXTRA_DATA_REMOVED is true and EXTRA_REPLACING is false of that broadcast.
          * EXTRA_UID containing the integer uid previously assigned to the package.
-         * EXTRA_DATA_REMOVED is set to true if the entire application -- data and code -- is being removed.
-         * EXTRA_REPLACING is set to true if this will be followed by an ACTION_PACKAGE_ADDED broadcast for the same package.
          * This is a protected intent that can only be sent by the system.
-         * Constant Value: "android.intent.action.PACKAGE_REMOVED"
+         * Constant Value: "android.intent.action.PACKAGE_FULLY_REMOVED"
          */
-        else if(intent.getAction() == "android.intent.action.PACKAGE_REMOVED") {
+        else if(intent.getAction() == "android.intent.action.PACKAGE_FULLY_REMOVED") {
             /**
-             * When app is uninstalled delete it from table
+             * When app is FULLY uninstalled delete it from table
              */
-            String[] pakcagesUnistalled = packageManager.getPackagesForUid(intent.getIntExtra(Intent.EXTRA_UID, 0));
-            for (String pkgName : pakcagesUnistalled) {
-                if(intent.getBooleanExtra(EXTRA_DATA_REMOVED,false) && !intent.getBooleanExtra(EXTRA_REPLACING,true)) {
-                    //Find all apps that were uninstalled and remove them from database
-                    mithrilDBHelper.deleteAppByPackageName(mithrilDB, pkgName);
-                }
-            }
+            mithrilDBHelper.deleteAppByUID(mithrilDB, intent.getIntExtra(Intent.EXTRA_UID, 0));
         }
         /**
          * Broadcast Action: A new version of an application package has been installed, replacing an existing version that was previously installed. The data contains the name of the package.
@@ -118,10 +115,10 @@ public class AppInstallBroadcastReceiver extends BroadcastReceiver {
          * This is a protected intent that can only be sent by the system.
          * Constant Value: "android.intent.action.PACKAGE_REPLACED"
          */
-        else if(intent.getAction() == "android.intent.action.PACKAGE_REPLACED") {
+//        else if(intent.getAction() == "android.intent.action.PACKAGE_REPLACED") {
             /**
              * Don't send data on update for now
              */
-        }
+//        }
     }
 }

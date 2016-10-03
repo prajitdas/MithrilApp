@@ -18,6 +18,7 @@ public class AppData implements Comparable<AppData>{
     private String versionInfo;
     private boolean installed;
     private String appType;
+    private int uid;
 
     public AppData(String appDescription,
                    String associatedProcessName,
@@ -26,7 +27,8 @@ public class AppData implements Comparable<AppData>{
                    String appName,
                    String packageName,
                    String versionInfo,
-                   String appType) {
+                   String appType,
+                   int uid) {
         setAppDescription(appDescription);
         setAssociatedProcessName(associatedProcessName);
         setTargetSdkVersion(targetSdkVersion);
@@ -35,35 +37,10 @@ public class AppData implements Comparable<AppData>{
         setPackageName(packageName);
         setVersionInfo(versionInfo);
         setAppType(appType);
-    }
-
-    public AppData(String packageName) {
-        setPackageName(packageName);
+        setUid(uid);
     }
 
     public AppData() {
-
-    }
-
-    public AppData(String appDescription, String[] permissions,
-                   String associatedProcessName,
-                   int targetSdkVersion,
-                   Bitmap icon,
-                   String appName,
-                   String packageName,
-                   String versionInfo,
-                   boolean installed,
-                   String appType) {
-        setAppDescription(appDescription);
-        setPermissions(permissions);
-        setAssociatedProcessName(associatedProcessName);
-        setTargetSdkVersion(targetSdkVersion);
-        setIcon(icon);
-        setAppName(appName);
-        setPackageName(packageName);
-        setVersionInfo(versionInfo);
-        setInstalled(installed);
-        setAppType(appType);
     }
 
     public String getAppDescription() {
@@ -146,6 +123,14 @@ public class AppData implements Comparable<AppData>{
         this.appType = appType;
     }
 
+    public int getUid() {
+        return uid;
+    }
+
+    public void setUid(int uid) {
+        this.uid = uid;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -155,6 +140,7 @@ public class AppData implements Comparable<AppData>{
 
         if (getTargetSdkVersion() != appData.getTargetSdkVersion()) return false;
         if (isInstalled() != appData.isInstalled()) return false;
+        if (getUid() != appData.getUid()) return false;
         if (!getAppDescription().equals(appData.getAppDescription())) return false;
         // Probably incorrect - comparing Object[] arrays with Arrays.equals
         if (!Arrays.equals(getPermissions(), appData.getPermissions())) return false;
@@ -179,6 +165,7 @@ public class AppData implements Comparable<AppData>{
         result = 31 * result + getVersionInfo().hashCode();
         result = 31 * result + (isInstalled() ? 1 : 0);
         result = 31 * result + getAppType().hashCode();
+        result = 31 * result + getUid();
         return result;
     }
 
@@ -195,6 +182,7 @@ public class AppData implements Comparable<AppData>{
                 ", versionInfo='" + versionInfo + '\'' +
                 ", installed=" + installed +
                 ", appType='" + appType + '\'' +
+                ", uid=" + uid +
                 '}';
     }
 
