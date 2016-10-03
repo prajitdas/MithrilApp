@@ -6,11 +6,16 @@ import android.app.Application;
  * Created by PrajitKumar on 5/1/2016.
  */
 public class MithrilApplication extends Application{
+
     private static final String CONST_COMMAND_APP_BROADCAST_INTENT = "edu.umbc.ebiquity.mithril.command.intent.action.DATA_REQUEST";
 
-    private final static String CONST_DATABASE_NAME = "mithril.db";
+    private static final String PREF_KEY_HOME_LOC = "homeLocation";
+    private static final String PREF_KEY_WORK_LOC = "workLocation";
+    private static final String PREF_KEY_START_TIME = "startTime";
+    private static final String PREF_KEY_END_TIME = "endTime";
+    private static final String PREF_KEY_WORKING_HOURS_ENABLED = "workingHoursEnabled";
+    private static final String CONST_DATABASE_NAME = "mithril.db";
     private static final String CONST_DEBUG_TAG = "MITHRIL_DEBUG_TAG";
-
     /**
      * Context constants
      * TODO Change the constants as per the ontology and ensure that you generate some rules to be modified by the automated script
@@ -23,7 +28,6 @@ public class MithrilApplication extends Application{
     private static final String CONST_ARRAY_PRESENCE_INFO_IDENTITY[] = {"Public", "Professional_Network", "Personal_Network", "Superior",
             "Subordinate", "Colleague", "Family", "Friends", "Private"};
     private static final String CONST_ARRAY_TIME[] = {"Week_Day", "Working_Hours", "Weekend", "Off_Hours"};
-
     /**
      * Resource constants
      */
@@ -32,7 +36,6 @@ public class MithrilApplication extends Application{
             "Network_Location", "WiFi_Location", "GPS_Location", "Accelerometer", "Gravity_Sensor", "Gyroscope", "Rotation", "Bluetooth",
             "Cellular_Network", "WiFi_Network", "Geomagnetic_Field_Sensor", "Orientation_Sensor", "Proximity_Sensor", "Calendar", "Call_Logs",
             "Contacts", "Email", "Audio_Files", "Non_Media_Files", "Image_Files", "Video_Files", "Messages", "User_Dictionary", "Device_Id"};
-
     /**
      * Requester constants
      */
@@ -43,44 +46,52 @@ public class MithrilApplication extends Application{
             "Travel_And_Local", "Weather", "App_Widgets", "Game", "Game_Action", "Game_Adventure", "Game_Arcade", "Game_Board", "Game_Card",
             "Game_Casino", "Game_Casual", "Game_Educational", "Game_Family", "Game_Music", "Game_Puzzle", "Game_Racing", "Game_Role_Playing",
             "Game_Simulation", "Game_Sports", "Game_Strategy", "Game_Trivia", "Game_Word"};
-
-
     private static final String CONST_CONTEXT_DEFAULT_TIME = "Default Time";
-
     private static final String CONST_CONTEXT_DEFAULT_ACTIVITY = "Default Activity";
-
     private static final String CONST_CONTEXT_DEFAULT_LOCATION = "Default Location";
-
     private static final String CONST_CONTEXT_DEFAULT_IDENTITY = "John Doe";
-
     private static final String CONST_POL_RUL_NAME_SOCIAL_MEDIA_CAMERA_ACCESS_RULE = "Social_Media_Camera_Access_Rule";
-
     private static final String CONST_POL_RUL_DEFAULT_RULE = "Default policy rule name";
-
     private static final String CONST_DEFAULT_DESCRIPTION = "Default description";
-
     private static final String CONST_KEY_POLICY_RULE_ID = "PolicyRuleId";
-
     private static final String CONST_KEY_POLICY_RULE_NAME = "PolicyRuleName";
-
     private static final String CONST_PRESENCE_INFO_HEADER = "Presence Info";
-
     private static final String CONST_REQUESTER_INFO_HEADER = "Requester Info";
-
     private static final String CONST_USER_ACTIVITY_HEADER = "User Activity";
-
     private static final String CONST_USER_IDENTITY_HEADER = "User Identity";
-
     private static final String CONST_USER_LOCATION_HEADER = "User Location";
-
     private static final String CONST_USER_TIME_HEADER = "Date and Time";
-
     private static final String CONST_TOAST_MESSAGE_RULE_DELETED = " rule was deleted";
-
     private static final String CONST_TOAST_MESSAGE_TRUE_VIOLATION_NOTED = " the \"true violation\" has been noted. User will not be asked again "
             + "about the same violation";
-
     private static final String CONST_TOAST_MESSAGE_DATABASE_NOT_RELOADED = "Data was not relaoded!";
+    private static final String sharedPreferencesName = "edu.umbc.cs.ebiquity.mithril.mithrilappmanager";
+    private static final String debugTag = "MithrilAppManagerDebugTag";
+    private static final String allAppsDisplayTag = "allApps";
+    private static final String systemAppsDisplayTag = "systemApps";
+    private static final String userAppsDisplayTag = "userApps";
+    private static final String appDisplayTypeTag = "AppDisplayTypeTag";
+    private static final String sharedPreferenceAppCount = "AppCount";
+
+    public static String getPrefKeyWorkingHoursEnabled() {
+        return PREF_KEY_WORKING_HOURS_ENABLED;
+    }
+
+    public static String getPrefKeyHomeLoc() {
+        return PREF_KEY_HOME_LOC;
+    }
+
+    public static String getPrefKeyWorkLoc() {
+        return PREF_KEY_WORK_LOC;
+    }
+
+    public static String getPrefKeyStartTime() {
+        return PREF_KEY_START_TIME;
+    }
+
+    public static String getPrefKeyEndTime() {
+        return PREF_KEY_END_TIME;
+    }
 
     public static String getConstCommandAppBroadcastIntent() {
         return CONST_COMMAND_APP_BROADCAST_INTENT;
@@ -189,14 +200,10 @@ public class MithrilApplication extends Application{
     public static String[] getConstArrayResourceCategory() {
         return CONST_ARRAY_RESOURCE_CATEGORY;
     }
-    private static final String sharedPreferencesName = "edu.umbc.cs.ebiquity.mithril.mithrilappmanager";
-    private static final String debugTag = "MithrilAppManagerDebugTag";
 
     public static String getAllAppsDisplayTag() {
         return allAppsDisplayTag;
     }
-
-    private static final String allAppsDisplayTag = "allApps";
 
     public static String getSystemAppsDisplayTag() {
         return systemAppsDisplayTag;
@@ -206,20 +213,13 @@ public class MithrilApplication extends Application{
         return userAppsDisplayTag;
     }
 
-    private static final String systemAppsDisplayTag = "systemApps";
-    private static final String userAppsDisplayTag = "userApps";
-
     public static String getAppDisplayTypeTag() {
         return appDisplayTypeTag;
     }
 
-    private static final String appDisplayTypeTag = "AppDisplayTypeTag";
-
     public static String getSharedPreferenceAppCount() {
         return sharedPreferenceAppCount;
     }
-
-    private static final String sharedPreferenceAppCount = "AppCount";
 
     public static String getSharedPreferencesName() {
         return sharedPreferencesName;

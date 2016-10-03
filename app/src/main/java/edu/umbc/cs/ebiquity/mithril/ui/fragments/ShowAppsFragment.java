@@ -146,7 +146,7 @@ public class ShowAppsFragment extends Fragment {
 //            Log.d("MithrilAppManager", entry.toString());
                 systemAppDataItems.add(entry.getValue());
             }
-            Collections.sort(allAppDataItems);
+            Collections.sort(systemAppDataItems);
             appMetadataMap.clear();
         } else if (mAppDisplayType.equals(MithrilApplication.getUserAppsDisplayTag())) {
             /**
@@ -158,7 +158,7 @@ public class ShowAppsFragment extends Fragment {
 //            Log.d("MithrilAppManager", entry.toString());
                 userAppDataItems.add(entry.getValue());
             }
-            Collections.sort(allAppDataItems);
+            Collections.sort(userAppDataItems);
             appMetadataMap.clear();
         }
     }

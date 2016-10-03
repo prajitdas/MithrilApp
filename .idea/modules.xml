@@ -3,7 +3,10 @@
   <component name="ProjectModuleManager">
     <modules>
       <module fileurl="file:///media/prajit/data/code/android/projects/MithrilApp/MithrilApp.iml" filepath="/media/prajit/data/code/android/projects/MithrilApp/MithrilApp.iml" />
+      <module fileurl="file:///media/prajit/data/code/android/projects/MithrilApp/MithrilApp.iml" filepath="/media/prajit/data/code/android/projects/MithrilApp/MithrilApp.iml" />
       <module fileurl="file:///media/prajit/data/code/android/projects/MithrilApp/app/app.iml" filepath="/media/prajit/data/code/android/projects/MithrilApp/app/app.iml" />
+      <module fileurl="file:///media/prajit/data/code/android/projects/MithrilApp/app/app.iml" filepath="/media/prajit/data/code/android/projects/MithrilApp/app/app.iml" />
+      <module fileurl="file:///media/prajit/data/code/android/projects/MithrilApp/volley/volley.iml" filepath="/media/prajit/data/code/android/projects/MithrilApp/volley/volley.iml" />
       <module fileurl="file:///media/prajit/data/code/android/projects/MithrilApp/volley/volley.iml" filepath="/media/prajit/data/code/android/projects/MithrilApp/volley/volley.iml" />
     </modules>
   </component>

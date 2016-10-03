@@ -3,6 +3,7 @@
     package="edu.umbc.cs.ebiquity.mithril">
 
     <uses-permission android:name="android.permission.READ_LOGS" />
+    <uses-permission android:name="android.permission.PACKAGE_USAGE_STATS" />
 
     <application
         android:allowBackup="true"
@@ -37,15 +38,6 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="edu.umbc.cs.ebiquity.mithril.ui.activities.MainActivity" />
         </activity>
-        <activity
-            android:name=".ui.activities.ShowAppDetailActivity"
-            android:label="@string/title_activity_show_app_detail"
-            android:parentActivityName=".ui.activities.MainActivity"
-            android:theme="@style/AppTheme.NoActionBar">
-            <meta-data
-                android:name="android.support.PARENT_ACTIVITY"
-                android:value="edu.umbc.cs.ebiquity.mithril.ui.activities.MainActivity" />
-        </activity>
 
         <receiver
             android:name=".util.receivers.CommandBroadcastReceiver"
@@ -65,10 +57,6 @@
             </intent-filter>
         </receiver>
 
-        <service
-            android:name=".util.services.AppLaunchDetectionIntentService"
-            android:enabled="true"
-            android:exported="true" />
     </application>
 
 </manifest>
