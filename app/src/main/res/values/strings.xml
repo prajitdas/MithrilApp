@@ -158,5 +158,6 @@
 
     <string name="pref_title_vibrate">Vibrate</string>
     <string name="title_activity_about">About this app</string>
+    <string name="title_activity_show_app_detail">ShowAppDetailActivity</string>
 
 </resources>

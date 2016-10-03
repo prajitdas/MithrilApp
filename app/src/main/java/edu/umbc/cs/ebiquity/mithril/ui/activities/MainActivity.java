@@ -16,7 +16,6 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.TextView;
 
 import java.util.List;
 
@@ -46,7 +45,6 @@ public class MainActivity extends AppCompatActivity
     private AppData appDataItemSelected = null;
     private List<AppData> appDataItemsSelected = null;
     private FloatingActionButton fab;
-    private TextView mAppCountTextView;
 
     private void loadAllAppsFragment() {
         Bundle data = new Bundle();
@@ -133,35 +131,21 @@ public class MainActivity extends AppCompatActivity
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-//        createShortCut();
         initData();
         initViews();
         defaultFragmentLoad();
-        mAppCountTextView.setText(getResources().getString(
-                R.string.all_app_info_placeholder_text) +
-                Integer.toString(sharedPreferences.getInt(MithrilApplication.getSharedPreferenceAppCount(),0)));
     }
 
-//    private void createShortCut() {
-//        Intent shortcutIntent = new Intent(getApplicationContext(), MainActivity.class);
-//        shortcutIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-//        shortcutIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-//
-//        Intent addIntent = new Intent();
-//        addIntent.putExtra(Intent.EXTRA_SHORTCUT_INTENT, shortcutIntent);
-//        addIntent.putExtra("duplicate", false);
-//        addIntent.putExtra(Intent.EXTRA_SHORTCUT_NAME, getResources().getString(R.string.short_app_name));
-//        addIntent.putExtra(Intent.EXTRA_SHORTCUT_ICON_RESOURCE, Intent.ShortcutIconResource.fromContext(getApplicationContext(), R.drawable.ic_launcher));
-//        addIntent.setAction("com.android.launcher.action.INSTALL_SHORTCUT");
-//        getApplicationContext().sendBroadcast(addIntent);
-//    }
+    @Override
+    public void onResume() {
+        super.onResume();
+        defaultFragmentLoad();
+    }
 
-   private void initViews() {
+    private void initViews() {
         setContentView(R.layout.activity_main);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-
-        mAppCountTextView = (TextView) findViewById(R.id.app_count);
 
         fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {

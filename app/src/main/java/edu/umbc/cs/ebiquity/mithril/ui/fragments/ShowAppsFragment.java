@@ -25,7 +25,6 @@ import edu.umbc.cs.ebiquity.mithril.R;
 import edu.umbc.cs.ebiquity.mithril.data.dbhelpers.MithrilDBHelper;
 import edu.umbc.cs.ebiquity.mithril.data.model.AppData;
 import edu.umbc.cs.ebiquity.mithril.ui.adapters.InstalledAppsRecyclerViewAdapter;
-import edu.umbc.cs.ebiquity.mithril.ui.specialFeatures.DividerItemDecoration;
 
 /**
  * A fragment representing a list of Items.
@@ -35,11 +34,11 @@ import edu.umbc.cs.ebiquity.mithril.ui.specialFeatures.DividerItemDecoration;
  */
 public class ShowAppsFragment extends Fragment {
 
+    // TODO: Customize parameter argument names
+    private static final String ARG_COLUMN_COUNT = "column-count";
     private static MithrilDBHelper mithrilDBHelper;
     private static SQLiteDatabase mithrilDB;
     private SharedPreferences sharedPreferences;
-    // TODO: Customize parameter argument names
-    private static final String ARG_COLUMN_COUNT = "column-count";
     // TODO: Customize parameters
     private int mColumnCount = 1;
     private OnListFragmentInteractionListener mListener;
@@ -110,11 +109,6 @@ public class ShowAppsFragment extends Fragment {
                 recyclerView.setAdapter(new InstalledAppsRecyclerViewAdapter(systemAppDataItems, mListener, mListenerLongInteraction));
             else if (mAppDisplayType.equals(MithrilApplication.getUserAppsDisplayTag()))
                 recyclerView.setAdapter(new InstalledAppsRecyclerViewAdapter(userAppDataItems, mListener, mListenerLongInteraction));
-
-            /**
-             * Item decoration added
-             */
-            recyclerView.addItemDecoration(new DividerItemDecoration(getActivity(), DividerItemDecoration.VERTICAL_LIST));
 
             recyclerView.setHasFixedSize(true);
             recyclerView.setItemAnimator(new DefaultItemAnimator());
