@@ -26,6 +26,12 @@ import java.util.Arrays;
 import edu.umbc.cs.ebiquity.mithril.MithrilApplication;
 import edu.umbc.cs.ebiquity.mithril.R;
 
+/**
+ * Orange - rule1
+ * Light blue - rule2
+ * Pink - rule3
+ * Black - rule4
+ */
 public class TestMainActivity extends AppCompatActivity {
 
     private static final String MIME_TEXT_PLAIN = "text/plain";
