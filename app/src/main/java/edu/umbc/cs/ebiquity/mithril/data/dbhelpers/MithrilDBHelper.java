@@ -20,7 +20,6 @@ import java.util.List;
 
 import edu.umbc.cs.ebiquity.mithril.MithrilApplication;
 import edu.umbc.cs.ebiquity.mithril.R;
-import edu.umbc.cs.ebiquity.mithril.data.dataloaders.DataGenerator;
 import edu.umbc.cs.ebiquity.mithril.data.model.AppData;
 import edu.umbc.cs.ebiquity.mithril.data.model.Violation;
 import edu.umbc.cs.ebiquity.mithril.data.model.rules.PolicyRule;
@@ -34,24 +33,20 @@ import edu.umbc.cs.ebiquity.mithril.data.model.rules.context.contextpieces.Infer
 import edu.umbc.cs.ebiquity.mithril.data.model.rules.context.contextpieces.PresenceInfo;
 import edu.umbc.cs.ebiquity.mithril.data.model.rules.protectedresources.Resource;
 import edu.umbc.cs.ebiquity.mithril.data.model.rules.requesters.Requester;
+import edu.umbc.cs.ebiquity.mithril.simulations.DataGenerator;
 
 public class MithrilDBHelper extends SQLiteOpenHelper {
 
-    private Context context;
-    private PackageManager packageManager;
     // database declarations
     private final static int DATABASE_VERSION = 1;
     private final static String DATABASE_NAME = MithrilApplication.getConstDatabaseName();
-
 	// Fields for the database tables
 	// Table for Requester information
     private final static String REQID = "id"; // ID of a request
 	private final static String REQNAME = "name"; // Name from App table from which a request was received
-
     // Table for Resource requested information
 	private final static String RESID = "id"; // ID of a resource on the device
 	private final static String RESNAME = "name"; // Meaningful name of the resource on the device
-
     // Table for User Context information.
     // An entry is made into this table everytime we determine a change in context.
     // This could be where we could do energy efficient stuff as in we can save battery by determining context from historical data or some other way.
@@ -61,7 +56,6 @@ public class MithrilDBHelper extends SQLiteOpenHelper {
 	private final static String ACTIVITY = "activity"; // Activity context
 	private final static String PRESENCEINFO = "presenceinfo"; // If we could get presence information of others then we can do relationship based privacy solutions
 	private final static String TIME = "time"; // Temporal information; the time instance when the current context was captured
-
     // Table for storing define Policy information
     private final static String POLRULID = "id"; // ID of policy defined
     private final static String POLRULNAME = "name"; // Policy short name
@@ -71,7 +65,6 @@ public class MithrilDBHelper extends SQLiteOpenHelper {
     // This will be a general text that will have to be "reasoned" about!
     // If this says policy is applicable @home then we have to be able to determine that context available represents "home".
     private final static String POLRULACTIN = "action"; // Action will be denoted as: 0 for to deny, 1 for allow
-
     // Table for Action taken information
     // 0 for denied, 1 for allowed
     // Makes a record everytime an action is taken for a certain requester, resource, context and applicable policy
@@ -82,7 +75,6 @@ public class MithrilDBHelper extends SQLiteOpenHelper {
     private final static String ACTIONCONID = "contxtid"; // Context in which the request was made
     private final static String ACTIONPRLID = "polrulid"; // Policy rule id from the policy table that was used to determine the action.
     private final static String ACTION = "action"; // Action that was taken for a certain scenario
-
     // Table for Violation information
 	private final static String VIOLATIONID = "id"; // ID of violation captured
 	private final static String VIOLATIONDESC = "description"; // An appropriate description of the violation. No idea how this will be generated but
@@ -90,7 +82,6 @@ public class MithrilDBHelper extends SQLiteOpenHelper {
     // we have a violation of a policy - "policy name". Additionally we could state that
 	private final static String VIOLATIONOFRULID = "polrulid"; // policy rule id that was violated
 	private final static String VIOLATIONMARKER = "marker";
-
     // Table for Installed application information
     private final static String APPID = "id"; // ID of an installed app
     // Below columns store information colelcted on the phone about app
@@ -104,7 +95,6 @@ public class MithrilDBHelper extends SQLiteOpenHelper {
     private final static String APPVERSIONINFO = "versionInfo";
     private final static String APPINSTALLED = "installed"; // boolean value that represents whether an app is installed or not
     private final static String APPTYPE = "type";
-
     // Table for Permission information
     private final static String PERMID = "id"; // ID of a known permission on the device
     // Once a permission is known, we will get the meta information about them
@@ -112,14 +102,12 @@ public class MithrilDBHelper extends SQLiteOpenHelper {
     private final static String PERMPROTECTIONLEVEL = "protectionlevel";
     private final static String PERMGROUP = "permissiongroup";
     private final static String PERMFLAG = "permissionflag";
-
     // Table for App permission
     // This table represents all the apps and their corresponding permissions. We also want to store the association between an app and an api call or a resource access.
     private final static String APPPERMRESID = "id"; // ID for this table
     private final static String APPPERMRESAPPID = "appid"; // ID from resource table
     private final static String APPPERMRESPERID = "permid"; // ID from permission table
     private final static String APPPERMRESRESID = "rsrcid"; // ID from resource table
-
 	private final static String REQUESTERS_TABLE_NAME = "requesters";
 	private final static String RESOURCES_TABLE_NAME = "resources";
 	private final static String CONTEXT_TABLE_NAME = "context";
@@ -129,7 +117,6 @@ public class MithrilDBHelper extends SQLiteOpenHelper {
     private final static String APP_DATA_TABLE_NAME = "appdata";
     private final static String PERMISSIONS_TABLE_NAME = "permissions";
     private final static String APP_PERM_RSRC_TABLE_NAME = "apppermrsrc";
-
     /**
 	 * Table creation statements
 	 */
@@ -145,31 +132,26 @@ public class MithrilDBHelper extends SQLiteOpenHelper {
             APPVERSIONINFO + " TEXT NOT NULL DEFAULT '*', " +
             APPINSTALLED + " INTEGER NOT NULL DEFAULT 1, " +
             APPTYPE + " TEXT NOT NULL DEFAULT '*');";
-
     private final static String CREATE_REQUESTERS_TABLE =  " CREATE TABLE " + getRequestersTableName() + " (" +
 			REQID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
 			REQNAME + " TEXT NOT NULL DEFAULT '*');";
-	
 	private final static String CREATE_RESOURCES_TABLE =  " CREATE TABLE " + getResourcesTableName() + " (" +
-			RESID + " INTEGER PRIMARY KEY AUTOINCREMENT, " + 
+			RESID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
 			RESNAME + " TEXT NOT NULL DEFAULT '*');";
-	
 	private final static String CREATE_CONTEXT_TABLE =  " CREATE TABLE " + getContextTableName() + " (" +
-			CONTEXTID + " INTEGER PRIMARY KEY AUTOINCREMENT, " + 
+			CONTEXTID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
 			LOCATION + " TEXT NOT NULL DEFAULT '*', " +
 			IDENTITY + " TEXT NOT NULL DEFAULT 'USER', " +
 			ACTIVITY +  " TEXT NOT NULL DEFAULT '*', " +
 			PRESENCEINFO +  " TEXT NOT NULL DEFAULT '*', " +
 			TIME +  " TEXT NOT NULL DEFAULT '*');";
-	
 	private final static String CREATE_POLICY_RULES_TABLE =  " CREATE TABLE " + getPolicyRulesTableName() + " (" +
-			POLRULID + " INTEGER PRIMARY KEY AUTOINCREMENT, " + 
-			POLRULNAME + " TEXT NOT NULL DEFAULT '*', " + 
+			POLRULID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
+			POLRULNAME + " TEXT NOT NULL DEFAULT '*', " +
 			POLRULREQID + " INTEGER NOT NULL REFERENCES " + getRequestersTableName() + "(" + REQID + "), " +
 			POLRULRESID + " INTEGER NOT NULL REFERENCES " + getResourcesTableName() + "(" + RESID + "), " +
 			POLRULCNTXT + " TEXT NOT NULL DEFAULT '*'," +
             POLRULACTIN + " INTEGER NOT NULL DEFAULT 0);";
-
     private final static String CREATE_ACTION_TABLE =  " CREATE TABLE " + getActionTableName() + " (" +
             ACTIONID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
             ACTIONREQID + " INTEGER NOT NULL REFERENCES " + getRequestersTableName() + "(" + REQID + "), " +
@@ -177,29 +159,28 @@ public class MithrilDBHelper extends SQLiteOpenHelper {
             ACTIONCONID + " INTEGER NOT NULL REFERENCES " + getContextTableName() + "(" + CONTEXTID + "), " +
             ACTIONPRLID + " INTEGER NOT NULL REFERENCES " + getPolicyRulesTableName() + "(" + POLRULID + "), " +
             ACTION + " INTEGER NOT NULL DEFAULT 0);";
-
     private final static String CREATE_VIOLATIONS_TABLE =  " CREATE TABLE " + getViolationsTableName() + " (" +
-			VIOLATIONID + " INTEGER PRIMARY KEY AUTOINCREMENT, " + 
-			VIOLATIONDESC + " TEXT NOT NULL DEFAULT '*', " + 
+			VIOLATIONID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
+			VIOLATIONDESC + " TEXT NOT NULL DEFAULT '*', " +
 			VIOLATIONOFRULID + " INTEGER NOT NULL, " +
 			VIOLATIONMARKER + " INTEGER NOT NULL DEFAULT 0, " +
 			"CONSTRAINT violationsToPolicyRuleFK " +
 			"FOREIGN KEY ("+ VIOLATIONOFRULID +") " +
 			"REFERENCES " + MithrilDBHelper.getPolicyRulesTableName() + "(id) " +
 			"ON DELETE CASCADE);";
-
     private final static String CREATE_PERMISSIONS_TABLE =  " CREATE TABLE " + getPermissionsTableName() + " (" +
             PERMID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
             PERMNAME + " TEXT NOT NULL DEFAULT '*', " +
             PERMPROTECTIONLEVEL + " TEXT NOT NULL DEFAULT '*', " +
             PERMGROUP + " TEXT NOT NULL DEFAULT '*', " +
             PERMFLAG + " TEXT NOT NULL DEFAULT '*');";
-
     private final static String CREATE_APP_PERM_RSRC_TABLE =  " CREATE TABLE " + getAppPermRsrcTableName() + " (" +
             APPPERMRESID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
             APPPERMRESAPPID + " INTEGER NOT NULL REFERENCES " + getAppDataTableName() + "(" + APPID + "), " +
             APPPERMRESPERID + " INTEGER NOT NULL REFERENCES " + getPermissionsTableName() + "(" + PERMID + "), " +
             APPPERMRESRESID + " INTEGER NOT NULL REFERENCES " + getResourcesTableName() + "(" + RESID + "));";
+	private Context context;
+	private PackageManager packageManager;
 
 	/**
 	 * Database creation constructor
@@ -208,6 +189,53 @@ public class MithrilDBHelper extends SQLiteOpenHelper {
 	public MithrilDBHelper(Context context) {
 		super(context, DATABASE_NAME, null, DATABASE_VERSION);
 		this.setContext(context);
+	}
+
+	private static byte[] getBitmapAsByteArray(Bitmap bitmap) {
+		ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
+		bitmap.compress(Bitmap.CompressFormat.PNG, 0, outputStream);
+		return outputStream.toByteArray();
+	}
+
+	/**
+	 * Table name getters
+	 *
+	 * @return the table name
+	 */
+	public static String getPolicyRulesTableName() {
+		return POLICY_RULES_TABLE_NAME;
+	}
+
+	public static String getRequestersTableName() {
+		return REQUESTERS_TABLE_NAME;
+	}
+
+	public static String getResourcesTableName() {
+		return RESOURCES_TABLE_NAME;
+	}
+
+	public static String getContextTableName() {
+		return CONTEXT_TABLE_NAME;
+	}
+
+	public static String getActionTableName() {
+		return ACTION_TABLE_NAME;
+	}
+
+	public static String getViolationsTableName() {
+		return VIOLATIONS_TABLE_NAME;
+	}
+
+	public static String getAppDataTableName() {
+		return APP_DATA_TABLE_NAME;
+	}
+
+	public static String getPermissionsTableName() {
+		return PERMISSIONS_TABLE_NAME;
+	}
+
+	public static String getAppPermRsrcTableName() {
+		return APP_PERM_RSRC_TABLE_NAME;
 	}
 
 	public Context getContext() {
@@ -308,7 +336,7 @@ public class MithrilDBHelper extends SQLiteOpenHelper {
 	public void deleteAllData(SQLiteDatabase db) {
 		dropDBObjects(db);
 	}
-	
+
 	@Override
 	public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
 		Log.w(MithrilDBHelper.class.getName(),
@@ -345,7 +373,7 @@ public class MithrilDBHelper extends SQLiteOpenHelper {
 		}
 		return insertedRowId;
 	}
-	
+
 	public long addResource(SQLiteDatabase db, Resource aResource) {
 		long insertedRowId;
 		ContentValues values = new ContentValues();
@@ -388,7 +416,7 @@ public class MithrilDBHelper extends SQLiteOpenHelper {
 		}
 		return insertedRowId;
 	}
-
+	
 	public long addAppData(SQLiteDatabase db, AppData anAppData) {
 		long insertedRowId;
 		ContentValues values = new ContentValues();
@@ -414,13 +442,7 @@ public class MithrilDBHelper extends SQLiteOpenHelper {
 		}
 		return insertedRowId;
 	}
-
-    private static byte[] getBitmapAsByteArray(Bitmap bitmap) {
-        ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
-        bitmap.compress(Bitmap.CompressFormat.PNG, 0, outputStream);
-        return outputStream.toByteArray();
-    }
-
+	
     public long addPolicyRule(SQLiteDatabase db, PolicyRule aPolicyRule) {
         long insertedRowId;
         ContentValues values = new ContentValues();
@@ -627,7 +649,7 @@ public class MithrilDBHelper extends SQLiteOpenHelper {
         }
         return app;
     }
-
+	
     /**
 	 * Finds all violations
 	 * @param db
@@ -683,7 +705,7 @@ public class MithrilDBHelper extends SQLiteOpenHelper {
 				getViolationsTableName() + "." + VIOLATIONDESC + ", " +
 				getViolationsTableName() + "." + VIOLATIONOFRULID + ", " +
 				getViolationsTableName() + "." + VIOLATIONMARKER +
-				" FROM " + getViolationsTableName() + 
+				" FROM " + getViolationsTableName() +
 				" WHERE " + getViolationsTableName() + "." + VIOLATIONMARKER + " = 0;";
 
 		List<Violation> violations = new ArrayList<Violation>();
@@ -714,7 +736,7 @@ public class MithrilDBHelper extends SQLiteOpenHelper {
 		}
 		return violations;
 	}
-	
+
 	/**
 	 * Getting all policies
 	 * @param db
@@ -730,13 +752,13 @@ public class MithrilDBHelper extends SQLiteOpenHelper {
 				getResourcesTableName() + "." + RESNAME + ", " +
                 getPolicyRulesTableName() + "." + POLRULCNTXT + ", " +
                 getPolicyRulesTableName() + "." + POLRULACTIN +
-				" FROM " + 
+				" FROM " +
 				getPolicyRulesTableName() +
-				" LEFT JOIN " + getRequestersTableName() + 
-				" ON " + getPolicyRulesTableName() + "." + POLRULREQID + 
+				" LEFT JOIN " + getRequestersTableName() +
+				" ON " + getPolicyRulesTableName() + "." + POLRULREQID +
 				" = " +  getRequestersTableName() + "." + REQID +
-				" LEFT JOIN " + getResourcesTableName() + 
-				" ON " + getPolicyRulesTableName() + "." + POLRULRESID + 
+				" LEFT JOIN " + getResourcesTableName() +
+				" ON " + getPolicyRulesTableName() + "." + POLRULRESID +
 				" = " +  getResourcesTableName() + "." + RESID + ";";
 
 		try{
@@ -750,12 +772,12 @@ public class MithrilDBHelper extends SQLiteOpenHelper {
 					policyRule.setName(cursor.getString(1));
 					policyRule.setRequester(new Requester(cursor.getString(2)));
 					policyRule.setResource(new Resource(cursor.getString(3)));
-					
+
 //					ArrayList<Identity> presenceInfoList = new ArrayList<Identity>();
 //					presenceInfoList.add(new Identity(cursor.getString(4)));
-					
+
 					policyRule.setContext(cursor.getString(4));
-					
+
 					if(Integer.parseInt(cursor.getString(5)) == 1)
 						policyRule.setAction(new RuleAction(Action.ALLOW));
 					else
@@ -771,7 +793,7 @@ public class MithrilDBHelper extends SQLiteOpenHelper {
 		// return policy rules list
 		return policyRules;
 	}
-	
+
 	/**
 	 * Finds a policy based on the application and the provider being accessed
 	 * @param db
@@ -788,19 +810,19 @@ public class MithrilDBHelper extends SQLiteOpenHelper {
                 getPolicyRulesTableName() + "." + POLRULACTIN +
                 " FROM " +
 				getPolicyRulesTableName() +
-				" LEFT JOIN " + getRequestersTableName() + 
-				" ON " + getPolicyRulesTableName() + "." + POLRULREQID + 
+				" LEFT JOIN " + getRequestersTableName() +
+				" ON " + getPolicyRulesTableName() + "." + POLRULREQID +
 				" = " +  getRequestersTableName() + "." + REQID +
-				" LEFT JOIN " + getResourcesTableName() + 
-				" ON " + getPolicyRulesTableName() + "." + POLRULRESID + 
-				" = " +  getResourcesTableName() + "." + RESID + 
+				" LEFT JOIN " + getResourcesTableName() +
+				" ON " + getPolicyRulesTableName() + "." + POLRULRESID +
+				" = " + getResourcesTableName() + "." + RESID +
 				" WHERE "  +
 				getRequestersTableName() + "." + REQNAME + " = '" + requester + "' AND " +
-				getResourcesTableName() + "." + RESNAME + " = '" + resource + 
+				getResourcesTableName() + "." + RESNAME + " = '" + resource +
 				"';";
 
 		PolicyRule policyRule = new PolicyRule();
-		
+
 		try{
 			Cursor cursor = db.rawQuery(selectQuery, null);
 			if (cursor.moveToFirst()) {
@@ -808,12 +830,12 @@ public class MithrilDBHelper extends SQLiteOpenHelper {
 				policyRule.setName(cursor.getString(1));
 				policyRule.setRequester(new Requester(cursor.getString(2)));
 				policyRule.setResource(new Resource(cursor.getString(3)));
-				
+
 				ArrayList<Identity> presenceInfoList = new ArrayList<Identity>();
 				presenceInfoList.add(new Identity(cursor.getString(4)));
 
 				policyRule.setContext(cursor.getString(5));
-				
+
 				if(Integer.parseInt(cursor.getString(6)) == 1)
 					policyRule.setAction(new RuleAction(Action.ALLOW));
 				else
@@ -840,19 +862,19 @@ public class MithrilDBHelper extends SQLiteOpenHelper {
 				getResourcesTableName() + "." + RESNAME + ", " +
                 getPolicyRulesTableName() + "." + POLRULCNTXT + ", " +
                 getPolicyRulesTableName() + "." + POLRULACTIN +
-				" FROM " + 
+				" FROM " +
 				getPolicyRulesTableName() +
-				" LEFT JOIN " + getRequestersTableName() + 
-				" ON " + getPolicyRulesTableName() + "." + POLRULREQID + 
+				" LEFT JOIN " + getRequestersTableName() +
+				" ON " + getPolicyRulesTableName() + "." + POLRULREQID +
 				" = " +  getRequestersTableName() + "." + REQID +
-				" LEFT JOIN " + getResourcesTableName() + 
-				" ON " + getPolicyRulesTableName() + "." + POLRULRESID + 
-				" = " +  getResourcesTableName() + "." + RESID + 
+				" LEFT JOIN " + getResourcesTableName() +
+				" ON " + getPolicyRulesTableName() + "." + POLRULRESID +
+				" = " + getResourcesTableName() + "." + RESID +
 				" WHERE "  +
 				getPolicyRulesTableName() + "." + POLRULID + " = " + id + ";";
 
 		PolicyRule policyRule = new PolicyRule();
-		
+
 		try{
 			Cursor cursor = db.rawQuery(selectQuery, null);
 			if (cursor.moveToFirst()) {
@@ -860,12 +882,12 @@ public class MithrilDBHelper extends SQLiteOpenHelper {
 				policyRule.setName(cursor.getString(1));
 				policyRule.setRequester(new Requester(cursor.getString(2)));
 				policyRule.setResource(new Resource(cursor.getString(3)));
-				
+
 				ArrayList<Identity> presenceInfoList = new ArrayList<Identity>();
 				presenceInfoList.add(new Identity(cursor.getString(4)));
 
 				policyRule.setContext(cursor.getString(5));
-				
+
 				if(Integer.parseInt(cursor.getString(6)) == 1)
 					policyRule.setAction(new RuleAction(Action.ALLOW));
 				else
@@ -887,14 +909,14 @@ public class MithrilDBHelper extends SQLiteOpenHelper {
 		// Select Query
 		String selectQuery = "SELECT " +
 				getRequestersTableName() + "." + REQID + ", " +
-				getRequestersTableName() + "." + REQNAME + 
-				" FROM " + 
-				getRequestersTableName() + 
-				" WHERE "  +   
+				getRequestersTableName() + "." + REQNAME +
+				" FROM " +
+				getRequestersTableName() +
+				" WHERE "  +
 				getRequestersTableName() + "." + REQID + " = " + id + ";";
 
 		Requester requester = new Requester();
-		
+
 		try{
 			Cursor cursor = db.rawQuery(selectQuery, null);
 			if (cursor.moveToFirst()) {
@@ -917,14 +939,14 @@ public class MithrilDBHelper extends SQLiteOpenHelper {
 		// Select Query
 		String selectQuery = "SELECT "+
 				getResourcesTableName() + "." + RESID + ", " +
-				getResourcesTableName() + "." + RESNAME + 
-				" FROM " + 
-				getResourcesTableName() + 
-				" WHERE "  +   
+				getResourcesTableName() + "." + RESNAME +
+				" FROM " +
+				getResourcesTableName() +
+				" WHERE "  +
 				getResourcesTableName() + "." + RESID + " = " + id + ";";
 
 		Resource resource = new Resource();
-		
+
 		try{
 			Cursor cursor = db.rawQuery(selectQuery, null);
 			if (cursor.moveToFirst()) {
@@ -947,14 +969,14 @@ public class MithrilDBHelper extends SQLiteOpenHelper {
 		// Select Query
 		String selectQuery = "SELECT "+
 				getActionTableName() + "." + ACTIONID + ", " +
-				getActionTableName() + "." + ACTION + 
-				" FROM " + 
-				getActionTableName() + 
-				" WHERE "  +   
+				getActionTableName() + "." + ACTION +
+				" FROM " +
+				getActionTableName() +
+				" WHERE "  +
 				getActionTableName() + "." + ACTIONID + " = " + id + ";";
 
 		RuleAction action = new RuleAction();
-		
+
 		try{
 			Cursor cursor = db.rawQuery(selectQuery, null);
 			if (cursor.moveToFirst()) {
@@ -986,14 +1008,14 @@ public class MithrilDBHelper extends SQLiteOpenHelper {
 				getContextTableName() + "." + ACTIVITY + ", " +
 				getContextTableName() + "." + LOCATION + ", " +
 				getContextTableName() + "." + IDENTITY + ", " +
-				getContextTableName() + "." + TIME + 
-				" FROM " + 
-				getContextTableName() + 
-				" WHERE "  +   
+				getContextTableName() + "." + TIME +
+				" FROM " +
+				getContextTableName() +
+				" WHERE "  +
 				getContextTableName() + "." + RESID + " = " + id + ";";
 
 		UserContext userContext = new UserContext();
-		
+
 		try{
 			Cursor cursor = db.rawQuery(selectQuery, null);
 			if (cursor.moveToFirst()) {
@@ -1013,7 +1035,7 @@ public class MithrilDBHelper extends SQLiteOpenHelper {
 		}
 		return userContext;
 	}
-	
+
 	/**
 	 * method to update single violation
 	 */
@@ -1022,10 +1044,10 @@ public class MithrilDBHelper extends SQLiteOpenHelper {
 		values.put(VIOLATIONDESC, aViolation.getViolationDescription());
 		values.put(VIOLATIONOFRULID, aViolation.getRuleId());
 		values.put(VIOLATIONMARKER, 1);
-		return db.update(getViolationsTableName(), values, VIOLATIONID + " = ?", 
+		return db.update(getViolationsTableName(), values, VIOLATIONID + " = ?",
 				new String[] { String.valueOf(aViolation.getId()) });
 	}
-
+	
 	/**
 	 * method to update single violation
 	 * Update is being removed because of the foreign key constraint as this causes an SQLException during insertion
@@ -1046,7 +1068,7 @@ public class MithrilDBHelper extends SQLiteOpenHelper {
 	}
 
 	/**
-	 * method to delete a row from a table based on the identifier 
+	 * method to delete a row from a table based on the identifier
 	 * @param db
 	 */
 	public void deleteViolation(SQLiteDatabase db, Violation aViolation) {
@@ -1055,7 +1077,7 @@ public class MithrilDBHelper extends SQLiteOpenHelper {
 					new String[] { String.valueOf(aViolation.getId()) });
 		} catch(SQLException e) {
 			throw new SQLException("Could not find " + e);
-		} 
+		}
 	}
 
     /**
@@ -1085,7 +1107,7 @@ public class MithrilDBHelper extends SQLiteOpenHelper {
 					new String[] { String.valueOf(policyId) });
 		} catch(SQLException e) {
 			throw new SQLException("Could not find " + e);
-		} 
+		}
 	}
 
 	public void deleteRequester(SQLiteDatabase db, Requester aRequester) {
@@ -1094,7 +1116,7 @@ public class MithrilDBHelper extends SQLiteOpenHelper {
 					new String[] { String.valueOf(aRequester.getId()) });
 		} catch(SQLException e) {
 	        throw new SQLException("Could not find " + e);
-		} 
+		}
 	}
 
 	public void deleteResource(SQLiteDatabase db, Resource aResource) {
@@ -1103,7 +1125,7 @@ public class MithrilDBHelper extends SQLiteOpenHelper {
 				new String[] { String.valueOf(aResource.getId()) });
 		} catch(SQLException e) {
 	        throw new SQLException("Could not find " + e);
-		} 
+		}
 	}
 
 	public void deleteContext(SQLiteDatabase db, UserContext aUserContext) {
@@ -1112,7 +1134,7 @@ public class MithrilDBHelper extends SQLiteOpenHelper {
 					new String[] { String.valueOf(aUserContext.getId()) });
 		} catch(SQLException e) {
 	        throw new SQLException("Could not find " + e);
-		} 
+		}
 	}
 
 	public void deleteRuleAction(SQLiteDatabase db, RuleAction aRuleAction) {
@@ -1121,7 +1143,7 @@ public class MithrilDBHelper extends SQLiteOpenHelper {
 					new String[] { String.valueOf(aRuleAction.getId()) });
 		} catch(SQLException e) {
 	        throw new SQLException("Could not find " + e);
-		} 
+		}
 	}
 
 	public void deletePolicyRule(SQLiteDatabase db, PolicyRule aPolicyRule) {
@@ -1130,49 +1152,17 @@ public class MithrilDBHelper extends SQLiteOpenHelper {
 				new String[] { String.valueOf(aPolicyRule.getId()) });
 		} catch(SQLException e) {
             throw new SQLException("Could not find " + e);
-		} 
+		}
 	}
-	
+
 	public void deletePolicyRuleById(SQLiteDatabase db, int aPolicyRuleId) {
 		try {
 			db.delete(getPolicyRulesTableName(), POLRULID + " = ?",
 					new String[] { String.valueOf(aPolicyRuleId) });
 		} catch(SQLException e) {
             throw new SQLException("Could not find " + e);
-		} 
+		}
 	}
-	
-	/**
-	 * Table name getters
-	 * @return the table name
-	 */
-	public static String getPolicyRulesTableName() {
-		return POLICY_RULES_TABLE_NAME;
-	}
-	public static String getRequestersTableName() {
-		return REQUESTERS_TABLE_NAME;
-	}
-	public static String getResourcesTableName() {
-		return RESOURCES_TABLE_NAME;
-	}
-	public static String getContextTableName() {
-		return CONTEXT_TABLE_NAME;
-	}
-	public static String getActionTableName() {
-		return ACTION_TABLE_NAME;
-	}
-	public static String getViolationsTableName() {
-		return VIOLATIONS_TABLE_NAME;
-	}
-    public static String getAppDataTableName() {
-        return APP_DATA_TABLE_NAME;
-    }
-    public static String getPermissionsTableName() {
-        return PERMISSIONS_TABLE_NAME;
-    }
-    public static String getAppPermRsrcTableName() {
-        return APP_PERM_RSRC_TABLE_NAME;
-    }
 
     /**
 	 * method to load the default set of policies into the database
