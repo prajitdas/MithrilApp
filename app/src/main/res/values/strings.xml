@@ -46,6 +46,8 @@
     <string name="dialog_resp_delete">Yes</string>
     <string name="dialog_resp_NO">No</string>
 
+    <string name="no_data">No data!</string>
+
     <string name="policy_tbl_policy_rule_info">Policy Rule Info</string>
     <string name="policy_tbl_lbl_policy_name">Policy Name: </string>
     <string name="policy_tbl_lbl_rule_name">Rule Name: </string>
