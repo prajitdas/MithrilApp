@@ -46,7 +46,7 @@ public class ShowAppsFragment extends Fragment {
     private String mAppDisplayType;
 
     /**
-     * An array of violation items.
+     * An array of app items.
      */
     private List<AppData> allAppDataItems = new ArrayList<>();
     private List<AppData> systemAppDataItems = new ArrayList<>();

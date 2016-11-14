@@ -446,8 +446,9 @@ public class MithrilDBHelper extends SQLiteOpenHelper {
 	}
 
 	//TODO We have to do a join across 3 tables and return the permissions for an app
-	public PermissionInfo[] getAppPermissions() {
-		return new PermissionInfo[0];
+	public List<PermData> getAppPermissions(SQLiteDatabase db, String appName) {
+		List<PermData> permDataList = new ArrayList<PermData>();
+		return permDataList;
 	}
 
 	public long addPolicyRule(SQLiteDatabase db, PolicyRule aPolicyRule) {

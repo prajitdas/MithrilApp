@@ -16,6 +16,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.Toast;
 
 import java.util.List;
 
@@ -43,7 +44,7 @@ public class MainActivity extends AppCompatActivity
     private DrawerLayout drawer;
     private ActionBarDrawerToggle toggle;
     private NavigationView navigationView;
-    private AppData appDataItemSelected = null;
+//    private AppData appDataItemSelected = null;
     private List<AppData> appDataItemsSelected = null;
     private FloatingActionButton fab;
 
@@ -113,19 +114,22 @@ public class MainActivity extends AppCompatActivity
 
     @Override
     public void onListFragmentInteraction(AppData item) {
-        //TODO Do something with the item selected
-        appDataItemSelected = item;
+        //TODO Do something with the App selected
+//        Toast.makeText(this, item.getAppName(), Toast.LENGTH_LONG).show();
+        Intent intent = new Intent(this, ViewAppDetailsActivity.class);
+        intent.putExtra(MithrilApplication.getAppNameTag(), item.getAppName());
+        startActivity(intent);
     }
 
     @Override
     public void onListFragmentInteraction(Violation item) {
-        //TODO Do something with the item selected
+        //TODO Do something with the Violation selected
         violationItemSelected = item;
     }
 
     @Override
     public void onListFragmentLongInteraction(List<AppData> items) {
-        //TODO Do something with the item selected
+        //TODO Do something with the Apps selected
         appDataItemsSelected = items;
     }
 

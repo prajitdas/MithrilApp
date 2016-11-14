@@ -1,17 +1,37 @@
 package edu.umbc.cs.ebiquity.mithril.data.model;
 
+import android.graphics.Bitmap;
+import android.support.annotation.NonNull;
+
 import edu.umbc.cs.ebiquity.mithril.data.model.rules.protectedresources.Resource;
 
 /**
  * Created by prajit on 11/14/16.
  */
 
-public class PermData {
+public class PermData implements Comparable<PermData>{
     private String permissionName;
     private String permissionProtectionLevel;
     private String permissionGroup;
     private String permissionFlag;
+    private String permissionDescription;
+    private Bitmap permissionIcon;
+    private String permissionLabel;
     private Resource resource;
+
+    public PermData() {
+    }
+
+    public PermData(String permissionName, String permissionProtectionLevel, String permissionGroup, String permissionFlag, String permissionDescription, Bitmap permissionIcon, String permissionLabel, Resource resource) {
+        this.permissionName = permissionName;
+        this.permissionProtectionLevel = permissionProtectionLevel;
+        this.permissionGroup = permissionGroup;
+        this.permissionFlag = permissionFlag;
+        this.permissionDescription = permissionDescription;
+        this.permissionIcon = permissionIcon;
+        this.permissionLabel = permissionLabel;
+        this.resource = resource;
+    }
 
     public String getPermissionName() {
         return permissionName;
@@ -45,6 +65,30 @@ public class PermData {
         this.permissionFlag = permissionFlag;
     }
 
+    public String getPermissionDescription() {
+        return permissionDescription;
+    }
+
+    public void setPermissionDescription(String permissionDescription) {
+        this.permissionDescription = permissionDescription;
+    }
+
+    public Bitmap getPermissionIcon() {
+        return permissionIcon;
+    }
+
+    public void setPermissionIcon(Bitmap permissionIcon) {
+        this.permissionIcon = permissionIcon;
+    }
+
+    public String getPermissionLabel() {
+        return permissionLabel;
+    }
+
+    public void setPermissionLabel(String permissionLabel) {
+        this.permissionLabel = permissionLabel;
+    }
+
     public Resource getResource() {
         return resource;
     }
@@ -54,45 +98,65 @@ public class PermData {
     }
 
     @Override
-    public String toString() {
-        return "PermData{" +
-                "permissionName='" + permissionName + '\'' +
-                ", permissionProtectionLevel='" + permissionProtectionLevel + '\'' +
-                ", permissionGroup='" + permissionGroup + '\'' +
-                ", permissionFlag='" + permissionFlag + '\'' +
-                ", resource=" + resource +
-                '}';
-    }
-
-    @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (!(o instanceof PermData)) return false;
 
         PermData permData = (PermData) o;
 
-        if (!getPermissionName().equals(permData.getPermissionName())) return false;
-        if (!getPermissionProtectionLevel().equals(permData.getPermissionProtectionLevel()))
+        if (getPermissionName() != null ? !getPermissionName().equals(permData.getPermissionName()) : permData.getPermissionName() != null)
             return false;
-        if (!getPermissionGroup().equals(permData.getPermissionGroup())) return false;
-        if (!getPermissionFlag().equals(permData.getPermissionFlag())) return false;
-        return getResource().equals(permData.getResource());
+        if (getPermissionProtectionLevel() != null ? !getPermissionProtectionLevel().equals(permData.getPermissionProtectionLevel()) : permData.getPermissionProtectionLevel() != null)
+            return false;
+        if (getPermissionGroup() != null ? !getPermissionGroup().equals(permData.getPermissionGroup()) : permData.getPermissionGroup() != null)
+            return false;
+        if (getPermissionFlag() != null ? !getPermissionFlag().equals(permData.getPermissionFlag()) : permData.getPermissionFlag() != null)
+            return false;
+        if (getPermissionDescription() != null ? !getPermissionDescription().equals(permData.getPermissionDescription()) : permData.getPermissionDescription() != null)
+            return false;
+        if (getPermissionIcon() != null ? !getPermissionIcon().equals(permData.getPermissionIcon()) : permData.getPermissionIcon() != null)
+            return false;
+        if (getPermissionLabel() != null ? !getPermissionLabel().equals(permData.getPermissionLabel()) : permData.getPermissionLabel() != null)
+            return false;
+        return getResource() != null ? getResource().equals(permData.getResource()) : permData.getResource() == null;
 
     }
 
     @Override
     public int hashCode() {
-        int result = getPermissionName().hashCode();
-        result = 31 * result + getPermissionProtectionLevel().hashCode();
-        result = 31 * result + getPermissionGroup().hashCode();
-        result = 31 * result + getPermissionFlag().hashCode();
-        result = 31 * result + getResource().hashCode();
+        int result = getPermissionName() != null ? getPermissionName().hashCode() : 0;
+        result = 31 * result + (getPermissionProtectionLevel() != null ? getPermissionProtectionLevel().hashCode() : 0);
+        result = 31 * result + (getPermissionGroup() != null ? getPermissionGroup().hashCode() : 0);
+        result = 31 * result + (getPermissionFlag() != null ? getPermissionFlag().hashCode() : 0);
+        result = 31 * result + (getPermissionDescription() != null ? getPermissionDescription().hashCode() : 0);
+        result = 31 * result + (getPermissionIcon() != null ? getPermissionIcon().hashCode() : 0);
+        result = 31 * result + (getPermissionLabel() != null ? getPermissionLabel().hashCode() : 0);
+        result = 31 * result + (getResource() != null ? getResource().hashCode() : 0);
         return result;
     }
 
+    @Override
+    public String toString() {
+        return "PermData{" +
+                "permissionName='" + permissionName + '\'' +
+                ", permissionProtectionLevel='" + permissionProtectionLevel + '\'' +
+                ", permissionGroup='" + permissionGroup + '\'' +
+                ", permissionFlag='" + permissionFlag + '\'' +
+                ", permissionDescription='" + permissionDescription + '\'' +
+                ", permissionIcon=" + permissionIcon +
+                ", permissionLabel='" + permissionLabel + '\'' +
+                ", resource=" + resource +
+                '}';
+    }
+
+    @Override
+    public int compareTo(@NonNull PermData another) {
+        return this.getPermissionLabel().compareTo(another.getPermissionLabel());
+    }
+
     /**
-     * Android Permissions Metadata
-     * ----------------------------
+     * Android Permission Group Metadata
+     * ---------------------------------
      * Permission information from https://material.google.com/patterns/permissions.html
      * Permission  |  Description
      * Calendar    |  Managing calendars
@@ -175,8 +239,8 @@ public class PermData {
      * DIAGNOSTIC	                        |	Allows applications to RW to diagnostic resources
      * DISABLE_KEYGUARD	                    |	Allows applications to disable the keyguard if it is not secure
      * DUMP	                                |	Allows an application to retrieve state dump information from system services
-     * EXPAND_STATUS_BAR	|	Allows an application to expand or collapse the status bar
-     * FACTORY_TEST	|	Run as a manufacturer test application, running as the root user
+     * EXPAND_STATUS_BAR	                |	Allows an application to expand or collapse the status bar
+     * FACTORY_TEST	                        |	Run as a manufacturer test application, running as the root user
      * GET_ACCOUNTS	|	Allows access to the list of accounts in the Accounts Service
      * GET_ACCOUNTS_PRIVILEGED	|	Allows access to the list of accounts in the Accounts Service
      * GET_PACKAGE_SIZE	|	Allows an application to find out the space used by any package

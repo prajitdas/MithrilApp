@@ -71,6 +71,7 @@ public class MithrilApplication extends Application{
     private static final String systemAppsDisplayTag = "systemApps";
     private static final String userAppsDisplayTag = "userApps";
     private static final String appDisplayTypeTag = "AppDisplayTypeTag";
+    private static final String appNameTag = "AppNameTag";
     private static final String sharedPreferenceAppCount = "AppCount";
 
     public static String getPrefKeyWorkingHoursEnabled() {
@@ -227,5 +228,9 @@ public class MithrilApplication extends Application{
 
     public static String getDebugTag() {
         return debugTag;
+    }
+
+    public static String getAppNameTag() {
+        return appNameTag;
     }
 }

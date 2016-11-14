@@ -5,8 +5,9 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.content.pm.PackageManager.NameNotFoundException;
 import android.content.pm.PermissionInfo;
-import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.ImageButton;
@@ -19,7 +20,7 @@ import edu.umbc.cs.ebiquity.mithril.R;
 import edu.umbc.cs.ebiquity.mithril.data.dbhelpers.MithrilDBHelper;
 import edu.umbc.cs.ebiquity.mithril.ui.adapters.AppPermListAdapter;
 
-public class ViewAppDetailsActivity extends ListActivity {
+public class ViewAppDetailsActivity extends AppCompatActivity {
     private PackageManager packageManager;
     private List<PermissionInfo> appPermList;
     private AppPermListAdapter appPermListAdapter;
@@ -36,28 +37,21 @@ public class ViewAppDetailsActivity extends ListActivity {
          * However, if you desire, you can customize the screen layout by setting your own view layout with setContentView() in onCreate().
          * To do this, your own view MUST contain a ListView object with the id "@android:id/list" (or list if it's in code)
          */
-        setContentView(R.layout.activity_view_app_details);
+        setContentView(R.layout.activity_view_app_detail);
 
         initView();
     }
 
     private void initView() {
+        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+
         packageManager = getApplicationContext().getPackageManager();
 
         mImgBtnLaunchApp = (ImageButton) findViewById(R.id.launch_app_btn);
         mImgBtnAppIsGood = (ImageButton) findViewById(R.id.app_is_good_btn);
         mImgBtnAppIsBad = (ImageButton) findViewById(R.id.app_is_bad_btn);
-
-        MithrilDBHelper dbHelper = new MithrilDBHelper(this);
-        SQLiteDatabase db = dbHelper.getWritableDatabase();
-
-        setAppPermList(dbHelper.getAppPermissions());
-
-        appPermListAdapter = new AppPermListAdapter(ViewAppDetailsActivity.this, R.layout.app_list_item, getAppPermList());
-        // Bind to new adapter.
-        if (appPermListAdapter.getCount() == 0)
-            appPermListAdapter = null;
-        setListAdapter(appPermListAdapter);
 
         setOnClickListeners();
     }
@@ -113,6 +107,7 @@ public class ViewAppDetailsActivity extends ListActivity {
         return appPermList;
     }
 
+    //TODO complete the implementation of setAppPermList() by adding code for
     public void setAppPermList(PermissionInfo[] requestedPermissions) {
         appPermList = new ArrayList<PermissionInfo>();
         for(int index = 0; index < requestedPermissions.length; index++)
