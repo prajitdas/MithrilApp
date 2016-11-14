@@ -20,6 +20,8 @@
     <string name="app_name">Mithril Access Control</string>
 
     <string name="explanation">Tap device with NFC tag</string>
+    <string name="no_description_available_txt">No description available!</string>
+    <string name="no_data">No permission information is available for this app or this app doesn\'t use any permissions!</string>
 
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>
@@ -45,8 +47,6 @@
     <string name="dialog_reload_data">Do you really want to delete all data from the database and reload default data?</string>
     <string name="dialog_resp_delete">Yes</string>
     <string name="dialog_resp_NO">No</string>
-
-    <string name="no_data">No data!</string>
 
     <string name="policy_tbl_policy_rule_info">Policy Rule Info</string>
     <string name="policy_tbl_lbl_policy_name">Policy Name: </string>

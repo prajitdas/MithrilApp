@@ -3,6 +3,7 @@ package edu.umbc.cs.ebiquity.mithril.ui.activities;
 import android.app.ListActivity;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.content.pm.PackageManager.NameNotFoundException;
 import android.content.pm.PermissionInfo;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
@@ -11,6 +12,7 @@ import android.view.View.OnClickListener;
 import android.widget.ImageButton;
 import android.widget.Toast;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import edu.umbc.cs.ebiquity.mithril.R;
@@ -46,12 +48,10 @@ public class ViewAppDetailsActivity extends ListActivity {
         mImgBtnAppIsGood = (ImageButton) findViewById(R.id.app_is_good_btn);
         mImgBtnAppIsBad = (ImageButton) findViewById(R.id.app_is_bad_btn);
 
-        packageName = getIntent().getStringExtra(MithrilDBHelper.getAppPackageName());
         MithrilDBHelper dbHelper = new MithrilDBHelper(this);
         SQLiteDatabase db = dbHelper.getWritableDatabase();
-        setTitle(getResources().getText(R.string.title_activity_view_app_details) + ": " + MithrilDBHelper.readAppNameByPackageName(db, packageName));
 
-        setAppPermList(packageName);
+        setAppPermList(dbHelper.getAppPermissions());
 
         appPermListAdapter = new AppPermListAdapter(ViewAppDetailsActivity.this, R.layout.app_list_item, getAppPermList());
         // Bind to new adapter.
@@ -113,21 +113,9 @@ public class ViewAppDetailsActivity extends ListActivity {
         return appPermList;
     }
 
-    public void setAppPermList(String packageName) {
+    public void setAppPermList(PermissionInfo[] requestedPermissions) {
         appPermList = new ArrayList<PermissionInfo>();
-        try {
-            String[] resquestedPermissions = packageManager.getPackageInfo(packageName,
-                    PackageManager.GET_META_DATA |
-                            PackageManager.GET_SHARED_LIBRARY_FILES |
-                            PackageManager.GET_UNINSTALLED_PACKAGES |
-                            PackageManager.GET_PERMISSIONS).requestedPermissions;
-            if (resquestedPermissions != null)
-                for (String permission : resquestedPermissions)
-                    if (permission != null)
-                        appPermList.add(packageManager.getPermissionInfo(permission, PackageManager.GET_PERMISSIONS));
-        } catch (NameNotFoundException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
-        }
+        for(int index = 0; index < requestedPermissions.length; index++)
+            appPermList.add(requestedPermissions[index]);
     }
 }
