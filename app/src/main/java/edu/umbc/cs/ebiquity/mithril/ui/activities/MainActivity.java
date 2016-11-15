@@ -16,7 +16,6 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.Toast;
 
 import java.util.List;
 
@@ -117,7 +116,7 @@ public class MainActivity extends AppCompatActivity
         //TODO Do something with the App selected
 //        Toast.makeText(this, item.getAppName(), Toast.LENGTH_LONG).show();
         Intent intent = new Intent(this, ViewAppDetailsActivity.class);
-        intent.putExtra(MithrilApplication.getAppNameTag(), item.getAppName());
+        intent.putExtra(MithrilApplication.getAppPkgNameTag(), item.getAppName());
         startActivity(intent);
     }
 

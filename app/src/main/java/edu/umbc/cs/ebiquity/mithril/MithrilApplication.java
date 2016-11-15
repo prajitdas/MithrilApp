@@ -230,7 +230,7 @@ public class MithrilApplication extends Application{
         return debugTag;
     }
 
-    public static String getAppNameTag() {
+    public static String getAppPkgNameTag() {
         return appNameTag;
     }
 }

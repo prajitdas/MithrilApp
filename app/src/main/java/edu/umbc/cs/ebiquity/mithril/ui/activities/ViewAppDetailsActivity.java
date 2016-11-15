@@ -1,6 +1,5 @@
 package edu.umbc.cs.ebiquity.mithril.ui.activities;
 
-import android.app.ListActivity;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.content.pm.PackageManager.NameNotFoundException;
@@ -16,8 +15,8 @@ import android.widget.Toast;
 import java.util.ArrayList;
 import java.util.List;
 
+import edu.umbc.cs.ebiquity.mithril.MithrilApplication;
 import edu.umbc.cs.ebiquity.mithril.R;
-import edu.umbc.cs.ebiquity.mithril.data.dbhelpers.MithrilDBHelper;
 import edu.umbc.cs.ebiquity.mithril.ui.adapters.AppPermListAdapter;
 
 public class ViewAppDetailsActivity extends AppCompatActivity {
@@ -48,6 +47,8 @@ public class ViewAppDetailsActivity extends AppCompatActivity {
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         packageManager = getApplicationContext().getPackageManager();
+
+        packageName = getIntent().getStringExtra(MithrilApplication.getAppPkgNameTag());
 
         mImgBtnLaunchApp = (ImageButton) findViewById(R.id.launch_app_btn);
         mImgBtnAppIsGood = (ImageButton) findViewById(R.id.app_is_good_btn);

@@ -15,17 +15,13 @@ import android.view.ViewGroup;
 
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import edu.umbc.cs.ebiquity.mithril.MithrilApplication;
 import edu.umbc.cs.ebiquity.mithril.R;
 import edu.umbc.cs.ebiquity.mithril.data.dbhelpers.MithrilDBHelper;
-import edu.umbc.cs.ebiquity.mithril.data.model.AppData;
 import edu.umbc.cs.ebiquity.mithril.data.model.PermData;
 import edu.umbc.cs.ebiquity.mithril.ui.adapters.AppDetailRecyclerViewAdapter;
-import edu.umbc.cs.ebiquity.mithril.ui.adapters.InstalledAppsRecyclerViewAdapter;
 
 /**
  * A fragment representing a list of Items.
@@ -72,7 +68,7 @@ public class AppDetailFragment extends Fragment {
 
         if (getArguments() != null) {
             mColumnCount = getArguments().getInt(ARG_COLUMN_COUNT);
-            mAppName = getArguments().getString(MithrilApplication.getAppNameTag());
+            mAppName = getArguments().getString(MithrilApplication.getAppPkgNameTag());
         }
         Log.d(MithrilApplication.getDebugTag(), mAppName);
     }
