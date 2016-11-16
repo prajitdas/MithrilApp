@@ -161,6 +161,8 @@ public class ShowAppsFragment extends Fragment {
             Collections.sort(userAppDataItems);
             appMetadataMap.clear();
         }
+
+        mithrilDB.close();
     }
 
     /**

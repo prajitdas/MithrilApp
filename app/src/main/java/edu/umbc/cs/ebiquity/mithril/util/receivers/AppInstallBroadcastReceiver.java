@@ -117,5 +117,6 @@ public class AppInstallBroadcastReceiver extends BroadcastReceiver {
              * Don't send data on update for now
              */
 //        }
+        mithrilDB.close();
     }
 }

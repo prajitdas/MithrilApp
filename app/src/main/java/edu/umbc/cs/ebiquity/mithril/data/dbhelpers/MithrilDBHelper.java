@@ -220,11 +220,11 @@ public class MithrilDBHelper extends SQLiteOpenHelper {
 	 * Table creation statements complete
 	 * -------------------------------------------------------------------------------------------------------------------------------------------------------------------
 	 * Database creation constructor
-	 * @param context
+	 * @param aContext
 	 */
-	public MithrilDBHelper(Context context) {
-		super(context, DATABASE_NAME, null, DATABASE_VERSION);
-		this.setContext(context);
+	public MithrilDBHelper(Context aContext) {
+		super(aContext, DATABASE_NAME, null, DATABASE_VERSION);
+		setContext(aContext);
 	}
 
 	private static byte[] getBitmapAsByteArray(Bitmap bitmap) {
@@ -288,39 +288,33 @@ public class MithrilDBHelper extends SQLiteOpenHelper {
 	@Override
 	public void onCreate(SQLiteDatabase db) {
         try {
-            Log.d(MithrilApplication.getDebugTag(), CREATE_APP_DATA_TABLE);
             db.execSQL(CREATE_APP_DATA_TABLE);
-            Log.d(MithrilApplication.getDebugTag(), CREATE_REQUESTERS_TABLE);
             db.execSQL(CREATE_REQUESTERS_TABLE);
-            Log.d(MithrilApplication.getDebugTag(), CREATE_RESOURCES_TABLE);
             db.execSQL(CREATE_RESOURCES_TABLE);
-            Log.d(MithrilApplication.getDebugTag(), CREATE_CONTEXT_TABLE);
             db.execSQL(CREATE_CONTEXT_TABLE);
-            Log.d(MithrilApplication.getDebugTag(), CREATE_POLICY_RULES_TABLE);
             db.execSQL(CREATE_POLICY_RULES_TABLE);
-            Log.d(MithrilApplication.getDebugTag(), CREATE_ACTION_TABLE);
             db.execSQL(CREATE_ACTION_TABLE);
-            Log.d(MithrilApplication.getDebugTag(), CREATE_VIOLATIONS_TABLE);
             db.execSQL(CREATE_VIOLATIONS_TABLE);
-            Log.d(MithrilApplication.getDebugTag(), CREATE_PERMISSIONS_TABLE);
             db.execSQL(CREATE_PERMISSIONS_TABLE);
-            Log.d(MithrilApplication.getDebugTag(), CREATE_APP_PERM_TABLE);
             db.execSQL(CREATE_APP_PERM_TABLE);
         } catch (SQLException sqlException) {
             Log.e(MithrilApplication.getDebugTag(), "Following error occurred while inserting data in SQLite DB - "+sqlException.getMessage());
         } catch (Exception e) {
             Log.e(MithrilApplication.getDebugTag(), "Some other error occurred while inserting data in SQLite DB - "+e.getMessage());
         }
+		loadRealAppDataIntoDB(db);
 		//The following method loads the database with the default dummy data on creation of the database
 		//THIS WILL NOT BE USED ANYMORE
-//		loadDefaultDataIntoDB(db);
-        loadRealAppDataIntoDB(db);
-		Log.d(MithrilApplication.getDebugTag(), "I came to onCreate");
+		//loadDefaultDataIntoDB(db);
 	}
 
-    @Override
+	@Override
 	public void onOpen(SQLiteDatabase db) {
-		db.execSQL("PRAGMA foreign_keys=ON");
+		super.onOpen(db);
+		if (!db.isReadOnly()) {
+			// Enable foreign key constraints
+			db.execSQL("PRAGMA foreign_keys=ON;");
+		}
 	}
 
 	/**

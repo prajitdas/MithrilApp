@@ -101,8 +101,9 @@ public class AppDetailFragment extends Fragment {
     private void initData() {
         mithrilDBHelper = new MithrilDBHelper(view.getContext());
         mithrilDB = mithrilDBHelper.getWritableDatabase();
-
         appPerms = mithrilDBHelper.getAppPermissions(mithrilDB, mAppName);
+        mithrilDB.close();
+
         Collections.sort(appPerms);
     }
 

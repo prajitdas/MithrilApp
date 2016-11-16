@@ -103,7 +103,7 @@ public class ViolationFragment extends Fragment {
         // Add some violation items.
         for (Violation item : violationItems)
             violationItemsMap.put(item.getId(), item);
-
+        mithrilDB.close();
     }
 
     @Override
