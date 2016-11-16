@@ -13,22 +13,21 @@ import android.widget.TextView;
 import java.util.List;
 
 import edu.umbc.cs.ebiquity.mithril.R;
+import edu.umbc.cs.ebiquity.mithril.data.model.PermData;
 
 /**
  * Created by Prajit on 11/9/2016.
  */
 
-public class AppPermListAdapter extends ArrayAdapter<PermissionInfo> {
-    private List<PermissionInfo> permList;
+public class AppPermListAdapter extends ArrayAdapter<PermData> {
+    private List<PermData> permList;
     private Context context;
-    private PackageManager packageManager;
 
-    public AppPermListAdapter(Context context, int resource, List<PermissionInfo> objects) {
+    public AppPermListAdapter(Context context, int resource, List<PermData> objects) {
         super(context, resource, objects);
 
         this.context = context;
         this.permList = objects;
-        packageManager = context.getPackageManager();
     }
 
     @Override
@@ -37,7 +36,7 @@ public class AppPermListAdapter extends ArrayAdapter<PermissionInfo> {
     }
 
     @Override
-    public PermissionInfo getItem(int position) {
+    public PermData getItem(int position) {
         return ((permList != null) ? permList.get(position) : null);
     }
 
@@ -57,7 +56,7 @@ public class AppPermListAdapter extends ArrayAdapter<PermissionInfo> {
             view = layoutInflater.inflate(R.layout.app_detail_list_item, null);
         }
 
-        PermissionInfo data = permList.get(position);
+        PermData data = permList.get(position);
 
         if (data != null) {
             TextView permissionName = (TextView) view.findViewById(R.id.perm_name);
@@ -65,53 +64,32 @@ public class AppPermListAdapter extends ArrayAdapter<PermissionInfo> {
             TextView permissionProtectionLevel = (TextView) view.findViewById(R.id.protection_level);
             TextView permissionGroup = (TextView) view.findViewById(R.id.perm_group);
 
-            permissionName.setText(data.loadLabel(packageManager));
+            permissionName.setText(data.getPermissionName());
 
-            if (data.loadDescription(packageManager) != null)
-                permissionDescription.setText(data.loadDescription(packageManager));
+            if (data.getPermissionDescription() != null)
+                permissionDescription.setText(data.getPermissionDescription());
             else
                 permissionDescription.setText(R.string.no_description_available_txt);
 
-            String protctionLevel = new String();
-
-            switch (data.protectionLevel) {
-                /**
-                 * Colors from: https://design.google.com/articles/evolving-the-google-identity/
-                 */
-                case PermissionInfo.PROTECTION_NORMAL:
-                    protctionLevel = "normal";
-                    //Google Green
-                    view.setBackgroundColor(Color.parseColor("#34A853"));
-                    break;
-                case PermissionInfo.PROTECTION_DANGEROUS:
-                    protctionLevel = "dangerous";
-                    //Google Red
-                    view.setBackgroundColor(Color.parseColor("#EA4335"));
-                    break;
-                case PermissionInfo.PROTECTION_SIGNATURE:
-                    //Google Blue
-                    protctionLevel = "signature";
-                    view.setBackgroundColor(Color.parseColor("#4285F4"));
-                    break;
-                case PermissionInfo.PROTECTION_SIGNATURE_OR_SYSTEM:
-                    //Google Yellow
-                    protctionLevel = "signatureOrSystem";
-                    view.setBackgroundColor(Color.parseColor("#FBBC05"));
-                    break;
-                case PermissionInfo.PROTECTION_FLAG_SYSTEM:
-                    protctionLevel = "system";
-                    view.setBackgroundColor(Color.CYAN);
-                    break;
-                default:
-                    protctionLevel = "<unknown>";
-                    view.setBackgroundColor(Color.GRAY);
-                    break;
+            if (data.getPermissionProtectionLevel() == "normal") {
+                permissionProtectionLevel.setText("normal");
+                view.setBackgroundColor(Color.GREEN);
+            } else if (data.getPermissionProtectionLevel() == "dangerous") {
+                permissionProtectionLevel.setText("dangerous");
+                view.setBackgroundColor(Color.RED);
+            } else if (data.getPermissionProtectionLevel() == "signature") {
+                permissionProtectionLevel.setText("signature");
+                view.setBackgroundColor(Color.BLUE);
+            } else if (data.getPermissionProtectionLevel() == "privileged") {
+                permissionProtectionLevel.setText("privileged");
+                view.setBackgroundColor(Color.YELLOW);
+            } else if (data.getPermissionProtectionLevel() == "unknown") {
+                permissionProtectionLevel.setText("unknown");
+                view.setBackgroundColor(Color.GRAY);
             }
 
-            permissionProtectionLevel.setText(protctionLevel);
-
-            if (data.group != null)
-                permissionGroup.setText(data.group);
+            if (data.getPermissionGroup() != null)
+                permissionGroup.setText(data.getPermissionGroup());
         }
         return view;
     }

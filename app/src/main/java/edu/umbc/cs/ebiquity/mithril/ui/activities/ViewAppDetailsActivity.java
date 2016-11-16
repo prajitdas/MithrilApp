@@ -1,9 +1,11 @@
 package edu.umbc.cs.ebiquity.mithril.ui.activities;
 
+import android.app.FragmentManager;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.content.pm.PackageManager.NameNotFoundException;
 import android.content.pm.PermissionInfo;
+import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
@@ -17,11 +19,16 @@ import java.util.List;
 
 import edu.umbc.cs.ebiquity.mithril.MithrilApplication;
 import edu.umbc.cs.ebiquity.mithril.R;
+import edu.umbc.cs.ebiquity.mithril.data.dbhelpers.MithrilDBHelper;
+import edu.umbc.cs.ebiquity.mithril.data.model.PermData;
 import edu.umbc.cs.ebiquity.mithril.ui.adapters.AppPermListAdapter;
+import edu.umbc.cs.ebiquity.mithril.ui.fragments.AppDetailFragment;
+import edu.umbc.cs.ebiquity.mithril.ui.fragments.ShowAppsFragment;
+import edu.umbc.cs.ebiquity.mithril.ui.fragments.ViolationFragment;
 
 public class ViewAppDetailsActivity extends AppCompatActivity {
     private PackageManager packageManager;
-    private List<PermissionInfo> appPermList;
+    private List<PermData> appPermList;
     private AppPermListAdapter appPermListAdapter;
     private ImageButton mImgBtnLaunchApp;
     private ImageButton mImgBtnAppIsGood;
@@ -54,8 +61,25 @@ public class ViewAppDetailsActivity extends AppCompatActivity {
         mImgBtnAppIsGood = (ImageButton) findViewById(R.id.app_is_good_btn);
         mImgBtnAppIsBad = (ImageButton) findViewById(R.id.app_is_bad_btn);
 
+        loadViewAppDetailsFragment();
+
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         setOnClickListeners();
+    }
+
+    /**
+     * Add the fragment that will allow us to show and interact with the permissions for the current app
+     */
+    private void loadViewAppDetailsFragment() {
+        Bundle data = new Bundle();
+        data.putString(MithrilApplication.getAppPkgNameTag(), packageName);
+
+        AppDetailFragment appDetailFragment = new AppDetailFragment();
+        appDetailFragment.setArguments(data);
+
+        FragmentManager fragmentManager = getFragmentManager();
+        fragmentManager.beginTransaction().replace(R.id.container_main, appDetailFragment)
+                .commit();
     }
 
     private void setOnClickListeners() {
@@ -80,14 +104,15 @@ public class ViewAppDetailsActivity extends AppCompatActivity {
             }
         });
 
+        //TODO add the functionality of feedback
         mImgBtnAppIsGood.setOnClickListener(new OnClickListener() {
 
             @Override
             public void onClick(View v) {
                 Toast.makeText(
                         v.getContext(),
-                        "Thanks for your feedback on app: " + packageName,
-                        Toast.LENGTH_LONG)
+                        "Thanks for your feedback on app: " + packageName + " but right now I will be doing nothing with it. Sorry!",
+                        Toast.LENGTH_SHORT)
                         .show();
             }
         });
@@ -98,21 +123,10 @@ public class ViewAppDetailsActivity extends AppCompatActivity {
             public void onClick(View v) {
                 Toast.makeText(
                         v.getContext(),
-                        "Thanks for your feedback on app: " + packageName,
-                        Toast.LENGTH_LONG)
+                        "Thanks for your feedback on app: " + packageName + " but right now I will be doing nothing with it. Sorry!",
+                        Toast.LENGTH_SHORT)
                         .show();
             }
         });
-    }
-
-    public List<PermissionInfo> getAppPermList() {
-        return appPermList;
-    }
-
-    //TODO complete the implementation of setAppPermList() by adding code for
-    public void setAppPermList(PermissionInfo[] requestedPermissions) {
-        appPermList = new ArrayList<PermissionInfo>();
-        for(int index = 0; index < requestedPermissions.length; index++)
-            appPermList.add(requestedPermissions[index]);
     }
 }

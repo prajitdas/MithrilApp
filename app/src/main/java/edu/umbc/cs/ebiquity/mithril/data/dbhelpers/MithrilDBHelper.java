@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
+import android.content.pm.PermissionGroupInfo;
 import android.content.pm.PermissionInfo;
 import android.database.Cursor;
 import android.database.SQLException;
@@ -12,7 +13,11 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Canvas;
+import android.graphics.Color;
 import android.graphics.drawable.BitmapDrawable;
+import android.graphics.drawable.Drawable;
+import android.graphics.drawable.VectorDrawable;
 import android.util.Log;
 
 import java.io.ByteArrayOutputStream;
@@ -113,15 +118,18 @@ public class MithrilDBHelper extends SQLiteOpenHelper {
     // Once a permission is known, we will get the meta information about them
     private final static String PERMNAME = "name";
     private final static String PERMPROTECTIONLEVEL = "protectionlevel";
-    private final static String PERMGROUP = "permissiongroup";
-    private final static String PERMFLAG = "permissionflag";
+    private final static String PERMGROUP = "group";
+    private final static String PERMFLAG = "flag";
+    private final static String PERMDESC = "description";
+    private final static String PERMICON = "icon";
+    private final static String PERMLABEL = "label";
+    private final static String PERMRESNAME = "resource";
 
     // Table 9 for App permission
     // This table represents all the apps and their corresponding permissions. We also want to store the association between an app and an api call or a resource access.
     private final static String APPPERMRESID = "id"; // ID for this table
     private final static String APPPERMRESAPPID = "appid"; // ID from resource table
     private final static String APPPERMRESPERID = "permid"; // ID from permission table
-    private final static String APPPERMRESRESID = "rsrcid"; // ID from resource table
 
 	/**
 	 * -------------------------------------------------------------------------------------------------------------------------------------------------------------------
@@ -137,7 +145,7 @@ public class MithrilDBHelper extends SQLiteOpenHelper {
 	private final static String VIOLATIONS_TABLE_NAME = "violations";
     private final static String APP_DATA_TABLE_NAME = "appdata";
     private final static String PERMISSIONS_TABLE_NAME = "permissions";
-    private final static String APP_PERM_RSRC_TABLE_NAME = "apppermrsrc";
+    private final static String APP_PERM_TABLE_NAME = "appperm";
 
 	/**
      * Following are table creation statements
@@ -202,13 +210,16 @@ public class MithrilDBHelper extends SQLiteOpenHelper {
             PERMNAME + " TEXT NOT NULL DEFAULT '*', " +
             PERMPROTECTIONLEVEL + " TEXT NOT NULL DEFAULT '*', " +
             PERMGROUP + " TEXT NOT NULL DEFAULT '*', " +
+            PERMDESC + " TEXT NOT NULL DEFAULT '*', " +
+            PERMICON + " BLOB, " +
+            PERMLABEL + " TEXT NOT NULL DEFAULT '*', " +
+            PERMRESNAME + " TEXT NOT NULL DEFAULT '*', " +
             PERMFLAG + " TEXT NOT NULL DEFAULT '*');";
 
-	private final static String CREATE_APP_PERM_RSRC_TABLE =  " CREATE TABLE " + getAppPermRsrcTableName() + " (" +
+	private final static String CREATE_APP_PERM_TABLE =  " CREATE TABLE " + getAppPermTableName() + " (" +
             APPPERMRESID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
             APPPERMRESAPPID + " INTEGER NOT NULL REFERENCES " + getAppDataTableName() + "(" + APPID + "), " +
-            APPPERMRESPERID + " INTEGER NOT NULL REFERENCES " + getPermissionsTableName() + "(" + PERMID + "), " +
-            APPPERMRESRESID + " INTEGER NOT NULL REFERENCES " + getResourcesTableName() + "(" + RESID + "));";
+            APPPERMRESPERID + " INTEGER NOT NULL REFERENCES " + getPermissionsTableName() + "(" + PERMID + "));";
 
 	/**
 	 * -------------------------------------------------------------------------------------------------------------------------------------------------------------------
@@ -265,8 +276,8 @@ public class MithrilDBHelper extends SQLiteOpenHelper {
 		return PERMISSIONS_TABLE_NAME;
 	}
 
-	public static String getAppPermRsrcTableName() {
-		return APP_PERM_RSRC_TABLE_NAME;
+	public static String getAppPermTableName() {
+		return APP_PERM_TABLE_NAME;
 	}
 
 	public Context getContext() {
@@ -299,8 +310,8 @@ public class MithrilDBHelper extends SQLiteOpenHelper {
             db.execSQL(CREATE_VIOLATIONS_TABLE);
             Log.d(MithrilApplication.getDebugTag(), CREATE_PERMISSIONS_TABLE);
             db.execSQL(CREATE_PERMISSIONS_TABLE);
-            Log.d(MithrilApplication.getDebugTag(), CREATE_APP_PERM_RSRC_TABLE);
-            db.execSQL(CREATE_APP_PERM_RSRC_TABLE);
+            Log.d(MithrilApplication.getDebugTag(), CREATE_APP_PERM_TABLE);
+            db.execSQL(CREATE_APP_PERM_TABLE);
         } catch (SQLException sqlException) {
             Log.e(MithrilApplication.getDebugTag(), "Following error occurred while inserting data in SQLite DB - "+sqlException.getMessage());
         } catch (Exception e) {
@@ -335,7 +346,7 @@ public class MithrilDBHelper extends SQLiteOpenHelper {
 	}
 
 	private void dropDBObjects(SQLiteDatabase db) {
-        db.execSQL("DROP TABLE IF EXISTS " +  getAppPermRsrcTableName());
+        db.execSQL("DROP TABLE IF EXISTS " +  getAppPermTableName());
         db.execSQL("DROP TABLE IF EXISTS " +  getPermissionsTableName());
         db.execSQL("DROP TABLE IF EXISTS " +  getViolationsTableName());
         db.execSQL("DROP TABLE IF EXISTS " +  getActionTableName());
@@ -432,11 +443,35 @@ public class MithrilDBHelper extends SQLiteOpenHelper {
 		return insertedRowId;
 	}
 
-	//TODO This needs to be completed!
+	public long addAppPerm(SQLiteDatabase db, AppData anAppData, long appId) {
+        String[] appPermissions = anAppData.getPermissions();
+        long insertedRowId = -1;
+        ContentValues values = new ContentValues();
+        values.put(APPPERMRESAPPID, appId);
+        for(int permIdx = 0; permIdx < appPermissions.length; permIdx++) {
+            values.put(APPPERMRESPERID, findPermissionsByName(db, appPermissions[permIdx]));
+            try {
+                insertedRowId = db.insert(getAppPermTableName(), null, values);
+            } catch (SQLException e) {
+                Log.e(MithrilApplication.getConstDebugTag(), "Error inserting " + values, e);
+                return -1;
+            }
+        }
+        return insertedRowId;
+    }
+
 	public long addPermission(SQLiteDatabase db, PermData aPermData) {
 		long insertedRowId;
 		ContentValues values = new ContentValues();
-		try {
+        values.put(PERMNAME, aPermData.getPermissionName());
+        values.put(PERMPROTECTIONLEVEL, aPermData.getPermissionProtectionLevel());
+        values.put(PERMGROUP, aPermData.getPermissionGroup());
+        values.put(PERMFLAG, aPermData.getPermissionFlag());
+        values.put(PERMDESC, aPermData.getPermissionDescription());
+        values.put(PERMICON, getBitmapAsByteArray(aPermData.getPermissionIcon()));
+        values.put(PERMLABEL, aPermData.getPermissionLabel());
+        values.put(PERMRESNAME, aPermData.getResource().getResourceName());
+        try {
 			insertedRowId = db.insert(getPermissionsTableName(), null, values);
 		} catch (SQLException e) {
 			Log.e(MithrilApplication.getConstDebugTag(), "Error inserting " + values, e);
@@ -446,6 +481,12 @@ public class MithrilDBHelper extends SQLiteOpenHelper {
 	}
 
 	//TODO We have to do a join across 3 tables and return the permissions for an app
+    /**
+     * Temporary solution setup but eventually we will the join and populate with data from our servers
+     * @param db
+     * @param appName
+     * @return List of PermData objects
+     */
 	public List<PermData> getAppPermissions(SQLiteDatabase db, String appName) {
 		List<PermData> permDataList = new ArrayList<PermData>();
 		return permDataList;
@@ -657,7 +698,33 @@ public class MithrilDBHelper extends SQLiteOpenHelper {
         }
         return app;
     }
-	
+
+    /**
+     * Finds permissions by name
+     * @param db
+     * @return permissionName
+     */
+    public long findPermissionsByName(SQLiteDatabase db, String permissionName) {
+        // Select AppData Query
+        String selectQuery = "SELECT " +
+                getPermissionsTableName() + "." + PERMID +
+                " FROM " + getPermissionsTableName() +
+                " WHERE " + getPermissionsTableName() + "." + PERMNAME +
+                " = " + permissionName +
+                ";";
+
+        long permId = -1;
+        try{
+            Cursor cursor = db.rawQuery(selectQuery, null);
+            if (cursor.moveToFirst()) {
+                permId = Integer.parseInt(cursor.getString(0));
+            }
+        } catch(SQLException e) {
+            throw new SQLException("Could not find " + e);
+        }
+        return permId;
+    }
+
     /**
 	 * Finds all violations
 	 * @param db
@@ -1264,7 +1331,11 @@ public class MithrilDBHelper extends SQLiteOpenHelper {
 							tempAppData.setPermissions(requestedPermissions);
 					}
 					//Insert an app into database
-					addAppData(db, tempAppData);
+					long appId = addAppData(db, tempAppData);
+
+                    //Insert permissions for an app into AppPerm
+                    addAppPerm(db, tempAppData, appId);
+
 //                    long insertedRowId = addAppData(db, tempAppData);
 //                    Log.d(MithrilApplication.getDebugTag(), "Inserted record id is: "+Long.toString(insertedRowId));
 				} catch (ClassCastException e){
@@ -1277,7 +1348,85 @@ public class MithrilDBHelper extends SQLiteOpenHelper {
 	}
 
 	private void loadAndroidPermissionsIntoDB(SQLiteDatabase db) {
-		PermData tempPermData = new PermData();
-		addPermission(db, tempPermData);
+        List<PermissionGroupInfo> permisisonGroupInfoList = packageManager.getAllPermissionGroups(packageManager.GET_META_DATA);
+        permisisonGroupInfoList.add(null);
+
+        for(PermissionGroupInfo permissionGroupInfo : permisisonGroupInfoList) {
+            String groupName = permissionGroupInfo == null ? null : permissionGroupInfo.name;
+            try {
+                for(PermissionInfo permissionInfo : packageManager.queryPermissionsByGroup(groupName, 0)) {
+                    PermData tempPermData = new PermData();
+
+                    tempPermData.setPermissionName(permissionInfo.name);
+                    //Setting the protection level
+                    switch(permissionInfo.protectionLevel) {
+                        /**
+                         * Colors from: https://design.google.com/articles/evolving-the-google-identity/
+                         */
+                        case PermissionInfo.PROTECTION_NORMAL:
+                            tempPermData.setPermissionProtectionLevel("normal");
+                            break;
+                        case PermissionInfo.PROTECTION_DANGEROUS:
+                            tempPermData.setPermissionProtectionLevel("dangerous");
+                            break;
+                        case PermissionInfo.PROTECTION_SIGNATURE:
+                            tempPermData.setPermissionProtectionLevel("signature");
+                            break;
+                        case PermissionInfo.PROTECTION_FLAG_PRIVILEGED:
+                            tempPermData.setPermissionProtectionLevel("privileged");
+                            break;
+                        default:
+                            tempPermData.setPermissionProtectionLevel("unknown");
+                            break;
+                    }
+                    tempPermData.setPermissionGroup(groupName);
+                    //Setting the protection level
+                    switch(permissionInfo.flags) {
+                        case PermissionInfo.FLAG_COSTS_MONEY:
+                            tempPermData.setPermissionFlag("costs-money");
+                            break;
+                        case PermissionInfo.FLAG_INSTALLED:
+                            tempPermData.setPermissionFlag("installed");
+                            break;
+                        default:
+                            tempPermData.setPermissionProtectionLevel("no-flags");
+                            break;
+                    }
+                    //Permission description can be null. We are preventing a null pointer exception here.
+                    tempPermData.setPermissionDescription(permissionInfo.loadDescription(packageManager)
+                            == null
+                            ? context.getResources().getString(R.string.no_description_available_txt)
+                            : permissionInfo.loadDescription(packageManager).toString());
+
+//                    tempPermData.setPermissionIcon(((BitmapDrawable) permissionInfo.loadIcon(packageManager)).getBitmap());
+                    tempPermData.setPermissionIcon(getPermissionIconBitmap(permissionInfo));
+                    //TODO this is bad!!! figure out how to get the resource
+                    tempPermData.setPermissionLabel("label");
+//                    tempPermData.setPermissionLabel(context.getResources().getString(permissionInfo.labelRes));
+                    tempPermData.setResource(new Resource("camera"));
+
+                    addPermission(db, tempPermData);
+                }
+            } catch (PackageManager.NameNotFoundException exception) {
+                Log.e(MithrilApplication.getDebugTag(), "Some error due to "+exception.getMessage());
+            }
+        }
 	}
+
+    private Bitmap getPermissionIconBitmap(PermissionInfo permissionInfo) {
+        Drawable drawable = permissionInfo.loadIcon(packageManager);
+        Bitmap bitmap;
+        try {
+
+            bitmap = Bitmap.createBitmap(drawable.getIntrinsicWidth(), drawable.getIntrinsicHeight(), Bitmap.Config.ARGB_8888);
+
+            Canvas canvas = new Canvas(bitmap);
+            drawable.setBounds(0, 0, canvas.getWidth(), canvas.getHeight());
+            drawable.draw(canvas);
+        } catch (OutOfMemoryError e) {
+            // Handle the error
+            return null;
+        }
+        return bitmap;
+    }
 }
