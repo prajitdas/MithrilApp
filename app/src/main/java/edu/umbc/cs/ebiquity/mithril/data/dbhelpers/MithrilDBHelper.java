@@ -145,14 +145,14 @@ public class MithrilDBHelper extends SQLiteOpenHelper {
     private final static String CREATE_APP_DATA_TABLE =  " CREATE TABLE " + getAppDataTableName() + " (" +
             APPID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
             APPUID + " INTEGER NOT NULL, " +
-            APPDESCRIPTION + " TEXT NOT NULL DEFAULT '*', " +
-            APPASSOCIATEDPROCNAME + " TEXT, " +
-            APPTARGETSDKVERSION + " TEXT NOT NULL DEFAULT '*', " +
-            APPICON + " BLOB, " +
-            APPNAME + " TEXT NOT NULL DEFAULT '*', " +
-            APPPACKAGENAME + " TEXT UNIQUE NOT NULL DEFAULT '*', " + // Only the package name is unique, rest may repeat
-            APPVERSIONINFO + " TEXT NOT NULL DEFAULT '*', " +
-            APPINSTALLED + " INTEGER NOT NULL DEFAULT 1, " +
+			APPDESCRIPTION + " TEXT, " +
+			APPASSOCIATEDPROCNAME + " TEXT, " +
+			APPTARGETSDKVERSION + " TEXT, " +
+			APPICON + " BLOB, " +
+			APPNAME + " TEXT, " +
+			APPPACKAGENAME + " TEXT UNIQUE NOT NULL DEFAULT '*', " + // Only the package name is unique, rest may repeat
+			APPVERSIONINFO + " TEXT, " +
+			APPINSTALLED + " INTEGER NOT NULL DEFAULT 1, " +
             APPTYPE + " TEXT NOT NULL DEFAULT '*');";
 
 	private final static String CREATE_REQUESTERS_TABLE =  " CREATE TABLE " + getRequestersTableName() + " (" +
@@ -165,15 +165,15 @@ public class MithrilDBHelper extends SQLiteOpenHelper {
 
 	private final static String CREATE_CONTEXT_TABLE =  " CREATE TABLE " + getContextTableName() + " (" +
 			CONTEXTID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
-			LOCATION + " TEXT NOT NULL DEFAULT '*', " +
+			LOCATION + " TEXT, " +
 			IDENTITY + " TEXT NOT NULL DEFAULT 'USER', " +
-			ACTIVITY +  " TEXT NOT NULL DEFAULT '*', " +
-			PRESENCEINFO +  " TEXT NOT NULL DEFAULT '*', " +
+			ACTIVITY + " TEXT, " +
+			PRESENCEINFO + " TEXT, " +
 			TIME +  " TEXT NOT NULL DEFAULT '*');";
 
 	private final static String CREATE_POLICY_RULES_TABLE =  " CREATE TABLE " + getPolicyRulesTableName() + " (" +
 			POLRULID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
-			POLRULNAME + " TEXT NOT NULL DEFAULT '*', " +
+			POLRULNAME + " TEXT, " +
 			POLRULREQID + " INTEGER NOT NULL REFERENCES " + getRequestersTableName() + "(" + REQID + "), " +
 			POLRULRESID + " INTEGER NOT NULL REFERENCES " + getResourcesTableName() + "(" + RESID + "), " +
 			POLRULCNTXT + " TEXT NOT NULL DEFAULT '*'," +
@@ -189,7 +189,7 @@ public class MithrilDBHelper extends SQLiteOpenHelper {
 
 	private final static String CREATE_VIOLATIONS_TABLE =  " CREATE TABLE " + getViolationsTableName() + " (" +
 			VIOLATIONID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
-			VIOLATIONDESC + " TEXT NOT NULL DEFAULT '*', " +
+			VIOLATIONDESC + " TEXT, " +
 			VIOLATIONOFRULID + " INTEGER NOT NULL, " +
 			VIOLATIONMARKER + " INTEGER NOT NULL DEFAULT 0, " +
 			"CONSTRAINT violationsToPolicyRuleFK " +
@@ -199,14 +199,14 @@ public class MithrilDBHelper extends SQLiteOpenHelper {
 
 	private final static String CREATE_PERMISSIONS_TABLE =  " CREATE TABLE " + getPermissionsTableName() + " (" +
             PERMID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
-            PERMNAME + " TEXT NOT NULL DEFAULT '*', " +
-            PERMPROTECTIONLEVEL + " TEXT NOT NULL DEFAULT '*', " +
-            PERMGROUP + " TEXT NOT NULL DEFAULT '*', " +
-            PERMDESC + " TEXT NOT NULL DEFAULT '*', " +
-            PERMICON + " BLOB, " +
-            PERMLABEL + " TEXT NOT NULL DEFAULT '*', " +
-            PERMRESNAME + " TEXT NOT NULL DEFAULT '*', " +
-            PERMFLAG + " TEXT NOT NULL DEFAULT '*');";
+			PERMNAME + " TEXT, " +
+			PERMPROTECTIONLEVEL + " TEXT, " +
+			PERMGROUP + " TEXT, " +
+			PERMDESC + " TEXT, " +
+			PERMLABEL + " TEXT, " +
+			PERMRESNAME + " TEXT, " +
+			PERMFLAG + " TEXT, " +
+			PERMICON + " BLOB);";
 
 	private final static String CREATE_APP_PERM_TABLE =  " CREATE TABLE " + getAppPermTableName() + " (" +
             APPPERMRESID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
@@ -214,8 +214,6 @@ public class MithrilDBHelper extends SQLiteOpenHelper {
             APPPERMRESPERID + " INTEGER NOT NULL REFERENCES " + getPermissionsTableName() + "(" + PERMID + "));";
 
 	private Context context;
-	private PackageManager packageManager;
-	private int flags;
 
 	/**
 	 * -------------------------------------------------------------------------------------------------------------------------------------------------------------------
@@ -317,6 +315,7 @@ public class MithrilDBHelper extends SQLiteOpenHelper {
 		//THIS WILL NOT BE USED ANYMORE
 //		loadDefaultDataIntoDB(db);
         loadRealAppDataIntoDB(db);
+		Log.d(MithrilApplication.getDebugTag(), "I came to onCreate");
 	}
 
     @Override
@@ -443,16 +442,18 @@ public class MithrilDBHelper extends SQLiteOpenHelper {
         long insertedRowId = -1;
         ContentValues values = new ContentValues();
         values.put(APPPERMRESAPPID, appId);
-        for(int permIdx = 0; permIdx < appPermissions.length; permIdx++) {
-            values.put(APPPERMRESPERID, findPermissionsByName(db, appPermissions[permIdx]));
-            try {
-                insertedRowId = db.insert(getAppPermTableName(), null, values);
-            } catch (SQLException e) {
-                Log.e(MithrilApplication.getConstDebugTag(), "Error inserting " + values, e);
-                return -1;
-            }
-        }
-        return insertedRowId;
+		if (appPermissions != null) {
+			for (int permIdx = 0; permIdx < appPermissions.length; permIdx++) {
+				values.put(APPPERMRESPERID, findPermissionsByName(db, appPermissions[permIdx]));
+				try {
+					insertedRowId = db.insert(getAppPermTableName(), null, values);
+				} catch (SQLException e) {
+					Log.e(MithrilApplication.getConstDebugTag(), "Error inserting " + values, e);
+					return -1;
+				}
+			}
+		}
+		return insertedRowId;
     }
 
 	public long addPermission(SQLiteDatabase db, PermData aPermData) {
@@ -705,8 +706,8 @@ public class MithrilDBHelper extends SQLiteOpenHelper {
                 getPermissionsTableName() + "." + PERMID +
                 " FROM " + getPermissionsTableName() +
                 " WHERE " + getPermissionsTableName() + "." + PERMNAME +
-                " = " + permissionName +
-                ";";
+				" = '" + permissionName +
+				"';";
 
         long permId = -1;
         try{
@@ -717,8 +718,10 @@ public class MithrilDBHelper extends SQLiteOpenHelper {
         } catch(SQLException e) {
             throw new SQLException("Could not find " + e);
         }
-        return permId;
-    }
+		if (permId == -1)
+			Log.d(MithrilApplication.getDebugTag(), permissionName);
+		return permId;
+	}
 
     /**
 	 * Finds all violations
@@ -1269,8 +1272,9 @@ public class MithrilDBHelper extends SQLiteOpenHelper {
 	 */
 
 	public void loadRealAppDataIntoDB(SQLiteDatabase db) {
-		packageManager = getContext().getPackageManager();
-		flags = PackageManager.GET_META_DATA |
+		Log.d(MithrilApplication.getDebugTag(), "I came to loadRealAppDataIntoDB");
+		PackageManager packageManager = getContext().getPackageManager();
+		int flags = PackageManager.GET_META_DATA |
 				PackageManager.GET_SHARED_LIBRARY_FILES |
 				PackageManager.GET_PERMISSIONS;
 
@@ -1345,7 +1349,12 @@ public class MithrilDBHelper extends SQLiteOpenHelper {
 	}
 
 	private void loadAndroidPermissionsIntoDB(SQLiteDatabase db) {
+		Log.d(MithrilApplication.getDebugTag(), "I came to loadAndroidPermissionsIntoDB");
+		PackageManager packageManager = getContext().getPackageManager();
+		int flags = PackageManager.GET_META_DATA;
+
 		List<PermissionGroupInfo> permisisonGroupInfoList = packageManager.getAllPermissionGroups(flags);
+		Log.d(MithrilApplication.getDebugTag(), "Size is: " + Integer.toString(permisisonGroupInfoList.size()));
 		permisisonGroupInfoList.add(null);
 
         for(PermissionGroupInfo permissionGroupInfo : permisisonGroupInfoList) {
@@ -1414,8 +1423,10 @@ public class MithrilDBHelper extends SQLiteOpenHelper {
 	}
 
     private Bitmap getPermissionIconBitmap(PermissionInfo permissionInfo) {
-        Drawable drawable = permissionInfo.loadIcon(packageManager);
-        Bitmap bitmap;
+		PackageManager packageManager = getContext().getPackageManager();
+
+		Drawable drawable = permissionInfo.loadIcon(packageManager);
+		Bitmap bitmap;
         try {
 
             bitmap = Bitmap.createBitmap(drawable.getIntrinsicWidth(), drawable.getIntrinsicHeight(), Bitmap.Config.ARGB_8888);

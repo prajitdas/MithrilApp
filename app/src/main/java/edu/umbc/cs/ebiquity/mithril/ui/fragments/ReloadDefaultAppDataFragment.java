@@ -1,7 +1,9 @@
 package edu.umbc.cs.ebiquity.mithril.ui.fragments;
 
+import android.app.AlertDialog;
 import android.app.Fragment;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.database.sqlite.SQLiteDatabase;
 import android.net.Uri;
 import android.os.Bundle;
@@ -9,6 +11,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.Toast;
 
 import edu.umbc.cs.ebiquity.mithril.R;
 import edu.umbc.cs.ebiquity.mithril.data.dbhelpers.MithrilDBHelper;
@@ -79,7 +82,26 @@ public class ReloadDefaultAppDataFragment extends Fragment {
         mButtonReloadDefaultAppData.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                mithrilDBHelper.deleteAllData(mithrilDB);
+                // Use the Builder class for convenient dialog construction
+                final Context context = v.getContext();
+                AlertDialog.Builder builder = new AlertDialog.Builder(context);
+                builder.setMessage(R.string.dialog_reload_data)
+                        .setPositiveButton(R.string.dialog_resp_delete, new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int id) {
+                                mithrilDBHelper.deleteAllData(mithrilDB);
+                            }
+                        })
+                        .setNegativeButton(R.string.dialog_resp_NO, new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int id) {
+                                Toast.makeText(context, "Data was not deleted!", Toast.LENGTH_SHORT).show();
+                            }
+                        });
+
+                // create alert dialog
+                AlertDialog alertDialog = builder.create();
+
+                // show it
+                alertDialog.show();
             }
         });
         return view;
