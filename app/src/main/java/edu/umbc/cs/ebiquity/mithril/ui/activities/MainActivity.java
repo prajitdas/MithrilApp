@@ -25,6 +25,7 @@ import edu.umbc.cs.ebiquity.mithril.R;
 import edu.umbc.cs.ebiquity.mithril.data.dbhelpers.MithrilDBHelper;
 import edu.umbc.cs.ebiquity.mithril.data.model.AppData;
 import edu.umbc.cs.ebiquity.mithril.data.model.Violation;
+import edu.umbc.cs.ebiquity.mithril.ui.fragments.AboutFragment;
 import edu.umbc.cs.ebiquity.mithril.ui.fragments.PrefsFragment;
 import edu.umbc.cs.ebiquity.mithril.ui.fragments.ReloadDefaultAppDataFragment;
 import edu.umbc.cs.ebiquity.mithril.ui.fragments.ShowAppsFragment;
@@ -34,6 +35,7 @@ public class MainActivity extends AppCompatActivity
         implements  NavigationView.OnNavigationItemSelectedListener,
                     ShowAppsFragment.OnListFragmentInteractionListener,
                     ShowAppsFragment.OnListFragmentLongInteractionListener,
+        AboutFragment.OnFragmentInteractionListener,
         ViolationFragment.OnListFragmentInteractionListener,
         ReloadDefaultAppDataFragment.OnFragmentInteractionListener {
 
@@ -108,8 +110,8 @@ public class MainActivity extends AppCompatActivity
             FragmentManager fragmentManager = getFragmentManager();
             fragmentManager.beginTransaction().replace(R.id.container_main, new ReloadDefaultAppDataFragment()).commit();
         } else if (id == R.id.nav_about) {
-            Intent intent= new Intent(this, AboutActivity.class);
-            startActivity(intent);
+            FragmentManager fragmentManager = getFragmentManager();
+            fragmentManager.beginTransaction().replace(R.id.container_main, new AboutFragment()).commit();
         }
 
         drawer = (DrawerLayout) findViewById(R.id.drawer_layout);

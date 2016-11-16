@@ -28,15 +28,6 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".ui.activities.AboutActivity"
-            android:label="@string/title_activity_about"
-            android:parentActivityName=".ui.activities.MainActivity"
-            android:theme="@style/AppTheme.NoActionBar">
-            <meta-data
-                android:name="android.support.PARENT_ACTIVITY"
-                android:value="edu.umbc.cs.ebiquity.mithril.ui.activities.MainActivity" />
-        </activity>
-        <activity
             android:name=".ui.activities.ViewAppDetailsActivity"
             android:label="@string/title_activity_view_app_detail"
             android:parentActivityName=".ui.activities.MainActivity"
