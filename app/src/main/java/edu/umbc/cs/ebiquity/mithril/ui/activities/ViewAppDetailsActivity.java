@@ -4,8 +4,6 @@ import android.app.FragmentManager;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.content.pm.PackageManager.NameNotFoundException;
-import android.content.pm.PermissionInfo;
-import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
@@ -14,19 +12,16 @@ import android.view.View.OnClickListener;
 import android.widget.ImageButton;
 import android.widget.Toast;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import edu.umbc.cs.ebiquity.mithril.MithrilApplication;
 import edu.umbc.cs.ebiquity.mithril.R;
-import edu.umbc.cs.ebiquity.mithril.data.dbhelpers.MithrilDBHelper;
 import edu.umbc.cs.ebiquity.mithril.data.model.PermData;
 import edu.umbc.cs.ebiquity.mithril.ui.adapters.AppPermListAdapter;
 import edu.umbc.cs.ebiquity.mithril.ui.fragments.AppDetailFragment;
-import edu.umbc.cs.ebiquity.mithril.ui.fragments.ShowAppsFragment;
-import edu.umbc.cs.ebiquity.mithril.ui.fragments.ViolationFragment;
 
-public class ViewAppDetailsActivity extends AppCompatActivity {
+public class ViewAppDetailsActivity extends AppCompatActivity
+        implements AppDetailFragment.OnListFragmentInteractionListener {
     private PackageManager packageManager;
     private List<PermData> appPermList;
     private AppPermListAdapter appPermListAdapter;
@@ -78,7 +73,7 @@ public class ViewAppDetailsActivity extends AppCompatActivity {
         appDetailFragment.setArguments(data);
 
         FragmentManager fragmentManager = getFragmentManager();
-        fragmentManager.beginTransaction().replace(R.id.container_main, appDetailFragment)
+        fragmentManager.beginTransaction().replace(R.id.container_app_details, appDetailFragment)
                 .commit();
     }
 
@@ -128,5 +123,10 @@ public class ViewAppDetailsActivity extends AppCompatActivity {
                         .show();
             }
         });
+    }
+
+    @Override
+    public void onListFragmentInteraction(PermData item) {
+        //TODO Do something with the perm selected
     }
 }

@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.database.sqlite.SQLiteDatabase;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
@@ -25,6 +26,7 @@ import edu.umbc.cs.ebiquity.mithril.data.dbhelpers.MithrilDBHelper;
 import edu.umbc.cs.ebiquity.mithril.data.model.AppData;
 import edu.umbc.cs.ebiquity.mithril.data.model.Violation;
 import edu.umbc.cs.ebiquity.mithril.ui.fragments.PrefsFragment;
+import edu.umbc.cs.ebiquity.mithril.ui.fragments.ReloadDefaultAppDataFragment;
 import edu.umbc.cs.ebiquity.mithril.ui.fragments.ShowAppsFragment;
 import edu.umbc.cs.ebiquity.mithril.ui.fragments.ViolationFragment;
 
@@ -32,7 +34,8 @@ public class MainActivity extends AppCompatActivity
         implements  NavigationView.OnNavigationItemSelectedListener,
                     ShowAppsFragment.OnListFragmentInteractionListener,
                     ShowAppsFragment.OnListFragmentLongInteractionListener,
-                    ViolationFragment.OnListFragmentInteractionListener {
+        ViolationFragment.OnListFragmentInteractionListener,
+        ReloadDefaultAppDataFragment.OnFragmentInteractionListener {
 
     private static MithrilDBHelper mithrilDBHelper;
     private static SQLiteDatabase mithrilDB;
@@ -101,6 +104,9 @@ public class MainActivity extends AppCompatActivity
         } else if (id == R.id.nav_settings) {
             FragmentManager fragmentManager = getFragmentManager();
             fragmentManager.beginTransaction().replace(R.id.container_main, new PrefsFragment()).commit();
+        } else if (id == R.id.nav_reload) {
+            FragmentManager fragmentManager = getFragmentManager();
+            fragmentManager.beginTransaction().replace(R.id.container_main, new ReloadDefaultAppDataFragment()).commit();
         } else if (id == R.id.nav_about) {
             Intent intent= new Intent(this, AboutActivity.class);
             startActivity(intent);
@@ -129,6 +135,11 @@ public class MainActivity extends AppCompatActivity
     public void onListFragmentLongInteraction(List<AppData> items) {
         //TODO Do something with the Apps selected
         appDataItemsSelected = items;
+    }
+
+    @Override
+    public void onFragmentInteraction(Uri uri) {
+        //TODO do something when the reload data fragment is interacted with
     }
 
     @Override
