@@ -14,10 +14,8 @@ import android.database.sqlite.SQLiteOpenHelper;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
-import android.graphics.Color;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
-import android.graphics.drawable.VectorDrawable;
 import android.util.Log;
 
 import java.io.ByteArrayOutputStream;
@@ -40,27 +38,20 @@ import edu.umbc.cs.ebiquity.mithril.data.model.rules.context.contextpieces.Infer
 import edu.umbc.cs.ebiquity.mithril.data.model.rules.context.contextpieces.PresenceInfo;
 import edu.umbc.cs.ebiquity.mithril.data.model.rules.protectedresources.Resource;
 import edu.umbc.cs.ebiquity.mithril.data.model.rules.requesters.Requester;
-import edu.umbc.cs.ebiquity.mithril.simulations.DataGenerator;
 
 public class MithrilDBHelper extends SQLiteOpenHelper {
-	private Context context;
-	private PackageManager packageManager;
-
 	// Database declarations
     private final static int DATABASE_VERSION = 1;
     private final static String DATABASE_NAME = MithrilApplication.getConstDatabaseName();
-
-	// Fields for the database tables
-
 	// Table 1 for Requester information
     private final static String REQID = "id"; // ID of a request
 	private final static String REQNAME = "name"; // Name from App table from which a request was received
-
     // Table 2 for Resource requested information
 	private final static String RESID = "id"; // ID of a resource on the device
-	private final static String RESNAME = "name"; // Meaningful name of the resource on the device
 
-    // Table 3 for User Context information.
+	// Fields for the database tables
+	private final static String RESNAME = "name"; // Meaningful name of the resource on the device
+	// Table 3 for User Context information.
     // An entry is made into this table everytime we determine a change in context.
     // This could be where we could do energy efficient stuff as in we can save battery by determining context from historical data or some other way.
 	private final static String CONTEXTID = "id"; // ID of the context instance
@@ -69,7 +60,6 @@ public class MithrilDBHelper extends SQLiteOpenHelper {
 	private final static String ACTIVITY = "activity"; // Activity context
 	private final static String PRESENCEINFO = "presenceinfo"; // If we could get presence information of others then we can do relationship based privacy solutions
 	private final static String TIME = "time"; // Temporal information; the time instance when the current context was captured
-
     // Table 4 for storing define Policy information
     private final static String POLRULID = "id"; // ID of policy defined
     private final static String POLRULNAME = "name"; // Policy short name
@@ -79,7 +69,6 @@ public class MithrilDBHelper extends SQLiteOpenHelper {
     // This will be a general text that will have to be "reasoned" about!
     // If this says policy is applicable @home then we have to be able to determine that context available represents "home".
     private final static String POLRULACTIN = "action"; // Action will be denoted as: 0 for to deny, 1 for allow
-
     // Table 5 for Action taken information
     // 0 for denied, 1 for allowed
     // Makes a record everytime an action is taken for a certain requester, resource, context and applicable policy
@@ -90,7 +79,6 @@ public class MithrilDBHelper extends SQLiteOpenHelper {
     private final static String ACTIONCONID = "contxtid"; // Context in which the request was made
     private final static String ACTIONPRLID = "polrulid"; // Policy rule id from the policy table that was used to determine the action.
     private final static String ACTION = "action"; // Action that was taken for a certain scenario
-
     // Table 6 for Violation information
 	private final static String VIOLATIONID = "id"; // ID of violation captured
 	private final static String VIOLATIONDESC = "description"; // An appropriate description of the violation. No idea how this will be generated but
@@ -98,7 +86,6 @@ public class MithrilDBHelper extends SQLiteOpenHelper {
     // we have a violation of a policy - "policy name". Additionally we could state that
 	private final static String VIOLATIONOFRULID = "polrulid"; // policy rule id that was violated
 	private final static String VIOLATIONMARKER = "marker";
-
     // Table 7 for Installed application information
     private final static String APPID = "id"; // ID of an installed app
     // Below columns store information colelcted on the phone about app
@@ -112,7 +99,6 @@ public class MithrilDBHelper extends SQLiteOpenHelper {
     private final static String APPVERSIONINFO = "versionInfo";
     private final static String APPINSTALLED = "installed"; // boolean value that represents whether an app is installed or not
     private final static String APPTYPE = "type";
-
     // Table 8 for Permission information
     private final static String PERMID = "id"; // ID of a known permission on the device
     // Once a permission is known, we will get the meta information about them
@@ -124,13 +110,11 @@ public class MithrilDBHelper extends SQLiteOpenHelper {
     private final static String PERMICON = "icon";
     private final static String PERMLABEL = "label";
     private final static String PERMRESNAME = "resource";
-
     // Table 9 for App permission
     // This table represents all the apps and their corresponding permissions. We also want to store the association between an app and an api call or a resource access.
     private final static String APPPERMRESID = "id"; // ID for this table
     private final static String APPPERMRESAPPID = "appid"; // ID from resource table
     private final static String APPPERMRESPERID = "permid"; // ID from permission table
-
 	/**
 	 * -------------------------------------------------------------------------------------------------------------------------------------------------------------------
 	 * Table column definitions complete
@@ -146,7 +130,6 @@ public class MithrilDBHelper extends SQLiteOpenHelper {
     private final static String APP_DATA_TABLE_NAME = "appdata";
     private final static String PERMISSIONS_TABLE_NAME = "permissions";
     private final static String APP_PERM_TABLE_NAME = "appperm";
-
 	/**
      * Following are table creation statements
 	 */
@@ -162,15 +145,12 @@ public class MithrilDBHelper extends SQLiteOpenHelper {
             APPVERSIONINFO + " TEXT NOT NULL DEFAULT '*', " +
             APPINSTALLED + " INTEGER NOT NULL DEFAULT 1, " +
             APPTYPE + " TEXT NOT NULL DEFAULT '*');";
-
 	private final static String CREATE_REQUESTERS_TABLE =  " CREATE TABLE " + getRequestersTableName() + " (" +
 			REQID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
 			REQNAME + " TEXT NOT NULL DEFAULT '*');";
-
 	private final static String CREATE_RESOURCES_TABLE =  " CREATE TABLE " + getResourcesTableName() + " (" +
 			RESID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
 			RESNAME + " TEXT NOT NULL DEFAULT '*');";
-
 	private final static String CREATE_CONTEXT_TABLE =  " CREATE TABLE " + getContextTableName() + " (" +
 			CONTEXTID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
 			LOCATION + " TEXT NOT NULL DEFAULT '*', " +
@@ -178,7 +158,6 @@ public class MithrilDBHelper extends SQLiteOpenHelper {
 			ACTIVITY +  " TEXT NOT NULL DEFAULT '*', " +
 			PRESENCEINFO +  " TEXT NOT NULL DEFAULT '*', " +
 			TIME +  " TEXT NOT NULL DEFAULT '*');";
-
 	private final static String CREATE_POLICY_RULES_TABLE =  " CREATE TABLE " + getPolicyRulesTableName() + " (" +
 			POLRULID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
 			POLRULNAME + " TEXT NOT NULL DEFAULT '*', " +
@@ -186,7 +165,6 @@ public class MithrilDBHelper extends SQLiteOpenHelper {
 			POLRULRESID + " INTEGER NOT NULL REFERENCES " + getResourcesTableName() + "(" + RESID + "), " +
 			POLRULCNTXT + " TEXT NOT NULL DEFAULT '*'," +
             POLRULACTIN + " INTEGER NOT NULL DEFAULT 0);";
-
 	private final static String CREATE_ACTION_TABLE =  " CREATE TABLE " + getActionTableName() + " (" +
             ACTIONID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
             ACTIONREQID + " INTEGER NOT NULL REFERENCES " + getRequestersTableName() + "(" + REQID + "), " +
@@ -194,7 +172,6 @@ public class MithrilDBHelper extends SQLiteOpenHelper {
             ACTIONCONID + " INTEGER NOT NULL REFERENCES " + getContextTableName() + "(" + CONTEXTID + "), " +
             ACTIONPRLID + " INTEGER NOT NULL REFERENCES " + getPolicyRulesTableName() + "(" + POLRULID + "), " +
             ACTION + " INTEGER NOT NULL DEFAULT 0);";
-
 	private final static String CREATE_VIOLATIONS_TABLE =  " CREATE TABLE " + getViolationsTableName() + " (" +
 			VIOLATIONID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
 			VIOLATIONDESC + " TEXT NOT NULL DEFAULT '*', " +
@@ -204,7 +181,6 @@ public class MithrilDBHelper extends SQLiteOpenHelper {
 			"FOREIGN KEY ("+ VIOLATIONOFRULID +") " +
 			"REFERENCES " + MithrilDBHelper.getPolicyRulesTableName() + "(id) " +
 			"ON DELETE CASCADE);";
-
 	private final static String CREATE_PERMISSIONS_TABLE =  " CREATE TABLE " + getPermissionsTableName() + " (" +
             PERMID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
             PERMNAME + " TEXT NOT NULL DEFAULT '*', " +
@@ -215,11 +191,13 @@ public class MithrilDBHelper extends SQLiteOpenHelper {
             PERMLABEL + " TEXT NOT NULL DEFAULT '*', " +
             PERMRESNAME + " TEXT NOT NULL DEFAULT '*', " +
             PERMFLAG + " TEXT NOT NULL DEFAULT '*');";
-
 	private final static String CREATE_APP_PERM_TABLE =  " CREATE TABLE " + getAppPermTableName() + " (" +
             APPPERMRESID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
             APPPERMRESAPPID + " INTEGER NOT NULL REFERENCES " + getAppDataTableName() + "(" + APPID + "), " +
             APPPERMRESPERID + " INTEGER NOT NULL REFERENCES " + getPermissionsTableName() + "(" + PERMID + "));";
+	private Context context;
+	private PackageManager packageManager;
+	private int flags;
 
 	/**
 	 * -------------------------------------------------------------------------------------------------------------------------------------------------------------------
@@ -317,7 +295,6 @@ public class MithrilDBHelper extends SQLiteOpenHelper {
         } catch (Exception e) {
             Log.e(MithrilApplication.getDebugTag(), "Some other error occurred while inserting data in SQLite DB - "+e.getMessage());
         }
-        packageManager = getContext().getPackageManager();
 		//The following method loads the database with the default dummy data on creation of the database
 		//THIS WILL NOT BE USED ANYMORE
 //		loadDefaultDataIntoDB(db);
@@ -1273,13 +1250,15 @@ public class MithrilDBHelper extends SQLiteOpenHelper {
     }
 	 */
 
-	private void loadRealAppDataIntoDB(SQLiteDatabase db) {
+	public void loadRealAppDataIntoDB(SQLiteDatabase db) {
+		packageManager = getContext().getPackageManager();
+		flags = PackageManager.GET_META_DATA |
+				PackageManager.GET_SHARED_LIBRARY_FILES |
+				PackageManager.GET_PERMISSIONS;
+
 		//Load all the permissions that are known for Android into the database. We will refer to them in the future.
 		loadAndroidPermissionsIntoDB(db);
 
-		int flags = PackageManager.GET_META_DATA |
-				PackageManager.GET_SHARED_LIBRARY_FILES |
-				PackageManager.GET_PERMISSIONS;
 		for(PackageInfo pack : packageManager.getInstalledPackages(flags)) {
 			if ((pack.applicationInfo.flags) != 1) {
 				try {
@@ -1348,8 +1327,8 @@ public class MithrilDBHelper extends SQLiteOpenHelper {
 	}
 
 	private void loadAndroidPermissionsIntoDB(SQLiteDatabase db) {
-        List<PermissionGroupInfo> permisisonGroupInfoList = packageManager.getAllPermissionGroups(packageManager.GET_META_DATA);
-        permisisonGroupInfoList.add(null);
+		List<PermissionGroupInfo> permisisonGroupInfoList = packageManager.getAllPermissionGroups(flags);
+		permisisonGroupInfoList.add(null);
 
         for(PermissionGroupInfo permissionGroupInfo : permisisonGroupInfoList) {
             String groupName = permissionGroupInfo == null ? null : permissionGroupInfo.name;
@@ -1379,8 +1358,11 @@ public class MithrilDBHelper extends SQLiteOpenHelper {
                             tempPermData.setPermissionProtectionLevel("unknown");
                             break;
                     }
-                    tempPermData.setPermissionGroup(groupName);
-                    //Setting the protection level
+					if (groupName == null)
+						tempPermData.setPermissionGroup("No group");
+					else
+						tempPermData.setPermissionGroup(groupName);
+					//Setting the protection level
                     switch(permissionInfo.flags) {
                         case PermissionInfo.FLAG_COSTS_MONEY:
                             tempPermData.setPermissionFlag("costs-money");

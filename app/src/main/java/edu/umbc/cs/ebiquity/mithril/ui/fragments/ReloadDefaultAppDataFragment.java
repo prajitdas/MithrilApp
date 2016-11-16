@@ -2,13 +2,16 @@ package edu.umbc.cs.ebiquity.mithril.ui.fragments;
 
 import android.app.Fragment;
 import android.content.Context;
+import android.database.sqlite.SQLiteDatabase;
 import android.net.Uri;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 
 import edu.umbc.cs.ebiquity.mithril.R;
+import edu.umbc.cs.ebiquity.mithril.data.dbhelpers.MithrilDBHelper;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -27,6 +30,8 @@ public class ReloadDefaultAppDataFragment extends Fragment {
     // TODO: Rename and change types of parameters
     private String mParam1;
     private String mParam2;
+    private View view;
+    private Button mButtonReloadDefaultAppData;
 
     private OnFragmentInteractionListener mListener;
 
@@ -65,7 +70,19 @@ public class ReloadDefaultAppDataFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_reload_default_app_data, container, false);
+        view = inflater.inflate(R.layout.fragment_reload_default_app_data, container, false);
+
+        final MithrilDBHelper mithrilDBHelper = new MithrilDBHelper(view.getContext());
+        final SQLiteDatabase mithrilDB = mithrilDBHelper.getWritableDatabase();
+
+        mButtonReloadDefaultAppData = (Button) view.findViewById(R.id.buttonReloadDefaultAppData);
+        mButtonReloadDefaultAppData.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mithrilDBHelper.deleteAllData(mithrilDB);
+            }
+        });
+        return view;
     }
 
     // TODO: Rename method, update argument and hook method into UI event
