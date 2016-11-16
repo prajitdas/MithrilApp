@@ -27,6 +27,7 @@ public class ViewAppDetailsActivity extends AppCompatActivity {
     private ImageButton mImgBtnAppIsGood;
     private ImageButton mImgBtnAppIsBad;
     private String packageName;
+    private Toolbar toolbar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -36,15 +37,14 @@ public class ViewAppDetailsActivity extends AppCompatActivity {
          * However, if you desire, you can customize the screen layout by setting your own view layout with setContentView() in onCreate().
          * To do this, your own view MUST contain a ListView object with the id "@android:id/list" (or list if it's in code)
          */
-        setContentView(R.layout.activity_view_app_detail);
+        setContentView(R.layout.activity_view_app_details);
 
         initView();
     }
 
     private void initView() {
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        toolbar = (Toolbar) findViewById(R.id.toolbar_view_app_details);
         setSupportActionBar(toolbar);
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         packageManager = getApplicationContext().getPackageManager();
 
@@ -54,6 +54,7 @@ public class ViewAppDetailsActivity extends AppCompatActivity {
         mImgBtnAppIsGood = (ImageButton) findViewById(R.id.app_is_good_btn);
         mImgBtnAppIsBad = (ImageButton) findViewById(R.id.app_is_bad_btn);
 
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         setOnClickListeners();
     }
 

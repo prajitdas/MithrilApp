@@ -55,7 +55,7 @@ public class MainActivity extends AppCompatActivity
         aShowappsFragment.setArguments(data);
 
         FragmentManager fragmentManager = getFragmentManager();
-        fragmentManager.beginTransaction().replace(R.id.container, aShowappsFragment)
+        fragmentManager.beginTransaction().replace(R.id.container_main, aShowappsFragment)
                 .commit();
     }
 
@@ -67,7 +67,7 @@ public class MainActivity extends AppCompatActivity
         aShowappsFragment.setArguments(data);
 
         FragmentManager fragmentManager = getFragmentManager();
-        fragmentManager.beginTransaction().replace(R.id.container, aShowappsFragment)
+        fragmentManager.beginTransaction().replace(R.id.container_main, aShowappsFragment)
                 .commit();
     }
 
@@ -79,7 +79,7 @@ public class MainActivity extends AppCompatActivity
         aShowappsFragment.setArguments(data);
 
         FragmentManager fragmentManager = getFragmentManager();
-        fragmentManager.beginTransaction().replace(R.id.container, aShowappsFragment)
+        fragmentManager.beginTransaction().replace(R.id.container_main, aShowappsFragment)
                 .commit();
     }
 
@@ -91,7 +91,7 @@ public class MainActivity extends AppCompatActivity
 
         if (id == R.id.nav_violations) {
             FragmentManager fragmentManager = getFragmentManager();
-            fragmentManager.beginTransaction().replace(R.id.container, new ViolationFragment()).commit();
+            fragmentManager.beginTransaction().replace(R.id.container_main, new ViolationFragment()).commit();
         } else if (id == R.id.nav_user) {
             loadUserAppsFragment();
         } else if (id == R.id.nav_system) {
@@ -100,7 +100,7 @@ public class MainActivity extends AppCompatActivity
             loadAllAppsFragment();
         } else if (id == R.id.nav_settings) {
             FragmentManager fragmentManager = getFragmentManager();
-            fragmentManager.beginTransaction().replace(R.id.container, new PrefsFragment()).commit();
+            fragmentManager.beginTransaction().replace(R.id.container_main, new PrefsFragment()).commit();
         } else if (id == R.id.nav_about) {
             Intent intent= new Intent(this, AboutActivity.class);
             startActivity(intent);
@@ -114,9 +114,8 @@ public class MainActivity extends AppCompatActivity
     @Override
     public void onListFragmentInteraction(AppData item) {
         //TODO Do something with the App selected
-//        Toast.makeText(this, item.getAppName(), Toast.LENGTH_LONG).show();
         Intent intent = new Intent(this, ViewAppDetailsActivity.class);
-        intent.putExtra(MithrilApplication.getAppPkgNameTag(), item.getAppName());
+        intent.putExtra(MithrilApplication.getAppPkgNameTag(), item.getPackageName());
         startActivity(intent);
     }
 
@@ -148,10 +147,10 @@ public class MainActivity extends AppCompatActivity
 
     private void initViews() {
         setContentView(R.layout.activity_main);
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar_main);
         setSupportActionBar(toolbar);
 
-        fab = (FloatingActionButton) findViewById(R.id.fab);
+        fab = (FloatingActionButton) findViewById(R.id.fab_main);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {

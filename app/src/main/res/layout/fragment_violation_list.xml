@@ -12,4 +12,4 @@
     android:layout_marginTop="5dp"
     app:layoutManager="LinearLayoutManager"
     tools:context=".ui.fragments.ViolationFragment"
-    tools:listitem="@layout/fragment_violation" />
+    tools:listitem="@layout/fragment_violations" />

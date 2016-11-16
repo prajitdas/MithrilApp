@@ -38,7 +38,7 @@ public class ViolationRecyclerViewAdapter extends RecyclerView.Adapter<Violation
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         view = LayoutInflater.from(parent.getContext())
-                .inflate(R.layout.fragment_violation, parent, false);
+                .inflate(R.layout.fragment_violations, parent, false);
         return new ViewHolder(view);
     }
 

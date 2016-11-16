@@ -9,7 +9,7 @@
     android:paddingTop="@dimen/activity_vertical_margin"
     app:layout_behavior="@string/appbar_scrolling_view_behavior"
     tools:context="edu.umbc.cs.ebiquity.mithril.ui.activities.ViewAppDetailsActivity"
-    tools:showIn="@layout/activity_view_app_detail">
+    tools:showIn="@layout/activity_view_app_details">
 
     <ImageButton
         android:id="@+id/app_is_bad_btn"
