@@ -1,9 +1,7 @@
 package edu.umbc.cs.ebiquity.mithril.ui.activities;
 
 import android.app.FragmentManager;
-import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.database.sqlite.SQLiteDatabase;
 import android.net.Uri;
 import android.os.Bundle;
@@ -39,16 +37,12 @@ public class MainActivity extends AppCompatActivity
         ViolationFragment.OnListFragmentInteractionListener,
         ReloadDefaultAppDataFragment.OnFragmentInteractionListener {
 
-    private static MithrilDBHelper mithrilDBHelper;
-    private static SQLiteDatabase mithrilDB;
+    private MithrilDBHelper mithrilDBHelper;
+    private SQLiteDatabase mithrilDB;
     private Violation violationItemSelected = null;
-
-    private SharedPreferences sharedPreferences;
-    private Toolbar toolbar;
     private DrawerLayout drawer;
     private ActionBarDrawerToggle toggle;
     private NavigationView navigationView;
-//    private AppData appDataItemSelected = null;
     private List<AppData> appDataItemsSelected = null;
     private FloatingActionButton fab;
 
@@ -188,7 +182,7 @@ public class MainActivity extends AppCompatActivity
          */
         mithrilDBHelper = new MithrilDBHelper(this);
         mithrilDB = mithrilDBHelper.getWritableDatabase();
-        sharedPreferences = getSharedPreferences(MithrilApplication.getSharedPreferencesName(), Context.MODE_PRIVATE);
+        mithrilDB.close();
     }
 
     private void defaultFragmentLoad() {

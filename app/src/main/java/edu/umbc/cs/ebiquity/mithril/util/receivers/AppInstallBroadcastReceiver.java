@@ -16,16 +16,13 @@ import edu.umbc.cs.ebiquity.mithril.R;
 import edu.umbc.cs.ebiquity.mithril.data.dbhelpers.MithrilDBHelper;
 import edu.umbc.cs.ebiquity.mithril.data.model.AppData;
 
-import static android.content.Intent.EXTRA_DATA_REMOVED;
-import static android.content.Intent.EXTRA_REPLACING;
-
 public class AppInstallBroadcastReceiver extends BroadcastReceiver {
     private PackageManager packageManager;
+    private MithrilDBHelper mithrilDBHelper;
+    private SQLiteDatabase mithrilDB;
     private int flags = PackageManager.GET_META_DATA |
             PackageManager.GET_SHARED_LIBRARY_FILES |
             PackageManager.GET_PERMISSIONS;
-    private static MithrilDBHelper mithrilDBHelper;
-    private static SQLiteDatabase mithrilDB;
 
     public AppInstallBroadcastReceiver() {
     }

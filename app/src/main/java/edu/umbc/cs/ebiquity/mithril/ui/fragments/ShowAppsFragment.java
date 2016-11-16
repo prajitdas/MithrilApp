@@ -36,8 +36,8 @@ public class ShowAppsFragment extends Fragment {
 
     // TODO: Customize parameter argument names
     private static final String ARG_COLUMN_COUNT = "column-count";
-    private static MithrilDBHelper mithrilDBHelper;
-    private static SQLiteDatabase mithrilDB;
+    private MithrilDBHelper mithrilDBHelper;
+    private SQLiteDatabase mithrilDB;
     private SharedPreferences sharedPreferences;
     // TODO: Customize parameters
     private int mColumnCount = 1;

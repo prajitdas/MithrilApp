@@ -1,9 +1,9 @@
 package edu.umbc.cs.ebiquity.mithril.ui.fragments;
 
+import android.app.Fragment;
 import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
-import android.app.Fragment;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -29,23 +29,19 @@ import edu.umbc.cs.ebiquity.mithril.ui.adapters.ViolationRecyclerViewAdapter;
  */
 public class ViolationFragment extends Fragment {
 
-    private static MithrilDBHelper mithrilDBHelper;
-    private static SQLiteDatabase mithrilDB;
-
-    private View view;
-
+    // TODO: Customize parameter argument names
+    private static final String ARG_COLUMN_COUNT = "column-count";
     /**
      * An array of violation items.
      */
     public List<Violation> violationItems = new ArrayList<Violation>();
-
     /**
      * A map of violation items, by ID.
      */
     public Map<Integer, Violation> violationItemsMap = new HashMap<Integer, Violation>();
-
-    // TODO: Customize parameter argument names
-    private static final String ARG_COLUMN_COUNT = "column-count";
+    private MithrilDBHelper mithrilDBHelper;
+    private SQLiteDatabase mithrilDB;
+    private View view;
     // TODO: Customize parameters
     private int mColumnCount = 1;
     private OnListFragmentInteractionListener mListener;

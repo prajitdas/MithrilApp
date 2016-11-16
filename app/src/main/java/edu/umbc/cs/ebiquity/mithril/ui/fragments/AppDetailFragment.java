@@ -1,9 +1,9 @@
 package edu.umbc.cs.ebiquity.mithril.ui.fragments;
 
+import android.app.Fragment;
 import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
-import android.app.Fragment;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
@@ -30,10 +30,10 @@ import edu.umbc.cs.ebiquity.mithril.ui.adapters.AppDetailRecyclerViewAdapter;
  * interface.
  */
 public class AppDetailFragment extends Fragment {
-    private static MithrilDBHelper mithrilDBHelper;
-    private static SQLiteDatabase mithrilDB;
     // TODO: Customize parameter argument names
     private static final String ARG_COLUMN_COUNT = "column-count";
+    private MithrilDBHelper mithrilDBHelper;
+    private SQLiteDatabase mithrilDB;
     // TODO: Customize parameters
     private int mColumnCount = 1;
     private OnListFragmentInteractionListener mListener;
