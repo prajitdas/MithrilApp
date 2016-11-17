@@ -227,12 +227,6 @@ public class MithrilDBHelper extends SQLiteOpenHelper {
 		setContext(aContext);
 	}
 
-	private static byte[] getBitmapAsByteArray(Bitmap bitmap) {
-		ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
-		bitmap.compress(Bitmap.CompressFormat.PNG, 0, outputStream);
-		return outputStream.toByteArray();
-	}
-
 	/**
 	 * Table name getters
 	 *
@@ -272,6 +266,12 @@ public class MithrilDBHelper extends SQLiteOpenHelper {
 
 	public static String getAppPermTableName() {
 		return APP_PERM_TABLE_NAME;
+	}
+
+	private static byte[] getBitmapAsByteArray(Bitmap bitmap) {
+		ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
+		bitmap.compress(Bitmap.CompressFormat.PNG, 0, outputStream);
+		return outputStream.toByteArray();
 	}
 
 	public Context getContext() {
@@ -450,6 +450,8 @@ public class MithrilDBHelper extends SQLiteOpenHelper {
 		return insertedRowId;
 	}
 
+	//TODO We have to do a join across 3 tables and return the permissions for an app
+
 	public long addPermission(SQLiteDatabase db, PermData aPermData) {
 		long insertedRowId;
 		ContentValues values = new ContentValues();
@@ -469,8 +471,6 @@ public class MithrilDBHelper extends SQLiteOpenHelper {
 		}
 		return insertedRowId;
 	}
-
-	//TODO We have to do a join across 3 tables and return the permissions for an app
 
 	/**
 	 * Temporary solution setup but eventually we will the join and populate with data from our servers
