@@ -22,7 +22,7 @@
             android:layout_height="wrap_content"
             android:orientation="vertical">
             <ImageView
-                android:id="@+id/perm_icon"
+                android:id="@+id/perm_protection_lvl"
                 android:layout_width="60sp"
                 android:layout_height="60sp"
                 android:layout_alignParentLeft="true"
@@ -38,8 +38,8 @@
                 android:id="@+id/perm_lbl"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_toEndOf="@id/perm_icon"
-                android:layout_toRightOf="@id/perm_icon"
+                android:layout_toEndOf="@id/perm_protection_lvl"
+                android:layout_toRightOf="@id/perm_protection_lvl"
                 android:paddingEnd="5dp"
                 android:paddingLeft="5dp"
                 android:paddingRight="5dp"
@@ -50,12 +50,12 @@
                 android:textSize="25sp" />
 
             <TextView
-                android:id="@+id/perm_desc"
+                android:id="@+id/perm_name"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_below="@id/perm_lbl"
-                android:layout_toEndOf="@id/perm_icon"
-                android:layout_toRightOf="@id/perm_icon"
+                android:layout_toEndOf="@id/perm_protection_lvl"
+                android:layout_toRightOf="@id/perm_protection_lvl"
                 android:paddingEnd="5dp"
                 android:paddingLeft="5dp"
                 android:paddingRight="5dp"
@@ -65,11 +65,11 @@
                 android:textSize="15sp" />
 
             <TextView
-                android:id="@+id/protected_rsrc"
+                android:id="@+id/perm_group"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_alignParentRight="true"
                 android:layout_alignParentEnd="true"
+                android:layout_alignParentRight="true"
                 android:paddingEnd="5dp"
                 android:paddingLeft="5dp"
                 android:paddingRight="5dp"

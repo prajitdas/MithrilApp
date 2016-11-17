@@ -124,6 +124,14 @@ public class MithrilDBHelper extends SQLiteOpenHelper {
 	private final static String APPPERMRESAPPID = "appid"; // ID from resource table
 	private final static String APPPERMRESPERID = "permid"; // ID from permission table
 
+	// View 1 for App permissions
+	// This table represents all the apps and their corresponding permissions. We also want to store the association between an app and an api call or a resource access.
+	private final static String APPPERMVIEWAPPPKGNAME = "apppkgname"; // app package name
+	private final static String APPPERMVIEWPERMNAME = "permname"; // app permission name
+	private final static String APPPERMVIEWPERMPROLVL = "protectionlevel"; // app permission protection level
+	private final static String APPPERMVIEWPERMLABEL = "permlabel"; // app permission label
+	private final static String APPPERMVIEWPERMGROUP = "permgroup"; // app permission group
+
 	/**
 	 * -------------------------------------------------------------------------------------------------------------------------------------------------------------------
 	 * Table column definitions complete
@@ -139,6 +147,8 @@ public class MithrilDBHelper extends SQLiteOpenHelper {
 	private final static String APP_DATA_TABLE_NAME = "appdata";
 	private final static String PERMISSIONS_TABLE_NAME = "permissions";
 	private final static String APP_PERM_TABLE_NAME = "appperm";
+
+	private final static String APP_PERM_VIEW_NAME = "apppermview";
 	/**
 	 * Following are table creation statements
 	 */
@@ -155,15 +165,15 @@ public class MithrilDBHelper extends SQLiteOpenHelper {
 			APPINSTALLED + " INTEGER NOT NULL DEFAULT 1, " +
 			APPTYPE + " TEXT NOT NULL DEFAULT '*');";
 
-	private final static String CREATE_REQUESTERS_TABLE =  " CREATE TABLE " + getRequestersTableName() + " (" +
+	private final static String CREATE_REQUESTERS_TABLE = "CREATE TABLE " + getRequestersTableName() + " (" +
 			REQID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
 			REQNAME + " TEXT NOT NULL DEFAULT '*');";
 
-	private final static String CREATE_RESOURCES_TABLE =  " CREATE TABLE " + getResourcesTableName() + " (" +
+	private final static String CREATE_RESOURCES_TABLE = "CREATE TABLE " + getResourcesTableName() + " (" +
 			RESID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
 			RESNAME + " TEXT NOT NULL DEFAULT '*');";
 
-	private final static String CREATE_CONTEXT_TABLE =  " CREATE TABLE " + getContextTableName() + " (" +
+	private final static String CREATE_CONTEXT_TABLE = "CREATE TABLE " + getContextTableName() + " (" +
 			CONTEXTID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
 			LOCATION + " TEXT, " +
 			IDENTITY + " TEXT NOT NULL DEFAULT 'USER', " +
@@ -171,7 +181,7 @@ public class MithrilDBHelper extends SQLiteOpenHelper {
 			PRESENCEINFO + " TEXT, " +
 			TIME +  " TEXT NOT NULL DEFAULT '*');";
 
-	private final static String CREATE_POLICY_RULES_TABLE =  " CREATE TABLE " + getPolicyRulesTableName() + " (" +
+	private final static String CREATE_POLICY_RULES_TABLE = "CREATE TABLE " + getPolicyRulesTableName() + " (" +
 			POLRULID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
 			POLRULNAME + " TEXT, " +
 			POLRULREQID + " INTEGER NOT NULL REFERENCES " + getRequestersTableName() + "(" + REQID + "), " +
@@ -179,7 +189,7 @@ public class MithrilDBHelper extends SQLiteOpenHelper {
 			POLRULCNTXT + " TEXT NOT NULL DEFAULT '*'," +
 			POLRULACTIN + " INTEGER NOT NULL DEFAULT 0);";
 
-	private final static String CREATE_ACTION_TABLE =  " CREATE TABLE " + getActionTableName() + " (" +
+	private final static String CREATE_ACTION_TABLE = "CREATE TABLE " + getActionTableName() + " (" +
 			ACTIONID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
 			ACTIONREQID + " INTEGER NOT NULL REFERENCES " + getRequestersTableName() + "(" + REQID + "), " +
 			ACTIONRESID + " INTEGER NOT NULL REFERENCES " + getResourcesTableName() + "(" + RESID + "), " +
@@ -187,7 +197,7 @@ public class MithrilDBHelper extends SQLiteOpenHelper {
 			ACTIONPRLID + " INTEGER NOT NULL REFERENCES " + getPolicyRulesTableName() + "(" + POLRULID + "), " +
 			ACTION + " INTEGER NOT NULL DEFAULT 0);";
 
-	private final static String CREATE_VIOLATIONS_TABLE =  " CREATE TABLE " + getViolationsTableName() + " (" +
+	private final static String CREATE_VIOLATIONS_TABLE = "CREATE TABLE " + getViolationsTableName() + " (" +
 			VIOLATIONID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
 			VIOLATIONDESC + " TEXT, " +
 			VIOLATIONOFRULID + " INTEGER NOT NULL, " +
@@ -197,7 +207,7 @@ public class MithrilDBHelper extends SQLiteOpenHelper {
 			"REFERENCES " + MithrilDBHelper.getPolicyRulesTableName() + "(id) " +
 			"ON DELETE CASCADE);";
 
-	private final static String CREATE_PERMISSIONS_TABLE =  " CREATE TABLE " + getPermissionsTableName() + " (" +
+	private final static String CREATE_PERMISSIONS_TABLE = "CREATE TABLE " + getPermissionsTableName() + " (" +
 			PERMID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
 			PERMNAME + " TEXT, " +
 			PERMPROTECTIONLEVEL + " TEXT, " +
@@ -208,10 +218,26 @@ public class MithrilDBHelper extends SQLiteOpenHelper {
 			PERMFLAG + " TEXT, " +
 			PERMICON + " BLOB);";
 
-	private final static String CREATE_APP_PERM_TABLE =  " CREATE TABLE " + getAppPermTableName() + " (" +
+	private final static String CREATE_APP_PERM_TABLE = "CREATE TABLE " + getAppPermTableName() + " (" +
 			APPPERMRESID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
 			APPPERMRESAPPID + " INTEGER NOT NULL REFERENCES " + getAppDataTableName() + "(" + APPID + "), " +
 			APPPERMRESPERID + " INTEGER NOT NULL REFERENCES " + getPermissionsTableName() + "(" + PERMID + "));";
+
+	private final static String CREATE_APP_PERM_VIEW = "CREATE VIEW " + getAppPermViewName() + " AS " +
+			"SELECT " +
+			getAppDataTableName() + "." + APPPACKAGENAME + " AS " + APPPERMVIEWAPPPKGNAME + ", " +
+			getPermissionsTableName() + "." + PERMNAME + " AS " + APPPERMVIEWPERMNAME + ", " +
+			getPermissionsTableName() + "." + PERMPROTECTIONLEVEL + " AS " + APPPERMVIEWPERMPROLVL + ", " +
+			getPermissionsTableName() + "." + PERMLABEL + " AS " + APPPERMVIEWPERMLABEL + ", " +
+			getPermissionsTableName() + "." + PERMGROUP + " AS " + APPPERMVIEWPERMGROUP +
+			" FROM " +
+			getAppPermTableName() + "," +
+			getPermissionsTableName() + "," +
+			getAppDataTableName() +
+			" WHERE " +
+			getAppPermTableName() + "." + APPPERMRESAPPID + " = " + getAppDataTableName() + "." + APPID +
+			" AND " +
+			getAppPermTableName() + "." + APPPERMRESPERID + " = " + getPermissionsTableName() + "." + PERMID + ";";
 
 	private Context context;
 
@@ -268,6 +294,10 @@ public class MithrilDBHelper extends SQLiteOpenHelper {
 		return APP_PERM_TABLE_NAME;
 	}
 
+	public static String getAppPermViewName() {
+		return APP_PERM_VIEW_NAME;
+	}
+
 	private static byte[] getBitmapAsByteArray(Bitmap bitmap) {
 		ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
 		bitmap.compress(Bitmap.CompressFormat.PNG, 0, outputStream);
@@ -297,6 +327,7 @@ public class MithrilDBHelper extends SQLiteOpenHelper {
 			db.execSQL(CREATE_VIOLATIONS_TABLE);
 			db.execSQL(CREATE_PERMISSIONS_TABLE);
 			db.execSQL(CREATE_APP_PERM_TABLE);
+			db.execSQL(CREATE_APP_PERM_VIEW);
 		} catch (SQLException sqlException) {
 			Log.e(MithrilApplication.getDebugTag(), "Following error occurred while inserting data in SQLite DB - " + sqlException.getMessage());
 		} catch (Exception e) {
@@ -337,6 +368,7 @@ public class MithrilDBHelper extends SQLiteOpenHelper {
 	}
 
 	private void dropDBObjects(SQLiteDatabase db) {
+		db.execSQL("DROP VIEW IF EXISTS " + getAppPermViewName());
 		db.execSQL("DROP TABLE IF EXISTS " + getAppPermTableName());
 		db.execSQL("DROP TABLE IF EXISTS " + getPermissionsTableName());
 		db.execSQL("DROP TABLE IF EXISTS " + getViolationsTableName());
@@ -434,6 +466,8 @@ public class MithrilDBHelper extends SQLiteOpenHelper {
 		return insertedRowId;
 	}
 
+	//TODO We have to do a join across 3 tables and return the permissions for an app
+
 	public long addAppPerm(SQLiteDatabase db, AppData anAppData, long appId) {
 		String[] appPermissions = anAppData.getPermissions();
 		long insertedRowId = -1;
@@ -453,8 +487,6 @@ public class MithrilDBHelper extends SQLiteOpenHelper {
 		return insertedRowId;
 	}
 
-	//TODO We have to do a join across 3 tables and return the permissions for an app
-
 	public long addPermission(SQLiteDatabase db, PermData aPermData) {
 		long insertedRowId;
 		ContentValues values = new ContentValues();
@@ -473,18 +505,6 @@ public class MithrilDBHelper extends SQLiteOpenHelper {
 			return -1;
 		}
 		return insertedRowId;
-	}
-
-	/**
-	 * Temporary solution setup but eventually we will the join and populate with data from our servers
-	 *
-	 * @param db
-	 * @param appName
-	 * @return List of PermData objects
-	 */
-	public List<PermData> getAppPermissions(SQLiteDatabase db, String appName) {
-		List<PermData> permDataList = new ArrayList<PermData>();
-		return permDataList;
 	}
 
 	public long addPolicyRule(SQLiteDatabase db, PolicyRule aPolicyRule) {
@@ -694,6 +714,45 @@ public class MithrilDBHelper extends SQLiteOpenHelper {
 			throw new SQLException("Could not find " + e);
 		}
 		return app;
+	}
+
+	/**
+	 * Temporary solution setup but eventually we will the join and populate with data from our servers
+	 *
+	 * @param db
+	 * @param appPackageName
+	 * @return List of PermData objects
+	 */
+	public List<PermData> findAppPermissionsByAppPackageName(SQLiteDatabase db, String appPackageName) {
+		// Select AppPermData Query
+		String selectQuery = "SELECT " +
+				getAppPermViewName() + "." + APPPERMVIEWPERMNAME + ", " +
+				getAppPermViewName() + "." + APPPERMVIEWPERMGROUP + ", " +
+				getAppPermViewName() + "." + APPPERMVIEWPERMLABEL + ", " +
+				getAppPermViewName() + "." + APPPERMVIEWPERMPROLVL +
+				" FROM " +
+				getAppPermViewName() +
+				" WHERE " +
+				getAppPermViewName() + "." + APPPERMVIEWAPPPKGNAME + " = '" + appPackageName + "';";
+
+		List<PermData> permDataList = new ArrayList<PermData>();
+		try {
+			Cursor cursor = db.rawQuery(selectQuery, null);
+			if (cursor.moveToFirst()) {
+				do {
+					PermData permData = new PermData();
+					permData.setPermissionName(cursor.getString(0));
+					permData.setPermissionGroup(cursor.getString(1));
+					permData.setPermissionLabel(cursor.getString(2));
+					permData.setPermissionProtectionLevel(cursor.getString(3));
+					permDataList.add(permData);
+				} while (cursor.moveToNext());
+			}
+		} catch (SQLException e) {
+			Log.d(MithrilApplication.getDebugTag(), "Could not find " + e.getMessage());
+			return null;
+		}
+		return permDataList;
 	}
 
 	/**

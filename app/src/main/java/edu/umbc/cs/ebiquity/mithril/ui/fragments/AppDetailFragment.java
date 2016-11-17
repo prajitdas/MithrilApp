@@ -43,7 +43,7 @@ public class AppDetailFragment extends Fragment {
      * An array of app permissions
      */
     private List<PermData> appPerms = new ArrayList<>();
-    private String mAppName;
+    private String mAppPackageName;
 
     /**
      * Mandatory empty constructor for the fragment manager to instantiate the
@@ -68,9 +68,9 @@ public class AppDetailFragment extends Fragment {
 
         if (getArguments() != null) {
             mColumnCount = getArguments().getInt(ARG_COLUMN_COUNT);
-            mAppName = getArguments().getString(MithrilApplication.getAppPkgNameTag());
+            mAppPackageName = getArguments().getString(MithrilApplication.getAppPkgNameTag());
         }
-        Log.d(MithrilApplication.getDebugTag(), mAppName);
+        Log.d(MithrilApplication.getDebugTag(), mAppPackageName);
     }
 
     @Override
@@ -101,7 +101,7 @@ public class AppDetailFragment extends Fragment {
     private void initData() {
         mithrilDBHelper = new MithrilDBHelper(view.getContext());
         mithrilDB = mithrilDBHelper.getWritableDatabase();
-        appPerms = mithrilDBHelper.getAppPermissions(mithrilDB, mAppName);
+        appPerms = mithrilDBHelper.findAppPermissionsByAppPackageName(mithrilDB, mAppPackageName);
         mithrilDB.close();
 
         Collections.sort(appPerms);
