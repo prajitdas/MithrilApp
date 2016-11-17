@@ -302,6 +302,9 @@ public class MithrilDBHelper extends SQLiteOpenHelper {
 		} catch (Exception e) {
 			Log.e(MithrilApplication.getDebugTag(), "Some other error occurred while inserting data in SQLite DB - " + e.getMessage());
 		}
+		//Load all the permissions that are known for Android into the database. We will refer to them in the future.
+		loadAndroidPermissionsIntoDB(db);
+		//Load all the apps and app permissions that are known for this device into the database. We will refer to them in the future.
 		loadRealAppDataIntoDB(db);
 		//The following method loads the database with the default dummy data on creation of the database
 		//THIS WILL NOT BE USED ANYMORE
@@ -1238,14 +1241,10 @@ public class MithrilDBHelper extends SQLiteOpenHelper {
 	}
 
 	public void loadRealAppDataIntoDB(SQLiteDatabase db) {
-		Log.d(MithrilApplication.getDebugTag(), "I came to loadRealAppDataIntoDB");
 		PackageManager packageManager = getContext().getPackageManager();
 		int flags = PackageManager.GET_META_DATA |
 				PackageManager.GET_SHARED_LIBRARY_FILES |
 				PackageManager.GET_PERMISSIONS;
-
-		//Load all the permissions that are known for Android into the database. We will refer to them in the future.
-		loadAndroidPermissionsIntoDB(db);
 
 		for(PackageInfo pack : packageManager.getInstalledPackages(flags)) {
 			if ((pack.applicationInfo.flags) != 1) {
