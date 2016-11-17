@@ -151,7 +151,7 @@ public class PermData implements Comparable<PermData>{
 
     @Override
     public int compareTo(@NonNull PermData another) {
-        return this.getPermissionLabel().compareTo(another.getPermissionLabel());
+        return this.getPermissionProtectionLevel().compareTo(another.getPermissionProtectionLevel());
     }
 
     /**

@@ -734,9 +734,7 @@ public class MithrilDBHelper extends SQLiteOpenHelper {
 				" FROM " +
 				getAppPermViewName() +
 				" WHERE " +
-				getAppPermViewName() + "." + APPPERMVIEWAPPPKGNAME + " = '" + appPackageName + "'" +
-				" ORDER BY " +
-				getAppPermViewName() + "." + APPPERMVIEWPERMPROLVL + ";";
+				getAppPermViewName() + "." + APPPERMVIEWAPPPKGNAME + " = '" + appPackageName + "';";
 
 		List<PermData> permDataList = new ArrayList<PermData>();
 		try {
