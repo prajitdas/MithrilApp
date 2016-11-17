@@ -21,6 +21,7 @@ import android.util.Log;
 import java.io.ByteArrayOutputStream;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.regex.Pattern;
 
 import edu.umbc.cs.ebiquity.mithril.MithrilApplication;
 import edu.umbc.cs.ebiquity.mithril.R;
@@ -1390,29 +1391,32 @@ public class MithrilDBHelper extends SQLiteOpenHelper {
 					tempPermData.setPermissionName(permissionInfo.name);
 					//Setting the protection level
 					switch (permissionInfo.protectionLevel) {
-						/**
-						 * Colors from: https://design.google.com/articles/evolving-the-google-identity/
-						 */
 						case PermissionInfo.PROTECTION_NORMAL:
-							tempPermData.setPermissionProtectionLevel("normal");
+							tempPermData.setPermissionProtectionLevel(MithrilApplication.getConstPermissionProtectionLevelNormal());
 							break;
 						case PermissionInfo.PROTECTION_DANGEROUS:
-							tempPermData.setPermissionProtectionLevel("dangerous");
+							tempPermData.setPermissionProtectionLevel(MithrilApplication.getConstPermissionProtectionLevelDangerous());
 							break;
 						case PermissionInfo.PROTECTION_SIGNATURE:
-							tempPermData.setPermissionProtectionLevel("signature");
+							tempPermData.setPermissionProtectionLevel(MithrilApplication.getConstPermissionProtectionLevelSignature());
 							break;
 						case PermissionInfo.PROTECTION_FLAG_PRIVILEGED:
-							tempPermData.setPermissionProtectionLevel("privileged");
+							tempPermData.setPermissionProtectionLevel(MithrilApplication.getConstPermissionProtectionLevelPrivileged());
 							break;
 						default:
-							tempPermData.setPermissionProtectionLevel("unknown");
+							tempPermData.setPermissionProtectionLevel(MithrilApplication.getConstPermissionProtectionLevelUnknown());
 							break;
 					}
-					if (groupName == null)
-						tempPermData.setPermissionGroup("No group");
-					else
+					if (groupName == null) {
+						tempPermData.setPermissionGroup(MithrilApplication.getConstNoGroupForPermission());
+						tempPermData.setResource(new Resource("nada"));
+					} else {
 						tempPermData.setPermissionGroup(groupName);
+						String[] words = permissionInfo.group.split(Pattern.quote("."));
+						//In a group, the last word is most important for group identification, so use that I guess!
+						//TODO hanging logic! The code for inserting resource isn't done yet. This has to work in tandem with that! Do that ASAP...
+						tempPermData.setResource(new Resource(words[words.length - 1]));
+					}
 					//Setting the protection level
 					switch (permissionInfo.flags) {
 						case PermissionInfo.FLAG_COSTS_MONEY:
@@ -1431,12 +1435,8 @@ public class MithrilDBHelper extends SQLiteOpenHelper {
 							? context.getResources().getString(R.string.no_description_available_txt)
 							: permissionInfo.loadDescription(packageManager).toString());
 
-//                    tempPermData.setPermissionIcon(((BitmapDrawable) permissionInfo.loadIcon(packageManager)).getBitmap());
 					tempPermData.setPermissionIcon(getPermissionIconBitmap(permissionInfo));
-					//TODO this is bad!!! figure out how to get the resource
-					tempPermData.setPermissionLabel("label");
-//                    tempPermData.setPermissionLabel(context.getResources().getString(permissionInfo.labelRes));
-					tempPermData.setResource(new Resource("camera"));
+					tempPermData.setPermissionLabel(permissionInfo.loadLabel(packageManager).toString());
 
 					addPermission(db, tempPermData);
 				}

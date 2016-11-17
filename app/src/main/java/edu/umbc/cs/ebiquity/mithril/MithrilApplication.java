@@ -3,12 +3,10 @@ package edu.umbc.cs.ebiquity.mithril;
 import android.app.Application;
 
 /**
- * Created by PrajitKumar on 5/1/2016.
+ * Created by Prajit Kumar Das on 5/1/2016.
  */
 public class MithrilApplication extends Application{
-
     private static final String CONST_COMMAND_APP_BROADCAST_INTENT = "edu.umbc.ebiquity.mithril.command.intent.action.DATA_REQUEST";
-
     private static final String PREF_KEY_HOME_LOC = "homeLocation";
     private static final String PREF_KEY_WORK_LOC = "workLocation";
     private static final String PREF_KEY_START_TIME = "startTime";
@@ -16,6 +14,12 @@ public class MithrilApplication extends Application{
     private static final String PREF_KEY_WORKING_HOURS_ENABLED = "workingHoursEnabled";
     private static final String CONST_DATABASE_NAME = "mithril.db";
     private static final String CONST_DEBUG_TAG = "MITHRIL_DEBUG_TAG";
+    private static final String CONST_NO_GROUP_FOR_PERMISSION = "No group";
+    private static final String CONST_PERMISSION_PROTECTION_LEVEL_UNKNOWN = "unknown";
+    private static final String CONST_PERMISSION_PROTECTION_LEVEL_NORMAL = "normal";
+    private static final String CONST_PERMISSION_PROTECTION_LEVEL_DANGEROUS = "dangerous";
+    private static final String CONST_PERMISSION_PROTECTION_LEVEL_SIGNATURE = "signature";
+    private static final String CONST_PERMISSION_PROTECTION_LEVEL_PRIVILEGED = "privileged";
     /**
      * Context constants
      * TODO Change the constants as per the ontology and ensure that you generate some rules to be modified by the automated script
@@ -71,7 +75,7 @@ public class MithrilApplication extends Application{
     private static final String systemAppsDisplayTag = "systemApps";
     private static final String userAppsDisplayTag = "userApps";
     private static final String appDisplayTypeTag = "AppDisplayTypeTag";
-    private static final String appNameTag = "AppNameTag";
+    private static final String appPkgNameTag = "AppPkgNameTag";
     private static final String sharedPreferenceAppCount = "AppCount";
 
     public static String getPrefKeyWorkingHoursEnabled() {
@@ -231,6 +235,30 @@ public class MithrilApplication extends Application{
     }
 
     public static String getAppPkgNameTag() {
-        return appNameTag;
+        return appPkgNameTag;
+    }
+
+    public static String getConstNoGroupForPermission() {
+        return CONST_NO_GROUP_FOR_PERMISSION;
+    }
+
+    public static String getConstPermissionProtectionLevelUnknown() {
+        return CONST_PERMISSION_PROTECTION_LEVEL_UNKNOWN;
+    }
+
+    public static String getConstPermissionProtectionLevelNormal() {
+        return CONST_PERMISSION_PROTECTION_LEVEL_NORMAL;
+    }
+
+    public static String getConstPermissionProtectionLevelDangerous() {
+        return CONST_PERMISSION_PROTECTION_LEVEL_DANGEROUS;
+    }
+
+    public static String getConstPermissionProtectionLevelSignature() {
+        return CONST_PERMISSION_PROTECTION_LEVEL_SIGNATURE;
+    }
+
+    public static String getConstPermissionProtectionLevelPrivileged() {
+        return CONST_PERMISSION_PROTECTION_LEVEL_PRIVILEGED;
     }
 }

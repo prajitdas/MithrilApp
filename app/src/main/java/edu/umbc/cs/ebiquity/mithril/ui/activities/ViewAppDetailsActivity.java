@@ -2,6 +2,7 @@ package edu.umbc.cs.ebiquity.mithril.ui.activities;
 
 import android.app.FragmentManager;
 import android.content.Intent;
+import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageManager;
 import android.content.pm.PackageManager.NameNotFoundException;
 import android.os.Bundle;
@@ -10,24 +11,21 @@ import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.ImageButton;
+import android.widget.TextView;
 import android.widget.Toast;
-
-import java.util.List;
 
 import edu.umbc.cs.ebiquity.mithril.MithrilApplication;
 import edu.umbc.cs.ebiquity.mithril.R;
 import edu.umbc.cs.ebiquity.mithril.data.model.PermData;
-import edu.umbc.cs.ebiquity.mithril.ui.adapters.AppPermListAdapter;
 import edu.umbc.cs.ebiquity.mithril.ui.fragments.AppDetailFragment;
 
 public class ViewAppDetailsActivity extends AppCompatActivity
         implements AppDetailFragment.OnListFragmentInteractionListener {
     private PackageManager packageManager;
-    private List<PermData> appPermList;
-    private AppPermListAdapter appPermListAdapter;
     private ImageButton mImgBtnLaunchApp;
     private ImageButton mImgBtnAppIsGood;
     private ImageButton mImgBtnAppIsBad;
+    private TextView mTxtViewAppName;
     private String packageName;
     private Toolbar toolbar;
 
@@ -55,6 +53,22 @@ public class ViewAppDetailsActivity extends AppCompatActivity
         mImgBtnLaunchApp = (ImageButton) findViewById(R.id.launch_app_btn);
         mImgBtnAppIsGood = (ImageButton) findViewById(R.id.app_is_good_btn);
         mImgBtnAppIsBad = (ImageButton) findViewById(R.id.app_is_bad_btn);
+
+        mTxtViewAppName = (TextView) findViewById(R.id.textViewAppDetails);
+        ApplicationInfo applicationInfo;
+        try {
+            applicationInfo = packageManager.getApplicationInfo(packageName, 0);
+        } catch (final NameNotFoundException e) {
+            applicationInfo = null;
+        }
+        mTxtViewAppName.setText(
+                (
+                        applicationInfo != null ? packageManager.getApplicationLabel(applicationInfo).toString() : MithrilApplication.getConstPermissionProtectionLevelUnknown()
+                ) +
+                        " (" +
+                        packageName +
+                        ")"
+        );
 
         loadViewAppDetailsFragment();
 
