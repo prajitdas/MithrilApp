@@ -1,5 +1,7 @@
 package edu.umbc.cs.ebiquity.mithril.ui.adapters;
 
+import android.content.Context;
+import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -24,7 +26,9 @@ public class AppDetailRecyclerViewAdapter extends RecyclerView.Adapter<AppDetail
 
     private final List<PermData> mValues;
     private final OnListFragmentInteractionListener mListener;
+    private CardView cardView;
     private View view;
+    private Context context;
 
     public AppDetailRecyclerViewAdapter(List<PermData> items, OnListFragmentInteractionListener listener) {
         mValues = items;
@@ -35,26 +39,35 @@ public class AppDetailRecyclerViewAdapter extends RecyclerView.Adapter<AppDetail
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         view = LayoutInflater.from(parent.getContext())
                 .inflate(R.layout.fragment_app_detail, parent, false);
+        cardView = (CardView) view.findViewById(R.id.card_view_perm);
+        context = view.getContext();
         return new ViewHolder(view);
     }
 
     @Override
     public void onBindViewHolder(final ViewHolder holder, int position) {
+        String permProtLvl = mValues.get(position).getPermissionProtectionLevel();
+
         holder.mItem = mValues.get(position);
-        if (mValues.get(position).getPermissionProtectionLevel() == MithrilApplication.getConstPermissionProtectionLevelNormal()) {
-            holder.mPermissionProtectionLevel.setImageDrawable(view.getContext().getResources().getDrawable(R.drawable.comment_check_outline, view.getContext().getTheme()));
-        } else if (mValues.get(position).getPermissionProtectionLevel() == MithrilApplication.getConstPermissionProtectionLevelDangerous()) {
+        holder.mPermissionLabel.setText(mValues.get(position).getPermissionLabel());
+        holder.mPermissionName.setText(mValues.get(position).getPermissionName());
+
+        if (permProtLvl.equals(MithrilApplication.getConstPermissionProtectionLevelNormal())) {
+            holder.mPermissionProtectionLevel.setImageDrawable(context.getResources().getDrawable(R.drawable.comment_check_outline, context.getTheme()));
+            cardView.setCardBackgroundColor(context.getResources().getColor(R.color.lightgreen));
+        } else if (permProtLvl.equals(MithrilApplication.getConstPermissionProtectionLevelDangerous())) {
             holder.mPermissionProtectionLevel.setImageDrawable(view.getContext().getResources().getDrawable(R.drawable.comment_alert_outline, view.getContext().getTheme()));
-        } else if (mValues.get(position).getPermissionProtectionLevel() == MithrilApplication.getConstPermissionProtectionLevelSignature()) {
+            cardView.setCardBackgroundColor(context.getResources().getColor(R.color.lightcoral));
+        } else if (permProtLvl.equals(MithrilApplication.getConstPermissionProtectionLevelSignature())) {
             holder.mPermissionProtectionLevel.setImageDrawable(view.getContext().getResources().getDrawable(R.drawable.comment_processing_outline, view.getContext().getTheme()));
-        } else if (mValues.get(position).getPermissionProtectionLevel() == MithrilApplication.getConstPermissionProtectionLevelPrivileged()) {
+            cardView.setCardBackgroundColor(context.getResources().getColor(R.color.yellow));
+        } else if (permProtLvl.equals(MithrilApplication.getConstPermissionProtectionLevelPrivileged())) {
             holder.mPermissionProtectionLevel.setImageDrawable(view.getContext().getResources().getDrawable(R.drawable.comment_remove_outline, view.getContext().getTheme()));
+            cardView.setCardBackgroundColor(context.getResources().getColor(R.color.lightblue));
         } else {
             holder.mPermissionProtectionLevel.setImageDrawable(view.getContext().getResources().getDrawable(R.drawable.comment_question_outline, view.getContext().getTheme()));
+            cardView.setCardBackgroundColor(context.getResources().getColor(R.color.lightgrey));
         }
-        holder.mPermissionLabel.setText(mValues.get(position).getPermissionLabel());
-//        holder.mPermissionName.setText(mValues.get(position).getPermissionName());
-        holder.mPermissionName.setText(mValues.get(position).getPermissionProtectionLevel());
 
         if (mValues.get(position).getPermissionGroup() != MithrilApplication.getConstNoGroupForPermission()) {
             String[] words = mValues.get(position).getPermissionGroup().split(Pattern.quote("."));

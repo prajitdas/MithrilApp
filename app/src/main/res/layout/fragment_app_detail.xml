@@ -16,7 +16,7 @@
         android:layout_marginStart="@dimen/card_view_margin"
         android:layout_marginTop="@dimen/card_view_margin"
         android:elevation="@dimen/card_view_margin"
-        card_view:cardCornerRadius="4dp">
+        card_view:cardCornerRadius="10dp">
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
