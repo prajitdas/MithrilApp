@@ -54,19 +54,19 @@ public class AppDetailRecyclerViewAdapter extends RecyclerView.Adapter<AppDetail
 
         if (permProtLvl.equals(MithrilApplication.getConstPermissionProtectionLevelNormal())) {
             holder.mPermissionProtectionLevel.setImageDrawable(context.getResources().getDrawable(R.drawable.comment_check_outline, context.getTheme()));
-            cardView.setCardBackgroundColor(context.getResources().getColor(R.color.lightgreen));
+//            cardView.setCardBackgroundColor(Color.GREEN);
         } else if (permProtLvl.equals(MithrilApplication.getConstPermissionProtectionLevelDangerous())) {
             holder.mPermissionProtectionLevel.setImageDrawable(view.getContext().getResources().getDrawable(R.drawable.comment_alert_outline, view.getContext().getTheme()));
-            cardView.setCardBackgroundColor(context.getResources().getColor(R.color.lightcoral));
+//            cardView.setCardBackgroundColor(Color.RED);
         } else if (permProtLvl.equals(MithrilApplication.getConstPermissionProtectionLevelSignature())) {
             holder.mPermissionProtectionLevel.setImageDrawable(view.getContext().getResources().getDrawable(R.drawable.comment_processing_outline, view.getContext().getTheme()));
-            cardView.setCardBackgroundColor(context.getResources().getColor(R.color.yellow));
+//            cardView.setCardBackgroundColor(Color.YELLOW);
         } else if (permProtLvl.equals(MithrilApplication.getConstPermissionProtectionLevelPrivileged())) {
             holder.mPermissionProtectionLevel.setImageDrawable(view.getContext().getResources().getDrawable(R.drawable.comment_remove_outline, view.getContext().getTheme()));
-            cardView.setCardBackgroundColor(context.getResources().getColor(R.color.lightblue));
+//            cardView.setCardBackgroundColor(Color.BLUE);
         } else {
             holder.mPermissionProtectionLevel.setImageDrawable(view.getContext().getResources().getDrawable(R.drawable.comment_question_outline, view.getContext().getTheme()));
-            cardView.setCardBackgroundColor(context.getResources().getColor(R.color.lightgrey));
+//            cardView.setCardBackgroundColor(Color.GRAY);
         }
 
         if (mValues.get(position).getPermissionGroup() != MithrilApplication.getConstNoGroupForPermission()) {
