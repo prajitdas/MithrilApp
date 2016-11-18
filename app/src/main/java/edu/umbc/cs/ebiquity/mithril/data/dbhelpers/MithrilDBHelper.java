@@ -42,7 +42,7 @@ import edu.umbc.cs.ebiquity.mithril.data.model.rules.requesters.Requester;
 
 public class MithrilDBHelper extends SQLiteOpenHelper {
 	// Database declarations
-	private final static int DATABASE_VERSION = 51;
+	private final static int DATABASE_VERSION = 21;
 	private final static String DATABASE_NAME = MithrilApplication.getConstDatabaseName();
 
 	// Table 1 for Requester information

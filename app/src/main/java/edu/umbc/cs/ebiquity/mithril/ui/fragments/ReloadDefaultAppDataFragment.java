@@ -88,13 +88,8 @@ public class ReloadDefaultAppDataFragment extends Fragment {
                 builder.setMessage(R.string.dialog_reload_data)
                         .setPositiveButton(R.string.dialog_resp_delete, new DialogInterface.OnClickListener() {
                             public void onClick(DialogInterface dialog, int id) {
-                                try {
-                                    SQLiteDatabase.deleteDatabase(context.getDatabasePath(mithrilDB.getPath()));
-                                    Toast.makeText(context, "Database was reset!", Toast.LENGTH_SHORT).show();
-                                } catch (Exception e) {
-                                    Toast.makeText(context, "Database was not reset!", Toast.LENGTH_SHORT).show();
-                                }
-                                //mithrilDBHelper.deleteAllData(mithrilDB);
+                                mithrilDBHelper.deleteAllData(mithrilDB);
+                                Toast.makeText(context, "Database was reset!", Toast.LENGTH_SHORT).show();
                                 mithrilDB.close();
                             }
                         })
