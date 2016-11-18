@@ -96,17 +96,14 @@ public class ViewAppDetailsActivity extends AppCompatActivity
 
             @Override
             public void onClick(View v) {
-                try {
-                    Intent intent = packageManager.getLaunchIntentForPackage(packageName);
-                    if (intent == null) {
-                        throw new NameNotFoundException();
-                    }
+                Intent intent = packageManager.getLaunchIntentForPackage(packageName);
+                if (intent != null) {
                     intent.addCategory(Intent.CATEGORY_LAUNCHER);
                     startActivity(intent);
-                } catch (NameNotFoundException e) {
+                } else {
                     Toast.makeText(
                             v.getContext(),
-                            "The application " + packageName + " was not found! Possibly due to an exception: " + e.getMessage(),
+                            "The application " + packageName + " was not launchable! Possibly because it's not meant to be!",
                             Toast.LENGTH_LONG)
                             .show();
                 }
