@@ -45,7 +45,7 @@
     <string name="action_reload_database">Reload Database</string>
 
     <string name="action_reload_data">Reload Data</string>
-    <string name="dialog_reload_data">Do you really want to delete all data from the database and reload default data?</string>
+    <string name="dialog_reload_data">Do you really want to delete all data from the database and reset to default data?</string>
     <string name="dialog_resp_delete">Yes</string>
     <string name="dialog_resp_NO">No</string>
 

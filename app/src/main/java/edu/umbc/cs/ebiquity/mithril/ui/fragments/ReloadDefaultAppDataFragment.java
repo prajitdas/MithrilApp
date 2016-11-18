@@ -70,7 +70,7 @@ public class ReloadDefaultAppDataFragment extends Fragment {
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+    public View onCreateView(LayoutInflater inflater, final ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         view = inflater.inflate(R.layout.fragment_reload_default_app_data, container, false);
@@ -88,12 +88,20 @@ public class ReloadDefaultAppDataFragment extends Fragment {
                 builder.setMessage(R.string.dialog_reload_data)
                         .setPositiveButton(R.string.dialog_resp_delete, new DialogInterface.OnClickListener() {
                             public void onClick(DialogInterface dialog, int id) {
-                                mithrilDBHelper.deleteAllData(mithrilDB);
+                                try {
+                                    SQLiteDatabase.deleteDatabase(context.getDatabasePath(mithrilDB.getPath()));
+                                    Toast.makeText(context, "Database was reset!", Toast.LENGTH_SHORT).show();
+                                } catch (Exception e) {
+                                    Toast.makeText(context, "Database was not reset!", Toast.LENGTH_SHORT).show();
+                                }
+                                //mithrilDBHelper.deleteAllData(mithrilDB);
+                                mithrilDB.close();
                             }
                         })
                         .setNegativeButton(R.string.dialog_resp_NO, new DialogInterface.OnClickListener() {
                             public void onClick(DialogInterface dialog, int id) {
-                                Toast.makeText(context, "Data was not deleted!", Toast.LENGTH_SHORT).show();
+                                Toast.makeText(context, "Database was not reset!", Toast.LENGTH_SHORT).show();
+                                mithrilDB.close();
                             }
                         });
 

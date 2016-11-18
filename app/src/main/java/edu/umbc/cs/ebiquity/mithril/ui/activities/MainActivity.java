@@ -2,7 +2,6 @@ package edu.umbc.cs.ebiquity.mithril.ui.activities;
 
 import android.app.FragmentManager;
 import android.content.Intent;
-import android.database.sqlite.SQLiteDatabase;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
@@ -20,7 +19,6 @@ import java.util.List;
 
 import edu.umbc.cs.ebiquity.mithril.MithrilApplication;
 import edu.umbc.cs.ebiquity.mithril.R;
-import edu.umbc.cs.ebiquity.mithril.data.dbhelpers.MithrilDBHelper;
 import edu.umbc.cs.ebiquity.mithril.data.model.AppData;
 import edu.umbc.cs.ebiquity.mithril.data.model.Violation;
 import edu.umbc.cs.ebiquity.mithril.ui.fragments.AboutFragment;
@@ -37,8 +35,6 @@ public class MainActivity extends AppCompatActivity
         ViolationFragment.OnListFragmentInteractionListener,
         ReloadDefaultAppDataFragment.OnFragmentInteractionListener {
 
-    private MithrilDBHelper mithrilDBHelper;
-    private SQLiteDatabase mithrilDB;
     private Violation violationItemSelected = null;
     private DrawerLayout drawer;
     private ActionBarDrawerToggle toggle;
@@ -141,7 +137,6 @@ public class MainActivity extends AppCompatActivity
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        initData();
         initViews();
         defaultFragmentLoad();
     }
@@ -174,15 +169,6 @@ public class MainActivity extends AppCompatActivity
 
         navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
-    }
-
-    private void initData() {
-        /**
-         * Database creation and default data insertion, happens only once.
-         */
-        mithrilDBHelper = new MithrilDBHelper(this);
-        mithrilDB = mithrilDBHelper.getWritableDatabase();
-        mithrilDB.close();
     }
 
     private void defaultFragmentLoad() {
