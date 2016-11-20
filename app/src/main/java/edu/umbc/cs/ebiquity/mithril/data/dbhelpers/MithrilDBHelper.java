@@ -42,7 +42,7 @@ import edu.umbc.cs.ebiquity.mithril.data.model.rules.requesters.Requester;
 
 public class MithrilDBHelper extends SQLiteOpenHelper {
 	// Database declarations
-	private final static int DATABASE_VERSION = 21;
+	private final static int DATABASE_VERSION = 101;
 	private final static String DATABASE_NAME = MithrilApplication.getConstDatabaseName();
 
 	// Table 1 for Requester information
@@ -561,8 +561,8 @@ public class MithrilDBHelper extends SQLiteOpenHelper {
 		String selectQuery = "SELECT * FROM " + getViolationsTableName() +
 				" WHERE " + getViolationsTableName() + "." + VIOLATIONOFRULID + " = " + ruleid + ";";
 		Violation aViolation = null;
+		Cursor cursor = db.rawQuery(selectQuery, null);
 		try{
-			Cursor cursor = db.rawQuery(selectQuery, null);
 			if (cursor.moveToFirst()) {
 				/**
 				 * The policy id is always zero as the policy for the current user cannot change and therefore the policy is insignificant.
@@ -575,6 +575,8 @@ public class MithrilDBHelper extends SQLiteOpenHelper {
 			}
 		} catch (SQLException e) {
 			throw new SQLException("Could not find " + e);
+		} finally {
+			cursor.close();
 		}
 		return aViolation;
 	}
@@ -599,8 +601,8 @@ public class MithrilDBHelper extends SQLiteOpenHelper {
 				" FROM " + getAppDataTableName() + ";";
 
 		List<AppData> apps = new ArrayList<AppData>();
+		Cursor cursor = db.rawQuery(selectQuery, null);
 		try{
-			Cursor cursor = db.rawQuery(selectQuery, null);
 			if (cursor.moveToFirst()) {
 				do {
 					apps.add(
@@ -620,6 +622,8 @@ public class MithrilDBHelper extends SQLiteOpenHelper {
 			}
 		} catch(SQLException e) {
 			throw new SQLException("Could not find " + e);
+		} finally {
+			cursor.close();
 		}
 		return apps;
 	}
@@ -650,8 +654,8 @@ public class MithrilDBHelper extends SQLiteOpenHelper {
 				";";
 
 		AppData app = new AppData();
+		Cursor cursor = db.rawQuery(selectQuery, null);
 		try {
-			Cursor cursor = db.rawQuery(selectQuery, null);
 			if (cursor.moveToFirst()) {
 				app = new AppData(
 						cursor.getString(0),
@@ -667,6 +671,8 @@ public class MithrilDBHelper extends SQLiteOpenHelper {
 			}
 		} catch (SQLException e) {
 			throw new SQLException("Could not find " + e);
+		} finally {
+			cursor.close();
 		}
 		return app;
 	}
@@ -696,8 +702,8 @@ public class MithrilDBHelper extends SQLiteOpenHelper {
 				";";
 
 		AppData app = new AppData();
+		Cursor cursor = db.rawQuery(selectQuery, null);
 		try {
-			Cursor cursor = db.rawQuery(selectQuery, null);
 			if (cursor.moveToFirst()) {
 				app = new AppData(
 						cursor.getString(0),
@@ -713,6 +719,8 @@ public class MithrilDBHelper extends SQLiteOpenHelper {
 			}
 		} catch (SQLException e) {
 			throw new SQLException("Could not find " + e);
+		} finally {
+			cursor.close();
 		}
 		return app;
 	}
@@ -737,8 +745,8 @@ public class MithrilDBHelper extends SQLiteOpenHelper {
 				getAppPermViewName() + "." + APPPERMVIEWAPPPKGNAME + " = '" + appPackageName + "';";
 
 		List<PermData> permDataList = new ArrayList<PermData>();
+		Cursor cursor = db.rawQuery(selectQuery, null);
 		try {
-			Cursor cursor = db.rawQuery(selectQuery, null);
 			if (cursor.moveToFirst()) {
 				do {
 					PermData permData = new PermData();
@@ -752,6 +760,8 @@ public class MithrilDBHelper extends SQLiteOpenHelper {
 		} catch (SQLException e) {
 			Log.d(MithrilApplication.getDebugTag(), "Could not find " + e.getMessage());
 			return null;
+		} finally {
+			cursor.close();
 		}
 		return permDataList;
 	}
@@ -772,13 +782,15 @@ public class MithrilDBHelper extends SQLiteOpenHelper {
 				"';";
 
 		long permId = -1;
+		Cursor cursor = db.rawQuery(selectQuery, null);
 		try {
-			Cursor cursor = db.rawQuery(selectQuery, null);
 			if (cursor.moveToFirst()) {
 				permId = Integer.parseInt(cursor.getString(0));
 			}
 		} catch(SQLException e) {
 			throw new SQLException("Could not find " + e);
+		} finally {
+			cursor.close();
 		}
 		if (permId == -1)
 			Log.d(MithrilApplication.getDebugTag(), permissionName);
@@ -800,8 +812,8 @@ public class MithrilDBHelper extends SQLiteOpenHelper {
 				" FROM " + getViolationsTableName() + ";";
 
 		List<Violation> violations = new ArrayList<Violation>();
+		Cursor cursor = db.rawQuery(selectQuery, null);
 		try{
-			Cursor cursor = db.rawQuery(selectQuery, null);
 			if (cursor.moveToFirst()) {
 				do {
 					Violation tempViolation = new Violation();
@@ -824,6 +836,8 @@ public class MithrilDBHelper extends SQLiteOpenHelper {
 			}
 		} catch(SQLException e) {
 			throw new SQLException("Could not find " + e);
+		} finally {
+			cursor.close();
 		}
 		return violations;
 	}
@@ -844,8 +858,8 @@ public class MithrilDBHelper extends SQLiteOpenHelper {
 				" WHERE " + getViolationsTableName() + "." + VIOLATIONMARKER + " = 0;";
 
 		List<Violation> violations = new ArrayList<Violation>();
+		Cursor cursor = db.rawQuery(selectQuery, null);
 		try{
-			Cursor cursor = db.rawQuery(selectQuery, null);
 			if (cursor.moveToFirst()) {
 				do {
 					Violation tempViolation = new Violation();
@@ -868,6 +882,8 @@ public class MithrilDBHelper extends SQLiteOpenHelper {
 			}
 		} catch(SQLException e) {
 			throw new SQLException("Could not find " + e);
+		} finally {
+			cursor.close();
 		}
 		return violations;
 	}
@@ -896,8 +912,8 @@ public class MithrilDBHelper extends SQLiteOpenHelper {
 				" ON " + getPolicyRulesTableName() + "." + POLRULRESID +
 				" = " +  getResourcesTableName() + "." + RESID + ";";
 
+		Cursor cursor = db.rawQuery(selectQuery, null);
 		try{
-			Cursor cursor = db.rawQuery(selectQuery, null);
 
 			// looping through all rows and adding to list
 			if (cursor.moveToFirst()) {
@@ -924,6 +940,8 @@ public class MithrilDBHelper extends SQLiteOpenHelper {
 			}
 		} catch(SQLException e) {
 			throw new SQLException("Could not find " + e);
+		} finally {
+			cursor.close();
 		}
 		// return policy rules list
 		return policyRules;
@@ -957,9 +975,8 @@ public class MithrilDBHelper extends SQLiteOpenHelper {
 				"';";
 
 		PolicyRule policyRule = new PolicyRule();
-
+		Cursor cursor = db.rawQuery(selectQuery, null);
 		try{
-			Cursor cursor = db.rawQuery(selectQuery, null);
 			if (cursor.moveToFirst()) {
 				policyRule.setId(Integer.parseInt(cursor.getString(0)));
 				policyRule.setName(cursor.getString(1));
@@ -978,6 +995,8 @@ public class MithrilDBHelper extends SQLiteOpenHelper {
 			}
 		} catch(SQLException e) {
 			throw new SQLException("Could not find " + e);
+		} finally {
+			cursor.close();
 		}
 		return policyRule;
 	}
@@ -1009,9 +1028,8 @@ public class MithrilDBHelper extends SQLiteOpenHelper {
 				getPolicyRulesTableName() + "." + POLRULID + " = " + id + ";";
 
 		PolicyRule policyRule = new PolicyRule();
-
+		Cursor cursor = db.rawQuery(selectQuery, null);
 		try{
-			Cursor cursor = db.rawQuery(selectQuery, null);
 			if (cursor.moveToFirst()) {
 				policyRule.setId(Integer.parseInt(cursor.getString(0)));
 				policyRule.setName(cursor.getString(1));
@@ -1030,6 +1048,8 @@ public class MithrilDBHelper extends SQLiteOpenHelper {
 			}
 		} catch(SQLException e) {
 			throw new SQLException("Could not find " + e);
+		} finally {
+			cursor.close();
 		}
 		return policyRule;
 	}
@@ -1051,15 +1071,16 @@ public class MithrilDBHelper extends SQLiteOpenHelper {
 				getRequestersTableName() + "." + REQID + " = " + id + ";";
 
 		Requester requester = new Requester();
-
+		Cursor cursor = db.rawQuery(selectQuery, null);
 		try{
-			Cursor cursor = db.rawQuery(selectQuery, null);
 			if (cursor.moveToFirst()) {
 				requester.setId(Integer.parseInt(cursor.getString(0)));
 				requester.setRequesterName(cursor.getString(1));
 			}
 		} catch(SQLException e) {
 			throw new SQLException("Could not find " + e);
+		} finally {
+			cursor.close();
 		}
 		return requester;
 	}
@@ -1081,15 +1102,16 @@ public class MithrilDBHelper extends SQLiteOpenHelper {
 				getResourcesTableName() + "." + RESID + " = " + id + ";";
 
 		Resource resource = new Resource();
-
+		Cursor cursor = db.rawQuery(selectQuery, null);
 		try{
-			Cursor cursor = db.rawQuery(selectQuery, null);
 			if (cursor.moveToFirst()) {
 				resource.setId(Integer.parseInt(cursor.getString(0)));
 				resource.setResourceName(cursor.getString(1));
 			}
 		} catch(SQLException e) {
 			throw new SQLException("Could not find " + e);
+		} finally {
+			cursor.close();
 		}
 		return resource;
 	}
@@ -1111,9 +1133,8 @@ public class MithrilDBHelper extends SQLiteOpenHelper {
 				getActionTableName() + "." + ACTIONID + " = " + id + ";";
 
 		RuleAction action = new RuleAction();
-
+		Cursor cursor = db.rawQuery(selectQuery, null);
 		try{
-			Cursor cursor = db.rawQuery(selectQuery, null);
 			if (cursor.moveToFirst()) {
 				action.setId(Integer.parseInt(cursor.getString(0)));
 				if(Integer.parseInt(cursor.getString(1)) == 2)
@@ -1125,6 +1146,8 @@ public class MithrilDBHelper extends SQLiteOpenHelper {
 			}
 		} catch(SQLException e) {
 			throw new SQLException("Could not find " + e);
+		} finally {
+			cursor.close();
 		}
 		return action;
 	}
@@ -1150,9 +1173,8 @@ public class MithrilDBHelper extends SQLiteOpenHelper {
 				getContextTableName() + "." + RESID + " = " + id + ";";
 
 		UserContext userContext = new UserContext();
-
+		Cursor cursor = db.rawQuery(selectQuery, null);
 		try{
-			Cursor cursor = db.rawQuery(selectQuery, null);
 			if (cursor.moveToFirst()) {
 				userContext.setId(Integer.parseInt(cursor.getString(0)));
 
@@ -1167,6 +1189,8 @@ public class MithrilDBHelper extends SQLiteOpenHelper {
 			}
 		} catch(SQLException e) {
 			throw new SQLException("Could not find " + e);
+		} finally {
+			cursor.close();
 		}
 		return userContext;
 	}
