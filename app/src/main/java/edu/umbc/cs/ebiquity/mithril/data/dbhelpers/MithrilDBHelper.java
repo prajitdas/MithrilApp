@@ -1444,13 +1444,13 @@ public class MithrilDBHelper extends SQLiteOpenHelper {
 					//Setting the protection level
 					switch (permissionInfo.flags) {
 						case PermissionInfo.FLAG_COSTS_MONEY:
-							tempPermData.setPermissionFlag("costs-money");
+							tempPermData.setPermissionFlag(MithrilApplication.getConstPermissionFlagCostsMoney());
 							break;
 						case PermissionInfo.FLAG_INSTALLED:
-							tempPermData.setPermissionFlag("installed");
+							tempPermData.setPermissionFlag(MithrilApplication.getConstPermissionFlagInstalled());
 							break;
 						default:
-							tempPermData.setPermissionProtectionLevel("no-flags");
+							tempPermData.setPermissionProtectionLevel(MithrilApplication.getConstPermissionFlagNone());
 							break;
 					}
 					//Permission description can be null. We are preventing a null pointer exception here.

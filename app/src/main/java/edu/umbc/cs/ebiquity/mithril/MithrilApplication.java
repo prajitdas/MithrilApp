@@ -20,6 +20,9 @@ public class MithrilApplication extends Application{
     private static final String CONST_PERMISSION_PROTECTION_LEVEL_DANGEROUS = "dangerous";
     private static final String CONST_PERMISSION_PROTECTION_LEVEL_SIGNATURE = "signature";
     private static final String CONST_PERMISSION_PROTECTION_LEVEL_PRIVILEGED = "privileged";
+    private static final String CONST_PERMISSION_FLAG_COSTS_MONEY = "costs-money";
+    private static final String CONST_PERMISSION_FLAG_INSTALLED = "installed";
+    private static final String CONST_PERMISSION_FLAG_NONE = "no-flags";
     /**
      * Context constants
      * TODO Change the constants as per the ontology and ensure that you generate some rules to be modified by the automated script
@@ -260,5 +263,17 @@ public class MithrilApplication extends Application{
 
     public static String getConstPermissionProtectionLevelPrivileged() {
         return CONST_PERMISSION_PROTECTION_LEVEL_PRIVILEGED;
+    }
+
+    public static String getConstPermissionFlagCostsMoney() {
+        return CONST_PERMISSION_FLAG_COSTS_MONEY;
+    }
+
+    public static String getConstPermissionFlagInstalled() {
+        return CONST_PERMISSION_FLAG_INSTALLED;
+    }
+
+    public static String getConstPermissionFlagNone() {
+        return CONST_PERMISSION_FLAG_NONE;
     }
 }

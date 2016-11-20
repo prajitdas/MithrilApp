@@ -147,6 +147,7 @@ public class MainActivity extends AppCompatActivity
         defaultFragmentLoad();
     }
 
+    @SuppressWarnings("RestrictedApi")
     private void initViews() {
         setContentView(R.layout.activity_main);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar_main);
