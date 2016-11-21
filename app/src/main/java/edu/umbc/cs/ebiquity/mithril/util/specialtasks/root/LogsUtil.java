@@ -2,6 +2,12 @@ package edu.umbc.cs.ebiquity.mithril.util.specialtasks.root;
 
 /**
  * Created by Prajit on 10/3/2016.
+ * READ_LOGS
+ * Added in API level 1
+ * String READ_LOGS
+ * Allows an application to read the low-level system log files.
+ * Not for use by third-party applications, because Log entries can contain the user's private information.
+ * Constant Value: "android.permission.READ_LOGS"
  */
 
 import java.io.BufferedReader;

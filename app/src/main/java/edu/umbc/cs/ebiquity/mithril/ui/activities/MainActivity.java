@@ -14,6 +14,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.Toast;
 
 import java.util.List;
 
@@ -26,6 +27,7 @@ import edu.umbc.cs.ebiquity.mithril.ui.fragments.PrefsFragment;
 import edu.umbc.cs.ebiquity.mithril.ui.fragments.ReloadDefaultAppDataFragment;
 import edu.umbc.cs.ebiquity.mithril.ui.fragments.ShowAppsFragment;
 import edu.umbc.cs.ebiquity.mithril.ui.fragments.ViolationFragment;
+import edu.umbc.cs.ebiquity.mithril.util.specialtasks.root.RunningAppInfo;
 
 public class MainActivity extends AppCompatActivity
         implements  NavigationView.OnNavigationItemSelectedListener,
@@ -139,6 +141,7 @@ public class MainActivity extends AppCompatActivity
         super.onCreate(savedInstanceState);
         initViews();
         defaultFragmentLoad();
+        Toast.makeText(this, RunningAppInfo.getForegroundProcess(this), Toast.LENGTH_LONG).show();
     }
 
     @Override

@@ -4,9 +4,10 @@
 
     <uses-permission android:name="android.permission.READ_LOGS" />
     <uses-permission android:name="android.permission.PACKAGE_USAGE_STATS" />
+    <uses-permission android:name="com.google.android.launcher.permission.RECEIVE_LAUNCH_BROADCASTS" />
     <!-- Permission for using NFC hardware -->
     <uses-permission android:name="android.permission.NFC" />
-    <!-- Forcing device to have NFC hardware -->
+    <!-- Forcing device feature presence requirement of NFC hardware -->
     <uses-feature
         android:name="android.hardware.nfc"
         android:required="true" />
@@ -38,10 +39,6 @@
         </activity>
 
         <receiver
-            android:name=".util.receivers.CommandBroadcastReceiver"
-            android:enabled="true"
-            android:exported="true" />
-        <receiver
             android:name=".util.receivers.AppInstallBroadcastReceiver"
             android:enabled="true"
             android:exported="true">
@@ -55,16 +52,23 @@
             </intent-filter>
         </receiver>
 
+        <!-- This test activity was used for the IEEE CIC paper. This will possibly removed or modified in the future. -->
         <activity
             android:name=".simulations.TestMainActivity"
             android:label="@string/title_activity_test_main"
             android:theme="@style/AppTheme.NoActionBar">
             <intent-filter>
                 <action android:name="android.nfc.action.NDEF_DISCOVERED" />
+
                 <category android:name="android.intent.category.DEFAULT" />
+
                 <data android:mimeType="text/plain" />
             </intent-filter>
         </activity>
+
+        <service
+            android:name=".util.services.DetectAppLaunchIntentService"
+            android:exported="false"></service>
     </application>
 
 </manifest>
