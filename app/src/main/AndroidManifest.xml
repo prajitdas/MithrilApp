@@ -2,9 +2,9 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="edu.umbc.cs.ebiquity.mithril">
 
+    <!-- Remember to add all the permissions you request here in the PermissionHelper class for handling permission acquisition -->
     <uses-permission android:name="android.permission.READ_LOGS" />
     <uses-permission android:name="android.permission.PACKAGE_USAGE_STATS" />
-    <uses-permission android:name="com.google.android.launcher.permission.RECEIVE_LAUNCH_BROADCASTS" />
     <!-- Permission for using NFC hardware -->
     <uses-permission android:name="android.permission.NFC" />
     <!-- Forcing device feature presence requirement of NFC hardware -->

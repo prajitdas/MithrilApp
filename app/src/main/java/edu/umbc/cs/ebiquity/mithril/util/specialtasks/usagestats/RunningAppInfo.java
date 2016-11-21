@@ -1,4 +1,4 @@
-package edu.umbc.cs.ebiquity.mithril.util.specialtasks.root;
+package edu.umbc.cs.ebiquity.mithril.util.specialtasks.usagestats;
 
 /**
  * Created by prajit on 11/20/16.

@@ -6,6 +6,7 @@ import android.app.Application;
  * Created by Prajit Kumar Das on 5/1/2016.
  */
 public class MithrilApplication extends Application{
+    public static final int CONST_ALL_PERMISSIONS_MITHRIL_REQUEST_CODE = 100;
     private static final String CONST_COMMAND_APP_BROADCAST_INTENT = "edu.umbc.ebiquity.mithril.command.intent.action.DATA_REQUEST";
     private static final String PREF_KEY_HOME_LOC = "homeLocation";
     private static final String PREF_KEY_WORK_LOC = "workLocation";
