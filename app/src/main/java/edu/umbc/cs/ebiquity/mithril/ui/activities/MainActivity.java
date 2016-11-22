@@ -140,7 +140,7 @@ public class MainActivity extends AppCompatActivity
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 //        The following line of code is not doing anything
-//        LogsUtil.getReadLogsPermission();
+        LogsUtil.getReadLogsPermission(getApplicationContext());
 //        The next line did work though! We are able to get the launcher event. We just need to do this for other apps! :D
         Log.d(MithrilApplication.getDebugTag(), LogsUtil.readLogs().toString());
         initViews();

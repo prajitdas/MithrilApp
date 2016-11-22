@@ -1,7 +1,6 @@
 package edu.umbc.cs.ebiquity.mithril;
 
 import android.app.Application;
-import android.content.Context;
 
 /**
  * Created by Prajit Kumar Das on 5/1/2016.
@@ -9,6 +8,7 @@ import android.content.Context;
 public class MithrilApplication extends Application{
     public static final int CONST_ALL_PERMISSIONS_MITHRIL_REQUEST_CODE = 100;
     private static final String READ_LOGS_PERMISSION_FOR_APP_CMD = "pm grant edu.umbc.cs.ebiquity.mithril android.permission.READ_LOGS";
+    private static final String ROOT_PRIVILEGE_CMD = "su -c";
     private static final String CONST_COMMAND_APP_BROADCAST_INTENT = "edu.umbc.ebiquity.mithril.command.intent.action.DATA_REQUEST";
     private static final String PREF_KEY_HOME_LOC = "homeLocation";
     private static final String PREF_KEY_WORK_LOC = "workLocation";
@@ -87,7 +87,6 @@ public class MithrilApplication extends Application{
     private static final String appDisplayTypeTag = "AppDisplayTypeTag";
     private static final String appPkgNameTag = "AppPkgNameTag";
     private static final String sharedPreferenceAppCount = "AppCount";
-    private static Context context;
 
     public static String getPrefKeyWorkingHoursEnabled() {
         return PREF_KEY_WORKING_HOURS_ENABLED;
@@ -285,10 +284,6 @@ public class MithrilApplication extends Application{
         return CONST_PERMISSION_FLAG_NONE;
     }
 
-    public static Context getAppContext() {
-        return MithrilApplication.context;
-    }
-
     public static String getReadLogsPermissionForAppCmd() {
         return READ_LOGS_PERMISSION_FOR_APP_CMD;
     }
@@ -297,8 +292,7 @@ public class MithrilApplication extends Application{
         return CONST_LOG_LAUNCH_INTENT_TXT;
     }
 
-    public void onCreate() {
-        super.onCreate();
-        MithrilApplication.context = getApplicationContext();
+    public static String getRootPrivilegeCmd() {
+        return ROOT_PRIVILEGE_CMD;
     }
 }

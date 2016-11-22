@@ -18,10 +18,10 @@ public class RootAccess {
         appContext = context;
     }
 
-    public boolean runScript(String statementToRun) {
+    public boolean runScript(String[] statementsToRun) {
         try {
             // Preform su to get root privileges
-            rootProcess = Runtime.getRuntime().exec(statementToRun);
+            rootProcess = Runtime.getRuntime().exec(statementsToRun);
 
 //            // Attempt to write a file to a root-only
 //            DataOutputStream os = new DataOutputStream(rootProcess.getOutputStream());
