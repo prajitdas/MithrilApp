@@ -37,10 +37,10 @@ public class LogsUtil {
      * pm grant edu.umbc.cs.ebiquity.mithril android.permission.READ_LOGS
      */
     public static boolean getReadLogsPermission(Context context) {
-        String pname = context.getPackageName();
+        String packageName = context.getPackageName();
         RootAccess rootAccess = new RootAccess(context);
         String[] CMDLINE_GRANTPERMS = {"su", "-c", null};
-        if (context.getPackageManager().checkPermission(android.Manifest.permission.READ_LOGS, pname) != 0) {
+        if (context.getPackageManager().checkPermission(android.Manifest.permission.READ_LOGS, packageName) != 0) {
             Log.d(MithrilApplication.getDebugTag(), "we do not have the READ_LOGS permission!");
             if (android.os.Build.VERSION.SDK_INT >= 16) {
                 Log.d(MithrilApplication.getDebugTag(), "Working around JellyBeans 'feature'...");
@@ -60,6 +60,11 @@ public class LogsUtil {
         return true;
     }
 
+    /**
+     * Method returns a LogBuilder object with all the log info on LAUNCHER intent. We will extract the component part from it and know what app was launched!
+     *
+     * @return LogBuilder
+     */
     public static StringBuilder readLogs() {
         StringBuilder logBuilder = new StringBuilder();
         try {
