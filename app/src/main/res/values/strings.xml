@@ -3,9 +3,13 @@
     <string name="mithril_app_icon_description">This is Mithril\'s icon</string>
 
     <string name="violationsMenu">Policy violation list</string>
+    <string name="components">Component info</string>
     <string name="userApps">User apps</string>
     <string name="systemApps">System apps</string>
     <string name="allApps">All apps</string>
+    <string name="services">Services</string>
+    <string name="bcastreceivers">Broadcast receivers</string>
+    <string name="contentproviders">Content providers</string>
 
     <string name="help_text">Mithril Project: My PhD!</string>
     <string name="help_feedback_menu_text">Help &amp; Feedback</string>
@@ -29,7 +33,7 @@
     <string name="app_website">https://mithril.online/</string>
 
     <string name="action_settings">Settings</string>
-    <string name="info">App information</string>
+    <string name="info">About the app</string>
 
     <string name="place_holder_for_data_to_be_displayed">Some placeholder for data to be displayed</string>
 
