@@ -12,6 +12,7 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 
@@ -26,6 +27,7 @@ import edu.umbc.cs.ebiquity.mithril.ui.fragments.PrefsFragment;
 import edu.umbc.cs.ebiquity.mithril.ui.fragments.ReloadDefaultAppDataFragment;
 import edu.umbc.cs.ebiquity.mithril.ui.fragments.ShowAppsFragment;
 import edu.umbc.cs.ebiquity.mithril.ui.fragments.ViolationFragment;
+import edu.umbc.cs.ebiquity.mithril.util.specialtasks.root.LogsUtil;
 
 public class MainActivity extends AppCompatActivity
         implements  NavigationView.OnNavigationItemSelectedListener,
@@ -139,6 +141,8 @@ public class MainActivity extends AppCompatActivity
         super.onCreate(savedInstanceState);
 //        The following line of code is not doing anything
 //        LogsUtil.getReadLogsPermission();
+//        The next line did work though! We are able to get the launcher event. We just need to do this for other apps! :D
+        Log.d(MithrilApplication.getDebugTag(), LogsUtil.readLogs().toString());
         initViews();
         defaultFragmentLoad();
         //TODO This is a test! Remove it later...
@@ -177,10 +181,10 @@ public class MainActivity extends AppCompatActivity
     }
 
     private void defaultFragmentLoad() {
-        //For ViolationFragment() we will have to manage in a different manner
+//        For ViolationFragment() we will have to manage in a different manner
 //        FragmentManager fragmentManager = getFragmentManager();
 //        fragmentManager.beginTransaction().replace(R.id.container, new ViolationFragment()).commit();
-        //If we are loading the app list we don't need the above two lines as we take care of that in the loadAllAppsFragment() method
+//        If we are loading the app list we don't need the above two lines as we take care of that in the loadAllAppsFragment() method
         loadUserAppsFragment();
     }
 

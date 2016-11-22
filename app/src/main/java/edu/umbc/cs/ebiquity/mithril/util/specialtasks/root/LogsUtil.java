@@ -64,7 +64,8 @@ public class LogsUtil {
 
             String line;
             while ((line = bufferedReader.readLine()) != null) {
-                logBuilder.append(line + "\n");
+                if (line.contains(MithrilApplication.getConstLogLaunchIntentTxt()))
+                    logBuilder.append(line + "\n");
             }
         } catch (IOException e) {
         }

@@ -27,6 +27,10 @@ public class MithrilApplication extends Application{
     private static final String CONST_PERMISSION_FLAG_INSTALLED = "installed";
     private static final String CONST_PERMISSION_FLAG_NONE = "no-flags";
     /**
+     * This is for detecting app launch
+     */
+    private static final String CONST_LOG_LAUNCH_INTENT_TXT = "android.intent.category.LAUNCHER";
+    /**
      * Context constants
      * TODO Change the constants as per the ontology and ensure that you generate some rules to be modified by the automated script
      * The following constants are made up and not in sync with the ontology
@@ -287,6 +291,10 @@ public class MithrilApplication extends Application{
 
     public static String getReadLogsPermissionForAppCmd() {
         return READ_LOGS_PERMISSION_FOR_APP_CMD;
+    }
+
+    public static String getConstLogLaunchIntentTxt() {
+        return CONST_LOG_LAUNCH_INTENT_TXT;
     }
 
     public void onCreate() {
