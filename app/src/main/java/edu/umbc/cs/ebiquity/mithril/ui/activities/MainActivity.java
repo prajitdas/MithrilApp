@@ -26,7 +26,7 @@ import edu.umbc.cs.ebiquity.mithril.ui.fragments.PrefsFragment;
 import edu.umbc.cs.ebiquity.mithril.ui.fragments.ReloadDefaultAppDataFragment;
 import edu.umbc.cs.ebiquity.mithril.ui.fragments.ShowAppsFragment;
 import edu.umbc.cs.ebiquity.mithril.ui.fragments.ViolationFragment;
-import edu.umbc.cs.ebiquity.mithril.util.specialtasks.root.LogsUtil;
+import edu.umbc.cs.ebiquity.mithril.util.specialtasks.readlogs.LogsUtil;
 
 public class MainActivity extends AppCompatActivity
         implements  NavigationView.OnNavigationItemSelectedListener,

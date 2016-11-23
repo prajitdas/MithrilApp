@@ -1,4 +1,4 @@
-package edu.umbc.cs.ebiquity.mithril.util.specialtasks.root;
+package edu.umbc.cs.ebiquity.mithril.util.specialtasks.readlogs;
 
 /**
  * Created by Prajit on 10/3/2016.
@@ -19,6 +19,7 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 
 import edu.umbc.cs.ebiquity.mithril.MithrilApplication;
+import edu.umbc.cs.ebiquity.mithril.util.specialtasks.root.RootAccess;
 
 /**
  * This class will provide utility to read logs.

@@ -66,9 +66,9 @@
         </activity>
 
         <service
-            android:name=".util.services.DetectAppLaunchService"
+            android:name=".util.services.DetectAppLaunchIntentService"
             android:enabled="true"
-            android:exported="true"></service>
+            android:exported="false"></service>
     </application>
 
 </manifest>
