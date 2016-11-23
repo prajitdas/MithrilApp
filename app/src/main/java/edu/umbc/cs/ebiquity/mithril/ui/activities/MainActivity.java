@@ -26,7 +26,7 @@ import edu.umbc.cs.ebiquity.mithril.ui.fragments.PrefsFragment;
 import edu.umbc.cs.ebiquity.mithril.ui.fragments.ReloadDefaultAppDataFragment;
 import edu.umbc.cs.ebiquity.mithril.ui.fragments.ShowAppsFragment;
 import edu.umbc.cs.ebiquity.mithril.ui.fragments.ViolationFragment;
-import edu.umbc.cs.ebiquity.mithril.util.specialtasks.readlogs.LogsUtil;
+import edu.umbc.cs.ebiquity.mithril.util.specialtasks.permissions.PermissionHelper;
 
 public class MainActivity extends AppCompatActivity
         implements  NavigationView.OnNavigationItemSelectedListener,
@@ -138,10 +138,18 @@ public class MainActivity extends AppCompatActivity
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-//      We are getting special stuff done here! READ_LOGS permission is being obtained through a root privilege!
-        LogsUtil.getReadLogsPermission(getApplicationContext());
+        getRootPermissions();
         initViews();
         defaultFragmentLoad();
+    }
+
+    private void getRootPermissions() {
+//      We are getting special stuff done here! READ_LOGS permission is being obtained through a root privilege!
+        PermissionHelper.getReadLogsPermission(this);
+//      We are getting special stuff done here! PACKAGE_USAGE_STATS permission is being obtained by user action!
+        PermissionHelper.getUsageStatsPermisison(this);
+//        UsageStatsInfo usageStatsInfo = new UsageStatsInfo();
+//        Toast.makeText(this, usageStatsInfo.getForegroundProcess(this), Toast.LENGTH_LONG).show();
     }
 
     @Override

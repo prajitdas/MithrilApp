@@ -65,10 +65,6 @@
             </intent-filter>
         </activity>
 
-        <service
-            android:name=".util.services.DetectAppLaunchIntentService"
-            android:enabled="true"
-            android:exported="false"></service>
     </application>
 
 </manifest>

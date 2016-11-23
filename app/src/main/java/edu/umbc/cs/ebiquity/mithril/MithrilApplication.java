@@ -8,7 +8,9 @@ import android.app.Application;
 public class MithrilApplication extends Application{
     public static final int CONST_ALL_PERMISSIONS_MITHRIL_REQUEST_CODE = 100;
     private static final String READ_LOGS_PERMISSION_FOR_APP_CMD = "pm grant edu.umbc.cs.ebiquity.mithril android.permission.READ_LOGS";
+    private static final String PACKAGE_USAGE_STATS_PERMISSION_FOR_APP_CMD = "pm grant edu.umbc.cs.ebiquity.mithril android.permission.PACKAGE_USAGE_STATS";
     private static final String ROOT_PRIVILEGE_CMD = "su -c";
+    private static final String DETECT_APP_LAUNCH_CMD = "logcat ActivityManager:I *:S | grep \"LAUNCHER\"";
     private static final String CONST_COMMAND_APP_BROADCAST_INTENT = "edu.umbc.ebiquity.mithril.command.intent.action.DATA_REQUEST";
     private static final String PREF_KEY_HOME_LOC = "homeLocation";
     private static final String PREF_KEY_WORK_LOC = "workLocation";
@@ -26,6 +28,7 @@ public class MithrilApplication extends Application{
     private static final String CONST_PERMISSION_FLAG_COSTS_MONEY = "costs-money";
     private static final String CONST_PERMISSION_FLAG_INSTALLED = "installed";
     private static final String CONST_PERMISSION_FLAG_NONE = "no-flags";
+    private static final String CONST_MITHRIL_MONITORING_SERVICE_STOPPED = "edu.umbc.cs.ebiquity.mithril.SERVICE_STOPPED";
     /**
      * This is for detecting app launch
      */
@@ -294,5 +297,21 @@ public class MithrilApplication extends Application{
 
     public static String getRootPrivilegeCmd() {
         return ROOT_PRIVILEGE_CMD;
+    }
+
+    public static int getConstAllPermissionsMithrilRequestCode() {
+        return CONST_ALL_PERMISSIONS_MITHRIL_REQUEST_CODE;
+    }
+
+    public static String getConstMithrilMonitoringServiceStopped() {
+        return CONST_MITHRIL_MONITORING_SERVICE_STOPPED;
+    }
+
+    public static String getDetectAppLaunchCmd() {
+        return DETECT_APP_LAUNCH_CMD;
+    }
+
+    public static String getPackageUsageStatsPermissionForAppCmd() {
+        return PACKAGE_USAGE_STATS_PERMISSION_FOR_APP_CMD;
     }
 }

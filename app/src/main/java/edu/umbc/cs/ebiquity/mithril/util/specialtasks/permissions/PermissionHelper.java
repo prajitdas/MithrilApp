@@ -7,6 +7,7 @@ import android.content.pm.PackageManager;
 import android.os.Build;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
+import android.util.Log;
 import android.widget.Toast;
 
 import java.util.ArrayList;
@@ -14,6 +15,7 @@ import java.util.Arrays;
 import java.util.List;
 
 import edu.umbc.cs.ebiquity.mithril.MithrilApplication;
+import edu.umbc.cs.ebiquity.mithril.util.specialtasks.root.RootAccess;
 
 /**
  * Created by Prajit on 11/21/2016.
@@ -88,5 +90,64 @@ public class PermissionHelper {
 
     public static void setCountOfPermissionsToRequest(int countOfPermissionsToRequest) {
         PermissionHelper.countOfPermissionsToRequest = countOfPermissionsToRequest;
+    }
+
+    /**
+     * <uses-permission android:name="android.permission.READ_LOGS" />
+     * read logs needs the above permission. We are unable to trigger it from inside the app. Something special needs to be done in this case?
+     * We need to execute
+     * adb shell pm grant edu.umbc.cs.ebiquity.mithril android.permission.READ_LOGS
+     * as per the instructions here: http://stackoverflow.com/a/11517421/1816861
+     * from terminal and just the shell command from this class as below:
+     * pm grant edu.umbc.cs.ebiquity.mithril android.permission.READ_LOGS
+     * <p>
+     * To test: adb shell dumpsys package edu.umbc.cs.ebiquity.mithril
+     */
+    public static boolean getReadLogsPermission(Context context) {
+        String packageName = context.getPackageName();
+        RootAccess rootAccess = new RootAccess(context);
+        String[] CMDLINE_GRANTPERMS = {"su", "-c", null};
+        if (context.getPackageManager().checkPermission(Manifest.permission.READ_LOGS, packageName) != 0) {
+            Log.d(MithrilApplication.getDebugTag(), "we do not have the READ_LOGS permission!");
+            if (android.os.Build.VERSION.SDK_INT >= 16) {
+                Log.d(MithrilApplication.getDebugTag(), "Working around JellyBeans 'feature'...");
+                try {
+                    CMDLINE_GRANTPERMS[2] = MithrilApplication.getReadLogsPermissionForAppCmd();
+                    boolean result = rootAccess.runScript(CMDLINE_GRANTPERMS);
+                    if (!result)
+                        throw new Exception("failed to become root");
+                } catch (Exception e) {
+                    Log.d(MithrilApplication.getDebugTag(), "exec(): " + e);
+                    Toast.makeText(context, "Failed to obtain READ_LOGS permission", Toast.LENGTH_LONG).show();
+                    return false;
+                }
+            }
+        } else
+            Log.d(MithrilApplication.getDebugTag(), "we have the READ_LOGS permission already!");
+        return true;
+    }
+
+    public static boolean getUsageStatsPermisison(Context context) {
+        String packageName = context.getPackageName();
+        RootAccess rootAccess = new RootAccess(context);
+        String[] CMDLINE_GRANTPERMS = {"su", "-c", null};
+        if (context.getPackageManager().checkPermission(Manifest.permission.PACKAGE_USAGE_STATS, packageName) != 0) {
+            Log.d(MithrilApplication.getDebugTag(), "we do not have the PACKAGE_USAGE_STATS permission!");
+            if (android.os.Build.VERSION.SDK_INT >= 16) {
+                Log.d(MithrilApplication.getDebugTag(), "Working around JellyBeans 'feature'...");
+                try {
+                    CMDLINE_GRANTPERMS[2] = MithrilApplication.getPackageUsageStatsPermissionForAppCmd();
+                    boolean result = rootAccess.runScript(CMDLINE_GRANTPERMS);
+                    if (!result)
+                        throw new Exception("failed to become root");
+                } catch (Exception e) {
+                    Log.d(MithrilApplication.getDebugTag(), "exec(): " + e);
+                    Toast.makeText(context, "Failed to obtain PACKAGE_USAGE_STATS permission", Toast.LENGTH_LONG).show();
+                    return false;
+                }
+            }
+        } else
+            Log.d(MithrilApplication.getDebugTag(), "we have the PACKAGE_USAGE_STATS permission already!");
+        return true;
     }
 }
