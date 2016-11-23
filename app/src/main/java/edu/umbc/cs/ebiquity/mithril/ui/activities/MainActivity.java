@@ -144,9 +144,9 @@ public class MainActivity extends AppCompatActivity
     }
 
     private void getRootPermissions() {
-//      We are getting special stuff done here! READ_LOGS permission is being obtained through a root privilege!
-        PermissionHelper.getReadLogsPermission(this);
-//      We are getting special stuff done here! PACKAGE_USAGE_STATS permission is being obtained by user action!
+//        We are getting special stuff done here! READ_LOGS permission is being obtained through a root privilege!
+//        PermissionHelper.getReadLogsPermission(this);
+//        We are getting special stuff done here! PACKAGE_USAGE_STATS permission is being obtained by user action!
         PermissionHelper.getUsageStatsPermisison(this);
 //        UsageStatsInfo usageStatsInfo = new UsageStatsInfo();
 //        Toast.makeText(this, usageStatsInfo.getForegroundProcess(this), Toast.LENGTH_LONG).show();
