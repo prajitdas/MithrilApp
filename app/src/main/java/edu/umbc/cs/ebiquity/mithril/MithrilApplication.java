@@ -5,8 +5,8 @@ import android.app.Application;
 /**
  * Created by Prajit Kumar Das on 5/1/2016.
  */
-public class MithrilApplication extends Application{
-    public static final int CONST_ALL_PERMISSIONS_MITHRIL_REQUEST_CODE = 100;
+public class MithrilApplication extends Application {
+    public static final int CONST_ALL_PERMISSIONS_MITHRIL_REQUEST_CODE = 1;
     private static final String READ_LOGS_PERMISSION_FOR_APP_CMD = "pm grant edu.umbc.cs.ebiquity.mithril android.permission.READ_LOGS";
     private static final String PACKAGE_USAGE_STATS_PERMISSION_FOR_APP_CMD = "pm grant edu.umbc.cs.ebiquity.mithril android.permission.PACKAGE_USAGE_STATS";
     private static final String ROOT_PRIVILEGE_CMD = "su -c";

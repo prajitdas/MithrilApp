@@ -2,9 +2,12 @@ package edu.umbc.cs.ebiquity.mithril.util.specialtasks.permissions;
 
 import android.Manifest;
 import android.app.Activity;
+import android.app.AppOpsManager;
 import android.content.Context;
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Build;
+import android.provider.Settings;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.util.Log;
@@ -133,6 +136,10 @@ public class PermissionHelper {
         String[] CMDLINE_GRANTPERMS = {"su", "-c", null};
         if (context.getPackageManager().checkPermission(Manifest.permission.PACKAGE_USAGE_STATS, packageName) != 0) {
             Log.d(MithrilApplication.getDebugTag(), "we do not have the PACKAGE_USAGE_STATS permission!");
+            /**
+             * Alternative method of obtaining permission from user:
+             * context.startActivity(new Intent(Settings.ACTION_USAGE_ACCESS_SETTINGS));
+             */
             if (android.os.Build.VERSION.SDK_INT >= 16) {
                 Log.d(MithrilApplication.getDebugTag(), "Working around JellyBeans 'feature'...");
                 try {
@@ -149,5 +156,22 @@ public class PermissionHelper {
         } else
             Log.d(MithrilApplication.getDebugTag(), "we have the PACKAGE_USAGE_STATS permission already!");
         return true;
+    }
+
+    /**
+     * This isn't working :(
+     *
+     * @param context
+     * @return
+     */
+    public static boolean hasUsageStatsPermission(Context context) {
+        AppOpsManager appOps = (AppOpsManager) context.getSystemService(Context.APP_OPS_SERVICE);
+        int mode = appOps.checkOpNoThrow("android:get_usage_stats",
+                android.os.Process.myUid(), context.getPackageName());
+        if (mode == AppOpsManager.MODE_ERRORED) {
+            context.startActivity(new Intent(Settings.ACTION_USAGE_ACCESS_SETTINGS));
+            return false;
+        } else
+            return true;
     }
 }
