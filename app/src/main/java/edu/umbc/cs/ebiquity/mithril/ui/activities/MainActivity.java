@@ -14,6 +14,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.Toast;
 
 import java.util.List;
 
@@ -27,6 +28,7 @@ import edu.umbc.cs.ebiquity.mithril.ui.fragments.ReloadDefaultAppDataFragment;
 import edu.umbc.cs.ebiquity.mithril.ui.fragments.ShowAppsFragment;
 import edu.umbc.cs.ebiquity.mithril.ui.fragments.ViolationFragment;
 import edu.umbc.cs.ebiquity.mithril.util.specialtasks.permissions.PermissionHelper;
+import edu.umbc.cs.ebiquity.mithril.util.specialtasks.usagestats.UsageStatsInfo;
 
 public class MainActivity extends AppCompatActivity
         implements  NavigationView.OnNavigationItemSelectedListener,
@@ -146,9 +148,10 @@ public class MainActivity extends AppCompatActivity
 //        We are getting special stuff done here! READ_LOGS permission is being obtained through a root privilege!
 //        PermissionHelper.getReadLogsPermission(this);
 //        We are getting special stuff done here! PACKAGE_USAGE_STATS permission is being obtained by user action!
-        PermissionHelper.getUsageStatsPermisison(this);
-//        UsageStatsInfo usageStatsInfo = new UsageStatsInfo();
-//        Toast.makeText(this, "What we got was this: " + UsageStatsInfo.getForegroundProcess(this), Toast.LENGTH_LONG).show();
+        if (PermissionHelper.getUsageStatsPermisison(this)) {
+            UsageStatsInfo usageStatsInfo = new UsageStatsInfo();
+            Toast.makeText(this, "What we got was this: " + UsageStatsInfo.getForegroundProcess(this), Toast.LENGTH_LONG).show();
+        }
     }
 
     @Override
