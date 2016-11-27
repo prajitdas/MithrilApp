@@ -11,14 +11,14 @@ import java.io.IOException;
  */
 
 public class RootAccess {
-    private Process rootProcess;
-    private Context appContext;
+    private static Process rootProcess;
+    private static Context appContext;
 
     public RootAccess(Context context) {
         appContext = context;
     }
 
-    public boolean runScript(String[] statementsToRun) {
+    public static boolean runScript(String[] statementsToRun) {
         try {
             // Preform su to get root privileges
             rootProcess = Runtime.getRuntime().exec(statementsToRun);

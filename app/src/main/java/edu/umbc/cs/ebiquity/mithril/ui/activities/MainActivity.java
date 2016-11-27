@@ -27,8 +27,8 @@ import edu.umbc.cs.ebiquity.mithril.ui.fragments.PrefsFragment;
 import edu.umbc.cs.ebiquity.mithril.ui.fragments.ReloadDefaultAppDataFragment;
 import edu.umbc.cs.ebiquity.mithril.ui.fragments.ShowAppsFragment;
 import edu.umbc.cs.ebiquity.mithril.ui.fragments.ViolationFragment;
+import edu.umbc.cs.ebiquity.mithril.util.specialtasks.detectrunningapps.LollipopDetector;
 import edu.umbc.cs.ebiquity.mithril.util.specialtasks.permissions.PermissionHelper;
-import edu.umbc.cs.ebiquity.mithril.util.specialtasks.usagestats.UsageStatsInfo;
 
 public class MainActivity extends AppCompatActivity
         implements  NavigationView.OnNavigationItemSelectedListener,
@@ -149,8 +149,8 @@ public class MainActivity extends AppCompatActivity
 //        PermissionHelper.getReadLogsPermission(this);
 //        We are getting special stuff done here! PACKAGE_USAGE_STATS permission is being obtained by user action!
         if (PermissionHelper.getUsageStatsPermisison(this)) {
-            UsageStatsInfo usageStatsInfo = new UsageStatsInfo();
-            Toast.makeText(this, "What we got was this: " + UsageStatsInfo.getForegroundProcess(this), Toast.LENGTH_LONG).show();
+            LollipopDetector lollipopDetector = new LollipopDetector();
+            Toast.makeText(this, "What we got was this: " + lollipopDetector.getForegroundApp(this), Toast.LENGTH_LONG).show();
         }
     }
 

@@ -55,6 +55,10 @@
     <string name="dialog_resp_delete">Yes</string>
     <string name="dialog_resp_NO">No</string>
 
+    <string name="allow_usage_stats_permission">In order to do our work, we need the PACKAGE_USAGE_STATS permission. Kindly enable it in settings.</string>
+    <string name="dialog_resp_allow">Okay</string>
+    <string name="dialog_resp_deny">Nope!</string>
+
     <string name="policy_tbl_policy_rule_info">Policy Rule Info</string>
     <string name="policy_tbl_lbl_policy_name">Policy Name: </string>
     <string name="policy_tbl_lbl_rule_name">Rule Name: </string>

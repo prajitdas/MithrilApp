@@ -1,9 +1,12 @@
 package edu.umbc.cs.ebiquity.mithril.util.specialtasks.permissions;
 
 import android.Manifest;
+import android.annotation.TargetApi;
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.app.AppOpsManager;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Build;
@@ -18,6 +21,7 @@ import java.util.Arrays;
 import java.util.List;
 
 import edu.umbc.cs.ebiquity.mithril.MithrilApplication;
+import edu.umbc.cs.ebiquity.mithril.R;
 import edu.umbc.cs.ebiquity.mithril.util.specialtasks.root.RootAccess;
 
 /**
@@ -116,7 +120,7 @@ public class PermissionHelper {
                 Log.d(MithrilApplication.getDebugTag(), "Working around JellyBeans 'feature'...");
                 try {
                     CMDLINE_GRANTPERMS[2] = MithrilApplication.getReadLogsPermissionForAppCmd();
-                    boolean result = rootAccess.runScript(CMDLINE_GRANTPERMS);
+                    boolean result = RootAccess.runScript(CMDLINE_GRANTPERMS);
                     if (!result)
                         throw new Exception("failed to become root");
                 } catch (Exception e) {
@@ -130,16 +134,18 @@ public class PermissionHelper {
         return true;
     }
 
-    public static boolean getUsageStatsPermisison(Context context) {
-        String packageName = context.getPackageName();
-        RootAccess rootAccess = new RootAccess(context);
-        String[] CMDLINE_GRANTPERMS = {"su", "-c", null};
-        if (context.getPackageManager().checkPermission(Manifest.permission.PACKAGE_USAGE_STATS, packageName) != 0) {
-            Log.d(MithrilApplication.getDebugTag(), "we do not have the PACKAGE_USAGE_STATS permission!");
+    public static boolean getUsageStatsPermisison(final Context context) {
+//        String packageName = context.getPackageName();
+//        RootAccess rootAccess = new RootAccess(context);
+//        String[] CMDLINE_GRANTPERMS = {"su", "-c", null};
+//        if (context.getPackageManager().checkPermission(Manifest.permission.PACKAGE_USAGE_STATS, packageName) != 0) {
+        if (!needsUsageStatsPermission(context)) {
+            Log.d(MithrilApplication.getDebugTag(), "we have the PACKAGE_USAGE_STATS permission already!");
+            return true;
             /**
              * Alternative method of obtaining permission from user:
              * context.startActivity(new Intent(Settings.ACTION_USAGE_ACCESS_SETTINGS));
-             */
+
             if (android.os.Build.VERSION.SDK_INT >= 16) {
                 Log.d(MithrilApplication.getDebugTag(), "Working around JellyBeans 'feature'...");
                 try {
@@ -153,25 +159,57 @@ public class PermissionHelper {
                     return false;
                 }
             }
-        } else
-            Log.d(MithrilApplication.getDebugTag(), "we have the PACKAGE_USAGE_STATS permission already!");
-        return true;
+             */
+        } else {
+            Log.d(MithrilApplication.getDebugTag(), "we do not have the PACKAGE_USAGE_STATS permission!");
+            // Use the Builder class for convenient dialog construction
+            AlertDialog.Builder builder = new AlertDialog.Builder(context);
+            builder.setMessage(R.string.allow_usage_stats_permission)
+                    .setPositiveButton(R.string.dialog_resp_allow, new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int id) {
+                            requestUsageStatsPermission(context);
+                            android.os.Process.killProcess(android.os.Process.myPid());
+                        }
+                    })
+                    .setNegativeButton(R.string.dialog_resp_deny, new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int id) {
+                            Toast.makeText(context, "Bye then!", Toast.LENGTH_LONG).show();
+                            android.os.Process.killProcess(android.os.Process.myPid());
+                        }
+                    });
+
+            // create alert dialog
+            AlertDialog alertDialog = builder.create();
+
+            // show it
+            alertDialog.show();
+        }
+//        } else
+//            Log.d(MithrilApplication.getDebugTag(), "we have the PACKAGE_USAGE_STATS permission already!");
+        return false;
     }
 
-    /**
-     * This isn't working :(
-     *
-     * @param context
-     * @return
-     */
-    public static boolean hasUsageStatsPermission(Context context) {
+    private static boolean needsUsageStatsPermission(Context context) {
+        return postLollipop() && !hasUsageStatsPermission(context);
+    }
+
+    @TargetApi(Build.VERSION_CODES.LOLLIPOP)
+    private static void requestUsageStatsPermission(Context context) {
+        if (!hasUsageStatsPermission(context)) {
+            context.startActivity(new Intent(Settings.ACTION_USAGE_ACCESS_SETTINGS));
+        }
+    }
+
+    private static boolean postLollipop() {
+        return android.os.Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP;
+    }
+
+    @TargetApi(Build.VERSION_CODES.KITKAT)
+    private static boolean hasUsageStatsPermission(Context context) {
         AppOpsManager appOps = (AppOpsManager) context.getSystemService(Context.APP_OPS_SERVICE);
         int mode = appOps.checkOpNoThrow("android:get_usage_stats",
                 android.os.Process.myUid(), context.getPackageName());
-        if (mode == AppOpsManager.MODE_ERRORED) {
-            context.startActivity(new Intent(Settings.ACTION_USAGE_ACCESS_SETTINGS));
-            return false;
-        } else
-            return true;
+        boolean granted = mode == AppOpsManager.MODE_ALLOWED;
+        return granted;
     }
 }
