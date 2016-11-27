@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
+import android.content.pm.PermissionInfo;
 import android.database.sqlite.SQLiteDatabase;
 import android.graphics.BitmapFactory;
 import android.graphics.drawable.BitmapDrawable;
@@ -71,9 +72,35 @@ public class AppInstallBroadcastReceiver extends BroadcastReceiver {
                         else
                             tempAppData.setAppType(MithrilApplication.getUserAppsDisplayTag());
                         tempAppData.setUid(packageInfo.applicationInfo.uid);
+
+                        //App permissions
+                        String[] requestedPermissions = packageInfo.requestedPermissions;
+                        if (requestedPermissions != null) {
+                            tempAppData.setPermissions(requestedPermissions);
+                            for (int permIdx = 0; permIdx < requestedPermissions.length; permIdx++) {
+                                String permissionName = requestedPermissions[permIdx];
+                                long permId = mithrilDBHelper.findPermissionsByName(mithrilDB, permissionName);
+                                if (permId == -1) {
+                                    try {
+                                        PermissionInfo permissionInfo = packageManager.getPermissionInfo(permissionName, PackageManager.GET_META_DATA);
+                                        mithrilDBHelper.addPermission(mithrilDB,
+                                                mithrilDBHelper.getPermData(
+                                                        packageManager,
+                                                        permissionInfo.group,
+                                                        permissionInfo));
+                                    } catch (PackageManager.NameNotFoundException exception) {
+                                        Log.e(MithrilApplication.getDebugTag(), "Some error due to " + exception.getMessage());
+                                        mithrilDBHelper.addPermission(mithrilDB, mithrilDBHelper.getPermData(packageManager, permissionName));
+                                    }
+                                }
+                            }
+                        }
                     }
-                    //Find all apps and insert into database
-                    mithrilDBHelper.addAppData(mithrilDB, tempAppData);
+                    //Insert app into database
+                    long appId = mithrilDBHelper.addAppData(mithrilDB, tempAppData);
+
+                    //Insert permissions for app into AppPerm
+                    mithrilDBHelper.addAppPerm(mithrilDB, tempAppData, appId);
                 } catch (PackageManager.NameNotFoundException e) {
                     e.printStackTrace();
                 }

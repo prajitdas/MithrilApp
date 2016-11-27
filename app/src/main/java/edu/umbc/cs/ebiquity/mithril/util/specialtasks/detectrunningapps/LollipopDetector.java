@@ -107,7 +107,7 @@ public class LollipopDetector implements Detector {
             /**
              * Previous technique did not work on Nexus 5(returns null on nexus 5 with Android 6.0.1 cm13.0), worked on Nexus 5X
              */
-            List<UsageStats> stats = usageStatsManager.queryUsageStats(UsageStatsManager.INTERVAL_BEST, time - 1000 * 3600, time);
+            List<UsageStats> stats = usageStatsManager.queryUsageStats(UsageStatsManager.INTERVAL_DAILY, time - 1000 * 3600, time);
             if (stats != null) {
                 Log.d(MithrilApplication.getDebugTag(), "stats not null");
                 SortedMap<Long, UsageStats> runningTasks = new TreeMap<Long, UsageStats>();
