@@ -14,7 +14,6 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.Toast;
 
 import java.util.List;
 
@@ -27,7 +26,7 @@ import edu.umbc.cs.ebiquity.mithril.ui.fragments.PrefsFragment;
 import edu.umbc.cs.ebiquity.mithril.ui.fragments.ReloadDefaultAppDataFragment;
 import edu.umbc.cs.ebiquity.mithril.ui.fragments.ShowAppsFragment;
 import edu.umbc.cs.ebiquity.mithril.ui.fragments.ViolationFragment;
-import edu.umbc.cs.ebiquity.mithril.util.specialtasks.detectrunningapps.LollipopDetector;
+import edu.umbc.cs.ebiquity.mithril.util.services.AppLaunchDetectorService;
 import edu.umbc.cs.ebiquity.mithril.util.specialtasks.permissions.PermissionHelper;
 
 public class MainActivity extends AppCompatActivity
@@ -141,24 +140,25 @@ public class MainActivity extends AppCompatActivity
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         initViews();
-//        defaultFragmentLoad();
     }
 
-    private void getRootPermissions() {
+    private void getPermissions() {
 //        We are getting special stuff done here! READ_LOGS permission is being obtained through a root privilege!
 //        PermissionHelper.getReadLogsPermission(this);
 //        We are getting special stuff done here! PACKAGE_USAGE_STATS permission is being obtained by user action!
-        if (PermissionHelper.getUsageStatsPermisison(this)) {
-            LollipopDetector lollipopDetector = new LollipopDetector();
-            Toast.makeText(this, "What we got was this: " + lollipopDetector.getForegroundApp(this), Toast.LENGTH_LONG).show();
-        }
+        if (PermissionHelper.getUsageStatsPermisison(this))
+//        if(PermissionHelper.getReadLogsPermission(this))
+            startService(new Intent(this, AppLaunchDetectorService.class));
+//            LollipopDetector lollipopDetector = new LollipopDetector();
+//            Toast.makeText(this, "What we got was this: " + lollipopDetector.getForegroundApp(this), Toast.LENGTH_LONG).show();
+//        }
     }
 
     @Override
     public void onResume() {
         super.onResume();
         defaultFragmentLoad();
-        getRootPermissions();
+        getPermissions();
     }
 
     @SuppressWarnings("RestrictedApi")

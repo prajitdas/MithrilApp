@@ -8,9 +8,9 @@
         android:name="android.permission.PACKAGE_USAGE_STATS"
         tools:ignore="ProtectedPermissions" />
     <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
-    <!--<uses-permission android:name="android.permission.REAL_GET_TASKS" />-->
-    <!--<uses-permission android:name="android.permission.READ_LOGS" />-->
-    <!--<uses-permission android:name="android.permission.NFC" />-->
+    <!-- <uses-permission android:name="android.permission.REAL_GET_TASKS" /> -->
+    <uses-permission android:name="android.permission.READ_LOGS" />
+    <!-- <uses-permission android:name="android.permission.NFC" /> -->
 
     <uses-feature
         android:name="android.hardware.nfc"
@@ -45,7 +45,7 @@
         <receiver
             android:name=".util.receivers.AppInstallBroadcastReceiver"
             android:enabled="true"
-            android:exported="true">
+            android:exported="false">
             <intent-filter>
                 <category android:name="android.intent.category.DEFAULT" />
 
@@ -55,6 +55,13 @@
                 <data android:scheme="package" />
             </intent-filter>
         </receiver>
+
+        <service
+            android:name=".util.services.AppLaunchDetectorService"
+            android:enabled="true"
+            android:exported="false"
+            android:icon="@mipmap/ic_launcher"
+            android:label="@string/mithril_service_name"></service>
 
         <!-- This test activity was used for the IEEE CIC paper. This will possibly removed or modified in the future. -->
         <activity

@@ -23,7 +23,7 @@
 
     <string name="app_name">Mithril Access Control</string>
 
-    <string name="monitoring_serv">Mithril Monitoring Service</string>
+    <string name="mithril_service_name">Mithril App Launch Detector Service</string>
 
     <string name="explanation">Tap device with NFC tag</string>
     <string name="no_description_available_txt">No description available!</string>

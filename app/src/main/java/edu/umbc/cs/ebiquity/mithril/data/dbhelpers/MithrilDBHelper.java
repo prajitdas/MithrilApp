@@ -731,6 +731,36 @@ public class MithrilDBHelper extends SQLiteOpenHelper {
 		return app;
 	}
 
+    /**
+     * Finds appType by appPkgName
+     *
+     * @param db
+     * @param appPkgName
+     * @return AppData
+     */
+    public String findAppTypeByAppPkgName(SQLiteDatabase db, String appPkgName) {
+        // Select AppType Query
+        String selectQuery = "SELECT " +
+                getAppDataTableName() + "." + APPTYPE +
+                " FROM " + getAppDataTableName() +
+                " WHERE " + getAppDataTableName() + "." + APPPACKAGENAME +
+                " = '" + appPkgName +
+                "';";
+
+        String appType = null;
+        Cursor cursor = db.rawQuery(selectQuery, null);
+        try {
+            if (cursor.moveToFirst()) {
+                appType = cursor.getString(0);
+            }
+        } catch (SQLException e) {
+            throw new SQLException("Could not find " + e);
+        } finally {
+            cursor.close();
+        }
+        return appType;
+    }
+
 	/**
 	 * Temporary solution setup but eventually we will the join and populate with data from our servers
 	 *

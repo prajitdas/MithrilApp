@@ -1,4 +1,4 @@
-package edu.umbc.cs.ebiquity.mithril.util.specialtasks.readlogs;
+package edu.umbc.cs.ebiquity.mithril.util.specialtasks.detectrunningapps;
 
 /**
  * Created by Prajit on 10/3/2016.
@@ -9,6 +9,8 @@ package edu.umbc.cs.ebiquity.mithril.util.specialtasks.readlogs;
  * Not for use by third-party applications, because Log entries can contain the user's private information.
  * Constant Value: "android.permission.READ_LOGS"
  */
+
+import android.util.Log;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -22,7 +24,7 @@ import edu.umbc.cs.ebiquity.mithril.MithrilApplication;
  * @author Chintan Rathod (http://chintanrathod.com)
  * from: http://chintanrathod.com/read-logs-programmatically-in-android/
  */
-public class LogsUtil {
+public class ReadLogs {
     /**
      * Method returns a LogBuilder object with all the log info on LAUNCHER intent. We will extract the component part from it and know what app was launched!
      *
@@ -43,6 +45,7 @@ public class LogsUtil {
             }
         } catch (IOException e) {
         }
+        Log.d(MithrilApplication.getDebugTag(), "Log: " + logBuilder);
         return logBuilder;
     }
 }

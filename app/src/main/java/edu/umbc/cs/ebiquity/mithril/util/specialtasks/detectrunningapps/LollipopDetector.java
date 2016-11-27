@@ -10,15 +10,19 @@ import android.app.usage.UsageEvents;
 import android.app.usage.UsageStats;
 import android.app.usage.UsageStatsManager;
 import android.content.Context;
+import android.content.SharedPreferences;
+import android.database.sqlite.SQLiteDatabase;
 import android.os.Build;
 import android.text.TextUtils;
 import android.util.Log;
+import android.widget.Toast;
 
 import java.util.List;
 import java.util.SortedMap;
 import java.util.TreeMap;
 
 import edu.umbc.cs.ebiquity.mithril.MithrilApplication;
+import edu.umbc.cs.ebiquity.mithril.data.dbhelpers.MithrilDBHelper;
 import edu.umbc.cs.ebiquity.mithril.util.specialtasks.permissions.PermissionHelper;
 
 /**
@@ -26,6 +30,9 @@ import edu.umbc.cs.ebiquity.mithril.util.specialtasks.permissions.PermissionHelp
  * https://gist.github.com/plateaukao/011fa857d1919f2bbfdc
  */
 public class LollipopDetector implements Detector {
+    private MithrilDBHelper mithrilDBHelper;
+    private SQLiteDatabase mithrilDB;
+    private String currentPackageName;
 
     /**
      * Returns the consumer friendly device name
@@ -69,7 +76,10 @@ public class LollipopDetector implements Detector {
         if (!PermissionHelper.getUsageStatsPermisison(context))
             return null;
 
-        String topPackageName = null;
+        SharedPreferences sharedPref = context.getSharedPreferences(MithrilApplication.getSharedPreferencesName(), Context.MODE_PRIVATE);
+        mithrilDBHelper = new MithrilDBHelper(context);
+        mithrilDB = mithrilDBHelper.getWritableDatabase();
+        currentPackageName = null;
         long time = System.currentTimeMillis();
         UsageStatsManager usageStatsManager = (UsageStatsManager) context.getSystemService(Service.USAGE_STATS_SERVICE);
 
@@ -93,14 +103,13 @@ public class LollipopDetector implements Detector {
                 while (usageEvents.hasNextEvent()) {
                     usageEvents.getNextEvent(event);
                     runningTasks.put(event.getTimeStamp(), event);
-                    Log.d(MithrilApplication.getDebugTag(), event.getPackageName());
                 }
                 if (runningTasks.isEmpty()) {
                     Log.d(MithrilApplication.getDebugTag(), "tasks are empty");
                     return null;
                 }
                 if (runningTasks.get(runningTasks.lastKey()).getEventType() == UsageEvents.Event.MOVE_TO_FOREGROUND) {
-                    topPackageName = runningTasks.get(runningTasks.lastKey()).getPackageName();
+                    currentPackageName = runningTasks.get(runningTasks.lastKey()).getPackageName();
                 }
             }
         } else {
@@ -109,20 +118,34 @@ public class LollipopDetector implements Detector {
              */
             List<UsageStats> stats = usageStatsManager.queryUsageStats(UsageStatsManager.INTERVAL_DAILY, time - 1000 * 3600, time);
             if (stats != null) {
-                Log.d(MithrilApplication.getDebugTag(), "stats not null");
                 SortedMap<Long, UsageStats> runningTasks = new TreeMap<Long, UsageStats>();
                 for (UsageStats usageStats : stats) {
                     runningTasks.put(usageStats.getLastTimeUsed(), usageStats);
-                    Log.d(MithrilApplication.getDebugTag(), usageStats.getPackageName());
                 }
                 if (runningTasks.isEmpty()) {
                     Log.d(MithrilApplication.getDebugTag(), "tasks are empty");
                     return null;
                 }
-                topPackageName = runningTasks.get(runningTasks.lastKey()).getPackageName();
+                currentPackageName = runningTasks.get(runningTasks.lastKey()).getPackageName();
             }
         }
 
-        return topPackageName;
+        if (currentPackageName.equals(PermissionHelper.getLauncherName(context)) ||
+                sharedPref.getString(MithrilApplication.getAppPkgNameTag(), "").equals(currentPackageName))
+            return null;
+
+        if (mithrilDBHelper.findAppTypeByAppPkgName(mithrilDB, currentPackageName).equals(MithrilApplication.getUserAppsDisplayTag())) {
+            Toast.makeText(context, "App launched: " + currentPackageName, Toast.LENGTH_LONG).show();
+            Log.d(MithrilApplication.getDebugTag(), "App launched: " + currentPackageName);
+        }
+        mithrilDB.close();
+
+        SharedPreferences.Editor editor = sharedPref.edit();
+        editor.putString(MithrilApplication.getAppPkgNameTag(), currentPackageName);
+        editor.commit();
+
+        return currentPackageName;
     }
+
+
 }
