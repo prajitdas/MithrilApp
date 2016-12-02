@@ -8,12 +8,12 @@ import edu.umbc.cs.ebiquity.mithril.data.dbhelpers.MithrilDBHelper;
 import edu.umbc.cs.ebiquity.mithril.data.model.rules.PolicyRule;
 import edu.umbc.cs.ebiquity.mithril.data.model.rules.actions.Action;
 import edu.umbc.cs.ebiquity.mithril.data.model.rules.actions.RuleAction;
-import edu.umbc.cs.ebiquity.mithril.data.model.rules.context.UserContext;
-import edu.umbc.cs.ebiquity.mithril.data.model.rules.context.contextpieces.DeviceTime;
-import edu.umbc.cs.ebiquity.mithril.data.model.rules.context.contextpieces.Identity;
-import edu.umbc.cs.ebiquity.mithril.data.model.rules.context.contextpieces.InferredActivity;
-import edu.umbc.cs.ebiquity.mithril.data.model.rules.context.contextpieces.InferredLocation;
-import edu.umbc.cs.ebiquity.mithril.data.model.rules.context.contextpieces.PresenceInfo;
+import edu.umbc.cs.ebiquity.mithril.data.model.rules.context.SemanticUserContext;
+import edu.umbc.cs.ebiquity.mithril.data.model.rules.context.contextpieces.SemanticActivity;
+import edu.umbc.cs.ebiquity.mithril.data.model.rules.context.contextpieces.SemanticIdentity;
+import edu.umbc.cs.ebiquity.mithril.data.model.rules.context.contextpieces.SemanticLocation;
+import edu.umbc.cs.ebiquity.mithril.data.model.rules.context.contextpieces.SemanticNearActors;
+import edu.umbc.cs.ebiquity.mithril.data.model.rules.context.contextpieces.SemanticTime;
 import edu.umbc.cs.ebiquity.mithril.data.model.rules.protectedresources.Resource;
 import edu.umbc.cs.ebiquity.mithril.data.model.rules.requesters.Requester;
 
@@ -30,9 +30,9 @@ public class DataGenerator {
 		PolicyRule policyRule = new PolicyRule(MithrilApplication.getConstPolRulNameSocialMediaCameraAccessRule(), aRequester, aResource, aUserContext, aRuleAction);
 		return policyRule;
 	}
-	
-	public static UserContext generateContextForSocialMediaCameraAccessRule() {
-		List<String> tempIdentityString = new ArrayList<String>();
+
+    public static SemanticUserContext generateContextForSocialMediaCameraAccessRule() {
+        List<String> tempIdentityString = new ArrayList<String>();
 		for(String tempString : MithrilApplication.getConstArrayPresenceInfoIdentity()) {
 			tempIdentityString.add(tempString);
 		}
@@ -52,16 +52,16 @@ public class DataGenerator {
 			tempTimeString.add(tempString);
 		}
 
-		List<Identity> presenceInfo = new ArrayList<Identity>();
-		presenceInfo.add(new Identity(tempIdentityString.get(2))); // Index 2 is Department Head
+        List<SemanticIdentity> presenceInfo = new ArrayList<SemanticIdentity>();
+        presenceInfo.add(new SemanticIdentity(tempIdentityString.get(2))); // Index 2 is Department Head
 
-		UserContext userContext = new UserContext(
-				new PresenceInfo(presenceInfo),
-				new InferredActivity(tempActivityString.get(2)), //Index 2 is university talk
-				new Identity(MithrilApplication.getConstContextDefaultIdentity()),
-				new InferredLocation(tempLocationString.get(2)), // Index 2 is university state
-				new DeviceTime(tempTimeString.get(2))); // Index 2 is Week Day
-		return userContext;
+        SemanticUserContext userContext = new SemanticUserContext(
+                new SemanticNearActors(presenceInfo),
+                new SemanticActivity(tempActivityString.get(2)), //Index 2 is university talk
+                new SemanticIdentity(MithrilApplication.getConstContextDefaultIdentity()),
+                new SemanticLocation(tempLocationString.get(2)), // Index 2 is university state
+                new SemanticTime(tempTimeString.get(2))); // Index 2 is Week Day
+        return userContext;
 	}
 	
 	/**

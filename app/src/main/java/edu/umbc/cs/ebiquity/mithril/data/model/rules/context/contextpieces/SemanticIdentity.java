@@ -2,15 +2,15 @@ package edu.umbc.cs.ebiquity.mithril.data.model.rules.context.contextpieces;
 
 import edu.umbc.cs.ebiquity.mithril.MithrilApplication;
 
-public class Identity {
-	private String identity;
+public class SemanticIdentity {
+    private String identity;
 
-	public Identity() {
-		identity = MithrilApplication.getConstContextDefaultIdentity();
+    public SemanticIdentity() {
+        identity = MithrilApplication.getConstContextDefaultIdentity();
 	}
 
-	public Identity(String anIdentity) {
-		identity = anIdentity;
+    public SemanticIdentity(String anIdentity) {
+        identity = anIdentity;
 	}
 
 	/* (non-Javadoc)
@@ -24,11 +24,11 @@ public class Identity {
 		if (obj == null) {
 			return false;
 		}
-		if (!(obj instanceof Identity)) {
-			return false;
+        if (!(obj instanceof SemanticIdentity)) {
+            return false;
 		}
-		Identity other = (Identity) obj;
-		if (identity == null) {
+        SemanticIdentity other = (SemanticIdentity) obj;
+        if (identity == null) {
 			if (other.identity != null) {
 				return false;
 			}
@@ -45,6 +45,13 @@ public class Identity {
 		return identity;
 	}
 
+    /**
+     * @param identity the identity to set
+     */
+    public void setIdentity(String identity) {
+        this.identity = identity;
+    }
+
 	/* (non-Javadoc)
 	 * @see java.lang.Object#hashCode()
 	 */
@@ -55,13 +62,6 @@ public class Identity {
 		result = prime * result
 				+ ((identity == null) ? 0 : identity.hashCode());
 		return result;
-	}
-
-	/**
-	 * @param identity the identity to set
-	 */
-	public void setIdentity(String identity) {
-		this.identity = identity;
 	}
 
 	@Override

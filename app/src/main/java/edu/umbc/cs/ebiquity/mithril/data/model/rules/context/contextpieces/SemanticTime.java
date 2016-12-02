@@ -2,18 +2,18 @@ package edu.umbc.cs.ebiquity.mithril.data.model.rules.context.contextpieces;
 
 import edu.umbc.cs.ebiquity.mithril.MithrilApplication;
 
-public class DeviceTime {
-	private String deviceTime;
+public class SemanticTime {
+    private String deviceTime;
 
-	public DeviceTime() {
-		this.deviceTime = MithrilApplication.getConstContextDefaultTime();
+    public SemanticTime() {
+        this.deviceTime = MithrilApplication.getConstContextDefaultTime();
 	}
 
 	/**
 	 * @param deviceTime
 	 */
-	public DeviceTime(String deviceTime) {
-		this.deviceTime = deviceTime;
+    public SemanticTime(String deviceTime) {
+        this.deviceTime = deviceTime;
 	}
 
 	/* (non-Javadoc)
@@ -30,8 +30,8 @@ public class DeviceTime {
 		if (getClass() != obj.getClass()) {
 			return false;
 		}
-		DeviceTime other = (DeviceTime) obj;
-		if (deviceTime == null) {
+        SemanticTime other = (SemanticTime) obj;
+        if (deviceTime == null) {
 			if (other.deviceTime != null) {
 				return false;
 			}
@@ -48,6 +48,13 @@ public class DeviceTime {
 		return deviceTime;
 	}
 
+    /**
+     * @param deviceTime the deviceTime to set
+     */
+    public void setDeviceTime(String deviceTime) {
+        this.deviceTime = deviceTime;
+    }
+
 	/* (non-Javadoc)
 	 * @see java.lang.Object#hashCode()
 	 */
@@ -58,13 +65,6 @@ public class DeviceTime {
 		result = prime * result
 				+ ((deviceTime == null) ? 0 : deviceTime.hashCode());
 		return result;
-	}
-
-	/**
-	 * @param deviceTime the deviceTime to set
-	 */
-	public void setDeviceTime(String deviceTime) {
-		this.deviceTime = deviceTime;
 	}
 
 	@Override

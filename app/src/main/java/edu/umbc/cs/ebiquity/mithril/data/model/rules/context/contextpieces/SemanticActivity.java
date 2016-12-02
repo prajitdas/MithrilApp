@@ -2,18 +2,18 @@ package edu.umbc.cs.ebiquity.mithril.data.model.rules.context.contextpieces;
 
 import edu.umbc.cs.ebiquity.mithril.MithrilApplication;
 
-public class InferredActivity {
-	private String inferredActivity;
+public class SemanticActivity {
+    private String inferredActivity;
 
-	public InferredActivity() {
-		this.inferredActivity = MithrilApplication.getConstContextDefaultActivity();
+    public SemanticActivity() {
+        this.inferredActivity = MithrilApplication.getConstContextDefaultActivity();
 	}
 
 	/**
 	 * @param inferredActivity
 	 */
-	public InferredActivity(String inferredActivity) {
-		this.inferredActivity = inferredActivity;
+    public SemanticActivity(String inferredActivity) {
+        this.inferredActivity = inferredActivity;
 	}
 
 	/* (non-Javadoc)
@@ -30,8 +30,8 @@ public class InferredActivity {
 		if (getClass() != obj.getClass()) {
 			return false;
 		}
-		InferredActivity other = (InferredActivity) obj;
-		if (inferredActivity == null) {
+        SemanticActivity other = (SemanticActivity) obj;
+        if (inferredActivity == null) {
 			if (other.inferredActivity != null) {
 				return false;
 			}
@@ -48,6 +48,13 @@ public class InferredActivity {
 		return inferredActivity;
 	}
 
+    /**
+     * @param inferredActivity the inferredActivity to set
+     */
+    public void setInferredActivity(String inferredActivity) {
+        this.inferredActivity = inferredActivity;
+    }
+
 	/* (non-Javadoc)
 	 * @see java.lang.Object#hashCode()
 	 */
@@ -59,13 +66,6 @@ public class InferredActivity {
 				* result
 				+ ((inferredActivity == null) ? 0 : inferredActivity.hashCode());
 		return result;
-	}
-
-	/**
-	 * @param inferredActivity the inferredActivity to set
-	 */
-	public void setInferredActivity(String inferredActivity) {
-		this.inferredActivity = inferredActivity;
 	}
 
 	@Override

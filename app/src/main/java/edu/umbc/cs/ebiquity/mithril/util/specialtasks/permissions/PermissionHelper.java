@@ -92,6 +92,24 @@ public class PermissionHelper {
                 MithrilApplication.CONST_ALL_PERMISSIONS_MITHRIL_REQUEST_CODE);
     }
 
+    public static void requestPermission(Context context, String permission) {
+        if (isPermissionGranted(context, permission) != PackageManager.PERMISSION_GRANTED) {
+            // Should we show an explanation?
+            if (ActivityCompat.shouldShowRequestPermissionRationale((Activity) context, permission)) {
+                // Show an explanation to the user *asynchronously* -- don't block
+                // this thread waiting for the user's response! After the user
+                // sees the explanation, try again to request the permission.
+                Toast.makeText(context, "You denied the permission: " + permission + ". This might disrupt some functionality!", Toast.LENGTH_SHORT).show();
+            } else {
+                // No explanation needed, we can request the permission.
+                // getPermissionInt returns an app-defined int constant.
+                // The callback method gets the result of the request.
+            }
+        } //else {
+//                MithrilApplication.addToPermissionsGranted(permission);
+//            }
+    }
+
     public static int getCountOfPermissionsToRequest() {
         return countOfPermissionsToRequest;
     }

@@ -75,7 +75,7 @@ public class MithrilApplication extends Application {
     private static final String CONST_PRESENCE_INFO_HEADER = "Presence Info";
     private static final String CONST_REQUESTER_INFO_HEADER = "Requester Info";
     private static final String CONST_USER_ACTIVITY_HEADER = "User Activity";
-    private static final String CONST_USER_IDENTITY_HEADER = "User Identity";
+    private static final String CONST_USER_IDENTITY_HEADER = "User SemanticIdentity";
     private static final String CONST_USER_LOCATION_HEADER = "User Location";
     private static final String CONST_USER_TIME_HEADER = "Date and Time";
     private static final String CONST_TOAST_MESSAGE_RULE_DELETED = " rule was deleted";

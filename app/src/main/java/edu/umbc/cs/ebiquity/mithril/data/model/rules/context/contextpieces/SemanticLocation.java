@@ -2,18 +2,18 @@ package edu.umbc.cs.ebiquity.mithril.data.model.rules.context.contextpieces;
 
 import edu.umbc.cs.ebiquity.mithril.MithrilApplication;
 
-public class InferredLocation {
-	private String inferredLocation;
+public class SemanticLocation {
+    private String inferredLocation;
 
-	public InferredLocation() {
-		this.inferredLocation = MithrilApplication.getConstContextDefaultLocation();
+    public SemanticLocation() {
+        this.inferredLocation = MithrilApplication.getConstContextDefaultLocation();
 	}
 
 	/**
 	 * @param inferredLocation
 	 */
-	public InferredLocation(String inferredLocation) {
-		this.inferredLocation = inferredLocation;
+    public SemanticLocation(String inferredLocation) {
+        this.inferredLocation = inferredLocation;
 	}
 
 	/* (non-Javadoc)
@@ -30,8 +30,8 @@ public class InferredLocation {
 		if (getClass() != obj.getClass()) {
 			return false;
 		}
-		InferredLocation other = (InferredLocation) obj;
-		if (inferredLocation == null) {
+        SemanticLocation other = (SemanticLocation) obj;
+        if (inferredLocation == null) {
 			if (other.inferredLocation != null) {
 				return false;
 			}
@@ -48,6 +48,13 @@ public class InferredLocation {
 		return inferredLocation;
 	}
 
+    /**
+     * @param inferredLocation the inferredLocation to set
+     */
+    public void setInferredLocation(String inferredLocation) {
+        this.inferredLocation = inferredLocation;
+    }
+
 	/* (non-Javadoc)
 	 * @see java.lang.Object#hashCode()
 	 */
@@ -59,13 +66,6 @@ public class InferredLocation {
 				* result
 				+ ((inferredLocation == null) ? 0 : inferredLocation.hashCode());
 		return result;
-	}
-
-	/**
-	 * @param inferredLocation the inferredLocation to set
-	 */
-	public void setInferredLocation(String inferredLocation) {
-		this.inferredLocation = inferredLocation;
 	}
 
 	@Override

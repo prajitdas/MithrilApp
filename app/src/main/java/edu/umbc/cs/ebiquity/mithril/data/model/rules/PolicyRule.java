@@ -1,16 +1,8 @@
 package edu.umbc.cs.ebiquity.mithril.data.model.rules;
 
-import java.util.ArrayList;
-
 import edu.umbc.cs.ebiquity.mithril.MithrilApplication;
 import edu.umbc.cs.ebiquity.mithril.data.model.rules.actions.Action;
 import edu.umbc.cs.ebiquity.mithril.data.model.rules.actions.RuleAction;
-import edu.umbc.cs.ebiquity.mithril.data.model.rules.context.UserContext;
-import edu.umbc.cs.ebiquity.mithril.data.model.rules.context.contextpieces.DeviceTime;
-import edu.umbc.cs.ebiquity.mithril.data.model.rules.context.contextpieces.Identity;
-import edu.umbc.cs.ebiquity.mithril.data.model.rules.context.contextpieces.InferredActivity;
-import edu.umbc.cs.ebiquity.mithril.data.model.rules.context.contextpieces.InferredLocation;
-import edu.umbc.cs.ebiquity.mithril.data.model.rules.context.contextpieces.PresenceInfo;
 import edu.umbc.cs.ebiquity.mithril.data.model.rules.protectedresources.Resource;
 import edu.umbc.cs.ebiquity.mithril.data.model.rules.requesters.Requester;
 

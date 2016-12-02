@@ -31,12 +31,12 @@ import edu.umbc.cs.ebiquity.mithril.data.model.Violation;
 import edu.umbc.cs.ebiquity.mithril.data.model.rules.PolicyRule;
 import edu.umbc.cs.ebiquity.mithril.data.model.rules.actions.Action;
 import edu.umbc.cs.ebiquity.mithril.data.model.rules.actions.RuleAction;
-import edu.umbc.cs.ebiquity.mithril.data.model.rules.context.UserContext;
-import edu.umbc.cs.ebiquity.mithril.data.model.rules.context.contextpieces.DeviceTime;
-import edu.umbc.cs.ebiquity.mithril.data.model.rules.context.contextpieces.Identity;
-import edu.umbc.cs.ebiquity.mithril.data.model.rules.context.contextpieces.InferredActivity;
-import edu.umbc.cs.ebiquity.mithril.data.model.rules.context.contextpieces.InferredLocation;
-import edu.umbc.cs.ebiquity.mithril.data.model.rules.context.contextpieces.PresenceInfo;
+import edu.umbc.cs.ebiquity.mithril.data.model.rules.context.SemanticUserContext;
+import edu.umbc.cs.ebiquity.mithril.data.model.rules.context.contextpieces.SemanticActivity;
+import edu.umbc.cs.ebiquity.mithril.data.model.rules.context.contextpieces.SemanticIdentity;
+import edu.umbc.cs.ebiquity.mithril.data.model.rules.context.contextpieces.SemanticLocation;
+import edu.umbc.cs.ebiquity.mithril.data.model.rules.context.contextpieces.SemanticNearActors;
+import edu.umbc.cs.ebiquity.mithril.data.model.rules.context.contextpieces.SemanticTime;
 import edu.umbc.cs.ebiquity.mithril.data.model.rules.protectedresources.Resource;
 import edu.umbc.cs.ebiquity.mithril.data.model.rules.requesters.Requester;
 
@@ -59,8 +59,8 @@ public class MithrilDBHelper extends SQLiteOpenHelper {
 	// This could be where we could do energy efficient stuff as in we can save battery by determining context from historical data or some other way.
 	private final static String CONTEXTID = "id"; // ID of the context instance
 	private final static String LOCATION = "location"; // Location context
-	private final static String IDENTITY = "identity"; // Identity context; this is redundant as because we are working on a single device
-	private final static String ACTIVITY = "activity"; // Activity context
+    private final static String IDENTITY = "identity"; // SemanticIdentity context; this is redundant as because we are working on a single device
+    private final static String ACTIVITY = "activity"; // Activity context
 	private final static String PRESENCEINFO = "presenceinfo"; // If we could get presence information of others then we can do relationship based privacy solutions
 	private final static String TIME = "time"; // Temporal information; the time instance when the current context was captured
 
@@ -415,14 +415,14 @@ public class MithrilDBHelper extends SQLiteOpenHelper {
 		return insertedRowId;
 	}
 
-	public long addContext(SQLiteDatabase db, UserContext aUserContext) {
-		long insertedRowId;
+    public long addContext(SQLiteDatabase db, SemanticUserContext aUserContext) {
+        long insertedRowId;
 		ContentValues values = new ContentValues();
 		values.put(LOCATION, aUserContext.getLocation().toString());
-		values.put(IDENTITY, aUserContext.getIdentity().toString());
-		values.put(ACTIVITY, aUserContext.getActivity().toString());
-		values.put(PRESENCEINFO, aUserContext.getPresenceInfo().toString());
-		values.put(TIME, aUserContext.getTime().toString());
+        values.put(IDENTITY, aUserContext.getSemanticIdentity().toString());
+        values.put(ACTIVITY, aUserContext.getActivity().toString());
+        values.put(PRESENCEINFO, aUserContext.getSemanticNearActors().toString());
+        values.put(TIME, aUserContext.getTime().toString());
 		try {
 			insertedRowId = db.insert(getContextTableName(), null, values);
 		} catch (SQLException e) {
@@ -960,8 +960,8 @@ public class MithrilDBHelper extends SQLiteOpenHelper {
 					policyRule.setRequester(new Requester(cursor.getString(2)));
 					policyRule.setResource(new Resource(cursor.getString(3)));
 
-//					ArrayList<Identity> presenceInfoList = new ArrayList<Identity>();
-//					presenceInfoList.add(new Identity(cursor.getString(4)));
+//					ArrayList<SemanticIdentity> presenceInfoList = new ArrayList<SemanticIdentity>();
+//					presenceInfoList.add(new SemanticIdentity(cursor.getString(4)));
 
 					policyRule.setContext(cursor.getString(4));
 
@@ -1019,8 +1019,8 @@ public class MithrilDBHelper extends SQLiteOpenHelper {
 				policyRule.setRequester(new Requester(cursor.getString(2)));
 				policyRule.setResource(new Resource(cursor.getString(3)));
 
-				ArrayList<Identity> presenceInfoList = new ArrayList<Identity>();
-				presenceInfoList.add(new Identity(cursor.getString(4)));
+                ArrayList<SemanticIdentity> presenceInfoList = new ArrayList<SemanticIdentity>();
+                presenceInfoList.add(new SemanticIdentity(cursor.getString(4)));
 
 				policyRule.setContext(cursor.getString(5));
 
@@ -1072,8 +1072,8 @@ public class MithrilDBHelper extends SQLiteOpenHelper {
 				policyRule.setRequester(new Requester(cursor.getString(2)));
 				policyRule.setResource(new Resource(cursor.getString(3)));
 
-				ArrayList<Identity> presenceInfoList = new ArrayList<Identity>();
-				presenceInfoList.add(new Identity(cursor.getString(4)));
+                ArrayList<SemanticIdentity> presenceInfoList = new ArrayList<SemanticIdentity>();
+                presenceInfoList.add(new SemanticIdentity(cursor.getString(4)));
 
 				policyRule.setContext(cursor.getString(5));
 
@@ -1194,8 +1194,8 @@ public class MithrilDBHelper extends SQLiteOpenHelper {
 	 * @param id
 	 * @return
 	 */
-	public UserContext findContextByID(SQLiteDatabase db, int id) {
-		// Select Query
+    public SemanticUserContext findContextByID(SQLiteDatabase db, int id) {
+        // Select Query
 		String selectQuery = "SELECT "+
 				getContextTableName() + "." + CONTEXTID + ", " +
 				getContextTableName() + "." + PRESENCEINFO + ", " +
@@ -1208,21 +1208,21 @@ public class MithrilDBHelper extends SQLiteOpenHelper {
 				" WHERE "  +
 				getContextTableName() + "." + RESID + " = " + id + ";";
 
-		UserContext userContext = new UserContext();
-		Cursor cursor = db.rawQuery(selectQuery, null);
+        SemanticUserContext userContext = new SemanticUserContext();
+        Cursor cursor = db.rawQuery(selectQuery, null);
 		try{
 			if (cursor.moveToFirst()) {
 				userContext.setId(Integer.parseInt(cursor.getString(0)));
 
-				ArrayList<Identity> presenceIdList = new ArrayList<Identity>();
-				presenceIdList.add(new Identity(cursor.getString(1)));
-				PresenceInfo presenceInfo = new PresenceInfo(presenceIdList);
-				userContext.setPresenceInfo(presenceInfo);
+                ArrayList<SemanticIdentity> presenceIdList = new ArrayList<SemanticIdentity>();
+                presenceIdList.add(new SemanticIdentity(cursor.getString(1)));
+                SemanticNearActors semanticNearActors = new SemanticNearActors(presenceIdList);
+                userContext.setSemanticNearActors(semanticNearActors);
 
-				userContext.setActivity(new InferredActivity(cursor.getString(2)));
-				userContext.setLocation(new InferredLocation(cursor.getString(3)));
-				userContext.setTime(new DeviceTime(cursor.getString(4)));
-			}
+                userContext.setActivity(new SemanticActivity(cursor.getString(2)));
+                userContext.setLocation(new SemanticLocation(cursor.getString(3)));
+                userContext.setTime(new SemanticTime(cursor.getString(4)));
+            }
 		} catch(SQLException e) {
 			throw new SQLException("Could not find " + e);
 		} finally {
@@ -1325,8 +1325,8 @@ public class MithrilDBHelper extends SQLiteOpenHelper {
 		}
 	}
 
-	public void deleteContext(SQLiteDatabase db, UserContext aUserContext) {
-		try {
+    public void deleteContext(SQLiteDatabase db, SemanticUserContext aUserContext) {
+        try {
 			db.delete(getContextTableName(), CONTEXTID + " = ?",
 					new String[]{String.valueOf(aUserContext.getId()) });
 		} catch(SQLException e) {
