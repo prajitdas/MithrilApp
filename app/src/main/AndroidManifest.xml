@@ -46,28 +46,6 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="edu.umbc.cs.ebiquity.mithril.ui.activities.MainActivity" />
         </activity>
-
-        <receiver
-            android:name=".util.receivers.AppInstallBroadcastReceiver"
-            android:enabled="true"
-            android:exported="false">
-            <intent-filter>
-                <category android:name="android.intent.category.DEFAULT" />
-
-                <action android:name="android.intent.action.PACKAGE_ADDED" />
-                <action android:name="android.intent.action.PACKAGE_FULLY_REMOVED" />
-
-                <data android:scheme="package" />
-            </intent-filter>
-        </receiver>
-
-        <service
-            android:name=".util.services.AppLaunchDetectorService"
-            android:enabled="true"
-            android:exported="false"
-            android:icon="@mipmap/ic_launcher"
-            android:label="@string/mithril_service_name" />
-
         <!-- This test activity was used for the IEEE CIC paper. This will possibly removed or modified in the future. -->
         <activity
             android:name=".simulations.TestMainActivity"
@@ -82,10 +60,41 @@
             </intent-filter>
         </activity>
 
+        <receiver
+            android:name=".util.receivers.AppInstallBroadcastReceiver"
+            android:enabled="true"
+            android:exported="false">
+            <intent-filter>
+                <category android:name="android.intent.category.DEFAULT" />
+
+                <action android:name="android.intent.action.PACKAGE_ADDED" />
+                <action android:name="android.intent.action.PACKAGE_FULLY_REMOVED" />
+
+                <data android:scheme="package" />
+            </intent-filter>
+        </receiver>
+        <receiver
+            android:name=".util.receivers.StartServicesOnBootReceiver"
+            android:enabled="true"
+            android:exported="true">
+            <intent-filter>
+                <category android:name="android.intent.category.DEFAULT" />
+
+                <action android:name="android.intent.action.BOOT_COMPLETED" />
+
+                <data android:scheme="package" />
+            </intent-filter>
+        </receiver>
+
+        <service
+            android:name=".util.services.AppLaunchDetectorService"
+            android:enabled="true"
+            android:exported="false"
+            android:icon="@mipmap/ic_launcher"
+            android:label="@string/mithril_service_name" />
         <service
             android:name=".util.services.LocationUpdateService"
             android:enabled="true"
-            android:exported="true"></service>
+            android:exported="true" />
     </application>
-
 </manifest>
