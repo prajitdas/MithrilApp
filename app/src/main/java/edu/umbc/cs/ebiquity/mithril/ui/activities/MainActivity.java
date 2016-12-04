@@ -26,6 +26,7 @@ import edu.umbc.cs.ebiquity.mithril.ui.fragments.PrefsFragment;
 import edu.umbc.cs.ebiquity.mithril.ui.fragments.ReloadDefaultAppDataFragment;
 import edu.umbc.cs.ebiquity.mithril.ui.fragments.ShowAppsFragment;
 import edu.umbc.cs.ebiquity.mithril.ui.fragments.ViolationFragment;
+import edu.umbc.cs.ebiquity.mithril.util.specialtasks.permissions.PermissionHelper;
 
 public class MainActivity extends AppCompatActivity
         implements  NavigationView.OnNavigationItemSelectedListener,
@@ -138,12 +139,17 @@ public class MainActivity extends AppCompatActivity
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         initViews();
+        getBasicPermissions();
     }
 
     @Override
     public void onResume() {
         super.onResume();
         defaultFragmentLoad();
+    }
+
+    private void getBasicPermissions() {
+        PermissionHelper.requestAllNecessaryPermissions(this);
     }
 
     @SuppressWarnings("RestrictedApi")

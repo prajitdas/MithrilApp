@@ -9,12 +9,10 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
-import android.content.pm.ResolveInfo;
 import android.os.Build;
 import android.provider.Settings;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
-import android.util.Log;
 import android.widget.Toast;
 
 import java.util.ArrayList;
@@ -23,7 +21,6 @@ import java.util.List;
 
 import edu.umbc.cs.ebiquity.mithril.MithrilApplication;
 import edu.umbc.cs.ebiquity.mithril.R;
-import edu.umbc.cs.ebiquity.mithril.util.specialtasks.root.RootAccess;
 
 /**
  * Created by Prajit on 11/21/2016.
@@ -31,15 +28,16 @@ import edu.umbc.cs.ebiquity.mithril.util.specialtasks.root.RootAccess;
 
 public class PermissionHelper {
     private static final List<String> permissionsRequired = Arrays.asList(
-            Manifest.permission.READ_LOGS,
             Manifest.permission.NFC,
-            Manifest.permission.PACKAGE_USAGE_STATS
+            Manifest.permission.RECEIVE_BOOT_COMPLETED,
+            Manifest.permission.ACCESS_FINE_LOCATION
     );
-    private static int countOfPermissionsToRequest = 0;
 
-    public static int getPermissionsRequiredCount() {
-        return permissionsRequired.size();
-    }
+//    private static int countOfPermissionsToRequest = 0;
+//
+//    public static int getPermissionsRequiredCount() {
+//        return permissionsRequired.size();
+//    }
 
     private static List<String> getPermissionsRequired() {
         return permissionsRequired;
@@ -62,7 +60,7 @@ public class PermissionHelper {
                     // Show an explanation to the user *asynchronously* -- don't block
                     // this thread waiting for the user's response! After the user
                     // sees the explanation, try again to request the permission.
-                    Toast.makeText(context, "You denied the permission: " + permission + ". This might disrupt some functionality!", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(context, "You denied " + permission + " permission. This might disrupt some functionality!", Toast.LENGTH_SHORT).show();
                 } else {
                     // No explanation needed, we can request the permission.
                     permissionsThatCanBeRequested.add(permission);
@@ -76,7 +74,7 @@ public class PermissionHelper {
         return permissionsThatCanBeRequested;
     }
 
-    public static void requestAllPermissions(Context context) {
+    public static void requestAllNecessaryPermissions(Context context) {
         List<String> permissionsThatCanBeRequested = getPermissionsThatCanBeRequested(context);
         String[] permissionStrings = new String[permissionsThatCanBeRequested.size()];
         int permIdx = 0;
@@ -92,31 +90,13 @@ public class PermissionHelper {
                 MithrilApplication.CONST_ALL_PERMISSIONS_MITHRIL_REQUEST_CODE);
     }
 
-    public static void requestPermission(Context context, String permission) {
-        if (isPermissionGranted(context, permission) != PackageManager.PERMISSION_GRANTED) {
-            // Should we show an explanation?
-            if (ActivityCompat.shouldShowRequestPermissionRationale((Activity) context, permission)) {
-                // Show an explanation to the user *asynchronously* -- don't block
-                // this thread waiting for the user's response! After the user
-                // sees the explanation, try again to request the permission.
-                Toast.makeText(context, "You denied the permission: " + permission + ". This might disrupt some functionality!", Toast.LENGTH_SHORT).show();
-            } else {
-                // No explanation needed, we can request the permission.
-                // getPermissionInt returns an app-defined int constant.
-                // The callback method gets the result of the request.
-            }
-        } //else {
-//                MithrilApplication.addToPermissionsGranted(permission);
-//            }
-    }
-
-    public static int getCountOfPermissionsToRequest() {
-        return countOfPermissionsToRequest;
-    }
-
-    public static void setCountOfPermissionsToRequest(int countOfPermissionsToRequest) {
-        PermissionHelper.countOfPermissionsToRequest = countOfPermissionsToRequest;
-    }
+//    public static int getCountOfPermissionsToRequest() {
+//        return countOfPermissionsToRequest;
+//    }
+//
+//    public static void setCountOfPermissionsToRequest(int countOfPermissionsToRequest) {
+//        PermissionHelper.countOfPermissionsToRequest = countOfPermissionsToRequest;
+//    }
 
     /**
      * <uses-permission android:name="android.permission.READ_LOGS" />
@@ -128,7 +108,7 @@ public class PermissionHelper {
      * pm grant edu.umbc.cs.ebiquity.mithril android.permission.READ_LOGS
      * <p>
      * To test: adb shell dumpsys package edu.umbc.cs.ebiquity.mithril
-     */
+     *
     public static boolean getReadLogsPermission(Context context) {
         String packageName = context.getPackageName();
         RootAccess rootAccess = new RootAccess(context);
@@ -152,6 +132,7 @@ public class PermissionHelper {
             Log.d(MithrilApplication.getDebugTag(), "we have the READ_LOGS permission already!");
         return true;
     }
+     */
 
     public static boolean getUsageStatsPermisison(final Context context) {
 //        String packageName = context.getPackageName();
@@ -159,7 +140,7 @@ public class PermissionHelper {
 //        String[] CMDLINE_GRANTPERMS = {"su", "-c", null};
 //        if (context.getPackageManager().checkPermission(Manifest.permission.PACKAGE_USAGE_STATS, packageName) != 0) {
         if (!needsUsageStatsPermission(context)) {
-            Log.d(MithrilApplication.getDebugTag(), "we have the PACKAGE_USAGE_STATS permission already!");
+//            Log.d(MithrilApplication.getDebugTag(), "we have the PACKAGE_USAGE_STATS permission already!");
             return true;
             /**
              * Alternative method of obtaining permission from user:
@@ -180,7 +161,7 @@ public class PermissionHelper {
             }
              */
         } else {
-            Log.d(MithrilApplication.getDebugTag(), "we do not have the PACKAGE_USAGE_STATS permission!");
+//            Log.d(MithrilApplication.getDebugTag(), "we do not have the PACKAGE_USAGE_STATS permission!");
             // Use the Builder class for convenient dialog construction
             AlertDialog.Builder builder = new AlertDialog.Builder(context);
             builder.setMessage(R.string.allow_usage_stats_permission)
@@ -192,7 +173,7 @@ public class PermissionHelper {
                     })
                     .setNegativeButton(R.string.dialog_resp_deny, new DialogInterface.OnClickListener() {
                         public void onClick(DialogInterface dialog, int id) {
-                            Toast.makeText(context, "Bye then!", Toast.LENGTH_LONG).show();
+                            Toast.makeText(context, "You denied " + Manifest.permission.PACKAGE_USAGE_STATS + " permission. This might disrupt some functionality!", Toast.LENGTH_SHORT).show();
                             android.os.Process.killProcess(android.os.Process.myPid());
                         }
                     });
@@ -230,12 +211,5 @@ public class PermissionHelper {
                 android.os.Process.myUid(), context.getPackageName());
         boolean granted = mode == AppOpsManager.MODE_ALLOWED;
         return granted;
-    }
-
-    public static String getLauncherName(Context context) {
-        Intent intent = new Intent(Intent.ACTION_MAIN);
-        intent.addCategory(Intent.CATEGORY_HOME);
-        ResolveInfo resolveInfo = context.getPackageManager().resolveActivity(intent, PackageManager.MATCH_DEFAULT_ONLY);
-        return resolveInfo.activityInfo.packageName;
     }
 }

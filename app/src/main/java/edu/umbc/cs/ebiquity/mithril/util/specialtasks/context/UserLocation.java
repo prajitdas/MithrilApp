@@ -1,6 +1,5 @@
 package edu.umbc.cs.ebiquity.mithril.util.specialtasks.context;
 
-import android.Manifest;
 import android.content.Context;
 import android.location.Location;
 import android.location.LocationListener;
@@ -43,7 +42,7 @@ public class UserLocation {
         try {
             locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 0, 0, locationListener);
         } catch (SecurityException securityException) {
-            PermissionHelper.requestPermission(context, Manifest.permission.ACCESS_COARSE_LOCATION);
+            PermissionHelper.requestAllNecessaryPermissions(context);
         }
     }
 

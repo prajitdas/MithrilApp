@@ -10,7 +10,10 @@ import android.app.usage.UsageEvents;
 import android.app.usage.UsageStats;
 import android.app.usage.UsageStatsManager;
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.pm.PackageManager;
+import android.content.pm.ResolveInfo;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Build;
 import android.text.TextUtils;
@@ -69,6 +72,13 @@ public class LollipopDetector implements Detector {
         }
 
         return phrase.toString();
+    }
+
+    private static String getLauncherName(Context context) {
+        Intent intent = new Intent(Intent.ACTION_MAIN);
+        intent.addCategory(Intent.CATEGORY_HOME);
+        ResolveInfo resolveInfo = context.getPackageManager().resolveActivity(intent, PackageManager.MATCH_DEFAULT_ONLY);
+        return resolveInfo.activityInfo.packageName;
     }
 
     @TargetApi(Build.VERSION_CODES.LOLLIPOP)
@@ -130,7 +140,7 @@ public class LollipopDetector implements Detector {
             }
         }
 
-        if (currentPackageName.equals(PermissionHelper.getLauncherName(context)) ||
+        if (currentPackageName.equals(getLauncherName(context)) ||
                 sharedPref.getString(MithrilApplication.getAppPkgNameTag(), "").equals(currentPackageName))
             return null;
 

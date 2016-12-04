@@ -4,14 +4,14 @@
     package="edu.umbc.cs.ebiquity.mithril">
 
     <!-- Remember to add all the permissions you request here in the PermissionHelper class for handling permission acquisition -->
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
     <uses-permission
         android:name="android.permission.PACKAGE_USAGE_STATS"
         tools:ignore="ProtectedPermissions" />
-    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
     <!-- <uses-permission android:name="android.permission.REAL_GET_TASKS" /> -->
-    <uses-permission android:name="android.permission.READ_LOGS" />
+    <!--<uses-permission android:name="android.permission.READ_LOGS" />-->
     <!-- <uses-permission android:name="android.permission.NFC" /> -->
-    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
 
     <!-- Needed only if your app targets Android 5.0 (API level 21) or higher. -->
     <uses-feature
