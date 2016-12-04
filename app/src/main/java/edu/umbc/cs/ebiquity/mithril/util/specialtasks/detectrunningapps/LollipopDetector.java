@@ -146,6 +146,4 @@ public class LollipopDetector implements Detector {
 
         return currentPackageName;
     }
-
-
 }

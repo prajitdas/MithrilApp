@@ -26,8 +26,6 @@ import edu.umbc.cs.ebiquity.mithril.ui.fragments.PrefsFragment;
 import edu.umbc.cs.ebiquity.mithril.ui.fragments.ReloadDefaultAppDataFragment;
 import edu.umbc.cs.ebiquity.mithril.ui.fragments.ShowAppsFragment;
 import edu.umbc.cs.ebiquity.mithril.ui.fragments.ViolationFragment;
-import edu.umbc.cs.ebiquity.mithril.util.services.AppLaunchDetectorService;
-import edu.umbc.cs.ebiquity.mithril.util.specialtasks.permissions.PermissionHelper;
 
 public class MainActivity extends AppCompatActivity
         implements  NavigationView.OnNavigationItemSelectedListener,
@@ -142,23 +140,10 @@ public class MainActivity extends AppCompatActivity
         initViews();
     }
 
-    private void getPermissions() {
-//        We are getting special stuff done here! READ_LOGS permission is being obtained through a root privilege!
-//        PermissionHelper.getReadLogsPermission(this);
-//        We are getting special stuff done here! PACKAGE_USAGE_STATS permission is being obtained by user action!
-        if (PermissionHelper.getUsageStatsPermisison(this))
-//        if(PermissionHelper.getReadLogsPermission(this))
-            startService(new Intent(this, AppLaunchDetectorService.class));
-//            LollipopDetector lollipopDetector = new LollipopDetector();
-//            Toast.makeText(this, "What we got was this: " + lollipopDetector.getForegroundApp(this), Toast.LENGTH_LONG).show();
-//        }
-    }
-
     @Override
     public void onResume() {
         super.onResume();
         defaultFragmentLoad();
-        getPermissions();
     }
 
     @SuppressWarnings("RestrictedApi")
