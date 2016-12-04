@@ -28,9 +28,9 @@ import edu.umbc.cs.ebiquity.mithril.R;
 
 public class PermissionHelper {
     private static final List<String> permissionsRequired = Arrays.asList(
-            Manifest.permission.NFC,
-            Manifest.permission.RECEIVE_BOOT_COMPLETED,
-            Manifest.permission.ACCESS_FINE_LOCATION
+            Manifest.permission.ACCESS_FINE_LOCATION,
+            Manifest.permission.RECEIVE_BOOT_COMPLETED//,
+//            Manifest.permission.NFC
     );
 
 //    private static int countOfPermissionsToRequest = 0;
@@ -85,7 +85,8 @@ public class PermissionHelper {
         }
 //        Log.d(MithrilApplication.getDebugTag(), "granted: "+MithrilApplication.getPermissionsGranted());
 //        Log.d(MithrilApplication.getDebugTag(), "strings: "+stringBuffer.toString());
-        ActivityCompat.requestPermissions((Activity) context,
+        if (permissionStrings.length > 0)
+            ActivityCompat.requestPermissions((Activity) context,
                 permissionStrings,
                 MithrilApplication.CONST_ALL_PERMISSIONS_MITHRIL_REQUEST_CODE);
     }

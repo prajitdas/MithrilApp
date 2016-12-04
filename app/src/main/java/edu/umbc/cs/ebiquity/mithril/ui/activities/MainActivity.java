@@ -2,6 +2,7 @@ package edu.umbc.cs.ebiquity.mithril.ui.activities;
 
 import android.app.FragmentManager;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
@@ -14,6 +15,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.Toast;
 
 import java.util.List;
 
@@ -26,6 +28,7 @@ import edu.umbc.cs.ebiquity.mithril.ui.fragments.PrefsFragment;
 import edu.umbc.cs.ebiquity.mithril.ui.fragments.ReloadDefaultAppDataFragment;
 import edu.umbc.cs.ebiquity.mithril.ui.fragments.ShowAppsFragment;
 import edu.umbc.cs.ebiquity.mithril.ui.fragments.ViolationFragment;
+import edu.umbc.cs.ebiquity.mithril.util.services.AppLaunchDetectorService;
 import edu.umbc.cs.ebiquity.mithril.util.specialtasks.permissions.PermissionHelper;
 
 public class MainActivity extends AppCompatActivity
@@ -139,17 +142,21 @@ public class MainActivity extends AppCompatActivity
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         initViews();
-        getBasicPermissions();
+        initHousekeepingTasks();
+    }
+
+    private void initHousekeepingTasks() {
+        if (PermissionHelper.isExplicitPermissionAcquisitionNecessary()) {
+            PermissionHelper.requestAllNecessaryPermissions(this);
+            if (PermissionHelper.getUsageStatsPermisison(this))
+                startService(new Intent(this, AppLaunchDetectorService.class));
+        }
     }
 
     @Override
     public void onResume() {
         super.onResume();
         defaultFragmentLoad();
-    }
-
-    private void getBasicPermissions() {
-        PermissionHelper.requestAllNecessaryPermissions(this);
     }
 
     @SuppressWarnings("RestrictedApi")
@@ -191,6 +198,32 @@ public class MainActivity extends AppCompatActivity
             drawer.closeDrawer(GravityCompat.START);
         } else {
             super.onBackPressed();
+        }
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode,
+                                           String permissions[], int[] grantResults) {
+        switch (requestCode) {
+            case MithrilApplication.CONST_ALL_PERMISSIONS_MITHRIL_REQUEST_CODE: {
+                // If request is cancelled, the result arrays are empty.
+                if (grantResults.length > 0
+                        && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+
+                    // permission was granted, yay! Do the
+                    // contacts-related task you need to do.
+
+                } else {
+
+                    // permission denied, boo! Disable the
+                    // functionality that depends on this permission.
+                    Toast.makeText(this, "You denied some permissions. This might disrupt some functionality!", Toast.LENGTH_SHORT).show();
+                }
+                return;
+            }
+
+            // other 'case' lines to check for other
+            // permissions this app might request
         }
     }
 }
