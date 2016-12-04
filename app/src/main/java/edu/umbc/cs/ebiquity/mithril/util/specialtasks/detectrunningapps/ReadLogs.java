@@ -30,22 +30,30 @@ public class ReadLogs {
      *
      * @return LogBuilder
      */
-    public static StringBuilder readLogs() {
+    public static String readLogs() {
         StringBuilder logBuilder = new StringBuilder();
         try {
             //logcat -d dumps and exits the process! Won't work for me :(
             Process process = Runtime.getRuntime().exec(MithrilApplication.getDetectAppLaunchCmd());
-            BufferedReader bufferedReader = new BufferedReader(
+            BufferedReader appLaunchData = new BufferedReader(
                     new InputStreamReader(process.getInputStream()));
 
             String line;
-            while ((line = bufferedReader.readLine()) != null) {
-                if (line.contains(MithrilApplication.getConstLogLaunchIntentTxt()))
-                    logBuilder.append(line + "\n");
+            while ((line = appLaunchData.readLine()) != null) {
+                if (line.contains(MithrilApplication.getConstLogLaunchIntentTxt())) {
+                    Log.d(MithrilApplication.getDebugTag(), "another app launch: " + line);
+                    String date = line.substring(0, 4);
+                    String time = line.substring(7, 12);
+                    int appLuanchedIdx = line.indexOf("cmp=");
+                    String appLaunched = line.substring(appLuanchedIdx);
+                    int endIdx = appLaunched.indexOf("/");
+                    appLaunched = appLaunched.substring(0, endIdx);
+                    logBuilder.append(date + ";" + time + ";" + appLaunched + "\n");
+                }
             }
         } catch (IOException e) {
         }
-        Log.d(MithrilApplication.getDebugTag(), "Log: " + logBuilder);
-        return logBuilder;
+        Log.d(MithrilApplication.getDebugTag(), "ReadLog app launch: " + logBuilder);
+        return logBuilder.toString();
     }
 }

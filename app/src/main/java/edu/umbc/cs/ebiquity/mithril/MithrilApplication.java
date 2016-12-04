@@ -10,7 +10,10 @@ public class MithrilApplication extends Application {
     private static final String READ_LOGS_PERMISSION_FOR_APP_CMD = "pm grant edu.umbc.cs.ebiquity.mithril android.permission.READ_LOGS";
     private static final String PACKAGE_USAGE_STATS_PERMISSION_FOR_APP_CMD = "pm grant edu.umbc.cs.ebiquity.mithril android.permission.PACKAGE_USAGE_STATS";
     private static final String ROOT_PRIVILEGE_CMD = "su -c";
-    private static final String DETECT_APP_LAUNCH_CMD = "logcat ActivityManager:I *:S | grep \"LAUNCHER\"";
+    private static final String DETECT_APP_LAUNCH_CMD = "logcat -d ActivityManager:I *:S | grep 'LAUNCHER'";
+    //    private static final String DETECT_APP_LAUNCH_CMD = "logcat -d ActivityManager:I *:S | grep 'LAUNCHER' | cut -f5 -d'=' | cut -f1 -d'/'";
+    private static final String DETECT_APP_LAUNCH_DATE_CMD = "logcat -d ActivityManager:I *:S | grep 'LAUNCHER' | cut -f1 -d' '";
+    private static final String DETECT_APP_LAUNCH_TIME_CMD = "logcat -d ActivityManager:I *:S | grep 'LAUNCHER' | cut -f2 -d' '";
     private static final String CONST_COMMAND_APP_BROADCAST_INTENT = "edu.umbc.ebiquity.mithril.command.intent.action.DATA_REQUEST";
     private static final String PREF_KEY_HOME_LOC = "homeLocation";
     private static final String PREF_KEY_WORK_LOC = "workLocation";
@@ -313,5 +316,13 @@ public class MithrilApplication extends Application {
 
     public static String getPackageUsageStatsPermissionForAppCmd() {
         return PACKAGE_USAGE_STATS_PERMISSION_FOR_APP_CMD;
+    }
+
+    public static String getDetectAppLaunchDateCmd() {
+        return DETECT_APP_LAUNCH_DATE_CMD;
+    }
+
+    public static String getDetectAppLaunchTimeCmd() {
+        return DETECT_APP_LAUNCH_TIME_CMD;
     }
 }
