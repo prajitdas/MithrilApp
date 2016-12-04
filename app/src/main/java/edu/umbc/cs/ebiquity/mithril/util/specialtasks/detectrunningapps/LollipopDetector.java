@@ -26,6 +26,7 @@ import java.util.TreeMap;
 
 import edu.umbc.cs.ebiquity.mithril.MithrilApplication;
 import edu.umbc.cs.ebiquity.mithril.data.dbhelpers.MithrilDBHelper;
+import edu.umbc.cs.ebiquity.mithril.data.model.rules.context.SemanticUserContext;
 import edu.umbc.cs.ebiquity.mithril.util.specialtasks.permissions.PermissionHelper;
 
 /**
@@ -147,6 +148,11 @@ public class LollipopDetector implements Detector {
         if (mithrilDBHelper.findAppTypeByAppPkgName(mithrilDB, currentPackageName).equals(MithrilApplication.getUserAppsDisplayTag())) {
             Toast.makeText(context, "Mithril detects user app launch: " + currentPackageName, Toast.LENGTH_SHORT).show();
             Log.d(MithrilApplication.getDebugTag(), "Mithril detects user app launch: " + currentPackageName);
+            getCurrentSemanticUserContext();
+            /**
+             * TODO if this is a violation, then insert the information into the violation table.
+             * TODO if it is not a violation, then what do we do? **DECIDE**
+             */
         }
         mithrilDB.close();
 
@@ -155,5 +161,10 @@ public class LollipopDetector implements Detector {
         editor.commit();
 
         return currentPackageName;
+    }
+
+    private SemanticUserContext getCurrentSemanticUserContext() {
+        SemanticUserContext semanticUserContext = new SemanticUserContext();
+        return semanticUserContext;
     }
 }

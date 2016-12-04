@@ -20,8 +20,9 @@ public class PolicyRule {
 		this.requester = new Requester();
 		this.resource = new Resource();
 		this.context = new String();
-		this.action = new RuleAction(Action.DENY);
-	}
+        //OWA: Define allow rules, so that we know exactly when to deny an action
+        this.action = new RuleAction(Action.ALLOW);
+    }
 	public PolicyRule(int policyRuleId, String name, Requester requester, Resource resource,
 			String context, RuleAction action) {
 		super();
