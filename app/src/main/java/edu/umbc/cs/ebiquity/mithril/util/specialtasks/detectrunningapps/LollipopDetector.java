@@ -135,8 +135,8 @@ public class LollipopDetector implements Detector {
             return null;
 
         if (mithrilDBHelper.findAppTypeByAppPkgName(mithrilDB, currentPackageName).equals(MithrilApplication.getUserAppsDisplayTag())) {
-            Toast.makeText(context, "App launched: " + currentPackageName, Toast.LENGTH_LONG).show();
-            Log.d(MithrilApplication.getDebugTag(), "App launched: " + currentPackageName);
+            Toast.makeText(context, "Mithril detects user app launch: " + currentPackageName, Toast.LENGTH_SHORT).show();
+            Log.d(MithrilApplication.getDebugTag(), "Mithril detects user app launch: " + currentPackageName);
         }
         mithrilDB.close();
 
