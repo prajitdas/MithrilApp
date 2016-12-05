@@ -1,7 +1,9 @@
 package edu.umbc.cs.ebiquity.mithril.ui.activities;
 
 import android.app.FragmentManager;
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Bundle;
@@ -17,6 +19,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.Toast;
 
+import java.io.File;
 import java.util.List;
 
 import edu.umbc.cs.ebiquity.mithril.MithrilApplication;
@@ -39,6 +42,7 @@ public class MainActivity extends AppCompatActivity
         ViolationFragment.OnListFragmentInteractionListener,
         ReloadDefaultAppDataFragment.OnFragmentInteractionListener {
 
+    private SharedPreferences sharedPref;
     private Violation violationItemSelected = null;
     private DrawerLayout drawer;
     private ActionBarDrawerToggle toggle;
@@ -48,7 +52,7 @@ public class MainActivity extends AppCompatActivity
 
     private void loadAllAppsFragment() {
         Bundle data = new Bundle();
-        data.putString(MithrilApplication.getAppDisplayTypeTag(), MithrilApplication.getAllAppsDisplayTag());
+        data.putString(MithrilApplication.getPrefKeyAppDisplayType(), MithrilApplication.getPrefKeyAllAppsDisplay());
 
         ShowAppsFragment aShowappsFragment = new ShowAppsFragment();
         aShowappsFragment.setArguments(data);
@@ -60,7 +64,7 @@ public class MainActivity extends AppCompatActivity
 
     private void loadSystemAppsFragment() {
         Bundle data = new Bundle();
-        data.putString(MithrilApplication.getAppDisplayTypeTag(), MithrilApplication.getSystemAppsDisplayTag());
+        data.putString(MithrilApplication.getPrefKeyAppDisplayType(), MithrilApplication.getPrefKeySystemAppsDisplay());
 
         ShowAppsFragment aShowappsFragment = new ShowAppsFragment();
         aShowappsFragment.setArguments(data);
@@ -72,7 +76,7 @@ public class MainActivity extends AppCompatActivity
 
     private void loadUserAppsFragment() {
         Bundle data = new Bundle();
-        data.putString(MithrilApplication.getAppDisplayTypeTag(), MithrilApplication.getUserAppsDisplayTag());
+        data.putString(MithrilApplication.getPrefKeyAppDisplayType(), MithrilApplication.getPrefKeyUserAppsDisplay());
 
         ShowAppsFragment aShowappsFragment = new ShowAppsFragment();
         aShowappsFragment.setArguments(data);
@@ -117,7 +121,7 @@ public class MainActivity extends AppCompatActivity
     public void onListFragmentInteraction(AppData item) {
         //TODO Do something with the App selected
         Intent intent = new Intent(this, ViewAppDetailsActivity.class);
-        intent.putExtra(MithrilApplication.getAppPkgNameTag(), item.getPackageName());
+        intent.putExtra(MithrilApplication.getPrefKeyAppPkgName(), item.getPackageName());
         startActivity(intent);
     }
 
@@ -146,6 +150,17 @@ public class MainActivity extends AppCompatActivity
     }
 
     private void initHousekeepingTasks() {
+        File locationFile = new File(getFilesDir(), "location.txt");
+        File logFile = new File(getFilesDir(), "log.txt");
+
+        sharedPref = getSharedPreferences(MithrilApplication.getSharedPreferencesName(), Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = sharedPref.edit();
+        // Stores the lat / long pairs in a text file
+        editor.putString(MithrilApplication.getPrefKeyLocationFilename(), locationFile.getAbsolutePath());
+        // Stores the connect / disconnect data in a text file
+        editor.putString(MithrilApplication.getPrefKeyLogFilename(), logFile.getAbsolutePath());
+        editor.commit();
+
         if (PermissionHelper.isExplicitPermissionAcquisitionNecessary()) {
             PermissionHelper.requestAllNecessaryPermissions(this);
             if (PermissionHelper.getUsageStatsPermisison(this))
@@ -205,7 +220,7 @@ public class MainActivity extends AppCompatActivity
     public void onRequestPermissionsResult(int requestCode,
                                            String permissions[], int[] grantResults) {
         switch (requestCode) {
-            case MithrilApplication.CONST_ALL_PERMISSIONS_MITHRIL_REQUEST_CODE: {
+            case MithrilApplication.ALL_PERMISSIONS_MITHRIL_REQUEST_CODE: {
                 // If request is cancelled, the result arrays are empty.
                 if (grantResults.length > 0
                         && grantResults[0] == PackageManager.PERMISSION_GRANTED) {

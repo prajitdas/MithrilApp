@@ -27,29 +27,29 @@ public class DataGenerator {
 	 * @return
 	 */
 	public static PolicyRule generateSocialMediaCameraAccessRule(Requester aRequester, Resource aResource, String aUserContext, RuleAction aRuleAction) {
-		PolicyRule policyRule = new PolicyRule(MithrilApplication.getConstPolRulNameSocialMediaCameraAccessRule(), aRequester, aResource, aUserContext, aRuleAction);
-		return policyRule;
+        PolicyRule policyRule = new PolicyRule(MithrilApplication.getPolRulNameSocialMediaCameraAccessRule(), aRequester, aResource, aUserContext, aRuleAction);
+        return policyRule;
 	}
 
     public static SemanticUserContext generateContextForSocialMediaCameraAccessRule() {
         List<String> tempIdentityString = new ArrayList<String>();
-		for(String tempString : MithrilApplication.getConstArrayPresenceInfoIdentity()) {
-			tempIdentityString.add(tempString);
+        for (String tempString : MithrilApplication.getContextArrayPresenceInfoIdentity()) {
+            tempIdentityString.add(tempString);
 		}
 		
 		List<String> tempLocationString = new ArrayList<String>();
-		for(String tempString : MithrilApplication.getConstArrayLocation()) {
-			tempLocationString.add(tempString);
+        for (String tempString : MithrilApplication.getContextArrayLocation()) {
+            tempLocationString.add(tempString);
 		}
 
 		List<String> tempActivityString = new ArrayList<String>();
-		for(String tempString : MithrilApplication.getConstArrayActivity()) {
-			tempActivityString.add(tempString);
+        for (String tempString : MithrilApplication.getContextArrayActivity()) {
+            tempActivityString.add(tempString);
 		}
 
 		List<String> tempTimeString = new ArrayList<String>();
-		for(String tempString : MithrilApplication.getConstArrayTime()) {
-			tempTimeString.add(tempString);
+        for (String tempString : MithrilApplication.getContextArrayTime()) {
+            tempTimeString.add(tempString);
 		}
 
         List<SemanticIdentity> presenceInfo = new ArrayList<SemanticIdentity>();
@@ -58,7 +58,7 @@ public class DataGenerator {
         SemanticUserContext userContext = new SemanticUserContext(
                 new SemanticNearActors(presenceInfo),
                 new SemanticActivity(tempActivityString.get(2)), //Index 2 is university talk
-                new SemanticIdentity(MithrilApplication.getConstContextDefaultIdentity()),
+                new SemanticIdentity(MithrilApplication.getContextDefaultIdentity()),
                 new SemanticLocation(tempLocationString.get(2)), // Index 2 is university state
                 new SemanticTime(tempTimeString.get(2))); // Index 2 is Week Day
         return userContext;
@@ -82,8 +82,8 @@ public class DataGenerator {
 	 */ 
 	public static List<Resource> generateResources() {
 		List<Resource> tempList = new ArrayList<Resource>();
-		for(String aResourceString : MithrilApplication.getConstArrayResourceCategory())
-			tempList.add(new Resource(aResourceString));
+        for (String aResourceString : MithrilApplication.getContextArrayResourceCategory())
+            tempList.add(new Resource(aResourceString));
 		return tempList;
 	}
 
@@ -92,8 +92,8 @@ public class DataGenerator {
 	 */ 
 	public static List<Requester> generateRequesters() {
 		List<Requester> tempList = new ArrayList<Requester>();
-		for(String aRequesterString : MithrilApplication.getConstArrayRequesterCategory())
-			tempList.add(new Requester(aRequesterString));
+        for (String aRequesterString : MithrilApplication.getContextArrayRequesterCategory())
+            tempList.add(new Requester(aRequesterString));
 		return tempList;
 	}
 }

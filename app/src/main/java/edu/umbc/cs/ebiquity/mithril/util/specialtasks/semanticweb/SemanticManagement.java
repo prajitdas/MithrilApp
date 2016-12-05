@@ -1,13 +1,8 @@
 package edu.umbc.cs.ebiquity.mithril.util.semanticweb;
 
-import java.util.ArrayList;
-import java.util.Comparator;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-import java.util.TreeMap;
+import android.content.Context;
+import android.content.res.Resources.NotFoundException;
+import android.util.Log;
 
 import org.semanticweb.owlapi.apibinding.OWLManager;
 import org.semanticweb.owlapi.model.AddAxiom;
@@ -22,9 +17,9 @@ import org.semanticweb.owlapi.model.OWLNamedIndividual;
 import org.semanticweb.owlapi.model.OWLObjectProperty;
 import org.semanticweb.owlapi.model.OWLObjectPropertyExpression;
 import org.semanticweb.owlapi.model.OWLOntology;
+import org.semanticweb.owlapi.model.OWLOntologyChange;
 import org.semanticweb.owlapi.model.OWLOntologyCreationException;
 import org.semanticweb.owlapi.model.OWLOntologyManager;
-import org.semanticweb.owlapi.model.OWLOntologyChange;
 import org.semanticweb.owlapi.model.RemoveAxiom;
 import org.semanticweb.owlapi.reasoner.InferenceType;
 import org.semanticweb.owlapi.reasoner.Node;
@@ -34,14 +29,19 @@ import org.semanticweb.owlapi.util.BidirectionalShortFormProvider;
 import org.semanticweb.owlapi.util.BidirectionalShortFormProviderAdapter;
 import org.semanticweb.owlapi.util.SimpleShortFormProvider;
 
-import edu.umbc.cs.ebiquity.mithril.MithrilApplication;
-import uk.ac.manchester.cs.jfact.JFactFactory;
-import android.content.Context;
-import android.content.res.Resources.NotFoundException;
-import android.util.Log;
+import java.util.ArrayList;
+import java.util.Comparator;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+import java.util.TreeMap;
 
+import edu.umbc.cs.ebiquity.mithril.MithrilApplication;
 import edu.umbc.cs.ebiquity.mithril.R;
 import es.unizar.semantic.DLQueryEngine;
+import uk.ac.manchester.cs.jfact.JFactFactory;
 
 /**
  * @author Roberto
@@ -64,18 +64,18 @@ public class SemanticManagement {
 		manager = OWLManager.createOWLOntologyManager();
 		factory = OWLManager.getOWLDataFactory();
 
-		Log.i(MithrilApplication.getConstDebugTag(), "Starting...");
-		try {
-			Log.i(MithrilApplication.getConstDebugTag(), String.format("Loading ontology [%s] ...", context
-					.getResources().getResourceName(ontology_id)));
+        Log.i(MithrilApplication.getDebugTag(), "Starting...");
+        try {
+            Log.i(MithrilApplication.getDebugTag(), String.format("Loading ontology [%s] ...", context
+                    .getResources().getResourceName(ontology_id)));
 			ontology = manager.loadOntologyFromOntologyDocument(context
 					.getResources().openRawResource(ontology_id));
 
-			Log.i(MithrilApplication.getConstDebugTag(), "Creating reasoner...");
-			reasoner = createOWLReasoner(ontology);
+            Log.i(MithrilApplication.getDebugTag(), "Creating reasoner...");
+            reasoner = createOWLReasoner(ontology);
 
-			Log.i(MithrilApplication.getConstDebugTag(), "Creating DLQueryEngine...");
-			queryEngine = createDLQueryEngine(reasoner);
+            Log.i(MithrilApplication.getDebugTag(), "Creating DLQueryEngine...");
+            queryEngine = createDLQueryEngine(reasoner);
 
 			Set<OWLOntology> importsClosure = ontology.getImportsClosure();
 			// Create a bidirectional short form provider to do the actual
@@ -85,8 +85,8 @@ public class SemanticManagement {
 			bidiShortFormProvider = new BidirectionalShortFormProviderAdapter(
 					manager, importsClosure, queryEngine.getShortFormProvider());
 
-			Log.i(MithrilApplication.getConstDebugTag(), "Precomputing inferences...");
-			queryEngine.getReasoner().precomputeInferences(
+            Log.i(MithrilApplication.getDebugTag(), "Precomputing inferences...");
+            queryEngine.getReasoner().precomputeInferences(
 					InferenceType.CLASS_HIERARCHY);
 
 		} catch (OWLOntologyCreationException e) {
@@ -140,9 +140,9 @@ public class SemanticManagement {
 						// the domain is equivalent to the given
 						names.add(queryEngine.getShortFormProvider()
 								.getShortForm(
-										(OWLEntity) aux
-												.getRepresentativeElement()));
-					}
+                                        aux
+                                                .getRepresentativeElement()));
+                    }
 				}
 			}
 		}
@@ -647,16 +647,16 @@ public class SemanticManagement {
 			for (String locNew : locations) {
 				// if the location is equivalent or a subclass then is a
 				// supporter
-				Log.i(MithrilApplication.getConstDebugTag(), "--CHECKING: " + locSet + " vs " + locNew);
-				if (locSet == locNew) {
-					Log.i(MithrilApplication.getConstDebugTag(), "-->Equivalent!");
-					if (supValue != 0.0)
+                Log.i(MithrilApplication.getDebugTag(), "--CHECKING: " + locSet + " vs " + locNew);
+                if (locSet == locNew) {
+                    Log.i(MithrilApplication.getDebugTag(), "-->Equivalent!");
+                    if (supValue != 0.0)
 						supValue = (supValue + confidences.get(i)) / 2.0;
 					else
 						supValue = supValue + confidences.get(i);
 				} else if (isIn(locNew, containers)) {
-					Log.i(MithrilApplication.getConstDebugTag(), "-->is In!");
-					if (supValue != 0.0)
+                    Log.i(MithrilApplication.getDebugTag(), "-->is In!");
+                    if (supValue != 0.0)
 						supValue = (supValue + confidences.get(i)) / 2.0;
 					else
 						supValue = supValue + confidences.get(i);
@@ -670,7 +670,7 @@ public class SemanticManagement {
 		TreeMap<String, Double> sorted_map = new TreeMap<String, Double>(bvc);
 		sorted_map.putAll(locationsVote);
 
-		Log.i(MithrilApplication.getConstDebugTag(), "results: " + sorted_map);
+        Log.i(MithrilApplication.getDebugTag(), "results: " + sorted_map);
 
 		return sorted_map;
 	}
@@ -690,11 +690,11 @@ public class SemanticManagement {
 			// Who is supporting this activity?
 			Double supValue = 0.0;
 
-			Log.i(MithrilApplication.getConstDebugTag(), "*-*-*-"+actSet);
-			OWLNamedIndividual indvA = (OWLNamedIndividual) bidiShortFormProvider
+            Log.i(MithrilApplication.getDebugTag(), "*-*-*-" + actSet);
+            OWLNamedIndividual indvA = (OWLNamedIndividual) bidiShortFormProvider
 					.getEntity(actSet);
-			Log.d(MithrilApplication.getConstDebugTag(), "-*-*-*-*" + actSet + ", " + indvA);
-			OWLClass classA = indvA.getTypes(ontology).iterator().next()
+            Log.d(MithrilApplication.getDebugTag(), "-*-*-*-*" + actSet + ", " + indvA);
+            OWLClass classA = indvA.getTypes(ontology).iterator().next()
 					.asOWLClass();
 			String nameClassA = bidiShortFormProvider.getShortForm(classA);
 
@@ -711,16 +711,16 @@ public class SemanticManagement {
 						.asOWLClass();
 				String nameClassB = bidiShortFormProvider.getShortForm(classB);
 
-				Log.i(MithrilApplication.getConstDebugTag(), "--CHECKING: " + actSet + " vs " + actNew);
-				if (nameClassA == nameClassB) {
-					Log.i(MithrilApplication.getConstDebugTag(), "-->Equivalent!");
-					if (supValue != 0.0)
+                Log.i(MithrilApplication.getDebugTag(), "--CHECKING: " + actSet + " vs " + actNew);
+                if (nameClassA == nameClassB) {
+                    Log.i(MithrilApplication.getDebugTag(), "-->Equivalent!");
+                    if (supValue != 0.0)
 						supValue = (supValue + confidences.get(i)) / 2.0;
 					else
 						supValue = supValue + confidences.get(i);
 				} else if (isIn(nameClassB, containers)) {
-					Log.i(MithrilApplication.getConstDebugTag(), "-->is In!");
-					if (supValue != 0.0)
+                    Log.i(MithrilApplication.getDebugTag(), "-->is In!");
+                    if (supValue != 0.0)
 						supValue = (supValue + confidences.get(i)) / 2.0;
 					else
 						supValue = supValue + confidences.get(i);
@@ -734,7 +734,7 @@ public class SemanticManagement {
 		TreeMap<String, Double> sorted_map = new TreeMap<String, Double>(bvc);
 		sorted_map.putAll(activitiesVote);
 
-		Log.i(MithrilApplication.getConstDebugTag(), "results: " + sorted_map);
+        Log.i(MithrilApplication.getDebugTag(), "results: " + sorted_map);
 
 		return sorted_map;
 	}
@@ -812,8 +812,8 @@ public class SemanticManagement {
 					
 				}
 				if (prevLoc != null) {
-					Log.i(MithrilApplication.getConstDebugTag(), "-*-*-*-*>>PrevLoc:" + prevLoc);
-					if (!isIn(bidiShortFormProvider.getShortForm(prevLoc),
+                    Log.i(MithrilApplication.getDebugTag(), "-*-*-*-*>>PrevLoc:" + prevLoc);
+                    if (!isIn(bidiShortFormProvider.getShortForm(prevLoc),
 							containers)) {
 						// it was not consistent so we have to remove the
 						// previous axiom
@@ -931,25 +931,6 @@ public class SemanticManagement {
 		return users;
 	}
 
-	class ValueComparator implements Comparator<String> {
-
-		Map<String, Double> base;
-
-		public ValueComparator(Map<String, Double> base) {
-			this.base = base;
-		}
-
-		// Note: this comparator imposes orderings that are inconsistent with
-		// equals.
-		public int compare(String a, String b) {
-			if (base.get(a) >= base.get(b)) {
-				return -1;
-			} else {
-				return 1;
-			} // returning 0 would merge keys
-		}
-	}
-
 	public boolean isIn(String value, Set<OWLNamedIndividual> individuals) {
 		if (individuals.isEmpty())
 			return false;
@@ -967,6 +948,25 @@ public class SemanticManagement {
 	public boolean isIn(String value, List<String> containers) {
 
 		return containers.contains(value);
-	}
+    }
+
+    class ValueComparator implements Comparator<String> {
+
+        Map<String, Double> base;
+
+        public ValueComparator(Map<String, Double> base) {
+            this.base = base;
+        }
+
+        // Note: this comparator imposes orderings that are inconsistent with
+        // equals.
+        public int compare(String a, String b) {
+            if (base.get(a) >= base.get(b)) {
+                return -1;
+            } else {
+                return 1;
+            } // returning 0 would merge keys
+        }
+    }
 
 }

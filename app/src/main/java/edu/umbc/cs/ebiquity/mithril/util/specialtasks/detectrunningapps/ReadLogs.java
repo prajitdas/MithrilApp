@@ -34,13 +34,13 @@ public class ReadLogs {
         StringBuilder logBuilder = new StringBuilder();
         try {
             //logcat -d dumps and exits the process! Won't work for me :(
-            Process process = Runtime.getRuntime().exec(MithrilApplication.getDetectAppLaunchCmd());
+            Process process = Runtime.getRuntime().exec(MithrilApplication.getCmdDetectAppLaunch());
             BufferedReader appLaunchData = new BufferedReader(
                     new InputStreamReader(process.getInputStream()));
 
             String line;
             while ((line = appLaunchData.readLine()) != null) {
-                if (line.contains(MithrilApplication.getConstLogLaunchIntentTxt())) {
+                if (line.contains(MithrilApplication.getLogIntent())) {
                     Log.d(MithrilApplication.getDebugTag(), "another app launch: " + line);
                     String date = line.substring(0, 4);
                     String time = line.substring(7, 12);

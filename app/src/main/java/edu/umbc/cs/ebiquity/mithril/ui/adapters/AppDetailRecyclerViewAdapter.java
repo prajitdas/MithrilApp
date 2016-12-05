@@ -52,16 +52,16 @@ public class AppDetailRecyclerViewAdapter extends RecyclerView.Adapter<AppDetail
         holder.mPermissionLabel.setText(mValues.get(position).getPermissionLabel());
         holder.mPermissionName.setText(mValues.get(position).getPermissionName());
 
-        if (permProtLvl.equals(MithrilApplication.getConstPermissionProtectionLevelNormal())) {
+        if (permProtLvl.equals(MithrilApplication.getPermissionProtectionLevelNormal())) {
             holder.mPermissionProtectionLevel.setImageDrawable(context.getResources().getDrawable(R.drawable.comment_check_outline, context.getTheme()));
 //            cardView.setCardBackgroundColor(Color.GREEN);
-        } else if (permProtLvl.equals(MithrilApplication.getConstPermissionProtectionLevelDangerous())) {
+        } else if (permProtLvl.equals(MithrilApplication.getPermissionProtectionLevelDangerous())) {
             holder.mPermissionProtectionLevel.setImageDrawable(view.getContext().getResources().getDrawable(R.drawable.comment_alert_outline, view.getContext().getTheme()));
 //            cardView.setCardBackgroundColor(Color.RED);
-        } else if (permProtLvl.equals(MithrilApplication.getConstPermissionProtectionLevelSignature())) {
+        } else if (permProtLvl.equals(MithrilApplication.getPermissionProtectionLevelSignature())) {
             holder.mPermissionProtectionLevel.setImageDrawable(view.getContext().getResources().getDrawable(R.drawable.comment_processing_outline, view.getContext().getTheme()));
 //            cardView.setCardBackgroundColor(Color.YELLOW);
-        } else if (permProtLvl.equals(MithrilApplication.getConstPermissionProtectionLevelPrivileged())) {
+        } else if (permProtLvl.equals(MithrilApplication.getPermissionProtectionLevelPrivileged())) {
             holder.mPermissionProtectionLevel.setImageDrawable(view.getContext().getResources().getDrawable(R.drawable.comment_remove_outline, view.getContext().getTheme()));
 //            cardView.setCardBackgroundColor(Color.BLUE);
         } else {
@@ -69,7 +69,7 @@ public class AppDetailRecyclerViewAdapter extends RecyclerView.Adapter<AppDetail
 //            cardView.setCardBackgroundColor(Color.GRAY);
         }
 
-        if (mValues.get(position).getPermissionGroup() != MithrilApplication.getConstNoGroupForPermission()) {
+        if (mValues.get(position).getPermissionGroup() != MithrilApplication.getPermissionNoGroup()) {
             String[] words = mValues.get(position).getPermissionGroup().split(Pattern.quote("."));
             //In a group, the last word is most important for group identification, so use that I guess!
             holder.mPermissionGroup.setText(words[words.length - 1]);

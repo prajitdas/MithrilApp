@@ -11,8 +11,8 @@ public class Violation {
 
 	public Violation() {
 		this.Id = -1;
-		this.violationDescription = MithrilApplication.getConstDefaultDescription();
-		this.policyId = -1;
+        this.violationDescription = MithrilApplication.getDefaultDescription();
+        this.policyId = -1;
 		this.ruleId = -1;
 		this.violationMarker = false;
 	}
@@ -66,26 +66,40 @@ public class Violation {
 			return false;
 		if (Id != other.Id)
 			return false;
-		if (violationMarker != other.violationMarker)
-			return false;
-		return true;
-	}
+        return violationMarker == other.violationMarker;
+    }
 
 	public int getPolicyId() {
 		return policyId;
 	}
 
+    public void setPolicyId(int policyId) {
+        this.policyId = policyId;
+    }
+
 	public int getRuleId() {
 		return ruleId;
 	}
+
+    public void setRuleId(int ruleId) {
+        this.ruleId = ruleId;
+    }
 
 	public String getViolationDescription() {
 		return violationDescription;
 	}
 
+    public void setViolationDescription(String violationDescription) {
+        this.violationDescription = violationDescription;
+    }
+
 	public int getId() {
 		return Id;
 	}
+
+    public void setId(int violationId) {
+        this.Id = violationId;
+    }
 
 	@Override
 	public int hashCode() {
@@ -104,18 +118,6 @@ public class Violation {
 
 	public boolean isViolationMarker() {
 		return violationMarker;
-	}	
-	public void setPolicyId(int policyId) {
-		this.policyId = policyId;
-	}
-	public void setRuleId(int ruleId) {
-		this.ruleId = ruleId;
-	}
-	public void setViolationDescription(String violationDescription) {
-		this.violationDescription = violationDescription;
-	}
-	public void setId(int violationId) {
-		this.Id = violationId;
 	}
 
 	public void setViolationMarker(boolean violationMarker) {

@@ -20,8 +20,8 @@ public class Requester {
 	private String requesterUsageCount;	// installs
 	public Requester() {
 		this.id = -1;
-		this.requesterName = MithrilApplication.getConstArrayRequesterCategory()[1];
-	}
+        this.requesterName = MithrilApplication.getContextArrayRequesterCategory()[1];
+    }
 	public Requester(int id, String requesterName, String requesterCategory, String requesterPrivilegeLevel,
 			String requesterCreatorName, String requesterUsageCount, String requesterContentRating,
 			String requesterReviewRating, String requesterReviewCount, boolean adLibraryUsed) {
@@ -100,30 +100,75 @@ public class Requester {
 	public int getId() {
 		return id;
 	}
+
+    public void setId(int id) {
+        this.id = id;
+    }
+
 	public String getRequesterCategory() {
 		return requesterCategory;
 	}
+
+    public void setRequesterCategory(String requesterCategory) {
+        this.requesterCategory = requesterCategory;
+    }
+
 	public String getRequesterContentRating() {
 		return requesterContentRating;
 	}
+
+    public void setRequesterContentRating(String requesterContentRating) {
+        this.requesterContentRating = requesterContentRating;
+    }
+
 	public String getRequesterCreatorName() {
 		return requesterCreatorName;
 	}
+
+    public void setRequesterCreatorName(String requesterCreatorName) {
+        this.requesterCreatorName = requesterCreatorName;
+    }
+
 	public String getRequesterName() {
 		return requesterName;
 	}
+
+    public void setRequesterName(String requesterName) {
+        this.requesterName = requesterName;
+    }
+
 	public String getRequesterPrivilegeLevel() {
 		return requesterPrivilegeLevel;
 	}
+
+    public void setRequesterPrivilegeLevel(String requesterPrivilegeLevel) {
+        this.requesterPrivilegeLevel = requesterPrivilegeLevel;
+    }
+
 	public String getRequesterReviewCount() {
 		return requesterReviewCount;
 	}
+
+    public void setRequesterReviewCount(String requesterReviewCount) {
+        this.requesterReviewCount = requesterReviewCount;
+    }
+
 	public String getRequesterReviewRating() {
 		return requesterReviewRating;
 	}
+
+    public void setRequesterReviewRating(String requesterReviewRating) {
+        this.requesterReviewRating = requesterReviewRating;
+    }
+
 	public String getRequesterUsageCount() {
 		return requesterUsageCount;
 	}
+
+    public void setRequesterUsageCount(String requesterUsageCount) {
+        this.requesterUsageCount = requesterUsageCount;
+    }
+
 	@Override
 	public int hashCode() {
 		final int prime = 31;
@@ -140,40 +185,16 @@ public class Requester {
 		result = prime * result + ((requesterUsageCount == null) ? 0 : requesterUsageCount.hashCode());
 		return result;
 	}
-	public boolean isAdLibraryUsed() {
+
+    public boolean isAdLibraryUsed() {
 		return adLibraryUsed;
 	}
-	public void setAdLibraryUsed(boolean adLibraryUsed) {
+
+    public void setAdLibraryUsed(boolean adLibraryUsed) {
 		this.adLibraryUsed = adLibraryUsed;
 	}
-	public void setId(int id) {
-		this.id = id;
-	}
-	public void setRequesterCategory(String requesterCategory) {
-		this.requesterCategory = requesterCategory;
-	}
-	public void setRequesterContentRating(String requesterContentRating) {
-		this.requesterContentRating = requesterContentRating;
-	}
-	public void setRequesterCreatorName(String requesterCreatorName) {
-		this.requesterCreatorName = requesterCreatorName;
-	}
-	public void setRequesterName(String requesterName) {
-		this.requesterName = requesterName;
-	}
-	public void setRequesterPrivilegeLevel(String requesterPrivilegeLevel) {
-		this.requesterPrivilegeLevel = requesterPrivilegeLevel;
-	}
-	public void setRequesterReviewCount(String requesterReviewCount) {
-		this.requesterReviewCount = requesterReviewCount;
-	}
-	public void setRequesterReviewRating(String requesterReviewRating) {
-		this.requesterReviewRating = requesterReviewRating;
-	}
-	public void setRequesterUsageCount(String requesterUsageCount) {
-		this.requesterUsageCount = requesterUsageCount;
-	}
-	@Override
+
+    @Override
 	public String toString() {
 		return "Requester [id=" + id + ", requesterName=" + requesterName + ", requesterCategory=" + requesterCategory
 				+ ", requesterPrivilegeLevel=" + requesterPrivilegeLevel + ", requesterCreatorName="

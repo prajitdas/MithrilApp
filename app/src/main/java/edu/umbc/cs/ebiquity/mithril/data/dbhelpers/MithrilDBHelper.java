@@ -43,7 +43,7 @@ import edu.umbc.cs.ebiquity.mithril.data.model.rules.requesters.Requester;
 public class MithrilDBHelper extends SQLiteOpenHelper {
 	// Database declarations
 	private final static int DATABASE_VERSION = 101;
-	private final static String DATABASE_NAME = MithrilApplication.getConstDatabaseName();
+    private final static String DATABASE_NAME = MithrilApplication.getDatabaseName();
 
 	// Table 1 for Requester information
 	private final static String REQID = "id"; // ID of a request
@@ -396,8 +396,8 @@ public class MithrilDBHelper extends SQLiteOpenHelper {
 		try{
 			insertedRowId = db.insert(getRequestersTableName(), null, values);
 		} catch (SQLException e) {
-			Log.e(MithrilApplication.getConstDebugTag(), "Error inserting " + values, e);
-			return -1;
+            Log.e(MithrilApplication.getDebugTag(), "Error inserting " + values, e);
+            return -1;
 		}
 		return insertedRowId;
 	}
@@ -409,8 +409,8 @@ public class MithrilDBHelper extends SQLiteOpenHelper {
 		try {
 			insertedRowId = db.insert(getResourcesTableName(), null, values);
 		} catch (SQLException e) {
-			Log.e(MithrilApplication.getConstDebugTag(), "Error inserting " + values, e);
-			return -1;
+            Log.e(MithrilApplication.getDebugTag(), "Error inserting " + values, e);
+            return -1;
 		}
 		return insertedRowId;
 	}
@@ -426,8 +426,8 @@ public class MithrilDBHelper extends SQLiteOpenHelper {
 		try {
 			insertedRowId = db.insert(getContextTableName(), null, values);
 		} catch (SQLException e) {
-			Log.e(MithrilApplication.getConstDebugTag(), "Error inserting " + values, e);
-			return -1;
+            Log.e(MithrilApplication.getDebugTag(), "Error inserting " + values, e);
+            return -1;
 		}
 		return insertedRowId;
 	}
@@ -439,8 +439,8 @@ public class MithrilDBHelper extends SQLiteOpenHelper {
 		try {
 			insertedRowId = db.insert(getActionTableName(), null, values);
 		} catch (SQLException e) {
-			Log.e(MithrilApplication.getConstDebugTag(), "Error inserting " + values, e);
-			return -1;
+            Log.e(MithrilApplication.getDebugTag(), "Error inserting " + values, e);
+            return -1;
 		}
 		return insertedRowId;
 	}
@@ -465,8 +465,8 @@ public class MithrilDBHelper extends SQLiteOpenHelper {
 		try {
 			insertedRowId = db.insert(getAppDataTableName(), null, values);
 		} catch (SQLException e) {
-			Log.e(MithrilApplication.getConstDebugTag(), "Error inserting " + values, e);
-			return -1;
+            Log.e(MithrilApplication.getDebugTag(), "Error inserting " + values, e);
+            return -1;
 		}
 		return insertedRowId;
 	}
@@ -486,8 +486,8 @@ public class MithrilDBHelper extends SQLiteOpenHelper {
                 try {
 					insertedRowId = db.insert(getAppPermTableName(), null, values);
 				} catch (SQLException e) {
-					Log.e(MithrilApplication.getConstDebugTag(), "Error inserting " + values, e);
-					return -1;
+                    Log.e(MithrilApplication.getDebugTag(), "Error inserting " + values, e);
+                    return -1;
 				}
 			}
 		}
@@ -508,8 +508,8 @@ public class MithrilDBHelper extends SQLiteOpenHelper {
 		try {
 			insertedRowId = db.insert(getPermissionsTableName(), null, values);
 		} catch (SQLException e) {
-			Log.e(MithrilApplication.getConstDebugTag(), "Error inserting " + values, e);
-			return -1;
+            Log.e(MithrilApplication.getDebugTag(), "Error inserting " + values, e);
+            return -1;
 		}
 		return insertedRowId;
 	}
@@ -525,8 +525,8 @@ public class MithrilDBHelper extends SQLiteOpenHelper {
 		try {
 			insertedRowId = db.insert(getPolicyRulesTableName(), null, values);
 		} catch (SQLException e) {
-			Log.e(MithrilApplication.getConstDebugTag(), "Error inserting " + values, e);
-			return -1;
+            Log.e(MithrilApplication.getDebugTag(), "Error inserting " + values, e);
+            return -1;
 		}
 		return insertedRowId;
 	}
@@ -551,8 +551,8 @@ public class MithrilDBHelper extends SQLiteOpenHelper {
 		try{
 			insertedRowId = db.insert(getViolationsTableName(), null, values);
 		} catch (SQLException e) {
-			Log.e(MithrilApplication.getConstDebugTag(), "Error inserting " + values, e);
-			return -1;
+            Log.e(MithrilApplication.getDebugTag(), "Error inserting " + values, e);
+            return -1;
 		}
 		return insertedRowId;
 	}
@@ -1376,7 +1376,7 @@ public class MithrilDBHelper extends SQLiteOpenHelper {
 						if(pack.applicationInfo.loadDescription(packageManager) != null)
 							tempAppData.setAppDescription(pack.applicationInfo.loadDescription(packageManager).toString());
 						else
-							tempAppData.setAppDescription(MithrilApplication.getConstDefaultDescription());
+                            tempAppData.setAppDescription(MithrilApplication.getDefaultDescription());
 
 						//App process name
 						tempAppData.setAssociatedProcessName(pack.applicationInfo.processName);
@@ -1405,9 +1405,9 @@ public class MithrilDBHelper extends SQLiteOpenHelper {
 
 						//App type
 						if((pack.applicationInfo.flags & ApplicationInfo.FLAG_SYSTEM) == 1)
-							tempAppData.setAppType(MithrilApplication.getSystemAppsDisplayTag());
-						else
-							tempAppData.setAppType(MithrilApplication.getUserAppsDisplayTag());
+                            tempAppData.setAppType(MithrilApplication.getPrefKeySystemAppsDisplay());
+                        else
+                            tempAppData.setAppType(MithrilApplication.getPrefKeyUserAppsDisplay());
 
 						//App uid
 						tempAppData.setUid(pack.applicationInfo.uid);
@@ -1462,23 +1462,23 @@ public class MithrilDBHelper extends SQLiteOpenHelper {
         //Setting the protection level
         switch (permissionInfo.protectionLevel) {
             case PermissionInfo.PROTECTION_NORMAL:
-                tempPermData.setPermissionProtectionLevel(MithrilApplication.getConstPermissionProtectionLevelNormal());
+                tempPermData.setPermissionProtectionLevel(MithrilApplication.getPermissionProtectionLevelNormal());
                 break;
             case PermissionInfo.PROTECTION_DANGEROUS:
-                tempPermData.setPermissionProtectionLevel(MithrilApplication.getConstPermissionProtectionLevelDangerous());
+                tempPermData.setPermissionProtectionLevel(MithrilApplication.getPermissionProtectionLevelDangerous());
                 break;
             case PermissionInfo.PROTECTION_SIGNATURE:
-                tempPermData.setPermissionProtectionLevel(MithrilApplication.getConstPermissionProtectionLevelSignature());
+                tempPermData.setPermissionProtectionLevel(MithrilApplication.getPermissionProtectionLevelSignature());
                 break;
             case PermissionInfo.PROTECTION_FLAG_PRIVILEGED:
-                tempPermData.setPermissionProtectionLevel(MithrilApplication.getConstPermissionProtectionLevelPrivileged());
+                tempPermData.setPermissionProtectionLevel(MithrilApplication.getPermissionProtectionLevelPrivileged());
                 break;
             default:
-                tempPermData.setPermissionProtectionLevel(MithrilApplication.getConstPermissionProtectionLevelUnknown());
+                tempPermData.setPermissionProtectionLevel(MithrilApplication.getPermissionProtectionLevelUnknown());
                 break;
         }
         if (groupName == null) {
-            tempPermData.setPermissionGroup(MithrilApplication.getConstNoGroupForPermission());
+            tempPermData.setPermissionGroup(MithrilApplication.getPermissionNoGroup());
             tempPermData.setResource(new Resource("nada"));
         } else {
             tempPermData.setPermissionGroup(groupName);
@@ -1490,13 +1490,13 @@ public class MithrilDBHelper extends SQLiteOpenHelper {
         //Setting the protection level
         switch (permissionInfo.flags) {
             case PermissionInfo.FLAG_COSTS_MONEY:
-                tempPermData.setPermissionFlag(MithrilApplication.getConstPermissionFlagCostsMoney());
+                tempPermData.setPermissionFlag(MithrilApplication.getPermissionFlagCostsMoney());
                 break;
             case PermissionInfo.FLAG_INSTALLED:
-                tempPermData.setPermissionFlag(MithrilApplication.getConstPermissionFlagInstalled());
+                tempPermData.setPermissionFlag(MithrilApplication.getPermissionFlagInstalled());
                 break;
             default:
-                tempPermData.setPermissionProtectionLevel(MithrilApplication.getConstPermissionFlagNone());
+                tempPermData.setPermissionProtectionLevel(MithrilApplication.getPermissionFlagNone());
                 break;
         }
         //Permission description can be null. We are preventing a null pointer exception here.
@@ -1516,10 +1516,10 @@ public class MithrilDBHelper extends SQLiteOpenHelper {
 
         tempPermData.setPermissionName(permissionName);
         //Setting the protection level
-        tempPermData.setPermissionProtectionLevel(MithrilApplication.getConstPermissionProtectionLevelUnknown());
-        tempPermData.setPermissionGroup(MithrilApplication.getConstNoGroupForPermission());
+        tempPermData.setPermissionProtectionLevel(MithrilApplication.getPermissionProtectionLevelUnknown());
+        tempPermData.setPermissionGroup(MithrilApplication.getPermissionNoGroup());
         tempPermData.setResource(new Resource("nada"));
-        tempPermData.setPermissionProtectionLevel(MithrilApplication.getConstPermissionFlagNone());
+        tempPermData.setPermissionProtectionLevel(MithrilApplication.getPermissionFlagNone());
         tempPermData.setPermissionLabel(permissionName);
         tempPermData.setPermissionIcon(getPermissionIconBitmap());
 

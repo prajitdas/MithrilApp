@@ -6,8 +6,8 @@ public class SemanticIdentity {
     private String identity;
 
     public SemanticIdentity() {
-        identity = MithrilApplication.getConstContextDefaultIdentity();
-	}
+        identity = MithrilApplication.getContextDefaultIdentity();
+    }
 
     public SemanticIdentity(String anIdentity) {
         identity = anIdentity;

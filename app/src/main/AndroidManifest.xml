@@ -5,13 +5,18 @@
 
     <!-- Remember to add all the permissions you request here in the PermissionHelper class for handling permission acquisition -->
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
+    <uses-permission android:name="android.permission.WAKE_LOCK" />
     <uses-permission
         android:name="android.permission.PACKAGE_USAGE_STATS"
         tools:ignore="ProtectedPermissions" />
     <!-- <uses-permission android:name="android.permission.REAL_GET_TASKS" /> -->
-    <!--<uses-permission android:name="android.permission.READ_LOGS" />-->
+    <!-- <uses-permission android:name="android.permission.READ_LOGS" /> -->
     <!-- <uses-permission android:name="android.permission.NFC" /> -->
+
 
     <!-- Needed only if your app targets Android 5.0 (API level 21) or higher. -->
     <uses-feature
@@ -92,5 +97,11 @@
             android:name=".util.services.LocationUpdateService"
             android:enabled="true"
             android:exported="true" />
+
+        <receiver
+            android:name=".util.receivers.LocationUpdateReceiver"
+            android:enabled="true"
+            android:exported="true"></receiver>
     </application>
+
 </manifest>

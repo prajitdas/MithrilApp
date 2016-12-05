@@ -67,7 +67,7 @@ public class ShowAppsFragment extends Fragment {
         ShowAppsFragment fragment = new ShowAppsFragment();
         Bundle args = new Bundle();
         args.putInt(ARG_COLUMN_COUNT, columnCount);
-        args.putString(MithrilApplication.getAppDisplayTypeTag(), appDisplayType);
+        args.putString(MithrilApplication.getPrefKeyAppDisplayType(), appDisplayType);
         fragment.setArguments(args);
         return fragment;
     }
@@ -78,7 +78,7 @@ public class ShowAppsFragment extends Fragment {
 
         if (getArguments() != null) {
             mColumnCount = getArguments().getInt(ARG_COLUMN_COUNT);
-            mAppDisplayType = getArguments().getString(MithrilApplication.getAppDisplayTypeTag());
+            mAppDisplayType = getArguments().getString(MithrilApplication.getPrefKeyAppDisplayType());
         }
         Log.d(MithrilApplication.getDebugTag(), mAppDisplayType);
     }
@@ -103,11 +103,11 @@ public class ShowAppsFragment extends Fragment {
             else
                 recyclerView.setLayoutManager(new GridLayoutManager(context, mColumnCount));
 
-            if (mAppDisplayType.equals(MithrilApplication.getAllAppsDisplayTag()))
+            if (mAppDisplayType.equals(MithrilApplication.getPrefKeyAllAppsDisplay()))
                 recyclerView.setAdapter(new InstalledAppsRecyclerViewAdapter(allAppDataItems, mListener, mListenerLongInteraction));
-            else if (mAppDisplayType.equals(MithrilApplication.getSystemAppsDisplayTag()))
+            else if (mAppDisplayType.equals(MithrilApplication.getPrefKeySystemAppsDisplay()))
                 recyclerView.setAdapter(new InstalledAppsRecyclerViewAdapter(systemAppDataItems, mListener, mListenerLongInteraction));
-            else if (mAppDisplayType.equals(MithrilApplication.getUserAppsDisplayTag()))
+            else if (mAppDisplayType.equals(MithrilApplication.getPrefKeyUserAppsDisplay()))
                 recyclerView.setAdapter(new InstalledAppsRecyclerViewAdapter(userAppDataItems, mListener, mListenerLongInteraction));
 
             recyclerView.setHasFixedSize(true);
@@ -123,7 +123,7 @@ public class ShowAppsFragment extends Fragment {
         mithrilDB = mithrilDBHelper.getWritableDatabase();
         sharedPreferences = view.getContext().getSharedPreferences(MithrilApplication.getSharedPreferencesName(), Context.MODE_PRIVATE);
 
-        if (mAppDisplayType.equals(MithrilApplication.getAllAppsDisplayTag())) {
+        if (mAppDisplayType.equals(MithrilApplication.getPrefKeyAllAppsDisplay())) {
             /**
              * Data loading: get all apps
              */
@@ -135,7 +135,7 @@ public class ShowAppsFragment extends Fragment {
             }
             Collections.sort(allAppDataItems);
             appMetadataMap.clear();
-        } else if (mAppDisplayType.equals(MithrilApplication.getSystemAppsDisplayTag())) {
+        } else if (mAppDisplayType.equals(MithrilApplication.getPrefKeySystemAppsDisplay())) {
 
             /**
              * Data loading: get all system apps
@@ -148,7 +148,7 @@ public class ShowAppsFragment extends Fragment {
             }
             Collections.sort(systemAppDataItems);
             appMetadataMap.clear();
-        } else if (mAppDisplayType.equals(MithrilApplication.getUserAppsDisplayTag())) {
+        } else if (mAppDisplayType.equals(MithrilApplication.getPrefKeyUserAppsDisplay())) {
             /**
              * Data loading: get all user apps
              */
@@ -171,7 +171,7 @@ public class ShowAppsFragment extends Fragment {
     private void getAllApps() {
         List<AppData> tempList = mithrilDBHelper.findAllApps(mithrilDB);
         SharedPreferences.Editor editor = view.getContext().getSharedPreferences(MithrilApplication.getSharedPreferencesName(), Context.MODE_PRIVATE).edit();
-        editor.putInt(MithrilApplication.getSharedPreferenceAppCount(), tempList.size());
+        editor.putInt(MithrilApplication.getPrefKeyAppCount(), tempList.size());
         editor.commit();
         for(AppData app : tempList)
             appMetadataMap.put(app.getPackageName(), app);
@@ -182,7 +182,7 @@ public class ShowAppsFragment extends Fragment {
      */
     private void getSystemApps() {
         for(AppData app : mithrilDBHelper.findAllApps(mithrilDB))
-            if(app.getAppType().equals(MithrilApplication.getSystemAppsDisplayTag()))
+            if (app.getAppType().equals(MithrilApplication.getPrefKeySystemAppsDisplay()))
                 appMetadataMap.put(app.getPackageName(), app);
     }
 
@@ -191,7 +191,7 @@ public class ShowAppsFragment extends Fragment {
      */
     private void getUserApps() {
         for(AppData app : mithrilDBHelper.findAllApps(mithrilDB))
-            if(app.getAppType().equals(MithrilApplication.getUserAppsDisplayTag()))
+            if (app.getAppType().equals(MithrilApplication.getPrefKeyUserAppsDisplay()))
                 appMetadataMap.put(app.getPackageName(), app);
     }
 

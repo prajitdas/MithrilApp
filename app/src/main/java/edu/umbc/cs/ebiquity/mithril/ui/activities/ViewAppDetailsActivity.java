@@ -48,7 +48,7 @@ public class ViewAppDetailsActivity extends AppCompatActivity
 
         packageManager = getApplicationContext().getPackageManager();
 
-        packageName = getIntent().getStringExtra(MithrilApplication.getAppPkgNameTag());
+        packageName = getIntent().getStringExtra(MithrilApplication.getPrefKeyAppPkgName());
 
         mImgBtnLaunchApp = (ImageButton) findViewById(R.id.launch_app_btn);
         mImgBtnAppIsGood = (ImageButton) findViewById(R.id.app_is_good_btn);
@@ -63,7 +63,7 @@ public class ViewAppDetailsActivity extends AppCompatActivity
         }
         mTxtViewAppName.setText(
                 (
-                        applicationInfo != null ? packageManager.getApplicationLabel(applicationInfo).toString() : MithrilApplication.getConstPermissionProtectionLevelUnknown()
+                        applicationInfo != null ? packageManager.getApplicationLabel(applicationInfo).toString() : MithrilApplication.getPermissionProtectionLevelUnknown()
                 ) +
                         " (" +
                         packageName +
@@ -81,7 +81,7 @@ public class ViewAppDetailsActivity extends AppCompatActivity
      */
     private void loadViewAppDetailsFragment() {
         Bundle data = new Bundle();
-        data.putString(MithrilApplication.getAppPkgNameTag(), packageName);
+        data.putString(MithrilApplication.getPrefKeyAppPkgName(), packageName);
 
         AppDetailFragment appDetailFragment = new AppDetailFragment();
         appDetailFragment.setArguments(data);

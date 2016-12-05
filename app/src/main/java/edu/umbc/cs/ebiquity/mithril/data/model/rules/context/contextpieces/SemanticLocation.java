@@ -6,8 +6,8 @@ public class SemanticLocation {
     private String inferredLocation;
 
     public SemanticLocation() {
-        this.inferredLocation = MithrilApplication.getConstContextDefaultLocation();
-	}
+        this.inferredLocation = MithrilApplication.getContextDefaultLocation();
+    }
 
 	/**
 	 * @param inferredLocation

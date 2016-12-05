@@ -16,8 +16,8 @@ public class PolicyRule {
 	public PolicyRule() {
 		super();
 		this.id = -1;
-		this.name = MithrilApplication.getConstPolRulDefaultRule();
-		this.requester = new Requester();
+        this.name = MithrilApplication.getPolRulDefaultRule();
+        this.requester = new Requester();
 		this.resource = new Resource();
 		this.context = new String();
         //OWA: Define allow rules, so that we know exactly when to deny an action

@@ -55,7 +55,7 @@ public class AppInstallBroadcastReceiver extends BroadcastReceiver {
                         if(packageInfo.applicationInfo.loadDescription(packageManager) != null)
                             tempAppData.setAppDescription(packageInfo.applicationInfo.loadDescription(packageManager).toString());
                         else
-                            tempAppData.setAppDescription(MithrilApplication.getConstDefaultDescription());
+                            tempAppData.setAppDescription(MithrilApplication.getDefaultDescription());
                         tempAppData.setAssociatedProcessName(packageInfo.applicationInfo.processName);
                         tempAppData.setTargetSdkVersion(packageInfo.applicationInfo.targetSdkVersion);
                         if(packageInfo.applicationInfo.loadIcon(packageManager) instanceof BitmapDrawable)
@@ -68,9 +68,9 @@ public class AppInstallBroadcastReceiver extends BroadcastReceiver {
                         tempAppData.setVersionInfo(packageInfo.versionName);
                         tempAppData.setInstalled(true);
                         if((packageInfo.applicationInfo.flags & ApplicationInfo.FLAG_SYSTEM) == 1)
-                            tempAppData.setAppType(MithrilApplication.getSystemAppsDisplayTag());
+                            tempAppData.setAppType(MithrilApplication.getPrefKeySystemAppsDisplay());
                         else
-                            tempAppData.setAppType(MithrilApplication.getUserAppsDisplayTag());
+                            tempAppData.setAppType(MithrilApplication.getPrefKeyUserAppsDisplay());
                         tempAppData.setUid(packageInfo.applicationInfo.uid);
 
                         //App permissions

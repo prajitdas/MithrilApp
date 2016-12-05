@@ -68,7 +68,7 @@ public class AppDetailFragment extends Fragment {
 
         if (getArguments() != null) {
             mColumnCount = getArguments().getInt(ARG_COLUMN_COUNT);
-            mAppPackageName = getArguments().getString(MithrilApplication.getAppPkgNameTag());
+            mAppPackageName = getArguments().getString(MithrilApplication.getPrefKeyAppPkgName());
         }
         Log.d(MithrilApplication.getDebugTag(), mAppPackageName);
     }

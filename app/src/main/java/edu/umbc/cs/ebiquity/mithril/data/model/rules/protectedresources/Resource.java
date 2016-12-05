@@ -8,8 +8,8 @@ public class Resource {
 	public Resource() {
 		super();
 		this.id = -1;
-		this.resourceName = MithrilApplication.getConstArrayResourceCategory()[1];
-	}
+        this.resourceName = MithrilApplication.getContextArrayResourceCategory()[1];
+    }
 	public Resource(int resourceId, String resourceName) {
 		super();
 		this.id = resourceId;
@@ -41,9 +41,19 @@ public class Resource {
 	public int getId() {
 		return id;
 	}
+
+    public void setId(int id) {
+        this.id = id;
+    }
+
 	public String getResourceName() {
 		return resourceName;
 	}
+
+    public void setResourceName(String resourceName) {
+        this.resourceName = resourceName;
+    }
+
 	@Override
 	public int hashCode() {
 		final int prime = 31;
@@ -53,13 +63,8 @@ public class Resource {
 				+ ((resourceName == null) ? 0 : resourceName.hashCode());
 		return result;
 	}
-	public void setId(int id) {
-		this.id = id;
-	}
-	public void setResourceName(String resourceName) {
-		this.resourceName = resourceName;
-	}
-	@Override
+
+    @Override
 	public String toString() {
 		return resourceName;
 	}

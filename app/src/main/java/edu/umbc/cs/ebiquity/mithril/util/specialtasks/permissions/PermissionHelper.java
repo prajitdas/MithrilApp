@@ -10,6 +10,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Build;
+import android.os.Environment;
 import android.provider.Settings;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
@@ -29,6 +30,10 @@ import edu.umbc.cs.ebiquity.mithril.R;
 public class PermissionHelper {
     private static final List<String> permissionsRequired = Arrays.asList(
             Manifest.permission.ACCESS_FINE_LOCATION,
+            Manifest.permission.ACCESS_COARSE_LOCATION,
+            Manifest.permission.WRITE_EXTERNAL_STORAGE,
+            Manifest.permission.READ_EXTERNAL_STORAGE,
+            Manifest.permission.WAKE_LOCK,
             Manifest.permission.RECEIVE_BOOT_COMPLETED//,
 //            Manifest.permission.NFC
     );
@@ -47,7 +52,7 @@ public class PermissionHelper {
         return Build.VERSION.SDK_INT >= Build.VERSION_CODES.M;
     }
 
-    private static int isPermissionGranted(Context context, String permission) {
+    public static int isPermissionGranted(Context context, String permission) {
         return ContextCompat.checkSelfPermission(context, permission);
     }
 
@@ -88,16 +93,8 @@ public class PermissionHelper {
         if (permissionStrings.length > 0)
             ActivityCompat.requestPermissions((Activity) context,
                 permissionStrings,
-                MithrilApplication.CONST_ALL_PERMISSIONS_MITHRIL_REQUEST_CODE);
+                    MithrilApplication.ALL_PERMISSIONS_MITHRIL_REQUEST_CODE);
     }
-
-//    public static int getCountOfPermissionsToRequest() {
-//        return countOfPermissionsToRequest;
-//    }
-//
-//    public static void setCountOfPermissionsToRequest(int countOfPermissionsToRequest) {
-//        PermissionHelper.countOfPermissionsToRequest = countOfPermissionsToRequest;
-//    }
 
     /**
      * <uses-permission android:name="android.permission.READ_LOGS" />
@@ -194,6 +191,14 @@ public class PermissionHelper {
         return postLollipop() && !hasUsageStatsPermission(context);
     }
 
+//    public static int getCountOfPermissionsToRequest() {
+//        return countOfPermissionsToRequest;
+//    }
+//
+//    public static void setCountOfPermissionsToRequest(int countOfPermissionsToRequest) {
+//        PermissionHelper.countOfPermissionsToRequest = countOfPermissionsToRequest;
+//    }
+
     @TargetApi(Build.VERSION_CODES.LOLLIPOP)
     private static void requestUsageStatsPermission(Context context) {
         if (!hasUsageStatsPermission(context)) {
@@ -212,5 +217,18 @@ public class PermissionHelper {
                 android.os.Process.myUid(), context.getPackageName());
         boolean granted = mode == AppOpsManager.MODE_ALLOWED;
         return granted;
+    }
+
+    /* Checks if external storage is available for read and write */
+    public boolean isExternalStorageWritable() {
+        String state = Environment.getExternalStorageState();
+        return Environment.MEDIA_MOUNTED.equals(state);
+    }
+
+    /* Checks if external storage is available to at least read */
+    public boolean isExternalStorageReadable() {
+        String state = Environment.getExternalStorageState();
+        return Environment.MEDIA_MOUNTED.equals(state) ||
+                Environment.MEDIA_MOUNTED_READ_ONLY.equals(state);
     }
 }

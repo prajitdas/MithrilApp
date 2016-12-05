@@ -6,8 +6,8 @@ public class SemanticTime {
     private String deviceTime;
 
     public SemanticTime() {
-        this.deviceTime = MithrilApplication.getConstContextDefaultTime();
-	}
+        this.deviceTime = MithrilApplication.getContextDefaultTime();
+    }
 
 	/**
 	 * @param deviceTime

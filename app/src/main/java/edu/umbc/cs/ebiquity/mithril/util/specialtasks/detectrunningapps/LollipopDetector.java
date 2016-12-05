@@ -37,6 +37,7 @@ public class LollipopDetector implements Detector {
     private MithrilDBHelper mithrilDBHelper;
     private SQLiteDatabase mithrilDB;
     private String currentPackageName;
+    private SharedPreferences sharedPref;
 
     /**
      * Returns the consumer friendly device name
@@ -87,7 +88,7 @@ public class LollipopDetector implements Detector {
         if (!PermissionHelper.getUsageStatsPermisison(context))
             return null;
 
-        SharedPreferences sharedPref = context.getSharedPreferences(MithrilApplication.getSharedPreferencesName(), Context.MODE_PRIVATE);
+        sharedPref = context.getSharedPreferences(MithrilApplication.getSharedPreferencesName(), Context.MODE_PRIVATE);
         mithrilDBHelper = new MithrilDBHelper(context);
         mithrilDB = mithrilDBHelper.getWritableDatabase();
         currentPackageName = null;
@@ -142,10 +143,10 @@ public class LollipopDetector implements Detector {
         }
 
         if (currentPackageName.equals(getLauncherName(context)) ||
-                sharedPref.getString(MithrilApplication.getAppPkgNameTag(), "").equals(currentPackageName))
+                sharedPref.getString(MithrilApplication.getPrefKeyAppPkgName(), "").equals(currentPackageName))
             return null;
 
-        if (mithrilDBHelper.findAppTypeByAppPkgName(mithrilDB, currentPackageName).equals(MithrilApplication.getUserAppsDisplayTag())) {
+        if (mithrilDBHelper.findAppTypeByAppPkgName(mithrilDB, currentPackageName).equals(MithrilApplication.getPrefKeyUserAppsDisplay())) {
             Toast.makeText(context, "Mithril detects user app launch: " + currentPackageName, Toast.LENGTH_SHORT).show();
             Log.d(MithrilApplication.getDebugTag(), "Mithril detects user app launch: " + currentPackageName);
             getCurrentSemanticUserContext();
@@ -157,7 +158,7 @@ public class LollipopDetector implements Detector {
         mithrilDB.close();
 
         SharedPreferences.Editor editor = sharedPref.edit();
-        editor.putString(MithrilApplication.getAppPkgNameTag(), currentPackageName);
+        editor.putString(MithrilApplication.getPrefKeyAppPkgName(), currentPackageName);
         editor.commit();
 
         return currentPackageName;

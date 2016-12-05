@@ -6,8 +6,8 @@ public class SemanticActivity {
     private String inferredActivity;
 
     public SemanticActivity() {
-        this.inferredActivity = MithrilApplication.getConstContextDefaultActivity();
-	}
+        this.inferredActivity = MithrilApplication.getContextDefaultActivity();
+    }
 
 	/**
 	 * @param inferredActivity
