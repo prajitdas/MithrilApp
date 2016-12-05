@@ -30,9 +30,8 @@ import edu.umbc.cs.ebiquity.mithril.R;
 public class PermissionHelper {
     private static final List<String> permissionsRequired = Arrays.asList(
             Manifest.permission.ACCESS_FINE_LOCATION,
-            Manifest.permission.ACCESS_COARSE_LOCATION,
-            Manifest.permission.WRITE_EXTERNAL_STORAGE,
-            Manifest.permission.READ_EXTERNAL_STORAGE,
+//            Manifest.permission.WRITE_EXTERNAL_STORAGE,
+//            Manifest.permission.READ_EXTERNAL_STORAGE,
             Manifest.permission.WAKE_LOCK,
             Manifest.permission.RECEIVE_BOOT_COMPLETED//,
 //            Manifest.permission.NFC

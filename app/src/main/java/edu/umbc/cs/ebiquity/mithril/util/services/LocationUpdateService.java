@@ -12,20 +12,18 @@ import android.os.Bundle;
 import android.os.IBinder;
 import android.os.PowerManager;
 import android.util.Log;
+import android.widget.Toast;
 
 import com.google.android.gms.common.ConnectionResult;
-import com.google.android.gms.common.GooglePlayServicesUtil;
+import com.google.android.gms.common.GoogleApiAvailability;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.common.api.GoogleApiClient.ConnectionCallbacks;
 import com.google.android.gms.common.api.GoogleApiClient.OnConnectionFailedListener;
 import com.google.android.gms.location.LocationListener;
 import com.google.android.gms.location.LocationRequest;
 import com.google.android.gms.location.LocationServices;
+import com.google.gson.Gson;
 
-import java.io.BufferedWriter;
-import java.io.File;
-import java.io.FileWriter;
-import java.io.IOException;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -34,20 +32,19 @@ import edu.umbc.cs.ebiquity.mithril.MithrilApplication;
 import edu.umbc.cs.ebiquity.mithril.util.receivers.LocationUpdateReceiver;
 import edu.umbc.cs.ebiquity.mithril.util.specialtasks.permissions.PermissionHelper;
 
-public class LocationUpdateService extends Service
-        implements ConnectionCallbacks,
+public class LocationUpdateService extends Service implements
+        ConnectionCallbacks,
         OnConnectionFailedListener,
         LocationListener {
 
+    protected Location mLastLocation;
     private IBinder mBinder = new LocalBinder();
-
     private SharedPreferences sharedPref;
     private GoogleApiClient mGoogleApiClient;
     private PowerManager.WakeLock mWakeLock;
     private LocationRequest mLocationRequest;
     // Flag that indicates if a request is underway.
     private boolean mInProgress;
-
     private Boolean servicesAvailable = false;
 
     @Override
@@ -74,7 +71,7 @@ public class LocationUpdateService extends Service
         setUpLocationClientIfNeeded();
     }
 
-    /*
+    /**
      * Create a new location client, using the enclosing class to
      * handle callbacks.
      */
@@ -87,11 +84,15 @@ public class LocationUpdateService extends Service
     }
 
     private boolean servicesConnected() {
-        // Check that Google Play services is available
-        int resultCode = GooglePlayServicesUtil.isGooglePlayServicesAvailable(this);
-
-        // If Google Play services is available
-        return ConnectionResult.SUCCESS == resultCode;
+        GoogleApiAvailability googleAPI = GoogleApiAvailability.getInstance();
+        int result = googleAPI.isGooglePlayServicesAvailable(this);
+        if (result != ConnectionResult.SUCCESS) {
+            if (googleAPI.isUserResolvableError(result)) {
+                Toast.makeText(this, result, Toast.LENGTH_SHORT).show();
+            }
+            return false;
+        }
+        return true;
     }
 
     public int onStartCommand(Intent intent, int flags, int startId) {
@@ -99,16 +100,15 @@ public class LocationUpdateService extends Service
 
         PowerManager mgr = (PowerManager) getSystemService(Context.POWER_SERVICE);
 
-        /*
-        WakeLock is reference counted so we don't want to create multiple WakeLocks. So do a check before initializing and acquiring.
-
-        This will fix the "java.lang.Exception: WakeLock finalized while still held: MyWakeLock" error that you may find.
-        */
-        if (this.mWakeLock == null) { //**Added this
-            this.mWakeLock = mgr.newWakeLock(PowerManager.PARTIAL_WAKE_LOCK, "MyWakeLock");
+        /**
+         * WakeLock is reference counted so we don't want to create multiple WakeLocks. So do a check before initializing and acquiring.
+         * This will fix the "java.lang.Exception: WakeLock finalized while still held: MyWakeLock" error that you may find.
+         */
+        if (this.mWakeLock == null) { //Added this
+            this.mWakeLock = mgr.newWakeLock(PowerManager.PARTIAL_WAKE_LOCK, "MithrilWakeLock");
         }
 
-        if (!this.mWakeLock.isHeld()) { //**Added this
+        if (!this.mWakeLock.isHeld()) { //Added this
             this.mWakeLock.acquire();
         }
 
@@ -117,7 +117,8 @@ public class LocationUpdateService extends Service
 
         setUpLocationClientIfNeeded();
         if (!mGoogleApiClient.isConnected() || !mGoogleApiClient.isConnecting() && !mInProgress) {
-            appendLog(DateFormat.getDateTimeInstance().format(new Date()) + ": Started", sharedPref.getString(MithrilApplication.getPrefKeyLogFilename(), "sdcard/log.txt"));
+            Log.d(MithrilApplication.getDebugTag(), DateFormat.getDateTimeInstance().format(new Date()) + ": Started");
+//            appendLog(DateFormat.getDateTimeInstance().format(new Date()) + ": Started", sharedPref.getString(MithrilApplication.getPrefKeyLogFilename(), "sdcard/log.txt"));
             mInProgress = true;
             mGoogleApiClient.connect();
         }
@@ -134,11 +135,13 @@ public class LocationUpdateService extends Service
     @Override
     public void onLocationChanged(Location location) {
         // Report to the UI that the location was updated
-        String msg = Double.toString(location.getLatitude()) + "," +
-                Double.toString(location.getLongitude());
+        String msg = Double.toString(location.getLatitude()) + "," + Double.toString(location.getLongitude());
         Log.d(MithrilApplication.getDebugTag(), msg);
-        // Toast.makeText(this, msg, Toast.LENGTH_SHORT).show();
-        appendLog(DateFormat.getDateTimeInstance().format(new Date()) + ":" + msg, sharedPref.getString(MithrilApplication.getPrefKeyLocationFilename(), "sdcard/location.txt"));
+//        Toast.makeText(this, msg, Toast.LENGTH_SHORT).show();
+        Log.d(MithrilApplication.getDebugTag(), DateFormat.getDateTimeInstance().format(new Date()) + ":" + msg);
+//        appendLog(DateFormat.getDateTimeInstance().format(new Date()) + ":" + msg, sharedPref.getString(MithrilApplication.getPrefKeyLocationFilename(), "sdcard/location.txt"));
+        mLastLocation = location;
+        storeInSharedPreferences(MithrilApplication.getPrefKeyLocation(), mLastLocation);
     }
 
     @Override
@@ -151,26 +154,21 @@ public class LocationUpdateService extends Service
         return mDateFormat.format(new Date());
     }
 
-    public void appendLog(String text, String filename) {
-        File logFile = new File(filename);
-        if (!logFile.exists()) {
-            try {
-                logFile.createNewFile();
-            } catch (IOException e) {
-                // TODO Auto-generated catch block
-                e.printStackTrace();
-            }
-        }
-        try {
-            //BufferedWriter for performance, true to set append to file flag
-            BufferedWriter buf = new BufferedWriter(new FileWriter(logFile, true));
-            buf.append(text);
-            buf.newLine();
-            buf.close();
-        } catch (IOException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
-        }
+    /**
+     * From http://stackoverflow.com/a/18463758/1816861
+     *
+     * @param key
+     * @param location To Retreive
+     *                 Gson gson = new Gson();
+     *                 String json = mPrefs.getString("MyObject", "");
+     *                 MyObject obj = gson.fromJson(json, MyObject.class);
+     */
+    public void storeInSharedPreferences(String key, Location location) {
+        SharedPreferences.Editor editor = sharedPref.edit();
+        Gson gson = new Gson();
+        String json = gson.toJson(location);
+        editor.putString(key, json);
+        editor.commit();
     }
 
     @Override
@@ -197,7 +195,7 @@ public class LocationUpdateService extends Service
         super.onDestroy();
     }
 
-    /*
+    /**
      * Called by Location Services when the request to connect the
      * client finishes successfully. At this point, you can
      * request the current location or start periodic updates
@@ -207,8 +205,7 @@ public class LocationUpdateService extends Service
         // Request location updates using static settings
         Intent intent = new Intent(this, LocationUpdateReceiver.class);
         if (PermissionHelper.isExplicitPermissionAcquisitionNecessary()) {
-            if (PermissionHelper.isPermissionGranted(this, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED &&
-                    PermissionHelper.isPermissionGranted(this, Manifest.permission.ACCESS_COARSE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
+            if (PermissionHelper.isPermissionGranted(this, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
                 try {
                     LocationServices.FusedLocationApi.requestLocationUpdates(this.mGoogleApiClient,
                             mLocationRequest, this);
@@ -217,10 +214,11 @@ public class LocationUpdateService extends Service
                 }
             }
         }
-        appendLog(DateFormat.getDateTimeInstance().format(new Date()) + ": Connected", sharedPref.getString(MithrilApplication.getPrefKeyLogFilename(), "sdcard/log.txt"));
+        Log.d(MithrilApplication.getDebugTag(), DateFormat.getDateTimeInstance().format(new Date()) + ": Connected");
+//        appendLog(DateFormat.getDateTimeInstance().format(new Date()) + ": Connected", sharedPref.getString(MithrilApplication.getPrefKeyLogFilename(), "sdcard/log.txt"));
     }
 
-    /*
+    /**
      * Called by Location Services if the connection to the
      * location client drops because of an error.
      */
@@ -231,11 +229,12 @@ public class LocationUpdateService extends Service
         // Destroy the current location client
         mGoogleApiClient = null;
         // Display the connection status
-        // Toast.makeText(this, DateFormat.getDateTimeInstance().format(new Date()) + ": Disconnected. Please re-connect.", Toast.LENGTH_SHORT).show();
-        appendLog(DateFormat.getDateTimeInstance().format(new Date()) + ": Disconnected", sharedPref.getString(MithrilApplication.getPrefKeyLogFilename(), "sdcard/log.txt"));
+//        Toast.makeText(this, DateFormat.getDateTimeInstance().format(new Date()) + ": Disconnected. Please re-connect.", Toast.LENGTH_SHORT).show();
+        Log.d(MithrilApplication.getDebugTag(), DateFormat.getDateTimeInstance().format(new Date()) + ": Disconnected. Please re-connect.");
+//        appendLog(DateFormat.getDateTimeInstance().format(new Date()) + ": Disconnected", sharedPref.getString(MithrilApplication.getPrefKeyLogFilename(), "sdcard/log.txt"));
     }
 
-    /*
+    /**
      * Called by Location Services if the attempt to
      * Location Services fails.
      */
@@ -243,17 +242,15 @@ public class LocationUpdateService extends Service
     public void onConnectionFailed(ConnectionResult connectionResult) {
         mInProgress = false;
 
-    /*
+    /**
      * Google Play services can resolve some errors it detects.
      * If the error has a resolution, try sending an Intent to
      * start a Google Play services activity that can resolve
      * error.
      */
         if (connectionResult.hasResolution()) {
-
             // If no resolution is available, display an error dialog
         } else {
-
         }
     }
 

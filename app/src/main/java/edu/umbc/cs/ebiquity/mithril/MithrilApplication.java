@@ -7,10 +7,14 @@ import android.app.Application;
  */
 public class MithrilApplication extends Application {
     public static final int ALL_PERMISSIONS_MITHRIL_REQUEST_CODE = 1;
-    // Stores the lat / long pairs in a text file
-    public static final String PREF_KEY_LOCATION_FILENAME = "locationFile";
-    // Stores the connect / disconnect data in a text file
-    public static final String PREF_KEY_LOG_FILENAME = "logFile";
+    public static final int SUCCESS_RESULT = 0;
+    public static final int FAILURE_RESULT = 1;
+    public static final String PACKAGE_NAME = "edu.umbc.cs.ebiquity.mithril";
+    public static final String RECEIVER = PACKAGE_NAME + ".RECEIVER";
+    public static final String RESULT_DATA_KEY = PACKAGE_NAME + ".RESULT_DATA_KEY";
+    public static final String LOCATION_DATA_EXTRA = PACKAGE_NAME + ".LOCATION_DATA_EXTRA";
+
+    private static final String PREF_KEY_LOCATION = "location";
     private static final String PERMISSION_PROTECTION_LEVEL_UNKNOWN = "unknown";
     private static final String PERMISSION_PROTECTION_LEVEL_NORMAL = "normal";
     private static final String PERMISSION_PROTECTION_LEVEL_DANGEROUS = "dangerous";
@@ -340,31 +344,15 @@ public class MithrilApplication extends Application {
         return LOG_INTENT;
     }
 
-    public static int getMillisecondsPerSecond() {
-        return MILLISECONDS_PER_SECOND;
-    }
-
-    public static int getUpdateIntervalInSeconds() {
-        return UPDATE_INTERVAL_IN_SECONDS;
-    }
-
     public static long getUpdateInterval() {
         return UPDATE_INTERVAL;
-    }
-
-    public static int getFastestIntervalInSeconds() {
-        return FASTEST_INTERVAL_IN_SECONDS;
     }
 
     public static long getFastestInterval() {
         return FASTEST_INTERVAL;
     }
 
-    public static String getPrefKeyLocationFilename() {
-        return PREF_KEY_LOCATION_FILENAME;
-    }
-
-    public static String getPrefKeyLogFilename() {
-        return PREF_KEY_LOG_FILENAME;
+    public static String getPrefKeyLocation() {
+        return PREF_KEY_LOCATION;
     }
 }

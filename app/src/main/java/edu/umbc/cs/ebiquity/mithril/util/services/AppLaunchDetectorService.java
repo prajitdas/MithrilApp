@@ -9,13 +9,13 @@ import android.os.IBinder;
 import java.util.Timer;
 import java.util.TimerTask;
 
+import edu.umbc.cs.ebiquity.mithril.MithrilApplication;
 import edu.umbc.cs.ebiquity.mithril.util.specialtasks.detectrunningapps.Detector;
 import edu.umbc.cs.ebiquity.mithril.util.specialtasks.detectrunningapps.LollipopDetector;
 import edu.umbc.cs.ebiquity.mithril.util.specialtasks.detectrunningapps.PreLollipopDetector;
 import edu.umbc.cs.ebiquity.mithril.util.specialtasks.permissions.PermissionHelper;
 
 public class AppLaunchDetectorService extends Service {
-    private static final long NOTIFY_INTERVAL = 1000; //Do every ten seconds
     private Detector detector;
     // run on another Thread to avoid crash
     private Handler mHandler = new Handler();
@@ -46,7 +46,7 @@ public class AppLaunchDetectorService extends Service {
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
         // schedule task
-        mTimer.scheduleAtFixedRate(new LaunchedAppDetectTimerTask(), 0, NOTIFY_INTERVAL);
+        mTimer.scheduleAtFixedRate(new LaunchedAppDetectTimerTask(), 0, MithrilApplication.getUpdateInterval());
         return super.onStartCommand(intent, flags, startId);
     }
 

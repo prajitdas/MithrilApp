@@ -5,9 +5,6 @@
 
     <!-- Remember to add all the permissions you request here in the PermissionHelper class for handling permission acquisition -->
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
-    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
-    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
-    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
     <uses-permission android:name="android.permission.WAKE_LOCK" />
     <uses-permission
@@ -16,6 +13,8 @@
     <!-- <uses-permission android:name="android.permission.REAL_GET_TASKS" /> -->
     <!-- <uses-permission android:name="android.permission.READ_LOGS" /> -->
     <!-- <uses-permission android:name="android.permission.NFC" /> -->
+    <!-- <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" /> -->
+    <!-- <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" /> -->
 
 
     <!-- Needed only if your app targets Android 5.0 (API level 21) or higher. -->
@@ -81,11 +80,15 @@
         <receiver
             android:name=".util.receivers.StartServicesOnBootReceiver"
             android:enabled="true"
-            android:exported="true">
+            android:exported="false">
             <intent-filter>
                 <action android:name="android.intent.action.BOOT_COMPLETED" />
             </intent-filter>
         </receiver>
+        <receiver
+            android:name=".util.receivers.LocationUpdateReceiver"
+            android:enabled="true"
+            android:exported="false" />
 
         <service
             android:name=".util.services.AppLaunchDetectorService"
@@ -96,12 +99,11 @@
         <service
             android:name=".util.services.LocationUpdateService"
             android:enabled="true"
-            android:exported="true" />
-
-        <receiver
-            android:name=".util.receivers.LocationUpdateReceiver"
+            android:exported="false" />
+        <service
+            android:name=".util.services.FetchAddressIntentService"
             android:enabled="true"
-            android:exported="true"></receiver>
+            android:exported="false" />
     </application>
 
 </manifest>

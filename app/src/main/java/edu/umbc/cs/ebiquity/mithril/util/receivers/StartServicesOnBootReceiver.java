@@ -22,8 +22,14 @@ public class StartServicesOnBootReceiver extends BroadcastReceiver {
         sharedPref = context.getSharedPreferences(MithrilApplication.getSharedPreferencesName(), Context.MODE_PRIVATE);
         if (intent.getAction().equals(Intent.ACTION_BOOT_COMPLETED)) {
             if (PermissionHelper.isExplicitPermissionAcquisitionNecessary()) {
-                if (PermissionHelper.getUsageStatsPermisison(context))
-                    context.startService(new Intent(context, AppLaunchDetectorService.class));
+                if (PermissionHelper.getUsageStatsPermisison(context)) {
+                    ComponentName service = context.startService(new Intent(context, AppLaunchDetectorService.class));
+
+                    if (null == service) {
+                        // something really wrong here
+                        Log.e(MithrilApplication.getDebugTag(), "Could not start service " + LocationUpdateService.class.getName().toString());
+                    }
+                }
 
                 if (PermissionHelper.isPermissionGranted(context, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
                     boolean updatesRequested = false;
@@ -35,12 +41,11 @@ public class StartServicesOnBootReceiver extends BroadcastReceiver {
                         updatesRequested = sharedPref.getBoolean(MithrilApplication.getPrefKeyLocationUpdateServiceState(), false);
                     }
                     if (updatesRequested) {
-                        ComponentName comp = new ComponentName(context.getPackageName(), LocationUpdateService.class.getName());
-                        ComponentName service = context.startService(new Intent().setComponent(comp));
+                        ComponentName service = context.startService(new Intent(context, LocationUpdateService.class));
 
                         if (null == service) {
                             // something really wrong here
-                            Log.e(MithrilApplication.getDebugTag(), "Could not start service " + comp.toString());
+                            Log.e(MithrilApplication.getDebugTag(), "Could not start service " + LocationUpdateService.class.getName().toString());
                         }
                     }
                 }

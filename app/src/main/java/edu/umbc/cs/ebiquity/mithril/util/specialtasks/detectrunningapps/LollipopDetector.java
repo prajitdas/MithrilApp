@@ -151,6 +151,8 @@ public class LollipopDetector implements Detector {
             Log.d(MithrilApplication.getDebugTag(), "Mithril detects user app launch: " + currentPackageName);
             getCurrentSemanticUserContext();
             /**
+             * TODO if an app is launched at a certain Semantic location, does the location we know match any policy?
+             * TODO If it does then, can we determine if this is a violation?
              * TODO if this is a violation, then insert the information into the violation table.
              * TODO if it is not a violation, then what do we do? **DECIDE**
              */

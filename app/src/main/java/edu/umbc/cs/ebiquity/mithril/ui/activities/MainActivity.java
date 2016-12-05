@@ -1,7 +1,7 @@
 package edu.umbc.cs.ebiquity.mithril.ui.activities;
 
+import android.Manifest;
 import android.app.FragmentManager;
-import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
@@ -19,7 +19,6 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.Toast;
 
-import java.io.File;
 import java.util.List;
 
 import edu.umbc.cs.ebiquity.mithril.MithrilApplication;
@@ -32,6 +31,7 @@ import edu.umbc.cs.ebiquity.mithril.ui.fragments.ReloadDefaultAppDataFragment;
 import edu.umbc.cs.ebiquity.mithril.ui.fragments.ShowAppsFragment;
 import edu.umbc.cs.ebiquity.mithril.ui.fragments.ViolationFragment;
 import edu.umbc.cs.ebiquity.mithril.util.services.AppLaunchDetectorService;
+import edu.umbc.cs.ebiquity.mithril.util.services.LocationUpdateService;
 import edu.umbc.cs.ebiquity.mithril.util.specialtasks.permissions.PermissionHelper;
 
 public class MainActivity extends AppCompatActivity
@@ -150,21 +150,22 @@ public class MainActivity extends AppCompatActivity
     }
 
     private void initHousekeepingTasks() {
-        File locationFile = new File(getFilesDir(), "location.txt");
-        File logFile = new File(getFilesDir(), "log.txt");
-
-        sharedPref = getSharedPreferences(MithrilApplication.getSharedPreferencesName(), Context.MODE_PRIVATE);
-        SharedPreferences.Editor editor = sharedPref.edit();
-        // Stores the lat / long pairs in a text file
-        editor.putString(MithrilApplication.getPrefKeyLocationFilename(), locationFile.getAbsolutePath());
-        // Stores the connect / disconnect data in a text file
-        editor.putString(MithrilApplication.getPrefKeyLogFilename(), logFile.getAbsolutePath());
-        editor.commit();
+//        File locationFile = new File(getFilesDir(), "location.txt");
+//        File logFile = new File(getFilesDir(), "log.txt");
+//        sharedPref = getSharedPreferences(MithrilApplication.getSharedPreferencesName(), Context.MODE_PRIVATE);
+//        SharedPreferences.Editor editor = sharedPref.edit();
+//        // Stores the lat / long pairs in a text file
+//        editor.putString(MithrilApplication.getPrefKeyLocationFilename(), locationFile.getAbsolutePath());
+//        // Stores the connect / disconnect data in a text file
+//        editor.putString(MithrilApplication.getPrefKeyLogFilename(), logFile.getAbsolutePath());
+//        editor.commit();
 
         if (PermissionHelper.isExplicitPermissionAcquisitionNecessary()) {
             PermissionHelper.requestAllNecessaryPermissions(this);
             if (PermissionHelper.getUsageStatsPermisison(this))
                 startService(new Intent(this, AppLaunchDetectorService.class));
+            if (PermissionHelper.isPermissionGranted(this, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED)
+                startService(new Intent(this, LocationUpdateService.class));
         }
     }
 

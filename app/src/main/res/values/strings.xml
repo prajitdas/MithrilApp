@@ -113,6 +113,10 @@
     <string name="pref_header_work_location_summary">Save work location</string>
     <string name="pref_header_work_location_title">Work</string>
     <string name="pref_header_work_location_value">1000 Hilltop Cir., Baltimore MD, USA, 21250</string>
+    <string name="service_not_available">Service not available</string>
+    <string name="invalid_lat_long_used">Invalid latitude and longitude used</string>
+    <string name="no_address_found">No address found</string>
+    <string name="address_found">Address found</string>
 
     <!-- activity settings -->
     <string name="pref_header_home_activity_key">workingHoursEnabled</string>
