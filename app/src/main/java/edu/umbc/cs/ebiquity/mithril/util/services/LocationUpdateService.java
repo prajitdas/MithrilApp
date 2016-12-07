@@ -9,8 +9,10 @@ import android.content.pm.PackageManager;
 import android.location.Location;
 import android.os.Binder;
 import android.os.Bundle;
+import android.os.Handler;
 import android.os.IBinder;
 import android.os.PowerManager;
+import android.os.ResultReceiver;
 import android.util.Log;
 import android.widget.Toast;
 
@@ -29,6 +31,7 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 
 import edu.umbc.cs.ebiquity.mithril.MithrilApplication;
+import edu.umbc.cs.ebiquity.mithril.R;
 import edu.umbc.cs.ebiquity.mithril.util.receivers.LocationUpdateReceiver;
 import edu.umbc.cs.ebiquity.mithril.util.specialtasks.permissions.PermissionHelper;
 
@@ -37,7 +40,22 @@ public class LocationUpdateService extends Service implements
         OnConnectionFailedListener,
         LocationListener {
 
-    protected Location mLastLocation;
+    /**
+     * The formatted location address.
+     */
+    protected String mAddressOutput;
+    /**
+     * Tracks whether the user has requested an address. Becomes true when the user requests an
+     * address and false when the address (or an error message) is delivered.
+     * The user requests an address by pressing the Fetch Address button. This may happen
+     * before GoogleApiClient connects. This activity uses this boolean to keep track of the
+     * user's intent. If the value is true, the activity tries to fetch the address as soon as
+     * GoogleApiClient connects.
+     */
+    protected boolean mAddressRequested;
+    private Context context;
+    private Location mLastLocation;
+    private AddressResultReceiver mResultReceiver;
     private IBinder mBinder = new LocalBinder();
     private SharedPreferences sharedPref;
     private GoogleApiClient mGoogleApiClient;
@@ -50,6 +68,12 @@ public class LocationUpdateService extends Service implements
     @Override
     public void onCreate() {
         super.onCreate();
+
+        context = this;
+        mResultReceiver = new AddressResultReceiver(new Handler());
+        // Set defaults, then update using values stored in the Bundle.
+        mAddressRequested = false;
+        mAddressOutput = "";
 
         mInProgress = false;
         // Create the LocationRequest object
@@ -69,6 +93,26 @@ public class LocationUpdateService extends Service implements
          * handle callbacks.
          */
         setUpLocationClientIfNeeded();
+    }
+
+    /**
+     * Creates an intent, adds location data to it as an extra, and starts the intent service for
+     * fetching an address.
+     */
+    protected void startIntentService() {
+        // Create an intent for passing to the intent service responsible for fetching the address.
+        Intent intent = new Intent(this, FetchAddressIntentService.class);
+
+        // Pass the result receiver as an extra to the service.
+        intent.putExtra(MithrilApplication.RECEIVER, mResultReceiver);
+
+        // Pass the location data as an extra to the service.
+        intent.putExtra(MithrilApplication.LOCATION_DATA_EXTRA, mLastLocation);
+
+        // Start the service. If the service isn't already running, it is instantiated and started
+        // (creating a process for it if needed); if it is running then it remains running. The
+        // service kills itself automatically once all intents are processed.
+        startService(intent);
     }
 
     /**
@@ -142,6 +186,10 @@ public class LocationUpdateService extends Service implements
 //        appendLog(DateFormat.getDateTimeInstance().format(new Date()) + ":" + msg, sharedPref.getString(MithrilApplication.getPrefKeyLocationFilename(), "sdcard/location.txt"));
         mLastLocation = location;
         storeInSharedPreferences(MithrilApplication.getPrefKeyLocation(), mLastLocation);
+        /**
+         * We know the location has changed, let's check the address
+         */
+        startIntentService();
     }
 
     @Override
@@ -257,6 +305,29 @@ public class LocationUpdateService extends Service implements
     public class LocalBinder extends Binder {
         public LocationUpdateService getServerInstance() {
             return LocationUpdateService.this;
+        }
+    }
+
+    class AddressResultReceiver extends ResultReceiver {
+        public AddressResultReceiver(Handler handler) {
+            super(handler);
+        }
+
+        @Override
+        protected void onReceiveResult(int resultCode, Bundle resultData) {
+
+            // Display the address string
+            // or an error message sent from the intent service.
+            mAddressOutput = resultData.getString(MithrilApplication.RESULT_DATA_KEY);
+//            displayAddressOutput();
+
+            // Show a toast message if an address was found.
+            if (resultCode == MithrilApplication.SUCCESS_RESULT) {
+                Log.d(MithrilApplication.getDebugTag(), getString(R.string.address_found));
+                Toast.makeText(context, getString(R.string.address_found), Toast.LENGTH_LONG).show();
+            }
+            // Reset. Enable the Fetch Address button and stop showing the progress bar.
+            mAddressRequested = false;
         }
     }
 }
