@@ -26,6 +26,10 @@ import com.google.android.gms.location.LocationRequest;
 import com.google.android.gms.location.LocationServices;
 import com.google.gson.Gson;
 
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -183,7 +187,7 @@ public class LocationUpdateService extends Service implements
         Log.d(MithrilApplication.getDebugTag(), msg);
 //        Toast.makeText(this, msg, Toast.LENGTH_SHORT).show();
         Log.d(MithrilApplication.getDebugTag(), DateFormat.getDateTimeInstance().format(new Date()) + ":" + msg);
-//        appendLog(DateFormat.getDateTimeInstance().format(new Date()) + ":" + msg, sharedPref.getString(MithrilApplication.getPrefKeyLocationFilename(), "sdcard/location.txt"));
+        appendLog(DateFormat.getDateTimeInstance().format(new Date()) + ":" + msg);//, sharedPref.getString(MithrilApplication.getPrefKeyLocationFilename(), "sdcard/location.txt"));
         mLastLocation = location;
         storeInSharedPreferences(MithrilApplication.getPrefKeyLocation(), mLastLocation);
         /**
@@ -200,6 +204,28 @@ public class LocationUpdateService extends Service implements
     public String getTime() {
         SimpleDateFormat mDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         return mDateFormat.format(new Date());
+    }
+
+    public void appendLog(String text) {
+        File logFile = new File(getFilesDir(), "log.txt");
+        if (!logFile.exists()) {
+            try {
+                logFile.createNewFile();
+            } catch (IOException e) {
+                // TODO Auto-generated catch block
+                e.printStackTrace();
+            }
+        }
+        try {
+            //BufferedWriter for performance, true to set append to file flag
+            BufferedWriter buf = new BufferedWriter(new FileWriter(logFile, true));
+            buf.append(text);
+            buf.newLine();
+            buf.close();
+        } catch (IOException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
     }
 
     /**
@@ -323,8 +349,9 @@ public class LocationUpdateService extends Service implements
 
             // Show a toast message if an address was found.
             if (resultCode == MithrilApplication.SUCCESS_RESULT) {
-                Log.d(MithrilApplication.getDebugTag(), getString(R.string.address_found));
-                Toast.makeText(context, getString(R.string.address_found), Toast.LENGTH_LONG).show();
+                Log.d(MithrilApplication.getDebugTag(), getString(R.string.address_found) + ":" + mAddressOutput);
+                Toast.makeText(context, getString(R.string.address_found) + ":" + mAddressOutput, Toast.LENGTH_LONG).show();
+                appendLog(DateFormat.getDateTimeInstance().format(new Date()) + ":" + mAddressOutput);//, sharedPref.getString(MithrilApplication.getPrefKeyLocationFilename(), "sdcard/location.txt"));
             }
             // Reset. Enable the Fetch Address button and stop showing the progress bar.
             mAddressRequested = false;

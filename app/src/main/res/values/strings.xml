@@ -117,6 +117,7 @@
     <string name="invalid_lat_long_used">Invalid latitude and longitude used</string>
     <string name="no_address_found">No address found</string>
     <string name="address_found">Address found</string>
+    <string name="no_location_data_provided">No location data provided</string>
 
     <!-- activity settings -->
     <string name="pref_header_home_activity_key">workingHoursEnabled</string>
