@@ -39,15 +39,42 @@ import edu.umbc.cs.ebiquity.mithril.R;
 import edu.umbc.cs.ebiquity.mithril.util.receivers.LocationUpdateReceiver;
 import edu.umbc.cs.ebiquity.mithril.util.specialtasks.permissions.PermissionHelper;
 
+/**
+ * Getting Location Updates.
+ * <p>
+ * Demonstrates how to use the Fused Location Provider API to get updates about a device's
+ * location. The Fused Location Provider is part of the Google Play services location APIs.
+ * <p>
+ * For a simpler example that shows the use of Google Play services to fetch the last known location
+ * of a device, see
+ * https://github.com/googlesamples/android-play-location/tree/master/BasicLocation.
+ * <p>
+ * This sample uses Google Play services, but it does not require authentication. For a sample that
+ * uses Google Play services for authentication, see
+ * https://github.com/googlesamples/android-google-accounts/tree/master/QuickStart.
+ */
 public class LocationUpdateService extends Service implements
         ConnectionCallbacks,
         OnConnectionFailedListener,
         LocationListener {
 
     /**
+     * Tracks the status of the location updates request. Value changes when the user presses the
+     * Start Updates and Stop Updates buttons.
+     */
+    protected Boolean mRequestingLocationUpdates;
+    /**
+     * Time when the location was updated represented as a String.
+     */
+    protected String mLastUpdateTime;
+    private Context context;
+    private AddressResultReceiver mResultReceiver;
+    private IBinder mBinder = new LocalBinder();
+    private SharedPreferences sharedPref;
+    /**
      * The formatted location address.
      */
-    protected String mAddressOutput;
+    private String mAddressOutput;
     /**
      * Tracks whether the user has requested an address. Becomes true when the user requests an
      * address and false when the address (or an error message) is delivered.
@@ -56,15 +83,20 @@ public class LocationUpdateService extends Service implements
      * user's intent. If the value is true, the activity tries to fetch the address as soon as
      * GoogleApiClient connects.
      */
-    protected boolean mAddressRequested;
-    private Context context;
-    private Location mLastLocation;
-    private AddressResultReceiver mResultReceiver;
-    private IBinder mBinder = new LocalBinder();
-    private SharedPreferences sharedPref;
+    private boolean mAddressRequested;
+    /**
+     * Provides the entry point to Google Play services.
+     */
     private GoogleApiClient mGoogleApiClient;
-    private PowerManager.WakeLock mWakeLock;
+    /**
+     * Stores parameters for requests to the FusedLocationProviderApi.
+     */
     private LocationRequest mLocationRequest;
+    /**
+     * Represents a geographical location.
+     */
+    private Location mCurrentLocation;
+    private PowerManager.WakeLock mWakeLock;
     // Flag that indicates if a request is underway.
     private boolean mInProgress;
     private Boolean servicesAvailable = false;
@@ -84,9 +116,9 @@ public class LocationUpdateService extends Service implements
         mLocationRequest = LocationRequest.create();
         // Use high accuracy
         mLocationRequest.setPriority(LocationRequest.PRIORITY_BALANCED_POWER_ACCURACY);
-        // Set the update interval to 5 seconds
+        // Set the update interval to 5 minutes
         mLocationRequest.setInterval(MithrilApplication.getUpdateInterval());
-        // Set the fastest update interval to 1 second
+        // Set the fastest update interval to 1 minute
         mLocationRequest.setFastestInterval(MithrilApplication.getFastestInterval());
 
         servicesAvailable = servicesConnected();
@@ -111,7 +143,7 @@ public class LocationUpdateService extends Service implements
         intent.putExtra(MithrilApplication.RECEIVER, mResultReceiver);
 
         // Pass the location data as an extra to the service.
-        intent.putExtra(MithrilApplication.LOCATION_DATA_EXTRA, mLastLocation);
+        intent.putExtra(MithrilApplication.LOCATION_DATA_EXTRA, mCurrentLocation);
 
         // Start the service. If the service isn't already running, it is instantiated and started
         // (creating a process for it if needed); if it is running then it remains running. The
@@ -188,8 +220,8 @@ public class LocationUpdateService extends Service implements
 //        Toast.makeText(this, msg, Toast.LENGTH_SHORT).show();
         Log.d(MithrilApplication.getDebugTag(), DateFormat.getDateTimeInstance().format(new Date()) + ":" + msg);
         appendLog(DateFormat.getDateTimeInstance().format(new Date()) + ":" + msg);//, sharedPref.getString(MithrilApplication.getPrefKeyLocationFilename(), "sdcard/location.txt"));
-        mLastLocation = location;
-        storeInSharedPreferences(MithrilApplication.getPrefKeyLocation(), mLastLocation);
+        mCurrentLocation = location;
+        storeInSharedPreferences(MithrilApplication.getPrefKeyLocation(), mCurrentLocation);
         /**
          * We know the location has changed, let's check the address
          */
@@ -276,6 +308,30 @@ public class LocationUpdateService extends Service implements
      */
     @Override
     public void onConnected(Bundle bundle) {
+//        Log.i(MithrilApplication.getDebugTag(), "Connected to GoogleApiClient");
+//
+//        // If the initial location was never previously requested, we use
+//        // FusedLocationApi.getLastLocation() to get it. If it was previously requested, we store
+//        // its value in the Bundle and check for it in onCreate(). We
+//        // do not request it again unless the user specifically requests location updates by pressing
+//        // the Start Updates button.
+//        //
+//        // Because we cache the value of the initial location in the Bundle, it means that if the
+//        // user launches the activity,
+//        // moves to a new location, and then changes the device orientation, the original location
+//        // is displayed as the activity is re-created.
+//        if (mCurrentLocation == null) {
+//            mCurrentLocation = LocationServices.FusedLocationApi.getLastLocation(mGoogleApiClient);
+//            mLastUpdateTime = DateFormat.getTimeInstance().format(new Date());
+//            updateUI();
+//        }
+//
+//        // If the user presses the Start Updates button before GoogleApiClient connects, we set
+//        // mRequestingLocationUpdates to true (see startUpdatesButtonHandler()). Here, we check
+//        // the value of mRequestingLocationUpdates and if it is true, we start location updates.
+//        if (mRequestingLocationUpdates) {
+//            startLocationUpdates();
+//        }
         // Request location updates using static settings
         Intent intent = new Intent(this, LocationUpdateReceiver.class);
         if (PermissionHelper.isExplicitPermissionAcquisitionNecessary()) {
@@ -289,7 +345,7 @@ public class LocationUpdateService extends Service implements
             }
         }
         Log.d(MithrilApplication.getDebugTag(), DateFormat.getDateTimeInstance().format(new Date()) + ": Connected");
-//        appendLog(DateFormat.getDateTimeInstance().format(new Date()) + ": Connected", sharedPref.getString(MithrilApplication.getPrefKeyLogFilename(), "sdcard/log.txt"));
+        appendLog(DateFormat.getDateTimeInstance().format(new Date()) + ": Connected");//, sharedPref.getString(MithrilApplication.getPrefKeyLogFilename(), "sdcard/log.txt"));
     }
 
     /**
