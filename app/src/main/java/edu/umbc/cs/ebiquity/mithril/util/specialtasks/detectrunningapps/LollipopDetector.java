@@ -168,6 +168,8 @@ public class LollipopDetector implements Detector {
 
     private SemanticUserContext getCurrentSemanticUserContext() {
         SemanticUserContext semanticUserContext = new SemanticUserContext();
+        //TODO FIX THIS!!!
+        sharedPref.getString(MithrilApplication.getPrefKeyLocation(), new String("location"));
         return semanticUserContext;
     }
 }

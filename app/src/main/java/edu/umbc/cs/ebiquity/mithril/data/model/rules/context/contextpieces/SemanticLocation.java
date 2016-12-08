@@ -1,19 +1,25 @@
 package edu.umbc.cs.ebiquity.mithril.data.model.rules.context.contextpieces;
 
+import android.location.Address;
+import android.location.Location;
+
 import edu.umbc.cs.ebiquity.mithril.MithrilApplication;
 
 public class SemanticLocation {
-    private String inferredLocation;
+	private Location location;
+	private Address address;
+	private String inferredLocation;
 
-    public SemanticLocation() {
-        this.inferredLocation = MithrilApplication.getContextDefaultLocation();
-    }
+	public SemanticLocation(String inferredLocation, Location location, Address address) {
+		this.inferredLocation = inferredLocation;
+		this.location = location;
+		this.address = address;
+	}
 
-	/**
-	 * @param inferredLocation
-	 */
-    public SemanticLocation(String inferredLocation) {
-        this.inferredLocation = inferredLocation;
+	public SemanticLocation() {
+		this.inferredLocation = MithrilApplication.getContextDefaultWorkLocation();
+		this.location = null;
+		this.address = null;
 	}
 
 	/* (non-Javadoc)

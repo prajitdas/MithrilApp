@@ -2,6 +2,10 @@ package edu.umbc.cs.ebiquity.mithril;
 
 import android.app.Application;
 
+import com.google.android.gms.maps.model.LatLng;
+
+import java.util.HashMap;
+
 /**
  * Created by Prajit Kumar Das on 5/1/2016.
  */
@@ -13,7 +17,22 @@ public class MithrilApplication extends Application {
     public static final String RECEIVER = PACKAGE_NAME + ".RECEIVER";
     public static final String RESULT_DATA_KEY = PACKAGE_NAME + ".RESULT_DATA_KEY";
     public static final String LOCATION_DATA_EXTRA = PACKAGE_NAME + ".LOCATION_DATA_EXTRA";
-
+    public static final String GEOFENCES_ADDED_KEY = PACKAGE_NAME + ".GEOFENCES_ADDED_KEY";
+    /**
+     * Used to set an expiration time for a geofence. After this amount of time Location Services
+     * stops tracking the geofence.
+     */
+    public static final long GEOFENCE_EXPIRATION_IN_HOURS = 12;
+    /**
+     * For this sample, geofences expire after twelve hours.
+     */
+    public static final long GEOFENCE_EXPIRATION_IN_MILLISECONDS =
+            GEOFENCE_EXPIRATION_IN_HOURS * 60 * 60 * 1000;
+    public static final float GEOFENCE_RADIUS_IN_METERS = 1609; // 1 mile, 1.6 km
+    /**
+     * Map for storing information about airports in the San Francisco bay area.
+     */
+    public static final HashMap<String, LatLng> BALTIMORE_COUNTY_LANDMARKS = new HashMap<String, LatLng>();
     private static final String PREF_KEY_LOCATION = "location";
     private static final String PERMISSION_PROTECTION_LEVEL_UNKNOWN = "unknown";
     private static final String PERMISSION_PROTECTION_LEVEL_NORMAL = "normal";
@@ -58,9 +77,7 @@ public class MithrilApplication extends Application {
     private static final String PREF_KEY_APP_PKG_NAME = "AppPkgNameTag";
     private static final String PREF_KEY_APP_COUNT = "AppCount";
     private static final String DATABASE_NAME = "mithril.db";
-
     private static final String DEBUG_TAG = "MithrilDebugTag";
-
     /**
      * Context constants
      * TODO Change the constants as per the ontology and ensure that you generate some rules to be modified by the automated script
@@ -93,7 +110,7 @@ public class MithrilApplication extends Application {
             "Game_Simulation", "Game_Sports", "Game_Strategy", "Game_Trivia", "Game_Word"};
     private static final String CONTEXT_DEFAULT_TIME = "Default Time";
     private static final String CONTEXT_DEFAULT_ACTIVITY = "Default Activity";
-    private static final String CONTEXT_DEFAULT_LOCATION = "Default Location";
+    private static final String CONTEXT_DEFAULT_WORK_LOCATION = "Default Work Location";
     private static final String CONTEXT_DEFAULT_IDENTITY = "John Doe";
     private static final String POL_RUL_NAME_SOCIAL_MEDIA_CAMERA_ACCESS_RULE = "Social_Media_Camera_Access_Rule";
     private static final String POL_RUL_DEFAULT_RULE = "Default policy rule name";
@@ -106,11 +123,19 @@ public class MithrilApplication extends Application {
     private static final String USER_IDENTITY_HEADER = "User SemanticIdentity";
     private static final String USER_LOCATION_HEADER = "User Location";
     private static final String USER_TIME_HEADER = "Date and Time";
-
     private static final String TOAST_MESSAGE_RULE_DELETED = " rule was deleted";
     private static final String TOAST_MESSAGE_TRUE_VIOLATION_NOTED = " the \"true violation\" has been noted. User will not be asked again "
             + "about the same violation";
     private static final String TOAST_MESSAGE_DATABASE_NOT_RELOADED = "Data was not reloaded!";
+
+    static {
+        // Baltimore/Washington International Airport.
+        BALTIMORE_COUNTY_LANDMARKS.put("BWI", new LatLng(39.182288, -76.669765));
+        // Home.
+        BALTIMORE_COUNTY_LANDMARKS.put("HOME", new LatLng(39.261761, -76.702669));
+        // Work.
+        BALTIMORE_COUNTY_LANDMARKS.put("WORK", new LatLng(39.253794, -76.714629));
+    }
 
     public static int getAllPermissionsMithrilRequestCode() {
         return ALL_PERMISSIONS_MITHRIL_REQUEST_CODE;
@@ -272,8 +297,8 @@ public class MithrilApplication extends Application {
         return CONTEXT_DEFAULT_ACTIVITY;
     }
 
-    public static String getContextDefaultLocation() {
-        return CONTEXT_DEFAULT_LOCATION;
+    public static String getContextDefaultWorkLocation() {
+        return CONTEXT_DEFAULT_WORK_LOCATION;
     }
 
     public static String getContextDefaultIdentity() {
