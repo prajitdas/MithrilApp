@@ -16,6 +16,12 @@ public class SemanticLocation {
 		this.address = address;
 	}
 
+    public SemanticLocation(String inferredLocation) {
+        this.inferredLocation = inferredLocation;
+        this.location = null;
+        this.address = null;
+    }
+
 	public SemanticLocation() {
 		this.inferredLocation = MithrilApplication.getContextDefaultWorkLocation();
 		this.location = null;

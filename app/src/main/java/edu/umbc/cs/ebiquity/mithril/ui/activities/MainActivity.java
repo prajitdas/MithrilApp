@@ -172,7 +172,7 @@ public class MainActivity extends AppCompatActivity
     @Override
     public void onResume() {
         super.onResume();
-        defaultFragmentLoad();
+//        defaultFragmentLoad();
     }
 
     @SuppressWarnings("RestrictedApi")

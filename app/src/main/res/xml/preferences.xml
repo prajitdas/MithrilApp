@@ -2,7 +2,7 @@
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
     <PreferenceCategory
         android:enabled="true"
-        android:title="@string/pref_header_context">
+        android:title="@string/pref_header_location_context">
         <EditTextPreference
             android:defaultValue="@string/pref_header_home_location_value"
             android:key="@string/pref_header_home_location_key"

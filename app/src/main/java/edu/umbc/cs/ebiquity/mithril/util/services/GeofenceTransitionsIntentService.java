@@ -1,4 +1,5 @@
 package edu.umbc.cs.ebiquity.mithril.util.services;
+
 /**
  * Copyright 2014 Google Inc. All Rights Reserved.
  * <p>
@@ -20,7 +21,6 @@ import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
-import android.content.res.Resources;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.support.v4.app.NotificationCompat;
@@ -29,13 +29,14 @@ import android.text.TextUtils;
 import android.util.Log;
 
 import com.google.android.gms.location.Geofence;
-import com.google.android.gms.location.GeofenceStatusCodes;
 import com.google.android.gms.location.GeofencingEvent;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import edu.umbc.cs.ebiquity.mithril.R;
+import edu.umbc.cs.ebiquity.mithril.ui.fragments.PrefsFragment;
+import edu.umbc.cs.ebiquity.mithril.util.specialtasks.errors.GeofenceErrorMessages;
 
 /**
  * Listener for geofence transition changes.
@@ -134,13 +135,13 @@ public class GeofenceTransitionsIntentService extends IntentService {
      */
     private void sendNotification(String notificationDetails) {
         // Create an explicit content Intent that starts the main Activity.
-        Intent notificationIntent = new Intent(getApplicationContext(), MainActivity.class);
+        Intent notificationIntent = new Intent(getApplicationContext(), PrefsFragment.class);
 
         // Construct a task stack.
         TaskStackBuilder stackBuilder = TaskStackBuilder.create(this);
 
         // Add the main Activity to the task stack as the parent.
-        stackBuilder.addParentStack(MainActivity.class);
+        stackBuilder.addParentStack(PrefsFragment.class);
 
         // Push the content Intent onto the stack.
         stackBuilder.addNextIntent(notificationIntent);
@@ -188,34 +189,6 @@ public class GeofenceTransitionsIntentService extends IntentService {
                 return getString(R.string.geofence_transition_exited);
             default:
                 return getString(R.string.unknown_geofence_transition);
-        }
-    }
-
-    /**
-     * Geofence error codes mapped to error messages.
-     */
-    private static class GeofenceErrorMessages {
-        /**
-         * Prevents instantiation.
-         */
-        private GeofenceErrorMessages() {
-        }
-
-        /**
-         * Returns the error string for a geofencing error code.
-         */
-        public String getErrorString(Context context, int errorCode) {
-            Resources mResources = context.getResources();
-            switch (errorCode) {
-                case GeofenceStatusCodes.GEOFENCE_NOT_AVAILABLE:
-                    return mResources.getString(R.string.geofence_not_available);
-                case GeofenceStatusCodes.GEOFENCE_TOO_MANY_GEOFENCES:
-                    return mResources.getString(R.string.geofence_too_many_geofences);
-                case GeofenceStatusCodes.GEOFENCE_TOO_MANY_PENDING_INTENTS:
-                    return mResources.getString(R.string.geofence_too_many_pending_intents);
-                default:
-                    return mResources.getString(R.string.unknown_geofence_error);
-            }
         }
     }
 }

@@ -1,6 +1,7 @@
 package edu.umbc.cs.ebiquity.mithril.util.services;
 
 import android.Manifest;
+import android.app.PendingIntent;
 import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
@@ -21,6 +22,7 @@ import com.google.android.gms.common.GoogleApiAvailability;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.common.api.GoogleApiClient.ConnectionCallbacks;
 import com.google.android.gms.common.api.GoogleApiClient.OnConnectionFailedListener;
+import com.google.android.gms.location.Geofence;
 import com.google.android.gms.location.LocationListener;
 import com.google.android.gms.location.LocationRequest;
 import com.google.android.gms.location.LocationServices;
@@ -32,6 +34,7 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 
 import edu.umbc.cs.ebiquity.mithril.MithrilApplication;
@@ -67,6 +70,10 @@ public class LocationUpdateService extends Service implements
      * Time when the location was updated represented as a String.
      */
     protected String mLastUpdateTime;
+    /**
+     * The list of geofences used in this sample.
+     */
+    protected ArrayList<Geofence> mGeofenceList;
     private Context context;
     private AddressResultReceiver mResultReceiver;
     private IBinder mBinder = new LocalBinder();
@@ -100,6 +107,15 @@ public class LocationUpdateService extends Service implements
     // Flag that indicates if a request is underway.
     private boolean mInProgress;
     private Boolean servicesAvailable = false;
+    /**
+     * Used to keep track of whether geofences were added.
+     */
+    private boolean mGeofencesAdded;
+
+    /**
+     * Used when requesting to add or remove geofences.
+     */
+    private PendingIntent mGeofencePendingIntent;
 
     @Override
     public void onCreate() {

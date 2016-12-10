@@ -103,16 +103,24 @@
 
     <!-- Strings related to Settings -->
 
-    <string name="pref_header_context">Saved context</string>
-    <!-- location settings -->
+    <!-- Preference strings for Location context -->
+    <string name="pref_header_location_context">Location context</string>
     <string name="pref_header_home_location_key">homeLocation</string>
-    <string name="pref_header_home_location_summary">Save home location</string>
-    <string name="pref_header_home_location_title">Home</string>
-    <string name="pref_header_home_location_value">221B Baker Street, London, England</string>
+    <string name="pref_header_home_location_title">Save home location</string>
+    <string name="pref_header_home_location_summary">221B Baker Street, London, England</string>
     <string name="pref_header_work_location_key">workLocation</string>
     <string name="pref_header_work_location_summary">Save work location</string>
-    <string name="pref_header_work_location_title">Work</string>
-    <string name="pref_header_work_location_value">1000 Hilltop Cir., Baltimore MD, USA, 21250</string>
+    <string name="pref_header_work_location_title">1000 Hilltop Cir., Baltimore MD, USA, 21250</string>
+
+    <!-- Preference strings for Activity context -->
+    <string name="pref_header_activity_context">Activity context</string>
+    <string name="pref_header_home_location_key">homeLocation</string>
+    <string name="pref_header_home_location_title">Save home location</string>
+    <string name="pref_header_home_location_summary">221B Baker Street, London, England</string>
+    <string name="pref_header_work_location_key">workLocation</string>
+    <string name="pref_header_work_location_summary">Save work location</string>
+    <string name="pref_header_work_location_title">1000 Hilltop Cir., Baltimore MD, USA, 21250</string>
+
     <string name="service_not_available">Service not available</string>
     <string name="invalid_lat_long_used">Invalid latitude and longitude used</string>
     <string name="no_address_found">No address found</string>
