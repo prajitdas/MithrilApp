@@ -4,36 +4,28 @@
         android:enabled="true"
         android:title="@string/pref_header_location_context">
         <EditTextPreference
-            android:defaultValue="@string/pref_header_home_location_value"
+            android:defaultValue="@string/pref_header_home_location_summary"
             android:key="@string/pref_header_home_location_key"
             android:summary="@string/pref_header_home_location_summary"
             android:title="@string/pref_header_home_location_title" />
         <EditTextPreference
-            android:defaultValue="@string/pref_header_work_location_value"
+            android:defaultValue="@string/pref_header_work_location_summary"
             android:key="@string/pref_header_work_location_key"
             android:summary="@string/pref_header_work_location_summary"
             android:title="@string/pref_header_work_location_title" />
-        <SwitchPreference
-            android:defaultValue="true"
-            android:enabled="true"
-            android:key="@string/pref_header_home_activity_key"
-            android:summary="@string/pref_header_home_activity_summary"
-            android:title="@string/pref_header_home_activity_title" />
     </PreferenceCategory>
     <PreferenceCategory
         android:enabled="true"
-        android:title="@string/pref_header_time">
+        android:title="@string/pref_header_temporal_context">
         <EditTextPreference
-            android:defaultValue="@string/pref_start_time"
-            android:enabled="true"
-            android:key="@string/pref_header_home_start_time_key"
-            android:summary="@string/pref_header_home_start_time_summary"
-            android:title="@string/pref_header_home_start_time_title" />
+            android:defaultValue="@string/pref_header_work_hours_summary"
+            android:key="@string/pref_header_work_hours_key"
+            android:summary="@string/pref_header_work_hours_summary"
+            android:title="@string/pref_header_work_hours_title" />
         <EditTextPreference
-            android:defaultValue="@string/pref_end_time"
-            android:enabled="true"
-            android:key="@string/pref_header_home_end_time_key"
-            android:summary="@string/pref_header_home_end_time_summary"
-            android:title="@string/pref_header_home_end_time_title" />
+            android:defaultValue="@string/pref_header_DND_hours_summary"
+            android:key="@string/pref_header_DND_hours_key"
+            android:summary="@string/pref_header_DND_hours_summary"
+            android:title="@string/pref_header_DND_hours_title" />
     </PreferenceCategory>
 </PreferenceScreen>
