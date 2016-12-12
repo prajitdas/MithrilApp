@@ -107,39 +107,48 @@
 
     <!-- Preference strings for Location context -->
     <string name="pref_header_location_context">Location context</string>
+
     <string name="pref_location_context_switch_key">enableLocationContext</string>
     <string name="pref_location_context_switch_title">Enable location context</string>
     <string name="pref_location_context_switch_summary">Click to enable location context</string>
+
     <string name="pref_home_location_key">homeLocation</string>
     <string name="pref_home_location_title">Save home location</string>
     <string name="pref_home_location_summary">221B Baker Street, London, England</string>
+
     <string name="pref_work_location_key">workLocation</string>
-    <string name="pref_work_location_summary">Save work location</string>
-    <string name="pref_work_location_title">1000 Hilltop Cir., Baltimore MD, USA, 21250</string>
+    <string name="pref_work_location_summary">1000 Hilltop Cir., Baltimore MD, USA, 21250</string>
+    <string name="pref_work_location_title">Save work location</string>
 
     <!-- Preference strings for Temporal context -->
     <string name="pref_header_temporal_context">Temporal context</string>
+
     <string name="pref_temporal_context_switch_key">enableTemporalContext</string>
     <string name="pref_temporal_context_switch_title">Enable temporal context</string>
     <string name="pref_temporal_context_switch_summary">Click to enable temporal context</string>
+
     <string name="pref_work_hours_key">workHours</string>
     <string name="pref_work_hours_title">Change working hours</string>
     <string name="pref_work_hours_summary">M-F, 9AM - 5PM</string>
+
     <string name="pref_DND_hours_key">dndHours</string>
-    <string name="pref_DND_hours_summary">Change do not disturb hours</string>
-    <string name="pref_DND_hours_title">Everyday, 10PM - 7AM</string>
+    <string name="pref_DND_hours_summary">Everyday, 10PM - 7AM</string>
+    <string name="pref_DND_hours_title">Change do not disturb hours</string>
 
     <!-- Preference strings for Presence Info context -->
     <string name="pref_header_presence_info_context">Presence info context</string>
+
     <string name="pref_presence_info_context_switch_key">enablePresenceInfoContext</string>
     <string name="pref_presence_info_context_switch_title">Enable presence info context</string>
     <string name="pref_presence_info_context_switch_summary">Click to enable presence info context</string>
+
     <string name="pref_presence_info_supervisor_key">presenceInfoSupervisor</string>
     <string name="pref_presence_info_supervisor_title">Confirm supervisor identity</string>
     <string name="pref_presence_info_supervisor_summary">BluetoothIDSupervisor</string>
+
     <string name="pref_presence_info_colleague_key">presenceInfoColleague</string>
-    <string name="pref_presence_info_colleague_summary">Confirm colleague identity</string>
-    <string name="pref_presence_info_colleague_title">BluetoothIDColleague</string>
+    <string name="pref_presence_info_colleague_summary">BluetoothIDColleague</string>
+    <string name="pref_presence_info_colleague_title">Confirm colleague identity</string>
 
     <!-- End of Strings related to PrefsFragment -->
 

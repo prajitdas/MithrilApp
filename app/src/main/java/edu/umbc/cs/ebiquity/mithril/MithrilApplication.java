@@ -66,15 +66,21 @@ public class MithrilApplication extends Application {
     private static final String BROADCAST_INTENT_COMMAND_APP = "edu.umbc.ebiquity.mithril.command.intent.action.DATA_REQUEST";
     private static final String SHARED_PREFERENCES_NAME = "edu.umbc.cs.ebiquity.mithril.mithrilappmanager";
     private static final String PREF_KEY_LOCATION = "location";
+
+    //Make sure they match the values from preferences.xml
     private static final String PREF_LOCATION_CONTEXT_ENABLE_KEY = "enableLocationContext";
     private static final String PREF_HOME_LOCATION_KEY = "homeLocation";
     private static final String PREF_WORK_LOCATION_KEY = "workLocation";
+
     private static final String PREF_PRESENCE_INFO_CONTEXT_ENABLE_KEY = "enablePresenceInfoContext";
     private static final String PREF_PRESENCE_INFO_COLLEAGUE_KEY = "presenceInfoSupervisor";
     private static final String PREF_PRESENCE_INFO_SUPERVISOR_KEY = "presenceInfoColleague";
+
     private static final String PREF_TEMPORAL_CONTEXT_ENABLE_KEY = "enableTemporalContext";
     private static final String PREF_WORK_HOURS_KEY = "workHours";
-    private static final String PREF_DND_HOURS_KEY = "dndhours";
+    private static final String PREF_DND_HOURS_KEY = "dndHours";
+    //End of preferences.xml
+
     private static final String PREF_KEY_APP_LAUNCH_MONITORING_SERVICE_STATE = "appLaunchMonitoringServiceState";
     private static final String PREF_KEY_LOCATION_UPDATE_SERVICE_STATE = "locationUpdateServiceState";
     private static final String PREF_KEY_ALL_APPS_DISPLAY = "allApps";
