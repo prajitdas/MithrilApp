@@ -3,6 +3,8 @@
     <string name="mithril_app_icon_description">This is Mithril\'s icon</string>
 
     <string name="violationsMenu">Policy violation list</string>
+    <string name="permissions">Permission info</string>
+    <string name="permissionsList">Permissions list</string>
     <string name="components">Component info</string>
     <string name="userApps">User apps</string>
     <string name="systemApps">System apps</string>
@@ -101,66 +103,51 @@
     <string name="placeholder_text_violation_info">Violation Info</string>
     <string name="title_activity_app_settings">Settings</string>
 
-    <!-- Strings related to Settings -->
+    <!-- Strings related to PrefsFragment -->
 
     <!-- Preference strings for Location context -->
     <string name="pref_header_location_context">Location context</string>
-    <string name="pref_header_home_location_key">homeLocation</string>
-    <string name="pref_header_home_location_title">Save home location</string>
-    <string name="pref_header_home_location_summary">221B Baker Street, London, England</string>
-    <string name="pref_header_work_location_key">workLocation</string>
-    <string name="pref_header_work_location_summary">Save work location</string>
-    <string name="pref_header_work_location_title">1000 Hilltop Cir., Baltimore MD, USA, 21250</string>
+    <string name="pref_location_context_switch_key">enableLocationContext</string>
+    <string name="pref_location_context_switch_title">Enable location context</string>
+    <string name="pref_location_context_switch_summary">Click to enable location context</string>
+    <string name="pref_home_location_key">homeLocation</string>
+    <string name="pref_home_location_title">Save home location</string>
+    <string name="pref_home_location_summary">221B Baker Street, London, England</string>
+    <string name="pref_work_location_key">workLocation</string>
+    <string name="pref_work_location_summary">Save work location</string>
+    <string name="pref_work_location_title">1000 Hilltop Cir., Baltimore MD, USA, 21250</string>
 
     <!-- Preference strings for Temporal context -->
     <string name="pref_header_temporal_context">Temporal context</string>
-    <string name="pref_header_work_hours_key">workHours</string>
-    <string name="pref_header_work_hours_title">Change working hours</string>
-    <string name="pref_header_work_hours_summary">M-F, 9AM - 5PM</string>
-    <string name="pref_header_DND_hours_key">dndHours</string>
-    <string name="pref_header_DND_hours_summary">Change do not disturb hours</string>
-    <string name="pref_header_DND_hours_title">Everyday, 10PM - 7AM</string>
+    <string name="pref_temporal_context_switch_key">enableTemporalContext</string>
+    <string name="pref_temporal_context_switch_title">Enable temporal context</string>
+    <string name="pref_temporal_context_switch_summary">Click to enable temporal context</string>
+    <string name="pref_work_hours_key">workHours</string>
+    <string name="pref_work_hours_title">Change working hours</string>
+    <string name="pref_work_hours_summary">M-F, 9AM - 5PM</string>
+    <string name="pref_DND_hours_key">dndHours</string>
+    <string name="pref_DND_hours_summary">Change do not disturb hours</string>
+    <string name="pref_DND_hours_title">Everyday, 10PM - 7AM</string>
 
     <!-- Preference strings for Presence Info context -->
     <string name="pref_header_presence_info_context">Presence info context</string>
-    <string name="pref_header_presence_info_supervisor_key">presenceInfoSupervisor</string>
-    <string name="pref_header_presence_info_supervisor_title">Confirm supervisor identity</string>
-    <string name="pref_header_presence_info_supervisor_summary">BluetoothIDSupervisor</string>
-    <string name="pref_header_presence_info_colleague_key">presenceInfoColleague</string>
-    <string name="pref_header_presence_info_colleague_summary">Confirm colleague identity</string>
-    <string name="pref_header_presence_info_colleague_title">BluetoothIDColleague</string>
+    <string name="pref_presence_info_context_switch_key">enablePresenceInfoContext</string>
+    <string name="pref_presence_info_context_switch_title">Enable presence info context</string>
+    <string name="pref_presence_info_context_switch_summary">Click to enable presence info context</string>
+    <string name="pref_presence_info_supervisor_key">presenceInfoSupervisor</string>
+    <string name="pref_presence_info_supervisor_title">Confirm supervisor identity</string>
+    <string name="pref_presence_info_supervisor_summary">BluetoothIDSupervisor</string>
+    <string name="pref_presence_info_colleague_key">presenceInfoColleague</string>
+    <string name="pref_presence_info_colleague_summary">Confirm colleague identity</string>
+    <string name="pref_presence_info_colleague_title">BluetoothIDColleague</string>
+
+    <!-- End of Strings related to PrefsFragment -->
 
     <string name="service_not_available">Service not available</string>
     <string name="invalid_lat_long_used">Invalid latitude and longitude used</string>
     <string name="no_address_found">No address found</string>
     <string name="address_found">Address found</string>
     <string name="no_location_data_provided">No location data provided</string>
-
-    <!-- activity settings -->
-    <string name="pref_header_home_activity_key">workingHoursEnabled</string>
-    <string name="pref_header_home_activity_summary">Enable "at work" activity</string>
-    <string name="pref_header_home_activity_title">At work</string>
-
-    <!-- temporal settings -->
-    <string name="pref_header_time">Working hours</string>
-    <string name="pref_start_time">0900</string>
-    <string name="pref_end_time">1700</string>
-    <string name="pref_header_home_start_time_key">startTime</string>
-    <string name="pref_header_home_start_time_summary">Start of working hours</string>
-    <string name="pref_header_home_start_time_title">Start time</string>
-    <string name="pref_header_home_end_time_key">endTime</string>
-    <string name="pref_header_home_end_time_summary">End of working hours</string>
-    <string name="pref_header_home_end_time_title">End time</string>
-
-    <string name="pref_title_social_recommendations">Enable social recommendations</string>
-    <string name="pref_description_social_recommendations">Recommendations for people to contact
-        based on your message history
-    </string>
-
-    <string name="pref_title_display_name">Display name</string>
-    <string name="pref_default_display_name">John Smith</string>
-
-    <string name="pref_title_system_sync_settings">System sync settings</string>
 
     <string name="title_activity_about">About this app</string>
     <string name="title_activity_view_app_detail">App details</string>
@@ -183,6 +170,9 @@
     <string name="geofence_transition_invalid_type">
         Geofence transition error: invalid transition type %1$d
     </string>
+
+    <string name="geofences_added">Geofences added</string>
+    <string name="geofences_removed">Geofences removed</string>
 
     <!-- Geofence Transition type strings -->
     <string name="geofence_transition_entered">Entered</string>

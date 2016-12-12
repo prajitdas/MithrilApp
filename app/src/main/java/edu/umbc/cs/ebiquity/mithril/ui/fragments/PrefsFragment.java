@@ -1,6 +1,7 @@
 package edu.umbc.cs.ebiquity.mithril.ui.fragments;
 
 import android.app.PendingIntent;
+import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
@@ -48,12 +49,6 @@ public class PrefsFragment extends PreferenceFragment implements
      * The list of geofences used in this sample.
      */
     protected ArrayList<Geofence> mGeofenceList;
-    private SharedPreferences sharedPreferences;
-    private SwitchPreference mSwithPrefWorkingHoursEnabled;
-    private EditTextPreference mEditTextPrefHomeLocation;
-    private EditTextPreference mEditTextPrefWorkLocation;
-    private EditTextPreference mEditTextPrefStartTime;
-    private EditTextPreference mEditTextPrefEndTime;
     /**
      * Used to keep track of whether geofences were added.
      */
@@ -67,7 +62,21 @@ public class PrefsFragment extends PreferenceFragment implements
     /**
      * Used to persist application state about whether geofences were added.
      */
-    private SharedPreferences mSharedPreferences;
+    private SharedPreferences sharedPrefs;
+
+    private SwitchPreference mSwithPrefEnableLocationEnabled;
+    private EditTextPreference mEditTextPrefHomeLocation;
+    private EditTextPreference mEditTextPrefWorkLocation;
+
+    private SwitchPreference mSwithPrefEnableTemporalEnabled;
+    private EditTextPreference mEditTextPrefWorkHours;
+    private EditTextPreference mEditTextPrefDNDHours;
+
+    private SwitchPreference mSwithPrefEnablePresenceInfoEnabled;
+    private EditTextPreference mEditTextPrefPresenceInfoSupervisor;
+    private EditTextPreference mEditTextPrefPresenceInfoColleague;
+
+    private Context context;
 
     // Buttons for kicking off the process of adding or removing geofences.
 //    private Button mAddGeofencesButton;
@@ -76,18 +85,25 @@ public class PrefsFragment extends PreferenceFragment implements
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        context = getActivity();
 
         // Load the preferences from an XML resource
         addPreferencesFromResource(R.xml.preferences);
 
-        sharedPreferences = getActivity().getSharedPreferences(MithrilApplication.getSharedPreferencesName(), MODE_PRIVATE);
-        final SharedPreferences.Editor editor = sharedPreferences.edit();
+        sharedPrefs = getActivity().getSharedPreferences(MithrilApplication.getSharedPreferencesName(), MODE_PRIVATE);
+        final SharedPreferences.Editor editor = sharedPrefs.edit();
 
-        mSwithPrefWorkingHoursEnabled = (SwitchPreference) getPreferenceManager().findPreference(MithrilApplication.getPrefKeyWorkingHoursEnabled());
-        mEditTextPrefHomeLocation = (EditTextPreference) getPreferenceManager().findPreference(MithrilApplication.getPrefKeyHomeLoc());
-        mEditTextPrefWorkLocation = (EditTextPreference) getPreferenceManager().findPreference(MithrilApplication.getPrefKeyWorkLoc());
-        mEditTextPrefStartTime = (EditTextPreference) getPreferenceManager().findPreference(MithrilApplication.getPrefKeyStartTime());
-        mEditTextPrefEndTime = (EditTextPreference) getPreferenceManager().findPreference(MithrilApplication.getPrefKeyEndTime());
+        mSwithPrefEnableLocationEnabled = (SwitchPreference) getPreferenceManager().findPreference(MithrilApplication.getPrefLocationContextEnableKey());
+        mEditTextPrefHomeLocation = (EditTextPreference) getPreferenceManager().findPreference(MithrilApplication.getPrefHomeLocationKey());
+        mEditTextPrefWorkLocation = (EditTextPreference) getPreferenceManager().findPreference(MithrilApplication.getPrefWorkLocationKey());
+
+        mSwithPrefEnableTemporalEnabled = (SwitchPreference) getPreferenceManager().findPreference(MithrilApplication.getPrefTemporalContextEnableKey());
+        mEditTextPrefWorkHours = (EditTextPreference) getPreferenceManager().findPreference(MithrilApplication.getPrefWorkHoursKey());
+        mEditTextPrefDNDHours = (EditTextPreference) getPreferenceManager().findPreference(MithrilApplication.getPrefDndHoursKey());
+
+        mSwithPrefEnablePresenceInfoEnabled = (SwitchPreference) getPreferenceManager().findPreference(MithrilApplication.getPrefPresenceInfoContextEnableKey());
+        mEditTextPrefPresenceInfoSupervisor = (EditTextPreference) getPreferenceManager().findPreference(MithrilApplication.getPrefPresenceInfoSupervisorKey());
+        mEditTextPrefPresenceInfoColleague = (EditTextPreference) getPreferenceManager().findPreference(MithrilApplication.getPrefPresenceInfoColleagueKey());
 
         // Get the UI widgets.
 //        mAddGeofencesButton = (Button) findViewById(R.id.add_geofences_button);
@@ -100,10 +116,10 @@ public class PrefsFragment extends PreferenceFragment implements
         mGeofencePendingIntent = null;
 
         // Retrieve an instance of the SharedPreferences object.
-        mSharedPreferences = getActivity().getSharedPreferences(MithrilApplication.getSharedPreferencesName(), MODE_PRIVATE);
+        sharedPrefs = getActivity().getSharedPreferences(MithrilApplication.getSharedPreferencesName(), MODE_PRIVATE);
 
         // Get the value of mGeofencesAdded from SharedPreferences. Set to false as a default.
-        mGeofencesAdded = mSharedPreferences.getBoolean(MithrilApplication.GEOFENCES_ADDED_KEY, false);
+        mGeofencesAdded = sharedPrefs.getBoolean(MithrilApplication.GEOFENCES_ADDED_KEY, false);
         setButtonsEnabledState();
 
         // Get the geofences used. Geofence data is hard coded in this sample.
@@ -116,9 +132,9 @@ public class PrefsFragment extends PreferenceFragment implements
     }
 
     private void setOnPreferenceChangeListener() {
-        mSwithPrefWorkingHoursEnabled.setOnPreferenceChangeListener(new Preference.OnPreferenceChangeListener() {
+        mSwithPrefEnableLocationEnabled.setOnPreferenceChangeListener(new Preference.OnPreferenceChangeListener() {
             @Override
-            public boolean onPreferenceChange(Preference preference, Object newValue) {
+            public boolean onPreferenceChange(Preference preference, Object o) {
                 //TODO Add code for storing preferences
                 return false;
             }
@@ -126,7 +142,7 @@ public class PrefsFragment extends PreferenceFragment implements
 
         mEditTextPrefHomeLocation.setOnPreferenceChangeListener(new Preference.OnPreferenceChangeListener() {
             @Override
-            public boolean onPreferenceChange(Preference preference, Object newValue) {
+            public boolean onPreferenceChange(Preference preference, Object o) {
                 //TODO Add code for storing preferences
                 return false;
             }
@@ -134,23 +150,55 @@ public class PrefsFragment extends PreferenceFragment implements
 
         mEditTextPrefWorkLocation.setOnPreferenceChangeListener(new Preference.OnPreferenceChangeListener() {
             @Override
-            public boolean onPreferenceChange(Preference preference, Object newValue) {
+            public boolean onPreferenceChange(Preference preference, Object o) {
                 //TODO Add code for storing preferences
                 return false;
             }
         });
 
-        mEditTextPrefStartTime.setOnPreferenceChangeListener(new Preference.OnPreferenceChangeListener() {
+        mSwithPrefEnableTemporalEnabled.setOnPreferenceChangeListener(new Preference.OnPreferenceChangeListener() {
             @Override
-            public boolean onPreferenceChange(Preference preference, Object newValue) {
+            public boolean onPreferenceChange(Preference preference, Object o) {
                 //TODO Add code for storing preferences
                 return false;
             }
         });
 
-        mEditTextPrefEndTime.setOnPreferenceChangeListener(new Preference.OnPreferenceChangeListener() {
+        mEditTextPrefWorkHours.setOnPreferenceChangeListener(new Preference.OnPreferenceChangeListener() {
             @Override
-            public boolean onPreferenceChange(Preference preference, Object newValue) {
+            public boolean onPreferenceChange(Preference preference, Object o) {
+                //TODO Add code for storing preferences
+                return false;
+            }
+        });
+
+        mEditTextPrefDNDHours.setOnPreferenceChangeListener(new Preference.OnPreferenceChangeListener() {
+            @Override
+            public boolean onPreferenceChange(Preference preference, Object o) {
+                //TODO Add code for storing preferences
+                return false;
+            }
+        });
+
+        mSwithPrefEnablePresenceInfoEnabled.setOnPreferenceChangeListener(new Preference.OnPreferenceChangeListener() {
+            @Override
+            public boolean onPreferenceChange(Preference preference, Object o) {
+                //TODO Add code for storing preferences
+                return false;
+            }
+        });
+
+        mEditTextPrefPresenceInfoSupervisor.setOnPreferenceChangeListener(new Preference.OnPreferenceChangeListener() {
+            @Override
+            public boolean onPreferenceChange(Preference preference, Object o) {
+                //TODO Add code for storing preferences
+                return false;
+            }
+        });
+
+        mEditTextPrefPresenceInfoColleague.setOnPreferenceChangeListener(new Preference.OnPreferenceChangeListener() {
+            @Override
+            public boolean onPreferenceChange(Preference preference, Object o) {
                 //TODO Add code for storing preferences
                 return false;
             }
@@ -229,7 +277,7 @@ public class PrefsFragment extends PreferenceFragment implements
      */
     public void addGeofencesButtonHandler(View view) {
         if (!mGoogleApiClient.isConnected()) {
-            Toast.makeText(this, getString(R.string.not_connected), Toast.LENGTH_SHORT).show();
+            Toast.makeText(context, getString(R.string.not_connected), Toast.LENGTH_SHORT).show();
             return;
         }
 
@@ -255,7 +303,7 @@ public class PrefsFragment extends PreferenceFragment implements
      */
     public void removeGeofencesButtonHandler(View view) {
         if (!mGoogleApiClient.isConnected()) {
-            Toast.makeText(this, getString(R.string.not_connected), Toast.LENGTH_SHORT).show();
+            Toast.makeText(context, getString(R.string.not_connected), Toast.LENGTH_SHORT).show();
             return;
         }
         try {
@@ -290,7 +338,7 @@ public class PrefsFragment extends PreferenceFragment implements
         if (status.isSuccess()) {
             // Update state and save in shared preferences.
             mGeofencesAdded = !mGeofencesAdded;
-            SharedPreferences.Editor editor = mSharedPreferences.edit();
+            SharedPreferences.Editor editor = sharedPrefs.edit();
             editor.putBoolean(MithrilApplication.GEOFENCES_ADDED_KEY, mGeofencesAdded);
             editor.apply();
 
@@ -299,14 +347,14 @@ public class PrefsFragment extends PreferenceFragment implements
             setButtonsEnabledState();
 
             Toast.makeText(
-                    this,
+                    context,
                     getString(mGeofencesAdded ? R.string.geofences_added :
                             R.string.geofences_removed),
                     Toast.LENGTH_SHORT
             ).show();
         } else {
             // Get the status code for the error and log it using a user-friendly message.
-            String errorMessage = GeofenceErrorMessages.getErrorString(this,
+            String errorMessage = GeofenceErrorMessages.getErrorString(context,
                     status.getStatusCode());
             Log.e(MithrilApplication.getDebugTag(), errorMessage);
         }
@@ -370,11 +418,11 @@ public class PrefsFragment extends PreferenceFragment implements
      */
     private void setButtonsEnabledState() {
         if (mGeofencesAdded) {
-            mAddGeofencesButton.setEnabled(false);
-            mRemoveGeofencesButton.setEnabled(true);
+//            mAddGeofencesButton.setEnabled(false);
+//            mRemoveGeofencesButton.setEnabled(true);
         } else {
-            mAddGeofencesButton.setEnabled(true);
-            mRemoveGeofencesButton.setEnabled(false);
+//            mAddGeofencesButton.setEnabled(true);
+//            mRemoveGeofencesButton.setEnabled(false);
         }
     }
     /**************************************END OF GEOFENCE CODE*********************************************************/

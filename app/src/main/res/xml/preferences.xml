@@ -3,29 +3,67 @@
     <PreferenceCategory
         android:enabled="true"
         android:title="@string/pref_header_location_context">
+        <SwitchPreference
+            android:defaultValue="false"
+            android:enabled="true"
+            android:key="@string/pref_location_context_switch_key"
+            android:summary="@string/pref_location_context_switch_summary"
+            android:title="@string/pref_location_context_switch_title" />
         <EditTextPreference
-            android:defaultValue="@string/pref_header_home_location_summary"
-            android:key="@string/pref_header_home_location_key"
-            android:summary="@string/pref_header_home_location_summary"
-            android:title="@string/pref_header_home_location_title" />
+            android:defaultValue="@string/pref_home_location_summary"
+            android:enabled="false"
+            android:key="@string/pref_home_location_key"
+            android:summary="@string/pref_home_location_summary"
+            android:title="@string/pref_home_location_title" />
         <EditTextPreference
-            android:defaultValue="@string/pref_header_work_location_summary"
-            android:key="@string/pref_header_work_location_key"
-            android:summary="@string/pref_header_work_location_summary"
-            android:title="@string/pref_header_work_location_title" />
+            android:defaultValue="@string/pref_work_location_summary"
+            android:enabled="false"
+            android:key="@string/pref_work_location_key"
+            android:summary="@string/pref_work_location_summary"
+            android:title="@string/pref_work_location_title" />
     </PreferenceCategory>
     <PreferenceCategory
         android:enabled="true"
         android:title="@string/pref_header_temporal_context">
+        <SwitchPreference
+            android:defaultValue="false"
+            android:enabled="true"
+            android:key="@string/pref_temporal_context_switch_key"
+            android:summary="@string/pref_temporal_context_switch_summary"
+            android:title="@string/pref_temporal_context_switch_title" />
         <EditTextPreference
-            android:defaultValue="@string/pref_header_work_hours_summary"
-            android:key="@string/pref_header_work_hours_key"
-            android:summary="@string/pref_header_work_hours_summary"
-            android:title="@string/pref_header_work_hours_title" />
+            android:defaultValue="@string/pref_work_hours_summary"
+            android:enabled="false"
+            android:key="@string/pref_work_hours_key"
+            android:summary="@string/pref_work_hours_summary"
+            android:title="@string/pref_work_hours_title" />
         <EditTextPreference
-            android:defaultValue="@string/pref_header_DND_hours_summary"
-            android:key="@string/pref_header_DND_hours_key"
-            android:summary="@string/pref_header_DND_hours_summary"
-            android:title="@string/pref_header_DND_hours_title" />
+            android:defaultValue="@string/pref_DND_hours_summary"
+            android:enabled="false"
+            android:key="@string/pref_DND_hours_key"
+            android:summary="@string/pref_DND_hours_summary"
+            android:title="@string/pref_DND_hours_title" />
+    </PreferenceCategory>
+    <PreferenceCategory
+        android:enabled="true"
+        android:title="@string/pref_header_presence_info_context">
+        <SwitchPreference
+            android:defaultValue="false"
+            android:enabled="true"
+            android:key="@string/pref_presence_info_context_switch_key"
+            android:summary="@string/pref_presence_info_context_switch_summary"
+            android:title="@string/pref_presence_info_context_switch_title" />
+        <EditTextPreference
+            android:defaultValue="@string/pref_presence_info_supervisor_summary"
+            android:enabled="false"
+            android:key="@string/pref_presence_info_supervisor_key"
+            android:summary="@string/pref_presence_info_supervisor_summary"
+            android:title="@string/pref_presence_info_supervisor_title" />
+        <EditTextPreference
+            android:defaultValue="@string/pref_presence_info_colleague_summary"
+            android:enabled="false"
+            android:key="@string/pref_presence_info_colleague_key"
+            android:summary="@string/pref_presence_info_colleague_summary"
+            android:title="@string/pref_presence_info_colleague_title" />
     </PreferenceCategory>
 </PreferenceScreen>

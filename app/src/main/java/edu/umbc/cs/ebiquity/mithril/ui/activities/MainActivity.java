@@ -24,11 +24,13 @@ import java.util.List;
 import edu.umbc.cs.ebiquity.mithril.MithrilApplication;
 import edu.umbc.cs.ebiquity.mithril.R;
 import edu.umbc.cs.ebiquity.mithril.data.model.AppData;
+import edu.umbc.cs.ebiquity.mithril.data.model.PermData;
 import edu.umbc.cs.ebiquity.mithril.data.model.Violation;
 import edu.umbc.cs.ebiquity.mithril.ui.fragments.AboutFragment;
 import edu.umbc.cs.ebiquity.mithril.ui.fragments.PrefsFragment;
-import edu.umbc.cs.ebiquity.mithril.ui.fragments.ReloadDefaultAppDataFragment;
+import edu.umbc.cs.ebiquity.mithril.ui.fragments.ReloadDefaultDataFragment;
 import edu.umbc.cs.ebiquity.mithril.ui.fragments.ShowAppsFragment;
+import edu.umbc.cs.ebiquity.mithril.ui.fragments.ShowPermissionsFragment;
 import edu.umbc.cs.ebiquity.mithril.ui.fragments.ViolationFragment;
 import edu.umbc.cs.ebiquity.mithril.util.services.AppLaunchDetectorService;
 import edu.umbc.cs.ebiquity.mithril.util.services.LocationUpdateService;
@@ -38,9 +40,10 @@ public class MainActivity extends AppCompatActivity
         implements  NavigationView.OnNavigationItemSelectedListener,
                     ShowAppsFragment.OnListFragmentInteractionListener,
                     ShowAppsFragment.OnListFragmentLongInteractionListener,
+        ShowPermissionsFragment.OnListFragmentInteractionListener,
         AboutFragment.OnFragmentInteractionListener,
         ViolationFragment.OnListFragmentInteractionListener,
-        ReloadDefaultAppDataFragment.OnFragmentInteractionListener {
+        ReloadDefaultDataFragment.OnFragmentInteractionListener {
 
     private SharedPreferences sharedPref;
     private Violation violationItemSelected = null;
@@ -95,6 +98,9 @@ public class MainActivity extends AppCompatActivity
         if (id == R.id.nav_violations) {
             FragmentManager fragmentManager = getFragmentManager();
             fragmentManager.beginTransaction().replace(R.id.container_main, new ViolationFragment()).commit();
+        } else if (id == R.id.nav_perm) {
+            FragmentManager fragmentManager = getFragmentManager();
+            fragmentManager.beginTransaction().replace(R.id.container_main, new ShowPermissionsFragment()).commit();
         } else if (id == R.id.nav_user) {
             loadUserAppsFragment();
         } else if (id == R.id.nav_system) {
@@ -106,7 +112,7 @@ public class MainActivity extends AppCompatActivity
             fragmentManager.beginTransaction().replace(R.id.container_main, new PrefsFragment()).commit();
         } else if (id == R.id.nav_reload) {
             FragmentManager fragmentManager = getFragmentManager();
-            fragmentManager.beginTransaction().replace(R.id.container_main, new ReloadDefaultAppDataFragment()).commit();
+            fragmentManager.beginTransaction().replace(R.id.container_main, new ReloadDefaultDataFragment()).commit();
         } else if (id == R.id.nav_about) {
             FragmentManager fragmentManager = getFragmentManager();
             fragmentManager.beginTransaction().replace(R.id.container_main, new AboutFragment()).commit();
@@ -147,6 +153,7 @@ public class MainActivity extends AppCompatActivity
         super.onCreate(savedInstanceState);
         initViews();
         initHousekeepingTasks();
+        defaultFragmentLoad();
     }
 
     private void initHousekeepingTasks() {
@@ -241,5 +248,10 @@ public class MainActivity extends AppCompatActivity
             // other 'case' lines to check for other
             // permissions this app might request
         }
+    }
+
+    @Override
+    public void onListFragmentInteraction(PermData item) {
+
     }
 }

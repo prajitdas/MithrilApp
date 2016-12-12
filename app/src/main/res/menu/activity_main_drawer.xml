@@ -7,6 +7,18 @@
             android:icon="@drawable/rules"
             android:title="@string/violationsMenu" />
         <item
+            android:id="@+id/permissions"
+            android:icon="@drawable/view_list"
+            android:title="@string/permissions">
+            <menu>
+                <item
+                    android:id="@+id/nav_perm"
+                    android:checkable="true"
+                    android:icon="@drawable/account_settings_variant"
+                    android:title="@string/permissionsList" />
+            </menu>
+        </item>
+        <item
             android:id="@+id/components"
             android:icon="@drawable/view_list"
             android:title="@string/components">

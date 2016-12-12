@@ -10,6 +10,9 @@ import java.util.HashMap;
  * Created by Prajit Kumar Das on 5/1/2016.
  */
 public class MithrilApplication extends Application {
+    /**
+     * Public stuff! Make them private if you can...
+     */
     public static final int ALL_PERMISSIONS_MITHRIL_REQUEST_CODE = 1;
     public static final int SUCCESS_RESULT = 0;
     public static final int FAILURE_RESULT = 1;
@@ -33,7 +36,6 @@ public class MithrilApplication extends Application {
      * Map for storing information about airports in the San Francisco bay area.
      */
     public static final HashMap<String, LatLng> BALTIMORE_COUNTY_LANDMARKS = new HashMap<String, LatLng>();
-    private static final String PREF_KEY_LOCATION = "location";
     private static final String PERMISSION_PROTECTION_LEVEL_UNKNOWN = "unknown";
     private static final String PERMISSION_PROTECTION_LEVEL_NORMAL = "normal";
     private static final String PERMISSION_PROTECTION_LEVEL_DANGEROUS = "dangerous";
@@ -63,11 +65,16 @@ public class MithrilApplication extends Application {
     private static final String LOG_INTENT = "android.intent.category.LAUNCHER";
     private static final String BROADCAST_INTENT_COMMAND_APP = "edu.umbc.ebiquity.mithril.command.intent.action.DATA_REQUEST";
     private static final String SHARED_PREFERENCES_NAME = "edu.umbc.cs.ebiquity.mithril.mithrilappmanager";
-    private static final String PREF_KEY_HOME_LOC = "homeLocation";
-    private static final String PREF_KEY_WORK_LOC = "workLocation";
-    private static final String PREF_KEY_START_TIME = "startTime";
-    private static final String PREF_KEY_END_TIME = "endTime";
-    private static final String PREF_KEY_WORKING_HOURS_ENABLED = "workingHoursEnabled";
+    private static final String PREF_KEY_LOCATION = "location";
+    private static final String PREF_LOCATION_CONTEXT_ENABLE_KEY = "enableLocationContext";
+    private static final String PREF_HOME_LOCATION_KEY = "homeLocation";
+    private static final String PREF_WORK_LOCATION_KEY = "workLocation";
+    private static final String PREF_PRESENCE_INFO_CONTEXT_ENABLE_KEY = "enablePresenceInfoContext";
+    private static final String PREF_PRESENCE_INFO_COLLEAGUE_KEY = "presenceInfoSupervisor";
+    private static final String PREF_PRESENCE_INFO_SUPERVISOR_KEY = "presenceInfoColleague";
+    private static final String PREF_TEMPORAL_CONTEXT_ENABLE_KEY = "enableTemporalContext";
+    private static final String PREF_WORK_HOURS_KEY = "workHours";
+    private static final String PREF_DND_HOURS_KEY = "dndhours";
     private static final String PREF_KEY_APP_LAUNCH_MONITORING_SERVICE_STATE = "appLaunchMonitoringServiceState";
     private static final String PREF_KEY_LOCATION_UPDATE_SERVICE_STATE = "locationUpdateServiceState";
     private static final String PREF_KEY_ALL_APPS_DISPLAY = "allApps";
@@ -128,6 +135,9 @@ public class MithrilApplication extends Application {
             + "about the same violation";
     private static final String TOAST_MESSAGE_DATABASE_NOT_RELOADED = "Data was not reloaded!";
 
+    /**
+     * Private stuff!
+     */
     static {
         // Baltimore/Washington International Airport.
         BALTIMORE_COUNTY_LANDMARKS.put("BWI", new LatLng(39.182288, -76.669765));
@@ -135,10 +145,6 @@ public class MithrilApplication extends Application {
         BALTIMORE_COUNTY_LANDMARKS.put("HOME", new LatLng(39.261761, -76.702669));
         // Work.
         BALTIMORE_COUNTY_LANDMARKS.put("WORK", new LatLng(39.253794, -76.714629));
-    }
-
-    public static int getAllPermissionsMithrilRequestCode() {
-        return ALL_PERMISSIONS_MITHRIL_REQUEST_CODE;
     }
 
     public static String getPermissionProtectionLevelUnknown() {
@@ -173,6 +179,30 @@ public class MithrilApplication extends Application {
         return PERMISSION_FLAG_NONE;
     }
 
+    public static String getPermissionNoGroup() {
+        return PERMISSION_NO_GROUP;
+    }
+
+    public static int getMillisecondsPerSecond() {
+        return MILLISECONDS_PER_SECOND;
+    }
+
+    public static int getUpdateIntervalInSeconds() {
+        return UPDATE_INTERVAL_IN_SECONDS;
+    }
+
+    public static long getUpdateInterval() {
+        return UPDATE_INTERVAL;
+    }
+
+    public static int getFastestIntervalInSeconds() {
+        return FASTEST_INTERVAL_IN_SECONDS;
+    }
+
+    public static long getFastestInterval() {
+        return FASTEST_INTERVAL;
+    }
+
     public static String getCmdReadLogsPermissionForApp() {
         return CMD_READ_LOGS_PERMISSION_FOR_APP;
     }
@@ -197,6 +227,10 @@ public class MithrilApplication extends Application {
         return CMD_DETECT_APP_LAUNCH_TIME;
     }
 
+    public static String getLogIntent() {
+        return LOG_INTENT;
+    }
+
     public static String getBroadcastIntentCommandApp() {
         return BROADCAST_INTENT_COMMAND_APP;
     }
@@ -205,24 +239,44 @@ public class MithrilApplication extends Application {
         return SHARED_PREFERENCES_NAME;
     }
 
-    public static String getPrefKeyHomeLoc() {
-        return PREF_KEY_HOME_LOC;
+    public static String getPrefKeyLocation() {
+        return PREF_KEY_LOCATION;
     }
 
-    public static String getPrefKeyWorkLoc() {
-        return PREF_KEY_WORK_LOC;
+    public static String getPrefLocationContextEnableKey() {
+        return PREF_LOCATION_CONTEXT_ENABLE_KEY;
     }
 
-    public static String getPrefKeyStartTime() {
-        return PREF_KEY_START_TIME;
+    public static String getPrefHomeLocationKey() {
+        return PREF_HOME_LOCATION_KEY;
     }
 
-    public static String getPrefKeyEndTime() {
-        return PREF_KEY_END_TIME;
+    public static String getPrefWorkLocationKey() {
+        return PREF_WORK_LOCATION_KEY;
     }
 
-    public static String getPrefKeyWorkingHoursEnabled() {
-        return PREF_KEY_WORKING_HOURS_ENABLED;
+    public static String getPrefPresenceInfoContextEnableKey() {
+        return PREF_PRESENCE_INFO_CONTEXT_ENABLE_KEY;
+    }
+
+    public static String getPrefPresenceInfoColleagueKey() {
+        return PREF_PRESENCE_INFO_COLLEAGUE_KEY;
+    }
+
+    public static String getPrefPresenceInfoSupervisorKey() {
+        return PREF_PRESENCE_INFO_SUPERVISOR_KEY;
+    }
+
+    public static String getPrefTemporalContextEnableKey() {
+        return PREF_TEMPORAL_CONTEXT_ENABLE_KEY;
+    }
+
+    public static String getPrefWorkHoursKey() {
+        return PREF_WORK_HOURS_KEY;
+    }
+
+    public static String getPrefDndHoursKey() {
+        return PREF_DND_HOURS_KEY;
     }
 
     public static String getPrefKeyAppLaunchMonitoringServiceState() {
@@ -359,25 +413,5 @@ public class MithrilApplication extends Application {
 
     public static String getToastMessageDatabaseNotReloaded() {
         return TOAST_MESSAGE_DATABASE_NOT_RELOADED;
-    }
-
-    public static String getPermissionNoGroup() {
-        return PERMISSION_NO_GROUP;
-    }
-
-    public static String getLogIntent() {
-        return LOG_INTENT;
-    }
-
-    public static long getUpdateInterval() {
-        return UPDATE_INTERVAL;
-    }
-
-    public static long getFastestInterval() {
-        return FASTEST_INTERVAL;
-    }
-
-    public static String getPrefKeyLocation() {
-        return PREF_KEY_LOCATION;
     }
 }
