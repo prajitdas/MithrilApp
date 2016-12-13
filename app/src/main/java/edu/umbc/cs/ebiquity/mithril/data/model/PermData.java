@@ -154,6 +154,11 @@ public class PermData implements Comparable<PermData>{
         return this.getPermissionProtectionLevel().compareTo(another.getPermissionProtectionLevel());
     }
 
+    public String findAppsUsingPermission() {
+        //TODO CHANGE THIS LOGIC TO FIGURE OUT HOW MANY APPS ARE USING THIS PERMISSION!!!
+        return "Some apps are using this permission!";
+    }
+
     /**
      * Android Permission Group Metadata
      * ---------------------------------
