@@ -7,11 +7,11 @@ import android.location.Geocoder;
 import android.location.Location;
 import android.os.Bundle;
 import android.os.ResultReceiver;
-import android.text.TextUtils;
 import android.util.Log;
 
+import com.google.gson.Gson;
+
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 
@@ -116,7 +116,9 @@ public class FetchAddressIntentService extends IntentService {
             deliverResultToReceiver(MithrilApplication.FAILURE_RESULT, errorMessage);
         } else {
             Address address = addresses.get(0);
-            List<String> addressFragments = new ArrayList<String>();
+            Gson gson = new Gson();
+            String jsonAddress = gson.toJson(address);
+//            List<String> addressFragments = new ArrayList<String>();
 
             // Fetch the address lines using {@code getAddressLine},
             // join them, and send them to the thread. The {@link android.location.address}
@@ -127,13 +129,15 @@ public class FetchAddressIntentService extends IntentService {
             // getPostalCode() ("94043", for example)
             // getCountryCode() ("US", for example)
             // getCountryName() ("United States", for example)
-            for (int i = 0; i < address.getMaxAddressLineIndex(); i++) {
-                addressFragments.add(address.getAddressLine(i));
-            }
+//            for (int i = 0; i < address.getMaxAddressLineIndex(); i++) {
+//                addressFragments.add(address.getAddressLine(i));
+//            }
             Log.i(MithrilApplication.getDebugTag(), getString(R.string.address_found));
+//            deliverResultToReceiver(MithrilApplication.SUCCESS_RESULT,
+//                    TextUtils.join(System.getProperty("line.separator"),
+//                            addressFragments));
             deliverResultToReceiver(MithrilApplication.SUCCESS_RESULT,
-                    TextUtils.join(System.getProperty("line.separator"),
-                            addressFragments));
+                    jsonAddress);
         }
     }
 

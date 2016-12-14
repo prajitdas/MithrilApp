@@ -1,4 +1,4 @@
-package edu.umbc.cs.ebiquity.mithril.util.specialtasks.detectrunningapps;
+package edu.umbc.cs.ebiquity.mithril.util.specialtasks.detect.runningapps;
 
 /**
  * Created by Prajit on 10/3/2016.

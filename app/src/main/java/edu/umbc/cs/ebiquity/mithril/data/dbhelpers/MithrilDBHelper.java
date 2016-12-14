@@ -418,11 +418,11 @@ public class MithrilDBHelper extends SQLiteOpenHelper {
     public long addContext(SQLiteDatabase db, SemanticUserContext aUserContext) {
         long insertedRowId;
 		ContentValues values = new ContentValues();
-		values.put(LOCATION, aUserContext.getLocation().toString());
-        values.put(IDENTITY, aUserContext.getSemanticIdentity().toString());
-        values.put(ACTIVITY, aUserContext.getActivity().toString());
-        values.put(PRESENCEINFO, aUserContext.getSemanticNearActors().toString());
-        values.put(TIME, aUserContext.getTime().toString());
+		values.put(LOCATION, aUserContext.getSemanticLocation().toString());
+		values.put(IDENTITY, aUserContext.getSemanticIdentity().toString());
+		values.put(ACTIVITY, aUserContext.getSemanticActivity().toString());
+		values.put(PRESENCEINFO, aUserContext.getSemanticNearActors().toString());
+		values.put(TIME, aUserContext.getSemanticTime().toString());
 		try {
 			insertedRowId = db.insert(getContextTableName(), null, values);
 		} catch (SQLException e) {
@@ -1219,10 +1219,10 @@ public class MithrilDBHelper extends SQLiteOpenHelper {
                 SemanticNearActors semanticNearActors = new SemanticNearActors(presenceIdList);
                 userContext.setSemanticNearActors(semanticNearActors);
 
-                userContext.setActivity(new SemanticActivity(cursor.getString(2)));
-                userContext.setLocation(new SemanticLocation(cursor.getString(3)));
-                userContext.setTime(new SemanticTime(cursor.getString(4)));
-            }
+				userContext.setSemanticActivity(new SemanticActivity(cursor.getString(2)));
+				userContext.setSemanticLocation(new SemanticLocation(cursor.getString(3)));
+				userContext.setSemanticTime(new SemanticTime(cursor.getString(4)));
+			}
 		} catch(SQLException e) {
 			throw new SQLException("Could not find " + e);
 		} finally {

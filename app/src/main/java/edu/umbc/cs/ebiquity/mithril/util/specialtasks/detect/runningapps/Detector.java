@@ -1,4 +1,4 @@
-package edu.umbc.cs.ebiquity.mithril.util.specialtasks.detectrunningapps;
+package edu.umbc.cs.ebiquity.mithril.util.specialtasks.detect.runningapps;
 
 import android.content.Context;
 

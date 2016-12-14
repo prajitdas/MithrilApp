@@ -65,7 +65,10 @@ public class MithrilApplication extends Application {
     private static final String LOG_INTENT = "android.intent.category.LAUNCHER";
     private static final String BROADCAST_INTENT_COMMAND_APP = "edu.umbc.ebiquity.mithril.command.intent.action.DATA_REQUEST";
     private static final String SHARED_PREFERENCES_NAME = "edu.umbc.cs.ebiquity.mithril.mithrilappmanager";
-    private static final String PREF_KEY_LOCATION = "location";
+    private static final String PREF_KEY_CURRENT_TIME = "time";
+    private static final String PREF_KEY_CURRENT_LOCATION = "location";
+    private static final String PREF_KEY_CURRENT_ADDRESS = "address";
+    private static final String PREF_KEY_WHAT_LEVEL = "level";
 
     //Make sure they match the values from preferences.xml
     private static final String PREF_LOCATION_CONTEXT_ENABLE_KEY = "enableLocationContext";
@@ -245,10 +248,6 @@ public class MithrilApplication extends Application {
         return SHARED_PREFERENCES_NAME;
     }
 
-    public static String getPrefKeyLocation() {
-        return PREF_KEY_LOCATION;
-    }
-
     public static String getPrefLocationContextEnableKey() {
         return PREF_LOCATION_CONTEXT_ENABLE_KEY;
     }
@@ -419,5 +418,21 @@ public class MithrilApplication extends Application {
 
     public static String getToastMessageDatabaseNotReloaded() {
         return TOAST_MESSAGE_DATABASE_NOT_RELOADED;
+    }
+
+    public static String getPrefKeyCurrentLocation() {
+        return PREF_KEY_CURRENT_LOCATION;
+    }
+
+    public static String getPrefKeyCurrentAddress() {
+        return PREF_KEY_CURRENT_ADDRESS;
+    }
+
+    public static String getPrefKeyWhatLevel() {
+        return PREF_KEY_WHAT_LEVEL;
+    }
+
+    public static String getPrefKeyCurrentTime() {
+        return PREF_KEY_CURRENT_TIME;
     }
 }

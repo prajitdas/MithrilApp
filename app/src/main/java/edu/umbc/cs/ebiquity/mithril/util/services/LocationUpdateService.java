@@ -1,21 +1,23 @@
 package edu.umbc.cs.ebiquity.mithril.util.services;
 
 import android.Manifest;
+import android.annotation.TargetApi;
 import android.app.PendingIntent;
 import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
+import android.location.Address;
 import android.location.Location;
 import android.os.Binder;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.IBinder;
 import android.os.PowerManager;
 import android.os.ResultReceiver;
 import android.util.Log;
-import android.widget.Toast;
 
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GoogleApiAvailability;
@@ -81,7 +83,7 @@ public class LocationUpdateService extends Service implements
     /**
      * The formatted location address.
      */
-    private String mAddressOutput;
+    private Address mAddressOutput;
     /**
      * Tracks whether the user has requested an address. Becomes true when the user requests an
      * address and false when the address (or an error message) is delivered.
@@ -117,6 +119,7 @@ public class LocationUpdateService extends Service implements
      */
     private PendingIntent mGeofencePendingIntent;
 
+    @TargetApi(Build.VERSION_CODES.N)
     @Override
     public void onCreate() {
         super.onCreate();
@@ -125,7 +128,10 @@ public class LocationUpdateService extends Service implements
         mResultReceiver = new AddressResultReceiver(new Handler());
         // Set defaults, then update using values stored in the Bundle.
         mAddressRequested = false;
-        mAddressOutput = "";
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N)
+            mAddressOutput = new Address(getResources().getConfiguration().getLocales().get(0));
+        else
+            mAddressOutput = new Address(getResources().getConfiguration().locale);
 
         mInProgress = false;
         // Create the LocationRequest object
@@ -184,7 +190,7 @@ public class LocationUpdateService extends Service implements
         int result = googleAPI.isGooglePlayServicesAvailable(this);
         if (result != ConnectionResult.SUCCESS) {
             if (googleAPI.isUserResolvableError(result)) {
-                Toast.makeText(this, result, Toast.LENGTH_SHORT).show();
+//                Toast.makeText(this, result, Toast.LENGTH_SHORT).show();
             }
             return false;
         }
@@ -237,7 +243,7 @@ public class LocationUpdateService extends Service implements
         Log.d(MithrilApplication.getDebugTag(), DateFormat.getDateTimeInstance().format(new Date()) + ":" + msg);
         appendLog(DateFormat.getDateTimeInstance().format(new Date()) + ":" + msg);//, sharedPref.getString(MithrilApplication.getPrefKeyLocationFilename(), "sdcard/location.txt"));
         mCurrentLocation = location;
-        storeInSharedPreferences(MithrilApplication.getPrefKeyLocation(), mCurrentLocation);
+        storeInSharedPreferences(MithrilApplication.getPrefKeyCurrentLocation(), mCurrentLocation);
         /**
          * We know the location has changed, let's check the address
          */
@@ -289,6 +295,23 @@ public class LocationUpdateService extends Service implements
         SharedPreferences.Editor editor = sharedPref.edit();
         Gson gson = new Gson();
         String json = gson.toJson(location);
+        editor.putString(key, json);
+        editor.commit();
+    }
+
+    /**
+     * From http://stackoverflow.com/a/18463758/1816861
+     *
+     * @param key
+     * @param address To Retreive
+     *                Gson gson = new Gson();
+     *                String json = mPrefs.getString("MyObject", "");
+     *                MyObject obj = gson.fromJson(json, MyObject.class);
+     */
+    public void storeInSharedPreferences(String key, Address address) {
+        SharedPreferences.Editor editor = sharedPref.edit();
+        Gson gson = new Gson();
+        String json = gson.toJson(address);
         editor.putString(key, json);
         editor.commit();
     }
@@ -416,14 +439,17 @@ public class LocationUpdateService extends Service implements
 
             // Display the address string
             // or an error message sent from the intent service.
-            mAddressOutput = resultData.getString(MithrilApplication.RESULT_DATA_KEY);
+            Gson gson = new Gson();
+            String json = resultData.getString(MithrilApplication.RESULT_DATA_KEY);
+            mAddressOutput = gson.fromJson(json, Address.class);
 //            displayAddressOutput();
 
             // Show a toast message if an address was found.
             if (resultCode == MithrilApplication.SUCCESS_RESULT) {
                 Log.d(MithrilApplication.getDebugTag(), getString(R.string.address_found) + ":" + mAddressOutput);
-                Toast.makeText(context, getString(R.string.address_found) + ":" + mAddressOutput, Toast.LENGTH_LONG).show();
-                appendLog(DateFormat.getDateTimeInstance().format(new Date()) + ":" + mAddressOutput);//, sharedPref.getString(MithrilApplication.getPrefKeyLocationFilename(), "sdcard/location.txt"));
+//                Toast.makeText(context, getString(R.string.address_found) + ":" + mAddressOutput, Toast.LENGTH_LONG).show();
+                appendLog(DateFormat.getDateTimeInstance().format(new Date()) + ":" + mAddressOutput);
+                storeInSharedPreferences(MithrilApplication.getPrefKeyCurrentAddress(), mAddressOutput);
             }
             // Reset. Enable the Fetch Address button and stop showing the progress bar.
             mAddressRequested = false;

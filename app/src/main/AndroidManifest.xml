@@ -12,13 +12,13 @@
         tools:ignore="ProtectedPermissions" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+    <!-- <uses-permission android:name="android.permission.NFC" /> -->
     <!-- <uses-permission android:name="android.permission.REAL_GET_TASKS" /> -->
     <!-- <uses-permission android:name="android.permission.READ_LOGS" /> -->
-    <!-- <uses-permission android:name="android.permission.NFC" /> -->
 
     <!-- Needed only if your app targets Android 5.0 (API level 21) or higher. -->
     <uses-feature
-        android:name="android.hardware.location.gps"
+        android:name="android.hardware.semanticLocation.gps"
         android:required="true" />
     <uses-feature
         android:name="android.hardware.nfc"
@@ -49,9 +49,9 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="edu.umbc.cs.ebiquity.mithril.ui.activities.MainActivity" />
         </activity>
-        <!-- This test activity was used for the IEEE CIC paper. This will possibly removed or modified in the future. -->
+        <!-- This test semanticActivity was used for the IEEE CIC paper. This will possibly removed or modified in the future. -->
         <activity
-            android:name=".simulations.TestMainActivity"
+            android:name=".ui.activities.TestMainActivity"
             android:label="@string/title_activity_test_main"
             android:theme="@style/AppTheme.NoActionBar">
             <intent-filter>

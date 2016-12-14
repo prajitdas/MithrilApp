@@ -2,6 +2,7 @@ package edu.umbc.cs.ebiquity.mithril.ui.fragments;
 
 import android.app.Fragment;
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.support.v7.widget.GridLayoutManager;
@@ -16,6 +17,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import edu.umbc.cs.ebiquity.mithril.MithrilApplication;
 import edu.umbc.cs.ebiquity.mithril.R;
 import edu.umbc.cs.ebiquity.mithril.data.dbhelpers.MithrilDBHelper;
 import edu.umbc.cs.ebiquity.mithril.data.model.Violation;
@@ -100,6 +102,21 @@ public class ViolationFragment extends Fragment {
         mithrilDBHelper = new MithrilDBHelper(view.getContext());
         mithrilDB = mithrilDBHelper.getWritableDatabase();
         violationItems = mithrilDBHelper.findAllViolations(mithrilDB);
+
+        //TODO remove this later. This is for demo purposes.
+        SharedPreferences sharedPref = getActivity().getSharedPreferences(MithrilApplication.getSharedPreferencesName(), Context.MODE_PRIVATE);
+        if (sharedPref.contains(MithrilApplication.getPrefKeyAppPkgName()) &&
+                sharedPref.contains(MithrilApplication.getPrefKeyCurrentTime()))
+            violationItems.add(new Violation(sharedPref.getString(MithrilApplication.getPrefKeyAppPkgName(), "Youtube") +
+                    sharedPref.getString(MithrilApplication.getPrefKeyCurrentLocation(), "location") +
+                    sharedPref.getString(MithrilApplication.getPrefKeyCurrentTime(), "time"), 1, 1, true));
+        else if (sharedPref.contains(MithrilApplication.getPrefKeyAppPkgName()) &&
+                !sharedPref.contains(MithrilApplication.getPrefKeyCurrentTime()))
+            violationItems.add(new Violation(sharedPref.getString(MithrilApplication.getPrefKeyAppPkgName(), "Youtube") +
+                    sharedPref.getString(MithrilApplication.getPrefKeyCurrentLocation(), "location"), 1, 1, true));
+        else
+            violationItems.clear();
+
         // Add some violation items.
         for (Violation item : violationItems)
             violationItemsMap.put(item.getId(), item);

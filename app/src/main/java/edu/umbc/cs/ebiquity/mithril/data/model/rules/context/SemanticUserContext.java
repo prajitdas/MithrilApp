@@ -9,87 +9,35 @@ import edu.umbc.cs.ebiquity.mithril.data.model.rules.context.contextpieces.Seman
 public class SemanticUserContext {
     private int id;
     private SemanticNearActors semanticNearActors;
-    private SemanticActivity activity;
+    private SemanticActivity semanticActivity;
     private SemanticIdentity semanticIdentity;
-    private SemanticLocation location;
-    private SemanticTime time;
+    private SemanticLocation semanticLocation;
+    private SemanticTime semanticTime;
+
+    public SemanticUserContext() {
+
+    }
 
     public SemanticUserContext(int id, SemanticNearActors semanticNearActors,
-                               SemanticActivity activity, SemanticIdentity semanticIdentity,
-                               SemanticLocation location, SemanticTime time) {
+                               SemanticActivity semanticActivity, SemanticIdentity semanticIdentity,
+                               SemanticLocation semanticLocation, SemanticTime semanticTime) {
         this.id = id;
         this.semanticNearActors = semanticNearActors;
-        this.activity = activity;
+        this.semanticActivity = semanticActivity;
         this.semanticIdentity = semanticIdentity;
-        this.location = location;
-        this.time = time;
+        this.semanticLocation = semanticLocation;
+        this.semanticTime = semanticTime;
     }
 
     public SemanticUserContext(SemanticNearActors semanticNearActors,
-                               SemanticActivity activity, SemanticIdentity semanticIdentity,
-                               SemanticLocation location, SemanticTime time) {
+                               SemanticActivity semanticActivity, SemanticIdentity semanticIdentity,
+                               SemanticLocation semanticLocation, SemanticTime semanticTime) {
         this.id = -1;
         this.semanticNearActors = semanticNearActors;
-        this.activity = activity;
+        this.semanticActivity = semanticActivity;
         this.semanticIdentity = semanticIdentity;
-        this.location = location;
-        this.time = time;
-    }
-
-    public SemanticUserContext() {
-        this.id = -1;
-        this.semanticNearActors = new SemanticNearActors();
-        this.activity = new SemanticActivity();
-        this.semanticIdentity = new SemanticIdentity();
-        this.location = new SemanticLocation();
-        this.time = new SemanticTime();
-    }
-
-    @Override
-    public boolean equals(Object obj) {
-        if (this == obj)
-            return true;
-        if (obj == null)
-            return false;
-        if (getClass() != obj.getClass())
-            return false;
-        SemanticUserContext other = (SemanticUserContext) obj;
-        if (activity == null) {
-            if (other.activity != null)
-                return false;
-        } else if (!activity.equals(other.activity))
-            return false;
-        if (id != other.id)
-            return false;
-        if (semanticIdentity == null) {
-            if (other.semanticIdentity != null)
-                return false;
-        } else if (!semanticIdentity.equals(other.semanticIdentity))
-            return false;
-        if (location == null) {
-            if (other.location != null)
-                return false;
-        } else if (!location.equals(other.location))
-            return false;
-        if (semanticNearActors == null) {
-            if (other.semanticNearActors != null)
-                return false;
-        } else if (!semanticNearActors.equals(other.semanticNearActors))
-            return false;
-        if (time == null) {
-            if (other.time != null)
-                return false;
-        } else if (!time.equals(other.time))
-            return false;
-        return true;
-    }
-
-    public SemanticActivity getActivity() {
-        return activity;
-    }
-
-    public void setActivity(SemanticActivity activity) {
-        this.activity = activity;
+        this.semanticLocation = semanticLocation;
+        this.semanticTime = semanticTime;
     }
 
     public int getId() {
@@ -100,22 +48,6 @@ public class SemanticUserContext {
         this.id = id;
     }
 
-    public SemanticIdentity getSemanticIdentity() {
-        return semanticIdentity;
-    }
-
-    public void setSemanticIdentity(SemanticIdentity semanticIdentity) {
-        this.semanticIdentity = semanticIdentity;
-    }
-
-    public SemanticLocation getLocation() {
-        return location;
-    }
-
-    public void setLocation(SemanticLocation location) {
-        this.location = location;
-    }
-
     public SemanticNearActors getSemanticNearActors() {
         return semanticNearActors;
     }
@@ -124,35 +56,74 @@ public class SemanticUserContext {
         this.semanticNearActors = semanticNearActors;
     }
 
-    public SemanticTime getTime() {
-        return time;
+    public SemanticActivity getSemanticActivity() {
+        return semanticActivity;
     }
 
-    public void setTime(SemanticTime time) {
-        this.time = time;
+    public void setSemanticActivity(SemanticActivity semanticActivity) {
+        this.semanticActivity = semanticActivity;
+    }
+
+    public SemanticIdentity getSemanticIdentity() {
+        return semanticIdentity;
+    }
+
+    public void setSemanticIdentity(SemanticIdentity semanticIdentity) {
+        this.semanticIdentity = semanticIdentity;
+    }
+
+    public SemanticLocation getSemanticLocation() {
+        return semanticLocation;
+    }
+
+    public void setSemanticLocation(SemanticLocation semanticLocation) {
+        this.semanticLocation = semanticLocation;
+    }
+
+    public SemanticTime getSemanticTime() {
+        return semanticTime;
+    }
+
+    public void setSemanticTime(SemanticTime semanticTime) {
+        this.semanticTime = semanticTime;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof SemanticUserContext)) return false;
+
+        SemanticUserContext that = (SemanticUserContext) o;
+
+        if (getId() != that.getId()) return false;
+        if (!getSemanticNearActors().equals(that.getSemanticNearActors())) return false;
+        if (!getSemanticActivity().equals(that.getSemanticActivity())) return false;
+        if (!getSemanticIdentity().equals(that.getSemanticIdentity())) return false;
+        if (!getSemanticLocation().equals(that.getSemanticLocation())) return false;
+        return getSemanticTime().equals(that.getSemanticTime());
+
     }
 
     @Override
     public int hashCode() {
-        final int prime = 31;
-        int result = 1;
-        result = prime * result
-                + ((activity == null) ? 0 : activity.hashCode());
-        result = prime * result + id;
-        result = prime * result
-                + ((semanticIdentity == null) ? 0 : semanticIdentity.hashCode());
-        result = prime * result
-                + ((location == null) ? 0 : location.hashCode());
-        result = prime * result
-                + ((semanticNearActors == null) ? 0 : semanticNearActors.hashCode());
-        result = prime * result + ((time == null) ? 0 : time.hashCode());
+        int result = getId();
+        result = 31 * result + getSemanticNearActors().hashCode();
+        result = 31 * result + getSemanticActivity().hashCode();
+        result = 31 * result + getSemanticIdentity().hashCode();
+        result = 31 * result + getSemanticLocation().hashCode();
+        result = 31 * result + getSemanticTime().hashCode();
         return result;
     }
 
     @Override
     public String toString() {
-        return "SemanticUserContext [id=" + id + ", semanticNearActors=" + semanticNearActors
-                + ", activity=" + activity + ", semanticIdentity=" + semanticIdentity
-                + ", location=" + location + ", time=" + time + "]";
+        return "SemanticUserContext{" +
+                "id=" + id +
+                ", semanticNearActors=" + semanticNearActors +
+                ", semanticActivity=" + semanticActivity +
+                ", semanticIdentity=" + semanticIdentity +
+                ", semanticLocation=" + semanticLocation +
+                ", semanticTime=" + semanticTime +
+                '}';
     }
 }

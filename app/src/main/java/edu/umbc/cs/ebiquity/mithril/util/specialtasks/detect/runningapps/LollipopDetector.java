@@ -1,4 +1,4 @@
-package edu.umbc.cs.ebiquity.mithril.util.specialtasks.detectrunningapps;
+package edu.umbc.cs.ebiquity.mithril.util.specialtasks.detect.runningapps;
 
 /**
  * Created by prajit on 11/20/16.
@@ -15,10 +15,13 @@ import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.content.pm.ResolveInfo;
 import android.database.sqlite.SQLiteDatabase;
+import android.location.Address;
 import android.os.Build;
 import android.text.TextUtils;
 import android.util.Log;
 import android.widget.Toast;
+
+import com.google.gson.Gson;
 
 import java.util.List;
 import java.util.SortedMap;
@@ -27,6 +30,8 @@ import java.util.TreeMap;
 import edu.umbc.cs.ebiquity.mithril.MithrilApplication;
 import edu.umbc.cs.ebiquity.mithril.data.dbhelpers.MithrilDBHelper;
 import edu.umbc.cs.ebiquity.mithril.data.model.rules.context.SemanticUserContext;
+import edu.umbc.cs.ebiquity.mithril.data.model.rules.context.contextpieces.SemanticLocation;
+import edu.umbc.cs.ebiquity.mithril.data.model.rules.context.contextpieces.SemanticTime;
 import edu.umbc.cs.ebiquity.mithril.util.specialtasks.permissions.PermissionHelper;
 
 /**
@@ -38,6 +43,7 @@ public class LollipopDetector implements Detector {
     private SQLiteDatabase mithrilDB;
     private String currentPackageName;
     private SharedPreferences sharedPref;
+    private String contextLevel;
 
     /**
      * Returns the consumer friendly device name
@@ -89,6 +95,9 @@ public class LollipopDetector implements Detector {
             return null;
 
         sharedPref = context.getSharedPreferences(MithrilApplication.getSharedPreferencesName(), Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = sharedPref.edit();
+        contextLevel = sharedPref.getString(MithrilApplication.getPrefKeyWhatLevel(), MithrilApplication.getPrefKeyCurrentLocation());
+
         mithrilDBHelper = new MithrilDBHelper(context);
         mithrilDB = mithrilDBHelper.getWritableDatabase();
         currentPackageName = null;
@@ -149,27 +158,82 @@ public class LollipopDetector implements Detector {
         if (mithrilDBHelper.findAppTypeByAppPkgName(mithrilDB, currentPackageName).equals(MithrilApplication.getPrefKeyUserAppsDisplay())) {
             Toast.makeText(context, "Mithril detects user app launch: " + currentPackageName, Toast.LENGTH_SHORT).show();
             Log.d(MithrilApplication.getDebugTag(), "Mithril detects user app launch: " + currentPackageName);
-            getCurrentSemanticUserContext();
+            /**
+             * PolicyConflictDetector object to be created and sent the requester, resource, context combo to receive a decision!!!
+             */
             /**
              * TODO if an app is launched at a certain Semantic location, does the location we know match any policy?
              * TODO If it does then, can we determine if this is a violation?
              * TODO if this is a violation, then insert the information into the violation table.
              * TODO if it is not a violation, then what do we do? **DECIDE**
+             * TODO !!!!DUMMY POLICY!!!!
+             * REMOVE THIS AFTER DEMO
+             * com.google.android.youtube launch is not allowed in US!
+             * change policy to allowed in
              */
+            //Rule 1 is allow youtube at home
+            if (contextLevel.equals(MithrilApplication.getPrefKeyCurrentLocation())
+                    && !getCurrentSemanticUserContext().getSemanticLocation().getInferredLocation().equals("21250")) {
+                editor.putString(MithrilApplication.getPrefKeyCurrentLocation(), "Home");
+//                editor.commit();
+                Toast.makeText(context, "Rule 1 violation detected!", Toast.LENGTH_LONG).show();
+            }
+            //Rule 2 is allow youtube at work during lunch hours
+            else if (contextLevel.equals("loctime")
+                    && !getCurrentSemanticUserContext().getSemanticLocation().getInferredLocation().equals("21250")
+                    && !getCurrentSemanticUserContext().getSemanticTime().getDeviceTime().equals("Lunch")) {
+                editor.putString(MithrilApplication.getPrefKeyCurrentLocation(), "Work");
+                editor.putString(MithrilApplication.getPrefKeyCurrentTime(), "Lunch");
+//                editor.commit();
+                Toast.makeText(context, "Rule 2 violation detected!", Toast.LENGTH_LONG).show();
+            }
+            // If no rules are broken then we will show no violations
+            else {
+                editor.remove(MithrilApplication.getPrefKeyCurrentLocation());
+                editor.remove(MithrilApplication.getPrefKeyCurrentTime());
+                Toast.makeText(context, "All good!", Toast.LENGTH_LONG).show();
+            }
+
+            if (currentPackageName.equals("com.google.android.youtube")) {
+                editor.putString(MithrilApplication.getPrefKeyAppPkgName(), currentPackageName);
+//                editor.commit();
+            } else
+                editor.remove(MithrilApplication.getPrefKeyAppPkgName());
+            editor.commit();
         }
         mithrilDB.close();
-
-        SharedPreferences.Editor editor = sharedPref.edit();
-        editor.putString(MithrilApplication.getPrefKeyAppPkgName(), currentPackageName);
-        editor.commit();
-
         return currentPackageName;
     }
 
     private SemanticUserContext getCurrentSemanticUserContext() {
+        Gson gson = new Gson();
+        String json = sharedPref.getString(MithrilApplication.getPrefKeyCurrentAddress(), new String("address"));
+        Address detectedAddress = gson.fromJson(json, Address.class);
+
+
         SemanticUserContext semanticUserContext = new SemanticUserContext();
         //TODO FIX THIS!!!
-        sharedPref.getString(MithrilApplication.getPrefKeyLocation(), new String("location"));
+        SemanticLocation semanticLocation = new SemanticLocation();
+        SemanticTime semanticTime = new SemanticTime("Lunch");
+        // getLocality() ("Mountain View", for example)
+        // getAdminArea() ("CA", for example)
+        // getPostalCode() ("94043", for example)
+        // getCountryCode() ("US", for example)
+        // getCountryName() ("United States", for example)
+//        if (level.equals("home"))
+        semanticLocation.setInferredLocation(detectedAddress.getPostalCode());
+//        else if (level.equals("work"))
+//            semanticLocation.setInferredLocation(detectedAddress.getPostalCode());
+//        else if (level.equals("city"))
+//            semanticLocation.setInferredLocation(detectedAddress.getLocality());
+//        else if (level.equals("building"))
+//            semanticLocation.setInferredLocation(detectedAddress.getPremises());
+        if (contextLevel.equals(MithrilApplication.getPrefKeyCurrentLocation()))
+            semanticUserContext.setSemanticLocation(semanticLocation);
+        else if (contextLevel.equals("loctime")) {
+            semanticUserContext.setSemanticLocation(semanticLocation);
+            semanticUserContext.setSemanticTime(semanticTime);
+        }
         return semanticUserContext;
     }
 }

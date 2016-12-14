@@ -10,7 +10,7 @@
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin"
     app:layout_behavior="@string/appbar_scrolling_view_behavior"
-    tools:context="edu.umbc.cs.ebiquity.mithril.simulations.TestMainActivity"
+    tools:context="edu.umbc.cs.ebiquity.mithril.ui.activities.TestMainActivity"
     tools:showIn="@layout/activity_test_main">
 
     <TextView

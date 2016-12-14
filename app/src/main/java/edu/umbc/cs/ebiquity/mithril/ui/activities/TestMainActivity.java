@@ -1,4 +1,4 @@
-package edu.umbc.cs.ebiquity.mithril.simulations;
+package edu.umbc.cs.ebiquity.mithril.ui.activities;
 
 import android.app.Activity;
 import android.app.PendingIntent;
@@ -61,7 +61,11 @@ public class TestMainActivity extends AppCompatActivity {
             throw new RuntimeException("Check your mime type.");
         }
 
-        adapter.enableForegroundDispatch(activity, pendingIntent, filters, techList);
+        try {
+            adapter.enableForegroundDispatch(activity, pendingIntent, filters, techList);
+        } catch (SecurityException securityException) {
+            Log.d(MithrilApplication.getDebugTag(), securityException.getMessage());
+        }
     }
 
     /**
@@ -69,7 +73,11 @@ public class TestMainActivity extends AppCompatActivity {
      * @param adapter  The {@link NfcAdapter} used for the foreground dispatch.
      */
     public static void stopForegroundDispatch(final Activity activity, NfcAdapter adapter) {
-        adapter.disableForegroundDispatch(activity);
+        try {
+            adapter.disableForegroundDispatch(activity);
+        } catch (SecurityException securityException) {
+            Log.d(MithrilApplication.getDebugTag(), securityException.getMessage());
+        }
     }
 
     @Override

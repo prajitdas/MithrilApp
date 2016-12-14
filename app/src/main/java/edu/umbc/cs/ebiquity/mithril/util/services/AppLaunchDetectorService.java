@@ -10,9 +10,9 @@ import java.util.Timer;
 import java.util.TimerTask;
 
 import edu.umbc.cs.ebiquity.mithril.MithrilApplication;
-import edu.umbc.cs.ebiquity.mithril.util.specialtasks.detectrunningapps.Detector;
-import edu.umbc.cs.ebiquity.mithril.util.specialtasks.detectrunningapps.LollipopDetector;
-import edu.umbc.cs.ebiquity.mithril.util.specialtasks.detectrunningapps.PreLollipopDetector;
+import edu.umbc.cs.ebiquity.mithril.util.specialtasks.detect.runningapps.Detector;
+import edu.umbc.cs.ebiquity.mithril.util.specialtasks.detect.runningapps.LollipopDetector;
+import edu.umbc.cs.ebiquity.mithril.util.specialtasks.detect.runningapps.PreLollipopDetector;
 import edu.umbc.cs.ebiquity.mithril.util.specialtasks.permissions.PermissionHelper;
 
 public class AppLaunchDetectorService extends Service {
