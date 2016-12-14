@@ -44,6 +44,7 @@ public class LollipopDetector implements Detector {
     private String currentPackageName;
     private SharedPreferences sharedPref;
     private String contextLevel;
+    private Address detectedAddress;
 
     /**
      * Returns the consumer friendly device name
@@ -97,6 +98,16 @@ public class LollipopDetector implements Detector {
         sharedPref = context.getSharedPreferences(MithrilApplication.getSharedPreferencesName(), Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = sharedPref.edit();
         contextLevel = sharedPref.getString(MithrilApplication.getPrefKeyWhatLevel(), MithrilApplication.getPrefKeyCurrentLocation());
+
+//        Address tempAddress;
+//        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N)
+//            tempAddress = new Address(context.getResources().getConfiguration().getLocales().get(0));
+//        else
+//            tempAddress = new Address(context.getResources().getConfiguration().locale);
+
+        Gson gson = new Gson();
+        String json = sharedPref.getString(MithrilApplication.getPrefKeyCurrentAddress(), null);// gson.toJson(tempAddress));
+        detectedAddress = gson.fromJson(json, Address.class);
 
         mithrilDBHelper = new MithrilDBHelper(context);
         mithrilDB = mithrilDBHelper.getWritableDatabase();
@@ -171,22 +182,31 @@ public class LollipopDetector implements Detector {
              * com.google.android.youtube launch is not allowed in US!
              * change policy to allowed in
              */
-            //Rule 1 is allow youtube at home
-            if (contextLevel.equals(MithrilApplication.getPrefKeyCurrentLocation())
-                    && !getCurrentSemanticUserContext().getSemanticLocation().getInferredLocation().equals("21250")) {
-                editor.putString(MithrilApplication.getPrefKeyCurrentLocation(), "Home");
+            SemanticUserContext currSemanticUserContext = getCurrentSemanticUserContext();
+            if (currSemanticUserContext != null) {
+                //Rule 1 is allow youtube at home
+                if (contextLevel.equals(MithrilApplication.getPrefKeyCurrentLocation())
+                        && !currSemanticUserContext.getSemanticLocation().getInferredLocation().equals("21227")) {
+                    if (currentPackageName.equals("com.google.android.youtube")) {
+                        editor.putString(MithrilApplication.getPrefKeyAppPkgName(), currentPackageName);
+                        editor.putString(MithrilApplication.getPrefKeyCurrentLocation(), "Home");
+                        Toast.makeText(context, "Rule 1 violation detected!", Toast.LENGTH_LONG).show();
+                        Log.d(MithrilApplication.getDebugTag(), "Rule 1 violation detected!");
+                    }
+                }
+                //Rule 2 is allow youtube at work during lunch hours
+                else if (contextLevel.equals("loctime")
+                        && !currSemanticUserContext.getSemanticLocation().getInferredLocation().equals("21250")
+                        && !currSemanticUserContext.getSemanticTime().getDeviceTime().equals("Lunch")) {
+                    if (currentPackageName.equals("com.google.android.youtube")) {
+                        editor.putString(MithrilApplication.getPrefKeyAppPkgName(), currentPackageName);
+                        editor.putString(MithrilApplication.getPrefKeyCurrentLocation(), "Work");
+                        editor.putString(MithrilApplication.getPrefKeyCurrentTime(), "Lunch");
 //                editor.commit();
-                Toast.makeText(context, "Rule 1 violation detected!", Toast.LENGTH_LONG).show();
-            }
-            //Rule 2 is allow youtube at work during lunch hours
-            else if (contextLevel.equals("loctime")
-                    && !getCurrentSemanticUserContext().getSemanticLocation().getInferredLocation().equals("21250")
-                    && !getCurrentSemanticUserContext().getSemanticTime().getDeviceTime().equals("Lunch")) {
-                editor.putString(MithrilApplication.getPrefKeyCurrentLocation(), "Work");
-                editor.putString(MithrilApplication.getPrefKeyCurrentTime(), "Lunch");
-//                editor.commit();
-                Toast.makeText(context, "Rule 2 violation detected!", Toast.LENGTH_LONG).show();
-            }
+                        Toast.makeText(context, "Rule 2 violation detected!", Toast.LENGTH_LONG).show();
+                        Log.d(MithrilApplication.getDebugTag(), "Rule 2 violation detected!");
+                    }
+                }
 //            // If no rules are broken then we will show no violations
 //            else {
 //                editor.remove(MithrilApplication.getPrefKeyCurrentLocation());
@@ -194,24 +214,16 @@ public class LollipopDetector implements Detector {
 //                Toast.makeText(context, "All good!", Toast.LENGTH_LONG).show();
 //            }
 
-            if (currentPackageName.equals("com.google.android.youtube")) {
-                editor.putString(MithrilApplication.getPrefKeyAppPkgName(), currentPackageName);
-//                editor.commit();
+                editor.commit();
             }
-//            else
-//                editor.remove(MithrilApplication.getPrefKeyAppPkgName());
-            editor.commit();
         }
         mithrilDB.close();
         return currentPackageName;
     }
 
     private SemanticUserContext getCurrentSemanticUserContext() {
-        Gson gson = new Gson();
-        String json = sharedPref.getString(MithrilApplication.getPrefKeyCurrentAddress(), new String("address"));
-        Address detectedAddress = gson.fromJson(json, Address.class);
-
-
+        if (detectedAddress == null)
+            return null;
         SemanticUserContext semanticUserContext = new SemanticUserContext();
         //TODO FIX THIS!!!
         SemanticLocation semanticLocation = new SemanticLocation();
