@@ -243,7 +243,7 @@ public class LocationUpdateService extends Service implements
         Log.d(MithrilApplication.getDebugTag(), DateFormat.getDateTimeInstance().format(new Date()) + ":" + msg);
         appendLog(DateFormat.getDateTimeInstance().format(new Date()) + ":" + msg);//, sharedPref.getString(MithrilApplication.getPrefKeyLocationFilename(), "sdcard/location.txt"));
         mCurrentLocation = location;
-        storeInSharedPreferences(MithrilApplication.getPrefKeyCurrentLocation(), mCurrentLocation);
+        storeInSharedPreferences(MithrilApplication.getPrefKeyLocation(), mCurrentLocation);
         /**
          * We know the location has changed, let's check the address
          */

@@ -105,14 +105,20 @@ public class ViolationFragment extends Fragment {
 
         //TODO remove this later. This is for demo purposes.
         SharedPreferences sharedPref = getActivity().getSharedPreferences(MithrilApplication.getSharedPreferencesName(), Context.MODE_PRIVATE);
-        if (sharedPref.contains(MithrilApplication.getPrefKeyAppPkgName()) &&
+        String appPkgName = sharedPref.getString(MithrilApplication.getPrefKeyAppPkgName(), "Youtube");
+        if (appPkgName.equals("com.google.android.youtube") &&
                 sharedPref.contains(MithrilApplication.getPrefKeyCurrentTime()))
-            violationItems.add(new Violation(sharedPref.getString(MithrilApplication.getPrefKeyAppPkgName(), "Youtube") +
+            violationItems.add(new Violation("App package name: " +
+                    sharedPref.getString(MithrilApplication.getPrefKeyAppPkgName(), "Youtube") +
+                    "Location context: " +
                     sharedPref.getString(MithrilApplication.getPrefKeyCurrentLocation(), "location") +
+                    "Temporal context: " +
                     sharedPref.getString(MithrilApplication.getPrefKeyCurrentTime(), "time"), 1, 1, true));
-        else if (sharedPref.contains(MithrilApplication.getPrefKeyAppPkgName()) &&
+        else if (appPkgName.equals("com.google.android.youtube") &&
                 !sharedPref.contains(MithrilApplication.getPrefKeyCurrentTime()))
-            violationItems.add(new Violation(sharedPref.getString(MithrilApplication.getPrefKeyAppPkgName(), "Youtube") +
+            violationItems.add(new Violation("App package name: " +
+                    sharedPref.getString(MithrilApplication.getPrefKeyAppPkgName(), "Youtube") +
+                    "Location context: " +
                     sharedPref.getString(MithrilApplication.getPrefKeyCurrentLocation(), "location"), 1, 1, true));
         else
             violationItems.clear();

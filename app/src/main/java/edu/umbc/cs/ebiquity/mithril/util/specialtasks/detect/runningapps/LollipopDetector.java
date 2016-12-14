@@ -187,18 +187,19 @@ public class LollipopDetector implements Detector {
 //                editor.commit();
                 Toast.makeText(context, "Rule 2 violation detected!", Toast.LENGTH_LONG).show();
             }
-            // If no rules are broken then we will show no violations
-            else {
-                editor.remove(MithrilApplication.getPrefKeyCurrentLocation());
-                editor.remove(MithrilApplication.getPrefKeyCurrentTime());
-                Toast.makeText(context, "All good!", Toast.LENGTH_LONG).show();
-            }
+//            // If no rules are broken then we will show no violations
+//            else {
+//                editor.remove(MithrilApplication.getPrefKeyCurrentLocation());
+//                editor.remove(MithrilApplication.getPrefKeyCurrentTime());
+//                Toast.makeText(context, "All good!", Toast.LENGTH_LONG).show();
+//            }
 
             if (currentPackageName.equals("com.google.android.youtube")) {
                 editor.putString(MithrilApplication.getPrefKeyAppPkgName(), currentPackageName);
 //                editor.commit();
-            } else
-                editor.remove(MithrilApplication.getPrefKeyAppPkgName());
+            }
+//            else
+//                editor.remove(MithrilApplication.getPrefKeyAppPkgName());
             editor.commit();
         }
         mithrilDB.close();

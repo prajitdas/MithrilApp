@@ -66,7 +66,8 @@ public class MithrilApplication extends Application {
     private static final String BROADCAST_INTENT_COMMAND_APP = "edu.umbc.ebiquity.mithril.command.intent.action.DATA_REQUEST";
     private static final String SHARED_PREFERENCES_NAME = "edu.umbc.cs.ebiquity.mithril.mithrilappmanager";
     private static final String PREF_KEY_CURRENT_TIME = "time";
-    private static final String PREF_KEY_CURRENT_LOCATION = "location";
+    private static final String PREF_KEY_CURRENT_LOCATION = "currloc";
+    private static final String PREF_KEY_LOCATION = "location";
     private static final String PREF_KEY_CURRENT_ADDRESS = "address";
     private static final String PREF_KEY_WHAT_LEVEL = "level";
 
@@ -434,5 +435,9 @@ public class MithrilApplication extends Application {
 
     public static String getPrefKeyCurrentTime() {
         return PREF_KEY_CURRENT_TIME;
+    }
+
+    public static String getPrefKeyLocation() {
+        return PREF_KEY_LOCATION;
     }
 }
