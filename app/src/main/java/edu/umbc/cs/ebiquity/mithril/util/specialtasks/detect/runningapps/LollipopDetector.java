@@ -186,7 +186,7 @@ public class LollipopDetector implements Detector {
             if (currSemanticUserContext != null) {
                 //Rule 1 is allow youtube at home
                 if (contextLevel.equals(MithrilApplication.getPrefKeyCurrentLocation())
-                        && !currSemanticUserContext.getSemanticLocation().getInferredLocation().equals("21227")) {
+                        && !currSemanticUserContext.getSemanticLocation().getInferredLocation().equals("21250")) {
                     if (currentPackageName.equals("com.google.android.youtube")) {
                         editor.putString(MithrilApplication.getPrefKeyAppPkgName(), currentPackageName);
                         editor.putString(MithrilApplication.getPrefKeyCurrentLocation(), "Home");

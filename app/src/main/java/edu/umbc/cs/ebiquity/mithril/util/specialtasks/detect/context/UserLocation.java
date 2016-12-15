@@ -1,4 +1,4 @@
-package edu.umbc.cs.ebiquity.mithril.util.specialtasks.context;
+package edu.umbc.cs.ebiquity.mithril.util.specialtasks.detect.context;
 
 import android.content.Context;
 import android.location.Location;
