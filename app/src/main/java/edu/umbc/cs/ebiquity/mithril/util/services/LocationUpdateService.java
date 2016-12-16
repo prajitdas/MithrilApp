@@ -138,10 +138,12 @@ public class LocationUpdateService extends Service implements
         mLocationRequest = LocationRequest.create();
         // Use high accuracy
         mLocationRequest.setPriority(LocationRequest.PRIORITY_BALANCED_POWER_ACCURACY);
-        // Set the update interval to 5 minutes
+        // Set the update interval to 1 minute
         mLocationRequest.setInterval(MithrilApplication.getUpdateInterval());
         // Set the fastest update interval to 1 minute
         mLocationRequest.setFastestInterval(MithrilApplication.getFastestInterval());
+        // Set the minimum displacement between location updates in meters to 10m.
+        mLocationRequest.setSmallestDisplacement(MithrilApplication.getSmallestDisplacement());
 
         servicesAvailable = servicesConnected();
 
