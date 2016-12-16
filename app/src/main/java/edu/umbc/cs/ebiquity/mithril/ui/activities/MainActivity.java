@@ -162,47 +162,6 @@ public class MainActivity extends AppCompatActivity
     }
 
     private void initHousekeepingTasks() {
-//        File locationFile = new File(getFilesDir(), "location.txt");
-//        File logFile = new File(getFilesDir(), "log.txt");
-//        sharedPref = getSharedPreferences(MithrilApplication.getSharedPreferencesName(), Context.MODE_PRIVATE);
-//        SharedPreferences.Editor editor = sharedPref.edit();
-//        // Stores the lat / long pairs in a text file
-//        editor.putString(MithrilApplication.getPrefKeyLocationFilename(), locationFile.getAbsolutePath());
-//        // Stores the connect / disconnect data in a text file
-//        editor.putString(MithrilApplication.getPrefKeyLogFilename(), logFile.getAbsolutePath());
-//        editor.commit();
-/**
-        if (PermissionHelper.isExplicitPermissionAcquisitionNecessary()) {
-            PermissionHelper.requestAllNecessaryPermissions(this);
- if (PermissionHelper.getUsageStatsPermisison(this)) {
- ComponentName service = startService(new Intent(this, AppLaunchDetectorService.class));
-
- if (null == service) {
- // something really wrong here
- Log.e(MithrilApplication.getDebugTag(), "Could not start service " + AppLaunchDetectorService.class.getName().toString());
- }
- }
-
- if (PermissionHelper.isPermissionGranted(this, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
- boolean updatesRequested = false;
- /*
- * Get any previous setting for location updates
- * Gets "false" if an error occurs
- *
- if (sharedPref.contains(MithrilApplication.getPrefKeyLocationUpdateServiceState())) {
- updatesRequested = sharedPref.getBoolean(MithrilApplication.getPrefKeyLocationUpdateServiceState(), false);
- }
- if (updatesRequested) {
- ComponentName service = startService(new Intent(this, LocationUpdateService.class));
-
- if (null == service) {
- // something really wrong here
- Log.e(MithrilApplication.getDebugTag(), "Could not start service " + LocationUpdateService.class.getName().toString());
- }
- }
- }
-        }
- */
         if (PermissionHelper.isExplicitPermissionAcquisitionNecessary()) {
             PermissionHelper.requestAllNecessaryPermissions(this);
             if (PermissionHelper.getUsageStatsPermisison(this))
