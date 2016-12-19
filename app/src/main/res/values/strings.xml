@@ -109,16 +109,16 @@
     <string name="pref_header_location_context">Location context</string>
 
     <string name="pref_location_context_switch_key">enableLocationContext</string>
-    <string name="pref_location_context_switch_title">Enable semanticLocation context</string>
-    <string name="pref_location_context_switch_summary">Click to enable semanticLocation context</string>
+    <string name="pref_location_context_switch_title">Enable location context</string>
+    <string name="pref_location_context_switch_summary">Click to enable location context</string>
 
     <string name="pref_home_location_key">homeLocation</string>
-    <string name="pref_home_location_title">Save home semanticLocation</string>
+    <string name="pref_home_location_title">Save home location</string>
     <string name="pref_home_location_summary">221B Baker Street, London, England</string>
 
     <string name="pref_work_location_key">workLocation</string>
     <string name="pref_work_location_summary">1000 Hilltop Cir., Baltimore MD, USA, 21250</string>
-    <string name="pref_work_location_title">Save work semanticLocation</string>
+    <string name="pref_work_location_title">Save work location</string>
 
     <!-- Preference strings for Temporal context -->
     <string name="pref_header_temporal_context">Temporal context</string>
@@ -156,7 +156,7 @@
     <string name="invalid_lat_long_used">Invalid latitude and longitude used</string>
     <string name="no_address_found">No address found</string>
     <string name="address_found">Address found</string>
-    <string name="no_location_data_provided">No semanticLocation data provided</string>
+    <string name="no_location_data_provided">No location data provided</string>
 
     <string name="title_activity_about">About this app</string>
     <string name="title_activity_view_app_detail">App details</string>

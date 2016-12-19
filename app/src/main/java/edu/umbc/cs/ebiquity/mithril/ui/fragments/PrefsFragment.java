@@ -87,24 +87,14 @@ public class PrefsFragment extends PreferenceFragment implements
         super.onCreate(savedInstanceState);
         context = getActivity();
 
-        // Load the preferences from an XML resource
-        addPreferencesFromResource(R.xml.preferences);
-
         sharedPrefs = getActivity().getSharedPreferences(MithrilApplication.getSharedPreferencesName(), MODE_PRIVATE);
         final SharedPreferences.Editor editor = sharedPrefs.edit();
 
-        mSwithPrefEnableLocationEnabled = (SwitchPreference) getPreferenceManager().findPreference(MithrilApplication.getPrefLocationContextEnableKey());
-        mEditTextPrefHomeLocation = (EditTextPreference) getPreferenceManager().findPreference(MithrilApplication.getPrefHomeLocationKey());
-        mEditTextPrefWorkLocation = (EditTextPreference) getPreferenceManager().findPreference(MithrilApplication.getPrefWorkLocationKey());
+        initViews();
+        setOnPreferenceChangeListener();
+    }
 
-        mSwithPrefEnableTemporalEnabled = (SwitchPreference) getPreferenceManager().findPreference(MithrilApplication.getPrefTemporalContextEnableKey());
-        mEditTextPrefWorkHours = (EditTextPreference) getPreferenceManager().findPreference(MithrilApplication.getPrefWorkHoursKey());
-        mEditTextPrefDNDHours = (EditTextPreference) getPreferenceManager().findPreference(MithrilApplication.getPrefDndHoursKey());
-
-        mSwithPrefEnablePresenceInfoEnabled = (SwitchPreference) getPreferenceManager().findPreference(MithrilApplication.getPrefPresenceInfoContextEnableKey());
-        mEditTextPrefPresenceInfoSupervisor = (EditTextPreference) getPreferenceManager().findPreference(MithrilApplication.getPrefPresenceInfoSupervisorKey());
-        mEditTextPrefPresenceInfoColleague = (EditTextPreference) getPreferenceManager().findPreference(MithrilApplication.getPrefPresenceInfoColleagueKey());
-
+    private void setupGeoFences() {
         // Get the UI widgets.
 //        mAddGeofencesButton = (Button) findViewById(R.id.add_geofences_button);
 //        mRemoveGeofencesButton = (Button) findViewById(R.id.remove_geofences_button);
@@ -127,8 +117,23 @@ public class PrefsFragment extends PreferenceFragment implements
 
         // Kick off the request to build GoogleApiClient.
         buildGoogleApiClient();
+    }
 
-        setOnPreferenceChangeListener();
+    private void initViews() {
+        // Load the preferences from an XML resource
+        addPreferencesFromResource(R.xml.preferences);
+
+        mSwithPrefEnableLocationEnabled = (SwitchPreference) getPreferenceManager().findPreference(MithrilApplication.getPrefLocationContextEnableKey());
+        mEditTextPrefHomeLocation = (EditTextPreference) getPreferenceManager().findPreference(MithrilApplication.getPrefHomeLocationKey());
+        mEditTextPrefWorkLocation = (EditTextPreference) getPreferenceManager().findPreference(MithrilApplication.getPrefWorkLocationKey());
+
+        mSwithPrefEnableTemporalEnabled = (SwitchPreference) getPreferenceManager().findPreference(MithrilApplication.getPrefTemporalContextEnableKey());
+        mEditTextPrefWorkHours = (EditTextPreference) getPreferenceManager().findPreference(MithrilApplication.getPrefWorkHoursKey());
+        mEditTextPrefDNDHours = (EditTextPreference) getPreferenceManager().findPreference(MithrilApplication.getPrefDndHoursKey());
+
+        mSwithPrefEnablePresenceInfoEnabled = (SwitchPreference) getPreferenceManager().findPreference(MithrilApplication.getPrefPresenceInfoContextEnableKey());
+        mEditTextPrefPresenceInfoSupervisor = (EditTextPreference) getPreferenceManager().findPreference(MithrilApplication.getPrefPresenceInfoSupervisorKey());
+        mEditTextPrefPresenceInfoColleague = (EditTextPreference) getPreferenceManager().findPreference(MithrilApplication.getPrefPresenceInfoColleagueKey());
     }
 
     private void setOnPreferenceChangeListener() {
