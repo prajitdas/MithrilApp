@@ -1,4 +1,9 @@
-<!-- The following is a list of permissions that is part of CyanogenMod/android_packages_apps_Settings -->
+Permissions used by CM settings app
+-----------------------------------
+
+The following is a list of permissions that is part of [CyanogenMod/android_packages_apps_Settings](https://github.com/CyanogenMod/android_packages_apps_Settings)
+
+```xml
 <uses-permission android:name="android.permission.WRITE_MEDIA_STORAGE" />
 <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
 <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
@@ -76,3 +81,4 @@
 <uses-permission android:name="android.permission.PEERS_MAC_ADDRESS"/>
 <uses-permission android:name="android.permission.MANAGE_NOTIFICATIONS"/>
 <uses-permission android:name="android.permission.DELETE_PACKAGES"/>
+```
