@@ -1,5 +1,6 @@
 package edu.umbc.cs.ebiquity.mithril.ui.fragments;
 
+import android.app.AppOpsManager;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
@@ -90,8 +91,48 @@ public class PrefsFragment extends PreferenceFragment implements
         sharedPrefs = getActivity().getSharedPreferences(MithrilApplication.getSharedPreferencesName(), MODE_PRIVATE);
         final SharedPreferences.Editor editor = sharedPrefs.edit();
 
+//        appOps();
         initViews();
         setOnPreferenceChangeListener();
+    }
+
+    private void appOps() {
+//        PackageInfo mPackageInfo = null;
+//        String mPackageName = null;
+//        boolean newState = false;
+        AppOpsManager mAppOps = (AppOpsManager) getActivity().getSystemService(Context.APP_OPS_SERVICE);
+/*
+        mAppOps.setMode(AppOpsManager.OP_WRITE_SETTINGS,
+                mPackageInfo.applicationInfo.uid, mPackageName, newState
+                        ? AppOpsManager.MODE_ALLOWED : AppOpsManager.MODE_ERRORED);
+        mCurSysAppOpMode = mAppOps.checkOp(AppOpsManager.OP_SYSTEM_ALERT_WINDOW, uid, pkg);
+        mCurToastAppOpMode = mAppOps.checkOp(AppOpsManager.OP_TOAST_WINDOW, uid, pkg);
+        mAppOps.setMode(AppOpsManager.OP_SYSTEM_ALERT_WINDOW, uid, pkg, AppOpsManager.MODE_IGNORED);
+        mAppOps.setMode(AppOpsManager.OP_TOAST_WINDOW, uid, pkg, AppOpsManager.MODE_IGNORED);
+        mAppOps.setMode(AppOpsManager.OP_SYSTEM_ALERT_WINDOW, uid, pkg, mCurSysAppOpMode);
+        mAppOps.setMode(AppOpsManager.OP_TOAST_WINDOW, uid, pkg, mCurToastAppOpMode);
+        final int switchOp = AppOpsManager.opToSwitch(firstOp.getOp());
+        int mode = mAppOps.checkOp(switchOp, entry.getPackageOps().getUid(), entry.getPackageOps().getPackageName());
+        mAppOps.setMode(switchOp, entry.getPackageOps().getUid(), entry.getPackageOps().getPackageName(), positionToMode(position));
+        sw.setChecked(mAppOps.checkOp(switchOp, entry.getPackageOps()
+                .getUid(), entry.getPackageOps().getPackageName()) == AppOpsManager.MODE_ALLOWED);
+        sw.setOnCheckedChangeListener(new Switch.OnCheckedChangeListener() {
+            public void onCheckedChanged(CompoundButton buttonView,
+                                         boolean isChecked) {
+                mAppOps.setMode(switchOp, entry.getPackageOps()
+                                .getUid(), entry.getPackageOps()
+                                .getPackageName(),
+                        isChecked ? AppOpsManager.MODE_ALLOWED
+                                : AppOpsManager.MODE_IGNORED);
+            }
+        });
+        List<AppOpsManager.PackageOps> pkgs;
+        if (packageName != null) {
+            pkgs = mAppOps.getOpsForPackage(uid, packageName, tpl.ops);
+        } else {
+            pkgs = mAppOps.getPackagesForOps(tpl.ops);
+        }
+         */
     }
 
     private void setupGeoFences() {
@@ -140,7 +181,12 @@ public class PrefsFragment extends PreferenceFragment implements
         mSwithPrefEnableLocationEnabled.setOnPreferenceChangeListener(new Preference.OnPreferenceChangeListener() {
             @Override
             public boolean onPreferenceChange(Preference preference, Object o) {
-                //TODO Add code for storing preferences
+                /**
+                 * When the user enables the location settings, we set up the geo fences but we have to be careful about how we set this up.
+                 * We have to be careful because there's a limit on how many geofences we can create per device.
+                 * So, we will set this up only when the user sets up some locations
+                 */
+                setupGeoFences();
                 return false;
             }
         });
@@ -209,8 +255,8 @@ public class PrefsFragment extends PreferenceFragment implements
             }
         });
     }
-    /**************************************START OF GEOFENCE CODE*********************************************************/
 
+    /**************************************START OF GEOFENCE CODE*********************************************************/
     /**
      * Builds a GoogleApiClient. Uses the {@code #addApi} method to request the LocationServices API.
      */
