@@ -71,19 +71,33 @@ public class MithrilDBHelper extends SQLiteOpenHelper {
 	private final static String POLRULRESID = "resrcid"; // Resource that was requested
 	private final static String POLRULCNTXT = "context"; // Context in which the request was made.
 	// This will be a general text that will have to be "reasoned" about!
-	// If this says policy is applicable @home then we have to be able to determine that context available represents "home".
-	private final static String POLRULACTIN = "action"; // Action will be denoted as: 0 for to deny, 1 for allow
+    // If this says policy is applicable @home then we have to be able to determine that context available represents "home"
+    private final static String POLRULACTIN = "action"; // Action will be denoted as: 0 for to deny, 1 for allow
 
 	// Table 5 for Action taken information
 	// 0 for denied, 1 for allowed
 	// Makes a record everytime an action is taken for a certain requester, resource, context and applicable policy
 	// This is the action log table. Stores every action taken whether
-	private final static String ACTIONID = "id"; // ID of an action taken
-	private final static String ACTIONREQID = "reqtrid"; // Requester that sent the request
-	private final static String ACTIONRESID = "resrcid"; // Resource that was requested
-	private final static String ACTIONCONID = "contxtid"; // Context in which the request was made
-	private final static String ACTIONPRLID = "polrulid"; // Policy rule id from the policy table that was used to determine the action.
-	private final static String ACTION = "action"; // Action that was taken for a certain scenario
+    /**
+     * Following are table creation statements
+     * -- Table: actionlog
+     * CREATE TABLE actionlog (
+     * id int NOT NULL AUTO_INCREMENT,
+     * resources_id int NOT NULL,
+     * context_id int NOT NULL,
+     * requesters_id int NOT NULL,
+     * time timestamp NOT NULL,
+     * action int NOT NULL,
+     * CONSTRAINT actionlog_pk PRIMARY KEY (id)
+     * ) COMMENT 'Table showing actions taken for each context, resource, requester tuple';
+     */
+    private final static String ACTIONID = "id"; // ID of an action taken
+    private final static String ACTIONREQID = "requesters_id"; // Requester that sent the request
+    private final static String ACTIONRESID = "resources_id"; // Resource that was requested
+    private final static String ACTIONCONID = "context_id"; // Context in which the request was made
+    private final static String ACTIONTIME = "time"; // Time when action was taken
+    //    private final static String ACTIONPRLID = "polrulid"; // Policy rule id from the policy table that was used to determine the action
+    private final static String ACTION = "action"; // Action that was taken for a certain scenario
 
 	// Table 6 for Violation information
 	private final static String VIOLATIONID = "id"; // ID of violation captured
@@ -142,19 +156,17 @@ public class MithrilDBHelper extends SQLiteOpenHelper {
 	private final static String REQUESTERS_TABLE_NAME = "requesters";
 	private final static String RESOURCES_TABLE_NAME = "resources";
 	private final static String CONTEXT_TABLE_NAME = "context";
-	private final static String ACTION_TABLE_NAME = "actions";
-	private final static String POLICY_RULES_TABLE_NAME = "policyrules";
+    private final static String ACTION_TABLE_NAME = "actionlog";
+    private final static String POLICY_RULES_TABLE_NAME = "policyrules";
 	private final static String VIOLATIONS_TABLE_NAME = "violations";
 	private final static String APP_DATA_TABLE_NAME = "appdata";
 	private final static String PERMISSIONS_TABLE_NAME = "permissions";
 	private final static String APP_PERM_TABLE_NAME = "appperm";
 
 	private final static String APP_PERM_VIEW_NAME = "apppermview";
-	/**
-	 * Following are table creation statements
-	 */
-	private final static String CREATE_APP_DATA_TABLE = " CREATE TABLE " + getAppDataTableName() + " (" +
-			APPID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
+
+    private final static String CREATE_APP_DATA_TABLE = " CREATE TABLE " + getAppDataTableName() + " (" +
+            APPID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
 			APPUID + " INTEGER NOT NULL, " +
 			APPDESCRIPTION + " TEXT, " +
 			APPASSOCIATEDPROCNAME + " TEXT, " +
@@ -190,13 +202,27 @@ public class MithrilDBHelper extends SQLiteOpenHelper {
 			POLRULCNTXT + " TEXT NOT NULL DEFAULT '*'," +
 			POLRULACTIN + " INTEGER NOT NULL DEFAULT 0);";
 
-	private final static String CREATE_ACTION_TABLE = "CREATE TABLE " + getActionTableName() + " (" +
-			ACTIONID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
+    /**
+     * Following are table creation statements
+     * -- Table: actionlog
+     * CREATE TABLE actionlog (
+     * id int NOT NULL AUTO_INCREMENT,
+     * resources_id int NOT NULL,
+     * context_id int NOT NULL,
+     * requesters_id int NOT NULL,
+     * time timestamp NOT NULL,
+     * action int NOT NULL,
+     * CONSTRAINT actionlog_pk PRIMARY KEY (id)
+     * ) COMMENT 'Table showing actions taken for each context, resource, requester tuple';
+     */
+
+    private final static String CREATE_ACTION_TABLE = "CREATE TABLE " + getActionTableName() + " (" +
+            ACTIONID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
 			ACTIONREQID + " INTEGER NOT NULL REFERENCES " + getRequestersTableName() + "(" + REQID + "), " +
 			ACTIONRESID + " INTEGER NOT NULL REFERENCES " + getResourcesTableName() + "(" + RESID + "), " +
 			ACTIONCONID + " INTEGER NOT NULL REFERENCES " + getContextTableName() + "(" + CONTEXTID + "), " +
-			ACTIONPRLID + " INTEGER NOT NULL REFERENCES " + getPolicyRulesTableName() + "(" + POLRULID + "), " +
-			ACTION + " INTEGER NOT NULL DEFAULT 0);";
+            ACTIONTIME + " INTEGER NOT NULL REFERENCES " + getPolicyRulesTableName() + "(" + POLRULID + "), " +
+            ACTION + " INTEGER NOT NULL DEFAULT 0);";
 
 	private final static String CREATE_VIOLATIONS_TABLE = "CREATE TABLE " + getViolationsTableName() + " (" +
 			VIOLATIONID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +

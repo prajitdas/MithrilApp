@@ -1,5 +1,8 @@
 -- Created by Vertabelo (http://vertabelo.com)
--- Last modification date: 2016-12-19 11:34:13.656
+-- Last modification date: 2016-12-21 00:04:45.624
+
+-- views
+DROP VIEW apppermview;
 
 -- foreign keys
 ALTER TABLE actionlog

@@ -1,5 +1,5 @@
 -- Created by Vertabelo (http://vertabelo.com)
--- Last modification date: 2016-12-19 11:34:13.656
+-- Last modification date: 2016-12-21 00:04:45.624
 
 -- tables
 -- Table: actionlog
@@ -11,7 +11,7 @@ CREATE TABLE actionlog (
     time timestamp NOT NULL,
     action int NOT NULL,
     CONSTRAINT actionlog_pk PRIMARY KEY (id)
-);
+) COMMENT 'Table showing actions taken for each context, resource, requester tuple';
 
 -- Table: appperm
 CREATE TABLE appperm (
@@ -19,7 +19,7 @@ CREATE TABLE appperm (
     apps_id int NOT NULL,
     permissions_id int NOT NULL,
     CONSTRAINT appperm_pk PRIMARY KEY (id,apps_id,permissions_id)
-);
+) COMMENT 'Table showing apps and permissions';
 
 -- Table: apps
 CREATE TABLE apps (
@@ -38,7 +38,7 @@ CREATE TABLE apps (
     requesters_id int NOT NULL,
     UNIQUE INDEX apps_unique_key (name),
     CONSTRAINT apps_pk PRIMARY KEY (id)
-) COMMENT 'Table showing information of the app data';
+) COMMENT 'Table showing metadata for apps';
 
 -- Table: contextlog
 CREATE TABLE contextlog (
@@ -49,7 +49,7 @@ CREATE TABLE contextlog (
     temporal text NULL,
     time timestamp NOT NULL ON UPDATE CURRENT_TIMESTAMP,
     CONSTRAINT contextlog_pk PRIMARY KEY (id)
-) COMMENT 'Table showing information of the current user context';
+) COMMENT 'Table showing log of current user context';
 
 -- Table: permissions
 CREATE TABLE permissions (
@@ -57,14 +57,14 @@ CREATE TABLE permissions (
     name text NOT NULL,
     label text NOT NULL,
     protectionlvl text NOT NULL,
-    `group` text NULL,
+    permgrp text NULL,
     flag text NULL,
     description text NULL,
     icon blob NOT NULL,
     resources_id int NOT NULL,
     UNIQUE INDEX permissions_unique_name (name),
     CONSTRAINT permissions_pk PRIMARY KEY (id)
-);
+) COMMENT 'Table showing metadata for permissions';
 
 -- Table: policyrules
 CREATE TABLE policyrules (
@@ -75,25 +75,25 @@ CREATE TABLE policyrules (
     requesters_id int NOT NULL,
     resources_id int NOT NULL,
     CONSTRAINT policyrules_pk PRIMARY KEY (id)
-);
+) COMMENT 'Table showing policy rules defined for apps and requested resources in given context';
 
 -- Table: requesters
 CREATE TABLE requesters (
     id int NOT NULL AUTO_INCREMENT,
     name text NOT NULL DEFAULT *,
     CONSTRAINT requester_id PRIMARY KEY (id)
-) COMMENT 'Table showing information of the who is requesting the data';
+) COMMENT 'Table showing metadata for requesters of user data';
 
 -- Table: resources
 CREATE TABLE resources (
     id int NOT NULL AUTO_INCREMENT,
     name text NOT NULL,
     CONSTRAINT resource_id PRIMARY KEY (id)
-) COMMENT 'Table showing information of the what data is being requested';
+) COMMENT 'Table showing metadata for resource being requested';
 
 -- Table: violationlog
 CREATE TABLE violationlog (
-    id int NOT NULL,
+    id int NOT NULL AUTO_INCREMENT,
     resources_id int NOT NULL,
     requesters_id int NOT NULL,
     context_id int NOT NULL,
@@ -101,7 +101,25 @@ CREATE TABLE violationlog (
     marker bool NULL,
     time timestamp NOT NULL,
     CONSTRAINT violationlog_pk PRIMARY KEY (id)
-);
+) COMMENT 'Table showing violations recorded by MithrilAC and subsequent user feedback';
+
+-- views
+-- View: apppermview
+CREATE VIEW `mithril.db`.apppermview AS
+SELECT
+a.name as apppkgname,
+p.name as permname,
+p.protectionlvl as protectionlevel,
+p.label as permlabel,
+p.permgrp as permgroup
+FROM
+apps a,
+permissions p,
+appperm ap
+WHERE
+ap.apps_id = a.id
+AND
+ap.permissions_id = p.id;
 
 -- foreign keys
 -- Reference: actions_context (table: actionlog)
@@ -118,7 +136,8 @@ ALTER TABLE actionlog ADD CONSTRAINT actions_resources FOREIGN KEY actions_resou
 
 -- Reference: appperm_apps (table: appperm)
 ALTER TABLE appperm ADD CONSTRAINT appperm_apps FOREIGN KEY appperm_apps (apps_id)
-    REFERENCES apps (id);
+    REFERENCES apps (id)
+    ON DELETE CASCADE;
 
 -- Reference: appperm_permissions (table: appperm)
 ALTER TABLE appperm ADD CONSTRAINT appperm_permissions FOREIGN KEY appperm_permissions (permissions_id)
