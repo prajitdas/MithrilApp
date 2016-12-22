@@ -355,6 +355,7 @@ public class MithrilDBHelper extends SQLiteOpenHelper {
 			getAppPermTableName() + "." + APPPERMRESAPPID + " = " + getAppDataTableName() + "." + APPID +
 			" AND " +
 			getAppPermTableName() + "." + APPPERMRESPERID + " = " + getPermissionsTableName() + "." + PERMID + ";";
+
     //-- foreign keys
     //-- Reference: actions_context (table: actionlog)
     private final static String ALTER_TABLE_actions_context = "ALTER TABLE actionlog ADD CONSTRAINT actions_context FOREIGN KEY actions_context (context_id) REFERENCES contextlog (id);";
@@ -528,16 +529,32 @@ public class MithrilDBHelper extends SQLiteOpenHelper {
 
 	private void dropDBObjects(SQLiteDatabase db) {
 		db.execSQL("DROP VIEW IF EXISTS " + getAppPermViewName());
-		db.execSQL("DROP TABLE IF EXISTS " + getAppPermTableName());
-		db.execSQL("DROP TABLE IF EXISTS " + getPermissionsTableName());
-		db.execSQL("DROP TABLE IF EXISTS " + getViolationsTableName());
-		db.execSQL("DROP TABLE IF EXISTS " + getActionTableName());
-		db.execSQL("DROP TABLE IF EXISTS " +  getPolicyRulesTableName());
-		db.execSQL("DROP TABLE IF EXISTS " + getContextTableName());
-		db.execSQL("DROP TABLE IF EXISTS " + getResourcesTableName());
-		db.execSQL("DROP TABLE IF EXISTS " + getRequestersTableName());
-		db.execSQL("DROP TABLE IF EXISTS " + getAppDataTableName());
-		onCreate(db);
+
+        db.execSQL("ALTER TABLE actionlog DROP FOREIGN KEY actions_context;");
+        db.execSQL("ALTER TABLE actionlog DROP FOREIGN KEY actions_requesters;");
+        db.execSQL("ALTER TABLE actionlog DROP FOREIGN KEY actions_resources;");
+        db.execSQL("ALTER TABLE appperm DROP FOREIGN KEY appperm_apps;");
+        db.execSQL("ALTER TABLE appperm DROP FOREIGN KEY appperm_permissions;");
+        db.execSQL("ALTER TABLE apps DROP FOREIGN KEY apps_requesters;");
+        db.execSQL("ALTER TABLE permissions DROP FOREIGN KEY permissions_resources;");
+        db.execSQL("ALTER TABLE policyrules DROP FOREIGN KEY policyrules_context;");
+        db.execSQL("ALTER TABLE policyrules DROP FOREIGN KEY policyrules_requesters;");
+        db.execSQL("ALTER TABLE policyrules DROP FOREIGN KEY policyrules_resources;");
+        db.execSQL("ALTER TABLE violationlog DROP FOREIGN KEY violations_context;");
+        db.execSQL("ALTER TABLE violationlog DROP FOREIGN KEY violations_requesters;");
+        db.execSQL("ALTER TABLE violationlog DROP FOREIGN KEY violations_resources;");
+
+        db.execSQL("DROP TABLE IF EXISTS " + getActionTableName());
+        db.execSQL("DROP TABLE IF EXISTS " + getAppPermTableName());
+        db.execSQL("DROP TABLE IF EXISTS " + getAppDataTableName());
+        db.execSQL("DROP TABLE IF EXISTS " + getContextTableName());
+        db.execSQL("DROP TABLE IF EXISTS " + getPermissionsTableName());
+        db.execSQL("DROP TABLE IF EXISTS " + getPolicyRulesTableName());
+        db.execSQL("DROP TABLE IF EXISTS " + getRequestersTableName());
+        db.execSQL("DROP TABLE IF EXISTS " + getResourcesTableName());
+        db.execSQL("DROP TABLE IF EXISTS " + getViolationsTableName());
+
+        onCreate(db);
 	}
 
 	/**
