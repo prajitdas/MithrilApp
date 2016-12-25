@@ -523,7 +523,8 @@ public class MithrilDBHelper extends SQLiteOpenHelper {
 	}
 
 	/**
-	 * All CRUD(Create, Read, Update, Delete) Operations
+     * -----------------------------------------------------------------------------------------------------------------------------------------------------------------
+     * All CRUD(Create, Read, Update, Delete) Operations
 	 */
 	public long addRequester(SQLiteDatabase db, Requester aRequester) {
 		long insertedRowId;
@@ -1446,6 +1447,11 @@ public class MithrilDBHelper extends SQLiteOpenHelper {
 			throw new SQLException("Could not find " + e);
 		}
 	}
+
+    /**
+     * -----------------------------------------------------------------------------------------------------------------------------------------------------------------
+     * End of CRUD methods
+     */
 
 	public void loadRealAppDataIntoDB(SQLiteDatabase db) {
         PackageManager packageManager = getContext().getPackageManager();
