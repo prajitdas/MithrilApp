@@ -561,8 +561,8 @@ public class MithrilDBHelper extends SQLiteOpenHelper {
 		ContentValues values = new ContentValues();
 		values.put(REQNAME, aRequester.getRequesterName());
 		try{
-			insertedRowId = db.insert(getRequestersTableName(), null, values);
-		} catch (SQLException e) {
+            insertedRowId = db.insertOrThrow(getRequestersTableName(), null, values);
+        } catch (SQLException e) {
             Log.e(MithrilApplication.getDebugTag(), "Error inserting " + values, e);
             return -1;
 		}
@@ -574,8 +574,8 @@ public class MithrilDBHelper extends SQLiteOpenHelper {
 		ContentValues values = new ContentValues();
 		values.put(RESNAME, aResource.getResourceName());
 		try {
-			insertedRowId = db.insert(getResourcesTableName(), null, values);
-		} catch (SQLException e) {
+            insertedRowId = db.insertOrThrow(getResourcesTableName(), null, values);
+        } catch (SQLException e) {
             Log.e(MithrilApplication.getDebugTag(), "Error inserting " + values, e);
             return -1;
 		}
@@ -591,8 +591,8 @@ public class MithrilDBHelper extends SQLiteOpenHelper {
         values.put(PRESENCEINFO, aUserContext.getSemanticNearActors().toString());
         values.put(TEMPORAL, aUserContext.getSemanticTime().toString());
 		try {
-			insertedRowId = db.insert(getContextTableName(), null, values);
-		} catch (SQLException e) {
+            insertedRowId = db.insertOrThrow(getContextTableName(), null, values);
+        } catch (SQLException e) {
             Log.e(MithrilApplication.getDebugTag(), "Error inserting " + values, e);
             return -1;
 		}
@@ -604,8 +604,8 @@ public class MithrilDBHelper extends SQLiteOpenHelper {
 		ContentValues values = new ContentValues();
 		values.put(ACTION, aRuleAction.getAction().getStatusCode());
 		try {
-			insertedRowId = db.insert(getActionTableName(), null, values);
-		} catch (SQLException e) {
+            insertedRowId = db.insertOrThrow(getActionTableName(), null, values);
+        } catch (SQLException e) {
             Log.e(MithrilApplication.getDebugTag(), "Error inserting " + values, e);
             return -1;
 		}
@@ -630,8 +630,8 @@ public class MithrilDBHelper extends SQLiteOpenHelper {
 		values.put(APPTYPE, anAppData.getAppType());
 		values.put(APPUID, anAppData.getUid());
 		try {
-			insertedRowId = db.insert(getAppDataTableName(), null, values);
-		} catch (SQLException e) {
+            insertedRowId = db.insertOrThrow(getAppDataTableName(), null, values);
+        } catch (SQLException e) {
             Log.e(MithrilApplication.getDebugTag(), "Error inserting " + values, e);
             return -1;
 		}
@@ -659,7 +659,7 @@ public class MithrilDBHelper extends SQLiteOpenHelper {
             values.put(APPPERMRESPERID, permId);
             values.put(APPPERMGRANTED, appPermission.getValue());
             try {
-                insertedRowId = db.insert(getAppPermTableName(), null, values);
+                insertedRowId = db.insertOrThrow(getAppPermTableName(), null, values);
             } catch (SQLException e) {
                 Log.e(MithrilApplication.getDebugTag(), "Error inserting " + values, e);
                 return -1;
@@ -669,8 +669,8 @@ public class MithrilDBHelper extends SQLiteOpenHelper {
 	}
 
 	public long addPermission(SQLiteDatabase db, PermData aPermData) {
-		long insertedRowId;
-		ContentValues values = new ContentValues();
+        long insertedRowId = -1;
+        ContentValues values = new ContentValues();
 		values.put(PERMNAME, aPermData.getPermissionName());
 		values.put(PERMPROTECTIONLEVEL, aPermData.getPermissionProtectionLevel());
 		values.put(PERMGROUP, aPermData.getPermissionGroup());
@@ -680,10 +680,10 @@ public class MithrilDBHelper extends SQLiteOpenHelper {
 		values.put(PERMLABEL, aPermData.getPermissionLabel());
 		values.put(PERMRESNAME, aPermData.getResource().getResourceName());
 		try {
-			insertedRowId = db.insert(getPermissionsTableName(), null, values);
-		} catch (SQLiteConstraintException e) {
+            insertedRowId = db.insertOrThrow(getPermissionsTableName(), null, values);
+        } catch (SQLiteConstraintException e) {
             updateConflictedGooglePermissions(db, aPermData);
-            return 1;
+            return -1;
         } catch (SQLException e) {
             Log.e(MithrilApplication.getDebugTag(), "Error inserting " + values, e);
             return -1;
@@ -700,8 +700,8 @@ public class MithrilDBHelper extends SQLiteOpenHelper {
 		values.put(POLRULCNTXT, aPolicyRule.getContext());
 		values.put(POLRULACTIN, aPolicyRule.getAction().getId());
 		try {
-			insertedRowId = db.insert(getPolicyRulesTableName(), null, values);
-		} catch (SQLException e) {
+            insertedRowId = db.insertOrThrow(getPolicyRulesTableName(), null, values);
+        } catch (SQLException e) {
             Log.e(MithrilApplication.getDebugTag(), "Error inserting " + values, e);
             return -1;
 		}
@@ -725,8 +725,8 @@ public class MithrilDBHelper extends SQLiteOpenHelper {
 		else
 			values.put(VIOLATIONMARKER, 0);
 		try{
-			insertedRowId = db.insert(getViolationsTableName(), null, values);
-		} catch (SQLException e) {
+            insertedRowId = db.insertOrThrow(getViolationsTableName(), null, values);
+        } catch (SQLException e) {
             Log.e(MithrilApplication.getDebugTag(), "Error inserting " + values, e);
             return -1;
 		}
@@ -1418,7 +1418,7 @@ public class MithrilDBHelper extends SQLiteOpenHelper {
         values.put(PERMLABEL, aPermData.getPermissionLabel());
         values.put(PERMRESNAME, aPermData.getResource().getResourceName());
         try {
-            return db.update(getViolationsTableName(), values, PERMNAME + " = ?",
+            return db.update(getPermissionsTableName(), values, PERMNAME + " = ?",
                     new String[]{aPermData.getPermissionName()});
         } catch (SQLException e) {
             throw new SQLException("Exception " + e + " error updating permission: " + aPermData.getPermissionName());
