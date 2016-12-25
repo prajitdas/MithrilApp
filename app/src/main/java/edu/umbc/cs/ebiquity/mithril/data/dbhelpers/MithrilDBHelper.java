@@ -9,6 +9,7 @@ import android.content.pm.PermissionGroupInfo;
 import android.content.pm.PermissionInfo;
 import android.database.Cursor;
 import android.database.SQLException;
+import android.database.sqlite.SQLiteConstraintException;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.graphics.Bitmap;
@@ -44,7 +45,11 @@ import edu.umbc.cs.ebiquity.mithril.data.model.rules.requesters.Requester;
 
 public class MithrilDBHelper extends SQLiteOpenHelper {
 	// Database declarations
-    private final static int DATABASE_VERSION = (int) System.currentTimeMillis();
+    private final static int DATABASE_VERSION = 1;
+    // (int) System.currentTimeMillis();
+    // DO NOT DO THIS!!!
+    // THIS IS CREATING A NEW VERSION OF DATABASE ON EACH APP LAUNCH AND SLOWING DOWN THE COMPLETE APP!
+
     private final static String DATABASE_NAME = MithrilApplication.getDatabaseName();
 
 	/**
@@ -238,7 +243,7 @@ public class MithrilDBHelper extends SQLiteOpenHelper {
     private final static String CREATE_PERMISSIONS_TABLE = "CREATE TABLE " + getPermissionsTableName() + " (" +
             PERMID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
             PERMNAME + " TEXT NOT NULL, " +
-            PERMLABEL + " TEXT NOT NULL, " +
+            PERMLABEL + " TEXT NULL, " +
             PERMPROTECTIONLEVEL + " TEXT NOT NULL, " +
             PERMGROUP + " TEXT NULL, " +
             PERMFLAG + " TEXT NULL, " +
@@ -676,8 +681,10 @@ public class MithrilDBHelper extends SQLiteOpenHelper {
 		values.put(PERMRESNAME, aPermData.getResource().getResourceName());
 		try {
 			insertedRowId = db.insert(getPermissionsTableName(), null, values);
-		} catch (SQLException e) {
+		} catch (SQLiteConstraintException e) {
             updateConflictedGooglePermissions(db, aPermData);
+            return 1;
+        } catch (SQLException e) {
             Log.e(MithrilApplication.getDebugTag(), "Error inserting " + values, e);
             return -1;
 		}
@@ -1392,7 +1399,8 @@ public class MithrilDBHelper extends SQLiteOpenHelper {
 		values.put(POLRULCNTXT, aPolicyRule.getContext());
 //		values.put(POLRULACTID, aPolicyRule.getAction().getId());
 		try {
-			return db.update(getPolicyRulesTableName(), values, POLRULID + " = ?", new String[] { String.valueOf(aPolicyRule.getId()) });
+			return db.update(getPolicyRulesTableName(), values, POLRULID + " = ?",
+                    new String[] { String.valueOf(aPolicyRule.getId()) });
 		} catch(SQLException e) {
 			throw new SQLException("Exception " + e + " error updating Context: " + aPolicyRule.getContext());
 		}
@@ -1411,7 +1419,7 @@ public class MithrilDBHelper extends SQLiteOpenHelper {
         values.put(PERMRESNAME, aPermData.getResource().getResourceName());
         try {
             return db.update(getViolationsTableName(), values, PERMNAME + " = ?",
-                    new String[]{String.valueOf(aPermData.getPermissionName())});
+                    new String[]{aPermData.getPermissionName()});
         } catch (SQLException e) {
             throw new SQLException("Exception " + e + " error updating permission: " + aPermData.getPermissionName());
         }
