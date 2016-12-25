@@ -20,7 +20,9 @@ import android.util.Log;
 
 import java.io.ByteArrayOutputStream;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.regex.Pattern;
 
 import edu.umbc.cs.ebiquity.mithril.MithrilApplication;
@@ -109,10 +111,12 @@ public class MithrilDBHelper extends SQLiteOpenHelper {
      */
     private final static String APPPERMRESAPPID = "apps_id"; // ID from resource table
     private final static String APPPERMRESPERID = "permissions_id"; // ID from permission table
+    private final static String APPPERMGRANTED = "granted"; //Is this permission granted to the app?
 
     private final static String CREATE_APP_PERM_TABLE = "CREATE TABLE " + getAppPermTableName() + " (" +
             APPPERMRESAPPID + " INTEGER NOT NULL, " +
             APPPERMRESPERID + " INTEGER NOT NULL, " +
+            APPPERMGRANTED + " INTEGER NOT NULL, " +
             "FOREIGN KEY(apps_id) REFERENCES apps(id) ON DELETE CASCADE, " +
             "FOREIGN KEY(permissions_id) REFERENCES permissions(id), " +
             "CONSTRAINT appperm_pk PRIMARY KEY (" +
@@ -631,25 +635,32 @@ public class MithrilDBHelper extends SQLiteOpenHelper {
 
 	//TODO We have to do a join across 3 tables and return the permissions for an app
 	public long addAppPerm(SQLiteDatabase db, AppData anAppData, long appId) {
-		String[] appPermissions = anAppData.getPermissions();
-		long insertedRowId = -1;
-		ContentValues values = new ContentValues();
+        Map<String, Boolean> appPermissions = anAppData.getPermissions();
+        long insertedRowId = -1;
+        ContentValues values = new ContentValues();
 		values.put(APPPERMRESAPPID, appId);
-		if (appPermissions != null) {
-			for (int permIdx = 0; permIdx < appPermissions.length; permIdx++) {
-                long permId = findPermissionsByName(db, appPermissions[permIdx]);
-                if (permId == -1)
-                    return -1;
-                values.put(APPPERMRESPERID, permId);
+        for (Map.Entry<String, Boolean> appPermission : appPermissions.entrySet()) {
+            long permId = findPermissionsByName(db, appPermission.getKey());
+            if (permId == -1) {
+                PackageManager packageManager = getContext().getPackageManager();
                 try {
-					insertedRowId = db.insert(getAppPermTableName(), null, values);
-				} catch (SQLException e) {
-                    Log.e(MithrilApplication.getDebugTag(), "Error inserting " + values, e);
-                    return -1;
-				}
-			}
-		}
-		return insertedRowId;
+                    PermissionInfo permissionInfo = packageManager.getPermissionInfo(appPermission.getKey(), PackageManager.GET_META_DATA);
+                    permId = addPermission(db, getPermData(packageManager, permissionInfo.group, permissionInfo));
+                } catch (PackageManager.NameNotFoundException exception) {
+                    Log.e(MithrilApplication.getDebugTag(), "Some error due to perhaps group info being not present " + exception.getMessage());
+                    permId = addPermission(db, getPermData(packageManager, appPermission.getKey()));
+                }
+            }
+            values.put(APPPERMRESPERID, permId);
+            values.put(APPPERMGRANTED, appPermission.getValue());
+            try {
+                insertedRowId = db.insert(getAppPermTableName(), null, values);
+            } catch (SQLException e) {
+                Log.e(MithrilApplication.getDebugTag(), "Error inserting " + values, e);
+                return -1;
+            }
+        }
+        return insertedRowId;
 	}
 
 	public long addPermission(SQLiteDatabase db, PermData aPermData) {
@@ -1546,11 +1557,34 @@ public class MithrilDBHelper extends SQLiteOpenHelper {
 						tempAppData.setUid(pack.applicationInfo.uid);
 
 						//App permissions
-						String[] requestedPermissions = pack.requestedPermissions;
-						if(requestedPermissions != null)
-							tempAppData.setPermissions(requestedPermissions);
-					}
-					//Insert an app into database
+                        if (pack.requestedPermissions != null) {
+                            Map<String, Boolean> requestedPermissions = new HashMap<String, Boolean>();
+                            String[] packageUsesPermissions = pack.requestedPermissions;
+                            for (int permCount = 0; permCount < packageUsesPermissions.length; permCount++) {
+                                //TODO fix this eventually because we are not getting all the permission information from the PackageInfo api
+                                requestedPermissions.put(packageUsesPermissions[permCount], false);
+                                /**
+                                 * The following shell script may be used to extract exact permission data.
+                                 * However, that will require root access and adb shell code execution.
+                                 * Perhaps we should avoid that for now.
+                                 * ---------------------------------------------------------------------------------------------------------------------------------------------
+                                 findRequestedLineStart=`adb shell dumpsys package com.google.android.youtube | grep -n "requested permissions:" | cut -f1 -d ':'`
+                                 findRequestedLineEnd=`adb shell dumpsys package com.google.android.youtube | grep -n "install permissions:" | cut -f1 -d ':'`
+                                 findInstallLineStart=`adb shell dumpsys package com.google.android.youtube | grep -n "install permissions:" | cut -f1 -d ':'`
+                                 findInstallLineEnd=`adb shell dumpsys package com.google.android.youtube | grep -n "installed=true" | cut -f1 -d ':'`
+
+                                 numLinesRequestedPermission=$((findRequestedLineEnd-findRequestedLineStart-1))
+                                 adb shell dumpsys package com.google.android.youtube | grep -A $numLinesRequestedPermission "requested permissions:" | tr -d ' '
+
+                                 numLinesInstalledPermission=$((findInstallLineEnd-findInstallLineStart-1))
+                                 adb shell dumpsys package com.google.android.youtube | grep -A $numLinesInstalledPermission "install permissions:" | cut -f1 -d"=" | tr -d ' '
+                                 * ---------------------------------------------------------------------------------------------------------------------------------------------
+                                 */
+                                tempAppData.setPermissions(requestedPermissions);
+                            }
+                        }
+                    }
+                    //Insert an app into database
 					long appId = addAppData(db, tempAppData);
 
 					//Insert permissions for an app into AppPerm

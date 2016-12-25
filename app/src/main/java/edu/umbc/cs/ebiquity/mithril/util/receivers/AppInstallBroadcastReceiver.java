@@ -6,11 +6,13 @@ import android.content.Intent;
 import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
-import android.content.pm.PermissionInfo;
 import android.database.sqlite.SQLiteDatabase;
 import android.graphics.BitmapFactory;
 import android.graphics.drawable.BitmapDrawable;
 import android.util.Log;
+
+import java.util.HashMap;
+import java.util.Map;
 
 import edu.umbc.cs.ebiquity.mithril.MithrilApplication;
 import edu.umbc.cs.ebiquity.mithril.R;
@@ -74,25 +76,48 @@ public class AppInstallBroadcastReceiver extends BroadcastReceiver {
                         tempAppData.setUid(packageInfo.applicationInfo.uid);
 
                         //App permissions
-                        String[] requestedPermissions = packageInfo.requestedPermissions;
-                        if (requestedPermissions != null) {
-                            tempAppData.setPermissions(requestedPermissions);
-                            for (int permIdx = 0; permIdx < requestedPermissions.length; permIdx++) {
-                                String permissionName = requestedPermissions[permIdx];
-                                long permId = mithrilDBHelper.findPermissionsByName(mithrilDB, permissionName);
-                                if (permId == -1) {
-                                    try {
-                                        PermissionInfo permissionInfo = packageManager.getPermissionInfo(permissionName, PackageManager.GET_META_DATA);
-                                        mithrilDBHelper.addPermission(mithrilDB,
-                                                mithrilDBHelper.getPermData(
-                                                        packageManager,
-                                                        permissionInfo.group,
-                                                        permissionInfo));
-                                    } catch (PackageManager.NameNotFoundException exception) {
-                                        Log.e(MithrilApplication.getDebugTag(), "Some error due to " + exception.getMessage());
-                                        mithrilDBHelper.addPermission(mithrilDB, mithrilDBHelper.getPermData(packageManager, permissionName));
-                                    }
-                                }
+                        if (packageInfo.requestedPermissions != null) {
+                            Map<String, Boolean> requestedPermissions = new HashMap<String, Boolean>();
+                            String[] packageUsesPermissions = packageInfo.requestedPermissions;
+                            for (int permCount = 0; permCount < packageUsesPermissions.length; permCount++) {
+                                //TODO fix this eventually because we are not getting all the permission information from the PackageInfo api
+                                requestedPermissions.put(packageUsesPermissions[permCount], false);
+                                /**
+                                 * The following shell script may be used to extract exact permission data.
+                                 * However, that will require root access and adb shell code execution.
+                                 * Perhaps we should avoid that for now.
+                                 * ---------------------------------------------------------------------------------------------------------------------------------------------
+                                 findRequestedLineStart=`adb shell dumpsys package com.google.android.youtube | grep -n "requested permissions:" | cut -f1 -d ':'`
+                                 findRequestedLineEnd=`adb shell dumpsys package com.google.android.youtube | grep -n "install permissions:" | cut -f1 -d ':'`
+                                 findInstallLineStart=`adb shell dumpsys package com.google.android.youtube | grep -n "install permissions:" | cut -f1 -d ':'`
+                                 findInstallLineEnd=`adb shell dumpsys package com.google.android.youtube | grep -n "installed=true" | cut -f1 -d ':'`
+
+                                 numLinesRequestedPermission=$((findRequestedLineEnd-findRequestedLineStart-1))
+                                 adb shell dumpsys package com.google.android.youtube | grep -A $numLinesRequestedPermission "requested permissions:" | tr -d ' '
+
+                                 numLinesInstalledPermission=$((findInstallLineEnd-findInstallLineStart-1))
+                                 adb shell dumpsys package com.google.android.youtube | grep -A $numLinesInstalledPermission "install permissions:" | cut -f1 -d"=" | tr -d ' '
+                                 * ---------------------------------------------------------------------------------------------------------------------------------------------
+                                 */
+                                tempAppData.setPermissions(requestedPermissions);
+                                //The following code should not be required. We are taking care of this in mithrilDBHelper.addAppPerm()
+//                                for (int permIdx = 0; permIdx < requestedPermissions.length; permIdx++) {
+//                                    String permissionName = requestedPermissions[permIdx];
+//                                    long permId = mithrilDBHelper.findPermissionsByName(mithrilDB, permissionName);
+//                                    if (permId == -1) {
+//                                        try {
+//                                            PermissionInfo permissionInfo = packageManager.getPermissionInfo(permissionName, PackageManager.GET_META_DATA);
+//                                            mithrilDBHelper.addPermission(mithrilDB,
+//                                                    mithrilDBHelper.getPermData(
+//                                                            packageManager,
+//                                                            permissionInfo.group,
+//                                                            permissionInfo));
+//                                        } catch (PackageManager.NameNotFoundException exception) {
+//                                            Log.e(MithrilApplication.getDebugTag(), "Some error due to " + exception.getMessage());
+//                                            mithrilDBHelper.addPermission(mithrilDB, mithrilDBHelper.getPermData(packageManager, permissionName));
+//                                        }
+//                                    }
+//                                }
                             }
                         }
                     }

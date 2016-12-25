@@ -2,15 +2,14 @@ package edu.umbc.cs.ebiquity.mithril.data.model;
 
 import android.graphics.Bitmap;
 
-import java.util.Arrays;
-import java.util.Comparator;
+import java.util.Map;
 
 /**
 * Helper class for managing content
 */
 public class AppData implements Comparable<AppData>{
     private String appDescription;
-    private String[] permissions;
+    private Map<String, Boolean> permissions;
     private String associatedProcessName;
     private int	targetSdkVersion;
     private Bitmap icon;
@@ -52,11 +51,11 @@ public class AppData implements Comparable<AppData>{
         this.appDescription = appDescription;
     }
 
-    public String[] getPermissions() {
+    public Map<String, Boolean> getPermissions() {
         return permissions;
     }
 
-    public void setPermissions(String[] permissions) {
+    public void setPermissions(Map<String, Boolean> permissions) {
         this.permissions = permissions;
     }
 
@@ -133,6 +132,11 @@ public class AppData implements Comparable<AppData>{
     }
 
     @Override
+    public int compareTo(AppData another) {
+        return this.getAppName().compareTo(another.getAppName());
+    }
+
+    @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (!(o instanceof AppData)) return false;
@@ -143,8 +147,7 @@ public class AppData implements Comparable<AppData>{
         if (isInstalled() != appData.isInstalled()) return false;
         if (getUid() != appData.getUid()) return false;
         if (!getAppDescription().equals(appData.getAppDescription())) return false;
-        // Probably incorrect - comparing Object[] arrays with Arrays.equals
-        if (!Arrays.equals(getPermissions(), appData.getPermissions())) return false;
+        if (!getPermissions().equals(appData.getPermissions())) return false;
         if (!getAssociatedProcessName().equals(appData.getAssociatedProcessName())) return false;
         if (!getIcon().equals(appData.getIcon())) return false;
         if (!getAppName().equals(appData.getAppName())) return false;
@@ -157,7 +160,7 @@ public class AppData implements Comparable<AppData>{
     @Override
     public int hashCode() {
         int result = getAppDescription().hashCode();
-        result = 31 * result + Arrays.hashCode(getPermissions());
+        result = 31 * result + getPermissions().hashCode();
         result = 31 * result + getAssociatedProcessName().hashCode();
         result = 31 * result + getTargetSdkVersion();
         result = 31 * result + getIcon().hashCode();
@@ -174,7 +177,7 @@ public class AppData implements Comparable<AppData>{
     public String toString() {
         return "AppData{" +
                 "appDescription='" + appDescription + '\'' +
-                ", permissions=" + Arrays.toString(permissions) +
+                ", permissions=" + permissions +
                 ", associatedProcessName='" + associatedProcessName + '\'' +
                 ", targetSdkVersion=" + targetSdkVersion +
                 ", icon=" + icon +
@@ -185,10 +188,5 @@ public class AppData implements Comparable<AppData>{
                 ", appType='" + appType + '\'' +
                 ", uid=" + uid +
                 '}';
-    }
-
-    @Override
-    public int compareTo(AppData another) {
-        return this.getAppName().compareTo(another.getAppName());
     }
 }
