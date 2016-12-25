@@ -1417,6 +1417,8 @@ public class MithrilDBHelper extends SQLiteOpenHelper {
         values.put(PERMICON, getBitmapAsByteArray(aPermData.getPermissionIcon()));
         values.put(PERMLABEL, aPermData.getPermissionLabel());
         values.put(PERMRESNAME, aPermData.getResource().getResourceName());
+        if (aPermData.getPermissionGroup().equals(MithrilApplication.getPermissionNoGroup()))
+            values.put(PERMGROUP, aPermData.getPermissionGroup());
         try {
             return db.update(getPermissionsTableName(), values, PERMNAME + " = ?",
                     new String[]{aPermData.getPermissionName()});
