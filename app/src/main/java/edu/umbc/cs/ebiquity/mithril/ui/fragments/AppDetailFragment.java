@@ -8,7 +8,6 @@ import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -70,7 +69,7 @@ public class AppDetailFragment extends Fragment {
             mColumnCount = getArguments().getInt(ARG_COLUMN_COUNT);
             mAppPackageName = getArguments().getString(MithrilApplication.getPrefKeyAppPkgName());
         }
-        Log.d(MithrilApplication.getDebugTag(), mAppPackageName);
+//        Log.d(MithrilApplication.getDebugTag(), mAppPackageName);
     }
 
     @Override

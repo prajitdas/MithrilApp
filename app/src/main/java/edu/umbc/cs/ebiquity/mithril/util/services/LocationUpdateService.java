@@ -17,7 +17,6 @@ import android.os.Handler;
 import android.os.IBinder;
 import android.os.PowerManager;
 import android.os.ResultReceiver;
-import android.util.Log;
 
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GoogleApiAvailability;
@@ -40,7 +39,6 @@ import java.util.ArrayList;
 import java.util.Date;
 
 import edu.umbc.cs.ebiquity.mithril.MithrilApplication;
-import edu.umbc.cs.ebiquity.mithril.R;
 import edu.umbc.cs.ebiquity.mithril.util.receivers.LocationUpdateReceiver;
 import edu.umbc.cs.ebiquity.mithril.util.specialtasks.permissions.PermissionHelper;
 
@@ -221,7 +219,7 @@ public class LocationUpdateService extends Service implements
 
         setUpLocationClientIfNeeded();
         if (!mGoogleApiClient.isConnected() || !mGoogleApiClient.isConnecting() && !mInProgress) {
-            Log.d(MithrilApplication.getDebugTag(), DateFormat.getDateTimeInstance().format(new Date()) + ": Started");
+//            Log.d(MithrilApplication.getDebugTag(), DateFormat.getDateTimeInstance().format(new Date()) + ": Started");
 //            appendLog(DateFormat.getDateTimeInstance().format(new Date()) + ": Started", sharedPref.getString(MithrilApplication.getPrefKeyLogFilename(), "sdcard/log.txt"));
             mInProgress = true;
             mGoogleApiClient.connect();
@@ -240,9 +238,9 @@ public class LocationUpdateService extends Service implements
     public void onLocationChanged(Location location) {
         // Report to the UI that the location was updated
         String msg = Double.toString(location.getLatitude()) + "," + Double.toString(location.getLongitude());
-        Log.d(MithrilApplication.getDebugTag(), msg);
+//        Log.d(MithrilApplication.getDebugTag(), msg);
 //        Toast.makeText(this, msg, Toast.LENGTH_SHORT).show();
-        Log.d(MithrilApplication.getDebugTag(), DateFormat.getDateTimeInstance().format(new Date()) + ":" + msg);
+//        Log.d(MithrilApplication.getDebugTag(), DateFormat.getDateTimeInstance().format(new Date()) + ":" + msg);
         appendLog(DateFormat.getDateTimeInstance().format(new Date()) + ":" + msg);//, sharedPref.getString(MithrilApplication.getPrefKeyLocationFilename(), "sdcard/location.txt"));
         mCurrentLocation = location;
         storeInSharedPreferences(MithrilApplication.getPrefKeyLocation(), mCurrentLocation);
@@ -385,7 +383,7 @@ public class LocationUpdateService extends Service implements
                 }
             }
         }
-        Log.d(MithrilApplication.getDebugTag(), DateFormat.getDateTimeInstance().format(new Date()) + ": Connected");
+//        Log.d(MithrilApplication.getDebugTag(), DateFormat.getDateTimeInstance().format(new Date()) + ": Connected");
         appendLog(DateFormat.getDateTimeInstance().format(new Date()) + ": Connected");//, sharedPref.getString(MithrilApplication.getPrefKeyLogFilename(), "sdcard/log.txt"));
     }
 
@@ -401,7 +399,7 @@ public class LocationUpdateService extends Service implements
         mGoogleApiClient = null;
         // Display the connection status
 //        Toast.makeText(this, DateFormat.getDateTimeInstance().format(new Date()) + ": Disconnected. Please re-connect.", Toast.LENGTH_SHORT).show();
-        Log.d(MithrilApplication.getDebugTag(), DateFormat.getDateTimeInstance().format(new Date()) + ": Disconnected. Please re-connect.");
+//        Log.d(MithrilApplication.getDebugTag(), DateFormat.getDateTimeInstance().format(new Date()) + ": Disconnected. Please re-connect.");
 //        appendLog(DateFormat.getDateTimeInstance().format(new Date()) + ": Disconnected", sharedPref.getString(MithrilApplication.getPrefKeyLogFilename(), "sdcard/log.txt"));
     }
 
@@ -448,7 +446,7 @@ public class LocationUpdateService extends Service implements
 
             // Show a toast message if an address was found.
             if (resultCode == MithrilApplication.SUCCESS_RESULT) {
-                Log.d(MithrilApplication.getDebugTag(), getString(R.string.address_found) + ":" + mAddressOutput);
+//                Log.d(MithrilApplication.getDebugTag(), getString(R.string.address_found) + ":" + mAddressOutput);
 //                Toast.makeText(context, getString(R.string.address_found) + ":" + mAddressOutput, Toast.LENGTH_LONG).show();
                 appendLog(DateFormat.getDateTimeInstance().format(new Date()) + ":" + mAddressOutput);
                 storeInSharedPreferences(MithrilApplication.getPrefKeyCurrentAddress(), mAddressOutput);

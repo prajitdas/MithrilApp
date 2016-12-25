@@ -10,8 +10,6 @@ package edu.umbc.cs.ebiquity.mithril.util.specialtasks.detect.runningapps;
  * Constant Value: "android.permission.READ_LOGS"
  */
 
-import android.util.Log;
-
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -41,7 +39,7 @@ public class ReadLogs {
             String line;
             while ((line = appLaunchData.readLine()) != null) {
                 if (line.contains(MithrilApplication.getLogIntent())) {
-                    Log.d(MithrilApplication.getDebugTag(), "another app launch: " + line);
+//                    Log.d(MithrilApplication.getDebugTag(), "another app launch: " + line);
                     String date = line.substring(0, 4);
                     String time = line.substring(7, 12);
                     int appLuanchedIdx = line.indexOf("cmp=");
@@ -53,7 +51,7 @@ public class ReadLogs {
             }
         } catch (IOException e) {
         }
-        Log.d(MithrilApplication.getDebugTag(), "ReadLog app launch: " + logBuilder);
+//        Log.d(MithrilApplication.getDebugTag(), "ReadLogLog app launch: " + logBuilder);
         return logBuilder.toString();
     }
 }

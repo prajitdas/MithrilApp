@@ -967,9 +967,9 @@ public class MithrilDBHelper extends SQLiteOpenHelper {
 		} finally {
 			cursor.close();
 		}
-		if (permId == -1)
-			Log.d(MithrilApplication.getDebugTag(), permissionName);
-		return permId;
+//		if (permId == -1)
+//			Log.d(MithrilApplication.getDebugTag(), permissionName);
+        return permId;
 	}
 
 	/**
@@ -1438,7 +1438,7 @@ public class MithrilDBHelper extends SQLiteOpenHelper {
 	 */
 	public void deleteAppByUID(SQLiteDatabase db, int uid) {
 		try {
-            Log.d(MithrilApplication.getDebugTag(), "Deleting this: " + Integer.toString(uid));
+//            Log.d(MithrilApplication.getDebugTag(), "Deleting this: " + Integer.toString(uid));
             db.delete(getAppDataTableName(), APPUID + " = ?",
 					new String[]{String.valueOf(uid)});
 		} catch(SQLException e) {
@@ -1602,13 +1602,13 @@ public class MithrilDBHelper extends SQLiteOpenHelper {
 	}
 
 	private void loadAndroidPermissionsIntoDB(SQLiteDatabase db) {
-		Log.d(MithrilApplication.getDebugTag(), "I came to loadAndroidPermissionsIntoDB");
+//		Log.d(MithrilApplication.getDebugTag(), "I came to loadAndroidPermissionsIntoDB");
         PackageManager packageManager = getContext().getPackageManager();
         int flags = PackageManager.GET_META_DATA;
 
 		List<PermissionGroupInfo> permisisonGroupInfoList = packageManager.getAllPermissionGroups(flags);
-		Log.d(MithrilApplication.getDebugTag(), "Size is: " + Integer.toString(permisisonGroupInfoList.size()));
-		permisisonGroupInfoList.add(null);
+//		Log.d(MithrilApplication.getDebugTag(), "Size is: " + Integer.toString(permisisonGroupInfoList.size()));
+        permisisonGroupInfoList.add(null);
 
 		for (PermissionGroupInfo permissionGroupInfo : permisisonGroupInfoList) {
 			String groupName = permissionGroupInfo == null ? null : permissionGroupInfo.name;

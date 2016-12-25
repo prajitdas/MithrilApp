@@ -9,7 +9,6 @@ import android.content.pm.PackageManager;
 import android.database.sqlite.SQLiteDatabase;
 import android.graphics.BitmapFactory;
 import android.graphics.drawable.BitmapDrawable;
-import android.util.Log;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -35,8 +34,8 @@ public class AppInstallBroadcastReceiver extends BroadcastReceiver {
         packageManager = context.getPackageManager();
         mithrilDBHelper = new MithrilDBHelper(context);
         mithrilDB = mithrilDBHelper.getWritableDatabase();
-        Log.d(MithrilApplication.getDebugTag(), "Action: "+intent.getAction());
-        Log.d(MithrilApplication.getDebugTag(), "Uid: "+Integer.toString(intent.getIntExtra(Intent.EXTRA_UID, 0)));
+//        Log.d(MithrilApplication.getDebugTag(), "Action: "+intent.getAction());
+//        Log.d(MithrilApplication.getDebugTag(), "Uid: "+Integer.toString(intent.getIntExtra(Intent.EXTRA_UID, 0)));
 
         /**
          * Broadcast Action: A new application package has been installed on the device. The data contains the name of the package. Note that the newly installed package does not receive this broadcast.
@@ -50,7 +49,7 @@ public class AppInstallBroadcastReceiver extends BroadcastReceiver {
             String[] packagesInstalled = packageManager.getPackagesForUid(intent.getIntExtra(Intent.EXTRA_UID, 0));
             for (String pkgName : packagesInstalled) {
                 try {
-                    Log.d(MithrilApplication.getDebugTag(), "Package: "+pkgName);
+//                    Log.d(MithrilApplication.getDebugTag(), "Package: "+pkgName);
                     PackageInfo packageInfo = packageManager.getPackageInfo(pkgName, flags);
                     AppData tempAppData = new AppData();
                     if (packageInfo.packageName != null) {
