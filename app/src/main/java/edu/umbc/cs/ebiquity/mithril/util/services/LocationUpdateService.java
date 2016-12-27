@@ -2,13 +2,11 @@ package edu.umbc.cs.ebiquity.mithril.util.services;
 
 import android.Manifest;
 import android.annotation.TargetApi;
-import android.app.PendingIntent;
 import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
-import android.location.Address;
 import android.location.Location;
 import android.os.Binder;
 import android.os.Build;
@@ -16,7 +14,6 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.IBinder;
 import android.os.PowerManager;
-import android.os.ResultReceiver;
 
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GoogleApiAvailability;
@@ -39,6 +36,7 @@ import java.util.ArrayList;
 import java.util.Date;
 
 import edu.umbc.cs.ebiquity.mithril.MithrilApplication;
+import edu.umbc.cs.ebiquity.mithril.util.receivers.AddressResultReceiver;
 import edu.umbc.cs.ebiquity.mithril.util.receivers.LocationUpdateReceiver;
 import edu.umbc.cs.ebiquity.mithril.util.specialtasks.permissions.PermissionHelper;
 
@@ -75,13 +73,8 @@ public class LocationUpdateService extends Service implements
      */
     protected ArrayList<Geofence> mGeofenceList;
     private Context context;
-    private AddressResultReceiver mResultReceiver;
     private IBinder mBinder = new LocalBinder();
     private SharedPreferences sharedPref;
-    /**
-     * The formatted location address.
-     */
-    private Address mAddressOutput;
     /**
      * Tracks whether the user has requested an address. Becomes true when the user requests an
      * address and false when the address (or an error message) is delivered.
@@ -91,6 +84,7 @@ public class LocationUpdateService extends Service implements
      * GoogleApiClient connects.
      */
     private boolean mAddressRequested;
+    private AddressResultReceiver mResultReceiver;
     /**
      * Provides the entry point to Google Play services.
      */
@@ -110,12 +104,12 @@ public class LocationUpdateService extends Service implements
     /**
      * Used to keep track of whether geofences were added.
      */
-    private boolean mGeofencesAdded;
+//    private boolean mGeofencesAdded;
 
     /**
      * Used when requesting to add or remove geofences.
      */
-    private PendingIntent mGeofencePendingIntent;
+//    private PendingIntent mGeofencePendingIntent;
 
     @TargetApi(Build.VERSION_CODES.N)
     @Override
@@ -123,13 +117,9 @@ public class LocationUpdateService extends Service implements
         super.onCreate();
 
         context = this;
-        mResultReceiver = new AddressResultReceiver(new Handler());
+        mResultReceiver = new AddressResultReceiver(new Handler(), this);
         // Set defaults, then update using values stored in the Bundle.
         mAddressRequested = false;
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N)
-            mAddressOutput = new Address(getResources().getConfiguration().getLocales().get(0));
-        else
-            mAddressOutput = new Address(getResources().getConfiguration().locale);
 
         mInProgress = false;
         // Create the LocationRequest object
@@ -157,9 +147,12 @@ public class LocationUpdateService extends Service implements
      * Creates an intent, adds location data to it as an extra, and starts the intent service for
      * fetching an address.
      */
-    protected void startIntentService() {
+    protected void startSearchAddressIntentService() {
         // Create an intent for passing to the intent service responsible for fetching the address.
         Intent intent = new Intent(this, FetchAddressIntentService.class);
+
+        intent.putExtra(MithrilApplication.ADDRESS_REQUESTED_EXTRA, mAddressRequested);
+        intent.putExtra(MithrilApplication.ADDRESS_KEY, MithrilApplication.getPrefKeyCurrentAddress());
 
         // Pass the result receiver as an extra to the service.
         intent.putExtra(MithrilApplication.RECEIVER, mResultReceiver);
@@ -247,7 +240,8 @@ public class LocationUpdateService extends Service implements
         /**
          * We know the location has changed, let's check the address
          */
-        startIntentService();
+        mAddressRequested = true;
+        startSearchAddressIntentService();
     }
 
     @Override
@@ -295,23 +289,6 @@ public class LocationUpdateService extends Service implements
         SharedPreferences.Editor editor = sharedPref.edit();
         Gson gson = new Gson();
         String json = gson.toJson(location);
-        editor.putString(key, json);
-        editor.commit();
-    }
-
-    /**
-     * From http://stackoverflow.com/a/18463758/1816861
-     *
-     * @param key
-     * @param address To Retreive
-     *                Gson gson = new Gson();
-     *                String json = mPrefs.getString("MyObject", "");
-     *                MyObject obj = gson.fromJson(json, MyObject.class);
-     */
-    public void storeInSharedPreferences(String key, Address address) {
-        SharedPreferences.Editor editor = sharedPref.edit();
-        Gson gson = new Gson();
-        String json = gson.toJson(address);
         editor.putString(key, json);
         editor.commit();
     }
@@ -426,33 +403,6 @@ public class LocationUpdateService extends Service implements
     public class LocalBinder extends Binder {
         public LocationUpdateService getServerInstance() {
             return LocationUpdateService.this;
-        }
-    }
-
-    class AddressResultReceiver extends ResultReceiver {
-        public AddressResultReceiver(Handler handler) {
-            super(handler);
-        }
-
-        @Override
-        protected void onReceiveResult(int resultCode, Bundle resultData) {
-
-            // Display the address string
-            // or an error message sent from the intent service.
-            Gson gson = new Gson();
-            String json = resultData.getString(MithrilApplication.RESULT_DATA_KEY);
-            mAddressOutput = gson.fromJson(json, Address.class);
-//            displayAddressOutput();
-
-            // Show a toast message if an address was found.
-            if (resultCode == MithrilApplication.SUCCESS_RESULT) {
-//                Log.d(MithrilApplication.getDebugTag(), getString(R.string.address_found) + ":" + mAddressOutput);
-//                Toast.makeText(context, getString(R.string.address_found) + ":" + mAddressOutput, Toast.LENGTH_LONG).show();
-                appendLog(DateFormat.getDateTimeInstance().format(new Date()) + ":" + mAddressOutput);
-                storeInSharedPreferences(MithrilApplication.getPrefKeyCurrentAddress(), mAddressOutput);
-            }
-            // Reset. Enable the Fetch Address button and stop showing the progress bar.
-            mAddressRequested = false;
         }
     }
 }

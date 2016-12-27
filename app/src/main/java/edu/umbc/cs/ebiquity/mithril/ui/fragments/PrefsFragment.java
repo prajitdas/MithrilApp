@@ -1,11 +1,15 @@
 package edu.umbc.cs.ebiquity.mithril.ui.fragments;
 
+import android.app.Activity;
 import android.app.AppOpsManager;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.location.Location;
+import android.location.LocationManager;
 import android.os.Bundle;
+import android.os.Handler;
 import android.preference.EditTextPreference;
 import android.preference.Preference;
 import android.preference.PreferenceFragment;
@@ -15,12 +19,16 @@ import android.view.View;
 import android.widget.Toast;
 
 import com.google.android.gms.common.ConnectionResult;
+import com.google.android.gms.common.GooglePlayServicesNotAvailableException;
+import com.google.android.gms.common.GooglePlayServicesRepairableException;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.common.api.ResultCallback;
 import com.google.android.gms.common.api.Status;
 import com.google.android.gms.location.Geofence;
 import com.google.android.gms.location.GeofencingRequest;
 import com.google.android.gms.location.LocationServices;
+import com.google.android.gms.location.places.Place;
+import com.google.android.gms.location.places.ui.PlaceAutocomplete;
 import com.google.android.gms.maps.model.LatLng;
 
 import java.util.ArrayList;
@@ -28,6 +36,8 @@ import java.util.Map;
 
 import edu.umbc.cs.ebiquity.mithril.MithrilApplication;
 import edu.umbc.cs.ebiquity.mithril.R;
+import edu.umbc.cs.ebiquity.mithril.util.receivers.AddressResultReceiver;
+import edu.umbc.cs.ebiquity.mithril.util.services.FetchAddressIntentService;
 import edu.umbc.cs.ebiquity.mithril.util.services.GeofenceTransitionsIntentService;
 import edu.umbc.cs.ebiquity.mithril.util.specialtasks.errors.GeofenceErrorMessages;
 
@@ -42,6 +52,8 @@ public class PrefsFragment extends PreferenceFragment implements
         GoogleApiClient.OnConnectionFailedListener,
         ResultCallback<Status> {
 
+    private final int PLACE_AUTOCOMPLETE_REQUEST_CODE_HOME = 1;
+    private final int PLACE_AUTOCOMPLETE_REQUEST_CODE_WORK = 2;
     /**
      * Provides the entry point to Google Play services.
      */
@@ -50,6 +62,20 @@ public class PrefsFragment extends PreferenceFragment implements
      * The list of geofences used in this sample.
      */
     protected ArrayList<Geofence> mGeofenceList;
+    /**
+     * Tracks whether the user has requested an address. Becomes true when the user requests an
+     * address and false when the address (or an error message) is delivered.
+     * The user requests an address by pressing the Fetch Address button. This may happen
+     * before GoogleApiClient connects. This activity uses this boolean to keep track of the
+     * user's intent. If the value is true, the activity tries to fetch the address as soon as
+     * GoogleApiClient connects.
+     */
+    private boolean mAddressRequested;
+    private AddressResultReceiver mResultReceiver;
+    /**
+     * Represents a selected geographical location.
+     */
+    private Location mSelectedLocation;
     /**
      * Used to keep track of whether geofences were added.
      */
@@ -88,14 +114,19 @@ public class PrefsFragment extends PreferenceFragment implements
         super.onCreate(savedInstanceState);
         context = getActivity();
 
+        mResultReceiver = new AddressResultReceiver(new Handler(), context);
+        // Set defaults, then update using values stored in the Bundle.
+        mAddressRequested = false;
+
 //        appOps();
         initViews();
         initData();
-        setOnPreferenceChangeListener();
+        setOnPreferenceClickListeners();
+        setOnPreferenceChangeListeners();
     }
 
     private void initData() {
-        sharedPrefs = getActivity().getSharedPreferences(MithrilApplication.getSharedPreferencesName(), MODE_PRIVATE);
+        sharedPrefs = context.getSharedPreferences(MithrilApplication.getSharedPreferencesName(), MODE_PRIVATE);
 
         mSwitchPrefEnableLocationEnabled.setChecked(sharedPrefs.getBoolean(MithrilApplication.getPrefLocationContextEnableKey(), false));
         mEditTextPrefHomeLocation.setSummary(sharedPrefs.getString(MithrilApplication.getPrefHomeLocationKey(), getResources().getString(R.string.pref_home_location_summary)));
@@ -114,7 +145,7 @@ public class PrefsFragment extends PreferenceFragment implements
 //        PackageInfo mPackageInfo = null;
 //        String mPackageName = null;
 //        boolean newState = false;
-        AppOpsManager mAppOps = (AppOpsManager) getActivity().getSystemService(Context.APP_OPS_SERVICE);
+        AppOpsManager mAppOps = (AppOpsManager) context.getSystemService(Context.APP_OPS_SERVICE);
 /*
         mAppOps.setMode(AppOpsManager.OP_WRITE_SETTINGS,
                 mPackageInfo.applicationInfo.uid, mPackageName, newState
@@ -161,7 +192,7 @@ public class PrefsFragment extends PreferenceFragment implements
         mGeofencePendingIntent = null;
 
         // Retrieve an instance of the SharedPreferences object.
-        sharedPrefs = getActivity().getSharedPreferences(MithrilApplication.getSharedPreferencesName(), MODE_PRIVATE);
+        sharedPrefs = context.getSharedPreferences(MithrilApplication.getSharedPreferencesName(), MODE_PRIVATE);
 
         // Get the value of mGeofencesAdded from SharedPreferences. Set to false as a default.
         mGeofencesAdded = sharedPrefs.getBoolean(MithrilApplication.GEOFENCES_ADDED_KEY, false);
@@ -204,7 +235,45 @@ public class PrefsFragment extends PreferenceFragment implements
         mEditTextPrefPresenceInfoSupervisor.setEnabled(mSwitchPrefEnablePresenceInfoEnabled.isChecked());
     }
 
-    private void setOnPreferenceChangeListener() {
+    private void setOnPreferenceClickListeners() {
+        mEditTextPrefHomeLocation.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
+            @Override
+            public boolean onPreferenceClick(Preference preference) {
+                try {
+                    Intent intent =
+                            new PlaceAutocomplete.IntentBuilder(PlaceAutocomplete.MODE_FULLSCREEN)
+                                    .build(getActivity());
+                    startActivityForResult(intent, PLACE_AUTOCOMPLETE_REQUEST_CODE_HOME);
+                } catch (GooglePlayServicesRepairableException e) {
+                    // TODO: Handle the error.
+                } catch (GooglePlayServicesNotAvailableException e) {
+                    // TODO: Handle the error.
+                }
+
+                return false;
+            }
+        });
+
+        mEditTextPrefWorkLocation.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
+            @Override
+            public boolean onPreferenceClick(Preference preference) {
+                try {
+                    Intent intent =
+                            new PlaceAutocomplete.IntentBuilder(PlaceAutocomplete.MODE_FULLSCREEN)
+                                    .build(getActivity());
+                    startActivityForResult(intent, PLACE_AUTOCOMPLETE_REQUEST_CODE_WORK);
+                } catch (GooglePlayServicesRepairableException e) {
+                    // TODO: Handle the error.
+                } catch (GooglePlayServicesNotAvailableException e) {
+                    // TODO: Handle the error.
+                }
+
+                return false;
+            }
+        });
+    }
+
+    private void setOnPreferenceChangeListeners() {
         final SharedPreferences.Editor editor = sharedPrefs.edit();
         mSwitchPrefEnableLocationEnabled.setOnPreferenceChangeListener(new Preference.OnPreferenceChangeListener() {
             @Override
@@ -338,6 +407,92 @@ public class PrefsFragment extends PreferenceFragment implements
                 return false;
             }
         });
+    }
+
+    /**
+     * A location was selected by the user for their home/work address
+     * EDUCATION MOMENT (from http://android-er.blogspot.com/2013/02/convert-between-latlng-and-location.html):
+     * //Convert LatLng to Location
+     * Location location = new Location("Test");
+     * location.setLatitude(point.latitude);
+     * location.setLongitude(point.longitude);
+     * location.setTime(new Date().getTime()); //Set time as current Date
+     * info.setText(location.toString());
+     * <p>
+     * //Convert Location to LatLng
+     * LatLng newLatLng = new LatLng(location.getLatitude(), location.getLongitude());
+     *
+     * @param requestCode
+     * @param resultCode
+     * @param data
+     */
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        switch (requestCode) {
+            case PLACE_AUTOCOMPLETE_REQUEST_CODE_HOME: {
+                if (resultCode == Activity.RESULT_OK) {
+                    Place place = PlaceAutocomplete.getPlace(getActivity(), data);
+
+                    mSelectedLocation = new Location(LocationManager.GPS_PROVIDER);
+                    mSelectedLocation.setLatitude(place.getLatLng().latitude);
+                    mSelectedLocation.setLongitude(place.getLatLng().longitude);
+
+                    startSearchAddressIntentService(MithrilApplication.getPrefHomeLocationKey());
+
+                    Log.i(MithrilApplication.getDebugTag(), "Place: " + place.getAddress());
+                } else if (resultCode == PlaceAutocomplete.RESULT_ERROR) {
+                    Status status = PlaceAutocomplete.getStatus(getActivity(), data);
+                    // TODO: Handle the error.
+                    Log.i(MithrilApplication.getDebugTag(), status.getStatusMessage());
+
+                } else if (resultCode == Activity.RESULT_CANCELED) {
+                    // The user canceled the operation.
+                }
+            }
+            case PLACE_AUTOCOMPLETE_REQUEST_CODE_WORK: {
+                if (resultCode == Activity.RESULT_OK) {
+                    Place place = PlaceAutocomplete.getPlace(getActivity(), data);
+
+                    mSelectedLocation = new Location(LocationManager.GPS_PROVIDER);
+                    mSelectedLocation.setLatitude(place.getLatLng().latitude);
+                    mSelectedLocation.setLongitude(place.getLatLng().longitude);
+
+                    startSearchAddressIntentService(MithrilApplication.getPrefWorkLocationKey());
+
+                    Log.i(MithrilApplication.getDebugTag(), "Place: " + place.getAddress());
+                } else if (resultCode == PlaceAutocomplete.RESULT_ERROR) {
+                    Status status = PlaceAutocomplete.getStatus(getActivity(), data);
+                    // TODO: Handle the error.
+                    Log.i(MithrilApplication.getDebugTag(), status.getStatusMessage());
+
+                } else if (resultCode == Activity.RESULT_CANCELED) {
+                    // The user canceled the operation.
+                }
+            }
+        }
+    }
+
+    /**
+     * Creates an intent, adds location data to it as an extra, and starts the intent service for
+     * fetching an address.
+     */
+    protected void startSearchAddressIntentService(String key) {
+        // Create an intent for passing to the intent service responsible for fetching the address.
+        Intent intent = new Intent(context, FetchAddressIntentService.class);
+
+        intent.putExtra(MithrilApplication.ADDRESS_REQUESTED_EXTRA, mAddressRequested);
+        intent.putExtra(MithrilApplication.ADDRESS_KEY, key);
+
+        // Pass the result receiver as an extra to the service.
+        intent.putExtra(MithrilApplication.RECEIVER, mResultReceiver);
+
+        // Pass the location data as an extra to the service.
+        intent.putExtra(MithrilApplication.LOCATION_DATA_EXTRA, mSelectedLocation);
+
+        // Start the service. If the service isn't already running, it is instantiated and started
+        // (creating a process for it if needed); if it is running then it remains running. The
+        // service kills itself automatically once all intents are processed.
+        context.startService(intent);
     }
 
     /**************************************START OF GEOFENCE CODE*********************************************************/

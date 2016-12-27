@@ -14,7 +14,7 @@ import edu.umbc.cs.ebiquity.mithril.R;
 /**
  * Geofence error codes mapped to error messages.
  */
-public class GeofenceErrorMessages {
+public class GeofenceErrorMessages extends Error {
     /**
      * Prevents instantiation.
      */
