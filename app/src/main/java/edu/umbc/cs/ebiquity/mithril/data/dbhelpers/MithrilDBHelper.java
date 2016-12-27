@@ -219,7 +219,7 @@ public class MithrilDBHelper extends SQLiteOpenHelper {
      * CREATE TABLE permissions (
      * id INTEGER PRIMARY KEY AUTOINCREMENT,
      * name TEXT NOT NULL,
-     * label TEXT NOT NULL,
+     * label TEXT NULL,
      * protectionlvl TEXT NOT NULL,
      * permgrp TEXT NULL,
      * flag TEXT NULL,
@@ -239,6 +239,8 @@ public class MithrilDBHelper extends SQLiteOpenHelper {
     private final static String PERMDESC = "description";
     private final static String PERMICON = "icon";
     private final static String PERMRESNAME = "resources_id";
+    private final static String PERMURI = "uri";
+    private final static String PERMAPILVL = "apilvl";
 
     private final static String CREATE_PERMISSIONS_TABLE = "CREATE TABLE " + getPermissionsTableName() + " (" +
             PERMID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
@@ -250,6 +252,8 @@ public class MithrilDBHelper extends SQLiteOpenHelper {
             PERMDESC + " TEXT NULL, " +
             PERMICON + " BLOB, " +
             PERMRESNAME + " INTEGER NOT NULL DEFAULT 0, " +
+            PERMURI + " TEXT NULL, " +
+            PERMAPILVL + " INTEGER NULL, " +
             "FOREIGN KEY(resources_id) REFERENCES resources(id), " +
             "CONSTRAINT permissions_unique_name UNIQUE(" + PERMNAME + ") " +
             ");";
@@ -650,10 +654,12 @@ public class MithrilDBHelper extends SQLiteOpenHelper {
                 PackageManager packageManager = getContext().getPackageManager();
                 try {
                     PermissionInfo permissionInfo = packageManager.getPermissionInfo(appPermission.getKey(), PackageManager.GET_META_DATA);
-                    permId = addPermission(db, getPermData(packageManager, permissionInfo.group, permissionInfo));
+                    if (permissionInfo.group.equals(null))
+                        permId = addPermission(db, getPermData(packageManager, permissionInfo));
+                    else
+                        permId = addPermission(db, getPermData(packageManager, permissionInfo.group, permissionInfo));
                 } catch (PackageManager.NameNotFoundException exception) {
                     Log.e(MithrilApplication.getDebugTag(), "Some error due to perhaps group info being not present " + exception.getMessage());
-                    permId = addPermission(db, getPermData(packageManager, appPermission.getKey()));
                 }
             }
             values.put(APPPERMRESPERID, permId);
@@ -1573,9 +1579,11 @@ public class MithrilDBHelper extends SQLiteOpenHelper {
                             Map<String, Boolean> requestedPermissions = new HashMap<String, Boolean>();
                             String[] packageUsesPermissions = pack.requestedPermissions;
                             for (int permCount = 0; permCount < packageUsesPermissions.length; permCount++) {
-                                //TODO fix this eventually because we are not getting all the permission information from the PackageInfo api
                                 requestedPermissions.put(packageUsesPermissions[permCount], false);
                                 /**
+                                 * The following fix is no longer required. There was a flaw in insert permission we should have used insertOrThrow
+                                 * - PKD, Dec 27, 2016. Carrie Fisher AKA Princess Leia Organa (Skywalker) passed away today at 0855 PST. The world will miss her. :(
+                                 * ---------------------------------------------------------------------------------------------------------------------------------------------
                                  * The following shell script may be used to extract exact permission data.
                                  * However, that will require root access and adb shell code execution.
                                  * Perhaps we should avoid that for now.
@@ -1656,16 +1664,14 @@ public class MithrilDBHelper extends SQLiteOpenHelper {
                 tempPermData.setPermissionProtectionLevel(MithrilApplication.getPermissionProtectionLevelUnknown());
                 break;
         }
-        if (groupName == null) {
-            tempPermData.setPermissionGroup(MithrilApplication.getPermissionNoGroup());
-            tempPermData.setResource(new Resource("nada"));
-        } else {
-            tempPermData.setPermissionGroup(groupName);
-            String[] words = permissionInfo.group.split(Pattern.quote("."));
-            //In a group, the last word is most important for group identification, so use that I guess!
-            //TODO hanging logic! The code for inserting resource isn't done yet. This has to work in tandem with that! Do that ASAP...
-            tempPermData.setResource(new Resource(words[words.length - 1]));
-        }
+
+        tempPermData.setPermissionGroup(groupName);
+        String[] words = permissionInfo.group.split(Pattern.quote("."));
+        //In a group, the last word is most important for group identification, so use that I guess.
+        //The resourse signifies the possible purpose of the permission which is generally found in the last word.
+        //TODO hanging logic! The code for inserting resource isn't done yet. This has to work in tandem with that! Do that ASAP...
+        tempPermData.setResource(new Resource(words[words.length - 1]));
+
         //Setting the protection level
         switch (permissionInfo.flags) {
             case PermissionInfo.FLAG_COSTS_MONEY:
@@ -1690,17 +1696,52 @@ public class MithrilDBHelper extends SQLiteOpenHelper {
         return tempPermData;
     }
 
-    public PermData getPermData(PackageManager packageManager, String permissionName) {
+    public PermData getPermData(PackageManager packageManager, PermissionInfo permissionInfo) {
         PermData tempPermData = new PermData();
 
-        tempPermData.setPermissionName(permissionName);
+        tempPermData.setPermissionName(permissionInfo.name);
         //Setting the protection level
-        tempPermData.setPermissionProtectionLevel(MithrilApplication.getPermissionProtectionLevelUnknown());
+        switch (permissionInfo.protectionLevel) {
+            case PermissionInfo.PROTECTION_NORMAL:
+                tempPermData.setPermissionProtectionLevel(MithrilApplication.getPermissionProtectionLevelNormal());
+                break;
+            case PermissionInfo.PROTECTION_DANGEROUS:
+                tempPermData.setPermissionProtectionLevel(MithrilApplication.getPermissionProtectionLevelDangerous());
+                break;
+            case PermissionInfo.PROTECTION_SIGNATURE:
+                tempPermData.setPermissionProtectionLevel(MithrilApplication.getPermissionProtectionLevelSignature());
+                break;
+            case PermissionInfo.PROTECTION_FLAG_PRIVILEGED:
+                tempPermData.setPermissionProtectionLevel(MithrilApplication.getPermissionProtectionLevelPrivileged());
+                break;
+            default:
+                tempPermData.setPermissionProtectionLevel(MithrilApplication.getPermissionProtectionLevelUnknown());
+                break;
+        }
+
         tempPermData.setPermissionGroup(MithrilApplication.getPermissionNoGroup());
         tempPermData.setResource(new Resource("nada"));
-        tempPermData.setPermissionProtectionLevel(MithrilApplication.getPermissionFlagNone());
-        tempPermData.setPermissionLabel(permissionName);
-        tempPermData.setPermissionIcon(getPermissionIconBitmap());
+
+        //Setting the protection level
+        switch (permissionInfo.flags) {
+            case PermissionInfo.FLAG_COSTS_MONEY:
+                tempPermData.setPermissionFlag(MithrilApplication.getPermissionFlagCostsMoney());
+                break;
+            case PermissionInfo.FLAG_INSTALLED:
+                tempPermData.setPermissionFlag(MithrilApplication.getPermissionFlagInstalled());
+                break;
+            default:
+                tempPermData.setPermissionProtectionLevel(MithrilApplication.getPermissionFlagNone());
+                break;
+        }
+        //Permission description can be null. We are preventing a null pointer exception here.
+        tempPermData.setPermissionDescription(permissionInfo.loadDescription(packageManager)
+                == null
+                ? context.getResources().getString(R.string.no_description_available_txt)
+                : permissionInfo.loadDescription(packageManager).toString());
+
+        tempPermData.setPermissionIcon(getPermissionIconBitmap(permissionInfo));
+        tempPermData.setPermissionLabel(permissionInfo.loadLabel(packageManager).toString());
 
         return tempPermData;
     }

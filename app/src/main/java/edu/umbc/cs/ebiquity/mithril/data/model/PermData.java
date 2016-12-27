@@ -163,16 +163,16 @@ public class PermData implements Comparable<PermData>{
      * Android Permission Group Metadata
      * ---------------------------------
      * Permission information from https://material.google.com/patterns/permissions.html
-     * Permission  |  Description
-     * Calendar    |  Managing calendars
-     * Camera      |  Taking photos and recording videos
-     * Contacts    |  Managing contacts
-     * Location    |  Current device location
-     * Microphone  |  Audio recording
-     * Phone       |  Dialing and managing phone calls
-     * Body Sensors|  Heart rate and similar data
-     * SMS         |  Sending and viewing messages
-     * Storage     |  Accessing photos, media, and files
+     * Permission Group |  Description
+     * Calendar         |  Managing calendars
+     * Camera           |  Taking photos and recording videos
+     * Contacts         |  Managing contacts
+     * Location         |  Current device location
+     * Microphone       |  Audio recording
+     * Phone            |  Dialing and managing phone calls
+     * Body Sensors     |  Heart rate and similar data
+     * SMS              |  Sending and viewing messages
+     * Storage          |  Accessing photos, media, and files
      *
      * Manifest information from https://developer.android.com/guide/topics/manifest/permission-element.html
      * <permission android:description="string resource"
@@ -246,7 +246,7 @@ public class PermData implements Comparable<PermData>{
      * DUMP	                                |	Allows an application to retrieve state dump information from system services
      * EXPAND_STATUS_BAR	                |	Allows an application to expand or collapse the status bar
      * FACTORY_TEST	                        |	Run as a manufacturer test application, running as the root user
-     * GET_ACCOUNTS	|	Allows access to the list of accounts in the Accounts Service
+     * GET_ACCOUNTS	                        |	Allows access to the list of accounts in the Accounts Service
      * GET_ACCOUNTS_PRIVILEGED	|	Allows access to the list of accounts in the Accounts Service
      * GET_PACKAGE_SIZE	|	Allows an application to find out the space used by any package
      * GET_TASKS	|	This constant was deprecated in API level 21. No longer enforced
