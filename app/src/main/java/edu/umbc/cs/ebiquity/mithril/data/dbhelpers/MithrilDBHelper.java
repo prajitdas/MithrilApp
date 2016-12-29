@@ -1417,9 +1417,6 @@ public class MithrilDBHelper extends SQLiteOpenHelper {
      * We found extra information about the Google permissions and we are adding those in the table
      */
     public int updateConflictedGooglePermissions(SQLiteDatabase db, PermData aPermData) {
-        Log.e(MithrilApplication.getDebugTag(), "Perm name: " + aPermData.getPermissionName());
-        Log.e(MithrilApplication.getDebugTag(), "Perm flag: " + aPermData.getPermissionFlag());
-        Log.e(MithrilApplication.getDebugTag(), "Perm group: " + aPermData.getPermissionGroup());
 //        name, protectionlvl, permgrp, flags (these four columns should already be present)
         ContentValues values = new ContentValues();
         values.put(PERMDESC, aPermData.getPermissionDescription());
@@ -1678,9 +1675,6 @@ public class MithrilDBHelper extends SQLiteOpenHelper {
         //TODO hanging logic! The code for inserting resource isn't done yet. This has to work in tandem with that! Do that ASAP...
         tempPermData.setResource(new Resource(words[words.length - 1]));
 
-        Log.e(MithrilApplication.getDebugTag(), "Perm flags original: " + permissionInfo.flags);
-        Log.e(MithrilApplication.getDebugTag(), "Perm flags original: " + PermissionInfo.FLAG_COSTS_MONEY);
-        Log.e(MithrilApplication.getDebugTag(), "Perm flags original: " + PermissionInfo.FLAG_INSTALLED);
         //Setting the protection level
         switch (permissionInfo.flags) {
             case PermissionInfo.FLAG_COSTS_MONEY:
@@ -1731,9 +1725,6 @@ public class MithrilDBHelper extends SQLiteOpenHelper {
         tempPermData.setPermissionGroup(MithrilApplication.getPermissionNoGroup());
         tempPermData.setResource(new Resource("nada"));
 
-        Log.e(MithrilApplication.getDebugTag(), "Perm flags original: " + permissionInfo.flags);
-        Log.e(MithrilApplication.getDebugTag(), "Perm flags original: " + PermissionInfo.FLAG_COSTS_MONEY);
-        Log.e(MithrilApplication.getDebugTag(), "Perm flags original: " + PermissionInfo.FLAG_INSTALLED);
         //Setting the protection level
         switch (permissionInfo.flags) {
             case PermissionInfo.FLAG_COSTS_MONEY:
