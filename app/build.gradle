@@ -10,9 +10,6 @@ android {
         versionCode 1
         versionName "0.1"
         vectorDrawables.useSupportLibrary = true
-        jackOptions {
-            enabled true
-        }
     }
     buildTypes {
         release {
@@ -23,8 +20,8 @@ android {
     dexOptions {
     }
     compileOptions {
-        sourceCompatibility JavaVersion.VERSION_1_8
-        targetCompatibility JavaVersion.VERSION_1_8
+        sourceCompatibility JavaVersion.VERSION_1_7
+        targetCompatibility JavaVersion.VERSION_1_7
     }
     productFlavors {
     }

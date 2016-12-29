@@ -72,7 +72,7 @@ public class MithrilApplication extends Application {
     private static final String PREF_KEY_CURRENT_TIME = "time";
     private static final String PREF_KEY_CURRENT_LOCATION = "currloc";
     private static final String PREF_KEY_LOCATION = "location";
-    private static final String PREF_KEY_CURRENT_ADDRESS = "address";
+    private static final String PREF_KEY_CURRENT_ADDRESS = "curraddr";
     private static final String PREF_KEY_WHAT_LEVEL = "level";
 
     //Make sure they match the values from preferences.xml
