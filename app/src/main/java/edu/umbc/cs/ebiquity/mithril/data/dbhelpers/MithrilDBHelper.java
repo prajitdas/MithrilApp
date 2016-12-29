@@ -45,7 +45,7 @@ import edu.umbc.cs.ebiquity.mithril.data.model.rules.requesters.Requester;
 
 public class MithrilDBHelper extends SQLiteOpenHelper {
 	// Database declarations
-    private final static int DATABASE_VERSION = 1;
+    private final static int DATABASE_VERSION = 10001;
     // (int) System.currentTimeMillis();
     // DO NOT DO THIS!!!
     // THIS IS CREATING A NEW VERSION OF DATABASE ON EACH APP LAUNCH AND SLOWING DOWN THE COMPLETE APP!
@@ -1417,6 +1417,9 @@ public class MithrilDBHelper extends SQLiteOpenHelper {
      * We found extra information about the Google permissions and we are adding those in the table
      */
     public int updateConflictedGooglePermissions(SQLiteDatabase db, PermData aPermData) {
+        Log.e(MithrilApplication.getDebugTag(), "Perm name: " + aPermData.getPermissionName());
+        Log.e(MithrilApplication.getDebugTag(), "Perm flag: " + aPermData.getPermissionFlag());
+        Log.e(MithrilApplication.getDebugTag(), "Perm group: " + aPermData.getPermissionGroup());
 //        name, protectionlvl, permgrp, flags (these four columns should already be present)
         ContentValues values = new ContentValues();
         values.put(PERMDESC, aPermData.getPermissionDescription());
@@ -1634,7 +1637,10 @@ public class MithrilDBHelper extends SQLiteOpenHelper {
 			String groupName = permissionGroupInfo == null ? null : permissionGroupInfo.name;
 			try {
 				for (PermissionInfo permissionInfo : packageManager.queryPermissionsByGroup(groupName, 0)) {
-                    addPermission(db, getPermData(packageManager, groupName, permissionInfo));
+                    if (permissionInfo.group.equals(null))
+                        addPermission(db, getPermData(packageManager, permissionInfo));
+                    else
+                        addPermission(db, getPermData(packageManager, groupName, permissionInfo));
                 }
 			} catch (PackageManager.NameNotFoundException exception) {
 				Log.e(MithrilApplication.getDebugTag(), "Some error due to " + exception.getMessage());
@@ -1672,6 +1678,9 @@ public class MithrilDBHelper extends SQLiteOpenHelper {
         //TODO hanging logic! The code for inserting resource isn't done yet. This has to work in tandem with that! Do that ASAP...
         tempPermData.setResource(new Resource(words[words.length - 1]));
 
+        Log.e(MithrilApplication.getDebugTag(), "Perm flags original: " + permissionInfo.flags);
+        Log.e(MithrilApplication.getDebugTag(), "Perm flags original: " + PermissionInfo.FLAG_COSTS_MONEY);
+        Log.e(MithrilApplication.getDebugTag(), "Perm flags original: " + PermissionInfo.FLAG_INSTALLED);
         //Setting the protection level
         switch (permissionInfo.flags) {
             case PermissionInfo.FLAG_COSTS_MONEY:
@@ -1681,7 +1690,7 @@ public class MithrilDBHelper extends SQLiteOpenHelper {
                 tempPermData.setPermissionFlag(MithrilApplication.getPermissionFlagInstalled());
                 break;
             default:
-                tempPermData.setPermissionProtectionLevel(MithrilApplication.getPermissionFlagNone());
+                tempPermData.setPermissionFlag(MithrilApplication.getPermissionFlagNone());
                 break;
         }
         //Permission description can be null. We are preventing a null pointer exception here.
@@ -1722,6 +1731,9 @@ public class MithrilDBHelper extends SQLiteOpenHelper {
         tempPermData.setPermissionGroup(MithrilApplication.getPermissionNoGroup());
         tempPermData.setResource(new Resource("nada"));
 
+        Log.e(MithrilApplication.getDebugTag(), "Perm flags original: " + permissionInfo.flags);
+        Log.e(MithrilApplication.getDebugTag(), "Perm flags original: " + PermissionInfo.FLAG_COSTS_MONEY);
+        Log.e(MithrilApplication.getDebugTag(), "Perm flags original: " + PermissionInfo.FLAG_INSTALLED);
         //Setting the protection level
         switch (permissionInfo.flags) {
             case PermissionInfo.FLAG_COSTS_MONEY:
@@ -1731,7 +1743,7 @@ public class MithrilDBHelper extends SQLiteOpenHelper {
                 tempPermData.setPermissionFlag(MithrilApplication.getPermissionFlagInstalled());
                 break;
             default:
-                tempPermData.setPermissionProtectionLevel(MithrilApplication.getPermissionFlagNone());
+                tempPermData.setPermissionFlag(MithrilApplication.getPermissionFlagNone());
                 break;
         }
         //Permission description can be null. We are preventing a null pointer exception here.
