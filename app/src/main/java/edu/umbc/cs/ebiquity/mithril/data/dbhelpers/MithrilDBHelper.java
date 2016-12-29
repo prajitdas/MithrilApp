@@ -654,7 +654,7 @@ public class MithrilDBHelper extends SQLiteOpenHelper {
                 PackageManager packageManager = getContext().getPackageManager();
                 try {
                     PermissionInfo permissionInfo = packageManager.getPermissionInfo(appPermission.getKey(), PackageManager.GET_META_DATA);
-                    if (permissionInfo.group.equals(null))
+                    if (permissionInfo.group == null)
                         permId = addPermission(db, getPermData(packageManager, permissionInfo));
                     else
                         permId = addPermission(db, getPermData(packageManager, permissionInfo.group, permissionInfo));
@@ -1637,7 +1637,7 @@ public class MithrilDBHelper extends SQLiteOpenHelper {
 			String groupName = permissionGroupInfo == null ? null : permissionGroupInfo.name;
 			try {
 				for (PermissionInfo permissionInfo : packageManager.queryPermissionsByGroup(groupName, 0)) {
-                    if (permissionInfo.group.equals(null))
+                    if (permissionInfo.group == null)
                         addPermission(db, getPermData(packageManager, permissionInfo));
                     else
                         addPermission(db, getPermData(packageManager, groupName, permissionInfo));
