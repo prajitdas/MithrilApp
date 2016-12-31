@@ -666,6 +666,9 @@ public class MithrilDBHelper extends SQLiteOpenHelper {
             values.put(APPPERMGRANTED, appPermission.getValue());
             try {
                 insertedRowId = db.insertOrThrow(getAppPermTableName(), null, values);
+            } catch (SQLiteConstraintException e) {
+                Log.e(MithrilApplication.getDebugTag(), "there was a SQLite Constraint Exception " + values, e);
+                return -1;
             } catch (SQLException e) {
                 Log.e(MithrilApplication.getDebugTag(), "Error inserting " + values, e);
                 return -1;
