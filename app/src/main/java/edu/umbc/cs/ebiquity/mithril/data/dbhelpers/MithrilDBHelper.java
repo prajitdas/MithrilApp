@@ -652,7 +652,6 @@ public class MithrilDBHelper extends SQLiteOpenHelper {
         ContentValues values = new ContentValues();
 		values.put(APPPERMRESAPPID, appId);
         for (Map.Entry<String, Boolean> appPermission : appPermissions.entrySet()) {
-            Log.e(MithrilApplication.getDebugTag(), appPermission.getKey());
             long permId = findPermissionsByName(db, appPermission.getKey());
             if (permId == -1) {
                 PackageManager packageManager = getContext().getPackageManager();
