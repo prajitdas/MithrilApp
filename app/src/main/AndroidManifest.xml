@@ -24,6 +24,11 @@
         android:name="android.hardware.nfc"
         android:required="true" />
 
+    <!-- Google Places API Key -->
+    <meta-data
+        android:name="com.google.android.geo.API_KEY"
+        android:value="AIzaSyD90WROn0mNgMThb2lQimn-yl-zY7ICDF0" />
+
     <application
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"

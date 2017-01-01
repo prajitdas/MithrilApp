@@ -241,7 +241,7 @@ public class PrefsFragment extends PreferenceFragment implements
             public boolean onPreferenceClick(Preference preference) {
                 try {
                     Intent intent =
-                            new PlaceAutocomplete.IntentBuilder(PlaceAutocomplete.MODE_OVERLAY)
+                            new PlaceAutocomplete.IntentBuilder(PlaceAutocomplete.MODE_FULLSCREEN)
                                     .build(getActivity());
                     startActivityForResult(intent, PLACE_AUTOCOMPLETE_REQUEST_CODE_HOME);
                 } catch (GooglePlayServicesRepairableException e) {
@@ -259,7 +259,7 @@ public class PrefsFragment extends PreferenceFragment implements
             public boolean onPreferenceClick(Preference preference) {
                 try {
                     Intent intent =
-                            new PlaceAutocomplete.IntentBuilder(PlaceAutocomplete.MODE_OVERLAY)
+                            new PlaceAutocomplete.IntentBuilder(PlaceAutocomplete.MODE_FULLSCREEN)
                                     .build(getActivity());
                     startActivityForResult(intent, PLACE_AUTOCOMPLETE_REQUEST_CODE_WORK);
                 } catch (GooglePlayServicesRepairableException e) {
