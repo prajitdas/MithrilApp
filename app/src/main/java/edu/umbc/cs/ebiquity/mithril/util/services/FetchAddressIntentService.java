@@ -30,6 +30,7 @@ public class FetchAddressIntentService extends IntentService {
     protected ResultReceiver mReceiver;
     private Geocoder geocoder;
     private List<Address> addresses;
+    private String addressKey;
 
     /**
      * This constructor is required, and calls the super IntentService(String)
@@ -50,6 +51,7 @@ public class FetchAddressIntentService extends IntentService {
      */
     @Override
     protected void onHandleIntent(Intent intent) {
+        addressKey = intent.getStringExtra(MithrilApplication.ADDRESS_KEY);
         String errorMessage = "";
 
         mReceiver = intent.getParcelableExtra(MithrilApplication.RECEIVER);
@@ -147,6 +149,8 @@ public class FetchAddressIntentService extends IntentService {
     private void deliverResultToReceiver(int resultCode, String message) {
         Bundle bundle = new Bundle();
         bundle.putString(MithrilApplication.RESULT_DATA_KEY, message);
+        bundle.putString(MithrilApplication.ADDRESS_KEY, addressKey);
+
         mReceiver.send(resultCode, bundle);
     }
 }

@@ -12,7 +12,7 @@ import android.util.Log;
 import com.google.gson.Gson;
 
 import edu.umbc.cs.ebiquity.mithril.MithrilApplication;
-import edu.umbc.cs.ebiquity.mithril.util.specialtasks.errorsnexceptions.AddressKeyMissingError;
+import edu.umbc.cs.ebiquity.mithril.util.specialtasks.errorsnexceptions.AddressKeyMissingException;
 
 /**
  * Created by Prajit on 12/26/2016.
@@ -53,7 +53,7 @@ public class AddressResultReceiver extends ResultReceiver {
         mAddressRequested = resultData.getBoolean(MithrilApplication.ADDRESS_REQUESTED_EXTRA, false);
         Log.e(MithrilApplication.getDebugTag(), "Key error: " + resultData.getString(MithrilApplication.ADDRESS_KEY));
         if (resultData.getString(MithrilApplication.ADDRESS_KEY, null) == null)
-            throw new AddressKeyMissingError();
+            throw new AddressKeyMissingException();
         // Display the address string
         // or an error message sent from the intent service.
         Gson gson = new Gson();
