@@ -1,4 +1,4 @@
-package edu.umbc.cs.ebiquity.mithril.util.specialtasks.errors;
+package edu.umbc.cs.ebiquity.mithril.util.specialtasks.errorsnexceptions;
 
 /**
  * Created by Prajit on 12/26/2016.

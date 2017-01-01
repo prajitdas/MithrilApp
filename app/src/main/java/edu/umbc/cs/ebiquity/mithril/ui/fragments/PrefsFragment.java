@@ -39,7 +39,7 @@ import edu.umbc.cs.ebiquity.mithril.R;
 import edu.umbc.cs.ebiquity.mithril.util.receivers.AddressResultReceiver;
 import edu.umbc.cs.ebiquity.mithril.util.services.FetchAddressIntentService;
 import edu.umbc.cs.ebiquity.mithril.util.services.GeofenceTransitionsIntentService;
-import edu.umbc.cs.ebiquity.mithril.util.specialtasks.errors.GeofenceErrorMessages;
+import edu.umbc.cs.ebiquity.mithril.util.specialtasks.errorsnexceptions.GeofenceErrorMessages;
 
 import static android.content.Context.MODE_PRIVATE;
 
