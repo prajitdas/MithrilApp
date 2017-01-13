@@ -45,8 +45,8 @@
     <string name="title_activity_change_rule">Change Rule</string>
     <string name="title_activity_create_new_rule">Create New Rule</string>
 
-    <string name="button_true_violation">"That's a violation"</string>
-    <string name="button_false_violation">"Nah, that's fine"</string>
+    <string name="button_true_violation">"Violation"</string>
+    <string name="button_false_violation">"Not a violation"</string>
 
     <string name="action_delete_rule">Delete Rule</string>
     <string name="action_rule_ok">Rule is okay</string>
