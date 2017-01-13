@@ -6,10 +6,13 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
 import android.support.design.widget.Snackbar;
+import android.support.v4.content.ContextCompat;
+import android.support.v4.content.res.ResourcesCompat;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
@@ -19,6 +22,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.Toast;
 
+import java.util.Calendar;
 import java.util.List;
 
 import edu.umbc.cs.ebiquity.mithril.MithrilApplication;
@@ -52,6 +56,7 @@ public class MainActivity extends AppCompatActivity
     private NavigationView navigationView;
     private List<AppData> appDataItemsSelected = null;
     private FloatingActionButton fab;
+    private View headerView;
 
     private void loadAllAppsFragment() {
         Bundle data = new Bundle();
@@ -213,6 +218,33 @@ public class MainActivity extends AppCompatActivity
 
         navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
+
+        /**
+         * We wanted to show different banner at different times during the day. The following sub-section of the method takes care of that.
+         * http://stackoverflow.com/questions/33560219/in-android-how-to-set-navigation-drawer-header-image-and-name-programmatically-i
+         * As mentioned in the bug 190226, Since version 23.1.0 getting header layout view with: navigationView.findViewById(R.id.navigation_header_text) no longer works.
+         * A workaround is to inflate the headerview programatically and find view by ID from the inflated header view.
+         * mNavHeaderMain = (LinearLayout) findViewById(R.id.drawer_view);
+         */
+        headerView = navigationView.inflateHeaderView(R.layout.nav_header_main);
+        headerView.findViewById(R.id.drawer_view);
+        Calendar cal = Calendar.getInstance();
+        int hourofday = cal.get(Calendar.HOUR_OF_DAY);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            if (hourofday <= 12 && hourofday > 6)
+                headerView.setBackground(ResourcesCompat.getDrawable(getResources(), R.drawable.csee_morning, getTheme()));
+            else if (hourofday <= 18 && hourofday > 12)
+                headerView.setBackground(ResourcesCompat.getDrawable(getResources(), R.drawable.csee_afternoon, getTheme()));
+            else
+                headerView.setBackground(ResourcesCompat.getDrawable(getResources(), R.drawable.csee_evening, getTheme()));
+        } else {
+            if (hourofday <= 12 && hourofday > 6)
+                headerView.setBackground(ContextCompat.getDrawable(getApplicationContext(), R.drawable.csee_morning));
+            else if (hourofday <= 18 && hourofday > 12)
+                headerView.setBackground(ContextCompat.getDrawable(getApplicationContext(), R.drawable.csee_afternoon));
+            else
+                headerView.setBackground(ContextCompat.getDrawable(getApplicationContext(), R.drawable.csee_evening));
+        }
     }
 
     private void defaultFragmentLoad() {
