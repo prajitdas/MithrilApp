@@ -62,6 +62,7 @@
                 android:paddingStart="5dp"
                 android:text="@string/app_version_placeholder_text"
                 android:textAppearance="@android:style/TextAppearance.Holo.Small"
+                android:textColor="@color/colorAccent"
                 android:textSize="15sp" />
 
             <!--<CheckBox-->

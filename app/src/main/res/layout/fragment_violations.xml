@@ -39,6 +39,7 @@
                 android:id="@+id/violationText"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_toLeftOf="@+id/contextImage"
                 android:layout_toRightOf="@+id/violatingAppIcon"
                 android:fontFamily="josephine-sans"
                 android:paddingEnd="5dp"
@@ -46,8 +47,8 @@
                 android:paddingRight="5dp"
                 android:paddingStart="5dp"
                 android:text="@string/placeholder_text_violation_info"
-                android:textColor="@color/lightslategrey"
-                android:textSize="28dp" />
+                android:textColor="@color/colorPrimaryDark"
+                android:textSize="22dp" />
 
             <ImageView
                 android:id="@+id/contextImage"
@@ -70,6 +71,7 @@
                 android:layout_alignParentLeft="true"
                 android:layout_alignParentStart="true"
                 android:layout_below="@+id/violatingAppIcon"
+                android:backgroundTint="@color/colorButton"
                 android:paddingEnd="5dp"
                 android:paddingLeft="5dp"
                 android:paddingRight="5dp"
@@ -84,6 +86,7 @@
                 android:layout_alignParentEnd="true"
                 android:layout_alignParentRight="true"
                 android:layout_below="@+id/violatingAppIcon"
+                android:backgroundTint="@color/colorButton"
                 android:paddingEnd="5dp"
                 android:paddingLeft="5dp"
                 android:paddingRight="5dp"
