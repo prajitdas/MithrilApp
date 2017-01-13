@@ -18,6 +18,7 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Toast;
@@ -219,6 +220,10 @@ public class MainActivity extends AppCompatActivity
         navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
 
+        applyHeaderView();
+    }
+
+    private void applyHeaderView() {
         /**
          * We wanted to show different banner at different times during the day. The following sub-section of the method takes care of that.
          * http://stackoverflow.com/questions/33560219/in-android-how-to-set-navigation-drawer-header-image-and-name-programmatically-i
@@ -230,17 +235,18 @@ public class MainActivity extends AppCompatActivity
         headerView.findViewById(R.id.drawer_view);
         Calendar cal = Calendar.getInstance();
         int hourofday = cal.get(Calendar.HOUR_OF_DAY);
+        Log.d(MithrilApplication.getDebugTag(), Integer.toString(hourofday));
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            if (hourofday <= 12 && hourofday > 6)
+            if (hourofday < 12 && hourofday >= 6)
                 headerView.setBackground(ResourcesCompat.getDrawable(getResources(), R.drawable.csee_morning, getTheme()));
-            else if (hourofday <= 18 && hourofday > 12)
+            else if (hourofday < 18 && hourofday >= 12)
                 headerView.setBackground(ResourcesCompat.getDrawable(getResources(), R.drawable.csee_afternoon, getTheme()));
             else
                 headerView.setBackground(ResourcesCompat.getDrawable(getResources(), R.drawable.csee_evening, getTheme()));
         } else {
-            if (hourofday <= 12 && hourofday > 6)
+            if (hourofday < 12 && hourofday >= 6)
                 headerView.setBackground(ContextCompat.getDrawable(getApplicationContext(), R.drawable.csee_morning));
-            else if (hourofday <= 18 && hourofday > 12)
+            else if (hourofday < 18 && hourofday >= 12)
                 headerView.setBackground(ContextCompat.getDrawable(getApplicationContext(), R.drawable.csee_afternoon));
             else
                 headerView.setBackground(ContextCompat.getDrawable(getApplicationContext(), R.drawable.csee_evening));
