@@ -12,7 +12,7 @@ import android.util.Log;
 import com.google.gson.Gson;
 
 import edu.umbc.cs.ebiquity.mithril.MithrilApplication;
-import edu.umbc.cs.ebiquity.mithril.util.specialtasks.errors.AddressKeyMissingError;
+import edu.umbc.cs.ebiquity.mithril.util.specialtasks.errorsnexceptions.AddressKeyMissingError;
 
 /**
  * Created by Prajit on 12/26/2016.

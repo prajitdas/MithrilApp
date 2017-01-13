@@ -36,7 +36,7 @@ import java.util.List;
 
 import edu.umbc.cs.ebiquity.mithril.R;
 import edu.umbc.cs.ebiquity.mithril.ui.fragments.PrefsFragment;
-import edu.umbc.cs.ebiquity.mithril.util.specialtasks.errors.GeofenceErrorMessages;
+import edu.umbc.cs.ebiquity.mithril.util.specialtasks.errorsnexceptions.GeofenceErrorMessages;
 
 /**
  * Listener for geofence transition changes.

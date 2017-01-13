@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
+import android.content.pm.PackageManager.NameNotFoundException;
 import android.content.pm.PermissionGroupInfo;
 import android.content.pm.PermissionInfo;
 import android.database.Cursor;
@@ -42,6 +43,7 @@ import edu.umbc.cs.ebiquity.mithril.data.model.rules.context.contextpieces.Seman
 import edu.umbc.cs.ebiquity.mithril.data.model.rules.context.contextpieces.SemanticTime;
 import edu.umbc.cs.ebiquity.mithril.data.model.rules.protectedresources.Resource;
 import edu.umbc.cs.ebiquity.mithril.data.model.rules.requesters.Requester;
+import edu.umbc.cs.ebiquity.mithril.util.specialtasks.errorsnexceptions.PermissionWasUpdateException;
 
 public class MithrilDBHelper extends SQLiteOpenHelper {
 	// Database declarations
@@ -644,6 +646,7 @@ public class MithrilDBHelper extends SQLiteOpenHelper {
 
 	//TODO We have to do a join across 3 tables and return the permissions for an app
 	public long addAppPerm(SQLiteDatabase db, AppData anAppData, long appId) {
+        int flags = PackageManager.GET_META_DATA;
         Map<String, Boolean> appPermissions = anAppData.getPermissions();
         long insertedRowId = -1;
         ContentValues values = new ContentValues();
@@ -652,20 +655,33 @@ public class MithrilDBHelper extends SQLiteOpenHelper {
             long permId = findPermissionsByName(db, appPermission.getKey());
             if (permId == -1) {
                 PackageManager packageManager = getContext().getPackageManager();
+                PermissionInfo permissionInfo = null;
+
                 try {
-                    PermissionInfo permissionInfo = packageManager.getPermissionInfo(appPermission.getKey(), PackageManager.GET_META_DATA);
+                    permissionInfo = packageManager.getPermissionInfo(appPermission.getKey(), flags);
+                } catch (NameNotFoundException e) {
+                    Log.e(MithrilApplication.getDebugTag(), "Something wrong " + e.getMessage());
+                    continue;
+                    //TODO This is a big problem. Why are we not getting the permission info for certain installed permissions???
+                }
+
+                try {
                     if (permissionInfo.group == null)
                         permId = addPermission(db, getPermData(packageManager, permissionInfo));
                     else
                         permId = addPermission(db, getPermData(packageManager, permissionInfo.group, permissionInfo));
-                } catch (PackageManager.NameNotFoundException exception) {
-                    Log.e(MithrilApplication.getDebugTag(), "Some error due to perhaps group info being not present " + exception.getMessage());
+                } catch (PermissionWasUpdateException e) {
+                    Log.e(MithrilApplication.getDebugTag(), "So the permission was potentially updated, search for the id again " + e.getMessage());
+                    permId = findPermissionsByName(db, appPermission.getKey());
                 }
             }
             values.put(APPPERMRESPERID, permId);
             values.put(APPPERMGRANTED, appPermission.getValue());
             try {
                 insertedRowId = db.insertOrThrow(getAppPermTableName(), null, values);
+            } catch (SQLiteConstraintException e) {
+                Log.e(MithrilApplication.getDebugTag(), "there was a SQLite Constraint Exception " + values, e);
+                return -1;
             } catch (SQLException e) {
                 Log.e(MithrilApplication.getDebugTag(), "Error inserting " + values, e);
                 return -1;
@@ -674,7 +690,7 @@ public class MithrilDBHelper extends SQLiteOpenHelper {
         return insertedRowId;
 	}
 
-	public long addPermission(SQLiteDatabase db, PermData aPermData) {
+    public long addPermission(SQLiteDatabase db, PermData aPermData) throws PermissionWasUpdateException {
         long insertedRowId = -1;
         ContentValues values = new ContentValues();
 		values.put(PERMNAME, aPermData.getPermissionName());
@@ -689,7 +705,7 @@ public class MithrilDBHelper extends SQLiteOpenHelper {
             insertedRowId = db.insertOrThrow(getPermissionsTableName(), null, values);
         } catch (SQLiteConstraintException e) {
             updateConflictedGooglePermissions(db, aPermData);
-            return -1;
+            throw new PermissionWasUpdateException("Exception occured for " + aPermData.getPermissionName());
         } catch (SQLException e) {
             Log.e(MithrilApplication.getDebugTag(), "Error inserting " + values, e);
             return -1;
@@ -1624,7 +1640,8 @@ public class MithrilDBHelper extends SQLiteOpenHelper {
 	private void loadAndroidPermissionsIntoDB(SQLiteDatabase db) {
 //		Log.d(MithrilApplication.getDebugTag(), "I came to loadAndroidPermissionsIntoDB");
         PackageManager packageManager = getContext().getPackageManager();
-        int flags = PackageManager.GET_META_DATA;
+        int flags = PackageManager.GET_META_DATA |
+                PackageManager.GET_PERMISSIONS;
 
 		List<PermissionGroupInfo> permisisonGroupInfoList = packageManager.getAllPermissionGroups(flags);
 //		Log.d(MithrilApplication.getDebugTag(), "Size is: " + Integer.toString(permisisonGroupInfoList.size()));
@@ -1639,10 +1656,12 @@ public class MithrilDBHelper extends SQLiteOpenHelper {
                     else
                         addPermission(db, getPermData(packageManager, groupName, permissionInfo));
                 }
-			} catch (PackageManager.NameNotFoundException exception) {
-				Log.e(MithrilApplication.getDebugTag(), "Some error due to " + exception.getMessage());
-			}
-		}
+            } catch (NameNotFoundException exception) {
+                Log.e(MithrilApplication.getDebugTag(), "Some error due to " + exception.getMessage());
+            } catch (PermissionWasUpdateException exception) {
+                Log.e(MithrilApplication.getDebugTag(), "Ignore this? " + exception.getMessage());
+            }
+        }
 	}
 
     public PermData getPermData(PackageManager packageManager, String groupName, PermissionInfo permissionInfo) {
