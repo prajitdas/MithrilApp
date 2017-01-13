@@ -7,12 +7,10 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.ResultReceiver;
-import android.util.Log;
 
 import com.google.gson.Gson;
 
 import edu.umbc.cs.ebiquity.mithril.MithrilApplication;
-import edu.umbc.cs.ebiquity.mithril.util.specialtasks.errorsnexceptions.AddressKeyMissingError;
 
 /**
  * Created by Prajit on 12/26/2016.
@@ -51,9 +49,11 @@ public class AddressResultReceiver extends ResultReceiver {
     @Override
     protected void onReceiveResult(int resultCode, Bundle resultData) {
         mAddressRequested = resultData.getBoolean(MithrilApplication.ADDRESS_REQUESTED_EXTRA, false);
-        Log.e(MithrilApplication.getDebugTag(), "Key error: " + resultData.getString(MithrilApplication.ADDRESS_KEY));
-        if (resultData.getString(MithrilApplication.ADDRESS_KEY, null) == null)
-            throw new AddressKeyMissingError();
+//        Log.e(MithrilApplication.getDebugTag(), "Key error: " + resultData.getString(MithrilApplication.ADDRESS_KEY));
+        String addressKey = resultData.getString(MithrilApplication.ADDRESS_KEY, null);
+        if (addressKey.equals(null))
+            addressKey = MithrilApplication.getPrefKeyCurrentAddress();
+//            throw new AddressKeyMissingError();
         // Display the address string
         // or an error message sent from the intent service.
         Gson gson = new Gson();
@@ -66,7 +66,7 @@ public class AddressResultReceiver extends ResultReceiver {
 //                Log.d(MithrilApplication.getDebugTag(), getString(R.string.address_found) + ":" + mAddressOutput);
 //                Toast.makeText(context, getString(R.string.address_found) + ":" + mAddressOutput, Toast.LENGTH_LONG).show();
             storeInSharedPreferences(resultData.getString(
-                    MithrilApplication.ADDRESS_KEY),
+                    addressKey),
                     mAddressOutput);
         }
         // Reset. Enable the Fetch Address button and stop showing the progress bar.
