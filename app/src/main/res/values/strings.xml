@@ -114,7 +114,7 @@
 
     <string name="pref_home_location_key">homeLocation</string>
     <string name="pref_home_location_title">Save home location</string>
-    <string name="pref_home_location_summary">931 Palladi Dr., Halethorpe, MD, USA, 21227</string>
+    <string name="pref_home_location_summary">1000 Hilltop Circle, Catonsville, MD, USA, 21250</string>
 
     <string name="pref_work_location_key">workLocation</string>
     <string name="pref_work_location_summary">1000 Hilltop Cir., Catonsville MD, USA, 21250</string>
