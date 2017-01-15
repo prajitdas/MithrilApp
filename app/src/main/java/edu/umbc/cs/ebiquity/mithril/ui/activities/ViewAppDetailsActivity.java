@@ -1,30 +1,25 @@
 package edu.umbc.cs.ebiquity.mithril.ui.activities;
 
 import android.app.FragmentManager;
-import android.content.Intent;
 import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageManager;
 import android.content.pm.PackageManager.NameNotFoundException;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.view.View;
-import android.view.View.OnClickListener;
-import android.widget.ImageButton;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import edu.umbc.cs.ebiquity.mithril.MithrilApplication;
 import edu.umbc.cs.ebiquity.mithril.R;
 import edu.umbc.cs.ebiquity.mithril.data.model.PermData;
-import edu.umbc.cs.ebiquity.mithril.ui.fragments.AppDetailFragment;
+import edu.umbc.cs.ebiquity.mithril.ui.fragments.viewappdetailsactivityfragments.AppDetailFragment;
 
 public class ViewAppDetailsActivity extends AppCompatActivity
         implements AppDetailFragment.OnListFragmentInteractionListener {
     private PackageManager packageManager;
-    private ImageButton mImgBtnLaunchApp;
-    private ImageButton mImgBtnAppIsGood;
-    private ImageButton mImgBtnAppIsBad;
+    //    private ImageButton mImgBtnLaunchApp;
+//    private ImageButton mImgBtnAppIsGood;
+//    private ImageButton mImgBtnAppIsBad;
     private TextView mTxtViewAppName;
     private String packageName;
     private Toolbar toolbar;
@@ -50,9 +45,9 @@ public class ViewAppDetailsActivity extends AppCompatActivity
 
         packageName = getIntent().getStringExtra(MithrilApplication.getPrefKeyAppPkgName());
 
-        mImgBtnLaunchApp = (ImageButton) findViewById(R.id.launch_app_btn);
-        mImgBtnAppIsGood = (ImageButton) findViewById(R.id.app_is_good_btn);
-        mImgBtnAppIsBad = (ImageButton) findViewById(R.id.app_is_bad_btn);
+//        mImgBtnLaunchApp = (ImageButton) findViewById(R.id.launch_app_btn);
+//        mImgBtnAppIsGood = (ImageButton) findViewById(R.id.app_is_good_btn);
+//        mImgBtnAppIsBad = (ImageButton) findViewById(R.id.app_is_bad_btn);
 
         mTxtViewAppName = (TextView) findViewById(R.id.textViewAppDetails);
         ApplicationInfo applicationInfo;
@@ -92,48 +87,47 @@ public class ViewAppDetailsActivity extends AppCompatActivity
     }
 
     private void setOnClickListeners() {
-        mImgBtnLaunchApp.setOnClickListener(new OnClickListener() {
-
-            @Override
-            public void onClick(View v) {
-                Intent intent = packageManager.getLaunchIntentForPackage(packageName);
-                if (intent != null) {
-                    intent.addCategory(Intent.CATEGORY_LAUNCHER);
-                    startActivity(intent);
-                } else {
-                    Toast.makeText(
-                            v.getContext(),
-                            "The application " + packageName + " was not launchable! Possibly because it's not meant to be!",
-                            Toast.LENGTH_LONG)
-                            .show();
-                }
-            }
-        });
-
-        //TODO add the functionality of feedback
-        mImgBtnAppIsGood.setOnClickListener(new OnClickListener() {
-
-            @Override
-            public void onClick(View v) {
-                Toast.makeText(
-                        v.getContext(),
-                        "Thanks for your feedback on app: " + packageName + " but right now I will be doing nothing with it. Sorry!",
-                        Toast.LENGTH_SHORT)
-                        .show();
-            }
-        });
-
-        mImgBtnAppIsBad.setOnClickListener(new OnClickListener() {
-
-            @Override
-            public void onClick(View v) {
-                Toast.makeText(
-                        v.getContext(),
-                        "Thanks for your feedback on app: " + packageName + " but right now I will be doing nothing with it. Sorry!",
-                        Toast.LENGTH_SHORT)
-                        .show();
-            }
-        });
+//        mImgBtnLaunchApp.setOnClickListener(new OnClickListener() {
+//
+//            @Override
+//            public void onClick(View v) {
+//                Intent intent = packageManager.getLaunchIntentForPackage(packageName);
+//                if (intent != null) {
+//                    intent.addCategory(Intent.CATEGORY_LAUNCHER);
+//                    startActivity(intent);
+//                } else {
+//                    Toast.makeText(
+//                            v.getContext(),
+//                            "The application " + packageName + " was not launchable! Possibly because it's not meant to be!",
+//                            Toast.LENGTH_LONG)
+//                            .show();
+//                }
+//            }
+//        });
+//
+//        mImgBtnAppIsGood.setOnClickListener(new OnClickListener() {
+//
+//            @Override
+//            public void onClick(View v) {
+//                Toast.makeText(
+//                        v.getContext(),
+//                        "Thanks for your feedback on app: " + packageName + " but right now I will be doing nothing with it. Sorry!",
+//                        Toast.LENGTH_SHORT)
+//                        .show();
+//            }
+//        });
+//
+//        mImgBtnAppIsBad.setOnClickListener(new OnClickListener() {
+//
+//            @Override
+//            public void onClick(View v) {
+//                Toast.makeText(
+//                        v.getContext(),
+//                        "Thanks for your feedback on app: " + packageName + " but right now I will be doing nothing with it. Sorry!",
+//                        Toast.LENGTH_SHORT)
+//                        .show();
+//            }
+//        });
     }
 
     @Override

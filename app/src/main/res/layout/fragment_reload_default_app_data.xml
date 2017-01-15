@@ -2,7 +2,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".ui.fragments.ReloadDefaultDataFragment">
+    tools:context=".ui.fragments.mainactivityfragments.ReloadDefaultDataFragment">
 
     <Button
         android:id="@+id/buttonReloadDefaultAppData"
@@ -15,6 +15,7 @@
         android:backgroundTint="@color/colorButton"
         android:text="@string/reset_app"
         android:textAppearance="@android:style/TextAppearance.Material.Large"
-        android:textColor="@color/colorAccent" />
+        android:textColor="@color/colorAccent"
+        android:theme="@style/AppTheme.Button" />
 
 </RelativeLayout>

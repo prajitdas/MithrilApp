@@ -35,7 +35,9 @@
         android:layout_alignParentBottom="true"
         android:layout_alignParentRight="true"
         android:backgroundTint="@color/colorButton"
-        android:src="@drawable/thumb_down" />
+        android:src="@drawable/thumb_down"
+        android:theme="@style/AppTheme.Button"
+        android:visibility="gone" />
 
     <ImageButton
         android:id="@+id/app_is_good_btn"
@@ -44,7 +46,9 @@
         android:layout_alignParentBottom="true"
         android:layout_alignParentLeft="true"
         android:backgroundTint="@color/colorButton"
-        android:src="@drawable/thumb_up" />
+        android:src="@drawable/thumb_up"
+        android:theme="@style/AppTheme.Button"
+        android:visibility="gone" />
 
     <ImageButton
         android:id="@+id/launch_app_btn"
@@ -53,13 +57,16 @@
         android:layout_alignParentBottom="true"
         android:layout_centerHorizontal="true"
         android:backgroundTint="@color/colorButton"
-        android:src="@drawable/launch" />
+        android:src="@drawable/launch"
+        android:theme="@style/AppTheme.Button"
+        android:visibility="gone" />
 
+    <!-- We do not show the above buttons for apps anymore :( -->
+    <!--android:layout_above="@id/app_is_bad_btn"-->
     <ScrollView
         android:id="@+id/app_details_scroll_view"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_above="@id/app_is_bad_btn"
         android:layout_below="@id/textViewAppDetails"
         android:fadeScrollbars="false"
         android:fillViewport="true"

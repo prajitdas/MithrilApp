@@ -1,8 +1,10 @@
-package edu.umbc.cs.ebiquity.mithril.ui.fragments;
+package edu.umbc.cs.ebiquity.mithril.ui.fragments.viewappdetailsactivityfragments;
 
 import android.app.Fragment;
 import android.content.Context;
+import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
+import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -11,11 +13,14 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
+import edu.umbc.cs.ebiquity.mithril.MithrilApplication;
 import edu.umbc.cs.ebiquity.mithril.R;
+import edu.umbc.cs.ebiquity.mithril.data.dbhelpers.MithrilDBHelper;
 import edu.umbc.cs.ebiquity.mithril.data.model.PermData;
-import edu.umbc.cs.ebiquity.mithril.ui.adapters.InstalledPermissionRecyclerViewAdapter;
+import edu.umbc.cs.ebiquity.mithril.ui.adapters.AppDetailRecyclerViewAdapter;
 
 /**
  * A fragment representing a list of Items.
@@ -23,26 +28,33 @@ import edu.umbc.cs.ebiquity.mithril.ui.adapters.InstalledPermissionRecyclerViewA
  * Activities containing this fragment MUST implement the {@link OnListFragmentInteractionListener}
  * interface.
  */
-public class ShowPermissionsFragment extends Fragment {
-
+public class AppDetailFragment extends Fragment {
     // TODO: Customize parameter argument names
     private static final String ARG_COLUMN_COUNT = "column-count";
+    private MithrilDBHelper mithrilDBHelper;
+    private SQLiteDatabase mithrilDB;
     // TODO: Customize parameters
     private int mColumnCount = 1;
     private OnListFragmentInteractionListener mListener;
-    private List<PermData> permDataList;
+    private View view;
+
+    /**
+     * An array of app permissions
+     */
+    private List<PermData> appPerms = new ArrayList<>();
+    private String mAppPackageName;
 
     /**
      * Mandatory empty constructor for the fragment manager to instantiate the
      * fragment (e.g. upon screen orientation changes).
      */
-    public ShowPermissionsFragment() {
+    public AppDetailFragment() {
     }
 
     // TODO: Customize parameter initialization
     @SuppressWarnings("unused")
-    public static ShowPermissionsFragment newInstance(int columnCount) {
-        ShowPermissionsFragment fragment = new ShowPermissionsFragment();
+    public static AppDetailFragment newInstance(int columnCount) {
+        AppDetailFragment fragment = new AppDetailFragment();
         Bundle args = new Bundle();
         args.putInt(ARG_COLUMN_COUNT, columnCount);
         fragment.setArguments(args);
@@ -55,16 +67,21 @@ public class ShowPermissionsFragment extends Fragment {
 
         if (getArguments() != null) {
             mColumnCount = getArguments().getInt(ARG_COLUMN_COUNT);
+            mAppPackageName = getArguments().getString(MithrilApplication.getPrefKeyAppPkgName());
         }
+//        Log.d(MithrilApplication.getDebugTag(), mAppPackageName);
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_permissions_list, container, false);
+        view = inflater.inflate(R.layout.fragment_app_detail_list, container, false);
+        initData();
+        iniViews();
+        return view;
+    }
 
-        permDataList = new ArrayList<PermData>();
-
+    private void iniViews() {
         // Set the adapter
         if (view instanceof RecyclerView) {
             Context context = view.getContext();
@@ -74,9 +91,19 @@ public class ShowPermissionsFragment extends Fragment {
             } else {
                 recyclerView.setLayoutManager(new GridLayoutManager(context, mColumnCount));
             }
-            recyclerView.setAdapter(new InstalledPermissionRecyclerViewAdapter(permDataList, mListener));
+            recyclerView.setAdapter(new AppDetailRecyclerViewAdapter(appPerms, mListener));
+            recyclerView.setHasFixedSize(true);
+            recyclerView.setItemAnimator(new DefaultItemAnimator());
         }
-        return view;
+    }
+
+    private void initData() {
+        mithrilDBHelper = new MithrilDBHelper(view.getContext());
+        mithrilDB = mithrilDBHelper.getWritableDatabase();
+        appPerms = mithrilDBHelper.findAppPermissionsByAppPackageName(mithrilDB, mAppPackageName);
+        mithrilDB.close();
+
+        Collections.sort(appPerms);
     }
 
     @Override

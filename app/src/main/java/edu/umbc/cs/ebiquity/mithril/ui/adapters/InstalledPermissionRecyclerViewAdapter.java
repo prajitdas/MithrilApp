@@ -13,7 +13,7 @@ import java.util.List;
 import edu.umbc.cs.ebiquity.mithril.MithrilApplication;
 import edu.umbc.cs.ebiquity.mithril.R;
 import edu.umbc.cs.ebiquity.mithril.data.model.PermData;
-import edu.umbc.cs.ebiquity.mithril.ui.fragments.ShowPermissionsFragment.OnListFragmentInteractionListener;
+import edu.umbc.cs.ebiquity.mithril.ui.fragments.mainactivityfragments.ShowPermissionsFragment.OnListFragmentInteractionListener;
 
 /**
  * {@link RecyclerView.Adapter} that can display a {@link PermData} and makes a call to the
