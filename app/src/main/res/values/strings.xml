@@ -13,9 +13,9 @@
     <string name="bcastreceivers">Broadcast receivers</string>
     <string name="contentproviders">Content providers</string>
 
-    <string name="help_text">Mithril Project: My PhD!</string>
-    <string name="help_feedback_menu_text">Help &amp; Feedback</string>
-    <string name="title_activity_help_feedback">Help &amp; Feedback</string>
+    <string name="project_details_txt">Mithril: Android access control project</string>
+    <!-- TODO Finish the about text. This will inform the user of what is going on if they want to check! -->
+    <string name="about_txt">We collect anonymous feedback about your privacy preferences.</string>
 
     <string name="app_icon_description">This is an app\'s icon</string>
     <string name="app_name_placeholder_text">Some app</string>
@@ -189,4 +189,8 @@
     <string name="unknown_geofence_transition">Unknown Transition</string>
 
     <string name="geofence_transition_notification_text">Click notification to return to app</string>
+
+    <string name="title_activity_user_agreement">MithrilAC: Imp., please read</string>
+    <string name="dummy_button">Dummy Button</string>
+    <string name="dummy_content">DUMMY\nCONTENT</string>
 </resources>

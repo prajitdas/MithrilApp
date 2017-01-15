@@ -16,6 +16,7 @@
     <uses-permission android:name="android.permission.NFC" />
     <!-- <uses-permission android:name="android.permission.READ_LOGS" /> -->
 
+
     <!-- Needed only if your app targets Android 5.0 (API level 21) or higher. -->
     <uses-feature
         android:name="android.hardware.location.gps"
@@ -36,9 +37,10 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <activity
-            android:name=".ui.activities.MainActivity"
-            android:label="@string/short_app_name"
-            android:theme="@style/AppTheme.NoActionBar">
+            android:name=".ui.activities.UserAgreementActivity"
+            android:configChanges="orientation|keyboardHidden|screenSize"
+            android:label="@string/title_activity_user_agreement"
+            android:theme="@style/FullscreenTheme">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -46,15 +48,19 @@
             </intent-filter>
         </activity>
         <activity
+            android:name=".ui.activities.MainActivity"
+            android:label="@string/short_app_name"
+            android:theme="@style/AppTheme.NoActionBar"></activity>
+        <activity
             android:name=".ui.activities.ViewAppDetailsActivity"
             android:label="@string/title_activity_view_app_detail"
             android:parentActivityName=".ui.activities.MainActivity"
             android:theme="@style/AppTheme.NoActionBar">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value="edu.umbc.cs.ebiquity.mithril.ui.activities.MainActivity" />
+                android:value=".ui.activities.MainActivity" />
         </activity>
-        <!-- This test semanticActivity was used for the IEEE CIC paper. This will possibly removed or modified in the future. -->
+        <!-- This TestMainActivity was used for the IEEE CIC paper. This will possibly be removed or modified in the future. -->
         <activity
             android:name=".ui.activities.TestMainActivity"
             android:label="@string/title_activity_test_main"
@@ -110,7 +116,6 @@
             android:exported="false" />
         <service
             android:name=".util.services.GeofenceTransitionsIntentService"
-            android:exported="false"></service>
+            android:exported="false" />
     </application>
-
 </manifest>
