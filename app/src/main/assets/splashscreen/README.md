@@ -4,10 +4,10 @@
 
 * Privacy is a core tenant of the Wikimedia movement. [Photo](https://commons.wikimedia.org/wiki/File:Privacy_written_in_tiles.jpg) by [Owen Moore](https://www.flickr.com/photos/132053576@N03/17765606909/), freely licensed under [CC BY 2.0](https://creativecommons.org/licenses/by/2.0/deed.en).
 
-## For International_justice_and_privacy.jpg: 
+## For [International_justice_and_privacy.jpg](https://commons.wikimedia.org/wiki/File:International_justice_and_privacy.jpg): 
 
 ### Summary:
-* Description: English: Electronic Frontier Foundation (eff.org) graphic created by EFF Senior Designer Hugh D'Andrade to illustrate EFF's work for international human rights against mass surveillance.
+* Description: English - Electronic Frontier Foundation (eff.org) graphic created by EFF Senior Designer Hugh D'Andrade to illustrate EFF's work for international human rights against mass surveillance.
 * Date:	5 September 2014, 13:01:20
 * Source: Own work
 * Author: [EFF-Graphics](https://commons.wikimedia.org/wiki/User:EFF-Graphics)
