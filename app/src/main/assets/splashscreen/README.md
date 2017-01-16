@@ -1,6 +1,6 @@
 # License information
 
-## For privacy_written_in_tiles.jpg: 
+## For [privacy_written_in_tiles.jpg](https://commons.wikimedia.org/wiki/File:Privacy_written_in_tiles.jpg): 
 
 * Privacy is a core tenant of the Wikimedia movement. [Photo](https://commons.wikimedia.org/wiki/File:Privacy_written_in_tiles.jpg) by [Owen Moore](https://www.flickr.com/photos/132053576@N03/17765606909/), freely licensed under [CC BY 2.0](https://creativecommons.org/licenses/by/2.0/deed.en).
 
