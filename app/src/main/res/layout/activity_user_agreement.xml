@@ -2,22 +2,90 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#0099cc"
-    tools:context=".ui.activities.UserAgreementActivity">
+    android:background="@color/colorPrimary"
+    tools:context="edu.umbc.cs.ebiquity.mithril.ui.activities.UserAgreementActivity">
 
     <!-- The primary full-screen view. This can be replaced with whatever view
          is needed to present your content, e.g. VideoView, SurfaceView,
          TextureView, etc. -->
-    <TextView
-        android:id="@+id/fullscreen_content"
+    <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:gravity="center"
-        android:keepScreenOn="true"
-        android:text="@string/dummy_content"
-        android:textColor="#33b5e5"
-        android:textSize="50sp"
-        android:textStyle="bold" />
+        android:keepScreenOn="true">
+
+        <android.support.v7.widget.CardView xmlns:card_view="http://schemas.android.com/apk/res-auto"
+            android:id="@+id/projectDetailsTextCardView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentTop="true"
+            android:layout_marginBottom="@dimen/card_view_margin"
+            android:layout_marginEnd="@dimen/card_view_margin"
+            android:layout_marginStart="@dimen/card_view_margin"
+            android:layout_marginTop="@dimen/card_view_margin"
+            android:elevation="@dimen/card_view_margin"
+            card_view:cardCornerRadius="4dp">
+
+            <TextView
+                android:id="@+id/feedbackHintTextView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentEnd="true"
+                android:layout_alignParentStart="true"
+                android:paddingBottom="@dimen/activity_vertical_margin"
+                android:paddingLeft="@dimen/activity_horizontal_margin"
+                android:paddingRight="@dimen/activity_horizontal_margin"
+                android:paddingTop="@dimen/activity_vertical_margin"
+                android:text="@string/project_details_txt"
+                android:textAlignment="textStart"
+                android:textAppearance="@android:style/TextAppearance.Holo.Medium"
+                android:textColor="@color/colorPrimaryDark"
+                android:textSize="20sp" />
+        </android.support.v7.widget.CardView>
+
+        <android.support.v7.widget.CardView xmlns:card_view="http://schemas.android.com/apk/res-auto"
+            android:id="@+id/aboutTextCardView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/projectDetailsTextCardView"
+            android:layout_marginBottom="@dimen/card_view_margin"
+            android:layout_marginEnd="@dimen/card_view_margin"
+            android:layout_marginStart="@dimen/card_view_margin"
+            android:layout_marginTop="@dimen/card_view_margin"
+            android:elevation="@dimen/card_view_margin"
+            card_view:cardCornerRadius="10dp">
+
+            <TextView
+                android:id="@+id/aboutTextTextView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentEnd="true"
+                android:layout_alignParentStart="true"
+                android:layout_alignParentTop="true"
+                android:paddingBottom="@dimen/activity_vertical_margin"
+                android:paddingLeft="@dimen/activity_horizontal_margin"
+                android:paddingRight="@dimen/activity_horizontal_margin"
+                android:paddingTop="@dimen/activity_vertical_margin"
+                android:text="@string/user_agreement_information_text"
+                android:textAlignment="textStart"
+                android:textAppearance="@android:style/TextAppearance.Holo.Medium"
+                android:textColor="@color/colorPrimaryDark"
+                android:textSize="20sp" />
+
+        </android.support.v7.widget.CardView>
+
+        <TextView
+            android:id="@+id/fullscreen_user_agreement_consent_TextView"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_alignParentEnd="true"
+            android:layout_alignParentStart="true"
+            android:layout_alignParentTop="true"
+            android:keepScreenOn="true"
+            android:text="@string/fullscreen_user_agreement_consent_text"
+            android:textColor="@color/whitesmoke"
+            android:textSize="25sp"
+            android:textStyle="bold" />
+    </RelativeLayout>
 
     <!-- This FrameLayout insets its children based on system windows using
          android:fitsSystemWindows. -->
@@ -37,12 +105,13 @@
             tools:ignore="UselessParent">
 
             <Button
-                android:id="@+id/dummy_button"
-                style="?metaButtonBarButtonStyle"
+                android:id="@+id/fullscreen_user_agreement_Button"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:text="@string/dummy_button" />
+                android:text="@string/fullscreen_user_agreement_button_label"
+                android:textSize="20sp"
+                android:theme="@style/AppTheme.Button" />
 
         </LinearLayout>
     </FrameLayout>

@@ -13,10 +13,6 @@
     <string name="bcastreceivers">Broadcast receivers</string>
     <string name="contentproviders">Content providers</string>
 
-    <string name="project_details_txt">Mithril: Android access control project</string>
-    <!-- TODO Finish the about text. This will inform the user of what is going on if they want to check! -->
-    <string name="about_txt">We collect anonymous feedback about your privacy preferences.</string>
-
     <string name="app_icon_description">This is an app\'s icon</string>
     <string name="app_name_placeholder_text">Some app</string>
     <string name="app_version_placeholder_text">App\'s version</string>
@@ -190,7 +186,10 @@
 
     <string name="geofence_transition_notification_text">Click notification to return to app</string>
 
-    <string name="title_activity_user_agreement">MithrilAC: Imp., please read</string>
-    <string name="dummy_button">Dummy Button</string>
-    <string name="dummy_content">DUMMY\nCONTENT</string>
+    <string name="project_details_txt">MithrilAC: Android access control app</string>
+
+    <string name="title_activity_user_agreement">MithrilAC</string>
+    <string name="fullscreen_user_agreement_button_label">I agree!</string>
+    <string name="fullscreen_user_agreement_consent_text">User agreement, please read...\n</string>
+    <string name="user_agreement_information_text">We collect anonymous feedback about your privacy preferences.</string>
 </resources>

@@ -63,7 +63,7 @@
             android:paddingLeft="@dimen/activity_horizontal_margin"
             android:paddingRight="@dimen/activity_horizontal_margin"
             android:paddingTop="@dimen/activity_vertical_margin"
-            android:text="@string/about_txt"
+            android:text="@string/user_agreement_information_text"
             android:textAlignment="textStart"
             android:textAppearance="@android:style/TextAppearance.Holo.Medium"
             android:textColor="@color/colorPrimaryDark"
