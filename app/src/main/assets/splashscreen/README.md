@@ -5,7 +5,7 @@
 ### Summary:
 * Description: English - Privacy Stock Photo. When using this photo on a website, please include an image credit for www.homewatersoftenerreviews.com. For Example: [Photo credit: Home Water Softener Reviews]
 * Date: 21 May 2015, 14:55:36
-* Source: https://www.flickr.com/photos/132053576@N03/17765606909/
+* Source: https://www.flickr.com/photos/132053576\@N03/17765606909/
 * Author: Owen Moore
 
 ### Licensing
