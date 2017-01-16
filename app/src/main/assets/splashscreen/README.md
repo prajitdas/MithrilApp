@@ -9,7 +9,7 @@
 * Author: Owen Moore
 
 ### Licensing
-Checked copyright icon.svg	This image was originally posted to [Flickr](https://en.wikipedia.org/wiki/Flickr). Its license was verified as "cc-by-2.0" by the [UploadWizard Extension](https://www.mediawiki.org/wiki/Extension:UploadWizard) at the time it was transferred to Commons. See the license information for further details.
+This image was originally posted to [Flickr](https://en.wikipedia.org/wiki/Flickr). Its license was verified as "cc-by-2.0" by the [UploadWizard Extension](https://www.mediawiki.org/wiki/Extension:UploadWizard) at the time it was transferred to Commons. See the license information for further details.
 
 This file is licensed under the [Creative Commons](https://en.wikipedia.org/wiki/en:Creative_Commons) [Attribution 2.0 Generic](https://creativecommons.org/licenses/by/2.0/deed.en) license.	
 
