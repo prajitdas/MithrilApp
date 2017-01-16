@@ -1,6 +1,6 @@
 # License information
 
-## For [privacy_written_in_tiles.jpg](https://commons.wikimedia.org/wiki/File:Privacy_written_in_tiles.jpg): 
+## For [Privacy_written_in_tiles.jpg](https://commons.wikimedia.org/wiki/File:Privacy_written_in_tiles.jpg): 
 
 ### Summary:
 * Description: English - Privacy Stock Photo. When using this photo on a website, please include an image credit for www.homewatersoftenerreviews.com. For Example: [Photo credit: Home Water Softener Reviews]
