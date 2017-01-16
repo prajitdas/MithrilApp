@@ -4,7 +4,7 @@ import android.annotation.SuppressLint;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v7.app.ActionBar;
-import android.support.v7.app.ActionBarActivity;
+import android.support.v7.app.AppCompatActivity;
 import android.view.MotionEvent;
 import android.view.View;
 
@@ -14,7 +14,7 @@ import edu.umbc.cs.ebiquity.mithril.R;
  * An example full-screen activity that shows and hides the system UI (i.e.
  * status bar and navigation/system bar) with user interaction.
  */
-public class UserAgreementActivity extends ActionBarActivity {
+public class UserAgreementActivity extends AppCompatActivity {
     /**
      * Whether or not the system UI should be auto-hidden after
      * {@link #AUTO_HIDE_DELAY_MILLIS} milliseconds.
@@ -93,7 +93,7 @@ public class UserAgreementActivity extends ActionBarActivity {
 
         mVisible = true;
         mControlsView = findViewById(R.id.fullscreen_content_controls);
-        mContentView = findViewById(R.id.fullscreen_user_agreement_consent_TextView);
+        mContentView = findViewById(R.id.fullscreen_user_agreement_RelativeLayout);
 
 
         // Set up the user interaction to manually show or hide the system UI.

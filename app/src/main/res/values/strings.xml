@@ -186,10 +186,11 @@
 
     <string name="geofence_transition_notification_text">Click notification to return to app</string>
 
-    <string name="project_details_txt">MithrilAC: Android access control app</string>
+    <string name="project_details_txt_for_About">This is the MithrilAC app. It is capable of handling access control on Android devices.</string>
+    <string name="project_details_txt_for_fullscreen">MithrilAC: Android access control app</string>
 
     <string name="title_activity_user_agreement">MithrilAC</string>
     <string name="fullscreen_user_agreement_button_label">I agree!</string>
-    <string name="fullscreen_user_agreement_consent_text">User agreement, please read...\n</string>
+    <string name="fullscreen_user_agreement_consent_text">User agreement, please read&#8230;</string>
     <string name="user_agreement_information_text">We collect anonymous feedback about your privacy preferences.</string>
 </resources>
