@@ -191,8 +191,9 @@
 
     <string name="title_activity_user_agreement">MithrilAC</string>
     <string name="fullscreen_user_agreement_button_label">I agree!</string>
-    <string name="fullscreen_user_agreement_consent_text">to read the user agreement statement. When done reading, click on \"I agree!\" below to continue using the app&#8230;</string>
+    <string name="fullscreen_user_agreement_consent_text">Click above to read the user agreement statement. When done reading, click on \"I agree!\" below to continue using the app&#8230;</string>
     <string name="user_agreement_information_text">We collect anonymous feedback about your privacy preferences.</string>
+    <string name="show_user_agreement_btn_label">Show user agreement</string>
 
     <string name="previous">Previous</string>
     <string name="next">Next</string>
