@@ -30,7 +30,7 @@
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>
 
-    <string name="app_website">https://mithril.online/</string>
+    <string name="app_website">https://mithril.online</string>
 
     <string name="action_settings">Settings</string>
     <string name="info">About the app</string>
@@ -187,10 +187,13 @@
     <string name="geofence_transition_notification_text">Click notification to return to app</string>
 
     <string name="project_details_txt_for_About">This is the MithrilAC app. It is capable of handling access control on Android devices.</string>
-    <string name="project_details_txt_for_fullscreen">MithrilAC: Android access control app</string>
+    <string name="project_details_txt_for_fullscreen">MithrilAC: Mobile access control app</string>
 
     <string name="title_activity_user_agreement">MithrilAC</string>
     <string name="fullscreen_user_agreement_button_label">I agree!</string>
-    <string name="fullscreen_user_agreement_consent_text">User agreement, please read&#8230;</string>
+    <string name="fullscreen_user_agreement_consent_text">to read the user agreement statement. When done reading, click on \"I agree!\" below to continue using the app&#8230;</string>
     <string name="user_agreement_information_text">We collect anonymous feedback about your privacy preferences.</string>
+
+    <string name="previous">Previous</string>
+    <string name="next">Next</string>
 </resources>
