@@ -48,9 +48,18 @@
             </intent-filter>
         </activity>
         <activity
+            android:name=".ui.activities.ShowUserAgreementActivity"
+            android:label="@string/title_activity_show_user_agreement"
+            android:parentActivityName=".ui.activities.UserAgreementActivity"
+            android:theme="@style/FullscreenTheme">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".ui.activities.UserAgreementActivity" />
+        </activity>
+        <activity
             android:name=".ui.activities.MainActivity"
             android:label="@string/short_app_name"
-            android:theme="@style/AppTheme.NoActionBar"></activity>
+            android:theme="@style/AppTheme.NoActionBar" />
         <activity
             android:name=".ui.activities.ViewAppDetailsActivity"
             android:label="@string/title_activity_view_app_detail"
@@ -118,4 +127,5 @@
             android:name=".util.services.GeofenceTransitionsIntentService"
             android:exported="false" />
     </application>
+
 </manifest>

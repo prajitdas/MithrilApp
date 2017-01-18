@@ -38,6 +38,11 @@ public class MithrilApplication extends Application {
      * Map for storing information about airports in the San Francisco bay area.
      */
     public static final HashMap<String, LatLng> BALTIMORE_COUNTY_LANDMARKS = new HashMap<String, LatLng>();
+
+    /**
+     * Private variables start
+     */
+    private static final String FLIER_PDF_FILE_NAME = "flier.pdf";
     private static final String PERMISSION_PROTECTION_LEVEL_UNKNOWN = "unknown";
     private static final String PERMISSION_PROTECTION_LEVEL_NORMAL = "normal";
     private static final String PERMISSION_PROTECTION_LEVEL_DANGEROUS = "dangerous";
@@ -803,5 +808,9 @@ public class MithrilApplication extends Application {
 
     public static String getInsertStatementGooglePermissions() {
         return INSERT_STATEMENT_GOOGLE_PERMISSIONS;
+    }
+
+    public static String getFlierPdfFileName() {
+        return FLIER_PDF_FILE_NAME;
     }
 }
