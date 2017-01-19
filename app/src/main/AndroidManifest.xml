@@ -38,7 +38,7 @@
         android:theme="@style/AppTheme">
         <activity
             android:name=".ui.activities.UserAgreementActivity"
-            android:configChanges="orientation|keyboardHidden|screenSize|navigation"
+            android:configChanges="orientation|keyboardHidden|screenSize"
             android:label="@string/title_activity_user_agreement"
             android:theme="@style/FullscreenTheme">
             <intent-filter>

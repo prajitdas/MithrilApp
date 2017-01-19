@@ -13,16 +13,21 @@ public class MithrilApplication extends Application {
     /**
      * Public stuff! Make them private if you can...
      */
-    public static final int ALL_PERMISSIONS_MITHRIL_REQUEST_CODE = 1;
+    public static final int ALL_PERMISSIONS_MITHRIL_REQUEST_CODE = 100;
+    public static final int USER_AGREEMENT_READ_REQUEST_CODE = 200;
+
     public static final int SUCCESS_RESULT = 0;
     public static final int FAILURE_RESULT = 1;
-    public static final String PACKAGE_NAME = "edu.umbc.cs.ebiquity.mithril";
-    public static final String RECEIVER = PACKAGE_NAME + ".RECEIVER";
-    public static final String RESULT_DATA_KEY = PACKAGE_NAME + ".RESULT_DATA_KEY";
+
+    public static final String APP_PACKAGE_NAME_SELF = "edu.umbc.cs.ebiquity.mithril";
+
+    public static final String RECEIVER = APP_PACKAGE_NAME_SELF + ".RECEIVER";
+    public static final String RESULT_DATA_KEY = APP_PACKAGE_NAME_SELF + ".RESULT_DATA_KEY";
     public static final String ADDRESS_REQUESTED_EXTRA = "ADDRESS_REQUESTED_EXTRA";
+    public static final String LOCATION_DATA_EXTRA = APP_PACKAGE_NAME_SELF + ".LOCATION_DATA_EXTRA";
+    public static final String GEOFENCES_ADDED_KEY = APP_PACKAGE_NAME_SELF + ".GEOFENCES_ADDED_KEY";
+
     public static final String ADDRESS_KEY = "ADDRESS_KEY";
-    public static final String LOCATION_DATA_EXTRA = PACKAGE_NAME + ".LOCATION_DATA_EXTRA";
-    public static final String GEOFENCES_ADDED_KEY = PACKAGE_NAME + ".GEOFENCES_ADDED_KEY";
     /**
      * Used to set an expiration time for a geofence. After this amount of time Location Services
      * stops tracking the geofence.
@@ -102,6 +107,9 @@ public class MithrilApplication extends Application {
     private static final String PREF_KEY_APP_DISPLAY_TYPE = "AppDisplayTypeTag";
     private static final String PREF_KEY_APP_PKG_NAME = "AppPkgNameTag";
     private static final String PREF_KEY_APP_COUNT = "AppCount";
+    private static final String PREF_KEY_USER_CONSENT = "UserConsent";
+    //End of preference keys
+
     private static final String DATABASE_NAME = "mithril.db";
     private static final String DEBUG_TAG = "MithrilDebugTag";
     /**
@@ -812,5 +820,9 @@ public class MithrilApplication extends Application {
 
     public static String getFlierPdfFileName() {
         return FLIER_PDF_FILE_NAME;
+    }
+
+    public static String getPrefKeyUserConsent() {
+        return PREF_KEY_USER_CONSENT;
     }
 }
