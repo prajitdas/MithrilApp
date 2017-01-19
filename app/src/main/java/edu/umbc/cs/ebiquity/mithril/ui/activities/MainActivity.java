@@ -8,12 +8,10 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.net.Uri;
-import android.os.Build;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
 import android.support.design.widget.Snackbar;
-import android.support.v4.content.ContextCompat;
 import android.support.v4.content.res.ResourcesCompat;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
@@ -97,7 +95,6 @@ public class MainActivity extends AppCompatActivity
                 .commit();
     }
 
-    @SuppressWarnings("StatementWithEmptyBody")
     @Override
     public boolean onNavigationItemSelected(MenuItem item) {
         // Handle navigation view item clicks here.
@@ -118,9 +115,9 @@ public class MainActivity extends AppCompatActivity
         } else if (id == R.id.nav_settings) {
             FragmentManager fragmentManager = getFragmentManager();
             fragmentManager.beginTransaction().replace(R.id.container_main, new PrefsFragment()).commit();
-        } else if (id == R.id.nav_reload) {
-            FragmentManager fragmentManager = getFragmentManager();
-            fragmentManager.beginTransaction().replace(R.id.container_main, new ReloadDefaultDataFragment()).commit();
+//        } else if (id == R.id.nav_reload) {
+//            FragmentManager fragmentManager = getFragmentManager();
+//            fragmentManager.beginTransaction().replace(R.id.container_main, new ReloadDefaultDataFragment()).commit();
         } else if (id == R.id.nav_about) {
             FragmentManager fragmentManager = getFragmentManager();
             fragmentManager.beginTransaction().replace(R.id.container_main, new AboutFragment()).commit();
@@ -231,21 +228,21 @@ public class MainActivity extends AppCompatActivity
         Calendar cal = Calendar.getInstance();
         int hourofday = cal.get(Calendar.HOUR_OF_DAY);
         Log.d(MithrilApplication.getDebugTag(), Integer.toString(hourofday));
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            if (hourofday < 12 && hourofday >= 6)
-                headerView.setBackground(ResourcesCompat.getDrawable(getResources(), R.drawable.csee_morning, getTheme()));
-            else if (hourofday < 18 && hourofday >= 12)
-                headerView.setBackground(ResourcesCompat.getDrawable(getResources(), R.drawable.csee_afternoon, getTheme()));
-            else
-                headerView.setBackground(ResourcesCompat.getDrawable(getResources(), R.drawable.csee_evening, getTheme()));
-        } else {
-            if (hourofday < 12 && hourofday >= 6)
-                headerView.setBackground(ContextCompat.getDrawable(getApplicationContext(), R.drawable.csee_morning));
-            else if (hourofday < 18 && hourofday >= 12)
-                headerView.setBackground(ContextCompat.getDrawable(getApplicationContext(), R.drawable.csee_afternoon));
-            else
-                headerView.setBackground(ContextCompat.getDrawable(getApplicationContext(), R.drawable.csee_evening));
-        }
+//        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+        if (hourofday < 12 && hourofday >= 6)
+            headerView.setBackground(ResourcesCompat.getDrawable(getResources(), R.drawable.csee_morning, getTheme()));
+        else if (hourofday < 18 && hourofday >= 12)
+            headerView.setBackground(ResourcesCompat.getDrawable(getResources(), R.drawable.csee_afternoon, getTheme()));
+        else
+            headerView.setBackground(ResourcesCompat.getDrawable(getResources(), R.drawable.csee_evening, getTheme()));
+//        } else {
+//            if (hourofday < 12 && hourofday >= 6)
+//                headerView.setBackground(ContextCompat.getDrawable(getApplicationContext(), R.drawable.csee_morning));
+//            else if (hourofday < 18 && hourofday >= 12)
+//                headerView.setBackground(ContextCompat.getDrawable(getApplicationContext(), R.drawable.csee_afternoon));
+//            else
+//                headerView.setBackground(ContextCompat.getDrawable(getApplicationContext(), R.drawable.csee_evening));
+//        }
     }
 
     private void defaultFragmentLoad() {
@@ -270,16 +267,16 @@ public class MainActivity extends AppCompatActivity
         switch (requestCode) {
             case MithrilApplication.ALL_PERMISSIONS_MITHRIL_REQUEST_CODE: {
                 // If request is cancelled, the result arrays are empty.
-                if (grantResults.length > 0
-                        && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                    // permission was granted, yay! Do the
-                    // contacts-related task you need to do.
-                } else {
+                if (grantResults.length < 0
+                        && grantResults[0] == PackageManager.PERMISSION_DENIED) {
                     // permission denied, boo! Disable the
                     // functionality that depends on this permission.
                     Toast.makeText(this, "You denied some permissions. This might disrupt some functionality!", Toast.LENGTH_SHORT).show();
+//                } else {
+//                    // permission was granted, yay! Do the
+//                    // contacts-related task you need to do.
                 }
-                return;
+//                return;
             }
             // other 'case' lines to check for other
             // permissions this app might request
@@ -287,7 +284,7 @@ public class MainActivity extends AppCompatActivity
     }
 
     private void getUserConsent() {
-        /**
+        /*
          * If the user has already consented, we just go to the MainActivity, or else we are stuck here!
          */
         sharedPreferences = getApplicationContext().getSharedPreferences(MithrilApplication.getSharedPreferencesName(), Context.MODE_PRIVATE);
@@ -303,8 +300,8 @@ public class MainActivity extends AppCompatActivity
         if (requestCode == MithrilApplication.USER_CONSENT_RECEIVED_REQUEST_CODE) {
             if (resultCode == Activity.RESULT_OK) {
                 startMainActivityTasks();
-            } else {
-                /**
+//            } else {
+                /*
                  * Do nothing in this case!
                  * Something is obviously wrong!
                  * We should never reach this state, ever...

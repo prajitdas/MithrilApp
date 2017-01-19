@@ -57,7 +57,7 @@
         </item>
     </group>
 
-    <item android:title="More">
+    <item android:title="@string/extra_options">
         <menu>
             <item
                 android:id="@+id/nav_settings"
@@ -69,11 +69,11 @@
                 android:checkable="true"
                 android:icon="@drawable/ic_info"
                 android:title="@string/info" />
-            <item
-                android:id="@+id/nav_reload"
-                android:checkable="true"
-                android:icon="@drawable/reload"
-                android:title="@string/action_reload_data" />
+            <!--<item-->
+            <!--android:id="@+id/nav_reload"-->
+            <!--android:checkable="true"-->
+            <!--android:icon="@drawable/reload"-->
+            <!--android:title="@string/action_reload_data" />-->
         </menu>
     </item>
 
