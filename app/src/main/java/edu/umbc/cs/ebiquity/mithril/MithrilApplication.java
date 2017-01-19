@@ -48,7 +48,7 @@ public class MithrilApplication extends Application {
     /**
      * Private variables start
      */
-    private static final String FLIER_PDF_FILE_NAME = "flier.pdf";
+    private static final String FLIER_PDF_FILE_NAME = "flierForMobile.pdf";
     private static final String PERMISSION_PROTECTION_LEVEL_UNKNOWN = "unknown";
     private static final String PERMISSION_PROTECTION_LEVEL_NORMAL = "normal";
     private static final String PERMISSION_PROTECTION_LEVEL_DANGEROUS = "dangerous";
