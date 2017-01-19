@@ -21,6 +21,8 @@
 
     <string name="app_name">Mithril Access Control</string>
 
+    <string name="app_name_with_index">MithrilAC (%1$d/%2$d)</string>
+
     <string name="mithril_service_name">Mithril App Launch Detector Service</string>
 
     <string name="explanation">Tap device with NFC tag</string>
@@ -189,7 +191,7 @@
     <string name="project_details_txt_for_About">This is the MithrilAC app. It is capable of handling access control on Android devices.</string>
     <string name="project_details_txt_for_fullscreen">MithrilAC: Mobile access control app</string>
 
-    <string name="title_activity_user_agreement">MithrilAC</string>
+    <string name="title_activity_user_agreement">User notice</string>
     <string name="fullscreen_user_agreement_button_label">I agree!</string>
     <string name="fullscreen_user_disagreement_button_label">Delete app!</string>
     <string name="fullscreen_user_agreement_consent_text">Click button above to read the user agreement statement. When done reading, you will see the \"I agree!\" button below, click on it to continue using the app&#8230;</string>
@@ -197,6 +199,6 @@
     <string name="show_user_agreement_btn_label">Show user agreement</string>
     <string name="title_activity_show_user_agreement">ShowUserAgreementActivity</string>
 
-    <string name="previous">previous</string>
-    <string name="next">next</string>
+    <string name="okay">okay</string>
+    <string name="cancel">cancel</string>
 </resources>

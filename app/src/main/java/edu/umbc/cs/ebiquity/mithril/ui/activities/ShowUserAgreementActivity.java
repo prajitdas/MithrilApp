@@ -1,7 +1,9 @@
 package edu.umbc.cs.ebiquity.mithril.ui.activities;
 
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
+import android.content.res.AssetManager;
 import android.graphics.Bitmap;
 import android.graphics.pdf.PdfRenderer;
 import android.os.Bundle;
@@ -13,8 +15,11 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.Toast;
 
+import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
 
 import edu.umbc.cs.ebiquity.mithril.MithrilApplication;
 import edu.umbc.cs.ebiquity.mithril.R;
@@ -49,15 +54,8 @@ public class ShowUserAgreementActivity extends AppCompatActivity {
      */
     private ImageView mImageView;
 
-    /**
-     * {@link android.widget.Button} to move to the previous page.
-     */
-    private Button mButtonPrevious;
-
-    /**
-     * {@link android.widget.Button} to move to the next page.
-     */
-    private Button mButtonNext;
+    private Button mButtonOkay;
+    private Button mButtonCancel;
 
     private Bundle savedInstanceState;
 
@@ -92,31 +90,26 @@ public class ShowUserAgreementActivity extends AppCompatActivity {
 
     private void initViews() {
         setContentView(R.layout.activity_show_user_agreement);
-        // Retain view references.
+
         mImageView = (ImageView) findViewById(R.id.image);
-        mButtonPrevious = (Button) findViewById(R.id.previous);
-        mButtonNext = (Button) findViewById(R.id.next);
-        // Bind events.
-//        mButtonPrevious.setOnClickListener(this);
-//        mButtonNext.setOnClickListener(this);
+        mButtonOkay = (Button) findViewById(R.id.okay);
+        mButtonCancel = (Button) findViewById(R.id.cancel);
+
         makeFullScreen();
         setOnClickListeners();
     }
 
     private void setOnClickListeners() {
-        // Bind events.
-        mButtonPrevious.setOnClickListener(new View.OnClickListener() {
+        mButtonOkay.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                // Move to the previous page
-                showPage(mCurrentPage.getIndex() - 1);
+                resultOkay();
             }
         });
-        mButtonNext.setOnClickListener(new View.OnClickListener() {
+        mButtonCancel.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                // Move to the next page
-                showPage(mCurrentPage.getIndex() + 1);
+                resultCanceled();
             }
         });
     }
@@ -125,22 +118,77 @@ public class ShowUserAgreementActivity extends AppCompatActivity {
      * Sets up a {@link android.graphics.pdf.PdfRenderer} and related resources.
      */
     private void openRenderer() throws IOException {
+        // Copy the pdf to a usable location
+        CopyReadAssets();
+
+//        String strDir = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS)+ File.separator + "Pdfs";
+//        File fileDir = new File(strDir);
+//        fileDir.mkdirs();
+//        File file = new File(fileDir, MithrilApplication.getFlierPdfFileName());
+        File file = new File("/data/data/" + getPackageName() + "/files/" + MithrilApplication.getFlierPdfFileName());
+
         // In this sample, we read a PDF from the assets directory.
         try {
-            mFileDescriptor = getApplicationContext().getAssets().openFd(MithrilApplication.getFlierPdfFileName()).getParcelFileDescriptor();
             // This is the PdfRenderer we use to render the PDF.
-            mPdfRenderer = new PdfRenderer(mFileDescriptor);
+            mPdfRenderer = new PdfRenderer(ParcelFileDescriptor.open(file, ParcelFileDescriptor.MODE_READ_ONLY));
             // Show the first page by default.
             int index = 0;
             // If there is a savedInstanceState (screen orientations, etc.), we restore the page index.
             if (null != savedInstanceState) {
                 index = savedInstanceState.getInt(STATE_CURRENT_PAGE_INDEX, 0);
             }
-            showPage(index);
+            // We just have one page
+            showPage(0);
         } catch (FileNotFoundException e) {
             Log.d(MithrilApplication.getDebugTag(), MithrilApplication.getFlierPdfFileName() + " not found. Make sure the file name/path is correct!");
             // File could not be found!
-            error();
+            resultCanceled();
+        }
+    }
+
+    private void resultOkay() {
+        Intent returnIntent = new Intent();
+        setResult(Activity.RESULT_OK, returnIntent);
+        finish();
+    }
+
+    private void resultCanceled() {
+        Intent returnIntent = new Intent();
+        setResult(Activity.RESULT_CANCELED, returnIntent);
+        finish();
+    }
+
+    private void CopyReadAssets() {
+        AssetManager assetManager = getAssets();
+
+        InputStream in = null;
+        OutputStream out = null;
+        File file = new File(getFilesDir(), MithrilApplication.getFlierPdfFileName());
+
+        if (!file.exists()) {
+            try {
+                in = assetManager.open(MithrilApplication.getFlierPdfFileName());
+                out = openFileOutput(file.getName(), Context.MODE_PRIVATE);
+
+                copyFile(in, out);
+                in.close();
+                in = null;
+                out.flush();
+                out.close();
+                out = null;
+            } catch (Exception e) {
+                Log.e("tag", e.getMessage());
+            }
+        } else {
+            Log.d("test", "file already exists");
+        }
+    }
+
+    private void copyFile(InputStream in, OutputStream out) throws IOException {
+        byte[] buffer = new byte[1024];
+        int read;
+        while ((read = in.read(buffer)) != -1) {
+            out.write(buffer, 0, read);
         }
     }
 
@@ -183,18 +231,6 @@ public class ShowUserAgreementActivity extends AppCompatActivity {
         mCurrentPage.render(bitmap, null, null, PdfRenderer.Page.RENDER_MODE_FOR_DISPLAY);
         // We are ready to show the Bitmap to user.
         mImageView.setImageBitmap(bitmap);
-        updateUi();
-    }
-
-    /**
-     * Updates the state of 2 control buttons in response to the current page index.
-     */
-    private void updateUi() {
-        int index = mCurrentPage.getIndex();
-        int pageCount = mPdfRenderer.getPageCount();
-        mButtonPrevious.setEnabled(0 != index);
-        mButtonNext.setEnabled(index + 1 < pageCount);
-        setTitle(getString(index + 1, pageCount));
     }
 
     /**
@@ -222,17 +258,5 @@ public class ShowUserAgreementActivity extends AppCompatActivity {
         if (null != mCurrentPage) {
             outState.putInt(STATE_CURRENT_PAGE_INDEX, mCurrentPage.getIndex());
         }
-    }
-
-    private void allgood() {
-        Intent returnIntent = new Intent();
-        setResult(Activity.RESULT_OK, returnIntent);
-        finish();
-    }
-
-    private void error() {
-        Intent returnIntent = new Intent();
-        setResult(Activity.RESULT_CANCELED, returnIntent);
-        finish();
     }
 }

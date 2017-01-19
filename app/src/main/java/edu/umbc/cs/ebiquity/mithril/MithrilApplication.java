@@ -15,6 +15,7 @@ public class MithrilApplication extends Application {
      */
     public static final int ALL_PERMISSIONS_MITHRIL_REQUEST_CODE = 100;
     public static final int USER_AGREEMENT_READ_REQUEST_CODE = 200;
+    public static final int USER_CONSENT_RECEIVED_REQUEST_CODE = 300;
 
     public static final int SUCCESS_RESULT = 0;
     public static final int FAILURE_RESULT = 1;

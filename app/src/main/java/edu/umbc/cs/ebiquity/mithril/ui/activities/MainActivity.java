@@ -1,7 +1,9 @@
 package edu.umbc.cs.ebiquity.mithril.ui.activities;
 
 import android.Manifest;
+import android.app.Activity;
 import android.app.FragmentManager;
+import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
@@ -50,7 +52,7 @@ public class MainActivity extends AppCompatActivity
         ViolationFragment.OnListFragmentInteractionListener,
         ReloadDefaultDataFragment.OnFragmentInteractionListener {
 
-    private SharedPreferences sharedPref;
+    private SharedPreferences sharedPreferences;
     private Violation violationItemSelected = null;
     private DrawerLayout drawer;
     private ActionBarDrawerToggle toggle;
@@ -162,9 +164,8 @@ public class MainActivity extends AppCompatActivity
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        initViews();
-        initHousekeepingTasks();
-        defaultFragmentLoad();
+
+        getUserConsent();
     }
 
     private void initHousekeepingTasks() {
@@ -188,12 +189,6 @@ public class MainActivity extends AppCompatActivity
 //                }
 //            }
         }
-    }
-
-    @Override
-    public void onResume() {
-        super.onResume();
-//        defaultFragmentLoad();
     }
 
     @SuppressWarnings("RestrictedApi")
@@ -289,5 +284,37 @@ public class MainActivity extends AppCompatActivity
             // other 'case' lines to check for other
             // permissions this app might request
         }
+    }
+
+    private void getUserConsent() {
+        /**
+         * If the user has already consented, we just go to the MainActivity, or else we are stuck here!
+         */
+        sharedPreferences = getApplicationContext().getSharedPreferences(MithrilApplication.getSharedPreferencesName(), Context.MODE_PRIVATE);
+        if (sharedPreferences.getString(MithrilApplication.getPrefKeyUserConsent(), null) == null) {
+            Intent consentActivity = new Intent(getApplicationContext(), UserAgreementActivity.class);
+            startActivityForResult(consentActivity, MithrilApplication.USER_CONSENT_RECEIVED_REQUEST_CODE);
+        }
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (requestCode == MithrilApplication.USER_CONSENT_RECEIVED_REQUEST_CODE) {
+            if (resultCode == Activity.RESULT_OK) {
+                startMainActivityTasks();
+            } else {
+                /**
+                 * Do nothing in this case!
+                 * Something is obviously wrong!
+                 * We should never reach this state, ever...
+                 */
+            }
+        }
+    }
+
+    private void startMainActivityTasks() {
+        initViews();
+        initHousekeepingTasks();
+        defaultFragmentLoad();
     }
 }

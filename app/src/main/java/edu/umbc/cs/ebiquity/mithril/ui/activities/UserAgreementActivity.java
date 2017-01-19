@@ -18,22 +18,12 @@ public class UserAgreementActivity extends AppCompatActivity {
     private Button mIAgreeBtn;
     private Button mIDisagreeBtn;
     private SharedPreferences sharedPreferences;
+    private boolean isResultOkay = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
-        /**
-         * If the user has already consented, we just go to the MainActivity, or else we are stuck here!
-         */
-        sharedPreferences = getApplicationContext().getSharedPreferences(MithrilApplication.getSharedPreferencesName(), Context.MODE_PRIVATE);
-        if (sharedPreferences.getString(MithrilApplication.getPrefKeyUserConsent(), null) != null)
-            userAgreesStartMainApp();
-    }
-
-    @Override
-    public void onResume() {
-        super.onResume();
+        ifUserAgreesGoBackToMainApp();
         initViews();
     }
 
@@ -43,7 +33,10 @@ public class UserAgreementActivity extends AppCompatActivity {
         mIAgreeBtn = (Button) findViewById(R.id.iAgreeBtn);
         mIDisagreeBtn = (Button) findViewById(R.id.iDisagreeBtn);
 
-        mIAgreeBtn.setVisibility(View.GONE);
+        if (!isResultOkay)
+            mIAgreeBtn.setVisibility(View.GONE);
+        else
+            mIAgreeBtn.setVisibility(View.VISIBLE);
 
         makeFullScreen();
         setOnClickListeners();
@@ -75,7 +68,7 @@ public class UserAgreementActivity extends AppCompatActivity {
                 SharedPreferences.Editor editor = v.getContext().getSharedPreferences(MithrilApplication.getSharedPreferencesName(), Context.MODE_PRIVATE).edit();
                 editor.putString(MithrilApplication.getPrefKeyUserConsent(), "agreed");
                 editor.commit();
-                userAgreesStartMainApp();
+                resultOkay();
             }
         });
 
@@ -86,6 +79,8 @@ public class UserAgreementActivity extends AppCompatActivity {
                 Intent uninstallIntent =
                         new Intent(Intent.ACTION_DELETE, packageUri);
                 startActivity(uninstallIntent);
+                //The following line should be unreachable
+                resultCanceled();
             }
         });
     }
@@ -93,20 +88,33 @@ public class UserAgreementActivity extends AppCompatActivity {
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (requestCode == MithrilApplication.USER_AGREEMENT_READ_REQUEST_CODE) {
-            if (resultCode == Activity.RESULT_OK) {
-                mIAgreeBtn.setVisibility(View.VISIBLE);
-            }
-            if (resultCode == Activity.RESULT_CANCELED) {
-                /**
-                 * Do nothng in this case!
-                 * Some failure occurred obviously
-                 */
-            }
+            /**
+             * Do nothng in this case!
+             * Some failure occurred obviously
+             */isResultOkay = resultCode == Activity.RESULT_OK;
         }
     }
 
-    private void userAgreesStartMainApp() {
-        Intent startMainActivity = new Intent(getApplicationContext(), MainActivity.class);
-        startActivity(startMainActivity);
+    private void ifUserAgreesGoBackToMainApp() {
+        /**
+         * If the user has already consented, we just go back tp the MainActivity, or else we are stuck here!
+         */
+        sharedPreferences = getApplicationContext().getSharedPreferences(MithrilApplication.getSharedPreferencesName(), Context.MODE_PRIVATE);
+        if (sharedPreferences.getString(MithrilApplication.getPrefKeyUserConsent(), null) != null)
+            finish();
+//            Intent startMainActivity = new Intent(getApplicationContext(), MainActivity.class);
+//            startActivity(startMainActivity);
+    }
+
+    private void resultOkay() {
+        Intent returnIntent = new Intent();
+        setResult(Activity.RESULT_OK, returnIntent);
+        finish();
+    }
+
+    private void resultCanceled() {
+        Intent returnIntent = new Intent();
+        setResult(Activity.RESULT_CANCELED, returnIntent);
+        finish();
     }
 }

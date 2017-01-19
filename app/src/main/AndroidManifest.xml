@@ -37,15 +37,23 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <activity
-            android:name=".ui.activities.UserAgreementActivity"
-            android:configChanges="orientation|keyboardHidden|screenSize"
-            android:label="@string/title_activity_user_agreement"
-            android:theme="@style/FullscreenTheme">
+            android:name=".ui.activities.MainActivity"
+            android:label="@string/short_app_name"
+            android:theme="@style/AppTheme.NoActionBar">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
+        </activity>
+        <activity
+            android:name=".ui.activities.UserAgreementActivity"
+            android:configChanges="orientation|keyboardHidden|screenSize"
+            android:label="@string/title_activity_user_agreement"
+            android:theme="@style/FullscreenTheme">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".ui.activities.MainActivity" />
         </activity>
         <activity
             android:name=".ui.activities.ShowUserAgreementActivity"
@@ -56,10 +64,6 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".ui.activities.UserAgreementActivity" />
         </activity>
-        <activity
-            android:name=".ui.activities.MainActivity"
-            android:label="@string/short_app_name"
-            android:theme="@style/AppTheme.NoActionBar" />
         <activity
             android:name=".ui.activities.ViewAppDetailsActivity"
             android:label="@string/title_activity_view_app_detail"
