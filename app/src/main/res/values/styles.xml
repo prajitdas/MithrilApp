@@ -11,6 +11,8 @@
     <style name="AppTheme.Button" parent="Widget.AppCompat.Button.Colored">
         <item name="colorButtonNormal">@color/colorButton</item>
         <item name="android:textColor">@color/colorAccent</item>
+        <item name="android:textSize">20sp</item>
+        <item name="android:elevation">10dp</item>
     </style>
 
     <style name="AppTheme.NoActionBar">
