@@ -22,7 +22,13 @@ public class UserAgreementActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_user_agreement);
+
+        /**
+         * If the user has already consented, we just go to the MainActivity, or else we are stuck here!
+         */
+        sharedPreferences = getApplicationContext().getSharedPreferences(MithrilApplication.getSharedPreferencesName(), Context.MODE_PRIVATE);
+        if (sharedPreferences.getString(MithrilApplication.getPrefKeyUserConsent(), null) != null)
+            userAgreesStartMainApp();
     }
 
     @Override
@@ -65,12 +71,11 @@ public class UserAgreementActivity extends AppCompatActivity {
         mIAgreeBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                sharedPreferences = v.getContext().getSharedPreferences(MithrilApplication.getSharedPreferencesName(), Context.MODE_PRIVATE);
+
                 SharedPreferences.Editor editor = v.getContext().getSharedPreferences(MithrilApplication.getSharedPreferencesName(), Context.MODE_PRIVATE).edit();
-                editor.putString(MithrilApplication.getPrefKeyUserConsent(), "a");
+                editor.putString(MithrilApplication.getPrefKeyUserConsent(), "agreed");
                 editor.commit();
-                Intent showUserAgreementIntent = new Intent(v.getContext(), ShowUserAgreementActivity.class);
-                startActivity(showUserAgreementIntent);
+                userAgreesStartMainApp();
             }
         });
 
@@ -98,5 +103,10 @@ public class UserAgreementActivity extends AppCompatActivity {
                  */
             }
         }
+    }
+
+    private void userAgreesStartMainApp() {
+        Intent startMainActivity = new Intent(getApplicationContext(), MainActivity.class);
+        startActivity(startMainActivity);
     }
 }
