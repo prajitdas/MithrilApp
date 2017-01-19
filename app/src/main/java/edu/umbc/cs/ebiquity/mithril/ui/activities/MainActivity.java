@@ -300,9 +300,10 @@ public class MainActivity extends AppCompatActivity
         if (requestCode == MithrilApplication.USER_CONSENT_RECEIVED_REQUEST_CODE) {
             if (resultCode == Activity.RESULT_OK) {
                 startMainActivityTasks();
-//            } else {
+            } else {
+                finish();
                 /*
-                 * Do nothing in this case!
+                 * We did not get the consent, perhaps we should finish?
                  * Something is obviously wrong!
                  * We should never reach this state, ever...
                  */
@@ -311,8 +312,8 @@ public class MainActivity extends AppCompatActivity
     }
 
     private void startMainActivityTasks() {
-        initViews();
         initHousekeepingTasks();
+        initViews();
         defaultFragmentLoad();
     }
 }
