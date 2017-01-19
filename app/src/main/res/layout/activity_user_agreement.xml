@@ -2,8 +2,9 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@drawable/privacy"
+    android:background="@color/aliceblue"
     tools:context=".ui.activities.UserAgreementActivity">
+    <!--android:background="@drawable/privacy"-->
 
     <Button
         android:id="@+id/iDisagreeBtn"
