@@ -184,7 +184,7 @@ public class LollipopDetector implements Detector {
             if (currSemanticUserContext != null) {
                 //Rule 1 is allow youtube at home
                 if (contextLevel.equals(MithrilApplication.getPrefKeyCurrentLocation())
-                        && !currSemanticUserContext.getSemanticLocation().getInferredLocation().equals("21250")) {
+                        && !currSemanticUserContext.getSemanticLocation().getInferredLocation().equals("21227")) {
                     if (currentPackageName.equals("com.google.android.youtube")) {
                         editor.putString(MithrilApplication.getPrefKeyAppPkgName(), currentPackageName);
                         editor.putString(MithrilApplication.getPrefKeyCurrentLocation(), "Home");
@@ -202,6 +202,17 @@ public class LollipopDetector implements Detector {
                         editor.putString(MithrilApplication.getPrefKeyCurrentTime(), "Lunch");
 //                editor.commit();
                         Toast.makeText(context, "Rule 2 violation detected!", Toast.LENGTH_LONG).show();
+//                        Log.d(MithrilApplication.getDebugTag(), "Rule 2 violation detected!");
+                    }
+                }
+                //Rule 3 is allow SQLite at work
+                else if (contextLevel.equals(MithrilApplication.getPrefKeyCurrentLocation())
+                        && !currSemanticUserContext.getSemanticLocation().getInferredLocation().equals("21250")) {
+                    if (currentPackageName.equals("oliver.ehrenmueller.dbadmin")) {
+                        editor.putString(MithrilApplication.getPrefKeyAppPkgName(), currentPackageName);
+                        editor.putString(MithrilApplication.getPrefKeyCurrentLocation(), "Work");
+//                editor.commit();
+                        Toast.makeText(context, "Rule 3 violation detected!", Toast.LENGTH_LONG).show();
 //                        Log.d(MithrilApplication.getDebugTag(), "Rule 2 violation detected!");
                     }
                 }
