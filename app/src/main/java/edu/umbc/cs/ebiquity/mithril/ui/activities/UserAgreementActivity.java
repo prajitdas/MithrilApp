@@ -1,5 +1,6 @@
 package edu.umbc.cs.ebiquity.mithril.ui.activities;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -87,8 +88,14 @@ public class UserAgreementActivity extends AppCompatActivity {
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (requestCode == MithrilApplication.USER_AGREEMENT_READ_REQUEST_CODE) {
-            if (resultCode == RESULT_OK) {
+            if (resultCode == Activity.RESULT_OK) {
                 mIAgreeBtn.setVisibility(View.VISIBLE);
+            }
+            if (resultCode == Activity.RESULT_CANCELED) {
+                /**
+                 * Do nothng in this case!
+                 * Some failure occurred obviously
+                 */
             }
         }
     }

@@ -1,5 +1,7 @@
 package edu.umbc.cs.ebiquity.mithril.ui.activities;
 
+import android.app.Activity;
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.pdf.PdfRenderer;
 import android.os.Bundle;
@@ -137,7 +139,8 @@ public class ShowUserAgreementActivity extends AppCompatActivity {
             showPage(index);
         } catch (FileNotFoundException e) {
             Log.d(MithrilApplication.getDebugTag(), MithrilApplication.getFlierPdfFileName() + " not found. Make sure the file name/path is correct!");
-            finish();
+            // File could not be found!
+            error();
         }
     }
 
@@ -219,5 +222,17 @@ public class ShowUserAgreementActivity extends AppCompatActivity {
         if (null != mCurrentPage) {
             outState.putInt(STATE_CURRENT_PAGE_INDEX, mCurrentPage.getIndex());
         }
+    }
+
+    private void allgood() {
+        Intent returnIntent = new Intent();
+        setResult(Activity.RESULT_OK, returnIntent);
+        finish();
+    }
+
+    private void error() {
+        Intent returnIntent = new Intent();
+        setResult(Activity.RESULT_CANCELED, returnIntent);
+        finish();
     }
 }
