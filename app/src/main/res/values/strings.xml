@@ -191,7 +191,7 @@
     <string name="project_details_txt_for_About">This is the MithrilAC app. It is capable of handling access control on Android devices.</string>
     <string name="project_details_txt_for_fullscreen">MithrilAC: Mobile access control app</string>
 
-    <string name="title_activity_user_agreement">User notice</string>
+    <string name="title_activity_user_agreement"></string>
     <string name="fullscreen_user_agreement_button_label">I agree!</string>
     <string name="fullscreen_user_disagreement_button_label">Delete app!</string>
     <string name="fullscreen_user_agreement_consent_text">Click button above to read the user agreement statement. When done reading, you will see the \"I agree!\" button below, click on it to continue using the app&#8230;</string>

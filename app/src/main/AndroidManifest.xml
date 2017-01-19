@@ -51,9 +51,6 @@
             android:configChanges="orientation|keyboardHidden|screenSize"
             android:label="@string/title_activity_user_agreement"
             android:theme="@style/FullscreenTheme">
-            <meta-data
-                android:name="android.support.PARENT_ACTIVITY"
-                android:value=".ui.activities.MainActivity" />
         </activity>
         <activity
             android:name=".ui.activities.ShowUserAgreementActivity"

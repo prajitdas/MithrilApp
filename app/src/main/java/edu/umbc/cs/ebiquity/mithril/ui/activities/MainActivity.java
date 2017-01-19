@@ -294,7 +294,8 @@ public class MainActivity extends AppCompatActivity
         if (sharedPreferences.getString(MithrilApplication.getPrefKeyUserConsent(), null) == null) {
             Intent consentActivity = new Intent(getApplicationContext(), UserAgreementActivity.class);
             startActivityForResult(consentActivity, MithrilApplication.USER_CONSENT_RECEIVED_REQUEST_CODE);
-        }
+        } else
+            startMainActivityTasks();
     }
 
     @Override

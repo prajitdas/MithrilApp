@@ -23,6 +23,11 @@ public class UserAgreementActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
         ifUserAgreesGoBackToMainApp();
         initViews();
     }
@@ -80,7 +85,7 @@ public class UserAgreementActivity extends AppCompatActivity {
                         new Intent(Intent.ACTION_DELETE, packageUri);
                 startActivity(uninstallIntent);
                 //The following line should be unreachable
-                resultCanceled();
+//                resultCanceled();
             }
         });
     }
