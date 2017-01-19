@@ -216,9 +216,10 @@ public class ShowUserAgreementActivity extends AppCompatActivity {
             return;
         }
         // Make sure to close the current page before opening another one.
-        if (null != mCurrentPage) {
-            mCurrentPage.close();
-        }
+        // This is probably not necessary since we have only one page
+//        if (null != mCurrentPage) {
+//            mCurrentPage.close();
+//        }
         // Use `openPage` to open a specific page in PDF.
         mCurrentPage = mPdfRenderer.openPage(index);
         // Important: the destination bitmap must be ARGB (not RGB).
