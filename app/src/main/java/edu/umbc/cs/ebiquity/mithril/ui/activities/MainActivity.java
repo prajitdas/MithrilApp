@@ -31,6 +31,7 @@ import edu.umbc.cs.ebiquity.mithril.R;
 import edu.umbc.cs.ebiquity.mithril.data.model.AppData;
 import edu.umbc.cs.ebiquity.mithril.data.model.PermData;
 import edu.umbc.cs.ebiquity.mithril.data.model.Violation;
+import edu.umbc.cs.ebiquity.mithril.ui.fragments.EmptyFragment;
 import edu.umbc.cs.ebiquity.mithril.ui.fragments.mainactivityfragments.AboutFragment;
 import edu.umbc.cs.ebiquity.mithril.ui.fragments.mainactivityfragments.PrefsFragment;
 import edu.umbc.cs.ebiquity.mithril.ui.fragments.mainactivityfragments.ReloadDefaultDataFragment;
@@ -48,7 +49,8 @@ public class MainActivity extends AppCompatActivity
         ShowPermissionsFragment.OnListFragmentInteractionListener,
         AboutFragment.OnFragmentInteractionListener,
         ViolationFragment.OnListFragmentInteractionListener,
-        ReloadDefaultDataFragment.OnFragmentInteractionListener {
+        ReloadDefaultDataFragment.OnFragmentInteractionListener,
+        EmptyFragment.OnFragmentInteractionListener {
 
     private SharedPreferences sharedPreferences;
     private Violation violationItemSelected = null;
