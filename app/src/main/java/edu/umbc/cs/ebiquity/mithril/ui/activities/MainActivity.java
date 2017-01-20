@@ -200,7 +200,7 @@ public class MainActivity extends AppCompatActivity
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Snackbar.make(view, "Once clicked, apps will be sent to server!", Snackbar.LENGTH_LONG)
+                Snackbar.make(view, "Functionality not active right now. Once clicked, apps will be sent to server!", Snackbar.LENGTH_LONG)
                         .setAction("Action", null).show();
             }
         });
