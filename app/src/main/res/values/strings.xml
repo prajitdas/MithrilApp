@@ -201,6 +201,8 @@
     <string name="title_activity_show_user_agreement">ShowUserAgreementActivity</string>
 
     <string name="okay">okay</string>
+    <string name="next">next</string>
+    <string name="previous">previous</string>
 
     <string name="you_are_all_done_text">You\'re all done!</string>
 </resources>
