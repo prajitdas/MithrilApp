@@ -1,17 +1,25 @@
 package edu.umbc.cs.ebiquity.mithril.ui.activities;
 
+import android.Manifest;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.pm.PackageManager;
+import android.database.sqlite.SQLiteDatabase;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.Button;
+import android.widget.Toast;
 
 import edu.umbc.cs.ebiquity.mithril.MithrilApplication;
 import edu.umbc.cs.ebiquity.mithril.R;
+import edu.umbc.cs.ebiquity.mithril.data.dbhelpers.MithrilDBHelper;
+import edu.umbc.cs.ebiquity.mithril.util.services.AppLaunchDetectorService;
+import edu.umbc.cs.ebiquity.mithril.util.services.LocationUpdateService;
+import edu.umbc.cs.ebiquity.mithril.util.specialtasks.permissions.PermissionHelper;
 
 public class UserAgreementActivity extends AppCompatActivity {
     private Button mShowUserAgreementBtn;
@@ -19,6 +27,8 @@ public class UserAgreementActivity extends AppCompatActivity {
     private Button mIDisagreeBtn;
     private SharedPreferences sharedPreferences;
     private boolean isResultOkay = false;
+    private MithrilDBHelper mithrilDBHelper;
+    private SQLiteDatabase mithrilDB;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -121,5 +131,54 @@ public class UserAgreementActivity extends AppCompatActivity {
         Intent returnIntent = new Intent();
         setResult(Activity.RESULT_CANCELED, returnIntent);
         finish();
+    }
+
+    private void initHousekeepingTasks() {
+        if (PermissionHelper.isExplicitPermissionAcquisitionNecessary()) {
+            PermissionHelper.requestAllNecessaryPermissions(this);
+            if (PermissionHelper.getUsageStatsPermisison(this))
+                startService(new Intent(this, AppLaunchDetectorService.class));
+            if (PermissionHelper.isPermissionGranted(this, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED)
+                startService(new Intent(this, LocationUpdateService.class));
+//            if (PermissionHelper.isPermissionGranted(this, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
+//                boolean updatesRequested = false;
+//                    /*
+//                    * Get any previous setting for location updates
+//                    * Gets "false" if an error occurs
+//                    */
+//                if (sharedPref.contains(MithrilApplication.getPrefKeyLocationUpdateServiceState())) {
+//                    updatesRequested = sharedPref.getBoolean(MithrilApplication.getPrefKeyLocationUpdateServiceState(), false);
+//                }
+//                if (updatesRequested) {
+//                    startService(new Intent(this, LocationUpdateService.class));
+//                }
+//            }
+        }
+        /**
+         * Initiate database creation and default data insertion, happens only once.
+         */
+        mithrilDBHelper = new MithrilDBHelper(this);
+        mithrilDB = mithrilDBHelper.getWritableDatabase();
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, String permissions[], int[] grantResults) {
+        switch (requestCode) {
+            case MithrilApplication.ALL_PERMISSIONS_MITHRIL_REQUEST_CODE: {
+                // If request is cancelled, the result arrays are empty.
+                if (grantResults.length < 0
+                        && grantResults[0] == PackageManager.PERMISSION_DENIED) {
+                    // permission denied, boo! Disable the
+                    // functionality that depends on this permission.
+                    Toast.makeText(this, "You denied some permissions. This might disrupt some functionality!", Toast.LENGTH_SHORT).show();
+//                } else {
+//                    // permission was granted, yay! Do the
+//                    // contacts-related task you need to do.
+                }
+//                return;
+            }
+            // other 'case' lines to check for other
+            // permissions this app might request
+        }
     }
 }

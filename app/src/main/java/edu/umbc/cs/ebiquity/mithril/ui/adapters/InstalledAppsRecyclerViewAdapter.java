@@ -12,8 +12,8 @@ import java.util.List;
 
 import edu.umbc.cs.ebiquity.mithril.R;
 import edu.umbc.cs.ebiquity.mithril.data.model.AppData;
-import edu.umbc.cs.ebiquity.mithril.ui.fragments.mainactivityfragments.ShowAppsFragment.OnListFragmentInteractionListener;
-import edu.umbc.cs.ebiquity.mithril.ui.fragments.mainactivityfragments.ShowAppsFragment.OnListFragmentLongInteractionListener;
+import edu.umbc.cs.ebiquity.mithril.ui.fragments.mainactivityfragments.AppsFragment.OnListFragmentInteractionListener;
+import edu.umbc.cs.ebiquity.mithril.ui.fragments.mainactivityfragments.AppsFragment.OnListFragmentLongInteractionListener;
 
 /**
  * {@link RecyclerView.Adapter} that can display a {@link AppData} and makes a call to the

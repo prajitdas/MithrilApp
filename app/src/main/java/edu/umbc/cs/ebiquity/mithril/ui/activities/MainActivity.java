@@ -1,12 +1,12 @@
 package edu.umbc.cs.ebiquity.mithril.ui.activities;
 
-import android.Manifest;
 import android.app.Activity;
 import android.app.FragmentManager;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
+import android.database.sqlite.SQLiteDatabase;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
@@ -28,74 +28,46 @@ import java.util.List;
 
 import edu.umbc.cs.ebiquity.mithril.MithrilApplication;
 import edu.umbc.cs.ebiquity.mithril.R;
+import edu.umbc.cs.ebiquity.mithril.data.dbhelpers.MithrilDBHelper;
 import edu.umbc.cs.ebiquity.mithril.data.model.AppData;
 import edu.umbc.cs.ebiquity.mithril.data.model.PermData;
 import edu.umbc.cs.ebiquity.mithril.data.model.Violation;
 import edu.umbc.cs.ebiquity.mithril.ui.fragments.EmptyFragment;
 import edu.umbc.cs.ebiquity.mithril.ui.fragments.mainactivityfragments.AboutFragment;
+import edu.umbc.cs.ebiquity.mithril.ui.fragments.mainactivityfragments.BroadcastReceiversFragment;
+import edu.umbc.cs.ebiquity.mithril.ui.fragments.mainactivityfragments.ContentProvidersFragment;
 import edu.umbc.cs.ebiquity.mithril.ui.fragments.mainactivityfragments.PrefsFragment;
 import edu.umbc.cs.ebiquity.mithril.ui.fragments.mainactivityfragments.ReloadDefaultDataFragment;
-import edu.umbc.cs.ebiquity.mithril.ui.fragments.mainactivityfragments.ShowAppsFragment;
-import edu.umbc.cs.ebiquity.mithril.ui.fragments.mainactivityfragments.ShowPermissionsFragment;
+import edu.umbc.cs.ebiquity.mithril.ui.fragments.mainactivityfragments.AppsFragment;
+import edu.umbc.cs.ebiquity.mithril.ui.fragments.mainactivityfragments.PermissionsFragment;
+import edu.umbc.cs.ebiquity.mithril.ui.fragments.mainactivityfragments.ServicesFragment;
 import edu.umbc.cs.ebiquity.mithril.ui.fragments.mainactivityfragments.ViolationFragment;
-import edu.umbc.cs.ebiquity.mithril.util.services.AppLaunchDetectorService;
-import edu.umbc.cs.ebiquity.mithril.util.services.LocationUpdateService;
-import edu.umbc.cs.ebiquity.mithril.util.specialtasks.permissions.PermissionHelper;
+import edu.umbc.cs.ebiquity.mithril.ui.fragments.mainactivityfragments.dummy.DummyContent;
 
 public class MainActivity extends AppCompatActivity
         implements  NavigationView.OnNavigationItemSelectedListener,
-                    ShowAppsFragment.OnListFragmentInteractionListener,
-                    ShowAppsFragment.OnListFragmentLongInteractionListener,
-        ShowPermissionsFragment.OnListFragmentInteractionListener,
-        AboutFragment.OnFragmentInteractionListener,
-        ViolationFragment.OnListFragmentInteractionListener,
-        ReloadDefaultDataFragment.OnFragmentInteractionListener,
-        EmptyFragment.OnFragmentInteractionListener {
+                    AppsFragment.OnListFragmentInteractionListener,
+                    AppsFragment.OnListFragmentLongInteractionListener,
+                    PermissionsFragment.OnListFragmentInteractionListener,
+                    BroadcastReceiversFragment.OnListFragmentInteractionListener,
+                    ContentProvidersFragment.OnListFragmentInteractionListener,
+                    ServicesFragment.OnListFragmentInteractionListener,
+                    AboutFragment.OnFragmentInteractionListener,
+                    ViolationFragment.OnListFragmentInteractionListener,
+                    ReloadDefaultDataFragment.OnFragmentInteractionListener,
+                    EmptyFragment.OnFragmentInteractionListener {
 
+    private MithrilDBHelper mithrilDBHelper;
+    private SQLiteDatabase mithrilDB;
     private SharedPreferences sharedPreferences;
     private Violation violationItemSelected = null;
     private DrawerLayout drawer;
     private ActionBarDrawerToggle toggle;
     private NavigationView navigationView;
     private List<AppData> appDataItemsSelected = null;
+    private List<Violation> violationItems;
     private FloatingActionButton fab;
     private View headerView;
-
-    private void loadAllAppsFragment() {
-        Bundle data = new Bundle();
-        data.putString(MithrilApplication.getPrefKeyAppDisplayType(), MithrilApplication.getPrefKeyAllAppsDisplay());
-
-        ShowAppsFragment aShowappsFragment = new ShowAppsFragment();
-        aShowappsFragment.setArguments(data);
-
-        FragmentManager fragmentManager = getFragmentManager();
-        fragmentManager.beginTransaction().replace(R.id.container_main, aShowappsFragment)
-                .commit();
-    }
-
-    private void loadSystemAppsFragment() {
-        Bundle data = new Bundle();
-        data.putString(MithrilApplication.getPrefKeyAppDisplayType(), MithrilApplication.getPrefKeySystemAppsDisplay());
-
-        ShowAppsFragment aShowappsFragment = new ShowAppsFragment();
-        aShowappsFragment.setArguments(data);
-
-        FragmentManager fragmentManager = getFragmentManager();
-        fragmentManager.beginTransaction().replace(R.id.container_main, aShowappsFragment)
-                .commit();
-    }
-
-    private void loadUserAppsFragment() {
-        Bundle data = new Bundle();
-        data.putString(MithrilApplication.getPrefKeyAppDisplayType(), MithrilApplication.getPrefKeyUserAppsDisplay());
-
-        ShowAppsFragment aShowappsFragment = new ShowAppsFragment();
-        aShowappsFragment.setArguments(data);
-
-        FragmentManager fragmentManager = getFragmentManager();
-        fragmentManager.beginTransaction().replace(R.id.container_main, aShowappsFragment)
-                .commit();
-    }
 
     @Override
     public boolean onNavigationItemSelected(MenuItem item) {
@@ -103,23 +75,25 @@ public class MainActivity extends AppCompatActivity
         int id = item.getItemId();
 
         if (id == R.id.nav_violations) {
-            FragmentManager fragmentManager = getFragmentManager();
-            fragmentManager.beginTransaction().replace(R.id.container_main, new ViolationFragment()).commit();
+            loadViolationsFragment();
         } else if (id == R.id.nav_perm) {
-            FragmentManager fragmentManager = getFragmentManager();
-            fragmentManager.beginTransaction().replace(R.id.container_main, new ShowPermissionsFragment()).commit();
+            loadPermissionsFragment();
         } else if (id == R.id.nav_user) {
             loadUserAppsFragment();
         } else if (id == R.id.nav_system) {
             loadSystemAppsFragment();
         } else if (id == R.id.nav_all) {
             loadAllAppsFragment();
+        } else if (id == R.id.nav_services) {
+            loadServicesFragment();
+        } else if (id == R.id.nav_bcastreceivers) {
+            loadBroadcastReceiversFragment();
+        } else if (id == R.id.nav_contentproviders) {
+            loadContentProvidersFragment();
         } else if (id == R.id.nav_settings) {
-            FragmentManager fragmentManager = getFragmentManager();
-            fragmentManager.beginTransaction().replace(R.id.container_main, new PrefsFragment()).commit();
+            loadPrefsFragment();
 //        } else if (id == R.id.nav_reload) {
-//            FragmentManager fragmentManager = getFragmentManager();
-//            fragmentManager.beginTransaction().replace(R.id.container_main, new ReloadDefaultDataFragment()).commit();
+//            loadReloadDefaultDataFragment();
         } else if (id == R.id.nav_about) {
             FragmentManager fragmentManager = getFragmentManager();
             fragmentManager.beginTransaction().replace(R.id.container_main, new AboutFragment()).commit();
@@ -131,63 +105,27 @@ public class MainActivity extends AppCompatActivity
     }
 
     @Override
-    public void onListFragmentInteraction(AppData item) {
-        //TODO Do something with the App selected
-        Intent intent = new Intent(this, ViewAppDetailsActivity.class);
-        intent.putExtra(MithrilApplication.getPrefKeyAppPkgName(), item.getPackageName());
-        startActivity(intent);
-    }
-
-    @Override
-    public void onListFragmentInteraction(Violation item) {
-        //TODO Do something with the Violation selected
-        violationItemSelected = item;
-    }
-
-    @Override
-    public void onListFragmentLongInteraction(List<AppData> items) {
-        //TODO Do something with the Apps selected
-        appDataItemsSelected = items;
-    }
-
-    @Override
-    public void onFragmentInteraction(Uri uri) {
-        //TODO do something when the reload data fragment is interacted with
-    }
-
-    @Override
-    public void onListFragmentInteraction(PermData item) {
-        //TODO do something when the permission data is requested - I have an idea. Why don't you launch a list of permissions that are being used by apps.
-    }
-
-    @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
         getUserConsent();
     }
 
-    private void initHousekeepingTasks() {
-        if (PermissionHelper.isExplicitPermissionAcquisitionNecessary()) {
-            PermissionHelper.requestAllNecessaryPermissions(this);
-            if (PermissionHelper.getUsageStatsPermisison(this))
-                startService(new Intent(this, AppLaunchDetectorService.class));
-            if (PermissionHelper.isPermissionGranted(this, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED)
-                startService(new Intent(this, LocationUpdateService.class));
-//            if (PermissionHelper.isPermissionGranted(this, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
-//                boolean updatesRequested = false;
-//                    /*
-//                    * Get any previous setting for location updates
-//                    * Gets "false" if an error occurs
-//                    */
-//                if (sharedPref.contains(MithrilApplication.getPrefKeyLocationUpdateServiceState())) {
-//                    updatesRequested = sharedPref.getBoolean(MithrilApplication.getPrefKeyLocationUpdateServiceState(), false);
-//                }
-//                if (updatesRequested) {
-//                    startService(new Intent(this, LocationUpdateService.class));
-//                }
-//            }
-        }
+    private void getUserConsent() {
+        /*
+         * If the user has already consented, we just go to the MainActivity, or else we are stuck here!
+         */
+        sharedPreferences = getApplicationContext().getSharedPreferences(MithrilApplication.getSharedPreferencesName(), Context.MODE_PRIVATE);
+        if (sharedPreferences.getString(MithrilApplication.getPrefKeyUserConsent(), null) == null) {
+            Intent consentActivity = new Intent(getApplicationContext(), UserAgreementActivity.class);
+            startActivityForResult(consentActivity, MithrilApplication.USER_CONSENT_RECEIVED_REQUEST_CODE);
+        } else
+            startMainActivityTasks();
+    }
+
+    private void startMainActivityTasks() {
+        initViews();
+        defaultFragmentLoad();
     }
 
     @SuppressWarnings("RestrictedApi")
@@ -215,6 +153,10 @@ public class MainActivity extends AppCompatActivity
         navigationView.setNavigationItemSelectedListener(this);
 
         applyHeaderView();
+        
+        // Let's get the DB instances loaded too
+        mithrilDBHelper = new MithrilDBHelper(this);
+        mithrilDB = mithrilDBHelper.getWritableDatabase();
     }
 
     private void applyHeaderView() {
@@ -248,11 +190,186 @@ public class MainActivity extends AppCompatActivity
     }
 
     private void defaultFragmentLoad() {
-//        For ViolationFragment() we will have to manage in a different manner
-//        FragmentManager fragmentManager = getFragmentManager();
-//        fragmentManager.beginTransaction().replace(R.id.container, new ViolationFragment()).commit();
 //        If we are loading the app list we don't need the above two lines as we take care of that in the loadAllAppsFragment() method
+//        loadViolationsFragment();
         loadUserAppsFragment();
+    }
+
+    private void loadEmptyFragment(){
+        FragmentManager fragmentManager = getFragmentManager();
+        fragmentManager.beginTransaction().replace(R.id.container_main, new EmptyFragment())
+                .commit();
+    }
+
+    private void loadReloadDefaultDataFragment() {
+        FragmentManager fragmentManager = getFragmentManager();
+        fragmentManager.beginTransaction().replace(R.id.container_main, new ReloadDefaultDataFragment())
+                .commit();
+    }
+
+    private void loadPrefsFragment() {
+        FragmentManager fragmentManager = getFragmentManager();
+        fragmentManager.beginTransaction().replace(R.id.container_main, new PrefsFragment())
+                .commit();
+    }
+
+    private void loadViolationsFragment(){
+        if(isViolationFragmentListEmpty())
+            loadEmptyFragment();
+        else {
+//        For ViolationFragment() we will have to manage in a different manner
+            FragmentManager fragmentManager = getFragmentManager();
+            fragmentManager.beginTransaction().replace(R.id.container_main, new ViolationFragment())
+                    .commit();
+        }
+    }
+
+    private void loadBroadcastReceiversFragment(){
+        if(isBroadcastReceiverListEmpty())
+            loadEmptyFragment();
+        else {
+            FragmentManager fragmentManager = getFragmentManager();
+            fragmentManager.beginTransaction().replace(R.id.container_main, new BroadcastReceiversFragment())
+                    .commit();
+        }
+    }
+
+    private void loadContentProvidersFragment(){
+        if(isContentProvidersListEmpty())
+            loadEmptyFragment();
+        else {
+            FragmentManager fragmentManager = getFragmentManager();
+            fragmentManager.beginTransaction().replace(R.id.container_main, new ContentProvidersFragment())
+                    .commit();
+        }
+    }
+
+    private void loadServicesFragment(){
+        if(isServicesListEmpty())
+            loadEmptyFragment();
+        else {
+            FragmentManager fragmentManager = getFragmentManager();
+            fragmentManager.beginTransaction().replace(R.id.container_main, new ServicesFragment())
+                    .commit();
+        }
+    }
+
+    private void loadPermissionsFragment(){
+        if(isPermissionsListEmpty())
+            loadEmptyFragment();
+        else {
+            FragmentManager fragmentManager = getFragmentManager();
+            fragmentManager.beginTransaction().replace(R.id.container_main, new PermissionsFragment())
+                    .commit();
+        }
+    }
+
+    private void loadAllAppsFragment() {
+        Bundle data = new Bundle();
+        data.putString(MithrilApplication.getPrefKeyAppDisplayType(), MithrilApplication.getPrefKeyAllAppsDisplay());
+
+        AppsFragment aShowappsFragment = new AppsFragment();
+        aShowappsFragment.setArguments(data);
+
+        FragmentManager fragmentManager = getFragmentManager();
+        fragmentManager.beginTransaction().replace(R.id.container_main, aShowappsFragment)
+                .commit();
+    }
+
+    private void loadSystemAppsFragment() {
+        Bundle data = new Bundle();
+        data.putString(MithrilApplication.getPrefKeyAppDisplayType(), MithrilApplication.getPrefKeySystemAppsDisplay());
+
+        AppsFragment aShowappsFragment = new AppsFragment();
+        aShowappsFragment.setArguments(data);
+
+        FragmentManager fragmentManager = getFragmentManager();
+        fragmentManager.beginTransaction().replace(R.id.container_main, aShowappsFragment)
+                .commit();
+    }
+
+    private void loadUserAppsFragment() {
+        Bundle data = new Bundle();
+        data.putString(MithrilApplication.getPrefKeyAppDisplayType(), MithrilApplication.getPrefKeyUserAppsDisplay());
+
+        AppsFragment aShowappsFragment = new AppsFragment();
+        aShowappsFragment.setArguments(data);
+
+        FragmentManager fragmentManager = getFragmentManager();
+        fragmentManager.beginTransaction().replace(R.id.container_main, aShowappsFragment)
+                .commit();
+    }
+
+    private boolean isViolationFragmentListEmpty() {
+        /*
+         * We find out how many violations are there in the database.
+         * If there are none, we will load the EmptyFragment
+         */
+        violationItems = mithrilDBHelper.findAllViolations(mithrilDB);
+        return violationItems.size() > 0 ? true : false;
+    }
+
+    private boolean isBroadcastReceiverListEmpty() {
+        return false;
+    }
+
+    private boolean isUserAppsListEmpty() {
+        return false;
+    }
+
+    private boolean isSystemAppsListEmpty() {
+        return false;
+    }
+
+    private boolean isAllAppsListEmpty() {
+        return false;
+    }
+
+    private boolean isServicesListEmpty() {
+        return false;
+    }
+
+    private boolean isContentProvidersListEmpty() {
+        return false;
+    }
+
+    private boolean isPermissionsListEmpty() {
+        return false;
+    }
+
+    @Override
+    public void onListFragmentInteraction(AppData item) {
+        //TODO Do something with the App selected
+        Intent intent = new Intent(this, ViewAppDetailsActivity.class);
+        intent.putExtra(MithrilApplication.getPrefKeyAppPkgName(), item.getPackageName());
+        startActivity(intent);
+    }
+
+    @Override
+    public void onListFragmentInteraction(Violation item) {
+        //TODO Do something with the Violation selected
+        violationItemSelected = item;
+    }
+
+    @Override
+    public void onListFragmentLongInteraction(List<AppData> items) {
+        //TODO Do something with the Apps selected
+        appDataItemsSelected = items;
+    }
+
+    @Override
+    public void onFragmentInteraction(Uri uri) {
+        //TODO do something when the reload data fragment is interacted with
+    }
+
+    @Override
+    public void onListFragmentInteraction(PermData item) {
+        //TODO do something when the permission data is requested - I have an idea. Why don't you launch a list of permissions that are being used by apps.
+    }
+
+    @Override
+    public void onListFragmentInteraction(DummyContent.DummyItem item) {
+
     }
 
     @Override
@@ -262,39 +379,6 @@ public class MainActivity extends AppCompatActivity
         } else {
             super.onBackPressed();
         }
-    }
-
-    @Override
-    public void onRequestPermissionsResult(int requestCode, String permissions[], int[] grantResults) {
-        switch (requestCode) {
-            case MithrilApplication.ALL_PERMISSIONS_MITHRIL_REQUEST_CODE: {
-                // If request is cancelled, the result arrays are empty.
-                if (grantResults.length < 0
-                        && grantResults[0] == PackageManager.PERMISSION_DENIED) {
-                    // permission denied, boo! Disable the
-                    // functionality that depends on this permission.
-                    Toast.makeText(this, "You denied some permissions. This might disrupt some functionality!", Toast.LENGTH_SHORT).show();
-//                } else {
-//                    // permission was granted, yay! Do the
-//                    // contacts-related task you need to do.
-                }
-//                return;
-            }
-            // other 'case' lines to check for other
-            // permissions this app might request
-        }
-    }
-
-    private void getUserConsent() {
-        /*
-         * If the user has already consented, we just go to the MainActivity, or else we are stuck here!
-         */
-        sharedPreferences = getApplicationContext().getSharedPreferences(MithrilApplication.getSharedPreferencesName(), Context.MODE_PRIVATE);
-        if (sharedPreferences.getString(MithrilApplication.getPrefKeyUserConsent(), null) == null) {
-            Intent consentActivity = new Intent(getApplicationContext(), UserAgreementActivity.class);
-            startActivityForResult(consentActivity, MithrilApplication.USER_CONSENT_RECEIVED_REQUEST_CODE);
-        } else
-            startMainActivityTasks();
     }
 
     @Override
@@ -311,11 +395,5 @@ public class MainActivity extends AppCompatActivity
                  */
             }
         }
-    }
-
-    private void startMainActivityTasks() {
-        initHousekeepingTasks();
-        initViews();
-        defaultFragmentLoad();
     }
 }

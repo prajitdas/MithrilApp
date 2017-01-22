@@ -1,8 +1,8 @@
 package edu.umbc.cs.ebiquity.mithril.ui.fragments.mainactivityfragments;
 
-import android.app.Fragment;
 import android.content.Context;
 import android.os.Bundle;
+import android.app.Fragment;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -10,12 +10,10 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import edu.umbc.cs.ebiquity.mithril.R;
-import edu.umbc.cs.ebiquity.mithril.data.model.PermData;
-import edu.umbc.cs.ebiquity.mithril.ui.adapters.InstalledPermissionRecyclerViewAdapter;
+import edu.umbc.cs.ebiquity.mithril.ui.adapters.InstalledServicesRecyclerViewAdapter;
+import edu.umbc.cs.ebiquity.mithril.ui.fragments.mainactivityfragments.dummy.DummyContent;
+import edu.umbc.cs.ebiquity.mithril.ui.fragments.mainactivityfragments.dummy.DummyContent.DummyItem;
 
 /**
  * A fragment representing a list of Items.
@@ -23,26 +21,25 @@ import edu.umbc.cs.ebiquity.mithril.ui.adapters.InstalledPermissionRecyclerViewA
  * Activities containing this fragment MUST implement the {@link OnListFragmentInteractionListener}
  * interface.
  */
-public class ShowPermissionsFragment extends Fragment {
+public class ServicesFragment extends Fragment {
 
     // TODO: Customize parameter argument names
     private static final String ARG_COLUMN_COUNT = "column-count";
     // TODO: Customize parameters
     private int mColumnCount = 1;
     private OnListFragmentInteractionListener mListener;
-    private List<PermData> permDataList;
 
     /**
      * Mandatory empty constructor for the fragment manager to instantiate the
      * fragment (e.g. upon screen orientation changes).
      */
-    public ShowPermissionsFragment() {
+    public ServicesFragment() {
     }
 
     // TODO: Customize parameter initialization
     @SuppressWarnings("unused")
-    public static ShowPermissionsFragment newInstance(int columnCount) {
-        ShowPermissionsFragment fragment = new ShowPermissionsFragment();
+    public static ServicesFragment newInstance(int columnCount) {
+        ServicesFragment fragment = new ServicesFragment();
         Bundle args = new Bundle();
         args.putInt(ARG_COLUMN_COUNT, columnCount);
         fragment.setArguments(args);
@@ -61,9 +58,7 @@ public class ShowPermissionsFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_permissions_list, container, false);
-
-        permDataList = new ArrayList<PermData>();
+        View view = inflater.inflate(R.layout.fragment_services_list, container, false);
 
         // Set the adapter
         if (view instanceof RecyclerView) {
@@ -74,10 +69,11 @@ public class ShowPermissionsFragment extends Fragment {
             } else {
                 recyclerView.setLayoutManager(new GridLayoutManager(context, mColumnCount));
             }
-            recyclerView.setAdapter(new InstalledPermissionRecyclerViewAdapter(permDataList, mListener));
+            recyclerView.setAdapter(new InstalledServicesRecyclerViewAdapter(DummyContent.ITEMS, mListener));
         }
         return view;
     }
+
 
     @Override
     public void onAttach(Context context) {
@@ -108,6 +104,6 @@ public class ShowPermissionsFragment extends Fragment {
      */
     public interface OnListFragmentInteractionListener {
         // TODO: Update argument type and name
-        void onListFragmentInteraction(PermData item);
+        void onListFragmentInteraction(DummyItem item);
     }
 }
