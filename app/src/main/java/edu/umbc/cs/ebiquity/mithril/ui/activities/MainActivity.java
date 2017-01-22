@@ -127,7 +127,6 @@ public class MainActivity extends AppCompatActivity
         defaultFragmentLoad();
     }
 
-    @SuppressWarnings("RestrictedApi")
     private void initViews() {
         setContentView(R.layout.activity_main);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar_main);
@@ -170,28 +169,21 @@ public class MainActivity extends AppCompatActivity
         headerView.findViewById(R.id.drawer_view);
         Calendar cal = Calendar.getInstance();
         int hourofday = cal.get(Calendar.HOUR_OF_DAY);
-        Log.d(MithrilApplication.getDebugTag(), Integer.toString(hourofday));
-//        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
         if (hourofday < 12 && hourofday >= 6)
             headerView.setBackground(ResourcesCompat.getDrawable(getResources(), R.drawable.csee_morning, getTheme()));
         else if (hourofday < 18 && hourofday >= 12)
             headerView.setBackground(ResourcesCompat.getDrawable(getResources(), R.drawable.csee_afternoon, getTheme()));
         else
             headerView.setBackground(ResourcesCompat.getDrawable(getResources(), R.drawable.csee_evening, getTheme()));
-//        } else {
-//            if (hourofday < 12 && hourofday >= 6)
-//                headerView.setBackground(ContextCompat.getDrawable(getApplicationContext(), R.drawable.csee_morning));
-//            else if (hourofday < 18 && hourofday >= 12)
-//                headerView.setBackground(ContextCompat.getDrawable(getApplicationContext(), R.drawable.csee_afternoon));
-//            else
-//                headerView.setBackground(ContextCompat.getDrawable(getApplicationContext(), R.drawable.csee_evening));
-//        }
     }
 
     private void defaultFragmentLoad() {
-//        If we are loading the app list we don't need the above two lines as we take care of that in the loadAllAppsFragment() method
-//        loadViolationsFragment();
-        loadUserAppsFragment();
+        /*
+         * If we are loading the app list we don't need the above two lines
+         * as we take care of that in the loadAllAppsFragment() method
+         */
+        loadViolationsFragment();
+//        loadUserAppsFragment();
     }
 
     private void loadNothingHereFragment() {
@@ -317,7 +309,11 @@ public class MainActivity extends AppCompatActivity
          * If there are none, we will load the EmptyFragment
          */
         violationItems = mithrilDBHelper.findAllViolations(mithrilDB);
-        return !(violationItems == null || violationItems.size() <= 0);
+        if (violationItems != null)
+            Log.d(MithrilApplication.getDebugTag(), "Number of violations" + Integer.toString(violationItems.size()));
+        else
+            Log.d(MithrilApplication.getDebugTag(), "Null");
+        return !(violationItems == null || violationItems.size() > 0);
     }
 
     private boolean isBroadcastReceiverListEmpty() {
