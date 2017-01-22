@@ -5,7 +5,6 @@ import android.app.FragmentManager;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.content.pm.PackageManager;
 import android.database.sqlite.SQLiteDatabase;
 import android.net.Uri;
 import android.os.Bundle;
@@ -21,7 +20,6 @@ import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.Toast;
 
 import java.util.Calendar;
 import java.util.List;
@@ -33,13 +31,14 @@ import edu.umbc.cs.ebiquity.mithril.data.model.AppData;
 import edu.umbc.cs.ebiquity.mithril.data.model.PermData;
 import edu.umbc.cs.ebiquity.mithril.data.model.Violation;
 import edu.umbc.cs.ebiquity.mithril.ui.fragments.EmptyFragment;
+import edu.umbc.cs.ebiquity.mithril.ui.fragments.NothingHereFragment;
 import edu.umbc.cs.ebiquity.mithril.ui.fragments.mainactivityfragments.AboutFragment;
+import edu.umbc.cs.ebiquity.mithril.ui.fragments.mainactivityfragments.AppsFragment;
 import edu.umbc.cs.ebiquity.mithril.ui.fragments.mainactivityfragments.BroadcastReceiversFragment;
 import edu.umbc.cs.ebiquity.mithril.ui.fragments.mainactivityfragments.ContentProvidersFragment;
+import edu.umbc.cs.ebiquity.mithril.ui.fragments.mainactivityfragments.PermissionsFragment;
 import edu.umbc.cs.ebiquity.mithril.ui.fragments.mainactivityfragments.PrefsFragment;
 import edu.umbc.cs.ebiquity.mithril.ui.fragments.mainactivityfragments.ReloadDefaultDataFragment;
-import edu.umbc.cs.ebiquity.mithril.ui.fragments.mainactivityfragments.AppsFragment;
-import edu.umbc.cs.ebiquity.mithril.ui.fragments.mainactivityfragments.PermissionsFragment;
 import edu.umbc.cs.ebiquity.mithril.ui.fragments.mainactivityfragments.ServicesFragment;
 import edu.umbc.cs.ebiquity.mithril.ui.fragments.mainactivityfragments.ViolationFragment;
 import edu.umbc.cs.ebiquity.mithril.ui.fragments.mainactivityfragments.dummy.DummyContent;
@@ -55,7 +54,8 @@ public class MainActivity extends AppCompatActivity
                     AboutFragment.OnFragmentInteractionListener,
                     ViolationFragment.OnListFragmentInteractionListener,
                     ReloadDefaultDataFragment.OnFragmentInteractionListener,
-                    EmptyFragment.OnFragmentInteractionListener {
+        EmptyFragment.OnFragmentInteractionListener,
+        NothingHereFragment.OnFragmentInteractionListener {
 
     private MithrilDBHelper mithrilDBHelper;
     private SQLiteDatabase mithrilDB;
@@ -92,11 +92,10 @@ public class MainActivity extends AppCompatActivity
             loadContentProvidersFragment();
         } else if (id == R.id.nav_settings) {
             loadPrefsFragment();
-//        } else if (id == R.id.nav_reload) {
-//            loadReloadDefaultDataFragment();
+        } else if (id == R.id.nav_reload) {
+            loadReloadDefaultDataFragment();
         } else if (id == R.id.nav_about) {
-            FragmentManager fragmentManager = getFragmentManager();
-            fragmentManager.beginTransaction().replace(R.id.container_main, new AboutFragment()).commit();
+            loadAboutFragment();
         }
 
         drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
@@ -195,6 +194,12 @@ public class MainActivity extends AppCompatActivity
         loadUserAppsFragment();
     }
 
+    private void loadNothingHereFragment() {
+        FragmentManager fragmentManager = getFragmentManager();
+        fragmentManager.beginTransaction().replace(R.id.container_main, new NothingHereFragment())
+                .commit();
+    }
+
     private void loadEmptyFragment(){
         FragmentManager fragmentManager = getFragmentManager();
         fragmentManager.beginTransaction().replace(R.id.container_main, new EmptyFragment())
@@ -213,6 +218,12 @@ public class MainActivity extends AppCompatActivity
                 .commit();
     }
 
+    private void loadAboutFragment() {
+        FragmentManager fragmentManager = getFragmentManager();
+        fragmentManager.beginTransaction().replace(R.id.container_main, new AboutFragment())
+                .commit();
+    }
+
     private void loadViolationsFragment(){
         if(isViolationFragmentListEmpty())
             loadEmptyFragment();
@@ -226,7 +237,7 @@ public class MainActivity extends AppCompatActivity
 
     private void loadBroadcastReceiversFragment(){
         if(isBroadcastReceiverListEmpty())
-            loadEmptyFragment();
+            loadNothingHereFragment();
         else {
             FragmentManager fragmentManager = getFragmentManager();
             fragmentManager.beginTransaction().replace(R.id.container_main, new BroadcastReceiversFragment())
@@ -236,7 +247,7 @@ public class MainActivity extends AppCompatActivity
 
     private void loadContentProvidersFragment(){
         if(isContentProvidersListEmpty())
-            loadEmptyFragment();
+            loadNothingHereFragment();
         else {
             FragmentManager fragmentManager = getFragmentManager();
             fragmentManager.beginTransaction().replace(R.id.container_main, new ContentProvidersFragment())
@@ -246,7 +257,7 @@ public class MainActivity extends AppCompatActivity
 
     private void loadServicesFragment(){
         if(isServicesListEmpty())
-            loadEmptyFragment();
+            loadNothingHereFragment();
         else {
             FragmentManager fragmentManager = getFragmentManager();
             fragmentManager.beginTransaction().replace(R.id.container_main, new ServicesFragment())
@@ -256,7 +267,7 @@ public class MainActivity extends AppCompatActivity
 
     private void loadPermissionsFragment(){
         if(isPermissionsListEmpty())
-            loadEmptyFragment();
+            loadNothingHereFragment();
         else {
             FragmentManager fragmentManager = getFragmentManager();
             fragmentManager.beginTransaction().replace(R.id.container_main, new PermissionsFragment())
@@ -306,11 +317,11 @@ public class MainActivity extends AppCompatActivity
          * If there are none, we will load the EmptyFragment
          */
         violationItems = mithrilDBHelper.findAllViolations(mithrilDB);
-        return violationItems.size() > 0 ? true : false;
+        return !(violationItems == null || violationItems.size() <= 0);
     }
 
     private boolean isBroadcastReceiverListEmpty() {
-        return false;
+        return true;
     }
 
     private boolean isUserAppsListEmpty() {
@@ -326,15 +337,15 @@ public class MainActivity extends AppCompatActivity
     }
 
     private boolean isServicesListEmpty() {
-        return false;
+        return true;
     }
 
     private boolean isContentProvidersListEmpty() {
-        return false;
+        return true;
     }
 
     private boolean isPermissionsListEmpty() {
-        return false;
+        return true;
     }
 
     @Override

@@ -83,6 +83,8 @@ public class UserAgreementActivity extends AppCompatActivity {
                 SharedPreferences.Editor editor = v.getContext().getSharedPreferences(MithrilApplication.getSharedPreferencesName(), Context.MODE_PRIVATE).edit();
                 editor.putString(MithrilApplication.getPrefKeyUserConsent(), "agreed");
                 editor.commit();
+                // User has agreed, ask for the other permissions
+                initHousekeepingTasks();
                 resultOkay();
             }
         });

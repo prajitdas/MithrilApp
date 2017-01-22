@@ -10,15 +10,16 @@ import android.view.ViewGroup;
 
 import edu.umbc.cs.ebiquity.mithril.R;
 
-public class EmptyFragment extends Fragment {
+public class NothingHereFragment extends Fragment {
+
     private OnFragmentInteractionListener mListener;
 
-    public EmptyFragment() {
+    public NothingHereFragment() {
         // Required empty public constructor
     }
 
-    public static EmptyFragment newInstance() {
-        EmptyFragment fragment = new EmptyFragment();
+    public static NothingHereFragment newInstance() {
+        NothingHereFragment fragment = new NothingHereFragment();
         Bundle args = new Bundle();
         fragment.setArguments(args);
         return fragment;
@@ -33,7 +34,7 @@ public class EmptyFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_empty, container, false);
+        return inflater.inflate(R.layout.fragment_nothing_here, container, false);
     }
 
     // TODO: Rename method, update argument and hook method into UI event
