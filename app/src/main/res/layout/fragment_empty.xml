@@ -3,7 +3,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/white"
-    tools:context="edu.umbc.cs.ebiquity.mithril.ui.fragments.EmptyFragment">
+    tools:context=".ui.fragments.EmptyFragment">
 
     <RelativeLayout
         android:layout_width="wrap_content"

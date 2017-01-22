@@ -50,8 +50,7 @@
             android:name=".ui.activities.UserAgreementActivity"
             android:configChanges="orientation|keyboardHidden|screenSize"
             android:label="@string/title_activity_user_agreement"
-            android:theme="@style/FullscreenTheme">
-        </activity>
+            android:theme="@style/FullscreenTheme"></activity>
         <activity
             android:name=".ui.activities.ShowUserAgreementActivity"
             android:label="@string/title_activity_show_user_agreement"
@@ -127,6 +126,8 @@
         <service
             android:name=".util.services.GeofenceTransitionsIntentService"
             android:exported="false" />
+
+        <activity android:name=".ui.activities.RuleChangeActivity"></activity>
     </application>
 
 </manifest>
