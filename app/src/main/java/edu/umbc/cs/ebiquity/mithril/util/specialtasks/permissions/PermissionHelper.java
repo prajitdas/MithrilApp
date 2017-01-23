@@ -165,6 +165,7 @@ public class PermissionHelper {
                     .setPositiveButton(R.string.dialog_resp_allow, new DialogInterface.OnClickListener() {
                         public void onClick(DialogInterface dialog, int id) {
                             requestUsageStatsPermission(context);
+                            //This is not working as it kills the current activity and launches the previosu one!
                             android.os.Process.killProcess(android.os.Process.myPid());
                         }
                     })
@@ -186,23 +187,14 @@ public class PermissionHelper {
         return false;
     }
 
-    private static boolean needsUsageStatsPermission(Context context) {
-        return postLollipop() && !hasUsageStatsPermission(context);
-    }
-
-//    public static int getCountOfPermissionsToRequest() {
-//        return countOfPermissionsToRequest;
-//    }
-//
-//    public static void setCountOfPermissionsToRequest(int countOfPermissionsToRequest) {
-//        PermissionHelper.countOfPermissionsToRequest = countOfPermissionsToRequest;
-//    }
-
     @TargetApi(Build.VERSION_CODES.LOLLIPOP)
     private static void requestUsageStatsPermission(Context context) {
-        if (!hasUsageStatsPermission(context)) {
+        if (!hasUsageStatsPermission(context))
             context.startActivity(new Intent(Settings.ACTION_USAGE_ACCESS_SETTINGS));
-        }
+    }
+
+    private static boolean needsUsageStatsPermission(Context context) {
+        return postLollipop() && !hasUsageStatsPermission(context);
     }
 
     public static boolean postLollipop() {
@@ -217,6 +209,14 @@ public class PermissionHelper {
         boolean granted = mode == AppOpsManager.MODE_ALLOWED;
         return granted;
     }
+
+//    public static int getCountOfPermissionsToRequest() {
+//        return countOfPermissionsToRequest;
+//    }
+//
+//    public static void setCountOfPermissionsToRequest(int countOfPermissionsToRequest) {
+//        PermissionHelper.countOfPermissionsToRequest = countOfPermissionsToRequest;
+//    }
 
     /* Checks if external storage is available for read and write */
     public boolean isExternalStorageWritable() {

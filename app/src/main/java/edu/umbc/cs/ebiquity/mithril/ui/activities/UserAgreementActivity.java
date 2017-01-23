@@ -1,6 +1,5 @@
 package edu.umbc.cs.ebiquity.mithril.ui.activities;
 
-import android.Manifest;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
@@ -17,8 +16,6 @@ import android.widget.Toast;
 import edu.umbc.cs.ebiquity.mithril.MithrilApplication;
 import edu.umbc.cs.ebiquity.mithril.R;
 import edu.umbc.cs.ebiquity.mithril.data.dbhelpers.MithrilDBHelper;
-import edu.umbc.cs.ebiquity.mithril.util.services.AppLaunchDetectorService;
-import edu.umbc.cs.ebiquity.mithril.util.services.LocationUpdateService;
 import edu.umbc.cs.ebiquity.mithril.util.specialtasks.permissions.PermissionHelper;
 
 public class UserAgreementActivity extends AppCompatActivity {
@@ -84,7 +81,6 @@ public class UserAgreementActivity extends AppCompatActivity {
                 editor.putString(MithrilApplication.getPrefKeyUserConsent(), "agreed");
                 editor.commit();
                 // User has agreed, ask for the other permissions
-                initHousekeepingTasks();
                 resultOkay();
             }
         });
@@ -124,6 +120,7 @@ public class UserAgreementActivity extends AppCompatActivity {
     }
 
     private void resultOkay() {
+        initHousekeepingTasks();
         Intent returnIntent = new Intent();
         setResult(Activity.RESULT_OK, returnIntent);
         finish();
@@ -138,23 +135,6 @@ public class UserAgreementActivity extends AppCompatActivity {
     private void initHousekeepingTasks() {
         if (PermissionHelper.isExplicitPermissionAcquisitionNecessary()) {
             PermissionHelper.requestAllNecessaryPermissions(this);
-            if (PermissionHelper.getUsageStatsPermisison(this))
-                startService(new Intent(this, AppLaunchDetectorService.class));
-            if (PermissionHelper.isPermissionGranted(this, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED)
-                startService(new Intent(this, LocationUpdateService.class));
-//            if (PermissionHelper.isPermissionGranted(this, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
-//                boolean updatesRequested = false;
-//                    /*
-//                    * Get any previous setting for location updates
-//                    * Gets "false" if an error occurs
-//                    */
-//                if (sharedPref.contains(MithrilApplication.getPrefKeyLocationUpdateServiceState())) {
-//                    updatesRequested = sharedPref.getBoolean(MithrilApplication.getPrefKeyLocationUpdateServiceState(), false);
-//                }
-//                if (updatesRequested) {
-//                    startService(new Intent(this, LocationUpdateService.class));
-//                }
-//            }
         }
         /**
          * Initiate database creation and default data insertion, happens only once.

@@ -1,10 +1,12 @@
 package edu.umbc.cs.ebiquity.mithril.ui.activities;
 
+import android.Manifest;
 import android.app.Activity;
 import android.app.FragmentManager;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.pm.PackageManager;
 import android.database.sqlite.SQLiteDatabase;
 import android.net.Uri;
 import android.os.Bundle;
@@ -42,6 +44,9 @@ import edu.umbc.cs.ebiquity.mithril.ui.fragments.mainactivityfragments.ReloadDef
 import edu.umbc.cs.ebiquity.mithril.ui.fragments.mainactivityfragments.ServicesFragment;
 import edu.umbc.cs.ebiquity.mithril.ui.fragments.mainactivityfragments.ViolationFragment;
 import edu.umbc.cs.ebiquity.mithril.ui.fragments.mainactivityfragments.dummy.DummyContent;
+import edu.umbc.cs.ebiquity.mithril.util.services.AppLaunchDetectorService;
+import edu.umbc.cs.ebiquity.mithril.util.services.LocationUpdateService;
+import edu.umbc.cs.ebiquity.mithril.util.specialtasks.permissions.PermissionHelper;
 
 public class MainActivity extends AppCompatActivity
         implements  NavigationView.OnNavigationItemSelectedListener,
@@ -123,8 +128,29 @@ public class MainActivity extends AppCompatActivity
     }
 
     private void startMainActivityTasks() {
+        initHouseKeepingTasks();
         initViews();
         defaultFragmentLoad();
+    }
+
+    private void initHouseKeepingTasks() {
+        if (PermissionHelper.getUsageStatsPermisison(this))
+            startService(new Intent(this, AppLaunchDetectorService.class));
+        if (PermissionHelper.isPermissionGranted(this, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED)
+            startService(new Intent(this, LocationUpdateService.class));
+//            if (PermissionHelper.isPermissionGranted(this, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
+//                boolean updatesRequested = false;
+//                    /*
+//                    * Get any previous setting for location updates
+//                    * Gets "false" if an error occurs
+//                    */
+//                if (sharedPref.contains(MithrilApplication.getPrefKeyLocationUpdateServiceState())) {
+//                    updatesRequested = sharedPref.getBoolean(MithrilApplication.getPrefKeyLocationUpdateServiceState(), false);
+//                }
+//                if (updatesRequested) {
+//                    startService(new Intent(this, LocationUpdateService.class));
+//                }
+//            }
     }
 
     private void initViews() {
