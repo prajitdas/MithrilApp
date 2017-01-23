@@ -8,6 +8,7 @@ import android.content.pm.PackageManager;
 import android.database.sqlite.SQLiteDatabase;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.Button;
@@ -19,6 +20,7 @@ import edu.umbc.cs.ebiquity.mithril.data.dbhelpers.MithrilDBHelper;
 import edu.umbc.cs.ebiquity.mithril.util.specialtasks.permissions.PermissionHelper;
 
 public class UserAgreementActivity extends AppCompatActivity {
+    private final Handler handler = new Handler();
     private Button mShowUserAgreementBtn;
     private Button mIAgreeBtn;
     private Button mIDisagreeBtn;
@@ -121,6 +123,15 @@ public class UserAgreementActivity extends AppCompatActivity {
 
     private void resultOkay() {
         initHousekeepingTasks();
+
+        handler.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                //Do something after 100ms
+                //TODO show a window with a visual way os showing progress or better yet do the initHousekeepingTasks in a AsyncTask
+            }
+        }, 1000);
+
         Intent returnIntent = new Intent();
         setResult(Activity.RESULT_OK, returnIntent);
         finish();
