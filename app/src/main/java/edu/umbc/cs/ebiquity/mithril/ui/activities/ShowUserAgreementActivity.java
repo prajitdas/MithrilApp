@@ -30,12 +30,11 @@ import edu.umbc.cs.ebiquity.mithril.R;
  * pages. We use a {@link android.graphics.pdf.PdfRenderer} to render PDF pages as {@link android.graphics.Bitmap}s.
  */
 public class ShowUserAgreementActivity extends AppCompatActivity {
-    private SharedPreferences sharedPreferences;
     /**
      * Key string for saving the state of current page index.
      */
     private static final String STATE_CURRENT_PAGE_INDEX = "current_page_index";
-
+    private SharedPreferences sharedPreferences;
     /**
      * File descriptor of the PDF.
      */
@@ -257,17 +256,18 @@ public class ShowUserAgreementActivity extends AppCompatActivity {
             return;
         }
         // Make sure to close the current page before opening another one.
-        // This is probably not necessary since we have only one page
-//        if (null != mCurrentPage) {
-//            mCurrentPage.close();
-//        }
+        if (null != mCurrentPage) {
+            mCurrentPage.close();
+        }
         // Use `openPage` to open a specific page in PDF.
         mCurrentPage = mPdfRenderer.openPage(index);
         SharedPreferences.Editor editor = this.getSharedPreferences(MithrilApplication.getSharedPreferencesName(), Context.MODE_PRIVATE).edit();
         editor.putInt(MithrilApplication.getPrefKeyUserAgreementPageNumber(), index);
         editor.commit();
-                // Important: the destination bitmap must be ARGB (not RGB).
-        Bitmap bitmap = Bitmap.createBitmap(mCurrentPage.getWidth(), mCurrentPage.getHeight(),
+        // Important: the destination bitmap must be ARGB (not RGB).
+        Bitmap bitmap = Bitmap.createBitmap(
+                mCurrentPage.getWidth(),
+                mCurrentPage.getHeight(),
                 Bitmap.Config.ARGB_8888);
         // Here, we render the page onto the Bitmap.
         // To render a portion of the page, use the second and third parameter. Pass nulls to get

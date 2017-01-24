@@ -1,7 +1,9 @@
 package edu.umbc.cs.ebiquity.mithril.ui.activities;
 
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
@@ -9,7 +11,6 @@ import android.content.res.AssetManager;
 import android.database.sqlite.SQLiteDatabase;
 import android.net.Uri;
 import android.os.Bundle;
-import android.os.Handler;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
@@ -86,21 +87,11 @@ public class UserAgreementActivity extends AppCompatActivity {
         mIAgreeBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                //Copy the agreement file to the external files directory. The user needs a copy of the agreement.
-                File parent = getExternalFilesDir(null);
-                String child = MithrilApplication.getFlierPdfFileName();
-                copyAssets(parent, child);
-
-                Toast.makeText(v.getContext(),
-                        "Thanks! The agreement file has been copied to the "+parent.getAbsolutePath()+" directory, for your reference...",
-                        Toast.LENGTH_LONG)
-                        .show();
-
                 SharedPreferences.Editor editor = v.getContext().getSharedPreferences(MithrilApplication.getSharedPreferencesName(), Context.MODE_PRIVATE).edit();
                 editor.putString(MithrilApplication.getPrefKeyUserConsent(), "agreed");
                 editor.commit();
                 // User has agreed, ask for the other permissions
-                resultOkay();
+                initHousekeepingTasks();
             }
         });
 
@@ -139,15 +130,9 @@ public class UserAgreementActivity extends AppCompatActivity {
     }
 
     private void resultOkay() {
-        initHousekeepingTasks();
-
-//        handler.postDelayed(new Runnable() {
-//            @Override
-//            public void run() {
-//                //Do something after 100ms
-//                //TODO show a window with a visual way os showing progress or better yet do the initHousekeepingTasks in a AsyncTask
-//            }
-//        }, 1000);
+        if (PermissionHelper.isExplicitPermissionAcquisitionNecessary()) {
+            PermissionHelper.requestAllNecessaryPermissions(this);
+        }
 
         Intent returnIntent = new Intent();
         setResult(Activity.RESULT_OK, returnIntent);
@@ -161,14 +146,31 @@ public class UserAgreementActivity extends AppCompatActivity {
     }
 
     private void initHousekeepingTasks() {
-        if (PermissionHelper.isExplicitPermissionAcquisitionNecessary()) {
-            PermissionHelper.requestAllNecessaryPermissions(this);
-        }
         /**
          * Initiate database creation and default data insertion, happens only once.
          */
         mithrilDBHelper = new MithrilDBHelper(this);
         mithrilDB = mithrilDBHelper.getWritableDatabase();
+
+        final AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        final File parent = getExternalFilesDir(null);
+        final String child = MithrilApplication.getFlierPdfFileName();
+        builder.setMessage("Thanks! The agreement file has been copied to the "
+                + parent.getAbsolutePath()
+                + " directory, for your reference. We will need some more permissions though...")
+                .setPositiveButton(R.string.okay, new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+                        //Copy the agreement file to the external files directory. The user needs a copy of the agreement.
+                        copyAssets(parent, child);
+                        resultOkay();
+                    }
+                });
+
+        // create alert dialog
+        AlertDialog alertDialog = builder.create();
+
+        // show it
+        alertDialog.show();
     }
 
     @Override
