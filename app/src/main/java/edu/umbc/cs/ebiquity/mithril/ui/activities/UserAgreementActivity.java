@@ -1,29 +1,17 @@
 package edu.umbc.cs.ebiquity.mithril.ui.activities;
 
 import android.app.Activity;
-import android.app.AlertDialog;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
-import android.content.res.AssetManager;
 import android.database.sqlite.SQLiteDatabase;
 import android.net.Uri;
 import android.os.Bundle;
-import android.os.Environment;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.Toast;
-
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
 
 import edu.umbc.cs.ebiquity.mithril.MithrilApplication;
 import edu.umbc.cs.ebiquity.mithril.R;
@@ -154,25 +142,7 @@ public class UserAgreementActivity extends AppCompatActivity {
         mithrilDBHelper = new MithrilDBHelper(this);
         mithrilDB = mithrilDBHelper.getWritableDatabase();
 
-        final AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        final File parent = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS);
-        final String child = MithrilApplication.getFlierPdfFileName();
-        builder.setMessage("Thanks! The agreement file has been copied to the "
-                + parent.getAbsolutePath()
-                + " directory, for your reference. We will need some more permissions though...")
-                .setPositiveButton(R.string.okay, new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int id) {
-                        //Copy the agreement file to the external files directory. The user needs a copy of the agreement.
-                        copyAssets(parent, child);
-                        resultOkay();
-                    }
-                });
-
-        // create alert dialog
-        AlertDialog alertDialog = builder.create();
-
-        // show it
-        alertDialog.show();
+        resultOkay();
     }
 
     @Override
@@ -193,59 +163,6 @@ public class UserAgreementActivity extends AppCompatActivity {
             }
             // other 'case' lines to check for other
             // permissions this app might request
-        }
-    }
-
-    private void copyAssets(File parent, String child) {
-        File file = new File(parent, child);
-
-        if (!file.exists()) {
-            try {
-                writeFile(new FileOutputStream(file));
-            } catch (FileNotFoundException e) {
-                Log.e(MithrilApplication.getDebugTag(), e.getMessage());
-            }
-        } else {
-            Log.d(MithrilApplication.getDebugTag(), "file already exists");
-        }
-    }
-
-    private void writeFile(OutputStream destination) {
-        AssetManager assetManager = getAssets();
-        InputStream in = null;
-        try {
-            in = assetManager.open(MithrilApplication.getFlierPdfFileName());
-
-            copyFile(in, destination);
-
-            in.close();
-            destination.flush();
-            destination.close();
-        } catch (IOException iOException) {
-            Log.e(MithrilApplication.getDebugTag(), iOException.getMessage());
-        } finally {
-            if (in != null) {
-                try {
-                    in.close();
-                } catch (IOException e) {
-                    Log.d(MithrilApplication.getDebugTag(), "Filer file threw NullPointerException");
-                }
-            }
-            if (destination != null) {
-                try {
-                    destination.close();
-                } catch (IOException e) {
-                    Log.d(MithrilApplication.getDebugTag(), "output file threw NullPointerException");
-                }
-            }
-        }
-    }
-
-    private void copyFile(InputStream in, OutputStream out) throws IOException {
-        byte[] buffer = new byte[1024];
-        int read;
-        while ((read = in.read(buffer)) != -1) {
-            out.write(buffer, 0, read);
         }
     }
 }

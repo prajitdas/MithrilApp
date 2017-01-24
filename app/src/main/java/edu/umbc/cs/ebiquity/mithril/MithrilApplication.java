@@ -110,6 +110,7 @@ public class MithrilApplication extends Application {
     private static final String PREF_KEY_APP_COUNT = "AppCount";
     private static final String PREF_KEY_USER_CONSENT = "UserConsent";
     private static final String PREF_KEY_USER_AGREEMENT_PAGE_NUMBER = "UserAgreementPageNumber";
+    private static final String PREF_KEY_USER_AGREEMENT_COPIED = "UserAgreementCopied";
     //End of preference keys
 
     private static final String DATABASE_NAME = "mithril.db";
@@ -830,5 +831,9 @@ public class MithrilApplication extends Application {
 
     public static String getPrefKeyUserAgreementPageNumber() {
         return PREF_KEY_USER_AGREEMENT_PAGE_NUMBER;
+    }
+
+    public static String getPrefKeyUserAgreementCopied() {
+        return PREF_KEY_USER_AGREEMENT_COPIED;
     }
 }
