@@ -142,10 +142,6 @@ public class MainActivity extends AppCompatActivity
     private void startMainActivityTasks() {
         initHouseKeepingTasks();
 
-        //Agreement has not been copied to downloads folder yet, do it now
-        if (!isAgreementDownloaded())
-            copyAgreement();
-
         initViews();
         defaultFragmentLoad();
     }
@@ -246,6 +242,10 @@ public class MainActivity extends AppCompatActivity
          */
         loadViolationsFragment();
 //        loadUserAppsFragment();
+
+        //Agreement has not been copied to downloads folder yet, do it now
+        if (!isAgreementDownloaded())
+            copyAgreement();
     }
 
     private void loadNothingHereFragment() {
@@ -519,6 +519,6 @@ public class MainActivity extends AppCompatActivity
     }
 
     private boolean isAgreementDownloaded() {
-        return sharedPreferences.getBoolean(MithrilApplication.getPrefKeyUserAgreementCopied(), false);
+        return sharedPreferences.getBoolean(MithrilApplication.getPrefKeyUserAgreementCopied(), false) && new File(downloadsDirectory, agreementFile).exists();
     }
 }
