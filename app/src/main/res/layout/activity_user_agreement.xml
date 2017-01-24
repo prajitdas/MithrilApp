@@ -14,7 +14,7 @@
         android:layout_alignParentEnd="true"
         android:layout_alignParentStart="true"
         android:text="@string/fullscreen_user_disagreement_button_label"
-        android:theme="@style/AppTheme.AgreementButton" />
+        android:theme="@style/AppTheme.Button" />
 
     <Button
         android:id="@+id/iAgreeBtn"
@@ -25,16 +25,12 @@
         android:layout_alignParentStart="true"
         android:paddingBottom="@dimen/card_view_margin"
         android:text="@string/fullscreen_user_agreement_button_label"
-        android:theme="@style/AppTheme.AgreementButton" />
+        android:theme="@style/AppTheme.Button" />
 
     <android.support.v7.widget.CardView
         android:id="@+id/fullscreen_user_agreement_project_details_text_CardView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="0dp"
-        android:layout_marginEnd="0dp"
-        android:layout_marginStart="0dp"
-        android:layout_marginTop="0dp"
         android:background="@color/whitesmoke">
         <!--card_view:cardCornerRadius="10dp">-->
 
@@ -45,11 +41,17 @@
 
             <ImageView
                 android:id="@+id/icon"
-                android:layout_width="200dp"
-                android:layout_height="200dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
                 android:layout_alignParentTop="true"
                 android:layout_centerInParent="true"
-                android:src="@mipmap/ic_launcher" />
+                android:adjustViewBounds="true"
+                android:elevation="24dp"
+                android:maxHeight="200dp"
+                android:maxWidth="200dp"
+                android:paddingBottom="@dimen/card_view_margin"
+                android:paddingTop="@dimen/card_view_margin"
+                android:src="@drawable/logo" />
 
             <TextView
                 android:id="@+id/fullscreen_user_agreement_consent_Header_TextView"
@@ -74,10 +76,6 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@+id/fullscreen_user_agreement_project_details_text_CardView"
-        android:layout_marginBottom="0dp"
-        android:layout_marginEnd="0dp"
-        android:layout_marginStart="0dp"
-        android:layout_marginTop="0dp"
         android:background="@color/whitesmoke">
         <!--card_view:cardCornerRadius="10dp">-->
 
@@ -94,7 +92,7 @@
                 android:layout_alignParentTop="true"
                 android:layout_centerVertical="true"
                 android:text="@string/show_user_agreement_btn_label"
-                android:theme="@style/AppTheme.AgreementButton" />
+                android:theme="@style/AppTheme.Button" />
 
             <TextView
                 android:id="@+id/fullscreen_user_agreement_please_read_TextView"
