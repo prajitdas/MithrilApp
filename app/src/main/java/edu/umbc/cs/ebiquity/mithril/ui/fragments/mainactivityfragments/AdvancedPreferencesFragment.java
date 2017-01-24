@@ -19,12 +19,12 @@ import edu.umbc.cs.ebiquity.mithril.data.dbhelpers.MithrilDBHelper;
 /**
  * A simple {@link Fragment} subclass.
  * Activities that contain this fragment must implement the
- * {@link ReloadDefaultDataFragment.OnFragmentInteractionListener} interface
+ * {@link AdvancedPreferencesFragment.OnFragmentInteractionListener} interface
  * to handle interaction events.
- * Use the {@link ReloadDefaultDataFragment#newInstance} factory method to
+ * Use the {@link AdvancedPreferencesFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class ReloadDefaultDataFragment extends Fragment {
+public class AdvancedPreferencesFragment extends Fragment {
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";
@@ -38,7 +38,7 @@ public class ReloadDefaultDataFragment extends Fragment {
 
     private OnFragmentInteractionListener mListener;
 
-    public ReloadDefaultDataFragment() {
+    public AdvancedPreferencesFragment() {
         // Required empty public constructor
     }
 
@@ -48,11 +48,11 @@ public class ReloadDefaultDataFragment extends Fragment {
      *
      * @param param1 Parameter 1.
      * @param param2 Parameter 2.
-     * @return A new instance of fragment ReloadDefaultDataFragment.
+     * @return A new instance of fragment AdvancedPreferencesFragment.
      */
     // TODO: Rename and change types and number of parameters
-    public static ReloadDefaultDataFragment newInstance(String param1, String param2) {
-        ReloadDefaultDataFragment fragment = new ReloadDefaultDataFragment();
+    public static AdvancedPreferencesFragment newInstance(String param1, String param2) {
+        AdvancedPreferencesFragment fragment = new AdvancedPreferencesFragment();
         Bundle args = new Bundle();
         args.putString(ARG_PARAM1, param1);
         args.putString(ARG_PARAM2, param2);
@@ -73,7 +73,7 @@ public class ReloadDefaultDataFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, final ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        view = inflater.inflate(R.layout.fragment_reload_default_app_data, container, false);
+        view = inflater.inflate(R.layout.fragment_advanced_prefs, container, false);
 
         final MithrilDBHelper mithrilDBHelper = new MithrilDBHelper(view.getContext());
         final SQLiteDatabase mithrilDB = mithrilDBHelper.getWritableDatabase();

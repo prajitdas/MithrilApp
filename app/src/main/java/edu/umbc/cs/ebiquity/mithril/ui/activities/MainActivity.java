@@ -35,12 +35,12 @@ import edu.umbc.cs.ebiquity.mithril.data.model.Violation;
 import edu.umbc.cs.ebiquity.mithril.ui.fragments.EmptyFragment;
 import edu.umbc.cs.ebiquity.mithril.ui.fragments.NothingHereFragment;
 import edu.umbc.cs.ebiquity.mithril.ui.fragments.mainactivityfragments.AboutFragment;
+import edu.umbc.cs.ebiquity.mithril.ui.fragments.mainactivityfragments.AdvancedPreferencesFragment;
 import edu.umbc.cs.ebiquity.mithril.ui.fragments.mainactivityfragments.AppsFragment;
 import edu.umbc.cs.ebiquity.mithril.ui.fragments.mainactivityfragments.BroadcastReceiversFragment;
 import edu.umbc.cs.ebiquity.mithril.ui.fragments.mainactivityfragments.ContentProvidersFragment;
 import edu.umbc.cs.ebiquity.mithril.ui.fragments.mainactivityfragments.PermissionsFragment;
 import edu.umbc.cs.ebiquity.mithril.ui.fragments.mainactivityfragments.PrefsFragment;
-import edu.umbc.cs.ebiquity.mithril.ui.fragments.mainactivityfragments.ReloadDefaultDataFragment;
 import edu.umbc.cs.ebiquity.mithril.ui.fragments.mainactivityfragments.ServicesFragment;
 import edu.umbc.cs.ebiquity.mithril.ui.fragments.mainactivityfragments.ViolationFragment;
 import edu.umbc.cs.ebiquity.mithril.ui.fragments.mainactivityfragments.dummy.DummyContent;
@@ -58,7 +58,7 @@ public class MainActivity extends AppCompatActivity
                     ServicesFragment.OnListFragmentInteractionListener,
                     AboutFragment.OnFragmentInteractionListener,
                     ViolationFragment.OnListFragmentInteractionListener,
-                    ReloadDefaultDataFragment.OnFragmentInteractionListener,
+        AdvancedPreferencesFragment.OnFragmentInteractionListener,
         EmptyFragment.OnFragmentInteractionListener,
         NothingHereFragment.OnFragmentInteractionListener {
 
@@ -97,10 +97,10 @@ public class MainActivity extends AppCompatActivity
             loadContentProvidersFragment();
         } else if (id == R.id.nav_settings) {
             loadPrefsFragment();
-        } else if (id == R.id.nav_reload) {
-            loadReloadDefaultDataFragment();
         } else if (id == R.id.nav_about) {
             loadAboutFragment();
+        } else if (id == R.id.nav_advance_options) {
+            loadAdvancedPreferencesFragment();
         }
 
         drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
@@ -224,9 +224,9 @@ public class MainActivity extends AppCompatActivity
                 .commit();
     }
 
-    private void loadReloadDefaultDataFragment() {
+    private void loadAdvancedPreferencesFragment() {
         FragmentManager fragmentManager = getFragmentManager();
-        fragmentManager.beginTransaction().replace(R.id.container_main, new ReloadDefaultDataFragment())
+        fragmentManager.beginTransaction().replace(R.id.container_main, new AdvancedPreferencesFragment())
                 .commit();
     }
 

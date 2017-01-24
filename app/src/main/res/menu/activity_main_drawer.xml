@@ -70,11 +70,11 @@
                 android:icon="@drawable/ic_info"
                 android:title="@string/info" />
             <item
-                android:id="@+id/nav_reload"
+                android:id="@+id/nav_advance_options"
                 android:checkable="true"
                 android:enabled="false"
-                android:icon="@drawable/reload"
-                android:title="@string/action_reload_data" />
+                android:icon="@drawable/more"
+                android:title="@string/action_advance_options" />
         </menu>
     </item>
 
