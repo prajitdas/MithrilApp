@@ -3,7 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/whitesmoke"
+    android:background="@color/white"
     android:orientation="vertical"
     tools:context=".ui.activities.ShowUserAgreementActivity">
 
@@ -26,7 +26,7 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:text="@string/okay"
-            android:theme="@style/AppTheme.Button" />
+            android:theme="@style/AppTheme.AgreementButton" />
 
         <Button
             android:id="@+id/cancel"
@@ -34,7 +34,7 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:text="@android:string/cancel"
-            android:theme="@style/AppTheme.Button" />
+            android:theme="@style/AppTheme.AgreementButton" />
 
         <Button
             android:id="@+id/next"
@@ -42,7 +42,7 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:text="@string/next"
-            android:theme="@style/AppTheme.Button" />
+            android:theme="@style/AppTheme.AgreementButton" />
     </LinearLayout>
 
 </LinearLayout>
