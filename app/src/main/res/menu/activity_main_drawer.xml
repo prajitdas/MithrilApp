@@ -70,7 +70,7 @@
                 android:icon="@drawable/settings"
                 android:title="@string/action_settings" />
             <item
-                android:id="@+id/nav_advance_settings"
+                android:id="@+id/nav_advanced_settings"
                 android:checkable="true"
                 android:enabled="false"
                 android:icon="@drawable/more"

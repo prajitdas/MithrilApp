@@ -99,7 +99,7 @@ public class MainActivity extends AppCompatActivity
             loadPrefsFragment();
         } else if (id == R.id.nav_about) {
             loadAboutFragment();
-        } else if (id == R.id.nav_advance_options) {
+        } else if (id == R.id.nav_advanced_settings) {
             loadAdvancedPreferencesFragment();
         }
 
