@@ -184,7 +184,7 @@ public class MainActivity extends AppCompatActivity
     }
 
     private void applyHeaderView() {
-        /**
+        /*
          * We wanted to show different banner at different times during the day. The following sub-section of the method takes care of that.
          * http://stackoverflow.com/questions/33560219/in-android-how-to-set-navigation-drawer-header-image-and-name-programmatically-i
          * As mentioned in the bug 190226, Since version 23.1.0 getting header layout view with: navigationView.findViewById(R.id.navigation_header_text) no longer works.

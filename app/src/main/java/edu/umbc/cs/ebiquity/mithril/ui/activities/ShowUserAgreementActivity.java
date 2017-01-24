@@ -34,7 +34,7 @@ public class ShowUserAgreementActivity extends AppCompatActivity {
      * Key string for saving the state of current page index.
      */
     private static final String STATE_CURRENT_PAGE_INDEX = "current_page_index";
-    private SharedPreferences sharedPreferences;
+
     /**
      * File descriptor of the PDF.
      */
@@ -59,6 +59,7 @@ public class ShowUserAgreementActivity extends AppCompatActivity {
     private Button mButtonCancel;
     private Button mButtonNext;
 
+    private SharedPreferences sharedPreferences;
     private Bundle savedInstanceState;
 
     @Override
@@ -195,15 +196,14 @@ public class ShowUserAgreementActivity extends AppCompatActivity {
     private void writeFile(OutputStream destination) {
         AssetManager assetManager = getAssets();
         InputStream in = null;
-        OutputStream out = destination;
         try {
             in = assetManager.open(MithrilApplication.getFlierPdfFileName());
 
-            copyFile(in, out);
+            copyFile(in, destination);
 
             in.close();
-            out.flush();
-            out.close();
+            destination.flush();
+            destination.close();
         } catch (IOException iOException) {
             Log.e(MithrilApplication.getDebugTag(), iOException.getMessage());
         } finally {
@@ -214,9 +214,9 @@ public class ShowUserAgreementActivity extends AppCompatActivity {
                     Log.d(MithrilApplication.getDebugTag(), "Filer file threw NullPointerException");
                 }
             }
-            if (out != null) {
+            if (destination != null) {
                 try {
-                    out.close();
+                    destination.close();
                 } catch (IOException e) {
                     Log.d(MithrilApplication.getDebugTag(), "output file threw NullPointerException");
                 }
