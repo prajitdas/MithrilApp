@@ -3,6 +3,7 @@ package edu.umbc.cs.ebiquity.mithril.ui.activities;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.res.AssetManager;
 import android.graphics.Bitmap;
 import android.graphics.pdf.PdfRenderer;
@@ -29,6 +30,7 @@ import edu.umbc.cs.ebiquity.mithril.R;
  * pages. We use a {@link android.graphics.pdf.PdfRenderer} to render PDF pages as {@link android.graphics.Bitmap}s.
  */
 public class ShowUserAgreementActivity extends AppCompatActivity {
+    private SharedPreferences sharedPreferences;
     /**
      * Key string for saving the state of current page index.
      */
@@ -56,6 +58,7 @@ public class ShowUserAgreementActivity extends AppCompatActivity {
 
     private Button mButtonOkay;
     private Button mButtonCancel;
+    private Button mButtonNext;
 
     private Bundle savedInstanceState;
 
@@ -91,9 +94,12 @@ public class ShowUserAgreementActivity extends AppCompatActivity {
     private void initViews() {
         setContentView(R.layout.activity_show_user_agreement);
 
+        sharedPreferences = getApplicationContext().getSharedPreferences(MithrilApplication.getSharedPreferencesName(), Context.MODE_PRIVATE);
+
         mImageView = (ImageView) findViewById(R.id.image);
         mButtonOkay = (Button) findViewById(R.id.okay);
         mButtonCancel = (Button) findViewById(R.id.cancel);
+        mButtonNext = (Button) findViewById(R.id.next);
 
         makeFullScreen();
         setOnClickListeners();
@@ -112,32 +118,47 @@ public class ShowUserAgreementActivity extends AppCompatActivity {
                 resultCanceled();
             }
         });
+        mButtonNext.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(sharedPreferences.getInt(MithrilApplication.getPrefKeyUserAgreementPageNumber(), 0) == 1) {
+                    showPage(0);
+                    mButtonNext.setText(R.string.next);
+                } else {
+                    showPage(1);
+                    mButtonNext.setText(R.string.previous);
+                }
+            }
+        });
     }
 
     /**
      * Sets up a {@link android.graphics.pdf.PdfRenderer} and related resources.
      */
     private void openRenderer() throws IOException {
+        File parent = getFilesDir();
+        String child = MithrilApplication.getFlierPdfFileName();
         // Copy the pdf to a usable location
-        CopyReadAssets();
+        copyAssets(parent, child);
 
 //        String strDir = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS)+ File.separator + "Pdfs";
 //        File fileDir = new File(strDir);
 //        fileDir.mkdirs();
 //        File file = new File(fileDir, MithrilApplication.getFlierPdfFileName());
-        File file = new File("/data/data/" + getPackageName() + "/files/" + MithrilApplication.getFlierPdfFileName());
+//        File file = new File(parent, child);
+        //new File("/data/data/" + getPackageName() + "/files/" + MithrilApplication.getFlierPdfFileName());
 
         // In this sample, we read a PDF from the assets directory.
         try {
             // This is the PdfRenderer we use to render the PDF.
-            mPdfRenderer = new PdfRenderer(ParcelFileDescriptor.open(file, ParcelFileDescriptor.MODE_READ_ONLY));
+            mPdfRenderer = new PdfRenderer(ParcelFileDescriptor.open(new File(parent, child), ParcelFileDescriptor.MODE_READ_ONLY));
             // Show the first page by default.
             int index = 0;
             // If there is a savedInstanceState (screen orientations, etc.), we restore the page index.
             if (null != savedInstanceState) {
                 index = savedInstanceState.getInt(STATE_CURRENT_PAGE_INDEX, 0);
             }
-            // We just have one page
+            // Showing initial page
             showPage(0);
         } catch (FileNotFoundException e) {
             Log.d(MithrilApplication.getDebugTag(), MithrilApplication.getFlierPdfFileName() + " not found. Make sure the file name/path is correct!");
@@ -158,29 +179,49 @@ public class ShowUserAgreementActivity extends AppCompatActivity {
         finish();
     }
 
-    private void CopyReadAssets() {
-        AssetManager assetManager = getAssets();
-
-        InputStream in = null;
-        OutputStream out = null;
-        File file = new File(getFilesDir(), MithrilApplication.getFlierPdfFileName());
+    private void copyAssets(File parent, String child) {
+        File file = new File(parent, child);
 
         if (!file.exists()) {
             try {
-                in = assetManager.open(MithrilApplication.getFlierPdfFileName());
-                out = openFileOutput(file.getName(), Context.MODE_PRIVATE);
-
-                copyFile(in, out);
-                in.close();
-                in = null;
-                out.flush();
-                out.close();
-                out = null;
-            } catch (Exception e) {
-                Log.e("tag", e.getMessage());
+                writeFile(openFileOutput(file.getName(), Context.MODE_PRIVATE));
+            } catch (FileNotFoundException e) {
+                Log.e(MithrilApplication.getDebugTag(), e.getMessage());
             }
         } else {
-            Log.d("test", "file already exists");
+            Log.d(MithrilApplication.getDebugTag(), "file already exists");
+        }
+    }
+
+    private void writeFile(OutputStream destination) {
+        AssetManager assetManager = getAssets();
+        InputStream in = null;
+        OutputStream out = destination;
+        try {
+            in = assetManager.open(MithrilApplication.getFlierPdfFileName());
+
+            copyFile(in, out);
+
+            in.close();
+            out.flush();
+            out.close();
+        } catch (IOException iOException) {
+            Log.e(MithrilApplication.getDebugTag(), iOException.getMessage());
+        } finally {
+            if (in != null) {
+                try {
+                    in.close();
+                } catch (IOException e) {
+                    Log.d(MithrilApplication.getDebugTag(), "Filer file threw NullPointerException");
+                }
+            }
+            if (out != null) {
+                try {
+                    out.close();
+                } catch (IOException e) {
+                    Log.d(MithrilApplication.getDebugTag(), "output file threw NullPointerException");
+                }
+            }
         }
     }
 
@@ -222,7 +263,10 @@ public class ShowUserAgreementActivity extends AppCompatActivity {
 //        }
         // Use `openPage` to open a specific page in PDF.
         mCurrentPage = mPdfRenderer.openPage(index);
-        // Important: the destination bitmap must be ARGB (not RGB).
+        SharedPreferences.Editor editor = this.getSharedPreferences(MithrilApplication.getSharedPreferencesName(), Context.MODE_PRIVATE).edit();
+        editor.putInt(MithrilApplication.getPrefKeyUserAgreementPageNumber(), index);
+        editor.commit();
+                // Important: the destination bitmap must be ARGB (not RGB).
         Bitmap bitmap = Bitmap.createBitmap(mCurrentPage.getWidth(), mCurrentPage.getHeight(),
                 Bitmap.Config.ARGB_8888);
         // Here, we render the page onto the Bitmap.

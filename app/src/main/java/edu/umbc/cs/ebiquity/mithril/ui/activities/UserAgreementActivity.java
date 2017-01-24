@@ -5,14 +5,22 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
+import android.content.res.AssetManager;
 import android.database.sqlite.SQLiteDatabase;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.Toast;
+
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
 
 import edu.umbc.cs.ebiquity.mithril.MithrilApplication;
 import edu.umbc.cs.ebiquity.mithril.R;
@@ -20,7 +28,7 @@ import edu.umbc.cs.ebiquity.mithril.data.dbhelpers.MithrilDBHelper;
 import edu.umbc.cs.ebiquity.mithril.util.specialtasks.permissions.PermissionHelper;
 
 public class UserAgreementActivity extends AppCompatActivity {
-    private final Handler handler = new Handler();
+//    private final Handler handler = new Handler();
     private Button mShowUserAgreementBtn;
     private Button mIAgreeBtn;
     private Button mIDisagreeBtn;
@@ -78,6 +86,15 @@ public class UserAgreementActivity extends AppCompatActivity {
         mIAgreeBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                //Copy the agreement file to the external files directory. The user needs a copy of the agreement.
+                File parent = getExternalFilesDir(null);
+                String child = MithrilApplication.getFlierPdfFileName();
+                copyAssets(parent, child);
+
+                Toast.makeText(v.getContext(),
+                        "Thanks! The agreement file has been copied to the "+parent.getAbsolutePath()+" directory, for your reference...",
+                        Toast.LENGTH_LONG)
+                        .show();
 
                 SharedPreferences.Editor editor = v.getContext().getSharedPreferences(MithrilApplication.getSharedPreferencesName(), Context.MODE_PRIVATE).edit();
                 editor.putString(MithrilApplication.getPrefKeyUserConsent(), "agreed");
@@ -124,13 +141,13 @@ public class UserAgreementActivity extends AppCompatActivity {
     private void resultOkay() {
         initHousekeepingTasks();
 
-        handler.postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                //Do something after 100ms
-                //TODO show a window with a visual way os showing progress or better yet do the initHousekeepingTasks in a AsyncTask
-            }
-        }, 1000);
+//        handler.postDelayed(new Runnable() {
+//            @Override
+//            public void run() {
+//                //Do something after 100ms
+//                //TODO show a window with a visual way os showing progress or better yet do the initHousekeepingTasks in a AsyncTask
+//            }
+//        }, 1000);
 
         Intent returnIntent = new Intent();
         setResult(Activity.RESULT_OK, returnIntent);
@@ -172,6 +189,60 @@ public class UserAgreementActivity extends AppCompatActivity {
             }
             // other 'case' lines to check for other
             // permissions this app might request
+        }
+    }
+
+    private void copyAssets(File parent, String child) {
+        File file = new File(parent, child);
+
+        if (!file.exists()) {
+            try {
+                writeFile(openFileOutput(file.getName(), Context.MODE_PRIVATE));
+            } catch (FileNotFoundException e) {
+                Log.e(MithrilApplication.getDebugTag(), e.getMessage());
+            }
+        } else {
+            Log.d(MithrilApplication.getDebugTag(), "file already exists");
+        }
+    }
+
+    private void writeFile(OutputStream destination) {
+        AssetManager assetManager = getAssets();
+        InputStream in = null;
+        OutputStream out = destination;
+        try {
+            in = assetManager.open(MithrilApplication.getFlierPdfFileName());
+
+            copyFile(in, out);
+
+            in.close();
+            out.flush();
+            out.close();
+        } catch (IOException iOException) {
+            Log.e(MithrilApplication.getDebugTag(), iOException.getMessage());
+        } finally {
+            if (in != null) {
+                try {
+                    in.close();
+                } catch (IOException e) {
+                    Log.d(MithrilApplication.getDebugTag(), "Filer file threw NullPointerException");
+                }
+            }
+            if (out != null) {
+                try {
+                    out.close();
+                } catch (IOException e) {
+                    Log.d(MithrilApplication.getDebugTag(), "output file threw NullPointerException");
+                }
+            }
+        }
+    }
+
+    private void copyFile(InputStream in, OutputStream out) throws IOException {
+        byte[] buffer = new byte[1024];
+        int read;
+        while ((read = in.read(buffer)) != -1) {
+            out.write(buffer, 0, read);
         }
     }
 }
