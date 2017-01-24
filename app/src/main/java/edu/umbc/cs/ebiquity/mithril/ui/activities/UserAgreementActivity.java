@@ -11,6 +11,7 @@ import android.content.res.AssetManager;
 import android.database.sqlite.SQLiteDatabase;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Environment;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
@@ -154,7 +155,7 @@ public class UserAgreementActivity extends AppCompatActivity {
         mithrilDB = mithrilDBHelper.getWritableDatabase();
 
         final AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        final File parent = getExternalFilesDir(null);
+        final File parent = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS);
         final String child = MithrilApplication.getFlierPdfFileName();
         builder.setMessage("Thanks! The agreement file has been copied to the "
                 + parent.getAbsolutePath()
