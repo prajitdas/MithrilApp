@@ -74,7 +74,7 @@
                 android:checkable="true"
                 android:enabled="false"
                 android:icon="@drawable/more"
-                android:title="@string/action_advance_options" />
+                android:title="@string/action_advanced_options" />
         </menu>
     </item>
 

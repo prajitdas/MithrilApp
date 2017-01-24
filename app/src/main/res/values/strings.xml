@@ -51,7 +51,7 @@
     <string name="action_rule_ok">Rule is okay</string>
     <string name="action_reload_database">Reload Database</string>
 
-    <string name="action_advance_options">Advance options</string>
+    <string name="action_advanced_options">Advanced options</string>
 
     <string name="action_reload_data">Reload Data</string>
     <string name="dialog_reload_data">Do you really want to delete all data from the database and reset to default data?</string>
