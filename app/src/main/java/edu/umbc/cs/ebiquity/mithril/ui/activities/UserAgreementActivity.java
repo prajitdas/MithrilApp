@@ -19,6 +19,7 @@ import android.widget.Toast;
 
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -199,7 +200,7 @@ public class UserAgreementActivity extends AppCompatActivity {
 
         if (!file.exists()) {
             try {
-                writeFile(openFileOutput(file.getName(), Context.MODE_PRIVATE));
+                writeFile(new FileOutputStream(file));
             } catch (FileNotFoundException e) {
                 Log.e(MithrilApplication.getDebugTag(), e.getMessage());
             }
@@ -211,15 +212,14 @@ public class UserAgreementActivity extends AppCompatActivity {
     private void writeFile(OutputStream destination) {
         AssetManager assetManager = getAssets();
         InputStream in = null;
-        OutputStream out = destination;
         try {
             in = assetManager.open(MithrilApplication.getFlierPdfFileName());
 
-            copyFile(in, out);
+            copyFile(in, destination);
 
             in.close();
-            out.flush();
-            out.close();
+            destination.flush();
+            destination.close();
         } catch (IOException iOException) {
             Log.e(MithrilApplication.getDebugTag(), iOException.getMessage());
         } finally {
@@ -230,9 +230,9 @@ public class UserAgreementActivity extends AppCompatActivity {
                     Log.d(MithrilApplication.getDebugTag(), "Filer file threw NullPointerException");
                 }
             }
-            if (out != null) {
+            if (destination != null) {
                 try {
-                    out.close();
+                    destination.close();
                 } catch (IOException e) {
                     Log.d(MithrilApplication.getDebugTag(), "output file threw NullPointerException");
                 }
