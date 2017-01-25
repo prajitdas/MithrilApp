@@ -108,7 +108,7 @@ public class MainActivity extends AppCompatActivity
         } else if (id == R.id.nav_contentproviders) {
             loadContentProvidersFragment();
         } else if (id == R.id.nav_exit) {
-            exit();
+            exitTheApp();
         } else if (id == R.id.nav_settings) {
             loadPrefsFragment();
         } else if (id == R.id.nav_about) {
@@ -122,7 +122,7 @@ public class MainActivity extends AppCompatActivity
         return true;
     }
 
-    private void exit() {
+    private void exitTheApp() {
         Uri packageUri = Uri.parse("package:" + MithrilApplication.APP_PACKAGE_NAME_SELF);
         Intent uninstallIntent =
                 new Intent(Intent.ACTION_DELETE, packageUri);
