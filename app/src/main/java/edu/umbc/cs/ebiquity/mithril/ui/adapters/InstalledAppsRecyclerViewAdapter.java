@@ -11,7 +11,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import edu.umbc.cs.ebiquity.mithril.R;
-import edu.umbc.cs.ebiquity.mithril.data.model.AppData;
+import edu.umbc.cs.ebiquity.mithril.data.model.components.AppData;
 import edu.umbc.cs.ebiquity.mithril.ui.fragments.mainactivityfragments.AppsFragment.OnListFragmentInteractionListener;
 import edu.umbc.cs.ebiquity.mithril.ui.fragments.mainactivityfragments.AppsFragment.OnListFragmentLongInteractionListener;
 

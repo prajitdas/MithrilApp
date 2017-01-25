@@ -19,7 +19,7 @@ import java.util.List;
 import edu.umbc.cs.ebiquity.mithril.MithrilApplication;
 import edu.umbc.cs.ebiquity.mithril.R;
 import edu.umbc.cs.ebiquity.mithril.data.dbhelpers.MithrilDBHelper;
-import edu.umbc.cs.ebiquity.mithril.data.model.PermData;
+import edu.umbc.cs.ebiquity.mithril.data.model.components.PermData;
 import edu.umbc.cs.ebiquity.mithril.ui.adapters.AppDetailRecyclerViewAdapter;
 
 /**

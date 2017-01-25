@@ -1,4 +1,4 @@
-package edu.umbc.cs.ebiquity.mithril.data.model;
+package edu.umbc.cs.ebiquity.mithril.data.model.components;
 
 import android.graphics.Bitmap;
 import android.support.annotation.NonNull;

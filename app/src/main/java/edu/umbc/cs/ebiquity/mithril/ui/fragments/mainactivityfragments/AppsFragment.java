@@ -22,7 +22,7 @@ import java.util.Map;
 import edu.umbc.cs.ebiquity.mithril.MithrilApplication;
 import edu.umbc.cs.ebiquity.mithril.R;
 import edu.umbc.cs.ebiquity.mithril.data.dbhelpers.MithrilDBHelper;
-import edu.umbc.cs.ebiquity.mithril.data.model.AppData;
+import edu.umbc.cs.ebiquity.mithril.data.model.components.AppData;
 import edu.umbc.cs.ebiquity.mithril.ui.adapters.InstalledAppsRecyclerViewAdapter;
 
 /**
