@@ -60,6 +60,11 @@
     <item android:title="@string/extra_options">
         <menu>
             <item
+                android:id="@+id/nav_exit"
+                android:checkable="true"
+                android:icon="@drawable/exit_to_app"
+                android:title="@string/info" />
+            <item
                 android:id="@+id/nav_about"
                 android:checkable="true"
                 android:icon="@drawable/ic_info"

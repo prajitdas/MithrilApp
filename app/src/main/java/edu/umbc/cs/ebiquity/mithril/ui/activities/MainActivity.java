@@ -107,6 +107,8 @@ public class MainActivity extends AppCompatActivity
             loadBroadcastReceiversFragment();
         } else if (id == R.id.nav_contentproviders) {
             loadContentProvidersFragment();
+        } else if (id == R.id.nav_exit) {
+            exit();
         } else if (id == R.id.nav_settings) {
             loadPrefsFragment();
         } else if (id == R.id.nav_about) {
@@ -118,6 +120,13 @@ public class MainActivity extends AppCompatActivity
         drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
         return true;
+    }
+
+    private void exit() {
+        Uri packageUri = Uri.parse("package:" + MithrilApplication.APP_PACKAGE_NAME_SELF);
+        Intent uninstallIntent =
+                new Intent(Intent.ACTION_DELETE, packageUri);
+        startActivity(uninstallIntent);
     }
 
     @Override
