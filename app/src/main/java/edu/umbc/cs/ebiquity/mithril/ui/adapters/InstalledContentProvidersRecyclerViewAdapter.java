@@ -1,44 +1,54 @@
 package edu.umbc.cs.ebiquity.mithril.ui.adapters;
 
+import android.content.Context;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import java.util.List;
 
 import edu.umbc.cs.ebiquity.mithril.R;
+import edu.umbc.cs.ebiquity.mithril.data.model.components.ContentProvData;
 import edu.umbc.cs.ebiquity.mithril.ui.fragments.mainactivityfragments.ContentProvidersFragment.OnListFragmentInteractionListener;
-import edu.umbc.cs.ebiquity.mithril.ui.fragments.mainactivityfragments.dummy.DummyContent.DummyItem;
 
 /**
- * {@link RecyclerView.Adapter} that can display a {@link DummyItem} and makes a call to the
+ * {@link RecyclerView.Adapter} that can display a {@link ContentProvData} and makes a call to the
  * specified {@link OnListFragmentInteractionListener}.
  * TODO: Replace the implementation with code for your data type.
  */
 public class InstalledContentProvidersRecyclerViewAdapter extends RecyclerView.Adapter<InstalledContentProvidersRecyclerViewAdapter.ViewHolder> {
 
-    private final List<DummyItem> mValues;
+    private final List<ContentProvData> mValues;
     private final OnListFragmentInteractionListener mListener;
+    private Context context;
+    private View view;
 
-    public InstalledContentProvidersRecyclerViewAdapter(List<DummyItem> items, OnListFragmentInteractionListener listener) {
+    public InstalledContentProvidersRecyclerViewAdapter(List<ContentProvData> items, OnListFragmentInteractionListener listener) {
         mValues = items;
         mListener = listener;
     }
 
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(parent.getContext())
+        view = LayoutInflater.from(parent.getContext())
                 .inflate(R.layout.fragment_contentproviders, parent, false);
+        context = view.getContext();
         return new ViewHolder(view);
     }
 
     @Override
     public void onBindViewHolder(final ViewHolder holder, int position) {
         holder.mItem = mValues.get(position);
-        holder.mIdView.setText(mValues.get(position).id);
-        holder.mContentView.setText(mValues.get(position).content);
+        boolean contentProvExported = mValues.get(position).isExported();
+        if (contentProvExported)
+            holder.mContentProvExported.setImageDrawable(context.getResources().getDrawable(R.drawable.comment_check_outline, context.getTheme()));
+        else
+            holder.mContentProvExported.setImageDrawable(view.getContext().getResources().getDrawable(R.drawable.comment_remove_outline, view.getContext().getTheme()));
+        holder.mContentProvName.setText(mValues.get(position).getName());
+        holder.mContentProvProcessName.setText(mValues.get(position).getProcessName());
 
         holder.mView.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -59,20 +69,22 @@ public class InstalledContentProvidersRecyclerViewAdapter extends RecyclerView.A
 
     public class ViewHolder extends RecyclerView.ViewHolder {
         public final View mView;
-        public final TextView mIdView;
-        public final TextView mContentView;
-        public DummyItem mItem;
+        public final ImageView mContentProvExported;
+        public final TextView mContentProvName;
+        public final TextView mContentProvProcessName;
+        public ContentProvData mItem;
 
         public ViewHolder(View view) {
             super(view);
             mView = view;
-            mIdView = (TextView) view.findViewById(R.id.id);
-            mContentView = (TextView) view.findViewById(R.id.content);
+            mContentProvExported = (ImageView) view.findViewById(R.id.contentProvExportedImageView);
+            mContentProvName = (TextView) view.findViewById(R.id.contentProvNameTextView);
+            mContentProvProcessName = (TextView) view.findViewById(R.id.contentProvProcessNameTextView);
         }
 
         @Override
         public String toString() {
-            return super.toString() + " '" + mContentView.getText() + "'";
+            return super.toString() + " '" + mContentProvName.getText() + "'";
         }
     }
 }

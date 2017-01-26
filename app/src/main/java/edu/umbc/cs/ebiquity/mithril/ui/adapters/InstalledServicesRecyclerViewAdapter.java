@@ -6,23 +6,23 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-import edu.umbc.cs.ebiquity.mithril.R;
-import edu.umbc.cs.ebiquity.mithril.ui.fragments.mainactivityfragments.ServicesFragment.OnListFragmentInteractionListener;
-import edu.umbc.cs.ebiquity.mithril.ui.fragments.mainactivityfragments.dummy.DummyContent.DummyItem;
-
 import java.util.List;
 
+import edu.umbc.cs.ebiquity.mithril.R;
+import edu.umbc.cs.ebiquity.mithril.data.model.components.ServData;
+import edu.umbc.cs.ebiquity.mithril.ui.fragments.mainactivityfragments.ServicesFragment.OnListFragmentInteractionListener;
+
 /**
- * {@link RecyclerView.Adapter} that can display a {@link DummyItem} and makes a call to the
+ * {@link RecyclerView.Adapter} that can display a {@link ServData} and makes a call to the
  * specified {@link OnListFragmentInteractionListener}.
  * TODO: Replace the implementation with code for your data type.
  */
 public class InstalledServicesRecyclerViewAdapter extends RecyclerView.Adapter<InstalledServicesRecyclerViewAdapter.ViewHolder> {
 
-    private final List<DummyItem> mValues;
+    private final List<ServData> mValues;
     private final OnListFragmentInteractionListener mListener;
 
-    public InstalledServicesRecyclerViewAdapter(List<DummyItem> items, OnListFragmentInteractionListener listener) {
+    public InstalledServicesRecyclerViewAdapter(List<ServData> items, OnListFragmentInteractionListener listener) {
         mValues = items;
         mListener = listener;
     }
@@ -61,7 +61,7 @@ public class InstalledServicesRecyclerViewAdapter extends RecyclerView.Adapter<I
         public final View mView;
         public final TextView mIdView;
         public final TextView mContentView;
-        public DummyItem mItem;
+        public ServData mItem;
 
         public ViewHolder(View view) {
             super(view);

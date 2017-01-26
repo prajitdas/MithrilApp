@@ -1,8 +1,8 @@
 package edu.umbc.cs.ebiquity.mithril.ui.fragments.mainactivityfragments;
 
+import android.app.Fragment;
 import android.content.Context;
 import android.os.Bundle;
-import android.app.Fragment;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -11,9 +11,8 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import edu.umbc.cs.ebiquity.mithril.R;
+import edu.umbc.cs.ebiquity.mithril.data.model.components.ContentProvData;
 import edu.umbc.cs.ebiquity.mithril.ui.adapters.InstalledContentProvidersRecyclerViewAdapter;
-import edu.umbc.cs.ebiquity.mithril.ui.fragments.mainactivityfragments.dummy.DummyContent;
-import edu.umbc.cs.ebiquity.mithril.ui.fragments.mainactivityfragments.dummy.DummyContent.DummyItem;
 
 /**
  * A fragment representing a list of Items.
@@ -69,7 +68,7 @@ public class ContentProvidersFragment extends Fragment {
             } else {
                 recyclerView.setLayoutManager(new GridLayoutManager(context, mColumnCount));
             }
-            recyclerView.setAdapter(new InstalledContentProvidersRecyclerViewAdapter(DummyContent.ITEMS, mListener));
+            recyclerView.setAdapter(new InstalledContentProvidersRecyclerViewAdapter(ContentProvData.ITEMS, mListener));
         }
         return view;
     }
@@ -104,6 +103,6 @@ public class ContentProvidersFragment extends Fragment {
      */
     public interface OnListFragmentInteractionListener {
         // TODO: Update argument type and name
-        void onListFragmentInteraction(DummyItem item);
+        void onListFragmentInteraction(ContentProvData item);
     }
 }

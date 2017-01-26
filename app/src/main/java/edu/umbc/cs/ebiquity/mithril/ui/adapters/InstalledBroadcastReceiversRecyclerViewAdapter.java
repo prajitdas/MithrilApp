@@ -9,20 +9,20 @@ import android.widget.TextView;
 import java.util.List;
 
 import edu.umbc.cs.ebiquity.mithril.R;
+import edu.umbc.cs.ebiquity.mithril.data.model.components.BCastRecvData;
 import edu.umbc.cs.ebiquity.mithril.ui.fragments.mainactivityfragments.BroadcastReceiversFragment.OnListFragmentInteractionListener;
-import edu.umbc.cs.ebiquity.mithril.ui.fragments.mainactivityfragments.dummy.DummyContent.DummyItem;
 
 /**
- * {@link RecyclerView.Adapter} that can display a {@link DummyItem} and makes a call to the
+ * {@link RecyclerView.Adapter} that can display a {@link BCastRecvData} and makes a call to the
  * specified {@link OnListFragmentInteractionListener}.
  * TODO: Replace the implementation with code for your data type.
  */
 public class InstalledBroadcastReceiversRecyclerViewAdapter extends RecyclerView.Adapter<InstalledBroadcastReceiversRecyclerViewAdapter.ViewHolder> {
 
-    private final List<DummyItem> mValues;
+    private final List<BCastRecvData> mValues;
     private final OnListFragmentInteractionListener mListener;
 
-    public InstalledBroadcastReceiversRecyclerViewAdapter(List<DummyItem> items, OnListFragmentInteractionListener listener) {
+    public InstalledBroadcastReceiversRecyclerViewAdapter(List<BCastRecvData> items, OnListFragmentInteractionListener listener) {
         mValues = items;
         mListener = listener;
     }
@@ -61,7 +61,7 @@ public class InstalledBroadcastReceiversRecyclerViewAdapter extends RecyclerView
         public final View mView;
         public final TextView mIdView;
         public final TextView mContentView;
-        public DummyItem mItem;
+        public BCastRecvData mItem;
 
         public ViewHolder(View view) {
             super(view);
