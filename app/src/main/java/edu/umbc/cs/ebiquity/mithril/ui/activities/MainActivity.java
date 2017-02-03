@@ -53,7 +53,6 @@ import edu.umbc.cs.ebiquity.mithril.ui.fragments.mainactivityfragments.Permissio
 import edu.umbc.cs.ebiquity.mithril.ui.fragments.mainactivityfragments.PrefsFragment;
 import edu.umbc.cs.ebiquity.mithril.ui.fragments.mainactivityfragments.ServicesFragment;
 import edu.umbc.cs.ebiquity.mithril.ui.fragments.mainactivityfragments.ViolationFragment;
-import edu.umbc.cs.ebiquity.mithril.ui.fragments.mainactivityfragments.dummy.DummyContent;
 import edu.umbc.cs.ebiquity.mithril.util.services.AppLaunchDetectorService;
 import edu.umbc.cs.ebiquity.mithril.util.services.LocationUpdateService;
 import edu.umbc.cs.ebiquity.mithril.util.specialtasks.permissions.PermissionHelper;
