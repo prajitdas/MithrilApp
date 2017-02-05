@@ -502,7 +502,7 @@ public class MainActivity extends AppCompatActivity
                 try {
                     in.close();
                 } catch (IOException e) {
-                    Log.d(MithrilApplication.getDebugTag(), "Filer file threw NullPointerException");
+                    Log.d(MithrilApplication.getDebugTag(), "Flier file threw NullPointerException");
                 }
             }
             if (destination != null) {

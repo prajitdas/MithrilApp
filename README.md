@@ -11,3 +11,6 @@ Following are the goals of the app:
   * App API details if possible
 * Let users send an app or mutiple apps for analysis to [AndroidAnalytics](https://github.com/Ebiquity/AndroidAnalytics) project
   * Users should be able to select single or multiple apps and send the same for analysis to the [AndroidAnalytics](https://github.com/Ebiquity/AndroidAnalytics) project.
+
+
+Script to generate Android make files for the project: [generate_android_mk.py](https://github.com/WanghongLin/generate-android-mk) written by [Wanghong Lin](https://github.com/WanghongLin)
