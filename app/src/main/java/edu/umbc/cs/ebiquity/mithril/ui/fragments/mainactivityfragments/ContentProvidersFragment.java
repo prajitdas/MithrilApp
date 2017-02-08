@@ -10,6 +10,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import java.util.List;
+
 import edu.umbc.cs.ebiquity.mithril.R;
 import edu.umbc.cs.ebiquity.mithril.data.model.components.ContentProvData;
 import edu.umbc.cs.ebiquity.mithril.ui.adapters.InstalledContentProvidersRecyclerViewAdapter;
@@ -27,6 +29,7 @@ public class ContentProvidersFragment extends Fragment {
     // TODO: Customize parameters
     private int mColumnCount = 1;
     private OnListFragmentInteractionListener mListener;
+    private List<ContentProvData> contentProvDataList;
 
     /**
      * Mandatory empty constructor for the fragment manager to instantiate the
@@ -68,7 +71,7 @@ public class ContentProvidersFragment extends Fragment {
             } else {
                 recyclerView.setLayoutManager(new GridLayoutManager(context, mColumnCount));
             }
-            recyclerView.setAdapter(new InstalledContentProvidersRecyclerViewAdapter(ContentProvData.ITEMS, mListener));
+            recyclerView.setAdapter(new InstalledContentProvidersRecyclerViewAdapter(contentProvDataList, mListener));
         }
         return view;
     }

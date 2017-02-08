@@ -22,24 +22,9 @@ public class ServData implements Comparable<ServData> {
     private String name;
     private String packageName;
     private String label;
+    private String appName;
+    private String appType;
     private Resource resource;
-
-    public ServData(String permission, int flags, String description, boolean enabled, boolean exported, String name, String packageName, String label, Resource resource) {
-        this.permission = permission;
-        this.flags = flags;
-        this.description = description;
-        this.enabled = enabled;
-        this.exported = exported;
-        this.name = name;
-        this.packageName = packageName;
-        this.label = label;
-        this.resource = resource;
-    }
-
-    @Override
-    public int compareTo(@NonNull ServData o) {
-        return 0;
-    }
 
     public String getPermission() {
         return permission;
@@ -105,6 +90,22 @@ public class ServData implements Comparable<ServData> {
         this.label = label;
     }
 
+    public String getAppName() {
+        return appName;
+    }
+
+    public void setAppName(String appName) {
+        this.appName = appName;
+    }
+
+    public String getAppType() {
+        return appType;
+    }
+
+    public void setAppType(String appType) {
+        this.appType = appType;
+    }
+
     public Resource getResource() {
         return resource;
     }
@@ -128,6 +129,8 @@ public class ServData implements Comparable<ServData> {
         if (!getName().equals(servData.getName())) return false;
         if (!getPackageName().equals(servData.getPackageName())) return false;
         if (!getLabel().equals(servData.getLabel())) return false;
+        if (!getAppName().equals(servData.getAppName())) return false;
+        if (!getAppType().equals(servData.getAppType())) return false;
         return getResource().equals(servData.getResource());
 
     }
@@ -142,6 +145,8 @@ public class ServData implements Comparable<ServData> {
         result = 31 * result + getName().hashCode();
         result = 31 * result + getPackageName().hashCode();
         result = 31 * result + getLabel().hashCode();
+        result = 31 * result + getAppName().hashCode();
+        result = 31 * result + getAppType().hashCode();
         result = 31 * result + getResource().hashCode();
         return result;
     }
@@ -157,7 +162,14 @@ public class ServData implements Comparable<ServData> {
                 ", name='" + name + '\'' +
                 ", packageName='" + packageName + '\'' +
                 ", label='" + label + '\'' +
+                ", appName='" + appName + '\'' +
+                ", appType='" + appType + '\'' +
                 ", resource=" + resource +
                 '}';
+    }
+
+    @Override
+    public int compareTo(@NonNull ServData o) {
+        return 0;
     }
 }

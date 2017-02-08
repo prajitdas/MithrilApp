@@ -10,6 +10,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import java.util.List;
+
 import edu.umbc.cs.ebiquity.mithril.R;
 import edu.umbc.cs.ebiquity.mithril.data.model.components.BCastRecvData;
 import edu.umbc.cs.ebiquity.mithril.ui.adapters.InstalledBroadcastReceiversRecyclerViewAdapter;
@@ -27,6 +29,7 @@ public class BroadcastReceiversFragment extends Fragment {
     // TODO: Customize parameters
     private int mColumnCount = 1;
     private OnListFragmentInteractionListener mListener;
+    private List<BCastRecvData> bCastRecvDataList;
 
     /**
      * Mandatory empty constructor for the fragment manager to instantiate the
@@ -68,7 +71,7 @@ public class BroadcastReceiversFragment extends Fragment {
             } else {
                 recyclerView.setLayoutManager(new GridLayoutManager(context, mColumnCount));
             }
-            recyclerView.setAdapter(new InstalledBroadcastReceiversRecyclerViewAdapter(BCastRecvData.ITEMS, mListener));
+            recyclerView.setAdapter(new InstalledBroadcastReceiversRecyclerViewAdapter(bCastRecvDataList, mListener));
         }
         return view;
     }

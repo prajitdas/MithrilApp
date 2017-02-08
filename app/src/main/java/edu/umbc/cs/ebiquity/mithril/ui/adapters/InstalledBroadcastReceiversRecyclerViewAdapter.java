@@ -1,9 +1,11 @@
 package edu.umbc.cs.ebiquity.mithril.ui.adapters;
 
+import android.content.Context;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import java.util.List;
@@ -21,6 +23,8 @@ public class InstalledBroadcastReceiversRecyclerViewAdapter extends RecyclerView
 
     private final List<BCastRecvData> mValues;
     private final OnListFragmentInteractionListener mListener;
+    private Context context;
+    private View view;
 
     public InstalledBroadcastReceiversRecyclerViewAdapter(List<BCastRecvData> items, OnListFragmentInteractionListener listener) {
         mValues = items;
@@ -29,16 +33,18 @@ public class InstalledBroadcastReceiversRecyclerViewAdapter extends RecyclerView
 
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(parent.getContext())
+        view = LayoutInflater.from(parent.getContext())
                 .inflate(R.layout.fragment_broadcastreceivers, parent, false);
+        context = view.getContext();
         return new ViewHolder(view);
     }
 
     @Override
     public void onBindViewHolder(final ViewHolder holder, int position) {
         holder.mItem = mValues.get(position);
-        holder.mIdView.setText(mValues.get(position).id);
-        holder.mContentView.setText(mValues.get(position).content);
+        holder.mBcastIcon.setImageDrawable(context.getResources().getDrawable(R.drawable.comment_check_outline, context.getTheme()));
+        holder.mBcastLabel.setText(mValues.get(position).getLabel());
+        holder.mBcastName.setText(mValues.get(position).getName());
 
         holder.mView.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -59,20 +65,22 @@ public class InstalledBroadcastReceiversRecyclerViewAdapter extends RecyclerView
 
     public class ViewHolder extends RecyclerView.ViewHolder {
         public final View mView;
-        public final TextView mIdView;
-        public final TextView mContentView;
+        public final ImageView mBcastIcon;
+        public final TextView mBcastLabel;
+        public final TextView mBcastName;
         public BCastRecvData mItem;
 
         public ViewHolder(View view) {
             super(view);
             mView = view;
-            mIdView = (TextView) view.findViewById(R.id.id);
-            mContentView = (TextView) view.findViewById(R.id.content);
+            mBcastIcon = (ImageView) view.findViewById(R.id.bcast_icon);
+            mBcastLabel = (TextView) view.findViewById(R.id.bcast_lbl);
+            mBcastName = (TextView) view.findViewById(R.id.bcast_name);
         }
 
         @Override
         public String toString() {
-            return super.toString() + " '" + mContentView.getText() + "'";
+            return super.toString() + " '" + mBcastName.getText() + "'";
         }
     }
 }

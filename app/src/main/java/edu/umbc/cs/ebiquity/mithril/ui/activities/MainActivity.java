@@ -41,7 +41,10 @@ import edu.umbc.cs.ebiquity.mithril.R;
 import edu.umbc.cs.ebiquity.mithril.data.dbhelpers.MithrilDBHelper;
 import edu.umbc.cs.ebiquity.mithril.data.model.Violation;
 import edu.umbc.cs.ebiquity.mithril.data.model.components.AppData;
+import edu.umbc.cs.ebiquity.mithril.data.model.components.BCastRecvData;
+import edu.umbc.cs.ebiquity.mithril.data.model.components.ContentProvData;
 import edu.umbc.cs.ebiquity.mithril.data.model.components.PermData;
+import edu.umbc.cs.ebiquity.mithril.data.model.components.ServData;
 import edu.umbc.cs.ebiquity.mithril.ui.fragments.EmptyFragment;
 import edu.umbc.cs.ebiquity.mithril.ui.fragments.NothingHereFragment;
 import edu.umbc.cs.ebiquity.mithril.ui.fragments.mainactivityfragments.AboutFragment;
@@ -445,8 +448,18 @@ public class MainActivity extends AppCompatActivity
     }
 
     @Override
-    public void onListFragmentInteraction(DummyContent.DummyItem item) {
+    public void onListFragmentInteraction(ServData item) {
+        //TODO do something when the service data is requested - I have an idea. Why don't you launch a list of services that are being used by apps.
+    }
 
+    @Override
+    public void onListFragmentInteraction(ContentProvData item) {
+        //TODO do something when the content provider data is requested
+    }
+
+    @Override
+    public void onListFragmentInteraction(BCastRecvData item) {
+        //TODO do something when the broadcast receiver data is requested
     }
 
     @Override
