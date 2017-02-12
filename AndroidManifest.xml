@@ -1,1 +1,132 @@
-app/src/main/AndroidManifest.xml
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    package="edu.umbc.cs.ebiquity.mithril">
+
+    <!-- Remember to add all the permissions you request here in the PermissionHelper class for handling permission acquisition -->
+    <uses-permission
+        android:name="android.permission.PACKAGE_USAGE_STATS"
+        tools:ignore="ProtectedPermissions" />
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.WAKE_LOCK" />
+    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
+    <!--<uses-permission android:name="android.permission.GET_TASKS" />-->
+    <!--<uses-permission android:name="android.permission.NFC" />-->
+    <!-- <uses-permission android:name="android.permission.READ_LOGS" /> -->
+
+    <!-- Needed only if your app targets Android 5.0 (API level 21) or higher. -->
+    <uses-feature
+        android:name="android.hardware.location.gps"
+        android:required="true" />
+    <uses-feature
+        android:name="android.hardware.nfc"
+        android:required="true" />
+
+    <!-- Google Places API Key -->
+    <meta-data
+        android:name="com.google.android.geo.API_KEY"
+        android:value="AIzaSyD90WROn0mNgMThb2lQimn-yl-zY7ICDF0" />
+
+    <application
+        android:allowBackup="true"
+        android:icon="@mipmap/ic_launcher"
+        android:label="@string/short_app_name"
+        android:supportsRtl="true"
+        android:theme="@style/AppTheme">
+        <activity
+            android:name=".ui.activities.MainActivity"
+            android:label="@string/short_app_name"
+            android:theme="@style/AppTheme.NoActionBar">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+        <activity
+            android:name=".ui.activities.UserAgreementActivity"
+            android:configChanges="orientation|keyboardHidden|screenSize"
+            android:label="@string/title_activity_user_agreement"
+            android:theme="@style/FullscreenTheme"></activity>
+        <activity
+            android:name=".ui.activities.ShowUserAgreementActivity"
+            android:label="@string/title_activity_show_user_agreement"
+            android:parentActivityName=".ui.activities.UserAgreementActivity"
+            android:theme="@style/FullscreenTheme">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".ui.activities.UserAgreementActivity" />
+        </activity>
+        <activity
+            android:name=".ui.activities.ViewAppDetailsActivity"
+            android:label="@string/title_activity_view_app_detail"
+            android:parentActivityName=".ui.activities.MainActivity"
+            android:theme="@style/AppTheme.NoActionBar">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".ui.activities.MainActivity" />
+        </activity>
+        <!-- This TestMainActivity was used for the IEEE CIC paper. This will possibly be removed or modified in the future. -->
+        <activity
+            android:name=".ui.activities.TestMainActivity"
+            android:label="@string/title_activity_test_main"
+            android:theme="@style/AppTheme.NoActionBar">
+            <intent-filter>
+                <action android:name="android.nfc.action.NDEF_DISCOVERED" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+
+                <data android:mimeType="text/plain" />
+            </intent-filter>
+        </activity>
+
+        <receiver
+            android:name=".util.receivers.AppInstallBroadcastReceiver"
+            android:enabled="true"
+            android:exported="false">
+            <intent-filter>
+                <category android:name="android.intent.category.DEFAULT" />
+
+                <action android:name="android.intent.action.PACKAGE_ADDED" />
+                <action android:name="android.intent.action.PACKAGE_FULLY_REMOVED" />
+
+                <data android:scheme="package" />
+            </intent-filter>
+        </receiver>
+        <receiver
+            android:name=".util.receivers.StartServicesOnBootReceiver"
+            android:enabled="true"
+            android:exported="false">
+            <intent-filter>
+                <action android:name="android.intent.action.BOOT_COMPLETED" />
+            </intent-filter>
+        </receiver>
+        <receiver
+            android:name=".util.receivers.LocationUpdateReceiver"
+            android:enabled="true"
+            android:exported="false" />
+
+        <service
+            android:name=".util.services.AppLaunchDetectorService"
+            android:enabled="true"
+            android:exported="false"
+            android:icon="@mipmap/ic_launcher"
+            android:label="@string/mithril_service_name" />
+        <service
+            android:name=".util.services.LocationUpdateService"
+            android:enabled="true"
+            android:exported="false" />
+        <service
+            android:name=".util.services.FetchAddressIntentService"
+            android:enabled="true"
+            android:exported="false" />
+        <service
+            android:name=".util.services.GeofenceTransitionsIntentService"
+            android:exported="false" />
+
+        <activity android:name=".ui.activities.RuleChangeActivity"></activity>
+    </application>
+
+</manifest>
