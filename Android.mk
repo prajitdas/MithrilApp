@@ -1,11 +1,10 @@
-
-# Auto-generated module by script
 LOCAL_PATH := $(call my-dir)
 include $(CLEAR_VARS)
 
-LOCAL_PACKAGE_NAME := MithrilAC
-LOCAL_SRC_FILES := $(call all-subdir-java-files)
-LOCAL_STATIC_JAVA_LIBRARIES := 
+LOCAL_MODULE_TAGS := optional
+LOCAL_MODULE := MithrilApp
 LOCAL_CERTIFICATE := platform
-
-include $(BUILD_PACKAGE)
+LOCAL_SRC_FILES := $(call all-subdir-java-files)
+LOCAL_MODULE_CLASS := APPS
+LOCAL_MODULE_SUFFIX := $(COMMON_ANDROID_PACKAGE_SUFFIX)
+include $(BUILD_PREBUILT)
