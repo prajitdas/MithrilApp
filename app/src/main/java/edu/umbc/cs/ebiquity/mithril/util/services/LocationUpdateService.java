@@ -131,7 +131,7 @@ public class LocationUpdateService extends Service implements
         // Set the fastest update interval to 1 minute
         mLocationRequest.setFastestInterval(MithrilApplication.getFastestInterval());
         // Set the minimum displacement between location updates in meters to 10m.
-        mLocationRequest.setSmallestDisplacement(MithrilApplication.getSmallestDisplacement());
+//        mLocationRequest.setSmallestDisplacement(MithrilApplication.getSmallestDisplacement());
 
         servicesAvailable = servicesConnected();
 

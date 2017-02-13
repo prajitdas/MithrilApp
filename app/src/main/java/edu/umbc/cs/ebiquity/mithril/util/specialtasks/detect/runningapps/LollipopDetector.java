@@ -18,7 +18,7 @@ import android.database.sqlite.SQLiteDatabase;
 import android.location.Address;
 import android.os.Build;
 import android.text.TextUtils;
-import android.widget.Toast;
+import android.util.Log;
 
 import com.google.gson.Gson;
 
@@ -165,8 +165,8 @@ public class LollipopDetector implements Detector {
                 sharedPref.getString(MithrilApplication.getPrefKeyAppPkgName(), "").equals(currentPackageName))
             return null;
         if (mithrilDBHelper.findAppTypeByAppPkgName(mithrilDB, currentPackageName).equals(MithrilApplication.getPrefKeyUserAppsDisplay())) {
-            Toast.makeText(context, "Mithril detects user app launch: " + currentPackageName, Toast.LENGTH_SHORT).show();
-//            Log.d(MithrilApplication.getDebugTag(), "Mithril detects user app launch: " + currentPackageName);
+//            Toast.makeText(context, "Mithril detects user app launch: " + currentPackageName, Toast.LENGTH_SHORT).show();
+            Log.d(MithrilApplication.getDebugTag(), "Mithril detects user app launch: " + currentPackageName);
             /**
              * PolicyConflictDetector object to be created and sent the requester, resource, context combo to receive a decision!!!
              */
@@ -188,8 +188,8 @@ public class LollipopDetector implements Detector {
                     if (currentPackageName.equals("com.google.android.youtube")) {
                         editor.putString(MithrilApplication.getPrefKeyAppPkgName(), currentPackageName);
                         editor.putString(MithrilApplication.getPrefKeyCurrentLocation(), "Home");
-                        Toast.makeText(context, "Rule 1 violation detected!", Toast.LENGTH_LONG).show();
-//                        Log.d(MithrilApplication.getDebugTag(), "Rule 1 violation detected!");
+//                        Toast.makeText(context, "Rule 1 violation detected!", Toast.LENGTH_LONG).show();
+                        Log.d(MithrilApplication.getDebugTag(), "Rule 1 violation detected!");
                     }
                 }
                 //Rule 2 is allow youtube at work during lunch hours
@@ -200,9 +200,9 @@ public class LollipopDetector implements Detector {
                         editor.putString(MithrilApplication.getPrefKeyAppPkgName(), currentPackageName);
                         editor.putString(MithrilApplication.getPrefKeyCurrentLocation(), "Work");
                         editor.putString(MithrilApplication.getPrefKeyCurrentTime(), "Lunch");
-//                editor.commit();
-                        Toast.makeText(context, "Rule 2 violation detected!", Toast.LENGTH_LONG).show();
-//                        Log.d(MithrilApplication.getDebugTag(), "Rule 2 violation detected!");
+//                        editor.commit();
+//                        Toast.makeText(context, "Rule 2 violation detected!", Toast.LENGTH_LONG).show();
+                        Log.d(MithrilApplication.getDebugTag(), "Rule 2 violation detected!");
                     }
                 }
                 //Rule 3 is allow SQLite at work
@@ -212,8 +212,8 @@ public class LollipopDetector implements Detector {
                         editor.putString(MithrilApplication.getPrefKeyAppPkgName(), currentPackageName);
                         editor.putString(MithrilApplication.getPrefKeyCurrentLocation(), "Work");
 //                editor.commit();
-                        Toast.makeText(context, "Rule 3 violation detected!", Toast.LENGTH_LONG).show();
-//                        Log.d(MithrilApplication.getDebugTag(), "Rule 2 violation detected!");
+//                        Toast.makeText(context, "Rule 3 violation detected!", Toast.LENGTH_LONG).show();
+                        Log.d(MithrilApplication.getDebugTag(), "Rule 2 violation detected!");
                     }
                 }
 //            // If no rules are broken then we will show no violations

@@ -7,6 +7,7 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.ResultReceiver;
+import android.util.Log;
 
 import com.google.gson.Gson;
 
@@ -49,7 +50,7 @@ public class AddressResultReceiver extends ResultReceiver {
     @Override
     protected void onReceiveResult(int resultCode, Bundle resultData) {
         mAddressRequested = resultData.getBoolean(MithrilApplication.ADDRESS_REQUESTED_EXTRA, false);
-//        Log.e(MithrilApplication.getDebugTag(), "Key error: " + resultData.getString(MithrilApplication.ADDRESS_KEY));
+        Log.d(MithrilApplication.getDebugTag(), "Prajit error " + resultData.getString(MithrilApplication.ADDRESS_KEY));
         String addressKey = resultData.getString(MithrilApplication.ADDRESS_KEY, null);
         if (addressKey.equals(null))
             addressKey = MithrilApplication.getPrefKeyCurrentAddress();
