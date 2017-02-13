@@ -135,6 +135,7 @@ public class FetchAddressIntentService extends IntentService {
 //                addressFragments.add(address.getAddressLine(i));
 //            }
             Log.i(MithrilApplication.getDebugTag(), getString(R.string.address_found) + " : " + address.getPostalCode());
+            Log.i(MithrilApplication.getDebugTag(), getString(R.string.address_found) + " : " + jsonAddress);
 //            deliverResultToReceiver(MithrilApplication.SUCCESS_RESULT,
 //                    TextUtils.join(System.getProperty("line.separator"),
 //                            addressFragments));
