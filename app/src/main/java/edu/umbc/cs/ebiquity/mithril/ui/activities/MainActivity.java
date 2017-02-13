@@ -94,21 +94,49 @@ public class MainActivity extends AppCompatActivity
         int id = item.getItemId();
 
         if (id == R.id.nav_violations) {
-            loadViolationsFragment();
+            /*
+             * We find out how many violations are there in the database.
+             * If there are none, we will load the EmptyFragment
+             */
+            if (isViolationListEmpty())
+                loadEmptyFragment();
+            else
+                loadViolationsFragment();
         } else if (id == R.id.nav_perm) {
-            loadPermissionsFragment();
+            if (isPermissionsListEmpty())
+                loadNothingHereFragment();
+            else
+                loadPermissionsFragment();
         } else if (id == R.id.nav_user) {
-            loadUserAppsFragment();
+            if (isUserAppsListEmpty())
+                loadNothingHereFragment();
+            else
+                loadUserAppsFragment();
         } else if (id == R.id.nav_system) {
-            loadSystemAppsFragment();
+            if (isSystemAppsListEmpty())
+                loadNothingHereFragment();
+            else
+                loadSystemAppsFragment();
         } else if (id == R.id.nav_all) {
-            loadAllAppsFragment();
+            if (isAllAppsListEmpty())
+                loadNothingHereFragment();
+            else
+                loadAllAppsFragment();
         } else if (id == R.id.nav_services) {
-            loadServicesFragment();
+            if (isServicesListEmpty())
+                loadNothingHereFragment();
+            else
+                loadServicesFragment();
         } else if (id == R.id.nav_bcastreceivers) {
-            loadBroadcastReceiversFragment();
+            if (isBroadcastReceiverListEmpty())
+                loadNothingHereFragment();
+            else
+                loadBroadcastReceiversFragment();
         } else if (id == R.id.nav_contentproviders) {
-            loadContentProvidersFragment();
+            if (isContentProvidersListEmpty())
+                loadNothingHereFragment();
+            else
+                loadContentProvidersFragment();
         } else if (id == R.id.nav_exit) {
             exitTheApp();
         } else if (id == R.id.nav_settings) {
@@ -251,7 +279,10 @@ public class MainActivity extends AppCompatActivity
          * If we are loading the app list we don't need the above two lines
          * as we take care of that in the loadAllAppsFragment() method
          */
-        loadViolationsFragment();
+        if (isViolationListEmpty())
+            loadEmptyFragment();
+        else
+            loadViolationsFragment();
 //        loadUserAppsFragment();
 
         //Agreement has not been copied to downloads folder yet, do it now
@@ -290,54 +321,33 @@ public class MainActivity extends AppCompatActivity
     }
 
     private void loadViolationsFragment(){
-        if(isViolationFragmentListEmpty())
-            loadEmptyFragment();
-        else {
-//        For ViolationFragment() we will have to manage in a different manner
-            FragmentManager fragmentManager = getFragmentManager();
-            fragmentManager.beginTransaction().replace(R.id.container_main, new ViolationFragment())
-                    .commit();
-        }
+        FragmentManager fragmentManager = getFragmentManager();
+        fragmentManager.beginTransaction().replace(R.id.container_main, new ViolationFragment())
+                .commit();
     }
 
     private void loadBroadcastReceiversFragment(){
-        if(isBroadcastReceiverListEmpty())
-            loadNothingHereFragment();
-        else {
-            FragmentManager fragmentManager = getFragmentManager();
-            fragmentManager.beginTransaction().replace(R.id.container_main, new BroadcastReceiversFragment())
-                    .commit();
-        }
+        FragmentManager fragmentManager = getFragmentManager();
+        fragmentManager.beginTransaction().replace(R.id.container_main, new BroadcastReceiversFragment())
+                .commit();
     }
 
     private void loadContentProvidersFragment(){
-        if(isContentProvidersListEmpty())
-            loadNothingHereFragment();
-        else {
-            FragmentManager fragmentManager = getFragmentManager();
-            fragmentManager.beginTransaction().replace(R.id.container_main, new ContentProvidersFragment())
-                    .commit();
-        }
+        FragmentManager fragmentManager = getFragmentManager();
+        fragmentManager.beginTransaction().replace(R.id.container_main, new ContentProvidersFragment())
+                .commit();
     }
 
     private void loadServicesFragment(){
-        if(isServicesListEmpty())
-            loadNothingHereFragment();
-        else {
-            FragmentManager fragmentManager = getFragmentManager();
-            fragmentManager.beginTransaction().replace(R.id.container_main, new ServicesFragment())
-                    .commit();
-        }
+        FragmentManager fragmentManager = getFragmentManager();
+        fragmentManager.beginTransaction().replace(R.id.container_main, new ServicesFragment())
+                .commit();
     }
 
     private void loadPermissionsFragment(){
-        if(isPermissionsListEmpty())
-            loadNothingHereFragment();
-        else {
-            FragmentManager fragmentManager = getFragmentManager();
-            fragmentManager.beginTransaction().replace(R.id.container_main, new PermissionsFragment())
-                    .commit();
-        }
+        FragmentManager fragmentManager = getFragmentManager();
+        fragmentManager.beginTransaction().replace(R.id.container_main, new PermissionsFragment())
+                .commit();
     }
 
     private void loadAllAppsFragment() {
@@ -376,7 +386,7 @@ public class MainActivity extends AppCompatActivity
                 .commit();
     }
 
-    private boolean isViolationFragmentListEmpty() {
+    private boolean isViolationListEmpty() {
         /*
          * We find out how many violations are there in the database.
          * If there are none, we will load the EmptyFragment
