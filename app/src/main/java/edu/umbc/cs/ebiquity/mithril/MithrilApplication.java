@@ -69,7 +69,7 @@ public class MithrilApplication extends Application {
     // A fast frequency ceiling in milliseconds
     private static final long FASTEST_INTERVAL = MILLISECONDS_PER_SECOND * FASTEST_INTERVAL_IN_SECONDS;
     // Set the minimum displacement between location updates in meters. By default this is 0.
-    private static final float SMALLEST_DISPLACEMENT = new Float(10.0);
+    private static final float SMALLEST_DISPLACEMENT = new Float(1.0);
     private static final String CMD_READ_LOGS_PERMISSION_FOR_APP = "pm grant edu.umbc.cs.ebiquity.mithril android.permission.READ_LOGS";
     private static final String CMD_PACKAGE_USAGE_STATS_PERMISSION_FOR_APP = "pm grant edu.umbc.cs.ebiquity.mithril android.permission.PACKAGE_USAGE_STATS";
     private static final String CMD_ROOT_PRIVILEGE = "su -c";
