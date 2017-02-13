@@ -46,7 +46,7 @@ public class AppLaunchDetectorService extends Service {
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
         // schedule task
-        mTimer.scheduleAtFixedRate(new LaunchedAppDetectTimerTask(), 0, MithrilApplication.getUpdateInterval());
+        mTimer.scheduleAtFixedRate(new LaunchedAppDetectTimerTask(), 0, MithrilApplication.getLaunchDetectInterval());
         return super.onStartCommand(intent, flags, startId);
     }
 

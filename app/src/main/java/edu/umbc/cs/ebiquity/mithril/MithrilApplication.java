@@ -60,6 +60,10 @@ public class MithrilApplication extends Application {
     private static final String PERMISSION_NO_GROUP = "no-groups";
     // Milliseconds per second
     private static final int MILLISECONDS_PER_SECOND = 1000;
+    // Update frequency for app launch detection in seconds
+    private static final int LAUNCH_DETECTION_INTERVAL_IN_SECONDS = 1;
+    // Update frequency in milliseconds
+    private static final long LAUNCH_DETECT_INTERVAL = MILLISECONDS_PER_SECOND * LAUNCH_DETECTION_INTERVAL_IN_SECONDS;
     // Update frequency in seconds
     private static final int UPDATE_INTERVAL_IN_SECONDS = 60;
     // Update frequency in milliseconds
@@ -69,7 +73,7 @@ public class MithrilApplication extends Application {
     // A fast frequency ceiling in milliseconds
     private static final long FASTEST_INTERVAL = MILLISECONDS_PER_SECOND * FASTEST_INTERVAL_IN_SECONDS;
     // Set the minimum displacement between location updates in meters. By default this is 0.
-    private static final float SMALLEST_DISPLACEMENT = new Float(1.0);
+    private static final float SMALLEST_DISPLACEMENT = new Float(10.0);
     private static final String CMD_READ_LOGS_PERMISSION_FOR_APP = "pm grant edu.umbc.cs.ebiquity.mithril android.permission.READ_LOGS";
     private static final String CMD_PACKAGE_USAGE_STATS_PERMISSION_FOR_APP = "pm grant edu.umbc.cs.ebiquity.mithril android.permission.PACKAGE_USAGE_STATS";
     private static final String CMD_ROOT_PRIVILEGE = "su -c";
@@ -835,5 +839,9 @@ public class MithrilApplication extends Application {
 
     public static String getPrefKeyUserAgreementCopied() {
         return PREF_KEY_USER_AGREEMENT_COPIED;
+    }
+
+    public static long getLaunchDetectInterval() {
+        return LAUNCH_DETECT_INTERVAL;
     }
 }
