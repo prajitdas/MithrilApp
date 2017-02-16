@@ -61,11 +61,11 @@ public class MithrilApplication extends Application {
     // Milliseconds per second
     private static final int MILLISECONDS_PER_SECOND = 1000;
     // Update frequency for app launch detection in seconds
-    private static final int LAUNCH_DETECTION_INTERVAL_IN_SECONDS = 100;
+    private static final int LAUNCH_DETECTION_INTERVAL_IN_SECONDS = 10;
     // Update frequency in milliseconds
     private static final long LAUNCH_DETECT_INTERVAL = MILLISECONDS_PER_SECOND * LAUNCH_DETECTION_INTERVAL_IN_SECONDS;
     // Update frequency in seconds
-    private static final int UPDATE_INTERVAL_IN_SECONDS = 1;
+    private static final int UPDATE_INTERVAL_IN_SECONDS = 10;
     // Update frequency in milliseconds
     private static final long UPDATE_INTERVAL = MILLISECONDS_PER_SECOND * UPDATE_INTERVAL_IN_SECONDS;
     // The fastest update frequency, in seconds

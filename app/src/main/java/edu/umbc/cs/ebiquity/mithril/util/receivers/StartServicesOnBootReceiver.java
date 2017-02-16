@@ -19,25 +19,27 @@ public class StartServicesOnBootReceiver extends BroadcastReceiver {
     @Override
     public void onReceive(Context context, Intent intent) {
         sharedPref = context.getSharedPreferences(MithrilApplication.getSharedPreferencesName(), Context.MODE_PRIVATE);
-        if (intent.getAction().equals(Intent.ACTION_BOOT_COMPLETED)) {
-            if (PermissionHelper.isExplicitPermissionAcquisitionNecessary()) {
-                PermissionHelper.requestAllNecessaryPermissions(context);
-                if (PermissionHelper.getUsageStatsPermisison(context))
-                    context.startService(new Intent(context, AppLaunchDetectorService.class));
-                if (PermissionHelper.isPermissionGranted(context, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
-                    boolean updatesRequested = false;
+        // We have got the user agreement part done! Now we can start services...
+        if (sharedPref.getBoolean(MithrilApplication.getPrefKeyUserAgreementCopied(), false)) {
+            if (intent.getAction().equals(Intent.ACTION_BOOT_COMPLETED)) {
+                if (PermissionHelper.isExplicitPermissionAcquisitionNecessary()) {
+                    PermissionHelper.requestAllNecessaryPermissions(context);
+                    if (PermissionHelper.getUsageStatsPermisison(context))
+                        context.startService(new Intent(context, AppLaunchDetectorService.class));
+                    if (PermissionHelper.isPermissionGranted(context, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
+                        boolean updatesRequested = false;
                     /*
                     * Get any previous setting for location updates
                     * Gets "false" if an error occurs
                     */
-                    if (sharedPref.contains(MithrilApplication.getPrefKeyLocationUpdateServiceState())) {
-                        updatesRequested = sharedPref.getBoolean(MithrilApplication.getPrefKeyLocationUpdateServiceState(), false);
-                    }
-                    if (updatesRequested) {
-                        context.startService(new Intent(context, LocationUpdateService.class));
+                        if (sharedPref.contains(MithrilApplication.getPrefKeyLocationUpdateServiceState())) {
+                            updatesRequested = sharedPref.getBoolean(MithrilApplication.getPrefKeyLocationUpdateServiceState(), false);
+                        }
+                        if (updatesRequested) {
+                            context.startService(new Intent(context, LocationUpdateService.class));
+                        }
                     }
                 }
-            }
 //            if (PermissionHelper.isExplicitPermissionAcquisitionNecessary()) {
 //                if (PermissionHelper.getUsageStatsPermisison(context)) {
 //                    ComponentName service = context.startService(new Intent(context, AppLaunchDetectorService.class));
@@ -67,8 +69,9 @@ public class StartServicesOnBootReceiver extends BroadcastReceiver {
 //                    }
 //                }
 //            }
-        } else {
-            Log.e(MithrilApplication.getDebugTag(), "Received unexpected intent " + intent.toString());
+            } else {
+                Log.e(MithrilApplication.getDebugTag(), "Received unexpected intent " + intent.toString());
+            }
         }
     }
 }
