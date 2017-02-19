@@ -250,8 +250,8 @@ public class MainActivity extends AppCompatActivity
         applyHeaderView();
         
         // Let's get the DB instances loaded too
-        mithrilDBHelper = new MithrilDBHelper(this);
-        mithrilDB = mithrilDBHelper.getWritableDatabase();
+//        mithrilDBHelper = new MithrilDBHelper(this);
+//        mithrilDB = mithrilDBHelper.getWritableDatabase();
     }
 
     private void applyHeaderView() {
@@ -275,6 +275,8 @@ public class MainActivity extends AppCompatActivity
     }
 
     private void defaultFragmentLoad() {
+        if (isContextInfoSet())
+            loadPrefsFragment();
         /*
          * If we are loading the app list we don't need the above two lines
          * as we take care of that in the loadAllAppsFragment() method
@@ -551,5 +553,9 @@ public class MainActivity extends AppCompatActivity
 
     private boolean isAgreementDownloaded() {
         return sharedPreferences.getBoolean(MithrilApplication.getPrefKeyUserAgreementCopied(), false) && new File(downloadsDirectory, agreementFile).exists();
+    }
+
+    private boolean isContextInfoSet() {
+        return sharedPreferences.getBoolean(MithrilApplication.getPrefKeyContextInfoSet(), false);
     }
 }

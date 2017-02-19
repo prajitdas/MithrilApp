@@ -123,13 +123,29 @@
     <string name="pref_temporal_context_switch_title">Enable temporal context</string>
     <string name="pref_temporal_context_switch_summary">Click to enable temporal context</string>
 
-    <string name="pref_work_hours_key">workHours</string>
     <string name="pref_work_hours_title">Change working hours</string>
-    <string name="pref_work_hours_summary">M-F, 9AM - 5PM</string>
 
-    <string name="pref_DND_hours_key">dndHours</string>
-    <string name="pref_DND_hours_summary">Everyday, 10PM - 7AM</string>
+    <string name="pref_work_hours_start_key">workHoursStart</string>
+    <string name="pref_work_hours_start">09:00</string>
+
+    <string name="pref_work_hours_end_key">workHoursEnd</string>
+    <string name="pref_work_hours_end">17:00</string>
+
+    <string name="pref_work_days_key">workDays</string>
+    <string name="pref_work_days_title">Change working days</string>
+    <string name="pref_work_days">MTWTF</string>
+
     <string name="pref_DND_hours_title">Change do not disturb hours</string>
+
+    <string name="pref_DND_hours_start_key">dndHoursStart</string>
+    <string name="pref_DND_hours_start">22:00</string>
+
+    <string name="pref_DND_hours_end_key">dndHoursEnd</string>
+    <string name="pref_DND_hours_end">07:00</string>
+
+    <string name="pref_DND_days_key">dndDays</string>
+    <string name="pref_DND_days_title">Change do not disturb days</string>
+    <string name="pref_DND_days">SMTWTFS</string>
 
     <!-- Preference strings for Presence Info context -->
     <string name="pref_header_presence_info_context">Presence info context</string>

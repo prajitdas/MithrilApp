@@ -39,6 +39,7 @@ import edu.umbc.cs.ebiquity.mithril.R;
 import edu.umbc.cs.ebiquity.mithril.util.receivers.AddressResultReceiver;
 import edu.umbc.cs.ebiquity.mithril.util.services.FetchAddressIntentService;
 import edu.umbc.cs.ebiquity.mithril.util.services.GeofenceTransitionsIntentService;
+import edu.umbc.cs.ebiquity.mithril.util.specialtasks.context.TimePreference;
 import edu.umbc.cs.ebiquity.mithril.util.specialtasks.errorsnexceptions.GeofenceErrorMessages;
 
 import static android.content.Context.MODE_PRIVATE;
@@ -96,8 +97,14 @@ public class PrefsFragment extends PreferenceFragment implements
     private EditTextPreference mEditTextPrefWorkLocation;
 
     private SwitchPreference mSwitchPrefEnableTemporalEnabled;
-    private EditTextPreference mEditTextPrefWorkHours;
-    private EditTextPreference mEditTextPrefDNDHours;
+
+    private EditTextPreference mEditTextPrefWorkDays;
+    private TimePreference mTimePrefWorkHoursStart;
+    private TimePreference mTimePrefWorkHoursEnd;
+
+    private EditTextPreference mEditTextPrefDNDDays;
+    private TimePreference mTimePrefDNDHoursStart;
+    private TimePreference mTimePrefDNDHoursEnd;
 
     private SwitchPreference mSwitchPrefEnablePresenceInfoEnabled;
     private EditTextPreference mEditTextPrefPresenceInfoSupervisor;
@@ -133,8 +140,14 @@ public class PrefsFragment extends PreferenceFragment implements
         mEditTextPrefWorkLocation.setSummary(sharedPrefs.getString(MithrilApplication.getPrefWorkLocationKey(), getResources().getString(R.string.pref_work_location_summary)));
 
         mSwitchPrefEnableTemporalEnabled.setChecked(sharedPrefs.getBoolean(MithrilApplication.getPrefTemporalContextEnableKey(), false));
-        mEditTextPrefWorkHours.setSummary(sharedPrefs.getString(MithrilApplication.getPrefWorkHoursKey(), getResources().getString(R.string.pref_work_hours_summary)));
-        mEditTextPrefDNDHours.setSummary(sharedPrefs.getString(MithrilApplication.getPrefDndHoursKey(), getResources().getString(R.string.pref_DND_hours_summary)));
+
+        mEditTextPrefWorkDays.setSummary(sharedPrefs.getString(MithrilApplication.getPrefWorkDaysKey(), getResources().getString(R.string.pref_work_days)));
+        mTimePrefWorkHoursStart.setSummary(sharedPrefs.getString(MithrilApplication.getPrefWorkHoursStartKey(), getResources().getString(R.string.pref_work_hours_start)));
+        mTimePrefWorkHoursEnd.setSummary(sharedPrefs.getString(MithrilApplication.getPrefWorkHoursEndKey(), getResources().getString(R.string.pref_work_hours_end)));
+
+        mEditTextPrefDNDDays.setSummary(sharedPrefs.getString(MithrilApplication.getPrefDndDaysKey(), getResources().getString(R.string.pref_DND_days)));
+        mTimePrefDNDHoursStart.setSummary(sharedPrefs.getString(MithrilApplication.getPrefDndHoursStartKey(), getResources().getString(R.string.pref_DND_hours_start)));
+        mTimePrefDNDHoursEnd.setSummary(sharedPrefs.getString(MithrilApplication.getPrefDndHoursEndKey(), getResources().getString(R.string.pref_DND_hours_end)));
 
         mSwitchPrefEnablePresenceInfoEnabled.setChecked(sharedPrefs.getBoolean(MithrilApplication.getPrefPresenceInfoContextEnableKey(), false));
         mEditTextPrefPresenceInfoSupervisor.setSummary(sharedPrefs.getString(MithrilApplication.getPrefPresenceInfoSupervisorKey(), getResources().getString(R.string.pref_presence_info_supervisor_summary)));
@@ -214,8 +227,14 @@ public class PrefsFragment extends PreferenceFragment implements
         mEditTextPrefWorkLocation = (EditTextPreference) getPreferenceManager().findPreference(MithrilApplication.getPrefWorkLocationKey());
 
         mSwitchPrefEnableTemporalEnabled = (SwitchPreference) getPreferenceManager().findPreference(MithrilApplication.getPrefTemporalContextEnableKey());
-        mEditTextPrefWorkHours = (EditTextPreference) getPreferenceManager().findPreference(MithrilApplication.getPrefWorkHoursKey());
-        mEditTextPrefDNDHours = (EditTextPreference) getPreferenceManager().findPreference(MithrilApplication.getPrefDndHoursKey());
+
+        mEditTextPrefWorkDays = (EditTextPreference) getPreferenceManager().findPreference(MithrilApplication.getPrefWorkDaysKey());
+        mTimePrefWorkHoursStart = (TimePreference) getPreferenceManager().findPreference(MithrilApplication.getPrefWorkHoursStartKey());
+        mTimePrefWorkHoursEnd = (TimePreference) getPreferenceManager().findPreference(MithrilApplication.getPrefWorkHoursEndKey());
+
+        mEditTextPrefDNDDays = (EditTextPreference) getPreferenceManager().findPreference(MithrilApplication.getPrefDndDaysKey());
+        mTimePrefDNDHoursStart = (TimePreference) getPreferenceManager().findPreference(MithrilApplication.getPrefDndHoursStartKey());
+        mTimePrefDNDHoursEnd = (TimePreference) getPreferenceManager().findPreference(MithrilApplication.getPrefDndHoursStartKey());
 
         mSwitchPrefEnablePresenceInfoEnabled = (SwitchPreference) getPreferenceManager().findPreference(MithrilApplication.getPrefPresenceInfoContextEnableKey());
         mEditTextPrefPresenceInfoSupervisor = (EditTextPreference) getPreferenceManager().findPreference(MithrilApplication.getPrefPresenceInfoSupervisorKey());
@@ -228,8 +247,13 @@ public class PrefsFragment extends PreferenceFragment implements
         mEditTextPrefHomeLocation.setEnabled(mSwitchPrefEnableLocationEnabled.isChecked());
         mEditTextPrefWorkLocation.setEnabled(mSwitchPrefEnableLocationEnabled.isChecked());
 
-        mEditTextPrefWorkHours.setEnabled(mSwitchPrefEnableTemporalEnabled.isChecked());
-        mEditTextPrefDNDHours.setEnabled(mSwitchPrefEnableTemporalEnabled.isChecked());
+        mEditTextPrefWorkDays.setEnabled(mSwitchPrefEnableTemporalEnabled.isChecked());
+        mTimePrefWorkHoursStart.setEnabled(mSwitchPrefEnableTemporalEnabled.isChecked());
+        mTimePrefWorkHoursEnd.setEnabled(mSwitchPrefEnableTemporalEnabled.isChecked());
+
+        mEditTextPrefDNDDays.setEnabled(mSwitchPrefEnableTemporalEnabled.isChecked());
+        mTimePrefDNDHoursStart.setEnabled(mSwitchPrefEnableTemporalEnabled.isChecked());
+        mTimePrefDNDHoursEnd.setEnabled(mSwitchPrefEnableTemporalEnabled.isChecked());
 
         mEditTextPrefPresenceInfoColleague.setEnabled(mSwitchPrefEnablePresenceInfoEnabled.isChecked());
         mEditTextPrefPresenceInfoSupervisor.setEnabled(mSwitchPrefEnablePresenceInfoEnabled.isChecked());
@@ -332,34 +356,96 @@ public class PrefsFragment extends PreferenceFragment implements
                 editor.putBoolean(MithrilApplication.getPrefTemporalContextEnableKey(), mSwitchPrefEnableTemporalEnabled.isChecked());
                 editor.commit();
 
-                mEditTextPrefWorkHours.setEnabled(mSwitchPrefEnableTemporalEnabled.isChecked());
-                mEditTextPrefDNDHours.setEnabled(mSwitchPrefEnableTemporalEnabled.isChecked());
+                mEditTextPrefWorkDays.setEnabled(mSwitchPrefEnableTemporalEnabled.isChecked());
+                mTimePrefWorkHoursStart.setEnabled(mSwitchPrefEnableTemporalEnabled.isChecked());
+                mTimePrefWorkHoursEnd.setEnabled(mSwitchPrefEnableTemporalEnabled.isChecked());
+
+                mEditTextPrefDNDDays.setEnabled(mSwitchPrefEnableTemporalEnabled.isChecked());
+                mTimePrefDNDHoursStart.setEnabled(mSwitchPrefEnableTemporalEnabled.isChecked());
+                mTimePrefDNDHoursEnd.setEnabled(mSwitchPrefEnableTemporalEnabled.isChecked());
+
                 return true;
             }
         });
 
-        mEditTextPrefWorkHours.setOnPreferenceChangeListener(new Preference.OnPreferenceChangeListener() {
+        mEditTextPrefWorkDays.setOnPreferenceChangeListener(new Preference.OnPreferenceChangeListener() {
             @Override
             public boolean onPreferenceChange(Preference preference, Object o) {
                 //TODO Add code for storing preferences
                 String changedValue = (String) o;
                 preference.setSummary(changedValue);
 
-                editor.putString(MithrilApplication.getPrefWorkHoursKey(), changedValue);
+                editor.putString(MithrilApplication.getPrefWorkDaysKey(), changedValue);
                 editor.commit();
 
                 return false;
             }
         });
 
-        mEditTextPrefDNDHours.setOnPreferenceChangeListener(new Preference.OnPreferenceChangeListener() {
+        mTimePrefWorkHoursStart.setOnPreferenceChangeListener(new Preference.OnPreferenceChangeListener() {
             @Override
             public boolean onPreferenceChange(Preference preference, Object o) {
                 //TODO Add code for storing preferences
                 String changedValue = (String) o;
                 preference.setSummary(changedValue);
 
-                editor.putString(MithrilApplication.getPrefDndHoursKey(), changedValue);
+                editor.putString(MithrilApplication.getPrefWorkHoursStartKey(), changedValue);
+                editor.commit();
+
+                return false;
+            }
+        });
+
+        mTimePrefWorkHoursEnd.setOnPreferenceChangeListener(new Preference.OnPreferenceChangeListener() {
+            @Override
+            public boolean onPreferenceChange(Preference preference, Object o) {
+                //TODO Add code for storing preferences
+                String changedValue = (String) o;
+                preference.setSummary(changedValue);
+
+                editor.putString(MithrilApplication.getPrefWorkHoursEndKey(), changedValue);
+                editor.commit();
+
+                return false;
+            }
+        });
+
+        mEditTextPrefDNDDays.setOnPreferenceChangeListener(new Preference.OnPreferenceChangeListener() {
+            @Override
+            public boolean onPreferenceChange(Preference preference, Object o) {
+                //TODO Add code for storing preferences
+                String changedValue = (String) o;
+                preference.setSummary(changedValue);
+
+                editor.putString(MithrilApplication.getPrefDndDaysKey(), changedValue);
+                editor.commit();
+
+                return false;
+            }
+        });
+
+        mTimePrefDNDHoursStart.setOnPreferenceChangeListener(new Preference.OnPreferenceChangeListener() {
+            @Override
+            public boolean onPreferenceChange(Preference preference, Object o) {
+                //TODO Add code for storing preferences
+                String changedValue = (String) o;
+                preference.setSummary(changedValue);
+
+                editor.putString(MithrilApplication.getPrefDndHoursStartKey(), changedValue);
+                editor.commit();
+
+                return false;
+            }
+        });
+
+        mTimePrefDNDHoursEnd.setOnPreferenceChangeListener(new Preference.OnPreferenceChangeListener() {
+            @Override
+            public boolean onPreferenceChange(Preference preference, Object o) {
+                //TODO Add code for storing preferences
+                String changedValue = (String) o;
+                preference.setSummary(changedValue);
+
+                editor.putString(MithrilApplication.getPrefDndHoursEndKey(), changedValue);
                 editor.commit();
 
                 return false;

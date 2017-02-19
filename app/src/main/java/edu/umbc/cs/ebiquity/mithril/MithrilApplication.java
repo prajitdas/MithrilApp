@@ -100,8 +100,14 @@ public class MithrilApplication extends Application {
     private static final String PREF_PRESENCE_INFO_SUPERVISOR_KEY = "presenceInfoColleague";
 
     private static final String PREF_TEMPORAL_CONTEXT_ENABLE_KEY = "enableTemporalContext";
-    private static final String PREF_WORK_HOURS_KEY = "workHours";
-    private static final String PREF_DND_HOURS_KEY = "dndHours";
+
+    private static final String PREF_WORK_DAYS_KEY = "workDays";
+    private static final String PREF_WORK_HOURS_START_KEY = "workHoursStart";
+    private static final String PREF_WORK_HOURS_END_KEY = "workHoursEnd";
+
+    private static final String PREF_DND_DAYS_KEY = "dndDays";
+    private static final String PREF_DND_HOURS_START_KEY = "dndHoursStart";
+    private static final String PREF_DND_HOURS_END_KEY = "dndHoursEnd";
     //End of preferences.xml
 
     private static final String PREF_KEY_APP_LAUNCH_MONITORING_SERVICE_STATE = "appLaunchMonitoringServiceState";
@@ -115,10 +121,12 @@ public class MithrilApplication extends Application {
     private static final String PREF_KEY_USER_CONSENT = "UserConsent";
     private static final String PREF_KEY_USER_AGREEMENT_PAGE_NUMBER = "UserAgreementPageNumber";
     private static final String PREF_KEY_USER_AGREEMENT_COPIED = "UserAgreementCopied";
+    private static final String PREF_KEY_CONTEXT_INFO_SET = "ContextInfoSet";
     //End of preference keys
 
     private static final String DATABASE_NAME = "mithril.db";
     private static final String DEBUG_TAG = "MithrilDebugTag";
+
     /**
      * Context constants
      * TODO Change the constants as per the ontology and ensure that you generate some rules to be modified by the automated script
@@ -653,14 +661,6 @@ public class MithrilApplication extends Application {
         return PREF_TEMPORAL_CONTEXT_ENABLE_KEY;
     }
 
-    public static String getPrefWorkHoursKey() {
-        return PREF_WORK_HOURS_KEY;
-    }
-
-    public static String getPrefDndHoursKey() {
-        return PREF_DND_HOURS_KEY;
-    }
-
     public static String getPrefKeyAppLaunchMonitoringServiceState() {
         return PREF_KEY_APP_LAUNCH_MONITORING_SERVICE_STATE;
     }
@@ -843,5 +843,37 @@ public class MithrilApplication extends Application {
 
     public static long getLaunchDetectInterval() {
         return LAUNCH_DETECT_INTERVAL;
+    }
+
+    public static String getPrefKeyContextInfoSet() {
+        return PREF_KEY_CONTEXT_INFO_SET;
+    }
+
+    public static int getLaunchDetectionIntervalInSeconds() {
+        return LAUNCH_DETECTION_INTERVAL_IN_SECONDS;
+    }
+
+    public static String getPrefWorkDaysKey() {
+        return PREF_WORK_DAYS_KEY;
+    }
+
+    public static String getPrefWorkHoursStartKey() {
+        return PREF_WORK_HOURS_START_KEY;
+    }
+
+    public static String getPrefWorkHoursEndKey() {
+        return PREF_WORK_HOURS_END_KEY;
+    }
+
+    public static String getPrefDndDaysKey() {
+        return PREF_DND_DAYS_KEY;
+    }
+
+    public static String getPrefDndHoursStartKey() {
+        return PREF_DND_HOURS_START_KEY;
+    }
+
+    public static String getPrefDndHoursEndKey() {
+        return PREF_DND_HOURS_END_KEY;
     }
 }
