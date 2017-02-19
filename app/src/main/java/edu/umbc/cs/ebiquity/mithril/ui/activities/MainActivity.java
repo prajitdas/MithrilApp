@@ -162,6 +162,11 @@ public class MainActivity extends AppCompatActivity
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
 
         getUserConsent();
     }
@@ -250,8 +255,8 @@ public class MainActivity extends AppCompatActivity
         applyHeaderView();
         
         // Let's get the DB instances loaded too
-//        mithrilDBHelper = new MithrilDBHelper(this);
-//        mithrilDB = mithrilDBHelper.getWritableDatabase();
+        mithrilDBHelper = new MithrilDBHelper(this);
+        mithrilDB = mithrilDBHelper.getWritableDatabase();
     }
 
     private void applyHeaderView() {

@@ -36,7 +36,7 @@ public class UserAgreementActivity extends AppCompatActivity {
     @Override
     protected void onResume() {
         super.onResume();
-        ifUserAgreesGoBackToMainApp();
+        ifUserConsentedGoBackToMainApp();
         initViews();
     }
 
@@ -108,7 +108,7 @@ public class UserAgreementActivity extends AppCompatActivity {
         }
     }
 
-    private void ifUserAgreesGoBackToMainApp() {
+    private void ifUserConsentedGoBackToMainApp() {
         /**
          * If the user has already consented, we just go back tp the MainActivity, or else we are stuck here!
          */
