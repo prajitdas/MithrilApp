@@ -385,6 +385,7 @@ public class PrefsFragment extends PreferenceFragment implements
                 //TODO Add code for storing preferences
                 String changedValue = (String) o;
                 preference.setSummary(changedValue);
+                Log.d(MithrilApplication.getDebugTag() + " persisting? ", changedValue);
 
                 editor.putString(MithrilApplication.getPrefWorkDaysKey(), changedValue);
                 editor.commit();

@@ -24,8 +24,6 @@ import edu.umbc.cs.ebiquity.mithril.R;
 public class DayOfWeekPreference extends DialogPreference {
     private Set<String> daysOfWeek = new HashSet<String>();
 
-    private Context context;
-
     private CheckBox mMondayCheckbox;
     private CheckBox mTuesdayCheckbox;
     private CheckBox mWednesdayCheckbox;
@@ -37,11 +35,11 @@ public class DayOfWeekPreference extends DialogPreference {
     private String empty = "None!";
 
     private View view;
-    private SharedPreferences sharedPrefs;
 
     public DayOfWeekPreference(Context context, AttributeSet attributeSet) {
         super(context, attributeSet);
 
+        setPersistent(true);
         setPositiveButtonText(R.string.pref_days_set);
         setNegativeButtonText(R.string.pref_days_cancel);
         setDialogLayoutResource(R.layout.day_of_week_dialog_preferences);
@@ -50,8 +48,7 @@ public class DayOfWeekPreference extends DialogPreference {
     @Override
     protected void onBindDialogView(View v) {
         view = v;
-        context = view.getContext();
-        initViews();
+        initViews(view.getContext());
         super.onBindDialogView(v);
     }
 
@@ -82,8 +79,9 @@ public class DayOfWeekPreference extends DialogPreference {
         }
     }
 
-    private void initViews() {
-        sharedPrefs = context.getSharedPreferences(MithrilApplication.getSharedPreferencesName(), Context.MODE_PRIVATE);
+    private void initViews(Context context) {
+        SharedPreferences sharedPrefs = context.getSharedPreferences(MithrilApplication.getSharedPreferencesName(), Context.MODE_PRIVATE);
+        setDaysOfWeekForPref(sharedPrefs.getString(this.getKey(), empty));
 
         mMondayCheckbox = (CheckBox) view.findViewById(R.id.monday);
         mTuesdayCheckbox = (CheckBox) view.findViewById(R.id.tuesday);
@@ -112,6 +110,8 @@ public class DayOfWeekPreference extends DialogPreference {
     }
 
     private void setDaysOfWeekForPref(String string) {
+        Log.d(MithrilApplication.getDebugTag() + " What did we persist?", string);
+        daysOfWeek.clear();
         if (!string.equals(empty)) {
             for (String day : string.split(",")) {
                 if (!day.equals(""))
@@ -206,8 +206,6 @@ public class DayOfWeekPreference extends DialogPreference {
 
     @Override
     protected void onSetInitialValue(boolean restoreValue, Object defaultValue) {
-
-        Log.d(MithrilApplication.getDebugTag() + " DAYS!!!!", defaultValue.toString());
         if (restoreValue) {
             if (defaultValue == null)
                 setDaysOfWeekForPref(getPersistedString("Monday,Tuesday,Wednesday,Thursday,Friday,Saturday,Sunday"));
