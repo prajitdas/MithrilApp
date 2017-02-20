@@ -165,6 +165,7 @@
 
     <string name="pref_days_set">Set</string>
     <string name="pref_days_cancel">Cancel</string>
+
     <!-- Preference strings for Presence Info context -->
     <string name="pref_header_presence_info_context">Presence info context</string>
 
