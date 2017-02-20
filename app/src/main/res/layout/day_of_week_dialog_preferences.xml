@@ -8,64 +8,64 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentTop="true"
-        android:text="Monday" />
+        android:text="@string/pref_monday" />
 
     <CheckBox
         android:id="@+id/tuesday"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_below="@+id/monday"
-        android:text="Tuesday" />
+        android:text="@string/pref_tuesday" />
 
     <CheckBox
         android:id="@+id/wednesday"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_below="@+id/tuesday"
-        android:text="Wednesday" />
+        android:text="@string/pref_wednesday" />
 
     <CheckBox
         android:id="@+id/thursday"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_below="@+id/wednesday"
-        android:text="Thursday" />
+        android:text="@string/pref_thursday" />
 
     <CheckBox
         android:id="@+id/friday"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_below="@+id/thursday"
-        android:text="Friday" />
+        android:text="@string/pref_friday" />
 
     <CheckBox
         android:id="@+id/saturday"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_below="@+id/friday"
-        android:text="Saturday" />
+        android:text="@string/pref_saturday" />
 
     <CheckBox
         android:id="@+id/sunday"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_below="@+id/saturday"
-        android:text="Sunday" />
+        android:text="@string/pref_sunday" />
 
     <Button
-        android:id="@+id/daysOkBtn"
+        android:id="@+id/daysSetBtn"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_below="@+id/sunday"
         android:background="@null"
-        android:text="Set" />
+        android:text="@string/pref_days_set" />
 
     <Button
         android:id="@+id/daysCancelBtn"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_below="@+id/sunday"
-        android:layout_toRightOf="@+id/daysOkBtn"
+        android:layout_toRightOf="@+id/daysSetBtn"
         android:background="@null"
-        android:text="Cancel" />
+        android:text="@string/pref_days_cancel" />
 </RelativeLayout>

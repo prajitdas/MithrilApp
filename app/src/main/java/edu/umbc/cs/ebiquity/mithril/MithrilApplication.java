@@ -108,6 +108,14 @@ public class MithrilApplication extends Application {
     private static final String PREF_DND_DAYS_KEY = "dndDays";
     private static final String PREF_DND_HOURS_START_KEY = "dndHoursStart";
     private static final String PREF_DND_HOURS_END_KEY = "dndHoursEnd";
+
+    private static final String PREF_MONDAY = "Monday";
+    private static final String PREF_TUESDAY = "Tuesday";
+    private static final String PREF_WEDNESDAY = "Wednesday";
+    private static final String PREF_THURSDAY = "Thursday";
+    private static final String PREF_FRIDAY = "Friday";
+    private static final String PREF_SATURDAY = "Saturday";
+    private static final String PREF_SUNDAY = "Sunday";
     //End of preferences.xml
 
     private static final String PREF_KEY_APP_LAUNCH_MONITORING_SERVICE_STATE = "appLaunchMonitoringServiceState";
@@ -875,5 +883,33 @@ public class MithrilApplication extends Application {
 
     public static String getPrefDndHoursEndKey() {
         return PREF_DND_HOURS_END_KEY;
+    }
+
+    public static String getPrefMonday() {
+        return PREF_MONDAY;
+    }
+
+    public static String getPrefTuesday() {
+        return PREF_TUESDAY;
+    }
+
+    public static String getPrefWednesday() {
+        return PREF_WEDNESDAY;
+    }
+
+    public static String getPrefThursday() {
+        return PREF_THURSDAY;
+    }
+
+    public static String getPrefFriday() {
+        return PREF_FRIDAY;
+    }
+
+    public static String getPrefSaturday() {
+        return PREF_SATURDAY;
+    }
+
+    public static String getPrefSunday() {
+        return PREF_SUNDAY;
     }
 }

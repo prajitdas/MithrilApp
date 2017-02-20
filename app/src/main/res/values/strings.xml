@@ -117,6 +117,8 @@
     <string name="pref_work_location_title">Save work location</string>
 
     <!-- Preference strings for Temporal context -->
+    <string name="pref_choose_days">Choose the days</string>
+
     <string name="pref_header_temporal_context">Temporal context</string>
 
     <string name="pref_temporal_context_switch_key">enableTemporalContext</string>
@@ -133,7 +135,7 @@
 
     <string name="pref_work_days_key">workDays</string>
     <string name="pref_work_days_title">Change working days</string>
-    <string name="pref_work_days">M,Tu,W,Th,F</string>
+    <string name="pref_work_days">Monday,Tuesday,Wednesday,Thursday,Friday</string>
 
     <string name="pref_DND_hours_start_title">Change start of DND hours</string>
     <string name="pref_DND_hours_start_key">dndHoursStart</string>
@@ -145,8 +147,18 @@
 
     <string name="pref_DND_days_key">dndDays</string>
     <string name="pref_DND_days_title">Change do not disturb days</string>
-    <string name="pref_DND_days">M,Tu,W,Th,F,Sa,Su</string>
+    <string name="pref_DND_days">Monday,Tuesday,Wednesday,Thursday,Friday,Saturday,Sunday</string>
 
+    <string name="pref_monday">Monday</string>
+    <string name="pref_tuesday">Tuesday</string>
+    <string name="pref_wednesday">Wednesday</string>
+    <string name="pref_thursday">Thursday</string>
+    <string name="pref_friday">Friday</string>
+    <string name="pref_saturday">Saturday</string>
+    <string name="pref_sunday">Sunday</string>
+
+    <string name="pref_days_set">Set</string>
+    <string name="pref_days_cancel">Cancel</string>
     <!-- Preference strings for Presence Info context -->
     <string name="pref_header_presence_info_context">Presence info context</string>
 
