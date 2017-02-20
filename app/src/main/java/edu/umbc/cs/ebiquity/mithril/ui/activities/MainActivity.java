@@ -563,6 +563,6 @@ public class MainActivity extends AppCompatActivity
     }
 
     private boolean isContextInfoSet() {
-        return sharedPreferences.getBoolean(MithrilApplication.getPrefKeyContextInfoSet(), false);
+        return sharedPreferences.getBoolean(MithrilApplication.getPrefAllDoneKey(), false);
     }
 }

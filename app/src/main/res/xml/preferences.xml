@@ -1,5 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+    <SwitchPreference
+        android:defaultValue="false"
+        android:enabled="true"
+        android:key="@string/pref_all_done_key"
+        android:summary="@string/pref_all_done_summary"
+        android:title="@string/pref_all_done_title" />
     <PreferenceCategory
         android:enabled="true"
         android:title="@string/pref_header_location_context">

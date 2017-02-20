@@ -101,6 +101,10 @@
     <string name="placeholder_text_violation_info">Social media app was opened at work</string>
 
     <!-- Strings related to PrefsFragment -->
+    <string name="pref_all_done_key">prefsDone</string>
+    <string name="pref_all_done_summary">Done with context information setup</string>
+    <string name="pref_all_done_title">Context setup complete</string>
+
     <!-- Preference strings for Location context -->
     <string name="pref_header_location_context">Location context</string>
 
