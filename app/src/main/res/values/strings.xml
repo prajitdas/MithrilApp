@@ -141,7 +141,7 @@
 
     <string name="pref_work_days_key">workDays</string>
     <string name="pref_work_days_title">Change working days</string>
-    <string name="pref_work_days">Monday,Tuesday,Wednesday,Thursday,Friday</string>
+    <string name="pref_work_days">Monday, Tuesday, Wednesday, Thursday, Friday</string>
 
     <string name="pref_DND_hours_start_title">Change start of DND hours</string>
     <string name="pref_DND_hours_start_key">dndHoursStart</string>
@@ -153,7 +153,7 @@
 
     <string name="pref_DND_days_key">dndDays</string>
     <string name="pref_DND_days_title">Change do not disturb days</string>
-    <string name="pref_DND_days">Monday,Tuesday,Wednesday,Thursday,Friday,Saturday,Sunday</string>
+    <string name="pref_DND_days">Monday, Tuesday, Wednesday, Thursday, Friday, Saturday, Sunday</string>
 
     <string name="pref_monday">Monday</string>
     <string name="pref_tuesday">Tuesday</string>

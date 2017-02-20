@@ -23,6 +23,7 @@ import edu.umbc.cs.ebiquity.mithril.R;
 public class DayOfWeekPreference extends DialogPreference {
     private Set<DayOfWeek> daysOfWeek = new HashSet<DayOfWeek>();
     private String empty = "None!";
+    private String delimiter = ", ";
 
     private CheckBox mMondayCheckbox;
     private CheckBox mTuesdayCheckbox;
@@ -59,32 +60,33 @@ public class DayOfWeekPreference extends DialogPreference {
             if (daysOfWeek.size() > 0) {
                 if (daysOfWeek.contains(DayOfWeek.Monday)) {
                     temp.append(DayOfWeek.Monday);
-                    temp.append(",");
+                    temp.append(delimiter);
                 }
                 if (daysOfWeek.contains(DayOfWeek.Tuesday)) {
                     temp.append(DayOfWeek.Tuesday);
-                    temp.append(",");
+                    temp.append(delimiter);
                 }
                 if (daysOfWeek.contains(DayOfWeek.Wednesday)) {
                     temp.append(DayOfWeek.Wednesday);
-                    temp.append(",");
+                    temp.append(delimiter);
                 }
                 if (daysOfWeek.contains(DayOfWeek.Thursday)) {
                     temp.append(DayOfWeek.Thursday);
-                    temp.append(",");
+                    temp.append(delimiter);
                 }
                 if (daysOfWeek.contains(DayOfWeek.Friday)) {
                     temp.append(DayOfWeek.Friday);
-                    temp.append(",");
+                    temp.append(delimiter);
                 }
                 if (daysOfWeek.contains(DayOfWeek.Saturday)) {
                     temp.append(DayOfWeek.Saturday);
-                    temp.append(",");
+                    temp.append(delimiter);
                 }
                 if (daysOfWeek.contains(DayOfWeek.Sunday)) {
                     temp.append(DayOfWeek.Sunday);
-                    temp.append(",");
+                    temp.append(delimiter);
                 }
+                temp.deleteCharAt(temp.length() - 1);
                 temp.deleteCharAt(temp.length() - 1);
             } else
                 temp.append(empty);
@@ -103,7 +105,7 @@ public class DayOfWeekPreference extends DialogPreference {
     protected void onSetInitialValue(boolean restoreValue, Object defaultValue) {
         if (restoreValue) {
             if (defaultValue == null)
-                setDaysOfWeekForPref(getPersistedString("Monday,Tuesday,Wednesday,Thursday,Friday,Saturday,Sunday"));
+                setDaysOfWeekForPref(getPersistedString("Monday, Tuesday, Wednesday, Thursday, Friday, Saturday, Sunday"));
             else
                 setDaysOfWeekForPref(getPersistedString(defaultValue.toString()));
         } else
@@ -143,7 +145,7 @@ public class DayOfWeekPreference extends DialogPreference {
     private void setDaysOfWeekForPref(String string) {
         daysOfWeek.clear();
         if (!string.equals(empty)) {
-            for (String day : string.split(",")) {
+            for (String day : string.split(delimiter)) {
                 if (day.equals(MithrilApplication.getPrefMonday()))
                     daysOfWeek.add(DayOfWeek.Monday);
                 else if (day.equals(MithrilApplication.getPrefTuesday()))
