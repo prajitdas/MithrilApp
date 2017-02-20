@@ -42,13 +42,13 @@
             android:enabled="false"
             android:key="@string/pref_work_hours_start_key"
             android:summary="@string/pref_work_hours_start"
-            android:title="@string/pref_work_hours_title" />
+            android:title="@string/pref_work_hours_start_title" />
         <edu.umbc.cs.ebiquity.mithril.util.specialtasks.context.TimePreference
             android:defaultValue="@string/pref_work_hours_end"
             android:enabled="false"
             android:key="@string/pref_work_hours_end_key"
             android:summary="@string/pref_work_hours_end"
-            android:title="@string/pref_work_hours_title" />
+            android:title="@string/pref_work_hours_end_title" />
         <EditTextPreference
             android:defaultValue="@string/pref_DND_days"
             android:enabled="false"
@@ -60,13 +60,13 @@
             android:enabled="false"
             android:key="@string/pref_DND_hours_start_key"
             android:summary="@string/pref_DND_hours_start"
-            android:title="@string/pref_DND_hours_title" />
+            android:title="@string/pref_DND_hours_start_title" />
         <edu.umbc.cs.ebiquity.mithril.util.specialtasks.context.TimePreference
             android:defaultValue="@string/pref_DND_hours_end"
             android:enabled="false"
             android:key="@string/pref_DND_hours_end_key"
             android:summary="@string/pref_DND_hours_end"
-            android:title="@string/pref_DND_hours_title" />
+            android:title="@string/pref_DND_hours_end_title" />
     </PreferenceCategory>
     <PreferenceCategory
         android:enabled="true"

@@ -179,8 +179,12 @@ public class MainActivity extends AppCompatActivity
         if (sharedPreferences.getString(MithrilApplication.getPrefKeyUserConsent(), null) == null) {
             Intent consentActivity = new Intent(getApplicationContext(), UserAgreementActivity.class);
             startActivityForResult(consentActivity, MithrilApplication.USER_CONSENT_RECEIVED_REQUEST_CODE);
-        } else
+        } else {
+            //Agreement has not been copied to downloads folder yet, do it now
+            if (!isAgreementDownloaded())
+                copyAgreement();
             startMainActivityTasks();
+        }
     }
 
     private void startMainActivityTasks() {
@@ -280,21 +284,19 @@ public class MainActivity extends AppCompatActivity
     }
 
     private void defaultFragmentLoad() {
-        if (isContextInfoSet())
+        if (!isContextInfoSet())
             loadPrefsFragment();
+        else {
         /*
          * If we are loading the app list we don't need the above two lines
          * as we take care of that in the loadAllAppsFragment() method
          */
-        if (isViolationListEmpty())
-            loadEmptyFragment();
-        else
-            loadViolationsFragment();
+            if (isViolationListEmpty())
+                loadEmptyFragment();
+            else
+                loadViolationsFragment();
 //        loadUserAppsFragment();
-
-        //Agreement has not been copied to downloads folder yet, do it now
-        if (!isAgreementDownloaded())
-            copyAgreement();
+        }
     }
 
     private void loadNothingHereFragment() {

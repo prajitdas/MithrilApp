@@ -2,6 +2,7 @@ package edu.umbc.cs.ebiquity.mithril.ui.fragments.mainactivityfragments;
 
 import android.app.Activity;
 import android.app.AppOpsManager;
+import android.app.DatePickerDialog;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
@@ -16,6 +17,7 @@ import android.preference.PreferenceFragment;
 import android.preference.SwitchPreference;
 import android.util.Log;
 import android.view.View;
+import android.widget.DatePicker;
 import android.widget.Toast;
 
 import com.google.android.gms.common.ConnectionResult;
@@ -31,7 +33,9 @@ import com.google.android.gms.location.places.Place;
 import com.google.android.gms.location.places.ui.PlaceAutocomplete;
 import com.google.android.gms.maps.model.LatLng;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.Map;
 
 import edu.umbc.cs.ebiquity.mithril.MithrilApplication;
@@ -81,12 +85,10 @@ public class PrefsFragment extends PreferenceFragment implements
      * Used to keep track of whether geofences were added.
      */
     private boolean mGeofencesAdded;
-
     /**
      * Used when requesting to add or remove geofences.
      */
     private PendingIntent mGeofencePendingIntent;
-
     /**
      * Used to persist application state about whether geofences were added.
      */
@@ -115,6 +117,14 @@ public class PrefsFragment extends PreferenceFragment implements
     // Buttons for kicking off the process of adding or removing geofences.
 //    private Button mAddGeofencesButton;
 //    private Button mRemoveGeofencesButton;
+    private DatePickerDialog.OnDateSetListener datePickerListener = new DatePickerDialog.OnDateSetListener() {
+        public void onDateSet(DatePicker view, int selectedYear,
+                              int selectedMonth, int selectedDay) {
+            SimpleDateFormat simpledateformat = new SimpleDateFormat("EEEE");
+            Date date = new Date(selectedYear, selectedMonth, selectedDay - 1);
+            String dayOfWeek = simpledateformat.format(date);
+        }
+    };
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -234,7 +244,7 @@ public class PrefsFragment extends PreferenceFragment implements
 
         mEditTextPrefDNDDays = (EditTextPreference) getPreferenceManager().findPreference(MithrilApplication.getPrefDndDaysKey());
         mTimePrefDNDHoursStart = (TimePreference) getPreferenceManager().findPreference(MithrilApplication.getPrefDndHoursStartKey());
-        mTimePrefDNDHoursEnd = (TimePreference) getPreferenceManager().findPreference(MithrilApplication.getPrefDndHoursStartKey());
+        mTimePrefDNDHoursEnd = (TimePreference) getPreferenceManager().findPreference(MithrilApplication.getPrefDndHoursEndKey());
 
         mSwitchPrefEnablePresenceInfoEnabled = (SwitchPreference) getPreferenceManager().findPreference(MithrilApplication.getPrefPresenceInfoContextEnableKey());
         mEditTextPrefPresenceInfoSupervisor = (EditTextPreference) getPreferenceManager().findPreference(MithrilApplication.getPrefPresenceInfoSupervisorKey());
