@@ -7,6 +7,7 @@ import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.database.sqlite.SQLiteDatabase;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
@@ -77,6 +78,10 @@ public class UserAgreementActivity extends AppCompatActivity {
         mIAgreeBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M)
+                    v.setBackgroundColor(v.getResources().getColor(R.color.lightgrey, v.getContext().getTheme()));
+                else
+                    v.setBackgroundColor(v.getResources().getColor(R.color.lightgrey));
                 SharedPreferences.Editor editor = v.getContext().getSharedPreferences(MithrilApplication.getSharedPreferencesName(), Context.MODE_PRIVATE).edit();
                 editor.putString(MithrilApplication.getPrefKeyUserConsent(), "agreed");
                 editor.commit();
@@ -120,10 +125,6 @@ public class UserAgreementActivity extends AppCompatActivity {
     }
 
     private void resultOkay() {
-        if (PermissionHelper.isExplicitPermissionAcquisitionNecessary()) {
-            PermissionHelper.requestAllNecessaryPermissions(this);
-        }
-
         Intent returnIntent = new Intent();
         setResult(Activity.RESULT_OK, returnIntent);
         finish();
@@ -136,6 +137,10 @@ public class UserAgreementActivity extends AppCompatActivity {
     }
 
     private void initHousekeepingTasks() {
+        if (PermissionHelper.isExplicitPermissionAcquisitionNecessary()) {
+            PermissionHelper.requestAllNecessaryPermissions(this);
+        }
+
         /**
          * Initiate database creation and default data insertion, happens only once.
          */

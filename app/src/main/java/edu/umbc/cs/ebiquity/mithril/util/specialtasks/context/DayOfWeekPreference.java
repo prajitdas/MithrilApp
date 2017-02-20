@@ -1,13 +1,11 @@
 package edu.umbc.cs.ebiquity.mithril.util.specialtasks.context;
 
-import android.app.AlertDialog;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.content.res.TypedArray;
 import android.preference.DialogPreference;
 import android.util.AttributeSet;
 import android.view.View;
-import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
 
@@ -23,7 +21,7 @@ import edu.umbc.cs.ebiquity.mithril.R;
  */
 
 public class DayOfWeekPreference extends DialogPreference {
-    private List<String> daysOfWeek;
+    private List<String> daysOfWeek = new ArrayList<String>();
 
     private Context context;
 
@@ -35,26 +33,15 @@ public class DayOfWeekPreference extends DialogPreference {
     private CheckBox mSaturdayCheckbox;
     private CheckBox mSundayCheckbox;
 
-    private Button mSetDaysButton;
-    private Button mCancelDaysButton;
-
     private View view;
-    private String key;
     private SharedPreferences sharedPrefs;
 
-    public DayOfWeekPreference(Context context, AttributeSet attributeSet, String prefKey) {
+    public DayOfWeekPreference(Context context, AttributeSet attributeSet) {
         super(context, attributeSet);
 
-        key = prefKey;
+        setPositiveButtonText(R.string.pref_days_set);
+        setNegativeButtonText(R.string.pref_days_cancel);
         setDialogLayoutResource(R.layout.day_of_week_dialog_preferences);
-    }
-
-    @Override
-    protected void onPrepareDialogBuilder(AlertDialog.Builder builder) {
-        builder.setTitle(R.string.pref_choose_days);
-        builder.setPositiveButton(R.string.pref_days_set, null);
-        builder.setNegativeButton(R.string.pref_days_cancel, null);
-        super.onPrepareDialogBuilder(builder);
     }
 
     @Override
@@ -65,12 +52,32 @@ public class DayOfWeekPreference extends DialogPreference {
         super.onBindDialogView(v);
     }
 
+    @Override
+    protected void onDialogClosed(boolean result) {
+        super.onDialogClosed(result);
+
+        if (result) {
+            StringBuilder temp = new StringBuilder();
+            boolean first = true;
+            for (String day : daysOfWeek) {
+                if (first) {
+                    temp.append(day);
+                    first = false;
+                } else {
+                    temp.append(",");
+                    temp.append(day);
+                }
+            }
+            if (callChangeListener(temp.toString())) {
+                persistString(temp.toString());
+            }
+        }
+    }
+
     private void initViews() {
         sharedPrefs = context.getSharedPreferences(MithrilApplication.getSharedPreferencesName(), Context.MODE_PRIVATE);
 
-        daysOfWeek = new ArrayList<String>();
-
-        getDaysOfWeekForPref(sharedPrefs.getString(key, ""));
+        setDaysOfWeekForPref(sharedPrefs.getString(MithrilApplication.getPrefWorkDaysKey(), ""));
 
         mMondayCheckbox = (CheckBox) view.findViewById(R.id.monday);
         mTuesdayCheckbox = (CheckBox) view.findViewById(R.id.tuesday);
@@ -95,55 +102,28 @@ public class DayOfWeekPreference extends DialogPreference {
         if (daysOfWeek.contains(MithrilApplication.getPrefSunday()))
             mSundayCheckbox.setChecked(true);
 
-        mSetDaysButton = (Button) view.findViewById(R.id.daysSetBtn);
-        mCancelDaysButton = (Button) view.findViewById(R.id.daysCancelBtn);
-
         setOnClickListeners();
     }
 
-    private void getDaysOfWeekForPref(String string) {
+    private void setDaysOfWeekForPref(String string) {
         for (String day : string.split(",")) {
             daysOfWeek.add(day);
         }
     }
 
     private void setOnClickListeners() {
-        mSetDaysButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                StringBuilder temp = new StringBuilder();
-                boolean first = true;
-                for (String day : daysOfWeek) {
-                    if (first)
-                        temp.append(day);
-                    else {
-                        temp.append(",");
-                        temp.append(day);
-                    }
-                }
-                SharedPreferences.Editor editor = context.getSharedPreferences(MithrilApplication.getSharedPreferencesName(), Context.MODE_PRIVATE).edit();
-                editor.putString(key, temp.toString());
-                editor.commit();
-            }
-        });
-
-        mCancelDaysButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                getDialog().dismiss();
-            }
-        });
-
         mMondayCheckbox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                daysOfWeek.add(MithrilApplication.getPrefMonday());
+                if (!daysOfWeek.contains(MithrilApplication.getPrefMonday()))
+                    daysOfWeek.add(MithrilApplication.getPrefMonday());
             }
         });
 
         mTuesdayCheckbox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                if (!daysOfWeek.contains(MithrilApplication.getPrefTuesday()))
                 daysOfWeek.add(MithrilApplication.getPrefTuesday());
             }
         });
@@ -151,6 +131,7 @@ public class DayOfWeekPreference extends DialogPreference {
         mWednesdayCheckbox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                if (!daysOfWeek.contains(MithrilApplication.getPrefWednesday()))
                 daysOfWeek.add(MithrilApplication.getPrefWednesday());
             }
         });
@@ -158,6 +139,7 @@ public class DayOfWeekPreference extends DialogPreference {
         mThursdayCheckbox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                if (!daysOfWeek.contains(MithrilApplication.getPrefThursday()))
                 daysOfWeek.add(MithrilApplication.getPrefThursday());
             }
         });
@@ -165,6 +147,7 @@ public class DayOfWeekPreference extends DialogPreference {
         mFridayCheckbox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                if (!daysOfWeek.contains(MithrilApplication.getPrefFriday()))
                 daysOfWeek.add(MithrilApplication.getPrefFriday());
             }
         });
@@ -172,6 +155,7 @@ public class DayOfWeekPreference extends DialogPreference {
         mSaturdayCheckbox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                if (!daysOfWeek.contains(MithrilApplication.getPrefSaturday()))
                 daysOfWeek.add(MithrilApplication.getPrefSaturday());
             }
         });
@@ -179,6 +163,7 @@ public class DayOfWeekPreference extends DialogPreference {
         mSundayCheckbox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                if (!daysOfWeek.contains(MithrilApplication.getPrefSunday()))
                 daysOfWeek.add(MithrilApplication.getPrefSunday());
             }
         });
@@ -193,10 +178,10 @@ public class DayOfWeekPreference extends DialogPreference {
     protected void onSetInitialValue(boolean restoreValue, Object defaultValue) {
         if (restoreValue) {
             if (defaultValue == null)
-                getDaysOfWeekForPref(getPersistedString("Monday,Tuesday,Wednesday,Thursday,Friday,Saturday,Sunday"));
+                setDaysOfWeekForPref(getPersistedString("Monday,Tuesday,Wednesday,Thursday,Friday,Saturday,Sunday"));
             else
-                getDaysOfWeekForPref(getPersistedString(defaultValue.toString()));
+                setDaysOfWeekForPref(getPersistedString(defaultValue.toString()));
         } else
-            getDaysOfWeekForPref(defaultValue.toString());
+            setDaysOfWeekForPref(defaultValue.toString());
     }
 }

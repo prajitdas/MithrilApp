@@ -52,20 +52,20 @@
         android:layout_below="@+id/saturday"
         android:text="@string/pref_sunday" />
 
-    <Button
-        android:id="@+id/daysSetBtn"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/sunday"
-        android:background="@null"
-        android:text="@string/pref_days_set" />
+    <!--<Button-->
+    <!--android:id="@+id/daysSetBtn"-->
+    <!--android:layout_width="wrap_content"-->
+    <!--android:layout_height="wrap_content"-->
+    <!--android:layout_below="@+id/sunday"-->
+    <!--android:background="@null"-->
+    <!--android:text="@string/pref_days_set" />-->
 
-    <Button
-        android:id="@+id/daysCancelBtn"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/sunday"
-        android:layout_toRightOf="@+id/daysSetBtn"
-        android:background="@null"
-        android:text="@string/pref_days_cancel" />
+    <!--<Button-->
+    <!--android:id="@+id/daysCancelBtn"-->
+    <!--android:layout_width="wrap_content"-->
+    <!--android:layout_height="wrap_content"-->
+    <!--android:layout_below="@+id/sunday"-->
+    <!--android:layout_toRightOf="@+id/daysSetBtn"-->
+    <!--android:background="@null"-->
+    <!--android:text="@string/pref_days_cancel" />-->
 </RelativeLayout>
