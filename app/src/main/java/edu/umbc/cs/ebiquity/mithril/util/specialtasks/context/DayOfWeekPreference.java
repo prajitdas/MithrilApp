@@ -23,6 +23,7 @@ import edu.umbc.cs.ebiquity.mithril.R;
 
 public class DayOfWeekPreference extends DialogPreference {
     private Set<String> daysOfWeek = new HashSet<String>();
+    private String empty = "None!";
 
     private CheckBox mMondayCheckbox;
     private CheckBox mTuesdayCheckbox;
@@ -31,8 +32,6 @@ public class DayOfWeekPreference extends DialogPreference {
     private CheckBox mFridayCheckbox;
     private CheckBox mSaturdayCheckbox;
     private CheckBox mSundayCheckbox;
-
-    private String empty = "None!";
 
     private View view;
 
@@ -77,6 +76,22 @@ public class DayOfWeekPreference extends DialogPreference {
                 persistString(temp.toString());
             }
         }
+    }
+
+    @Override
+    protected Object onGetDefaultValue(TypedArray a, int index) {
+        return (a.getString(index));
+    }
+
+    @Override
+    protected void onSetInitialValue(boolean restoreValue, Object defaultValue) {
+        if (restoreValue) {
+            if (defaultValue == null)
+                setDaysOfWeekForPref(getPersistedString("Monday,Tuesday,Wednesday,Thursday,Friday,Saturday,Sunday"));
+            else
+                setDaysOfWeekForPref(getPersistedString(defaultValue.toString()));
+        } else
+            setDaysOfWeekForPref(defaultValue.toString());
     }
 
     private void initViews(Context context) {
@@ -197,21 +212,5 @@ public class DayOfWeekPreference extends DialogPreference {
                     daysOfWeek.remove(MithrilApplication.getPrefSunday());
             }
         });
-    }
-
-    @Override
-    protected Object onGetDefaultValue(TypedArray a, int index) {
-        return (a.getString(index));
-    }
-
-    @Override
-    protected void onSetInitialValue(boolean restoreValue, Object defaultValue) {
-        if (restoreValue) {
-            if (defaultValue == null)
-                setDaysOfWeekForPref(getPersistedString("Monday,Tuesday,Wednesday,Thursday,Friday,Saturday,Sunday"));
-            else
-                setDaysOfWeekForPref(getPersistedString(defaultValue.toString()));
-        } else
-            setDaysOfWeekForPref(defaultValue.toString());
     }
 }

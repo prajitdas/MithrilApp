@@ -1,8 +1,8 @@
-package edu.umbc.cs.ebiquity.mithril.mithrilappmanager;
+package edu.umbc.cs.ebiquity.mithril;
 
 import org.junit.Test;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
 
 /**
  * To work on unit tests, switch the Test Artifact in the Build Variants view.

@@ -1,4 +1,4 @@
-package edu.umbc.cs.ebiquity.mithril.mithrilappmanager;
+package edu.umbc.cs.ebiquity.mithril;
 
 import android.app.Application;
 import android.test.ApplicationTestCase;
