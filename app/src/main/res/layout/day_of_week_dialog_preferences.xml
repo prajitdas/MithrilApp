@@ -1,71 +1,73 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:paddingBottom="@dimen/top_margin_fullscreen"
+    android:paddingEnd="@dimen/top_margin_fullscreen"
+    android:paddingStart="@dimen/top_margin_fullscreen"
+    android:paddingTop="@dimen/top_margin_fullscreen">
 
     <CheckBox
         android:id="@+id/monday"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentTop="true"
-        android:text="@string/pref_monday" />
+        android:text="@string/pref_monday"
+        android:textColor="@color/colorPrimaryDark"
+        android:textSize="20sp" />
 
     <CheckBox
         android:id="@+id/tuesday"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_below="@+id/monday"
-        android:text="@string/pref_tuesday" />
+        android:text="@string/pref_tuesday"
+        android:textColor="@color/colorPrimaryDark"
+        android:textSize="20sp" />
 
     <CheckBox
         android:id="@+id/wednesday"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_below="@+id/tuesday"
-        android:text="@string/pref_wednesday" />
+        android:text="@string/pref_wednesday"
+        android:textColor="@color/colorPrimaryDark"
+        android:textSize="20sp" />
 
     <CheckBox
         android:id="@+id/thursday"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_below="@+id/wednesday"
-        android:text="@string/pref_thursday" />
+        android:text="@string/pref_thursday"
+        android:textColor="@color/colorPrimaryDark"
+        android:textSize="20sp" />
 
     <CheckBox
         android:id="@+id/friday"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_below="@+id/thursday"
-        android:text="@string/pref_friday" />
+        android:text="@string/pref_friday"
+        android:textColor="@color/colorPrimaryDark"
+        android:textSize="20sp" />
 
     <CheckBox
         android:id="@+id/saturday"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_below="@+id/friday"
-        android:text="@string/pref_saturday" />
+        android:text="@string/pref_saturday"
+        android:textColor="@color/colorPrimaryDark"
+        android:textSize="20sp" />
 
     <CheckBox
         android:id="@+id/sunday"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_below="@+id/saturday"
-        android:text="@string/pref_sunday" />
+        android:text="@string/pref_sunday"
+        android:textColor="@color/colorPrimaryDark"
+        android:textSize="20sp" />
 
-    <!--<Button-->
-    <!--android:id="@+id/daysSetBtn"-->
-    <!--android:layout_width="wrap_content"-->
-    <!--android:layout_height="wrap_content"-->
-    <!--android:layout_below="@+id/sunday"-->
-    <!--android:background="@null"-->
-    <!--android:text="@string/pref_days_set" />-->
-
-    <!--<Button-->
-    <!--android:id="@+id/daysCancelBtn"-->
-    <!--android:layout_width="wrap_content"-->
-    <!--android:layout_height="wrap_content"-->
-    <!--android:layout_below="@+id/sunday"-->
-    <!--android:layout_toRightOf="@+id/daysSetBtn"-->
-    <!--android:background="@null"-->
-    <!--android:text="@string/pref_days_cancel" />-->
 </RelativeLayout>
