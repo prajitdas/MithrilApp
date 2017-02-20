@@ -50,7 +50,6 @@ public class AddressResultReceiver extends ResultReceiver {
     @Override
     protected void onReceiveResult(int resultCode, Bundle resultData) {
         mAddressRequested = resultData.getBoolean(MithrilApplication.ADDRESS_REQUESTED_EXTRA, false);
-        Log.d(MithrilApplication.getDebugTag(), "Prajit error " + resultData.getString(MithrilApplication.ADDRESS_KEY));
         String addressKey = resultData.getString(MithrilApplication.ADDRESS_KEY, null);
         if (addressKey.equals(null))
             addressKey = MithrilApplication.getPrefKeyCurrentAddress();
@@ -62,6 +61,7 @@ public class AddressResultReceiver extends ResultReceiver {
         mAddressOutput = gson.fromJson(json, Address.class);
 //            displayAddressOutput();
 
+        Log.d(MithrilApplication.getDebugTag(), "Prajit error " + resultData.getString(MithrilApplication.ADDRESS_KEY) + mAddressRequested + addressKey + json);
         // Show a toast message if an address was found.
         if (resultCode == MithrilApplication.SUCCESS_RESULT) {
 //                Log.d(MithrilApplication.getDebugTag(), getString(R.string.address_found) + ":" + mAddressOutput);

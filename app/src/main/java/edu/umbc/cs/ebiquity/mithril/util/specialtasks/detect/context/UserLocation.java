@@ -1,51 +1,116 @@
 package edu.umbc.cs.ebiquity.mithril.util.specialtasks.detect.context;
 
+import android.annotation.TargetApi;
 import android.content.Context;
-import android.location.Location;
-import android.location.LocationListener;
-import android.location.LocationManager;
-import android.os.Bundle;
+import android.location.Address;
+import android.os.Build;
+import android.os.Parcelable;
 
-import edu.umbc.cs.ebiquity.mithril.util.specialtasks.permissions.PermissionHelper;
+import java.util.Locale;
 
 /**
  * Created by prajit on 12/1/16.
  */
 
-public class UserLocation {
-    Context context;
-    // Acquire a reference to the system Location Manager
-    LocationManager locationManager;
-    // Define a listener that responds to location updates
-    LocationListener locationListener;
+public class UserLocation extends Address implements Parcelable {
+    private Context context;
+    private Locale mLocale;
 
-    public UserLocation(Context context) {
-        this.context = context;
-        locationManager = (LocationManager) context.getSystemService(Context.LOCATION_SERVICE);
-        locationListener = new LocationListener() {
-            public void onLocationChanged(Location location) {
-                // Called when a new location is found by the network location provider.
-                makeUseOfNewLocation(location);
-            }
+    private String mBldgRoom;
+    private String mBldgFloor;
+    private String mBldgNumber;
+    private String mStreet;
+    private String mCity;
+    private String mCounty;
+    private String mState;
+    private String mCountry;
 
-            public void onStatusChanged(String provider, int status, Bundle extras) {
-            }
-
-            public void onProviderEnabled(String provider) {
-            }
-
-            public void onProviderDisabled(String provider) {
-            }
-        };
-
-        // Register the listener with the Location Manager to receive location updates
-        try {
-            locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 0, 0, locationListener);
-        } catch (SecurityException securityException) {
-            PermissionHelper.requestAllNecessaryPermissions(context);
-        }
+    @TargetApi(Build.VERSION_CODES.N)
+    public UserLocation(Context context, Address address) {
+        super(context.getResources().getConfiguration().getLocales().get(0));
+        setContext(context);
+        setBldgNumber(address.getFeatureName());
+        setStreet(address.getThoroughfare());
+        setCity(address.getLocality());
     }
 
-    private void makeUseOfNewLocation(Location location) {
+    public Context getContext() {
+        return context;
+    }
+
+    public void setContext(Context context) {
+        context = context;
+    }
+
+    public Locale getLocale() {
+        return mLocale;
+    }
+
+    public void setLocale(Locale locale) {
+        mLocale = locale;
+    }
+
+    public String getBldgRoom() {
+        return mBldgRoom;
+    }
+
+    public void setBldgRoom(String bldgRoom) {
+        mBldgRoom = bldgRoom;
+    }
+
+    public String getBldgFloor() {
+        return mBldgFloor;
+    }
+
+    public void setBldgFloor(String bldgFloor) {
+        mBldgFloor = bldgFloor;
+    }
+
+    public String getBldgNumber() {
+        return mBldgNumber;
+    }
+
+    public void setBldgNumber(String bldgNumber) {
+        mBldgNumber = bldgNumber;
+    }
+
+    public String getStreet() {
+        return mStreet;
+    }
+
+    public void setStreet(String street) {
+        mStreet = street;
+    }
+
+    public String getCity() {
+        return mCity;
+    }
+
+    public void setCity(String city) {
+        mCity = city;
+    }
+
+    public String getCounty() {
+        return mCounty;
+    }
+
+    public void setCounty(String county) {
+        mCounty = county;
+    }
+
+    public String getState() {
+        return mState;
+    }
+
+    public void setState(String state) {
+        mState = state;
+    }
+
+    public String getCountry() {
+        return mCountry;
+    }
+
+    public void setCountry(String country) {
+        mCountry = country;
     }
 }
