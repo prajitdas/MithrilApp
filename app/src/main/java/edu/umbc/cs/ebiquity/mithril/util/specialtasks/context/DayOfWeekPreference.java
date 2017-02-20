@@ -57,18 +57,35 @@ public class DayOfWeekPreference extends DialogPreference {
         if (result) {
             StringBuilder temp = new StringBuilder();
             if (daysOfWeek.size() > 0) {
-                boolean first = true;
-                for (DayOfWeek day : daysOfWeek) {
-                    if (!day.equals("")) {
-                        if (first) {
-                            temp.append(day);
-                            first = false;
-                        } else {
-                            temp.append(",");
-                            temp.append(day);
-                        }
-                    }
+                if (daysOfWeek.contains(DayOfWeek.Monday)) {
+                    temp.append(DayOfWeek.Monday);
+                    temp.append(",");
                 }
+                if (daysOfWeek.contains(DayOfWeek.Tuesday)) {
+                    temp.append(DayOfWeek.Tuesday);
+                    temp.append(",");
+                }
+                if (daysOfWeek.contains(DayOfWeek.Wednesday)) {
+                    temp.append(DayOfWeek.Wednesday);
+                    temp.append(",");
+                }
+                if (daysOfWeek.contains(DayOfWeek.Thursday)) {
+                    temp.append(DayOfWeek.Thursday);
+                    temp.append(",");
+                }
+                if (daysOfWeek.contains(DayOfWeek.Friday)) {
+                    temp.append(DayOfWeek.Friday);
+                    temp.append(",");
+                }
+                if (daysOfWeek.contains(DayOfWeek.Saturday)) {
+                    temp.append(DayOfWeek.Saturday);
+                    temp.append(",");
+                }
+                if (daysOfWeek.contains(DayOfWeek.Sunday)) {
+                    temp.append(DayOfWeek.Sunday);
+                    temp.append(",");
+                }
+                temp.deleteCharAt(temp.length() - 1);
             } else
                 temp.append(empty);
             if (callChangeListener(temp.toString())) {
