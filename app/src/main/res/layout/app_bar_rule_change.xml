@@ -32,6 +32,6 @@
         android:elevation="@dimen/fab_margin"
         app:backgroundTint="@color/colorButton"
         app:fabSize="normal"
-        app:srcCompat="@android:drawable/ic_menu_edit" />
+        app:srcCompat="@drawable/ic_menu_edit" />
 
 </android.support.design.widget.CoordinatorLayout>
