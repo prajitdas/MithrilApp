@@ -295,7 +295,7 @@ public class MainActivity extends AppCompatActivity
                 loadEmptyFragment();
             else
                 loadViolationsFragment();
-//        loadUserAppsFragment();
+//                loadUserAppsFragment();
         }
     }
 
@@ -396,16 +396,17 @@ public class MainActivity extends AppCompatActivity
     }
 
     private boolean isViolationListEmpty() {
+        return true;
         /*
          * We find out how many violations are there in the database.
          * If there are none, we will load the EmptyFragment
          */
-        violationItems = mithrilDBHelper.findAllViolations(mithrilDB);
-        if (violationItems != null)
-            Log.d(MithrilApplication.getDebugTag(), "Number of violations" + Integer.toString(violationItems.size()));
-        else
-            Log.d(MithrilApplication.getDebugTag(), "Null");
-        return !(violationItems == null || violationItems.size() > 0);
+//        violationItems = mithrilDBHelper.findAllViolations(mithrilDB);
+//        if (violationItems != null)
+//            Log.d(MithrilApplication.getDebugTag(), "Number of violations" + Integer.toString(violationItems.size()));
+//        else
+//            Log.d(MithrilApplication.getDebugTag(), "Null");
+//        return !(violationItems == null || violationItems.size() > 0);
     }
 
     private boolean isBroadcastReceiverListEmpty() {
