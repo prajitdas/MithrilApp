@@ -10,9 +10,10 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import java.util.List;
+
 import edu.umbc.cs.ebiquity.mithril.R;
-import edu.umbc.cs.ebiquity.mithril.ui.fragments.rulechangeactivityfragments.dummy.DummyContent;
-import edu.umbc.cs.ebiquity.mithril.ui.fragments.rulechangeactivityfragments.dummy.DummyContent.DummyItem;
+import edu.umbc.cs.ebiquity.mithril.data.model.rules.context.SemanticUserContext;
 
 /**
  * A fragment representing a list of Items.
@@ -24,6 +25,7 @@ public class SemanticUserContextFragment extends Fragment {
 
     // TODO: Customize parameter argument names
     private static final String ARG_COLUMN_COUNT = "column-count";
+    private List<SemanticUserContext> listOfSemanticUserContext;
     // TODO: Customize parameters
     private int mColumnCount = 1;
     private OnListFragmentInteractionListener mListener;
@@ -68,7 +70,7 @@ public class SemanticUserContextFragment extends Fragment {
             } else {
                 recyclerView.setLayoutManager(new GridLayoutManager(context, mColumnCount));
             }
-            recyclerView.setAdapter(new SemanticUserContextRecyclerViewAdapter(DummyContent.ITEMS, mListener));
+            recyclerView.setAdapter(new SemanticUserContextRecyclerViewAdapter(listOfSemanticUserContext, mListener));
         }
         return view;
     }
@@ -103,6 +105,6 @@ public class SemanticUserContextFragment extends Fragment {
      */
     public interface OnListFragmentInteractionListener {
         // TODO: Update argument type and name
-        void onListFragmentInteraction(DummyItem item);
+        void onListFragmentInteraction(SemanticUserContext item);
     }
 }
