@@ -8,6 +8,7 @@ import android.widget.TextView;
 
 import java.util.List;
 
+import edu.umbc.cs.ebiquity.mithril.R;
 import edu.umbc.cs.ebiquity.mithril.ui.fragments.rulechangeactivityfragments.SemanticUserContextFragment.OnListFragmentInteractionListener;
 import edu.umbc.cs.ebiquity.mithril.ui.fragments.rulechangeactivityfragments.dummy.DummyContent.DummyItem;
 
