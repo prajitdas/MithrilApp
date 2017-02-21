@@ -9,14 +9,18 @@ import android.util.Log;
 
 import com.google.gson.Gson;
 
+import java.util.List;
+
 import edu.umbc.cs.ebiquity.mithril.MithrilApplication;
 import edu.umbc.cs.ebiquity.mithril.data.dbhelpers.MithrilDBHelper;
+import edu.umbc.cs.ebiquity.mithril.data.model.rules.PolicyRule;
 import edu.umbc.cs.ebiquity.mithril.data.model.rules.actions.Action;
 import edu.umbc.cs.ebiquity.mithril.data.model.rules.context.SemanticUserContext;
 import edu.umbc.cs.ebiquity.mithril.data.model.rules.context.contextpieces.SemanticLocation;
 import edu.umbc.cs.ebiquity.mithril.data.model.rules.context.contextpieces.SemanticTime;
 import edu.umbc.cs.ebiquity.mithril.data.model.rules.protectedresources.Resource;
 import edu.umbc.cs.ebiquity.mithril.data.model.rules.requesters.Requester;
+import edu.umbc.cs.ebiquity.mithril.util.specialtasks.errorsnexceptions.CWAException;
 
 /**
  * Created by prajit on 12/13/16.
@@ -104,24 +108,37 @@ public class ViolationDetector {
      * 4) If no such rule is found then detect this as a violation and request a user action on it or if in execution mode, block this access
      */
 
-    public static void detectViolation(Context context, String currentPackageName) {
+    public static void detectViolation(Context context, String currentPackageName) throws CWAException {
         MithrilDBHelper mithrilDBHelper = new MithrilDBHelper(context);
         SQLiteDatabase mithrilDB = mithrilDBHelper.getWritableDatabase();
 
-        mithrilDBHelper.findAllPolicies(mithrilDB);
-
-        SharedPreferences sharedPref = context.getSharedPreferences(MithrilApplication.getSharedPreferencesName(), Context.MODE_PRIVATE);
-
-        Gson gson = new Gson();
-        String json = null;
-
-        json = sharedPref.getString(MithrilApplication.getPrefKeyCurrentAddress(), null);
-        detectedAddress = gson.fromJson(json, Address.class);
-
-        json = sharedPref.getString(MithrilApplication.getPrefKeyCurrentLocation(), null);
-        detectedLocation = gson.fromJson(json, Location.class);
-
-
+        List<PolicyRule> rulesForApp = mithrilDBHelper.findAllPoliciesByReq(mithrilDB, currentPackageName);
+        //No rules found! We have a violation...
+        if (rulesForApp.size() > 0) {
+            for (PolicyRule rule : rulesForApp) {
+                if (rule.getAction().equals(Action.ALLOW)) {
+                    //Is this allowed?
+                    //Do we need location?
+                    if (rule.getSemanticUserContext().getSemanticLocation() != null)
+                        weNeedLocation(context);
+                    //Do we need activity?
+                    if (rule.getSemanticUserContext().getSemanticActivity() != null)
+                        weNeedActivity();
+                    //Do we need temporal context?
+                    if (rule.getSemanticUserContext().getSemanticTime() != null)
+                        weNeedTime();
+                    //Do we need nearby actors?
+                    if (rule.getSemanticUserContext().getSemanticNearActors() != null)
+                        weNeedNearActors();
+                    //Do we need identity context?
+                    if (rule.getSemanticUserContext().getSemanticIdentity() != null)
+                        weNeedIdentity();
+                } else {
+                    Log.e(MithrilApplication.getDebugTag(), "Serious error! DB contains deny rules. This violates our CWA");
+                    throw new CWAException(); //Something is wrong!!!! We have a Closed World Assumption we cannot have deny rules...
+                }
+            }
+        }
         if (mithrilDBHelper.findAppTypeByAppPkgName(mithrilDB, currentPackageName).equals(MithrilApplication.getPrefKeyUserAppsDisplay())) {
 
 //            Toast.makeText(context, "Mithril detects user app launch: " + currentPackageName, Toast.LENGTH_SHORT).show();
@@ -186,5 +203,34 @@ public class ViolationDetector {
 //            }
         }
         mithrilDB.close();
+    }
+
+    private static void weNeedIdentity() {
+
+    }
+
+    private static void weNeedNearActors() {
+
+    }
+
+    private static void weNeedTime() {
+
+    }
+
+    private static void weNeedActivity() {
+
+    }
+
+    private static void weNeedLocation(Context context) {
+        SharedPreferences sharedPref = context.getSharedPreferences(MithrilApplication.getSharedPreferencesName(), Context.MODE_PRIVATE);
+
+        Gson gson = new Gson();
+        String json = null;
+
+        json = sharedPref.getString(MithrilApplication.getPrefKeyCurrentAddress(), null);
+        detectedAddress = gson.fromJson(json, Address.class);
+
+        json = sharedPref.getString(MithrilApplication.getPrefKeyCurrentLocation(), null);
+        detectedLocation = gson.fromJson(json, Location.class);
     }
 }
