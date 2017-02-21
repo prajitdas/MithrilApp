@@ -274,22 +274,31 @@ public class MithrilDBHelper extends SQLiteOpenHelper {
     private final static String POLRULID = "id"; // ID of policy defined
     private final static String POLRULNAME = "name"; // Policy short name
     private final static String POLRULACTIN = "action"; // Action will be denoted as: 0 for to deny, 1 for allow
-    private final static String POLRULCNTXT = "context_id"; // Context in which the request was made.
-    private final static String POLRULREQID = "requesters_id"; // Requester that sent the request
-    private final static String POLRULRESID = "resources_id"; // Resource that was requested
+    private final static String POLRULLOCAT = "location"; // Context in which the policy is applicable.
+    private final static String POLRULACTIV = "activity"; // Context in which the policy is applicable.
+    private final static String POLRULTEMPO = "temporal"; // Context in which the policy is applicable.
+    private final static String POLRULNEARA = "nearactr"; // Context in which the policy is applicable.
+    private final static String POLRULIDENT = "identity"; // Context in which the policy is applicable.
+    private final static String POLRULREQID = "reqst_id"; // Requester that sent the request
+    private final static String POLRULRESID = "resrc_id"; // Resource that was requested
     // This will be a general text that will have to be "reasoned" about!
     // If this says policy is applicable @home then we have to be able to determine that context available represents "home"
 
     private final static String CREATE_POLICY_RULES_TABLE = "CREATE TABLE " + getPolicyRulesTableName() + " (" +
             POLRULID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
             POLRULNAME + " TEXT NOT NULL, " +
-            POLRULACTIN + " INTEGER NOT NULL, " +
-            POLRULCNTXT + " INTEGER NOT NULL, " +
+            POLRULLOCAT + " TEXT DEFAULT NULL, " +
+            POLRULACTIV + " TEXT DEFAULT NULL, " +
+            POLRULTEMPO + " TEXT DEFAULT NULL, " +
+            POLRULTEMPO + " TEXT DEFAULT NULL, " +
+            POLRULNEARA + " TEXT DEFAULT NULL, " +
+            POLRULIDENT + " TEXT DEFAULT NULL, " +
             POLRULREQID + " INTEGER NOT NULL, " +
-            POLRULRESID + " INTEGER NOT NULL, " +
-            "FOREIGN KEY(context_id) REFERENCES contextlog(id), " +
-            "FOREIGN KEY(requesters_id) REFERENCES requesters(id), " +
-            "FOREIGN KEY(resources_id) REFERENCES resources(id) " +
+            POLRULACTIN + " INTEGER NOT NULL, " +
+            POLRULRESID + " INTEGER DEFAULT NULL, " +
+//            "FOREIGN KEY(context_id) REFERENCES contextlog(id), " +
+            "FOREIGN KEY(requesters_id) REFERENCES requesters(id)" + //, " +
+//            "FOREIGN KEY(resources_id) REFERENCES resources(id) " +
             ");";
 
     /**
@@ -719,9 +728,13 @@ public class MithrilDBHelper extends SQLiteOpenHelper {
 		values.put(POLRULNAME, aPolicyRule.getName());
 		values.put(POLRULREQID, aPolicyRule.getRequester().getId());
 		values.put(POLRULRESID, aPolicyRule.getResource().getId());
-		values.put(POLRULCNTXT, aPolicyRule.getContext());
-		values.put(POLRULACTIN, aPolicyRule.getAction().getId());
-		try {
+        values.put(POLRULLOCAT, aPolicyRule.getSemanticUserContext().getSemanticLocation().getInferredLocation());
+        values.put(POLRULACTIV, aPolicyRule.getSemanticUserContext().getSemanticActivity().getInferredActivity());
+        values.put(POLRULTEMPO, aPolicyRule.getSemanticUserContext().getSemanticTime().getInferredTime());
+        values.put(POLRULIDENT, aPolicyRule.getSemanticUserContext().getSemanticIdentity().getIdentity());
+        values.put(POLRULNEARA, aPolicyRule.getSemanticUserContext().getSemanticNearActors().toString());
+        values.put(POLRULACTIN, aPolicyRule.getAction().getId());
+        try {
             insertedRowId = db.insertOrThrow(getPolicyRulesTableName(), null, values);
         } catch (SQLException e) {
             Log.e(MithrilApplication.getDebugTag(), "Error inserting " + values, e);

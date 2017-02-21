@@ -15,7 +15,11 @@ public class SemanticUserContext {
     private SemanticTime semanticTime;
 
     public SemanticUserContext() {
-
+        semanticNearActors = new SemanticNearActors();
+        semanticActivity = new SemanticActivity();
+        semanticIdentity = new SemanticIdentity();
+        semanticLocation = new SemanticLocation();
+        semanticTime = new SemanticTime();
     }
 
     public SemanticUserContext(int id, SemanticNearActors semanticNearActors,

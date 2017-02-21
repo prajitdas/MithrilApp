@@ -1,5 +1,7 @@
 package edu.umbc.cs.ebiquity.mithril.data.model.rules.context.contextpieces;
 
+import android.content.Context;
+import android.content.SharedPreferences;
 import android.location.Address;
 import android.location.Location;
 
@@ -15,6 +17,19 @@ public class SemanticLocation {
 		this.location = location;
 		this.address = address;
 	}
+
+    public SemanticLocation(Address address, Location location, Context context) {
+        this.address = address;
+        this.location = location;
+
+        SharedPreferences sharedPreferences = context.getSharedPreferences(MithrilApplication.getSharedPreferencesName(), Context.MODE_PRIVATE);
+        String homeLocation = sharedPreferences.getString(MithrilApplication.getPrefHomeLocationKey(), null);
+//        String workLocation = sharedPreferences.getString(MithrilApplication.getPrefWorkLocationKey(), null);
+        if (address.getPostalCode().equals(homeLocation))
+            this.inferredLocation = "home";
+        else
+            this.inferredLocation = "work";
+    }
 
     public SemanticLocation(String inferredLocation) {
         this.inferredLocation = inferredLocation;

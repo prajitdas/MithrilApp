@@ -3,6 +3,7 @@ package edu.umbc.cs.ebiquity.mithril.data.model.rules;
 import edu.umbc.cs.ebiquity.mithril.MithrilApplication;
 import edu.umbc.cs.ebiquity.mithril.data.model.rules.actions.Action;
 import edu.umbc.cs.ebiquity.mithril.data.model.rules.actions.RuleAction;
+import edu.umbc.cs.ebiquity.mithril.data.model.rules.context.SemanticUserContext;
 import edu.umbc.cs.ebiquity.mithril.data.model.rules.protectedresources.Resource;
 import edu.umbc.cs.ebiquity.mithril.data.model.rules.requesters.Requester;
 
@@ -11,49 +12,71 @@ public class PolicyRule {
 	private String name;
 	private Requester requester;
 	private Resource resource;
-	private String context;
-	private RuleAction action;
+    private SemanticUserContext semanticUserContext;
+    private RuleAction action;
+
 	public PolicyRule() {
 		super();
 		this.id = -1;
         this.name = MithrilApplication.getPolRulDefaultRule();
         this.requester = new Requester();
 		this.resource = new Resource();
-		this.context = new String();
-		//Closed World Assumption (CWA): Define allow rules, so that we know exactly when to deny an action
-		this.action = new RuleAction(Action.ALLOW);
+        this.semanticUserContext = new SemanticUserContext();
+        //Closed World Assumption (CWA): Define allow rules, so that we know exactly when to deny an action
+        this.action = new RuleAction(Action.ALLOW);
     }
-	public PolicyRule(int policyRuleId, String name, Requester requester, Resource resource,
-			String context, RuleAction action) {
-		super();
-		this.id = policyRuleId;
-		this.name = name;
-		this.requester = requester;
-		this.resource = resource;
-		this.context = context;
-		this.action = action;
-	}
-	public PolicyRule(String name, Requester requester, Resource resource,
-			String context, RuleAction action) {
-		super();
-		this.id = -1;
-		this.name = name;
-		this.requester = requester;
-		this.resource = resource;
-		this.context = context;
-		this.action = action;
-	}
 
-	@Override
-	public String toString() {
-		return "PolicyRule{" +
+    public PolicyRule(int policyRuleId,
+                      String name,
+                      Requester requester,
+                      Resource resource,
+                      SemanticUserContext context,
+                      RuleAction action) {
+        super();
+        this.id = policyRuleId;
+		this.name = name;
+		this.requester = requester;
+		this.resource = resource;
+        this.semanticUserContext = context;
+        this.action = action;
+    }
+
+    public PolicyRule(String name,
+                      Requester requester,
+                      Resource resource,
+                      SemanticUserContext context,
+                      RuleAction action) {
+        super();
+        this.id = -1;
+		this.name = name;
+		this.requester = requester;
+		this.resource = resource;
+        this.semanticUserContext = context;
+        this.action = action;
+    }
+
+    public PolicyRule(String name,
+                      Requester requester,
+                      SemanticUserContext context,
+                      RuleAction action) {
+        super();
+        this.id = -1;
+        this.name = name;
+        this.requester = requester;
+        this.semanticUserContext = context;
+        this.action = action;
+    }
+
+    @Override
+    public String toString() {
+        return "PolicyRule{" +
 				"id=" + id +
 				", name='" + name + '\'' +
 				", requester=" + requester +
 				", resource=" + resource +
-				", context='" + context + '\'' +
-				", action=" + action +
-				'}';
+                ", context='" + semanticUserContext.toString() + '\'' +
+                ", action=" + action +
+                '}';
 	}
 
 	@Override
@@ -67,8 +90,8 @@ public class PolicyRule {
 		if (!getName().equals(that.getName())) return false;
 		if (!getRequester().equals(that.getRequester())) return false;
 		if (!getResource().equals(that.getResource())) return false;
-		if (!getContext().equals(that.getContext())) return false;
-		return getAction().equals(that.getAction());
+        if (!getSemanticUserContext().equals(that.getSemanticUserContext())) return false;
+        return getAction().equals(that.getAction());
 
 	}
 
@@ -78,9 +101,9 @@ public class PolicyRule {
 		result = 31 * result + getName().hashCode();
 		result = 31 * result + getRequester().hashCode();
 		result = 31 * result + getResource().hashCode();
-		result = 31 * result + getContext().hashCode();
-		result = 31 * result + getAction().hashCode();
-		return result;
+        result = 31 * result + getSemanticUserContext().hashCode();
+        result = 31 * result + getAction().hashCode();
+        return result;
 	}
 
 	public int getId() {
@@ -115,13 +138,13 @@ public class PolicyRule {
 		this.resource = resource;
 	}
 
-	public String getContext() {
-		return context;
-	}
+    public SemanticUserContext getSemanticUserContext() {
+        return semanticUserContext;
+    }
 
-	public void setContext(String context) {
-		this.context = context;
-	}
+    public void setSemanticUserContext(SemanticUserContext context) {
+        this.semanticUserContext = context;
+    }
 
 	public RuleAction getAction() {
 		return action;

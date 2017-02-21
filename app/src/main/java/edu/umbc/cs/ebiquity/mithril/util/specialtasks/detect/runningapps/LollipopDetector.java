@@ -4,33 +4,18 @@ package edu.umbc.cs.ebiquity.mithril.util.specialtasks.detect.runningapps;
  * Created by prajit on 11/20/16.
  */
 
-import android.annotation.TargetApi;
 import android.app.Service;
 import android.app.usage.UsageEvents;
 import android.app.usage.UsageStats;
 import android.app.usage.UsageStatsManager;
 import android.content.Context;
-import android.content.Intent;
-import android.content.SharedPreferences;
-import android.content.pm.PackageManager;
-import android.content.pm.ResolveInfo;
-import android.database.sqlite.SQLiteDatabase;
-import android.location.Address;
-import android.os.Build;
-import android.text.TextUtils;
-import android.util.Log;
-
-import com.google.gson.Gson;
 
 import java.util.List;
 import java.util.SortedMap;
 import java.util.TreeMap;
 
 import edu.umbc.cs.ebiquity.mithril.MithrilApplication;
-import edu.umbc.cs.ebiquity.mithril.data.dbhelpers.MithrilDBHelper;
-import edu.umbc.cs.ebiquity.mithril.data.model.rules.context.SemanticUserContext;
-import edu.umbc.cs.ebiquity.mithril.data.model.rules.context.contextpieces.SemanticLocation;
-import edu.umbc.cs.ebiquity.mithril.data.model.rules.context.contextpieces.SemanticTime;
+import edu.umbc.cs.ebiquity.mithril.util.specialtasks.detect.policyconflicts.ViolationDetector;
 import edu.umbc.cs.ebiquity.mithril.util.specialtasks.permissions.PermissionHelper;
 
 /**
@@ -38,79 +23,12 @@ import edu.umbc.cs.ebiquity.mithril.util.specialtasks.permissions.PermissionHelp
  * https://gist.github.com/plateaukao/011fa857d1919f2bbfdc
  */
 public class LollipopDetector implements Detector {
-    private MithrilDBHelper mithrilDBHelper;
-    private SQLiteDatabase mithrilDB;
-    private String currentPackageName;
-    private SharedPreferences sharedPref;
-    private String contextLevel;
-    private Address detectedAddress;
-
-    /**
-     * Returns the consumer friendly device name
-     */
-    public static String getDeviceName() {
-        String manufacturer = Build.MANUFACTURER;
-        String model = Build.MODEL;
-        if (model.startsWith(manufacturer)) {
-            return capitalize(model);
-        }
-        return capitalize(manufacturer) + " " + model;
-    }
-
-    private static String capitalize(String str) {
-        if (TextUtils.isEmpty(str)) {
-            return str;
-        }
-        char[] arr = str.toCharArray();
-        boolean capitalizeNext = true;
-
-//        String phrase = "";
-        StringBuilder phrase = new StringBuilder();
-        for (char c : arr) {
-            if (capitalizeNext && Character.isLetter(c)) {
-//                phrase += Character.toUpperCase(c);
-                phrase.append(Character.toUpperCase(c));
-                capitalizeNext = false;
-                continue;
-            } else if (Character.isWhitespace(c)) {
-                capitalizeNext = true;
-            }
-//            phrase += c;
-            phrase.append(c);
-        }
-
-        return phrase.toString();
-    }
-
-    private static String getLauncherName(Context context) {
-        Intent intent = new Intent(Intent.ACTION_MAIN);
-        intent.addCategory(Intent.CATEGORY_HOME);
-        ResolveInfo resolveInfo = context.getPackageManager().resolveActivity(intent, PackageManager.MATCH_DEFAULT_ONLY);
-        return resolveInfo.activityInfo.packageName;
-    }
-
-    @TargetApi(Build.VERSION_CODES.LOLLIPOP)
-    public String getForegroundApp(final Context context) {
+    public String getForegroundApp(Context context) {
         if (!PermissionHelper.getUsageStatsPermisison(context))
             return null;
 
-        sharedPref = context.getSharedPreferences(MithrilApplication.getSharedPreferencesName(), Context.MODE_PRIVATE);
-        SharedPreferences.Editor editor = sharedPref.edit();
-        contextLevel = sharedPref.getString(MithrilApplication.getPrefKeyWhatLevel(), MithrilApplication.getPrefKeyCurrentLocation());
+        String currentPackageName = null;
 
-//        Address tempAddress;
-//        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N)
-//            tempAddress = new Address(context.getResources().getConfiguration().getLocales().get(0));
-//        else
-//            tempAddress = new Address(context.getResources().getConfiguration().locale);
-
-        Gson gson = new Gson();
-        String json = sharedPref.getString(MithrilApplication.getPrefKeyCurrentAddress(), null);// gson.toJson(tempAddress));
-        detectedAddress = gson.fromJson(json, Address.class);
-
-        mithrilDBHelper = new MithrilDBHelper(context);
-        mithrilDB = mithrilDBHelper.getWritableDatabase();
-        currentPackageName = null;
         long time = System.currentTimeMillis();
         UsageStatsManager usageStatsManager = (UsageStatsManager) context.getSystemService(Service.USAGE_STATS_SERVICE);
 
@@ -118,7 +36,7 @@ public class LollipopDetector implements Detector {
          * Technique from: https://github.com/ricvalerio/foregroundappchecker
          * On Nexus 5x it detects foreground launcher events after the app event!!
          */
-        if (LollipopDetector.getDeviceName().equals("LGE Nexus 5")) {
+        if (MithrilApplication.getDeviceName().equals("LGE Nexus 5")) {
             UsageEvents usageEvents = usageStatsManager.queryEvents(time - 1000 * 3600, time);
             SortedMap<Long, UsageEvents.Event> runningTasks = new TreeMap<Long, UsageEvents.Event>();
             if (usageEvents != null) {
@@ -161,102 +79,10 @@ public class LollipopDetector implements Detector {
             }
         }
 
-        if (currentPackageName.equals(getLauncherName(context)) ||
-                sharedPref.getString(MithrilApplication.getPrefKeyAppPkgName(), "").equals(currentPackageName))
-            return null;
-        if (mithrilDBHelper.findAppTypeByAppPkgName(mithrilDB, currentPackageName).equals(MithrilApplication.getPrefKeyUserAppsDisplay())) {
-
-//            Toast.makeText(context, "Mithril detects user app launch: " + currentPackageName, Toast.LENGTH_SHORT).show();
-            Log.d(MithrilApplication.getDebugTag(), "Mithril detects user app launch: " + currentPackageName);
-            /**
-             * PolicyConflictDetector object to be created and sent the requester, resource, context combo to receive a decision!!!
-             */
-            /**
-             * TODO if an app is launched at a certain Semantic location, does the location we know match any policy?
-             * TODO If it does then, can we determine if this is a violation?
-             * TODO if this is a violation, then insert the information into the violation table.
-             * TODO if it is not a violation, then what do we do? **DECIDE**
-             * TODO !!!!DUMMY POLICY!!!!
-             * REMOVE THIS AFTER DEMO
-             * com.google.android.youtube launch is not allowed in US!
-             * change policy to allowed in
-             */
-            SemanticUserContext currSemanticUserContext = getCurrentSemanticUserContext();
-            if (currSemanticUserContext != null) {
-                //Rule 1 is allow youtube at home
-                if (contextLevel.equals(MithrilApplication.getPrefKeyCurrentLocation())
-                        && !currSemanticUserContext.getSemanticLocation().getInferredLocation().equals("21227")) {
-                    if (currentPackageName.equals("com.google.android.youtube")) {
-                        editor.putString(MithrilApplication.getPrefKeyAppPkgName(), currentPackageName);
-                        editor.putString(MithrilApplication.getPrefKeyCurrentLocation(), "Home");
-//                        Toast.makeText(context, "Rule 1 violation detected!", Toast.LENGTH_LONG).show();
-                        Log.d(MithrilApplication.getDebugTag(), "Rule 1 violation detected!");
-                    }
-                }
-                //Rule 2 is allow youtube at work during lunch hours
-                else if (contextLevel.equals("loctime")
-                        && !currSemanticUserContext.getSemanticLocation().getInferredLocation().equals("21250")
-                        && !currSemanticUserContext.getSemanticTime().getDeviceTime().equals("Lunch")) {
-                    if (currentPackageName.equals("com.google.android.youtube")) {
-                        editor.putString(MithrilApplication.getPrefKeyAppPkgName(), currentPackageName);
-                        editor.putString(MithrilApplication.getPrefKeyCurrentLocation(), "Work");
-                        editor.putString(MithrilApplication.getPrefKeyCurrentTime(), "Lunch");
-//                        editor.commit();
-//                        Toast.makeText(context, "Rule 2 violation detected!", Toast.LENGTH_LONG).show();
-                        Log.d(MithrilApplication.getDebugTag(), "Rule 2 violation detected!");
-                    }
-                }
-                //Rule 3 is allow SQLite at work
-                else if (contextLevel.equals(MithrilApplication.getPrefKeyCurrentLocation())
-                        && !currSemanticUserContext.getSemanticLocation().getInferredLocation().equals("21250")) {
-                    if (currentPackageName.equals("oliver.ehrenmueller.dbadmin")) {
-                        editor.putString(MithrilApplication.getPrefKeyAppPkgName(), currentPackageName);
-                        editor.putString(MithrilApplication.getPrefKeyCurrentLocation(), "Work");
-//                editor.commit();
-//                        Toast.makeText(context, "Rule 3 violation detected!", Toast.LENGTH_LONG).show();
-                        Log.d(MithrilApplication.getDebugTag(), "Rule 2 violation detected!");
-                    }
-                }
-//            // If no rules are broken then we will show no violations
-//            else {
-//                editor.remove(MithrilApplication.getPrefKeyCurrentLocation());
-//                editor.remove(MithrilApplication.getPrefKeyCurrentTime());
-//                Toast.makeText(context, "All good!", Toast.LENGTH_LONG).show();
-//            }
-
-                editor.commit();
-            }
-        }
-        mithrilDB.close();
+        if (currentPackageName.equals(MithrilApplication.getLauncherName(context)) || currentPackageName.equals(context.getPackageName()))
+            currentPackageName = null;
+        else
+            ViolationDetector.detectViolation(context, currentPackageName);
         return currentPackageName;
-    }
-
-    private SemanticUserContext getCurrentSemanticUserContext() {
-        if (detectedAddress == null)
-            return null;
-        SemanticUserContext semanticUserContext = new SemanticUserContext();
-        //TODO FIX THIS!!!
-        SemanticLocation semanticLocation = new SemanticLocation();
-        SemanticTime semanticTime = new SemanticTime("Lunch");
-        // getLocality() ("Mountain View", for example)
-        // getAdminArea() ("CA", for example)
-        // getPostalCode() ("94043", for example)
-        // getCountryCode() ("US", for example)
-        // getCountryName() ("United States", for example)
-//        if (level.equals("home"))
-        semanticLocation.setInferredLocation(detectedAddress.getPostalCode());
-//        else if (level.equals("work"))
-//            semanticLocation.setInferredLocation(detectedAddress.getPostalCode());
-//        else if (level.equals("city"))
-//            semanticLocation.setInferredLocation(detectedAddress.getLocality());
-//        else if (level.equals("building"))
-//            semanticLocation.setInferredLocation(detectedAddress.getPremises());
-        if (contextLevel.equals(MithrilApplication.getPrefKeyCurrentLocation()))
-            semanticUserContext.setSemanticLocation(semanticLocation);
-        else if (contextLevel.equals("loctime")) {
-            semanticUserContext.setSemanticLocation(semanticLocation);
-            semanticUserContext.setSemanticTime(semanticTime);
-        }
-        return semanticUserContext;
     }
 }

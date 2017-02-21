@@ -3,17 +3,17 @@ package edu.umbc.cs.ebiquity.mithril.data.model.rules.context.contextpieces;
 import edu.umbc.cs.ebiquity.mithril.MithrilApplication;
 
 public class SemanticTime {
-    private String deviceTime;
+	private String inferredTime;
 
     public SemanticTime() {
-        this.deviceTime = MithrilApplication.getContextDefaultTime();
-    }
+		this.inferredTime = MithrilApplication.getContextDefaultTime();
+	}
 
 	/**
 	 * @param deviceTime
 	 */
     public SemanticTime(String deviceTime) {
-        this.deviceTime = deviceTime;
+		this.inferredTime = deviceTime;
 	}
 
 	/* (non-Javadoc)
@@ -31,29 +31,29 @@ public class SemanticTime {
 			return false;
 		}
         SemanticTime other = (SemanticTime) obj;
-        if (deviceTime == null) {
-			if (other.deviceTime != null) {
+		if (inferredTime == null) {
+			if (other.inferredTime != null) {
 				return false;
 			}
-		} else if (!deviceTime.equals(other.deviceTime)) {
+		} else if (!inferredTime.equals(other.inferredTime)) {
 			return false;
 		}
 		return true;
 	}
 
 	/**
-	 * @return the deviceTime
+	 * @return the inferredTime
 	 */
-	public String getDeviceTime() {
-		return deviceTime;
+	public String getInferredTime() {
+		return inferredTime;
 	}
 
     /**
-     * @param deviceTime the deviceTime to set
-     */
-    public void setDeviceTime(String deviceTime) {
-        this.deviceTime = deviceTime;
-    }
+	 * @param inferredTime the inferredTime to set
+	 */
+	public void setInferredTime(String inferredTime) {
+		this.inferredTime = inferredTime;
+	}
 
 	/* (non-Javadoc)
 	 * @see java.lang.Object#hashCode()
@@ -63,12 +63,12 @@ public class SemanticTime {
 		final int prime = 31;
 		int result = 1;
 		result = prime * result
-				+ ((deviceTime == null) ? 0 : deviceTime.hashCode());
+				+ ((inferredTime == null) ? 0 : inferredTime.hashCode());
 		return result;
 	}
 
 	@Override
 	public String toString() {
-		return deviceTime;
+		return inferredTime;
 	}
 }

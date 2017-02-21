@@ -25,6 +25,7 @@ import com.google.android.gms.location.LocationListener;
 import com.google.android.gms.location.LocationRequest;
 import com.google.android.gms.location.LocationServices;
 import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 
 import java.io.BufferedWriter;
 import java.io.File;
@@ -237,6 +238,12 @@ public class LocationUpdateService extends Service implements
         appendLog(DateFormat.getDateTimeInstance().format(new Date()) + ":" + msg);//, sharedPref.getString(MithrilApplication.getPrefKeyLocationFilename(), "sdcard/location.txt"));
         mCurrentLocation = location;
         storeInSharedPreferences(MithrilApplication.getPrefKeyLocation(), mCurrentLocation);
+
+        //Store the current location in preferences
+        String json = new GsonBuilder().create().toJson(mCurrentLocation, Location.class);
+        SharedPreferences.Editor editor = sharedPref.edit();
+        editor.putString(MithrilApplication.getPrefKeyCurrentLocation(), json);
+
         /**
          * We know the location has changed, let's check the address
          */
