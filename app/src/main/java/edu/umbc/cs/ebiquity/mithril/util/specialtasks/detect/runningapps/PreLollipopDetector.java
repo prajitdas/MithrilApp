@@ -1,16 +1,20 @@
 package edu.umbc.cs.ebiquity.mithril.util.specialtasks.detect.runningapps;
 
+import android.annotation.TargetApi;
 import android.app.ActivityManager;
 import android.app.Service;
 import android.content.Context;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
+import android.os.Build;
 
 /**
  * Created by prajit on 11/26/16.
  */
 
 public class PreLollipopDetector implements Detector {
+
+    @TargetApi(Build.VERSION_CODES.LOLLIPOP)
     @Override
     public String getForegroundApp(Context context) {
         ActivityManager am = (ActivityManager) context.getSystemService(Service.ACTIVITY_SERVICE);
