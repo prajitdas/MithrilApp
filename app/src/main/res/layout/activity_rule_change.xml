@@ -5,6 +5,6 @@
     android:background="@color/white"
     tools:context=".ui.activities.RuleChangeActivity">
 
-    <include layout="@layout/content_view_app_details" />
+    <include layout="@layout/content_view_rule_change" />
 
 </RelativeLayout>
