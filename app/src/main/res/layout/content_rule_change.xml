@@ -12,11 +12,9 @@
     tools:context=".ui.activities.RuleChangeActivity"
     tools:showIn="@layout/activity_rule_change">
 
-    <Spinner
-        android:id="@+id/spinner"
+    <FrameLayout
+        android:id="@+id/container_main"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_alignParentTop="true"
-        android:layout_centerHorizontal="true" />
+        android:layout_height="match_parent" />
 
 </RelativeLayout>
