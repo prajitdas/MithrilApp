@@ -84,6 +84,7 @@
     <string name="policy_tbl_data_requester">Camera</string>
     <string name="policy_tbl_data_rule_description">At school</string>
 
+    <string name="pol_rule_change_header_txt">Current rule details</string>
     <string name="pol_rule_del_btn_label">Delete Rule</string>
     <string name="pol_rule_change_save_btn_label">Save rule changes</string>
     <string name="pol_rule_ok_btn_label">Rule OK</string>
