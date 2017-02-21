@@ -11,8 +11,10 @@ public class SemanticNearActors {
         setListOfUsersInTheVicinity(aListOfUsersInTheVicinity);
 	}
 
-    public SemanticNearActors() {
+    public SemanticNearActors(String actorsAsString) {
         listOfUsersInTheVicinity = new ArrayList<SemanticIdentity>();
+        for (String actor : actorsAsString.split(","))
+            listOfUsersInTheVicinity.add(new SemanticIdentity(actor));
     }
 
 	/* (non-Javadoc)

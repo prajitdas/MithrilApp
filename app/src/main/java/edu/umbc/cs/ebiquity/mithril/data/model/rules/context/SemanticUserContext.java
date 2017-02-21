@@ -1,5 +1,7 @@
 package edu.umbc.cs.ebiquity.mithril.data.model.rules.context;
 
+import java.util.ArrayList;
+
 import edu.umbc.cs.ebiquity.mithril.data.model.rules.context.contextpieces.SemanticActivity;
 import edu.umbc.cs.ebiquity.mithril.data.model.rules.context.contextpieces.SemanticIdentity;
 import edu.umbc.cs.ebiquity.mithril.data.model.rules.context.contextpieces.SemanticLocation;
@@ -15,7 +17,7 @@ public class SemanticUserContext {
     private SemanticTime semanticTime;
 
     public SemanticUserContext() {
-        semanticNearActors = new SemanticNearActors();
+        semanticNearActors = new SemanticNearActors(new ArrayList<SemanticIdentity>());
         semanticActivity = new SemanticActivity();
         semanticIdentity = new SemanticIdentity();
         semanticLocation = new SemanticLocation();

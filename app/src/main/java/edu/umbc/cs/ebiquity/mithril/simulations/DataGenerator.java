@@ -22,13 +22,13 @@ public class DataGenerator {
 	 * This data generator is used in the loadDefaultDataIntoDB method in {@link MithrilDBHelper} to generate default policies
 	 * @param aRequester
 	 * @param aResource
-	 * @param aUserContext
+	 * @param aSemanticUserContext
 	 * @param aRuleAction
 	 * @return
 	 */
-	public static PolicyRule generateSocialMediaCameraAccessRule(Requester aRequester, Resource aResource, String aUserContext, RuleAction aRuleAction) {
-        PolicyRule policyRule = new PolicyRule(MithrilApplication.getPolRulNameSocialMediaCameraAccessRule(), aRequester, aResource, aUserContext, aRuleAction);
-        return policyRule;
+	public static PolicyRule generateSocialMediaCameraAccessRule(Requester aRequester, Resource aResource, SemanticUserContext aSemanticUserContext, RuleAction aRuleAction) {
+		PolicyRule policyRule = new PolicyRule(MithrilApplication.getPolRulNameSocialMediaCameraAccessRule(), aRequester, aResource, aSemanticUserContext, aRuleAction);
+		return policyRule;
 	}
 
     public static SemanticUserContext generateContextForSocialMediaCameraAccessRule() {

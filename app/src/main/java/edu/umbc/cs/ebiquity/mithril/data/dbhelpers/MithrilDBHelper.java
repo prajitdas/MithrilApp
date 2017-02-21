@@ -296,9 +296,7 @@ public class MithrilDBHelper extends SQLiteOpenHelper {
             POLRULREQID + " INTEGER NOT NULL, " +
             POLRULACTIN + " INTEGER NOT NULL, " +
             POLRULRESID + " INTEGER DEFAULT NULL, " +
-//            "FOREIGN KEY(context_id) REFERENCES contextlog(id), " +
-            "FOREIGN KEY(requesters_id) REFERENCES requesters(id)" + //, " +
-//            "FOREIGN KEY(resources_id) REFERENCES resources(id) " +
+            "FOREIGN KEY(requesters_id) REFERENCES requesters(id)" +
             ");";
 
     /**
@@ -1116,16 +1114,17 @@ public class MithrilDBHelper extends SQLiteOpenHelper {
 				getPolicyRulesTableName() + "." + POLRULNAME + ", " +
 				getRequestersTableName() + "." + REQNAME + ", " +
 				getResourcesTableName() + "." + RESNAME + ", " +
-				getPolicyRulesTableName() + "." + POLRULCNTXT + ", " +
-				getPolicyRulesTableName() + "." + POLRULACTIN +
+                getPolicyRulesTableName() + "." + POLRULNEARA + ", " +
+                getPolicyRulesTableName() + "." + POLRULACTIV + ", " +
+                getPolicyRulesTableName() + "." + POLRULIDENT + ", " +
+                getPolicyRulesTableName() + "." + POLRULLOCAT + ", " +
+                getPolicyRulesTableName() + "." + POLRULTEMPO + ", " +
+                getPolicyRulesTableName() + "." + POLRULACTIN +
 				" FROM " +
 				getPolicyRulesTableName() +
 				" LEFT JOIN " + getRequestersTableName() +
 				" ON " + getPolicyRulesTableName() + "." + POLRULREQID +
-				" = " +  getRequestersTableName() + "." + REQID +
-				" LEFT JOIN " + getResourcesTableName() +
-				" ON " + getPolicyRulesTableName() + "." + POLRULRESID +
-				" = " +  getResourcesTableName() + "." + RESID + ";";
+                " = " + getRequestersTableName() + "." + REQID + ";";
 
 		Cursor cursor = db.rawQuery(selectQuery, null);
 		try{
@@ -1139,13 +1138,17 @@ public class MithrilDBHelper extends SQLiteOpenHelper {
 					policyRule.setRequester(new Requester(cursor.getString(2)));
 					policyRule.setResource(new Resource(cursor.getString(3)));
 
-//					ArrayList<SemanticIdentity> presenceInfoList = new ArrayList<SemanticIdentity>();
-//					presenceInfoList.add(new SemanticIdentity(cursor.getString(4)));
+                    policyRule.setSemanticUserContext(
+                            new SemanticUserContext(
+                                    new SemanticNearActors(cursor.getString(4)),
+                                    new SemanticActivity(cursor.getString(5)),
+                                    new SemanticIdentity(cursor.getString(6)),
+                                    new SemanticLocation(cursor.getString(7)),
+                                    new SemanticTime(cursor.getString(8))
+                            ));
 
-					policyRule.setContext(cursor.getString(4));
-
-					if(Integer.parseInt(cursor.getString(5)) == 1)
-						policyRule.setAction(new RuleAction(Action.ALLOW));
+                    if (Integer.parseInt(cursor.getString(9)) == 1)
+                        policyRule.setAction(new RuleAction(Action.ALLOW));
 					else
 						policyRule.setAction(new RuleAction(Action.DENY));
 
@@ -1163,58 +1166,71 @@ public class MithrilDBHelper extends SQLiteOpenHelper {
 	}
 
 	/**
-	 * Finds a policy based on the application and the provider being accessed
-	 * @param db
+     * Finds a policy based on the application being accessed
+     * @param db
 	 * @return
 	 */
-	public PolicyRule findPolicyRuleByReqRes(SQLiteDatabase db, String requester, String resource) {
-		// Select Policy Query
-		String selectQuery = "SELECT " +
+    public ArrayList<PolicyRule> findAllPoliciesByReq(SQLiteDatabase db, String requester) {
+        ArrayList<PolicyRule> policyRules = new ArrayList<PolicyRule>();
+        // Select Policy Query
+        String selectQuery = "SELECT " +
 				getPolicyRulesTableName() + "." + POLRULID + ", " +
 				getPolicyRulesTableName() + "." + POLRULNAME + ", " +
 				getRequestersTableName() + "." + REQNAME + ", " +
 				getResourcesTableName() + "." + RESNAME + ", " +
-				getPolicyRulesTableName() + "." + POLRULCNTXT + ", " +
-				getPolicyRulesTableName() + "." + POLRULACTIN +
+                getPolicyRulesTableName() + "." + POLRULNEARA + ", " +
+                getPolicyRulesTableName() + "." + POLRULACTIV + ", " +
+                getPolicyRulesTableName() + "." + POLRULIDENT + ", " +
+                getPolicyRulesTableName() + "." + POLRULLOCAT + ", " +
+                getPolicyRulesTableName() + "." + POLRULTEMPO + ", " +
+                getPolicyRulesTableName() + "." + POLRULACTIN +
 				" FROM " +
 				getPolicyRulesTableName() +
 				" LEFT JOIN " + getRequestersTableName() +
 				" ON " + getPolicyRulesTableName() + "." + POLRULREQID +
 				" = " +  getRequestersTableName() + "." + REQID +
-				" LEFT JOIN " + getResourcesTableName() +
-				" ON " + getPolicyRulesTableName() + "." + POLRULRESID +
-				" = " + getResourcesTableName() + "." + RESID +
 				" WHERE "  +
-				getRequestersTableName() + "." + REQNAME + " = '" + requester + "' AND " +
-				getResourcesTableName() + "." + RESNAME + " = '" + resource +
-				"';";
+                getRequestersTableName() + "." + REQNAME + " = '" + requester +
+                "';";
 
-		PolicyRule policyRule = new PolicyRule();
-		Cursor cursor = db.rawQuery(selectQuery, null);
-		try{
-			if (cursor.moveToFirst()) {
-				policyRule.setId(Integer.parseInt(cursor.getString(0)));
-				policyRule.setName(cursor.getString(1));
-				policyRule.setRequester(new Requester(cursor.getString(2)));
-				policyRule.setResource(new Resource(cursor.getString(3)));
+        Cursor cursor = db.rawQuery(selectQuery, null);
+        try {
 
-                ArrayList<SemanticIdentity> presenceInfoList = new ArrayList<SemanticIdentity>();
-                presenceInfoList.add(new SemanticIdentity(cursor.getString(4)));
+            // looping through all rows and adding to list
+            if (cursor.moveToFirst()) {
+                do {
+                    PolicyRule policyRule = new PolicyRule();
+                    policyRule.setId(Integer.parseInt(cursor.getString(0)));
+                    policyRule.setName(cursor.getString(1));
+                    policyRule.setRequester(new Requester(cursor.getString(2)));
+                    policyRule.setResource(new Resource(cursor.getString(3)));
 
-				policyRule.setContext(cursor.getString(5));
+                    policyRule.setSemanticUserContext(
+                            new SemanticUserContext(
+                                    new SemanticNearActors(cursor.getString(4)),
+                                    new SemanticActivity(cursor.getString(5)),
+                                    new SemanticIdentity(cursor.getString(6)),
+                                    new SemanticLocation(cursor.getString(7)),
+                                    new SemanticTime(cursor.getString(8))
+                            ));
 
-				if(Integer.parseInt(cursor.getString(6)) == 1)
-					policyRule.setAction(new RuleAction(Action.ALLOW));
-				else
-					policyRule.setAction(new RuleAction(Action.DENY));
-			}
-		} catch(SQLException e) {
-			throw new SQLException("Could not find " + e);
-		} finally {
-			cursor.close();
-		}
-		return policyRule;
-	}
+                    if (Integer.parseInt(cursor.getString(9)) == 1)
+                        policyRule.setAction(new RuleAction(Action.ALLOW));
+                    else
+                        policyRule.setAction(new RuleAction(Action.DENY));
+
+                    // Adding policies to list
+                    policyRules.add(policyRule);
+                } while (cursor.moveToNext());
+            }
+        } catch (SQLException e) {
+            throw new SQLException("Could not find " + e);
+        } finally {
+            cursor.close();
+        }
+        // return policy rules list
+        return policyRules;
+    }
 
 	/**
 	 * Finds a policy based on the policy id
@@ -1229,16 +1245,17 @@ public class MithrilDBHelper extends SQLiteOpenHelper {
 				getPolicyRulesTableName() + "." + POLRULNAME + ", " +
 				getRequestersTableName() + "." + REQNAME + ", " +
 				getResourcesTableName() + "." + RESNAME + ", " +
-				getPolicyRulesTableName() + "." + POLRULCNTXT + ", " +
-				getPolicyRulesTableName() + "." + POLRULACTIN +
+                getPolicyRulesTableName() + "." + POLRULNEARA + ", " +
+                getPolicyRulesTableName() + "." + POLRULACTIV + ", " +
+                getPolicyRulesTableName() + "." + POLRULIDENT + ", " +
+                getPolicyRulesTableName() + "." + POLRULLOCAT + ", " +
+                getPolicyRulesTableName() + "." + POLRULTEMPO + ", " +
+                getPolicyRulesTableName() + "." + POLRULACTIN +
 				" FROM " +
 				getPolicyRulesTableName() +
 				" LEFT JOIN " + getRequestersTableName() +
 				" ON " + getPolicyRulesTableName() + "." + POLRULREQID +
 				" = " +  getRequestersTableName() + "." + REQID +
-				" LEFT JOIN " + getResourcesTableName() +
-				" ON " + getPolicyRulesTableName() + "." + POLRULRESID +
-				" = " + getResourcesTableName() + "." + RESID +
 				" WHERE "  +
 				getPolicyRulesTableName() + "." + POLRULID + " = " + id + ";";
 
@@ -1251,13 +1268,17 @@ public class MithrilDBHelper extends SQLiteOpenHelper {
 				policyRule.setRequester(new Requester(cursor.getString(2)));
 				policyRule.setResource(new Resource(cursor.getString(3)));
 
-                ArrayList<SemanticIdentity> presenceInfoList = new ArrayList<SemanticIdentity>();
-                presenceInfoList.add(new SemanticIdentity(cursor.getString(4)));
+                policyRule.setSemanticUserContext(
+                        new SemanticUserContext(
+                                new SemanticNearActors(cursor.getString(4)),
+                                new SemanticActivity(cursor.getString(5)),
+                                new SemanticIdentity(cursor.getString(6)),
+                                new SemanticLocation(cursor.getString(7)),
+                                new SemanticTime(cursor.getString(8))
+                        ));
 
-				policyRule.setContext(cursor.getString(5));
-
-				if(Integer.parseInt(cursor.getString(6)) == 1)
-					policyRule.setAction(new RuleAction(Action.ALLOW));
+                if (Integer.parseInt(cursor.getString(9)) == 1)
+                    policyRule.setAction(new RuleAction(Action.ALLOW));
 				else
 					policyRule.setAction(new RuleAction(Action.DENY));
 			}
@@ -1431,14 +1452,19 @@ public class MithrilDBHelper extends SQLiteOpenHelper {
 //		values.put(POLRULNAME, aPolicyRule.getName());
 //		values.put(POLRULREQID, aPolicyRule.getRequester().getId());
 //		values.put(POLRULRESID, aPolicyRule.getResource().getId());
-		values.put(POLRULCNTXT, aPolicyRule.getContext());
+        values.put(POLRULLOCAT, aPolicyRule.getSemanticUserContext().getSemanticLocation().getInferredLocation());
+        values.put(POLRULTEMPO, aPolicyRule.getSemanticUserContext().getSemanticTime().getInferredTime());
+        values.put(POLRULACTIV, aPolicyRule.getSemanticUserContext().getSemanticActivity().getInferredActivity());
+        values.put(POLRULIDENT, aPolicyRule.getSemanticUserContext().getSemanticIdentity().getIdentity());
+        values.put(POLRULNEARA, aPolicyRule.getSemanticUserContext().getSemanticNearActors().toString());
+
 //		values.put(POLRULACTID, aPolicyRule.getAction().getId());
 		try {
 			return db.update(getPolicyRulesTableName(), values, POLRULID + " = ?",
                     new String[] { String.valueOf(aPolicyRule.getId()) });
 		} catch(SQLException e) {
-			throw new SQLException("Exception " + e + " error updating Context: " + aPolicyRule.getContext());
-		}
+            throw new SQLException("Exception " + e + " error updating Context: " + aPolicyRule.getSemanticUserContext());
+        }
 	}
 
     /**
