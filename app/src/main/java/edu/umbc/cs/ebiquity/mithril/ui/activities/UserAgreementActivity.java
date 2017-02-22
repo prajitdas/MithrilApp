@@ -4,16 +4,19 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.pm.PackageManager;
 import android.database.sqlite.SQLiteDatabase;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.Button;
+import android.widget.Toast;
 
 import edu.umbc.cs.ebiquity.mithril.MithrilApplication;
 import edu.umbc.cs.ebiquity.mithril.R;
 import edu.umbc.cs.ebiquity.mithril.data.dbhelpers.MithrilDBHelper;
+import edu.umbc.cs.ebiquity.mithril.util.specialtasks.permissions.PermissionHelper;
 
 public class UserAgreementActivity extends AppCompatActivity {
 //    private final Handler handler = new Handler();
@@ -85,7 +88,7 @@ public class UserAgreementActivity extends AppCompatActivity {
         mIDisagreeBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Uri packageUri = Uri.parse("package:" + MithrilApplication.APP_PACKAGE_NAME_SELF);
+                Uri packageUri = Uri.parse("package:" + MithrilApplication.MITHRIL_APP_PACKAGE_NAME);
                 Intent uninstallIntent =
                         new Intent(Intent.ACTION_DELETE, packageUri);
                 startActivity(uninstallIntent);
@@ -131,29 +134,10 @@ public class UserAgreementActivity extends AppCompatActivity {
         //And close this instance
         mithrilDB.close();
 
-        resultOkay();
-    }
-
-//    Potentially will never be used. Left for future purposes.
-//    private void resultCanceled() {
-//        Intent returnIntent = new Intent();
-//        setResult(Activity.RESULT_CANCELED, returnIntent);
-//        finish();
-//    }
-
-    /*
-    Following are permission request and handling sample code
         if (PermissionHelper.isExplicitPermissionAcquisitionNecessary()) {
-            PermissionHelper.requestPermissionIfAllowed(this, Manifest.permission.PACKAGE_USAGE_STATS, MithrilApplication.PERMISSION_REQUEST_CODE_PACKAGE_USAGE_STATS);
-            PermissionHelper.requestPermissionIfAllowed(this, Manifest.permission.ACCESS_FINE_LOCATION, MithrilApplication.PERMISSION_REQUEST_CODE_ACCESS_FINE_LOCATION);
-            PermissionHelper.requestPermissionIfAllowed(this, Manifest.permission.WRITE_EXTERNAL_STORAGE, MithrilApplication.PERMISSION_REQUEST_CODE_WRITE_EXTERNAL_STORAGE);
-            PermissionHelper.requestPermissionIfAllowed(this, Manifest.permission.READ_EXTERNAL_STORAGE, MithrilApplication.PERMISSION_REQUEST_CODE_READ_EXTERNAL_STORAGE);
-            PermissionHelper.requestPermissionIfAllowed(this, Manifest.permission.RECEIVE_BOOT_COMPLETED, MithrilApplication.PERMISSION_REQUEST_CODE_RECEIVE_BOOT_COMPLETED);
-            PermissionHelper.requestPermissionIfAllowed(this, Manifest.permission.INTERNET, MithrilApplication.PERMISSION_REQUEST_CODE_INTERNET);
-            PermissionHelper.requestPermissionIfAllowed(this, Manifest.permission.NFC, MithrilApplication.PERMISSION_REQUEST_CODE_NFC);
-            PermissionHelper.requestPermissionIfAllowed(this, Manifest.permission.GET_TASKS, MithrilApplication.PERMISSION_REQUEST_CODE_GET_TASKS);
-            PermissionHelper.requestPermissionIfAllowed(this, Manifest.permission.READ_LOGS, MithrilApplication.PERMISSION_REQUEST_CODE_READ_LOGS);
+            PermissionHelper.requestAllNecessaryPermissions(this);
         }
+        resultOkay();
     }
 
     @Override
@@ -176,5 +160,10 @@ public class UserAgreementActivity extends AppCompatActivity {
             // permissions this app might request
         }
     }
-     */
+
+    private void resultCanceled() {
+        Intent returnIntent = new Intent();
+        setResult(Activity.RESULT_CANCELED, returnIntent);
+        finish();
+    }
 }

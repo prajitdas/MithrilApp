@@ -36,7 +36,10 @@
 
     <string name="action_settings">Settings</string>
     <string name="info">About the app</string>
-    <string name="exit">Exit this survey</string>
+    <string name="exit_this_survey">Exit this survey</string>
+    <string name="exit">Ok</string>
+    <string name="cancel">Cancel</string>
+    <string name="dialog_exit_app">Do you want to uninstall this app?</string>
     <string name="extra_options">Extra options</string>
 
     <string name="place_holder_for_data_to_be_displayed">Some placeholder for data to be displayed</string>
@@ -55,6 +58,8 @@
     <string name="dialog_resp_delete">Yes</string>
     <string name="dialog_resp_NO">No</string>
 
+    <string name="allow_access_fine_location_permission">ACCESS_FINE_LOCATION permission is mandatory for app functionality</string>
+    <string name="allow_write_external_storage_permission">WRITE_EXTERNAL_STORAGE permission is mandatory for app functionality</string>
     <string name="allow_usage_stats_permission">PACKAGE_USAGE_STATS permission required, please enable in settings</string>
     <string name="dialog_resp_allow">Okay</string>
     <string name="dialog_resp_deny">Cancel</string>
@@ -242,4 +247,7 @@
 
     <string name="you_are_all_done_text">You\'re all done!</string>
     <string name="nothing_here">Nothing here!</string>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
 </resources>

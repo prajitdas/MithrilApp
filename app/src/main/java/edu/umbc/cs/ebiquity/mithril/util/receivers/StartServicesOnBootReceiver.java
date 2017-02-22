@@ -6,6 +6,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
+import android.support.v4.content.ContextCompat;
 import android.util.Log;
 
 import edu.umbc.cs.ebiquity.mithril.MithrilApplication;
@@ -25,7 +26,7 @@ public class StartServicesOnBootReceiver extends BroadcastReceiver {
                 if (PermissionHelper.isExplicitPermissionAcquisitionNecessary()) {
                     if (PermissionHelper.getUsageStatsPermission(context))
                         context.startService(new Intent(context, AppLaunchDetectorService.class));
-                    if (PermissionHelper.isPermissionGranted(context, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
+                    if (ContextCompat.checkSelfPermission(context, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
                         boolean updatesRequested = false;
                         /*
                         * Get any previous setting for location updates

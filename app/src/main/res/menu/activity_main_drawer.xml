@@ -63,7 +63,7 @@
                 android:id="@+id/nav_exit"
                 android:checkable="true"
                 android:icon="@drawable/exit_to_app"
-                android:title="@string/exit" />
+                android:title="@string/exit_this_survey" />
             <item
                 android:id="@+id/nav_about"
                 android:checkable="true"

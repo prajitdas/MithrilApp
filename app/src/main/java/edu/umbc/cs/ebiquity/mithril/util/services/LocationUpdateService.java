@@ -11,7 +11,7 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.IBinder;
-import android.os.PowerManager;
+import android.util.Log;
 
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GoogleApiAvailability;
@@ -94,7 +94,6 @@ public class LocationUpdateService extends Service implements
      * Represents a geographical location.
      */
     private Location mCurrentLocation;
-    private PowerManager.WakeLock mWakeLock;
     // Flag that indicates if a request is underway.
     private boolean mInProgress;
     private Boolean servicesAvailable = false;
@@ -189,20 +188,6 @@ public class LocationUpdateService extends Service implements
 
     public int onStartCommand(Intent intent, int flags, int startId) {
         super.onStartCommand(intent, flags, startId);
-
-        PowerManager mgr = (PowerManager) getSystemService(Context.POWER_SERVICE);
-
-        /**
-         * WakeLock is reference counted so we don't want to create multiple WakeLocks. So do a check before initializing and acquiring.
-         * This will fix the "java.lang.Exception: WakeLock finalized while still held: MyWakeLock" error that you may find.
-         */
-        if (this.mWakeLock == null) { //Added this
-            this.mWakeLock = mgr.newWakeLock(PowerManager.PARTIAL_WAKE_LOCK, "MithrilWakeLock");
-        }
-
-        if (!this.mWakeLock.isHeld()) { //Added this
-            this.mWakeLock.acquire();
-        }
 
         if (!servicesAvailable || mGoogleApiClient.isConnected() || mInProgress)
             return START_STICKY;
@@ -312,11 +297,6 @@ public class LocationUpdateService extends Service implements
         // Toast.makeText(this, DateFormat.getDateTimeInstance().format(new Date()) + ":
         // Disconnected. Please re-connect.", Toast.LENGTH_SHORT).show();
 
-        if (this.mWakeLock != null) {
-            this.mWakeLock.release();
-            this.mWakeLock = null;
-        }
-
         super.onDestroy();
     }
 
@@ -353,8 +333,12 @@ public class LocationUpdateService extends Service implements
 //        }
         // Request location updates using static settings
 //        Intent intent = new Intent(this, LocationUpdateReceiver.class);
-        LocationServices.FusedLocationApi.requestLocationUpdates(this.mGoogleApiClient,
-                mLocationRequest, this);
+        try {
+            LocationServices.FusedLocationApi.requestLocationUpdates(this.mGoogleApiClient,
+                    mLocationRequest, this);
+        } catch (SecurityException e) {
+            Log.e(MithrilApplication.getDebugTag(), "Get the permissions needed");
+        }
 //        Log.d(MithrilApplication.getDebugTag(), DateFormat.getDateTimeInstance().format(new Date()) + ": Connected");
         appendLog(DateFormat.getDateTimeInstance().format(new Date()) + ": Connected");//, sharedPref.getString(MithrilApplication.getPrefKeyLogFilename(), "sdcard/log.txt"));
     }

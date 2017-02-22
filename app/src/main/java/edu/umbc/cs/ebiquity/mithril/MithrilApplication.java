@@ -19,16 +19,7 @@ public class MithrilApplication extends Application {
     /**
      * Public stuff! Make them private if you can...
      */
-    public static final int PERMISSION_REQUEST_CODE_PACKAGE_USAGE_STATS = 101;
-    public static final int PERMISSION_REQUEST_CODE_ACCESS_FINE_LOCATION = 102;
-    public static final int PERMISSION_REQUEST_CODE_WRITE_EXTERNAL_STORAGE = 103;
-    public static final int PERMISSION_REQUEST_CODE_READ_EXTERNAL_STORAGE = 104;
-    public static final int PERMISSION_REQUEST_CODE_RECEIVE_BOOT_COMPLETED = 105;
-    public static final int PERMISSION_REQUEST_CODE_INTERNET = 106;
-    public static final int PERMISSION_REQUEST_CODE_NFC = 107;
-    public static final int PERMISSION_REQUEST_CODE_GET_TASKS = 108;
-    public static final int PERMISSION_REQUEST_CODE_WAKE_LOCK = 109;
-    public static final int PERMISSION_REQUEST_CODE_READ_LOGS = 110;
+    public static final int ALL_PERMISSIONS_MITHRIL_REQUEST_CODE = 100;
 
     public static final int ACTIVITY_RESULT_CODE_USER_AGREEMENT_READ = 10;
     public static final int ACTIVITY_RESULT_CODE_USER_CONSENT_RECEIVED = 11;
@@ -36,13 +27,13 @@ public class MithrilApplication extends Application {
     public static final int SUCCESS_RESULT = 0;
     public static final int FAILURE_RESULT = 1;
 
-    public static final String APP_PACKAGE_NAME_SELF = "edu.umbc.cs.ebiquity.mithril";
+    public static final String MITHRIL_APP_PACKAGE_NAME = "edu.umbc.cs.ebiquity.mithril";
 
-    public static final String RECEIVER = APP_PACKAGE_NAME_SELF + ".RECEIVER";
-    public static final String RESULT_DATA_KEY = APP_PACKAGE_NAME_SELF + ".RESULT_DATA_KEY";
+    public static final String RECEIVER = MITHRIL_APP_PACKAGE_NAME + ".RECEIVER";
+    public static final String RESULT_DATA_KEY = MITHRIL_APP_PACKAGE_NAME + ".RESULT_DATA_KEY";
     public static final String ADDRESS_REQUESTED_EXTRA = "ADDRESS_REQUESTED_EXTRA";
-    public static final String LOCATION_DATA_EXTRA = APP_PACKAGE_NAME_SELF + ".LOCATION_DATA_EXTRA";
-    public static final String GEOFENCES_ADDED_KEY = APP_PACKAGE_NAME_SELF + ".GEOFENCES_ADDED_KEY";
+    public static final String LOCATION_DATA_EXTRA = MITHRIL_APP_PACKAGE_NAME + ".LOCATION_DATA_EXTRA";
+    public static final String GEOFENCES_ADDED_KEY = MITHRIL_APP_PACKAGE_NAME + ".GEOFENCES_ADDED_KEY";
 
     public static final String ADDRESS_KEY = "ADDRESS_KEY";
     /**

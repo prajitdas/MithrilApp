@@ -139,6 +139,7 @@ public class MainActivity extends AppCompatActivity
                 loadContentProvidersFragment();
         } else if (id == R.id.nav_exit) {
             PermissionHelper.quitMithril(this);
+            finish();
         } else if (id == R.id.nav_settings) {
             loadPrefsFragment();
         } else if (id == R.id.nav_about) {
@@ -172,28 +173,25 @@ public class MainActivity extends AppCompatActivity
         if (sharedPreferences.getString(MithrilApplication.getPrefKeyUserConsent(), null) == null) {
             Intent consentActivity = new Intent(getApplicationContext(), UserAgreementActivity.class);
             startActivityForResult(consentActivity, MithrilApplication.ACTIVITY_RESULT_CODE_USER_CONSENT_RECEIVED);
-        } else {
-            //Agreement has not been copied to downloads folder yet, do it now
-            if (!isAgreementDownloaded())
-                copyAgreement();
+        } else
             startMainActivityTasks();
-        }
     }
 
     private void startMainActivityTasks() {
         initHouseKeepingTasks();
-
         initViews();
         defaultFragmentLoad();
     }
 
     private void initHouseKeepingTasks() {
+        //Agreement has not been copied to downloads folder yet, do it now
+        if (!isAgreementDownloaded())
+            copyAgreement();
+
         if (PermissionHelper.getUsageStatsPermission(this))
             startService(new Intent(this, AppLaunchDetectorService.class));
         if (PermissionHelper.isPermissionGranted(this, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED)
             startService(new Intent(this, LocationUpdateService.class));
-        else
-            PermissionHelper.requestPermissionIfAllowed(this, Manifest.permission.ACCESS_FINE_LOCATION, MithrilApplication.PERMISSION_REQUEST_CODE_ACCESS_FINE_LOCATION);
     }
 
     private void copyAgreement() {
@@ -547,25 +545,6 @@ public class MainActivity extends AppCompatActivity
                  * We should never reach this state, ever...
                  */
             }
-        }
-    }
-
-    @Override
-    public void onRequestPermissionsResult(int requestCode, String permissions[], int[] grantResults) {
-        switch (requestCode) {
-            case MithrilApplication.PERMISSION_REQUEST_CODE_ACCESS_FINE_LOCATION: {
-                // If request is cancelled, the result arrays are empty.
-                if (grantResults.length < 0
-                        && grantResults[0] == PackageManager.PERMISSION_DENIED) {
-                    // permission denied, boo! Disable the
-                    // functionality that depends on this permission.
-                    PermissionHelper.quitMithril(this);
-                } else {
-                    startService(new Intent(this, LocationUpdateService.class));
-                }
-            }
-            // other 'case' lines to check for other
-            // permissions this app might request
         }
     }
 }
