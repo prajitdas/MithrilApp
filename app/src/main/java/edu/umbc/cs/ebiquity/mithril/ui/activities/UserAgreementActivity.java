@@ -8,10 +8,13 @@ import android.content.pm.PackageManager;
 import android.database.sqlite.SQLiteDatabase;
 import android.net.Uri;
 import android.os.Bundle;
+import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.Button;
 import android.widget.Toast;
+
+import java.util.List;
 
 import edu.umbc.cs.ebiquity.mithril.MithrilApplication;
 import edu.umbc.cs.ebiquity.mithril.R;
@@ -137,30 +140,44 @@ public class UserAgreementActivity extends AppCompatActivity {
         mithrilDBHelper = new MithrilDBHelper(this);
         mithrilDB = mithrilDBHelper.getWritableDatabase();
 
-        //And close this instance
+        //And close db instance
         mithrilDB.close();
-
         if (PermissionHelper.isExplicitPermissionAcquisitionNecessary()) {
-            PermissionHelper.requestAllNecessaryPermissions(this);
+            requestAllNecessaryPermissions();
         }
-        resultOkay();
+    }
+
+    public void requestAllNecessaryPermissions() {
+        List<String> permissionsThatCanBeRequested = PermissionHelper.getPermissionsThatCanBeRequested(this);
+        String[] permissionStrings = new String[permissionsThatCanBeRequested.size()];
+        int permIdx = 0;
+        StringBuffer stringBuffer = new StringBuffer();
+        for (String permission : permissionsThatCanBeRequested) {
+            permissionStrings[permIdx++] = permission;
+            stringBuffer.append(permission);
+        }
+        if (permissionStrings.length > 0)
+            ActivityCompat.requestPermissions(this, permissionStrings, MithrilApplication.ALL_PERMISSIONS_MITHRIL_REQUEST_CODE);
     }
 
     @Override
-    public void onRequestPermissionsResult(int requestCode, String permissions[], int[] grantResults) {
+    public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
         switch (requestCode) {
             case MithrilApplication.ALL_PERMISSIONS_MITHRIL_REQUEST_CODE: {
                 // If request is cancelled, the result arrays are empty.
-                if (grantResults.length > 0)
-                    for (int i = 0; i < grantResults.length; i++)
+                if (grantResults.length > 0) {
+                    for (int i = 0; i < grantResults.length; i++) {
                         if (grantResults[i] == PackageManager.PERMISSION_DENIED) {
                             // permission denied, boo! Disable the
                             // functionality that depends on this permission.
                             Toast.makeText(this, "You denied some permissions. This might disrupt some functionality!", Toast.LENGTH_SHORT).show();
                             resultCanceled();
                         } else {
-                    // permission was granted, yay! Do the
-                    // contacts-related task you need to do.
+                            resultOkay();
+                            // permission was granted, yay! Do the
+                            // contacts-related task you need to do.
+                        }
+                    }
                 }
             }
             // other 'case' lines to check for other

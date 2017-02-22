@@ -20,7 +20,6 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-import edu.umbc.cs.ebiquity.mithril.MithrilApplication;
 import edu.umbc.cs.ebiquity.mithril.R;
 
 /**
@@ -44,7 +43,7 @@ public class PermissionHelper {
         return permissionsRequired;
     }
 
-    private static List<String> getPermissionsThatCanBeRequested(final Context context) {
+    public static List<String> getPermissionsThatCanBeRequested(final Context context) {
         List<String> permissionsThatCanBeRequested = new ArrayList<String>();
         for (String permission : getPermissionsRequired()) {
             if (isPermissionGranted(context, permission) != PackageManager.PERMISSION_GRANTED) {
@@ -60,21 +59,6 @@ public class PermissionHelper {
 
     public static int isPermissionGranted(Context context, String permission) {
         return ContextCompat.checkSelfPermission(context, permission);
-    }
-
-    public static void requestAllNecessaryPermissions(Context context) {
-        List<String> permissionsThatCanBeRequested = getPermissionsThatCanBeRequested(context);
-        String[] permissionStrings = new String[permissionsThatCanBeRequested.size()];
-        int permIdx = 0;
-        StringBuffer stringBuffer = new StringBuffer();
-        for (String permission : permissionsThatCanBeRequested) {
-            permissionStrings[permIdx++] = permission;
-            stringBuffer.append(permission);
-        }
-        if (permissionStrings.length > 0)
-            ActivityCompat.requestPermissions((Activity) context,
-                    permissionStrings,
-                    MithrilApplication.ALL_PERMISSIONS_MITHRIL_REQUEST_CODE);
     }
 
     public static boolean isExplicitPermissionAcquisitionNecessary() {
