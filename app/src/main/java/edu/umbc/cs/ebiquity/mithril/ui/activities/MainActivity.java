@@ -139,6 +139,7 @@ public class MainActivity extends AppCompatActivity
                 loadContentProvidersFragment();
         } else if (id == R.id.nav_exit) {
             PermissionHelper.quitMithril(this);
+            finish();
         } else if (id == R.id.nav_settings) {
             loadPrefsFragment();
         } else if (id == R.id.nav_about) {
@@ -535,6 +536,7 @@ public class MainActivity extends AppCompatActivity
                 startMainActivityTasks();
             } else {
                 PermissionHelper.quitMithril(this);
+                finish();
                 /*
                  * We did not get the consent, perhaps we should finish?
                  * Something is obviously wrong!

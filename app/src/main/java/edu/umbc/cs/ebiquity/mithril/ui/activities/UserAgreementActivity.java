@@ -124,6 +124,12 @@ public class UserAgreementActivity extends AppCompatActivity {
         finish();
     }
 
+    private void resultCanceled() {
+        Intent returnIntent = new Intent();
+        setResult(Activity.RESULT_CANCELED, returnIntent);
+        finish();
+    }
+
     private void initHousekeepingTasks() {
         /**
          * Initiate database creation and default data insertion, happens only once.
@@ -145,13 +151,14 @@ public class UserAgreementActivity extends AppCompatActivity {
         switch (requestCode) {
             case MithrilApplication.ALL_PERMISSIONS_MITHRIL_REQUEST_CODE: {
                 // If request is cancelled, the result arrays are empty.
-                if (grantResults.length < 0
-                        && grantResults[0] == PackageManager.PERMISSION_DENIED) {
-                    // permission denied, boo! Disable the
-                    // functionality that depends on this permission.
-                    Toast.makeText(this, "You denied some permissions. This might disrupt some functionality!", Toast.LENGTH_SHORT).show();
-                    resultCanceled();
-                } else {
+                if (grantResults.length > 0)
+                    for (int i = 0; i < grantResults.length; i++)
+                        if (grantResults[i] == PackageManager.PERMISSION_DENIED) {
+                            // permission denied, boo! Disable the
+                            // functionality that depends on this permission.
+                            Toast.makeText(this, "You denied some permissions. This might disrupt some functionality!", Toast.LENGTH_SHORT).show();
+                            resultCanceled();
+                        } else {
                     // permission was granted, yay! Do the
                     // contacts-related task you need to do.
                 }
@@ -159,11 +166,5 @@ public class UserAgreementActivity extends AppCompatActivity {
             // other 'case' lines to check for other
             // permissions this app might request
         }
-    }
-
-    private void resultCanceled() {
-        Intent returnIntent = new Intent();
-        setResult(Activity.RESULT_CANCELED, returnIntent);
-        finish();
     }
 }
