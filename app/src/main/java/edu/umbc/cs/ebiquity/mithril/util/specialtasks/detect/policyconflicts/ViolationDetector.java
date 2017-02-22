@@ -142,7 +142,7 @@ public class ViolationDetector {
         if (mithrilDBHelper.findAppTypeByAppPkgName(mithrilDB, currentPackageName).equals(MithrilApplication.getPrefKeyUserAppsDisplay())) {
 
 //            Toast.makeText(context, "Mithril detects user app launch: " + currentPackageName, Toast.LENGTH_SHORT).show();
-            Log.d(MithrilApplication.getDebugTag(), "Mithril detects user app launch: " + currentPackageName);
+//            Log.d(MithrilApplication.getDebugTag(), "Mithril detects user app launch: " + currentPackageName);
             /**
              * PolicyConflictDetector object to be created and sent the requester, resource, context combo to receive a decision!!!
              */

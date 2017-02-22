@@ -11,7 +11,6 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.IBinder;
-import android.util.Log;
 
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GoogleApiAvailability;
@@ -337,7 +336,7 @@ public class LocationUpdateService extends Service implements
             LocationServices.FusedLocationApi.requestLocationUpdates(this.mGoogleApiClient,
                     mLocationRequest, this);
         } catch (SecurityException e) {
-            Log.e(MithrilApplication.getDebugTag(), "Get the permissions needed");
+//            Log.e(MithrilApplication.getDebugTag(), "Get the permissions needed");
         }
 //        Log.d(MithrilApplication.getDebugTag(), DateFormat.getDateTimeInstance().format(new Date()) + ": Connected");
         appendLog(DateFormat.getDateTimeInstance().format(new Date()) + ": Connected");//, sharedPref.getString(MithrilApplication.getPrefKeyLogFilename(), "sdcard/log.txt"));

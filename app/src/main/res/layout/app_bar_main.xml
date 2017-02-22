@@ -2,6 +2,7 @@
 <android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/main_coordinator_layout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:fitsSystemWindows="true"
@@ -31,8 +32,8 @@
         android:layout_margin="@dimen/fab_margin"
         android:elevation="@dimen/fab_margin"
         app:backgroundTint="@color/colorButton"
-        app:rippleColor="@color/colorAccent"
         app:fabSize="auto"
+        app:rippleColor="@color/colorAccent"
         app:srcCompat="@drawable/ic_menu_upload" />
 
 </android.support.design.widget.CoordinatorLayout>

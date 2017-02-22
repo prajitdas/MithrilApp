@@ -26,7 +26,6 @@ import android.graphics.Color;
 import android.support.v4.app.NotificationCompat;
 import android.support.v4.app.TaskStackBuilder;
 import android.text.TextUtils;
-import android.util.Log;
 
 import com.google.android.gms.location.Geofence;
 import com.google.android.gms.location.GeofencingEvent;
@@ -74,7 +73,7 @@ public class GeofenceTransitionsIntentService extends IntentService {
         if (geofencingEvent.hasError()) {
             String errorMessage = GeofenceErrorMessages.getErrorString(this,
                     geofencingEvent.getErrorCode());
-            Log.e(TAG, errorMessage);
+//            Log.e(TAG, errorMessage);
             return;
         }
 
@@ -97,10 +96,10 @@ public class GeofenceTransitionsIntentService extends IntentService {
 
             // Send notification and log the transition details.
             sendNotification(geofenceTransitionDetails);
-            Log.i(TAG, geofenceTransitionDetails);
+//            Log.i(TAG, geofenceTransitionDetails);
         } else {
             // Log the error.
-            Log.e(TAG, getString(R.string.geofence_transition_invalid_type, geofenceTransition));
+//            Log.e(TAG, getString(R.string.geofence_transition_invalid_type, geofenceTransition));
         }
     }
 

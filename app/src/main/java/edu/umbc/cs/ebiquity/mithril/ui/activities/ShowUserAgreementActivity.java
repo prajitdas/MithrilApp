@@ -10,7 +10,6 @@ import android.graphics.pdf.PdfRenderer;
 import android.os.Bundle;
 import android.os.ParcelFileDescriptor;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
@@ -161,7 +160,7 @@ public class ShowUserAgreementActivity extends AppCompatActivity {
             // Showing initial page
             showPage(0);
         } catch (FileNotFoundException e) {
-            Log.d(MithrilApplication.getDebugTag(), MithrilApplication.getFlierPdfFileName() + " not found. Make sure the file name/path is correct!");
+//            Log.d(MithrilApplication.getDebugTag(), MithrilApplication.getFlierPdfFileName() + " not found. Make sure the file name/path is correct!");
             // File could not be found!
             resultCanceled();
         }
@@ -186,10 +185,10 @@ public class ShowUserAgreementActivity extends AppCompatActivity {
             try {
                 writeFile(openFileOutput(file.getName(), Context.MODE_PRIVATE));
             } catch (FileNotFoundException e) {
-                Log.e(MithrilApplication.getDebugTag(), e.getMessage());
+//                Log.e(MithrilApplication.getDebugTag(), e.getMessage());
             }
         } else {
-            Log.d(MithrilApplication.getDebugTag(), "file already exists");
+//            Log.d(MithrilApplication.getDebugTag(), "file already exists");
         }
     }
 
@@ -205,20 +204,20 @@ public class ShowUserAgreementActivity extends AppCompatActivity {
             destination.flush();
             destination.close();
         } catch (IOException iOException) {
-            Log.e(MithrilApplication.getDebugTag(), iOException.getMessage());
+//            Log.e(MithrilApplication.getDebugTag(), iOException.getMessage());
         } finally {
             if (in != null) {
                 try {
                     in.close();
                 } catch (IOException e) {
-                    Log.d(MithrilApplication.getDebugTag(), "Filer file threw NullPointerException");
+//                    Log.d(MithrilApplication.getDebugTag(), "Filer file threw NullPointerException");
                 }
             }
             if (destination != null) {
                 try {
                     destination.close();
                 } catch (IOException e) {
-                    Log.d(MithrilApplication.getDebugTag(), "output file threw NullPointerException");
+//                    Log.d(MithrilApplication.getDebugTag(), "output file threw NullPointerException");
                 }
             }
         }

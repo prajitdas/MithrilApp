@@ -9,7 +9,6 @@ import android.app.usage.UsageEvents;
 import android.app.usage.UsageStats;
 import android.app.usage.UsageStatsManager;
 import android.content.Context;
-import android.util.Log;
 
 import java.util.List;
 import java.util.SortedMap;
@@ -88,7 +87,7 @@ public class LollipopDetector implements Detector {
                 ViolationDetector.detectViolation(context, currentPackageName);
             } catch (CWAException cwaException) {
                 //Something is wrong!!!! We have a Closed World Assumption we cannot have deny rules...
-                Log.e(MithrilApplication.getDebugTag(), "Serious error! DB contains deny rules. This violates our CWA");
+//                Log.e(MithrilApplication.getDebugTag(), "Serious error! DB contains deny rules. This violates our CWA");
             }
         }
         return currentPackageName;

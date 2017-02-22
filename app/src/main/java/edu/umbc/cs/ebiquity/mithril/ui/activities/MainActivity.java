@@ -2,10 +2,8 @@ package edu.umbc.cs.ebiquity.mithril.ui.activities;
 
 import android.Manifest;
 import android.app.Activity;
-import android.app.AlertDialog;
 import android.app.FragmentManager;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
@@ -14,6 +12,7 @@ import android.database.sqlite.SQLiteDatabase;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
+import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
 import android.support.design.widget.Snackbar;
@@ -184,39 +183,23 @@ public class MainActivity extends AppCompatActivity
     }
 
     private void initHouseKeepingTasks() {
-        //Agreement has not been copied to downloads folder yet, do it now
-        if (!isAgreementDownloaded())
-            copyAgreement();
-
-        if (PermissionHelper.getUsageStatsPermission(this))
-            startService(new Intent(this, AppLaunchDetectorService.class));
         if (PermissionHelper.isPermissionGranted(this, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED)
             startService(new Intent(this, LocationUpdateService.class));
-    }
-
-    private void copyAgreement() {
-        final AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        builder.setMessage("The agreement doc has been copied to the "
-                + downloadsDirectory.getAbsolutePath()
-                + " directory, for your reference...")
-                .setPositiveButton(R.string.okay, new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int id) {
-                        //Copy the agreement file to the external files directory. The user needs a copy of the agreement.
-                        copyAssets(downloadsDirectory, agreementFile);
-                    }
-                });
-
-        // create alert dialog
-        AlertDialog alertDialog = builder.create();
-
-        // show it
-        alertDialog.show();
+        if (PermissionHelper.getUsageStatsPermission(this))
+            startService(new Intent(this, AppLaunchDetectorService.class));
     }
 
     private void initViews() {
         setContentView(R.layout.activity_main);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar_main);
         setSupportActionBar(toolbar);
+
+        CoordinatorLayout mainCoordinatorLayoutView = (CoordinatorLayout) findViewById(R.id.main_coordinator_layout);
+        if (isAgreementDownloaded())
+            Snackbar.make(
+                    mainCoordinatorLayoutView,
+                    R.string.agreement_copied + downloadsDirectory.getAbsolutePath() + R.string.agreement_copied_end,
+                    Snackbar.LENGTH_LONG).setAction("Action", null).show();
 
         fab = (FloatingActionButton) findViewById(R.id.fab_main);
         fab.setOnClickListener(new View.OnClickListener() {
@@ -533,6 +516,9 @@ public class MainActivity extends AppCompatActivity
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (requestCode == MithrilApplication.ACTIVITY_RESULT_CODE_USER_CONSENT_RECEIVED) {
             if (resultCode == Activity.RESULT_OK) {
+                //Agreement has not been copied to downloads folder yet, do it now
+                if (!isAgreementDownloaded())
+                    copyAssets(downloadsDirectory, agreementFile);
                 startMainActivityTasks();
             } else {
                 PermissionHelper.quitMithril(this);

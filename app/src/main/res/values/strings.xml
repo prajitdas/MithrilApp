@@ -240,6 +240,8 @@
     <string name="fullscreen_user_agreement_consent_text">Click button above to read the user agreement statement. When done reading, you will see a new \"I agree!\" button below. Click that to continue using the app&#8230;</string>
     <string name="user_agreement_information_text">We collect anonymous feedback about your privacy preferences.</string>
     <string name="show_user_agreement_btn_label">Show user agreement</string>
+    <string name="agreement_copied">The agreement doc has been copied to the </string>
+    <string name="agreement_copied_end"> directory, for your reference...</string>
 
     <string name="okay">okay</string>
     <string name="next">next</string>

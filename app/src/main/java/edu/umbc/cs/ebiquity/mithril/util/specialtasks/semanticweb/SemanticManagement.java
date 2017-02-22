@@ -1,4 +1,4 @@
-package edu.umbc.cs.ebiquity.mithril.util.semanticweb;
+package edu.umbc.cs.ebiquity.mithril.util.specialtasks.semanticweb;
 
 import android.content.Context;
 import android.content.res.Resources.NotFoundException;

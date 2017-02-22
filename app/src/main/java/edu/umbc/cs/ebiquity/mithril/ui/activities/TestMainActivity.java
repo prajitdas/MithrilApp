@@ -15,7 +15,6 @@ import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -23,7 +22,6 @@ import android.widget.Toast;
 import java.io.UnsupportedEncodingException;
 import java.util.Arrays;
 
-import edu.umbc.cs.ebiquity.mithril.MithrilApplication;
 import edu.umbc.cs.ebiquity.mithril.R;
 
 /**
@@ -64,7 +62,7 @@ public class TestMainActivity extends AppCompatActivity {
         try {
             adapter.enableForegroundDispatch(activity, pendingIntent, filters, techList);
         } catch (SecurityException securityException) {
-            Log.d(MithrilApplication.getDebugTag(), securityException.getMessage());
+//            Log.d(MithrilApplication.getDebugTag(), securityException.getMessage());
         }
     }
 
@@ -76,7 +74,7 @@ public class TestMainActivity extends AppCompatActivity {
         try {
             adapter.disableForegroundDispatch(activity);
         } catch (SecurityException securityException) {
-            Log.d(MithrilApplication.getDebugTag(), securityException.getMessage());
+//            Log.d(MithrilApplication.getDebugTag(), securityException.getMessage());
         }
     }
 
@@ -160,7 +158,7 @@ public class TestMainActivity extends AppCompatActivity {
                 new NdefReaderTask().execute(tag);
 
             } else {
-                Log.d(MithrilApplication.getDebugTag(), "Wrong mime type: " + type);
+//                Log.d(MithrilApplication.getDebugTag(), "Wrong mime type: " + type);
             }
         } else if (NfcAdapter.ACTION_TECH_DISCOVERED.equals(action)) {
 
@@ -203,7 +201,7 @@ public class TestMainActivity extends AppCompatActivity {
                     try {
                         return readText(ndefRecord);
                     } catch (UnsupportedEncodingException e) {
-                        Log.e(MithrilApplication.getDebugTag(), "Unsupported Encoding", e);
+//                        Log.e(MithrilApplication.getDebugTag(), "Unsupported Encoding", e);
                     }
                 }
             }

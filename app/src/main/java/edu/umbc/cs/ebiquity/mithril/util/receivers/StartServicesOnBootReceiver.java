@@ -7,7 +7,6 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.support.v4.content.ContextCompat;
-import android.util.Log;
 
 import edu.umbc.cs.ebiquity.mithril.MithrilApplication;
 import edu.umbc.cs.ebiquity.mithril.util.services.AppLaunchDetectorService;
@@ -41,7 +40,7 @@ public class StartServicesOnBootReceiver extends BroadcastReceiver {
                     }
                 }
             } else {
-                Log.e(MithrilApplication.getDebugTag(), "Received unexpected intent " + intent.toString());
+//                Log.e(MithrilApplication.getDebugTag(), "Received unexpected intent " + intent.toString());
             }
         }
     }
