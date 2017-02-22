@@ -197,7 +197,7 @@ public class MainActivity extends AppCompatActivity
         if (sharedPreferences.getBoolean(MithrilApplication.getPrefShouldShowAgreementSnackbar(), true)) {
             if (isAgreementDownloaded()) {
                 CoordinatorLayout mainCoordinatorLayoutView = (CoordinatorLayout) findViewById(R.id.main_coordinator_layout);
-                Snackbar.make(mainCoordinatorLayoutView, R.string.agreement_copied, Snackbar.LENGTH_LONG).setAction("Action", null).show();
+                Snackbar.make(mainCoordinatorLayoutView, R.string.agreement_copied, Snackbar.LENGTH_LONG).setAction(R.string.okay, null).show();
                 SharedPreferences.Editor editor = sharedPreferences.edit();
                 editor.putBoolean(MithrilApplication.getPrefShouldShowAgreementSnackbar(), false);
                 editor.commit();

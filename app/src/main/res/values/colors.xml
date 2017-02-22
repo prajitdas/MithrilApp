@@ -20,7 +20,7 @@
             #d0fbd5
             rgb(208, 251, 213)
             hsl(127, 84%, 90%) -->
-    <color name="colorButton">@color/whitesmoke</color>
+    <color name="colorButton">#d0fbd5</color>
     <!--    End of theme colors                                         -->
 
     <color name="white">#ffffff</color>
