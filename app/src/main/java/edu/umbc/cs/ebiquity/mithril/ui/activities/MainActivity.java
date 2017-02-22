@@ -139,7 +139,6 @@ public class MainActivity extends AppCompatActivity
                 loadContentProvidersFragment();
         } else if (id == R.id.nav_exit) {
             PermissionHelper.quitMithril(this);
-            finish();
         } else if (id == R.id.nav_settings) {
             loadPrefsFragment();
         } else if (id == R.id.nav_about) {
@@ -275,7 +274,6 @@ public class MainActivity extends AppCompatActivity
                 loadEmptyFragment();
             else
                 loadViolationsFragment();
-//                loadUserAppsFragment();
         }
     }
 
@@ -376,17 +374,16 @@ public class MainActivity extends AppCompatActivity
     }
 
     private boolean isViolationListEmpty() {
-        return true;
         /*
          * We find out how many violations are there in the database.
          * If there are none, we will load the EmptyFragment
          */
-//        violationItems = mithrilDBHelper.findAllViolations(mithrilDB);
-//        if (violationItems != null)
-//            Log.d(MithrilApplication.getDebugTag(), "Number of violations" + Integer.toString(violationItems.size()));
-//        else
-//            Log.d(MithrilApplication.getDebugTag(), "Null");
-//        return !(violationItems == null || violationItems.size() > 0);
+        violationItems = mithrilDBHelper.findAllViolations(mithrilDB);
+        if (violationItems != null)
+            Log.d(MithrilApplication.getDebugTag(), "Number of violations" + Integer.toString(violationItems.size()));
+        else
+            Log.d(MithrilApplication.getDebugTag(), "Null");
+        return !(violationItems == null || violationItems.size() > 0);
     }
 
     private boolean isBroadcastReceiverListEmpty() {
@@ -538,7 +535,6 @@ public class MainActivity extends AppCompatActivity
                 startMainActivityTasks();
             } else {
                 PermissionHelper.quitMithril(this);
-                finish();
                 /*
                  * We did not get the consent, perhaps we should finish?
                  * Something is obviously wrong!
