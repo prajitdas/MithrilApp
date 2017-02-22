@@ -194,12 +194,15 @@ public class MainActivity extends AppCompatActivity
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar_main);
         setSupportActionBar(toolbar);
 
-        CoordinatorLayout mainCoordinatorLayoutView = (CoordinatorLayout) findViewById(R.id.main_coordinator_layout);
-        if (isAgreementDownloaded())
-            Snackbar.make(
-                    mainCoordinatorLayoutView,
-                    R.string.agreement_copied + downloadsDirectory.getAbsolutePath() + R.string.agreement_copied_end,
-                    Snackbar.LENGTH_LONG).setAction("Action", null).show();
+        if (sharedPreferences.getBoolean(MithrilApplication.getPrefShouldShowAgreementSnackbar(), true)) {
+            if (isAgreementDownloaded()) {
+                CoordinatorLayout mainCoordinatorLayoutView = (CoordinatorLayout) findViewById(R.id.main_coordinator_layout);
+                Snackbar.make(mainCoordinatorLayoutView, R.string.agreement_copied, Snackbar.LENGTH_LONG).setAction("Action", null).show();
+                SharedPreferences.Editor editor = sharedPreferences.edit();
+                editor.putBoolean(MithrilApplication.getPrefShouldShowAgreementSnackbar(), false);
+                editor.commit();
+            }
+        }
 
         fab = (FloatingActionButton) findViewById(R.id.fab_main);
         fab.setOnClickListener(new View.OnClickListener() {

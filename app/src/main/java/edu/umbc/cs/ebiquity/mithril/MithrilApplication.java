@@ -125,6 +125,8 @@ public class MithrilApplication extends Application {
     private static final String PREF_FRIDAY = "Friday";
     private static final String PREF_SATURDAY = "Saturday";
     private static final String PREF_SUNDAY = "Sunday";
+
+    private static final String PREF_SHOULD_SHOW_AGREEMENT_SNACKBAR = "shouldShowAgreementSnackbar";
     //End of preferences.xml
 
     private static final String PREF_KEY_APP_LAUNCH_MONITORING_SERVICE_STATE = "appLaunchMonitoringServiceState";
@@ -919,6 +921,10 @@ public class MithrilApplication extends Application {
 
     public static String getPrefAllDoneKey() {
         return PREF_ALL_DONE_KEY;
+    }
+
+    public static String getPrefShouldShowAgreementSnackbar() {
+        return PREF_SHOULD_SHOW_AGREEMENT_SNACKBAR;
     }
 
     public static String getLauncherName(Context context) {
