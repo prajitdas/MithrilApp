@@ -198,9 +198,9 @@ public class MainActivity extends AppCompatActivity
             if (isAgreementDownloaded()) {
                 CoordinatorLayout mainCoordinatorLayoutView = (CoordinatorLayout) findViewById(R.id.main_coordinator_layout);
                 Snackbar.make(mainCoordinatorLayoutView, R.string.agreement_copied, Snackbar.LENGTH_LONG).setAction(R.string.okay, null).show();
-                SharedPreferences.Editor editor = sharedPreferences.edit();
+                SharedPreferences.Editor editor = this.getSharedPreferences(MithrilApplication.getSharedPreferencesName(), Context.MODE_PRIVATE).edit();
                 editor.putBoolean(MithrilApplication.getPrefShouldShowAgreementSnackbar(), false);
-                editor.commit();
+                editor.apply();
             }
         }
 
@@ -450,7 +450,7 @@ public class MainActivity extends AppCompatActivity
         }
         SharedPreferences.Editor editor = this.getSharedPreferences(MithrilApplication.getSharedPreferencesName(), Context.MODE_PRIVATE).edit();
         editor.putBoolean(MithrilApplication.getPrefKeyUserAgreementCopied(), true);
-        editor.commit();
+        editor.apply();
     }
 
     private boolean isAgreementDownloaded() {

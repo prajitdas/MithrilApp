@@ -300,7 +300,7 @@ public class PrefsFragment extends PreferenceFragment implements
     }
 
     private void setOnPreferenceChangeListeners() {
-        final SharedPreferences.Editor editor = sharedPrefs.edit();
+        final SharedPreferences.Editor editor = context.getSharedPreferences(MithrilApplication.getSharedPreferencesName(), Context.MODE_PRIVATE).edit();
 
         mSwitchPrefAllDone.setOnPreferenceChangeListener(new Preference.OnPreferenceChangeListener() {
             @Override
@@ -308,7 +308,7 @@ public class PrefsFragment extends PreferenceFragment implements
                 mSwitchPrefAllDone.setChecked((Boolean) o);
 
                 editor.putBoolean(MithrilApplication.getPrefAllDoneKey(), mSwitchPrefAllDone.isChecked());
-                editor.commit();
+                editor.apply();
 
                 if (mSwitchPrefAllDone.isChecked())
                     context.startActivity(new Intent(context, MainActivity.class));
@@ -323,7 +323,7 @@ public class PrefsFragment extends PreferenceFragment implements
                 mSwitchPrefEnableLocation.setChecked((Boolean) o);
 
                 editor.putBoolean(MithrilApplication.getPrefLocationContextEnableKey(), mSwitchPrefEnableLocation.isChecked());
-                editor.commit();
+                editor.apply();
 
                 mEditTextPrefHomeLocation.setEnabled(mSwitchPrefEnableLocation.isChecked());
                 mEditTextPrefWorkLocation.setEnabled(mSwitchPrefEnableLocation.isChecked());
@@ -346,7 +346,7 @@ public class PrefsFragment extends PreferenceFragment implements
                 preference.setSummary(changedValue);
 
                 editor.putString(MithrilApplication.getPrefHomeLocationKey(), changedValue);
-                editor.commit();
+                editor.apply();
 
                 return true;
             }
@@ -360,7 +360,7 @@ public class PrefsFragment extends PreferenceFragment implements
                 preference.setSummary(changedValue);
 
                 editor.putString(MithrilApplication.getPrefWorkLocationKey(), changedValue);
-                editor.commit();
+                editor.apply();
 
                 return false;
             }
@@ -372,7 +372,7 @@ public class PrefsFragment extends PreferenceFragment implements
                 mSwitchPrefEnableTemporal.setChecked((Boolean) o);
 
                 editor.putBoolean(MithrilApplication.getPrefTemporalContextEnableKey(), mSwitchPrefEnableTemporal.isChecked());
-                editor.commit();
+                editor.apply();
 
                 mDayOfWeekPrefWorkDays.setEnabled(mSwitchPrefEnableTemporal.isChecked());
                 mTimePrefWorkHoursStart.setEnabled(mSwitchPrefEnableTemporal.isChecked());
@@ -395,7 +395,7 @@ public class PrefsFragment extends PreferenceFragment implements
                 Log.d(MithrilApplication.getDebugTag() + " persisting? ", changedValue);
 
                 editor.putString(MithrilApplication.getPrefWorkDaysKey(), changedValue);
-                editor.commit();
+                editor.apply();
 
                 return false;
             }
@@ -409,7 +409,7 @@ public class PrefsFragment extends PreferenceFragment implements
                 preference.setSummary(changedValue);
 
                 editor.putString(MithrilApplication.getPrefWorkHoursStartKey(), changedValue);
-                editor.commit();
+                editor.apply();
 
                 return false;
             }
@@ -423,7 +423,7 @@ public class PrefsFragment extends PreferenceFragment implements
                 preference.setSummary(changedValue);
 
                 editor.putString(MithrilApplication.getPrefWorkHoursEndKey(), changedValue);
-                editor.commit();
+                editor.apply();
 
                 return false;
             }
@@ -437,7 +437,7 @@ public class PrefsFragment extends PreferenceFragment implements
                 preference.setSummary(changedValue);
 
                 editor.putString(MithrilApplication.getPrefDndDaysKey(), changedValue);
-                editor.commit();
+                editor.apply();
 
                 return false;
             }
@@ -451,7 +451,7 @@ public class PrefsFragment extends PreferenceFragment implements
                 preference.setSummary(changedValue);
 
                 editor.putString(MithrilApplication.getPrefDndHoursStartKey(), changedValue);
-                editor.commit();
+                editor.apply();
 
                 return false;
             }
@@ -465,7 +465,7 @@ public class PrefsFragment extends PreferenceFragment implements
                 preference.setSummary(changedValue);
 
                 editor.putString(MithrilApplication.getPrefDndHoursEndKey(), changedValue);
-                editor.commit();
+                editor.apply();
 
                 return false;
             }
@@ -477,7 +477,7 @@ public class PrefsFragment extends PreferenceFragment implements
                 mSwitchPrefEnablePresenceInfo.setChecked((Boolean) o);
 
                 editor.putBoolean(MithrilApplication.getPrefPresenceInfoContextEnableKey(), mSwitchPrefEnablePresenceInfo.isChecked());
-                editor.commit();
+                editor.apply();
 
                 mEditTextPrefPresenceInfoColleague.setEnabled(mSwitchPrefEnablePresenceInfo.isChecked());
                 mEditTextPrefPresenceInfoSupervisor.setEnabled(mSwitchPrefEnablePresenceInfo.isChecked());
@@ -493,7 +493,7 @@ public class PrefsFragment extends PreferenceFragment implements
                 preference.setSummary(changedValue);
 
                 editor.putString(MithrilApplication.getPrefPresenceInfoSupervisorKey(), changedValue);
-                editor.commit();
+                editor.apply();
 
                 return false;
             }
@@ -507,7 +507,7 @@ public class PrefsFragment extends PreferenceFragment implements
                 preference.setSummary(changedValue);
 
                 editor.putString(MithrilApplication.getPrefPresenceInfoColleagueKey(), changedValue);
-                editor.commit();
+                editor.apply();
 
                 return false;
             }
@@ -733,7 +733,7 @@ public class PrefsFragment extends PreferenceFragment implements
         if (status.isSuccess()) {
             // Update state and save in shared preferences.
             mGeofencesAdded = !mGeofencesAdded;
-            SharedPreferences.Editor editor = sharedPrefs.edit();
+            SharedPreferences.Editor editor = context.getSharedPreferences(MithrilApplication.getSharedPreferencesName(), Context.MODE_PRIVATE).edit();
             editor.putBoolean(MithrilApplication.GEOFENCES_ADDED_KEY, mGeofencesAdded);
             editor.apply();
 

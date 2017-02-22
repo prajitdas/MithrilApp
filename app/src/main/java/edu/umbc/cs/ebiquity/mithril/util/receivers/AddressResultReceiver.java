@@ -84,10 +84,10 @@ public class AddressResultReceiver extends ResultReceiver {
      *                MyObject obj = gson.fromJson(json, MyObject.class);
      */
     public void storeInSharedPreferences(String key, Address address) {
-        SharedPreferences.Editor editor = sharedPref.edit();
+        SharedPreferences.Editor editor = context.getSharedPreferences(MithrilApplication.getSharedPreferencesName(), Context.MODE_PRIVATE).edit();
         Gson gson = new Gson();
         String json = gson.toJson(address);
         editor.putString(key, json);
-        editor.commit();
+        editor.apply();
     }
 }

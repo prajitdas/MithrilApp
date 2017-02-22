@@ -221,8 +221,9 @@ public class LocationUpdateService extends Service implements
 
         //Store the current location in preferences
         String json = new GsonBuilder().create().toJson(mCurrentLocation, Location.class);
-        SharedPreferences.Editor editor = sharedPref.edit();
+        SharedPreferences.Editor editor = this.getSharedPreferences(MithrilApplication.getSharedPreferencesName(), Context.MODE_PRIVATE).edit();
         editor.putString(MithrilApplication.getPrefKeyCurrentLocation(), json);
+        editor.apply();
 
         /**
          * We know the location has changed, let's check the address
@@ -273,11 +274,11 @@ public class LocationUpdateService extends Service implements
      *                 MyObject obj = gson.fromJson(json, MyObject.class);
      */
     public void storeInSharedPreferences(String key, Location location) {
-        SharedPreferences.Editor editor = sharedPref.edit();
+        SharedPreferences.Editor editor = this.getSharedPreferences(MithrilApplication.getSharedPreferencesName(), Context.MODE_PRIVATE).edit();
         Gson gson = new Gson();
         String json = gson.toJson(location);
         editor.putString(key, json);
-        editor.commit();
+        editor.apply();
     }
 
     @Override
