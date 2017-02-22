@@ -4,19 +4,16 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.content.pm.PackageManager;
 import android.database.sqlite.SQLiteDatabase;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.Button;
-import android.widget.Toast;
 
 import edu.umbc.cs.ebiquity.mithril.MithrilApplication;
 import edu.umbc.cs.ebiquity.mithril.R;
 import edu.umbc.cs.ebiquity.mithril.data.dbhelpers.MithrilDBHelper;
-import edu.umbc.cs.ebiquity.mithril.util.specialtasks.permissions.PermissionHelper;
 
 public class UserAgreementActivity extends AppCompatActivity {
 //    private final Handler handler = new Handler();
@@ -70,7 +67,7 @@ public class UserAgreementActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 Intent showUserAgreementIntent = new Intent(v.getContext(), ShowUserAgreementActivity.class);
-                startActivityForResult(showUserAgreementIntent, MithrilApplication.USER_AGREEMENT_READ_REQUEST_CODE);
+                startActivityForResult(showUserAgreementIntent, MithrilApplication.ACTIVITY_RESULT_CODE_USER_AGREEMENT_READ);
             }
         });
 
@@ -92,7 +89,7 @@ public class UserAgreementActivity extends AppCompatActivity {
                 Intent uninstallIntent =
                         new Intent(Intent.ACTION_DELETE, packageUri);
                 startActivity(uninstallIntent);
-                //The following line should be unreachable
+//                The following line should be unreachable.
 //                resultCanceled();
             }
         });
@@ -100,11 +97,12 @@ public class UserAgreementActivity extends AppCompatActivity {
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        if (requestCode == MithrilApplication.USER_AGREEMENT_READ_REQUEST_CODE) {
+        if (requestCode == MithrilApplication.ACTIVITY_RESULT_CODE_USER_AGREEMENT_READ) {
             /**
-             * Do nothng in this case!
+             * Do nothing in this case!
              * Some failure occurred obviously
-             */isResultOkay = resultCode == Activity.RESULT_OK;
+             */
+            isResultOkay = resultCode == Activity.RESULT_OK;
         }
     }
 
@@ -115,8 +113,6 @@ public class UserAgreementActivity extends AppCompatActivity {
         sharedPreferences = getApplicationContext().getSharedPreferences(MithrilApplication.getSharedPreferencesName(), Context.MODE_PRIVATE);
         if (sharedPreferences.getString(MithrilApplication.getPrefKeyUserConsent(), null) != null)
             finish();
-//            Intent startMainActivity = new Intent(getApplicationContext(), MainActivity.class);
-//            startActivity(startMainActivity);
     }
 
     private void resultOkay() {
@@ -125,24 +121,39 @@ public class UserAgreementActivity extends AppCompatActivity {
         finish();
     }
 
-    private void resultCanceled() {
-        Intent returnIntent = new Intent();
-        setResult(Activity.RESULT_CANCELED, returnIntent);
-        finish();
-    }
-
     private void initHousekeepingTasks() {
-        if (PermissionHelper.isExplicitPermissionAcquisitionNecessary()) {
-            PermissionHelper.requestAllNecessaryPermissions(this);
-        }
-
         /**
          * Initiate database creation and default data insertion, happens only once.
          */
         mithrilDBHelper = new MithrilDBHelper(this);
         mithrilDB = mithrilDBHelper.getWritableDatabase();
 
+        //And close this instance
+        mithrilDB.close();
+
         resultOkay();
+    }
+
+//    Potentially will never be used. Left for future purposes.
+//    private void resultCanceled() {
+//        Intent returnIntent = new Intent();
+//        setResult(Activity.RESULT_CANCELED, returnIntent);
+//        finish();
+//    }
+
+    /*
+    Following are permission request and handling sample code
+        if (PermissionHelper.isExplicitPermissionAcquisitionNecessary()) {
+            PermissionHelper.requestPermissionIfAllowed(this, Manifest.permission.PACKAGE_USAGE_STATS, MithrilApplication.PERMISSION_REQUEST_CODE_PACKAGE_USAGE_STATS);
+            PermissionHelper.requestPermissionIfAllowed(this, Manifest.permission.ACCESS_FINE_LOCATION, MithrilApplication.PERMISSION_REQUEST_CODE_ACCESS_FINE_LOCATION);
+            PermissionHelper.requestPermissionIfAllowed(this, Manifest.permission.WRITE_EXTERNAL_STORAGE, MithrilApplication.PERMISSION_REQUEST_CODE_WRITE_EXTERNAL_STORAGE);
+            PermissionHelper.requestPermissionIfAllowed(this, Manifest.permission.READ_EXTERNAL_STORAGE, MithrilApplication.PERMISSION_REQUEST_CODE_READ_EXTERNAL_STORAGE);
+            PermissionHelper.requestPermissionIfAllowed(this, Manifest.permission.RECEIVE_BOOT_COMPLETED, MithrilApplication.PERMISSION_REQUEST_CODE_RECEIVE_BOOT_COMPLETED);
+            PermissionHelper.requestPermissionIfAllowed(this, Manifest.permission.INTERNET, MithrilApplication.PERMISSION_REQUEST_CODE_INTERNET);
+            PermissionHelper.requestPermissionIfAllowed(this, Manifest.permission.NFC, MithrilApplication.PERMISSION_REQUEST_CODE_NFC);
+            PermissionHelper.requestPermissionIfAllowed(this, Manifest.permission.GET_TASKS, MithrilApplication.PERMISSION_REQUEST_CODE_GET_TASKS);
+            PermissionHelper.requestPermissionIfAllowed(this, Manifest.permission.READ_LOGS, MithrilApplication.PERMISSION_REQUEST_CODE_READ_LOGS);
+        }
     }
 
     @Override
@@ -155,14 +166,15 @@ public class UserAgreementActivity extends AppCompatActivity {
                     // permission denied, boo! Disable the
                     // functionality that depends on this permission.
                     Toast.makeText(this, "You denied some permissions. This might disrupt some functionality!", Toast.LENGTH_SHORT).show();
-//                } else {
-//                    // permission was granted, yay! Do the
-//                    // contacts-related task you need to do.
+                    resultCanceled();
+                } else {
+                    // permission was granted, yay! Do the
+                    // contacts-related task you need to do.
                 }
-//                return;
             }
             // other 'case' lines to check for other
             // permissions this app might request
         }
     }
+     */
 }

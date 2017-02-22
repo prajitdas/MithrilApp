@@ -19,9 +19,19 @@ public class MithrilApplication extends Application {
     /**
      * Public stuff! Make them private if you can...
      */
-    public static final int ALL_PERMISSIONS_MITHRIL_REQUEST_CODE = 100;
-    public static final int USER_AGREEMENT_READ_REQUEST_CODE = 200;
-    public static final int USER_CONSENT_RECEIVED_REQUEST_CODE = 300;
+    public static final int PERMISSION_REQUEST_CODE_PACKAGE_USAGE_STATS = 101;
+    public static final int PERMISSION_REQUEST_CODE_ACCESS_FINE_LOCATION = 102;
+    public static final int PERMISSION_REQUEST_CODE_WRITE_EXTERNAL_STORAGE = 103;
+    public static final int PERMISSION_REQUEST_CODE_READ_EXTERNAL_STORAGE = 104;
+    public static final int PERMISSION_REQUEST_CODE_RECEIVE_BOOT_COMPLETED = 105;
+    public static final int PERMISSION_REQUEST_CODE_INTERNET = 106;
+    public static final int PERMISSION_REQUEST_CODE_NFC = 107;
+    public static final int PERMISSION_REQUEST_CODE_GET_TASKS = 108;
+    public static final int PERMISSION_REQUEST_CODE_WAKE_LOCK = 109;
+    public static final int PERMISSION_REQUEST_CODE_READ_LOGS = 110;
+
+    public static final int ACTIVITY_RESULT_CODE_USER_AGREEMENT_READ = 10;
+    public static final int ACTIVITY_RESULT_CODE_USER_CONSENT_RECEIVED = 11;
 
     public static final int SUCCESS_RESULT = 0;
     public static final int FAILURE_RESULT = 1;

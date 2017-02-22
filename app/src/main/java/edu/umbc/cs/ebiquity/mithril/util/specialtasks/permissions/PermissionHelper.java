@@ -9,18 +9,13 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.net.Uri;
 import android.os.Build;
-import android.os.Environment;
 import android.provider.Settings;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.widget.Toast;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-
-import edu.umbc.cs.ebiquity.mithril.MithrilApplication;
 import edu.umbc.cs.ebiquity.mithril.R;
 
 /**
@@ -28,23 +23,10 @@ import edu.umbc.cs.ebiquity.mithril.R;
  */
 
 public class PermissionHelper {
-    private static final List<String> permissionsRequired = Arrays.asList(
-            Manifest.permission.ACCESS_FINE_LOCATION,
-            Manifest.permission.WRITE_EXTERNAL_STORAGE,
-            Manifest.permission.READ_EXTERNAL_STORAGE,
-            Manifest.permission.WAKE_LOCK,
-            Manifest.permission.RECEIVE_BOOT_COMPLETED//,
-//            Manifest.permission.NFC
-    );
-
-//    private static int countOfPermissionsToRequest = 0;
-//
-//    public static int getPermissionsRequiredCount() {
-//        return permissionsRequired.size();
-//    }
-
-    private static List<String> getPermissionsRequired() {
-        return permissionsRequired;
+    public static void quitMithril(Context context) {
+        context.startActivity(new Intent(
+                Intent.ACTION_DELETE, Uri.parse(
+                "package:" + context.getPackageName())));
     }
 
     public static boolean isExplicitPermissionAcquisitionNecessary() {
@@ -55,117 +37,34 @@ public class PermissionHelper {
         return ContextCompat.checkSelfPermission(context, permission);
     }
 
-    private static List<String> getPermissionsThatCanBeRequested(final Context context) {
-        List<String> permissionsThatCanBeRequested = new ArrayList<String>();
-        for (String permission : getPermissionsRequired()) {
-            if (isPermissionGranted(context, permission) != PackageManager.PERMISSION_GRANTED) {
-                // Should we show an explanation?
-                if (ActivityCompat.shouldShowRequestPermissionRationale((Activity) context, permission)) {
-                    // Show an explanation to the user *asynchronously* -- don't block
-                    // this thread waiting for the user's response! After the user
-                    // sees the explanation, try again to request the permission.
-                    Toast.makeText(context, "You denied " + permission + " permission. This might disrupt some functionality!", Toast.LENGTH_SHORT).show();
-                } else {
-                    // No explanation needed, we can request the permission.
-                    permissionsThatCanBeRequested.add(permission);
-                    // getPermissionInt returns an app-defined int constant.
-                    // The callback method gets the result of the request.
-                }
-            } //else {
-//                MithrilApplication.addToPermissionsGranted(permission);
-//            }
-        }
-        return permissionsThatCanBeRequested;
-    }
+    public static void requestPermissionIfAllowed(Context context, String permission, int requestCode) {
+        // Here, thisActivity is the current activity
+        Activity thisActivity = (Activity) context;
+        if (ContextCompat.checkSelfPermission(thisActivity, permission) != PackageManager.PERMISSION_GRANTED) {
 
-    public static void requestAllNecessaryPermissions(Context context) {
-        List<String> permissionsThatCanBeRequested = getPermissionsThatCanBeRequested(context);
-        String[] permissionStrings = new String[permissionsThatCanBeRequested.size()];
-        int permIdx = 0;
-        StringBuffer stringBuffer = new StringBuffer();
-        for (String permission : permissionsThatCanBeRequested) {
-            permissionStrings[permIdx++] = permission;
-            stringBuffer.append(permission);
-        }
-//        Log.d(MithrilApplication.getDebugTag(), "granted: "+MithrilApplication.getPermissionsGranted());
-//        Log.d(MithrilApplication.getDebugTag(), "strings: "+stringBuffer.toString());
-        if (permissionStrings.length > 0)
-            ActivityCompat.requestPermissions((Activity) context,
-                permissionStrings,
-                    MithrilApplication.ALL_PERMISSIONS_MITHRIL_REQUEST_CODE);
-    }
-
-    /**
-     * <uses-permission android:name="android.permission.READ_LOGS" />
-     * read logs needs the above permission. We are unable to trigger it from inside the app. Something special needs to be done in this case?
-     * We need to execute
-     * adb shell pm grant edu.umbc.cs.ebiquity.mithril android.permission.READ_LOGS
-     * as per the instructions here: http://stackoverflow.com/a/11517421/1816861
-     * from terminal and just the shell command from this class as below:
-     * pm grant edu.umbc.cs.ebiquity.mithril android.permission.READ_LOGS
-     * <p>
-     * To test: adb shell dumpsys package edu.umbc.cs.ebiquity.mithril
-     *
-    public static boolean getReadLogsPermission(Context context) {
-        String packageName = context.getPackageName();
-        RootAccess rootAccess = new RootAccess(context);
-        String[] CMDLINE_GRANTPERMS = {"su", "-c", null};
-        if (context.getPackageManager().checkPermission(Manifest.permission.READ_LOGS, packageName) != 0) {
-            Log.d(MithrilApplication.getDebugTag(), "we do not have the READ_LOGS permission!");
-            if (android.os.Build.VERSION.SDK_INT >= 16) {
-                Log.d(MithrilApplication.getDebugTag(), "Working around JellyBeans 'feature'...");
-                try {
-                    CMDLINE_GRANTPERMS[2] = MithrilApplication.getReadLogsPermissionForAppCmd();
-                    boolean result = RootAccess.runScript(CMDLINE_GRANTPERMS);
-                    if (!result)
-                        throw new Exception("failed to become root");
-                } catch (Exception e) {
-                    Log.d(MithrilApplication.getDebugTag(), "exec(): " + e);
-                    Toast.makeText(context, "Failed to obtain READ_LOGS permission", Toast.LENGTH_LONG).show();
-                    return false;
-                }
+            // Should we show an explanation?
+            if (ActivityCompat.shouldShowRequestPermissionRationale(thisActivity, permission)) {
+                // Show an explanation to the user *asynchronously* -- don't block this thread waiting for the user's response!
+                // After the user sees the explanation, try again to request the permission.
+                Toast.makeText(context, "You denied " + permission + " permission. This might disrupt some app functionality!", Toast.LENGTH_SHORT).show();
+            } else {
+                // No explanation needed, we can request the permission.
+                ActivityCompat.requestPermissions(thisActivity, new String[]{permission}, requestCode);
+                // requestCode is an app-defined int constant. The callback method gets the result of the request.
             }
-        } else
-            Log.d(MithrilApplication.getDebugTag(), "we have the READ_LOGS permission already!");
-        return true;
+        }
     }
-     */
 
-    public static boolean getUsageStatsPermisison(final Context context) {
-//        String packageName = context.getPackageName();
-//        RootAccess rootAccess = new RootAccess(context);
-//        String[] CMDLINE_GRANTPERMS = {"su", "-c", null};
-//        if (context.getPackageManager().checkPermission(Manifest.permission.PACKAGE_USAGE_STATS, packageName) != 0) {
+    public static boolean getUsageStatsPermission(final Context context) {
         if (!needsUsageStatsPermission(context)) {
-//            Log.d(MithrilApplication.getDebugTag(), "we have the PACKAGE_USAGE_STATS permission already!");
             return true;
-            /**
-             * Alternative method of obtaining permission from user:
-             * context.startActivity(new Intent(Settings.ACTION_USAGE_ACCESS_SETTINGS));
-
-            if (android.os.Build.VERSION.SDK_INT >= 16) {
-                Log.d(MithrilApplication.getDebugTag(), "Working around JellyBeans 'feature'...");
-                try {
-                    CMDLINE_GRANTPERMS[2] = MithrilApplication.getPackageUsageStatsPermissionForAppCmd();
-                    boolean result = rootAccess.runScript(CMDLINE_GRANTPERMS);
-                    if (!result)
-                        throw new Exception("failed to become root");
-                } catch (Exception e) {
-                    Log.d(MithrilApplication.getDebugTag(), "exec(): " + e);
-                    Toast.makeText(context, "Failed to obtain PACKAGE_USAGE_STATS permission", Toast.LENGTH_LONG).show();
-                    return false;
-                }
-            }
-             */
         } else {
-//            Log.d(MithrilApplication.getDebugTag(), "we do not have the PACKAGE_USAGE_STATS permission!");
-            // Use the Builder class for convenient dialog construction
             AlertDialog.Builder builder = new AlertDialog.Builder(context);
             builder.setMessage(R.string.allow_usage_stats_permission)
                     .setPositiveButton(R.string.dialog_resp_allow, new DialogInterface.OnClickListener() {
                         public void onClick(DialogInterface dialog, int id) {
                             requestUsageStatsPermission(context);
-                            //This is not working as it kills the current activity and launches the previosu one!
+                            //This is not working as it kills the current activity and launches the previous one!
                             android.os.Process.killProcess(android.os.Process.myPid());
                         }
                     })
@@ -175,22 +74,12 @@ public class PermissionHelper {
                             android.os.Process.killProcess(android.os.Process.myPid());
                         }
                     });
-
             // create alert dialog
             AlertDialog alertDialog = builder.create();
-
             // show it
             alertDialog.show();
         }
-//        } else
-//            Log.d(MithrilApplication.getDebugTag(), "we have the PACKAGE_USAGE_STATS permission already!");
         return false;
-    }
-
-    @TargetApi(Build.VERSION_CODES.LOLLIPOP)
-    private static void requestUsageStatsPermission(Context context) {
-        if (!hasUsageStatsPermission(context))
-            context.startActivity(new Intent(Settings.ACTION_USAGE_ACCESS_SETTINGS));
     }
 
     private static boolean needsUsageStatsPermission(Context context) {
@@ -207,24 +96,45 @@ public class PermissionHelper {
         return mode == AppOpsManager.MODE_ALLOWED;
     }
 
-//    public static int getCountOfPermissionsToRequest() {
-//        return countOfPermissionsToRequest;
-//    }
-//
-//    public static void setCountOfPermissionsToRequest(int countOfPermissionsToRequest) {
-//        PermissionHelper.countOfPermissionsToRequest = countOfPermissionsToRequest;
-//    }
-
-    /* Checks if external storage is available for read and write */
-    public boolean isExternalStorageWritable() {
-        String state = Environment.getExternalStorageState();
-        return Environment.MEDIA_MOUNTED.equals(state);
+    @TargetApi(Build.VERSION_CODES.LOLLIPOP)
+    private static void requestUsageStatsPermission(Context context) {
+        if (!hasUsageStatsPermission(context))
+            context.startActivity(new Intent(Settings.ACTION_USAGE_ACCESS_SETTINGS));
     }
 
-    /* Checks if external storage is available to at least read */
-    public boolean isExternalStorageReadable() {
-        String state = Environment.getExternalStorageState();
-        return Environment.MEDIA_MOUNTED.equals(state) ||
-                Environment.MEDIA_MOUNTED_READ_ONLY.equals(state);
-    }
+    /**
+     * <uses-permission android:name="android.permission.READ_LOGS" />
+     * read logs needs the above permission. We are unable to trigger it from inside the app. Something special needs to be done in this case?
+     * We need to execute
+     * adb shell pm grant edu.umbc.cs.ebiquity.mithril android.permission.READ_LOGS
+     * as per the instructions here: http://stackoverflow.com/a/11517421/1816861
+     * from terminal and just the shell command from this class as below:
+     * pm grant edu.umbc.cs.ebiquity.mithril android.permission.READ_LOGS
+     * <p>
+     * To test: adb shell dumpsys package edu.umbc.cs.ebiquity.mithril
+     *
+     public static boolean getReadLogsPermission(Context context) {
+     String packageName = context.getPackageName();
+     RootAccess rootAccess = new RootAccess(context);
+     String[] CMDLINE_GRANTPERMS = {"su", "-c", null};
+     if (context.getPackageManager().checkPermission(Manifest.permission.READ_LOGS, packageName) != 0) {
+     Log.d(MithrilApplication.getDebugTag(), "we do not have the READ_LOGS permission!");
+     if (android.os.Build.VERSION.SDK_INT >= 16) {
+     Log.d(MithrilApplication.getDebugTag(), "Working around JellyBeans 'feature'...");
+     try {
+     CMDLINE_GRANTPERMS[2] = MithrilApplication.getReadLogsPermissionForAppCmd();
+     boolean result = RootAccess.runScript(CMDLINE_GRANTPERMS);
+     if (!result)
+     throw new Exception("failed to become root");
+     } catch (Exception e) {
+     Log.d(MithrilApplication.getDebugTag(), "exec(): " + e);
+     Toast.makeText(context, "Failed to obtain READ_LOGS permission", Toast.LENGTH_LONG).show();
+     return false;
+     }
+     }
+     } else
+     Log.d(MithrilApplication.getDebugTag(), "we have the READ_LOGS permission already!");
+     return true;
+     }
+     */
 }

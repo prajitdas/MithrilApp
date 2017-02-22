@@ -23,15 +23,14 @@ public class StartServicesOnBootReceiver extends BroadcastReceiver {
         if (sharedPref.getBoolean(MithrilApplication.getPrefKeyUserAgreementCopied(), false)) {
             if (intent.getAction().equals(Intent.ACTION_BOOT_COMPLETED)) {
                 if (PermissionHelper.isExplicitPermissionAcquisitionNecessary()) {
-                    PermissionHelper.requestAllNecessaryPermissions(context);
-                    if (PermissionHelper.getUsageStatsPermisison(context))
+                    if (PermissionHelper.getUsageStatsPermission(context))
                         context.startService(new Intent(context, AppLaunchDetectorService.class));
                     if (PermissionHelper.isPermissionGranted(context, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
                         boolean updatesRequested = false;
-                    /*
-                    * Get any previous setting for location updates
-                    * Gets "false" if an error occurs
-                    */
+                        /*
+                        * Get any previous setting for location updates
+                        * Gets "false" if an error occurs
+                        */
                         if (sharedPref.contains(MithrilApplication.getPrefKeyLocationUpdateServiceState())) {
                             updatesRequested = sharedPref.getBoolean(MithrilApplication.getPrefKeyLocationUpdateServiceState(), false);
                         }
@@ -40,35 +39,6 @@ public class StartServicesOnBootReceiver extends BroadcastReceiver {
                         }
                     }
                 }
-//            if (PermissionHelper.isExplicitPermissionAcquisitionNecessary()) {
-//                if (PermissionHelper.getUsageStatsPermisison(context)) {
-//                    ComponentName service = context.startService(new Intent(context, AppLaunchDetectorService.class));
-//
-//                    if (null == service) {
-//                        // something really wrong here
-//                        Log.e(MithrilApplication.getDebugTag(), "Could not start service " + AppLaunchDetectorService.class.getName().toString());
-//                    }
-//                }
-//
-//                if (PermissionHelper.isPermissionGranted(context, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
-//                    boolean updatesRequested = false;
-//                    /*
-//                    * Get any previous setting for location updates
-//                    * Gets "false" if an error occurs
-//                    */
-//                    if (sharedPref.contains(MithrilApplication.getPrefKeyLocationUpdateServiceState())) {
-//                        updatesRequested = sharedPref.getBoolean(MithrilApplication.getPrefKeyLocationUpdateServiceState(), false);
-//                    }
-//                    if (updatesRequested) {
-//                        ComponentName service = context.startService(new Intent(context, LocationUpdateService.class));
-//
-//                        if (null == service) {
-//                            // something really wrong here
-//                            Log.e(MithrilApplication.getDebugTag(), "Could not start service " + LocationUpdateService.class.getName().toString());
-//                        }
-//                    }
-//                }
-//            }
             } else {
                 Log.e(MithrilApplication.getDebugTag(), "Received unexpected intent " + intent.toString());
             }

@@ -1,12 +1,10 @@
 package edu.umbc.cs.ebiquity.mithril.util.services;
 
-import android.Manifest;
 import android.annotation.TargetApi;
 import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.content.pm.PackageManager;
 import android.location.Location;
 import android.os.Binder;
 import android.os.Build;
@@ -38,8 +36,6 @@ import java.util.Date;
 
 import edu.umbc.cs.ebiquity.mithril.MithrilApplication;
 import edu.umbc.cs.ebiquity.mithril.util.receivers.AddressResultReceiver;
-import edu.umbc.cs.ebiquity.mithril.util.receivers.LocationUpdateReceiver;
-import edu.umbc.cs.ebiquity.mithril.util.specialtasks.permissions.PermissionHelper;
 
 /**
  * Getting Location Updates.
@@ -330,7 +326,7 @@ public class LocationUpdateService extends Service implements
      * request the current location or start periodic updates
      */
     @Override
-    public void onConnected(Bundle bundle) {
+    public void onConnected(Bundle bundle) throws SecurityException {
 //        Log.i(MithrilApplication.getDebugTag(), "Connected to GoogleApiClient");
 //
 //        // If the initial location was never previously requested, we use
@@ -356,17 +352,9 @@ public class LocationUpdateService extends Service implements
 //            startLocationUpdates();
 //        }
         // Request location updates using static settings
-        Intent intent = new Intent(this, LocationUpdateReceiver.class);
-        if (PermissionHelper.isExplicitPermissionAcquisitionNecessary()) {
-            if (PermissionHelper.isPermissionGranted(this, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
-                try {
-                    LocationServices.FusedLocationApi.requestLocationUpdates(this.mGoogleApiClient,
-                            mLocationRequest, this);
-                } catch (SecurityException securityException) {
-                    PermissionHelper.requestAllNecessaryPermissions(this);
-                }
-            }
-        }
+//        Intent intent = new Intent(this, LocationUpdateReceiver.class);
+        LocationServices.FusedLocationApi.requestLocationUpdates(this.mGoogleApiClient,
+                mLocationRequest, this);
 //        Log.d(MithrilApplication.getDebugTag(), DateFormat.getDateTimeInstance().format(new Date()) + ": Connected");
         appendLog(DateFormat.getDateTimeInstance().format(new Date()) + ": Connected");//, sharedPref.getString(MithrilApplication.getPrefKeyLogFilename(), "sdcard/log.txt"));
     }

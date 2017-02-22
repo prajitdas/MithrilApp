@@ -138,7 +138,7 @@ public class MainActivity extends AppCompatActivity
             else
                 loadContentProvidersFragment();
         } else if (id == R.id.nav_exit) {
-            exitTheApp();
+            PermissionHelper.quitMithril(this);
         } else if (id == R.id.nav_settings) {
             loadPrefsFragment();
         } else if (id == R.id.nav_about) {
@@ -150,13 +150,6 @@ public class MainActivity extends AppCompatActivity
         drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
         return true;
-    }
-
-    private void exitTheApp() {
-        Uri packageUri = Uri.parse("package:" + MithrilApplication.APP_PACKAGE_NAME_SELF);
-        Intent uninstallIntent =
-                new Intent(Intent.ACTION_DELETE, packageUri);
-        startActivity(uninstallIntent);
     }
 
     @Override
@@ -178,7 +171,7 @@ public class MainActivity extends AppCompatActivity
         sharedPreferences = getApplicationContext().getSharedPreferences(MithrilApplication.getSharedPreferencesName(), Context.MODE_PRIVATE);
         if (sharedPreferences.getString(MithrilApplication.getPrefKeyUserConsent(), null) == null) {
             Intent consentActivity = new Intent(getApplicationContext(), UserAgreementActivity.class);
-            startActivityForResult(consentActivity, MithrilApplication.USER_CONSENT_RECEIVED_REQUEST_CODE);
+            startActivityForResult(consentActivity, MithrilApplication.ACTIVITY_RESULT_CODE_USER_CONSENT_RECEIVED);
         } else {
             //Agreement has not been copied to downloads folder yet, do it now
             if (!isAgreementDownloaded())
@@ -195,23 +188,12 @@ public class MainActivity extends AppCompatActivity
     }
 
     private void initHouseKeepingTasks() {
-        if (PermissionHelper.getUsageStatsPermisison(this))
+        if (PermissionHelper.getUsageStatsPermission(this))
             startService(new Intent(this, AppLaunchDetectorService.class));
         if (PermissionHelper.isPermissionGranted(this, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED)
             startService(new Intent(this, LocationUpdateService.class));
-//            if (PermissionHelper.isPermissionGranted(this, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
-//                boolean updatesRequested = false;
-//                    /*
-//                    * Get any previous setting for location updates
-//                    * Gets "false" if an error occurs
-//                    */
-//                if (sharedPref.contains(MithrilApplication.getPrefKeyLocationUpdateServiceState())) {
-//                    updatesRequested = sharedPref.getBoolean(MithrilApplication.getPrefKeyLocationUpdateServiceState(), false);
-//                }
-//                if (updatesRequested) {
-//                    startService(new Intent(this, LocationUpdateService.class));
-//                }
-//            }
+        else
+            PermissionHelper.requestPermissionIfAllowed(this, Manifest.permission.ACCESS_FINE_LOCATION, MithrilApplication.PERMISSION_REQUEST_CODE_ACCESS_FINE_LOCATION);
     }
 
     private void copyAgreement() {
@@ -437,76 +419,6 @@ public class MainActivity extends AppCompatActivity
         return true;
     }
 
-    @Override
-    public void onListFragmentInteraction(AppData item) {
-        //TODO Do something with the App selected
-        Intent intent = new Intent(this, ViewAppDetailsActivity.class);
-        intent.putExtra(MithrilApplication.getPrefKeyAppPkgName(), item.getPackageName());
-        startActivity(intent);
-    }
-
-    @Override
-    public void onListFragmentInteraction(Violation item) {
-        //TODO Do something with the Violation selected
-        violationItemSelected = item;
-    }
-
-    @Override
-    public void onListFragmentLongInteraction(List<AppData> items) {
-        //TODO Do something with the Apps selected
-        appDataItemsSelected = items;
-    }
-
-    @Override
-    public void onFragmentInteraction(Uri uri) {
-        //TODO do something when the reload data fragment is interacted with
-    }
-
-    @Override
-    public void onListFragmentInteraction(PermData item) {
-        //TODO do something when the permission data is requested - I have an idea. Why don't you launch a list of permissions that are being used by apps.
-    }
-
-    @Override
-    public void onListFragmentInteraction(ServData item) {
-        //TODO do something when the service data is requested - I have an idea. Why don't you launch a list of services that are being used by apps.
-    }
-
-    @Override
-    public void onListFragmentInteraction(ContentProvData item) {
-        //TODO do something when the content provider data is requested
-    }
-
-    @Override
-    public void onListFragmentInteraction(BCastRecvData item) {
-        //TODO do something when the broadcast receiver data is requested
-    }
-
-    @Override
-    public void onBackPressed() {
-        if (drawer.isDrawerOpen(GravityCompat.START)) {
-            drawer.closeDrawer(GravityCompat.START);
-        } else {
-            super.onBackPressed();
-        }
-    }
-
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        if (requestCode == MithrilApplication.USER_CONSENT_RECEIVED_REQUEST_CODE) {
-            if (resultCode == Activity.RESULT_OK) {
-                startMainActivityTasks();
-            } else {
-                finish();
-                /*
-                 * We did not get the consent, perhaps we should finish?
-                 * Something is obviously wrong!
-                 * We should never reach this state, ever...
-                 */
-            }
-        }
-    }
-
     private void copyAssets(File parent, String child) {
         File file = new File(parent, child);
 
@@ -565,5 +477,95 @@ public class MainActivity extends AppCompatActivity
 
     private boolean isContextInfoSet() {
         return sharedPreferences.getBoolean(MithrilApplication.getPrefAllDoneKey(), false);
+    }
+
+    @Override
+    public void onListFragmentInteraction(AppData item) {
+        //TODO Do something with the App selected
+        Intent intent = new Intent(this, ViewAppDetailsActivity.class);
+        intent.putExtra(MithrilApplication.getPrefKeyAppPkgName(), item.getPackageName());
+        startActivity(intent);
+    }
+
+    @Override
+    public void onListFragmentInteraction(Violation item) {
+        //TODO Do something with the Violation selected
+        violationItemSelected = item;
+    }
+
+    @Override
+    public void onListFragmentLongInteraction(List<AppData> items) {
+        //TODO Do something with the Apps selected
+        appDataItemsSelected = items;
+    }
+
+    @Override
+    public void onFragmentInteraction(Uri uri) {
+        //TODO do something when the reload data fragment is interacted with
+    }
+
+    @Override
+    public void onListFragmentInteraction(PermData item) {
+        //TODO do something when the permission data is requested - I have an idea. Why don't you launch a list of permissions that are being used by apps.
+    }
+
+    @Override
+    public void onListFragmentInteraction(ServData item) {
+        //TODO do something when the service data is requested - I have an idea. Why don't you launch a list of services that are being used by apps.
+    }
+
+    @Override
+    public void onListFragmentInteraction(ContentProvData item) {
+        //TODO do something when the content provider data is requested
+    }
+
+    @Override
+    public void onListFragmentInteraction(BCastRecvData item) {
+        //TODO do something when the broadcast receiver data is requested
+    }
+
+    @Override
+    public void onBackPressed() {
+        if (drawer.isDrawerOpen(GravityCompat.START)) {
+            drawer.closeDrawer(GravityCompat.START);
+        } else {
+            super.onBackPressed();
+        }
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (requestCode == MithrilApplication.ACTIVITY_RESULT_CODE_USER_CONSENT_RECEIVED) {
+            if (resultCode == Activity.RESULT_OK) {
+                startMainActivityTasks();
+            } else {
+                PermissionHelper.quitMithril(this);
+                finish();
+                /*
+                 * We did not get the consent, perhaps we should finish?
+                 * Something is obviously wrong!
+                 * We should never reach this state, ever...
+                 */
+            }
+        }
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, String permissions[], int[] grantResults) {
+        switch (requestCode) {
+            case MithrilApplication.PERMISSION_REQUEST_CODE_ACCESS_FINE_LOCATION: {
+                // If request is cancelled, the result arrays are empty.
+                if (grantResults.length < 0
+                        && grantResults[0] == PackageManager.PERMISSION_DENIED) {
+                    // permission denied, boo! Disable the
+                    // functionality that depends on this permission.
+                    PermissionHelper.quitMithril(this);
+                } else {
+                    startService(new Intent(this, LocationUpdateService.class));
+                }
+            }
+            // other 'case' lines to check for other
+            // permissions this app might request
+        }
     }
 }
