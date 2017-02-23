@@ -189,11 +189,7 @@ public class MainActivity extends AppCompatActivity
             startService(new Intent(this, AppLaunchDetectorService.class));
     }
 
-    private void initViews() {
-        setContentView(R.layout.activity_main);
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar_main);
-        setSupportActionBar(toolbar);
-
+    private void showAgreementDownloadedSnackbar() {
         if (sharedPreferences.getBoolean(MithrilApplication.getPrefShouldShowAgreementSnackbar(), true)) {
             if (isAgreementDownloaded()) {
                 CoordinatorLayout mainCoordinatorLayoutView = (CoordinatorLayout) findViewById(R.id.main_coordinator_layout);
@@ -203,6 +199,16 @@ public class MainActivity extends AppCompatActivity
                 editor.apply();
             }
         }
+    }
+
+    private void initViews() {
+        setContentView(R.layout.activity_main);
+        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar_main);
+        setSupportActionBar(toolbar);
+
+        //If we are here, we have usage stats permission which means all asynchronous tasks are complete. User is on main screen and we may show the snackbar, once.
+        if (!PermissionHelper.needsUsageStatsPermission(this))
+            showAgreementDownloadedSnackbar();
 
         fab = (FloatingActionButton) findViewById(R.id.fab_main);
         fab.setOnClickListener(new View.OnClickListener() {

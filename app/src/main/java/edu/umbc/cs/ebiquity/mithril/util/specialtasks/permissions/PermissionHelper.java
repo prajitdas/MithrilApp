@@ -89,7 +89,7 @@ public class PermissionHelper {
         return false;
     }
 
-    private static boolean needsUsageStatsPermission(Context context) {
+    public static boolean needsUsageStatsPermission(Context context) {
         return postLollipop() && !hasUsageStatsPermission(context);
     }
 
