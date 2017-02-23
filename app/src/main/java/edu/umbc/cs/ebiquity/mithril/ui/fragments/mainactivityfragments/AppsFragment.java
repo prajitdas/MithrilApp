@@ -171,7 +171,7 @@ public class AppsFragment extends Fragment {
         List<AppData> tempList = mithrilDBHelper.findAllApps(mithrilDB);
         SharedPreferences.Editor editor = view.getContext().getSharedPreferences(MithrilApplication.getSharedPreferencesName(), Context.MODE_PRIVATE).edit();
         editor.putInt(MithrilApplication.getPrefKeyAppCount(), tempList.size());
-        editor.commit();
+        editor.apply();
         for (AppData app : tempList)
             appMetadataMap.put(app.getPackageName(), app);
     }

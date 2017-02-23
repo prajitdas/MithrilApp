@@ -169,6 +169,10 @@ public class MainActivity extends AppCompatActivity
          * If the user has already consented, we just go to the MainActivity, or else we are stuck here!
          */
         sharedPreferences = getApplicationContext().getSharedPreferences(MithrilApplication.getSharedPreferencesName(), Context.MODE_PRIVATE);
+        if (sharedPreferences.getBoolean(MithrilApplication.getPrefKeyUserDeniedPermissions(), false)) {
+            PermissionHelper.quitMithril(this);
+            finish();
+        }
         if (sharedPreferences.getString(MithrilApplication.getPrefKeyUserConsent(), null) == null) {
             Intent consentActivity = new Intent(getApplicationContext(), UserAgreementActivity.class);
             startActivityForResult(consentActivity, MithrilApplication.ACTIVITY_RESULT_CODE_USER_CONSENT_RECEIVED);
@@ -190,12 +194,12 @@ public class MainActivity extends AppCompatActivity
     }
 
     private void showAgreementDownloadedSnackbar() {
-        if (sharedPreferences.getBoolean(MithrilApplication.getPrefShouldShowAgreementSnackbar(), true)) {
+        if (sharedPreferences.getBoolean(MithrilApplication.getPrefKeyShouldShowAgreementSnackbar(), true)) {
             if (isAgreementDownloaded()) {
                 CoordinatorLayout mainCoordinatorLayoutView = (CoordinatorLayout) findViewById(R.id.main_coordinator_layout);
                 Snackbar.make(mainCoordinatorLayoutView, R.string.agreement_copied, Snackbar.LENGTH_LONG).setAction(R.string.okay, null).show();
                 SharedPreferences.Editor editor = this.getSharedPreferences(MithrilApplication.getSharedPreferencesName(), Context.MODE_PRIVATE).edit();
-                editor.putBoolean(MithrilApplication.getPrefShouldShowAgreementSnackbar(), false);
+                editor.putBoolean(MithrilApplication.getPrefKeyShouldShowAgreementSnackbar(), false);
                 editor.apply();
             }
         }
@@ -531,7 +535,7 @@ public class MainActivity extends AppCompatActivity
                 startMainActivityTasks();
             } else {
                 PermissionHelper.quitMithril(this);
-//                finish();
+                finish();
                 /*
                  * We did not get the consent, perhaps we should finish?
                  * Something is obviously wrong!

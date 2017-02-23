@@ -262,7 +262,7 @@ public class ShowUserAgreementActivity extends AppCompatActivity {
         mCurrentPage = mPdfRenderer.openPage(index);
         SharedPreferences.Editor editor = this.getSharedPreferences(MithrilApplication.getSharedPreferencesName(), Context.MODE_PRIVATE).edit();
         editor.putInt(MithrilApplication.getPrefKeyUserAgreementPageNumber(), index);
-        editor.commit();
+        editor.apply();
         // Important: the destination bitmap must be ARGB (not RGB).
         Bitmap bitmap = Bitmap.createBitmap(
                 mCurrentPage.getWidth(),

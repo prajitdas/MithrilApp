@@ -176,7 +176,7 @@ public class ViolationDetector {
 //                        editor.putString(MithrilApplication.getPrefKeyAppPkgName(), currentPackageName);
 //                        editor.putString(MithrilApplication.getPrefKeyCurrentLocation(), "Work");
 //                        editor.putString(MithrilApplication.getPrefKeyCurrentTime(), "Lunch");
-////                        editor.commit();
+////                        editor.apply();
 ////                        Toast.makeText(context, "Rule 2 violation detected!", Toast.LENGTH_LONG).show();
 //                        Log.d(MithrilApplication.getDebugTag(), "Rule 2 violation detected!");
 //                    }
@@ -187,7 +187,7 @@ public class ViolationDetector {
 //                    if (currentPackageName.equals("oliver.ehrenmueller.dbadmin")) {
 //                        editor.putString(MithrilApplication.getPrefKeyAppPkgName(), currentPackageName);
 //                        editor.putString(MithrilApplication.getPrefKeyCurrentLocation(), "Work");
-////                editor.commit();
+////                editor.apply();
 ////                        Toast.makeText(context, "Rule 3 violation detected!", Toast.LENGTH_LONG).show();
 //                        Log.d(MithrilApplication.getDebugTag(), "Rule 2 violation detected!");
 //                    }
@@ -199,7 +199,7 @@ public class ViolationDetector {
 ////                Toast.makeText(context, "All good!", Toast.LENGTH_LONG).show();
 ////            }
 //
-//                editor.commit();
+//                editor.apply();
 //            }
         }
         mithrilDB.close();

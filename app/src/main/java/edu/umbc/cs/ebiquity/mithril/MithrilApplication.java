@@ -91,6 +91,8 @@ public class MithrilApplication extends Application {
     private static final String LOG_INTENT = "android.intent.category.LAUNCHER";
     private static final String BROADCAST_INTENT_COMMAND_APP = "edu.umbc.ebiquity.mithril.command.intent.action.DATA_REQUEST";
     private static final String SHARED_PREFERENCES_NAME = "edu.umbc.cs.ebiquity.mithril.mithrilappmanager";
+
+    //Preference keys
     private static final String PREF_KEY_CURRENT_TIME = "time";
     private static final String PREF_KEY_CURRENT_LOCATION = "currloc";
     private static final String PREF_KEY_LOCATION = "location";
@@ -126,9 +128,10 @@ public class MithrilApplication extends Application {
     private static final String PREF_SATURDAY = "Saturday";
     private static final String PREF_SUNDAY = "Sunday";
 
-    private static final String PREF_SHOULD_SHOW_AGREEMENT_SNACKBAR = "shouldShowAgreementSnackbar";
     //End of preferences.xml
 
+    private static final String PREF_KEY_USER_DENIED_PERMISSIONS = "userDeniedPermissions";
+    private static final String PREF_KEY_SHOULD_SHOW_AGREEMENT_SNACKBAR = "shouldShowAgreementSnackbar";
     private static final String PREF_KEY_APP_LAUNCH_MONITORING_SERVICE_STATE = "appLaunchMonitoringServiceState";
     private static final String PREF_KEY_LOCATION_UPDATE_SERVICE_STATE = "locationUpdateServiceState";
     private static final String PREF_KEY_ALL_APPS_DISPLAY = "allApps";
@@ -923,8 +926,12 @@ public class MithrilApplication extends Application {
         return PREF_ALL_DONE_KEY;
     }
 
-    public static String getPrefShouldShowAgreementSnackbar() {
-        return PREF_SHOULD_SHOW_AGREEMENT_SNACKBAR;
+    public static String getPrefKeyShouldShowAgreementSnackbar() {
+        return PREF_KEY_SHOULD_SHOW_AGREEMENT_SNACKBAR;
+    }
+
+    public static String getPrefKeyUserDeniedPermissions() {
+        return PREF_KEY_USER_DENIED_PERMISSIONS;
     }
 
     public static String getLauncherName(Context context) {

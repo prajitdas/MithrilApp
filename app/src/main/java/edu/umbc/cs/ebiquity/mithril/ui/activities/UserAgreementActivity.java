@@ -82,7 +82,7 @@ public class UserAgreementActivity extends AppCompatActivity {
             public void onClick(View v) {
                 SharedPreferences.Editor editor = v.getContext().getSharedPreferences(MithrilApplication.getSharedPreferencesName(), Context.MODE_PRIVATE).edit();
                 editor.putString(MithrilApplication.getPrefKeyUserConsent(), "agreed");
-                editor.commit();
+                editor.apply();
                 // User has agreed, ask for the other permissions
                 initHousekeepingTasks();
             }
@@ -128,6 +128,10 @@ public class UserAgreementActivity extends AppCompatActivity {
     }
 
     private void resultCanceled() {
+        SharedPreferences.Editor editor = this.getSharedPreferences(MithrilApplication.getSharedPreferencesName(), Context.MODE_PRIVATE).edit();
+        editor.putBoolean(MithrilApplication.getPrefKeyUserDeniedPermissions(), true);
+        editor.apply();
+
         Intent returnIntent = new Intent();
         setResult(Activity.RESULT_CANCELED, returnIntent);
         finish();
