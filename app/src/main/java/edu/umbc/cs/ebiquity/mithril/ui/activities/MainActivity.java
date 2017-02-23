@@ -169,10 +169,20 @@ public class MainActivity extends AppCompatActivity
          * If the user has already consented, we just go to the MainActivity, or else we are stuck here!
          */
         sharedPreferences = getApplicationContext().getSharedPreferences(MithrilApplication.getSharedPreferencesName(), Context.MODE_PRIVATE);
+
+        //Checking if we got all the necessary permissions, if we didn't we allow the user to uninstall the app.
         if (sharedPreferences.getBoolean(MithrilApplication.getPrefKeyUserDeniedPermissions(), false)) {
             PermissionHelper.quitMithril(this);
             finish();
         }
+
+        if (sharedPreferences.getBoolean(MithrilApplication.getPrefKeyUserDeniedUsageStatsPermissions(), false)) {
+            if (PermissionHelper.needsUsageStatsPermission(this)) {
+                PermissionHelper.quitMithril(this, "I need the " + Manifest.permission.PACKAGE_USAGE_STATS + " permission for app functionality. Please enable in settings and relaunch me...");
+                finish();
+            }
+        }
+
         if (sharedPreferences.getString(MithrilApplication.getPrefKeyUserConsent(), null) == null) {
             Intent consentActivity = new Intent(getApplicationContext(), UserAgreementActivity.class);
             startActivityForResult(consentActivity, MithrilApplication.ACTIVITY_RESULT_CODE_USER_CONSENT_RECEIVED);

@@ -130,6 +130,7 @@ public class MithrilApplication extends Application {
 
     //End of preferences.xml
 
+    private static final String PREF_KEY_USER_DENIED_USAGE_STATS_PERMISSIONS = "userDeniedUsageStatsPermissions";
     private static final String PREF_KEY_USER_DENIED_PERMISSIONS = "userDeniedPermissions";
     private static final String PREF_KEY_SHOULD_SHOW_AGREEMENT_SNACKBAR = "shouldShowAgreementSnackbar";
     private static final String PREF_KEY_APP_LAUNCH_MONITORING_SERVICE_STATE = "appLaunchMonitoringServiceState";
@@ -932,6 +933,10 @@ public class MithrilApplication extends Application {
 
     public static String getPrefKeyUserDeniedPermissions() {
         return PREF_KEY_USER_DENIED_PERMISSIONS;
+    }
+
+    public static String getPrefKeyUserDeniedUsageStatsPermissions() {
+        return PREF_KEY_USER_DENIED_USAGE_STATS_PERMISSIONS;
     }
 
     public static String getLauncherName(Context context) {

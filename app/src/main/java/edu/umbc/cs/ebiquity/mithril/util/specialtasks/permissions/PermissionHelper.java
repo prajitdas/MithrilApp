@@ -8,6 +8,7 @@ import android.app.AppOpsManager;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Build;
@@ -20,7 +21,9 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+import edu.umbc.cs.ebiquity.mithril.MithrilApplication;
 import edu.umbc.cs.ebiquity.mithril.R;
+import edu.umbc.cs.ebiquity.mithril.ui.activities.MainActivity;
 
 /**
  * Created by Prajit on 11/21/2016.
@@ -35,6 +38,13 @@ public class PermissionHelper {
 
     public static void quitMithril(Context context) {
         Toast.makeText(context, "You denied permissions I desperately needed, please uninstall me :(", Toast.LENGTH_LONG).show();
+        context.startActivity(new Intent(
+                Intent.ACTION_DELETE, Uri.parse(
+                "package:" + context.getPackageName())));
+    }
+
+    public static void quitMithril(Context context, String message) {
+        Toast.makeText(context, message, Toast.LENGTH_LONG).show();
         context.startActivity(new Intent(
                 Intent.ACTION_DELETE, Uri.parse(
                 "package:" + context.getPackageName())));
@@ -80,8 +90,10 @@ public class PermissionHelper {
                     })
                     .setNegativeButton(R.string.dialog_resp_deny, new DialogInterface.OnClickListener() {
                         public void onClick(DialogInterface dialog, int id) {
-                            Toast.makeText(context, "You denied " + Manifest.permission.PACKAGE_USAGE_STATS + " permission. This might disrupt some functionality!", Toast.LENGTH_SHORT).show();
-                            android.os.Process.killProcess(android.os.Process.myPid());
+                            SharedPreferences.Editor editor = context.getSharedPreferences(MithrilApplication.getSharedPreferencesName(), Context.MODE_PRIVATE).edit();
+                            editor.putBoolean(MithrilApplication.getPrefKeyUserDeniedUsageStatsPermissions(), true);
+                            editor.apply();
+                            context.startActivity(new Intent(context, MainActivity.class));
                         }
                     });
             AlertDialog alertDialog = builder.create();
