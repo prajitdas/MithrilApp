@@ -12,7 +12,6 @@ import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.Button;
-import android.widget.Toast;
 
 import java.util.List;
 
@@ -174,7 +173,6 @@ public class UserAgreementActivity extends AppCompatActivity {
                         if (grantResults[i] == PackageManager.PERMISSION_DENIED) {
                             // permission denied, boo! Disable the
                             // functionality that depends on this permission.
-                            Toast.makeText(this, "You denied some permissions. This might disrupt some functionality!", Toast.LENGTH_SHORT).show();
                             resultCanceled();
                         } else {
                             resultOkay();

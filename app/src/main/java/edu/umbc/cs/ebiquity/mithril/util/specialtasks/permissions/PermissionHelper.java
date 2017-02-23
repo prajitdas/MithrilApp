@@ -34,6 +34,7 @@ public class PermissionHelper {
     );
 
     public static void quitMithril(Context context) {
+        Toast.makeText(context, "You denied permissions I desperately needed, please uninstall me :(", Toast.LENGTH_LONG).show();
         context.startActivity(new Intent(
                 Intent.ACTION_DELETE, Uri.parse(
                 "package:" + context.getPackageName())));
