@@ -137,8 +137,7 @@ public class MainActivity extends AppCompatActivity
             else
                 loadContentProvidersFragment();
         } else if (id == R.id.nav_exit) {
-            PermissionHelper.quitMithril(this);
-//            finish();
+            PermissionHelper.quitMithril(this, "Bye! Thanks for helping with our survey...");
         } else if (id == R.id.nav_settings) {
             loadPrefsFragment();
         } else if (id == R.id.nav_about) {
@@ -170,19 +169,6 @@ public class MainActivity extends AppCompatActivity
          */
         sharedPreferences = getApplicationContext().getSharedPreferences(MithrilApplication.getSharedPreferencesName(), Context.MODE_PRIVATE);
 
-        //Checking if we got all the necessary permissions, if we didn't we allow the user to uninstall the app.
-        if (sharedPreferences.getBoolean(MithrilApplication.getPrefKeyUserDeniedPermissions(), false)) {
-            PermissionHelper.quitMithril(this);
-            finish();
-        }
-
-        if (sharedPreferences.getBoolean(MithrilApplication.getPrefKeyUserDeniedUsageStatsPermissions(), false)) {
-            if (PermissionHelper.needsUsageStatsPermission(this)) {
-                PermissionHelper.quitMithril(this, "I need the " + Manifest.permission.PACKAGE_USAGE_STATS + " permission for app functionality. Please enable in settings and relaunch me...");
-                finish();
-            }
-        }
-
         if (sharedPreferences.getString(MithrilApplication.getPrefKeyUserConsent(), null) == null) {
             Intent consentActivity = new Intent(getApplicationContext(), UserAgreementActivity.class);
             startActivityForResult(consentActivity, MithrilApplication.ACTIVITY_RESULT_CODE_USER_CONSENT_RECEIVED);
@@ -191,6 +177,16 @@ public class MainActivity extends AppCompatActivity
     }
 
     private void startMainActivityTasks() {
+        //Checking if we got all the necessary permissions, if we didn't we allow the user to uninstall the app.
+        if (sharedPreferences.getBoolean(MithrilApplication.getPrefKeyUserDeniedPermissions(), false)) {
+            PermissionHelper.quitMithril(this);
+            finish();
+        }
+
+        //Agreement has not been copied to downloads folder yet, do it now
+        if (!isAgreementDownloaded())
+            copyAssets(downloadsDirectory, agreementFile);
+
         initHouseKeepingTasks();
         initViews();
         defaultFragmentLoad();
@@ -199,8 +195,14 @@ public class MainActivity extends AppCompatActivity
     private void initHouseKeepingTasks() {
         if (PermissionHelper.isPermissionGranted(this, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED)
             startService(new Intent(this, LocationUpdateService.class));
-        if (PermissionHelper.getUsageStatsPermission(this))
-            startService(new Intent(this, AppLaunchDetectorService.class));
+        if (sharedPreferences.getBoolean(MithrilApplication.getPrefKeyUserDeniedUsageStatsPermissions(), false)) {
+            if (PermissionHelper.needsUsageStatsPermission(this)) {
+                PermissionHelper.quitMithril(this, "The " + Manifest.permission.PACKAGE_USAGE_STATS + " permission is required for app functionality. Please enable in settings and relaunch me...");
+                finish();
+            } else
+                startService(new Intent(this, AppLaunchDetectorService.class));
+        } else
+            PermissionHelper.getUsageStatsPermission(this);
     }
 
     private void showAgreementDownloadedSnackbar() {
@@ -539,9 +541,6 @@ public class MainActivity extends AppCompatActivity
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (requestCode == MithrilApplication.ACTIVITY_RESULT_CODE_USER_CONSENT_RECEIVED) {
             if (resultCode == Activity.RESULT_OK) {
-                //Agreement has not been copied to downloads folder yet, do it now
-                if (!isAgreementDownloaded())
-                    copyAssets(downloadsDirectory, agreementFile);
                 startMainActivityTasks();
             } else {
                 PermissionHelper.quitMithril(this);

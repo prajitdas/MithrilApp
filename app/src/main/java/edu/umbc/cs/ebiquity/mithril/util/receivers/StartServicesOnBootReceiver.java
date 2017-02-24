@@ -23,7 +23,7 @@ public class StartServicesOnBootReceiver extends BroadcastReceiver {
         if (sharedPref.getBoolean(MithrilApplication.getPrefKeyUserAgreementCopied(), false)) {
             if (intent.getAction().equals(Intent.ACTION_BOOT_COMPLETED)) {
                 if (PermissionHelper.isExplicitPermissionAcquisitionNecessary()) {
-                    if (PermissionHelper.getUsageStatsPermission(context))
+                    if (!PermissionHelper.needsUsageStatsPermission(context))
                         context.startService(new Intent(context, AppLaunchDetectorService.class));
                     if (ContextCompat.checkSelfPermission(context, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
                         boolean updatesRequested = false;

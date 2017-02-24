@@ -23,7 +23,6 @@ import java.util.List;
 
 import edu.umbc.cs.ebiquity.mithril.MithrilApplication;
 import edu.umbc.cs.ebiquity.mithril.R;
-import edu.umbc.cs.ebiquity.mithril.ui.activities.MainActivity;
 
 /**
  * Created by Prajit on 11/21/2016.
@@ -92,8 +91,10 @@ public class PermissionHelper {
                         public void onClick(DialogInterface dialog, int id) {
                             SharedPreferences.Editor editor = context.getSharedPreferences(MithrilApplication.getSharedPreferencesName(), Context.MODE_PRIVATE).edit();
                             editor.putBoolean(MithrilApplication.getPrefKeyUserDeniedUsageStatsPermissions(), true);
-                            editor.apply();
-                            context.startActivity(new Intent(context, MainActivity.class));
+                            // editor.apply(); //Apply method is asynchronous.
+                            // It does not get stored if we kill the process right after. So only in this place have we used editor.commit();
+                            editor.commit();
+                            android.os.Process.killProcess(android.os.Process.myPid());
                         }
                     });
             AlertDialog alertDialog = builder.create();

@@ -25,7 +25,7 @@ import edu.umbc.cs.ebiquity.mithril.util.specialtasks.permissions.PermissionHelp
  */
 public class LollipopDetector implements Detector {
     public String getForegroundApp(Context context) {
-        if (!PermissionHelper.getUsageStatsPermission(context))
+        if (!PermissionHelper.needsUsageStatsPermission(context))
             return null;
 
         String currentPackageName = null;
