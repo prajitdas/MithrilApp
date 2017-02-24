@@ -92,6 +92,8 @@ public class MithrilApplication extends Application {
     private static final String BROADCAST_INTENT_COMMAND_APP = "edu.umbc.ebiquity.mithril.command.intent.action.DATA_REQUEST";
     private static final String SHARED_PREFERENCES_NAME = "edu.umbc.cs.ebiquity.mithril.mithrilappmanager";
 
+    private static final String BACK_PRESSED_USER_AGREEMENT_SCREEN = "backPressed";
+
     //Preference keys
     private static final String PREF_KEY_CURRENT_TIME = "time";
     private static final String PREF_KEY_CURRENT_LOCATION = "currloc";
@@ -937,6 +939,10 @@ public class MithrilApplication extends Application {
 
     public static String getPrefKeyUserDeniedUsageStatsPermissions() {
         return PREF_KEY_USER_DENIED_USAGE_STATS_PERMISSIONS;
+    }
+
+    public static String getBackPressedUserAgreementScreen() {
+        return BACK_PRESSED_USER_AGREEMENT_SCREEN;
     }
 
     public static String getLauncherName(Context context) {

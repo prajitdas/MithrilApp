@@ -543,13 +543,18 @@ public class MainActivity extends AppCompatActivity
             if (resultCode == Activity.RESULT_OK) {
                 startMainActivityTasks();
             } else {
-                PermissionHelper.quitMithril(this);
-                finish();
-                /*
-                 * We did not get the consent, perhaps we should finish?
-                 * Something is obviously wrong!
-                 * We should never reach this state, ever...
-                 */
+                // User pressed back on agreement screen!
+                if (data.getBooleanExtra(MithrilApplication.getBackPressedUserAgreementScreen(), false))
+                    finish();
+                else {
+                    PermissionHelper.quitMithril(this);
+                    finish();
+                    /*
+                     * We did not get the consent, perhaps we should finish?
+                     * Something is obviously wrong!
+                     * We should never reach this state, ever...
+                     */
+                }
             }
         }
     }

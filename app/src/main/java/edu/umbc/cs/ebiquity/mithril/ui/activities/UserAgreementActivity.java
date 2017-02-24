@@ -42,6 +42,14 @@ public class UserAgreementActivity extends AppCompatActivity {
         initViews();
     }
 
+    @Override
+    public void onBackPressed() {
+        Intent returnIntent = new Intent();
+        returnIntent.putExtra(MithrilApplication.getBackPressedUserAgreementScreen(), true);
+        setResult(Activity.RESULT_CANCELED, returnIntent);
+        finish();
+    }
+
     private void initViews() {
         setContentView(R.layout.activity_user_agreement);
         mShowUserAgreementBtn = (Button) findViewById(R.id.showUserAgreementBtn);
