@@ -179,8 +179,10 @@ public class MainActivity extends AppCompatActivity
     private void startMainActivityTasks() {
         //Checking if we got all the necessary permissions, if we didn't we allow the user to uninstall the app.
         if (sharedPreferences.getBoolean(MithrilApplication.getPrefKeyUserDeniedPermissions(), false)) {
-            PermissionHelper.quitMithril(this);
-            finish();
+            if (!PermissionHelper.isAllRequiredPermissionsGranted(this)) {
+                PermissionHelper.quitMithril(this);
+                finish();
+            }
         }
 
         //Agreement has not been copied to downloads folder yet, do it now
