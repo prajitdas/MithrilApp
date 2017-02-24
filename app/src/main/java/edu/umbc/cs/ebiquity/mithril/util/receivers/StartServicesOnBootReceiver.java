@@ -39,9 +39,10 @@ public class StartServicesOnBootReceiver extends BroadcastReceiver {
                         }
                     }
                 }
-            } else {
-//                Log.e(MithrilApplication.getDebugTag(), "Received unexpected intent " + intent.toString());
             }
+//            } else {
+//                Log.e(MithrilApplication.getDebugTag(), "Received unexpected intent " + intent.toString());
+//            }
         }
     }
 }
