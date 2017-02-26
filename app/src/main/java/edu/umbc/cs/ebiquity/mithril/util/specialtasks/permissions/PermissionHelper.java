@@ -68,7 +68,6 @@ public class PermissionHelper {
     }
 
     public static boolean isAllRequiredPermissionsGranted(Context context) {
-        List<String> permissionsThatCanBeRequested = new ArrayList<String>();
         for (String permission : getPermissionsRequired())
             if (isPermissionGranted(context, permission) == PackageManager.PERMISSION_DENIED)
                 return false;
