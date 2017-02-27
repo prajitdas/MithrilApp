@@ -1679,10 +1679,8 @@ public class MithrilDBHelper extends SQLiteOpenHelper {
 	private void loadAndroidPermissionsIntoDB(SQLiteDatabase db) {
 //		Log.d(MithrilApplication.getDebugTag(), "I came to loadAndroidPermissionsIntoDB");
         PackageManager packageManager = getContext().getPackageManager();
-        int flags = PackageManager.GET_META_DATA |
-                PackageManager.GET_PERMISSIONS;
 
-		List<PermissionGroupInfo> permisisonGroupInfoList = packageManager.getAllPermissionGroups(flags);
+        List<PermissionGroupInfo> permisisonGroupInfoList = packageManager.getAllPermissionGroups(PackageManager.GET_META_DATA);
 //		Log.d(MithrilApplication.getDebugTag(), "Size is: " + Integer.toString(permisisonGroupInfoList.size()));
         permisisonGroupInfoList.add(null);
 
