@@ -1,6 +1,6 @@
 package edu.umbc.cs.ebiquity.mithril.util.specialtasks.detect.runningapps;
 
-/**
+/*
  * Created by prajit on 11/20/16.
  */
 
@@ -19,11 +19,11 @@ import edu.umbc.cs.ebiquity.mithril.util.specialtasks.detect.policyconflicts.Vio
 import edu.umbc.cs.ebiquity.mithril.util.specialtasks.errorsnexceptions.CWAException;
 import edu.umbc.cs.ebiquity.mithril.util.specialtasks.permissions.PermissionHelper;
 
-/**
+/*
  * Taken from:
  * https://gist.github.com/plateaukao/011fa857d1919f2bbfdc
  */
-public class AppLaunchDetector implements Detector {
+public class AppLaunchDetector {
     public String getForegroundApp(Context context) {
         if (!PermissionHelper.needsUsageStatsPermission(context))
             return null;
@@ -33,15 +33,15 @@ public class AppLaunchDetector implements Detector {
         long time = System.currentTimeMillis();
         UsageStatsManager usageStatsManager = (UsageStatsManager) context.getSystemService(Service.USAGE_STATS_SERVICE);
 
-        /**
+        /*
          * Technique from: https://github.com/ricvalerio/foregroundappchecker
          * On Nexus 5x it detects foreground launcher events after the app event!!
          */
         if (MithrilApplication.getDeviceName().equals("LGE Nexus 5")) {
             UsageEvents usageEvents = usageStatsManager.queryEvents(time - 1000 * 3600, time);
-            SortedMap<Long, UsageEvents.Event> runningTasks = new TreeMap<Long, UsageEvents.Event>();
+            SortedMap<Long, UsageEvents.Event> runningTasks = new TreeMap<>();
             if (usageEvents != null) {
-                /**
+                /*
                  * getNextEvent
                  * Added in API level 21
                  * boolean getNextEvent (UsageEvents.Event eventOut)
@@ -63,12 +63,12 @@ public class AppLaunchDetector implements Detector {
                 }
             }
         } else {
-            /**
+            /*
              * Previous technique did not work on Nexus 5(returns null on nexus 5 with Android 6.0.1 cm13.0), worked on Nexus 5X
              */
             List<UsageStats> stats = usageStatsManager.queryUsageStats(UsageStatsManager.INTERVAL_DAILY, time - 1000 * 3600, time);
             if (stats != null) {
-                SortedMap<Long, UsageStats> runningTasks = new TreeMap<Long, UsageStats>();
+                SortedMap<Long, UsageStats> runningTasks = new TreeMap<>();
                 for (UsageStats usageStats : stats) {
                     runningTasks.put(usageStats.getLastTimeUsed(), usageStats);
                 }
@@ -80,14 +80,16 @@ public class AppLaunchDetector implements Detector {
             }
         }
 
-        if (currentPackageName.equals(MithrilApplication.getLauncherName(context)) || currentPackageName.equals(context.getPackageName()))
-            currentPackageName = null;
-        else {
-            try {
-                ViolationDetector.detectViolation(context, currentPackageName);
-            } catch (CWAException cwaException) {
-                //Something is wrong!!!! We have a Closed World Assumption we cannot have deny rules...
-//                Log.e(MithrilApplication.getDebugTag(), "Serious error! DB contains deny rules. This violates our CWA");
+        if (currentPackageName != null) {
+            if (currentPackageName.equals(MithrilApplication.getLauncherName(context)) || currentPackageName.equals(context.getPackageName()))
+                currentPackageName = null;
+            else {
+                try {
+                    ViolationDetector.detectViolation(context, currentPackageName);
+                } catch (CWAException cwaException) {
+                    //Something is wrong!!!! We have a Closed World Assumption we cannot have deny rules...
+                    //                Log.e(MithrilApplication.getDebugTag(), "Serious error! DB contains deny rules. This violates our CWA");
+                }
             }
         }
         return currentPackageName;
