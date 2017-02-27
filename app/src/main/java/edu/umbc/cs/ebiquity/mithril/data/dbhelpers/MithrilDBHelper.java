@@ -294,7 +294,6 @@ public class MithrilDBHelper extends SQLiteOpenHelper {
             POLRULNEARA + " TEXT DEFAULT NULL, " +
             POLRULIDENT + " TEXT DEFAULT NULL, " +
             POLRULREQID + " INTEGER NOT NULL, " +
-            POLRULACTIN + " INTEGER NOT NULL, " +
             POLRULRESID + " INTEGER DEFAULT NULL, " +
             "FOREIGN KEY(requesters_id) REFERENCES requesters(id)" +
             ");";
