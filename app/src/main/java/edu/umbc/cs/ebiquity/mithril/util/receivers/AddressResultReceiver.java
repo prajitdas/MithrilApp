@@ -10,6 +10,7 @@ import android.os.ResultReceiver;
 import android.util.Log;
 
 import com.google.gson.Gson;
+import com.google.gson.JsonSyntaxException;
 
 import edu.umbc.cs.ebiquity.mithril.MithrilApplication;
 
@@ -57,8 +58,12 @@ public class AddressResultReceiver extends ResultReceiver {
         // Display the address string
         // or an error message sent from the intent service.
         Gson gson = new Gson();
-        String json = resultData.getString(MithrilApplication.RESULT_DATA_KEY);
-        mAddressOutput = gson.fromJson(json, Address.class);
+        String json = resultData.getString(MithrilApplication.RESULT_DATA_KEY, "");
+        try {
+            mAddressOutput = gson.fromJson(json, Address.class);
+        } catch (JsonSyntaxException e) {
+            Log.d(MithrilApplication.getDebugTag(), e.getMessage());
+        }
 //            displayAddressOutput();
 
         Log.d(MithrilApplication.getDebugTag(), "Prajit error " + resultData.getString(MithrilApplication.ADDRESS_KEY) + mAddressRequested + addressKey + json);
