@@ -218,11 +218,11 @@ public class MainActivity extends AppCompatActivity
                         R.string.agreement_copied,
                         Snackbar.LENGTH_INDEFINITE);
 
-                agreementCopiedSnackbar.setActionTextColor(getResources().getColor(R.color.aliceblue, this.getTheme()));
+                agreementCopiedSnackbar.setActionTextColor(getResources().getColor(R.color.white, this.getTheme()));
 
                 // get snackbar view
                 View snackbarView = agreementCopiedSnackbar.getView();
-                snackbarView.setBackgroundColor(getResources().getColor(R.color.colorButton, this.getTheme()));
+                snackbarView.setBackgroundColor(getResources().getColor(R.color.colorPrimary, this.getTheme()));
 
                 agreementCopiedSnackbar.setAction(R.string.okay,
                         new View.OnClickListener() {
