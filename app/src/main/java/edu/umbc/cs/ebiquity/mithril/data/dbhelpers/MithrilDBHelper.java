@@ -287,9 +287,9 @@ public class MithrilDBHelper extends SQLiteOpenHelper {
     private final static String CREATE_POLICY_RULES_TABLE = "CREATE TABLE " + getPolicyRulesTableName() + " (" +
             POLRULID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
             POLRULNAME + " TEXT NOT NULL, " +
+            POLRULACTIN + " TEXT DEFAULT NULL, " +
             POLRULLOCAT + " TEXT DEFAULT NULL, " +
             POLRULACTIV + " TEXT DEFAULT NULL, " +
-            POLRULTEMPO + " TEXT DEFAULT NULL, " +
             POLRULTEMPO + " TEXT DEFAULT NULL, " +
             POLRULNEARA + " TEXT DEFAULT NULL, " +
             POLRULIDENT + " TEXT DEFAULT NULL, " +
