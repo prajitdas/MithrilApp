@@ -10,10 +10,8 @@ import java.util.Timer;
 import java.util.TimerTask;
 
 import edu.umbc.cs.ebiquity.mithril.MithrilApplication;
+import edu.umbc.cs.ebiquity.mithril.util.specialtasks.detect.runningapps.AppLaunchDetector;
 import edu.umbc.cs.ebiquity.mithril.util.specialtasks.detect.runningapps.Detector;
-import edu.umbc.cs.ebiquity.mithril.util.specialtasks.detect.runningapps.LollipopDetector;
-import edu.umbc.cs.ebiquity.mithril.util.specialtasks.detect.runningapps.PreLollipopDetector;
-import edu.umbc.cs.ebiquity.mithril.util.specialtasks.permissions.PermissionHelper;
 
 public class AppLaunchDetectorService extends Service {
     private Detector detector;
@@ -31,10 +29,10 @@ public class AppLaunchDetectorService extends Service {
     @Override
     public void onCreate() {
         context = this;
-        if (PermissionHelper.postLollipop())
-            detector = new LollipopDetector();
-        else
-            detector = new PreLollipopDetector();
+//        if (PermissionHelper.postLollipop())
+        detector = new AppLaunchDetector();
+//        else
+//            detector = new PreLollipopDetector();
         // cancel if already existed
         if (mTimer != null) {
             mTimer.cancel();

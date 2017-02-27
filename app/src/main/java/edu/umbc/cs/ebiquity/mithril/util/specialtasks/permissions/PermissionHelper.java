@@ -1,7 +1,6 @@
 package edu.umbc.cs.ebiquity.mithril.util.specialtasks.permissions;
 
 import android.Manifest;
-import android.annotation.TargetApi;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.AppOpsManager;
@@ -124,7 +123,6 @@ public class PermissionHelper {
         return mode == AppOpsManager.MODE_ALLOWED;
     }
 
-    @TargetApi(Build.VERSION_CODES.LOLLIPOP)
     private static void requestUsageStatsPermission(Context context) {
         if (!hasUsageStatsPermission(context))
             context.startActivity(new Intent(Settings.ACTION_USAGE_ACCESS_SETTINGS));

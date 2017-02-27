@@ -23,7 +23,7 @@ import edu.umbc.cs.ebiquity.mithril.util.specialtasks.permissions.PermissionHelp
  * Taken from:
  * https://gist.github.com/plateaukao/011fa857d1919f2bbfdc
  */
-public class LollipopDetector implements Detector {
+public class AppLaunchDetector implements Detector {
     public String getForegroundApp(Context context) {
         if (!PermissionHelper.needsUsageStatsPermission(context))
             return null;

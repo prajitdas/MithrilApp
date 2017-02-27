@@ -1,9 +1,7 @@
 package edu.umbc.cs.ebiquity.mithril.ui.adapters;
 
-import android.annotation.TargetApi;
 import android.content.res.Resources;
 import android.graphics.drawable.Drawable;
-import android.os.Build;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -42,15 +40,11 @@ public class ViolationRecyclerViewAdapter extends RecyclerView.Adapter<Violation
         return new ViewHolder(view);
     }
 
-    @TargetApi(Build.VERSION_CODES.LOLLIPOP)
     @Override
     public void onBindViewHolder(final ViewHolder holder, int position) {
         Resources res = view.getContext().getResources();
         Drawable drawable;
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN)
-            drawable = res.getDrawable(R.drawable.ic_launcher, view.getContext().getTheme());
-        else
-            drawable = res.getDrawable(R.drawable.ic_launcher);
+        drawable = res.getDrawable(R.drawable.ic_launcher, view.getContext().getTheme());
 
         holder.mItem = mValues.get(position);
         holder.mViolatingAppIcon.setImageDrawable(drawable);
