@@ -1,6 +1,7 @@
 package edu.umbc.cs.ebiquity.mithril.ui.activities;
 
 import android.Manifest;
+import android.annotation.TargetApi;
 import android.app.Activity;
 import android.app.FragmentManager;
 import android.content.Context;
@@ -10,6 +11,7 @@ import android.content.pm.PackageManager;
 import android.content.res.AssetManager;
 import android.database.sqlite.SQLiteDatabase;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
 import android.support.design.widget.CoordinatorLayout;
@@ -207,11 +209,28 @@ public class MainActivity extends AppCompatActivity
             PermissionHelper.getUsageStatsPermission(this);
     }
 
+    @TargetApi(Build.VERSION_CODES.M)
     private void showAgreementDownloadedSnackbar() {
         if (sharedPreferences.getBoolean(MithrilApplication.getPrefKeyShouldShowAgreementSnackbar(), true)) {
             if (isAgreementDownloaded()) {
                 CoordinatorLayout mainCoordinatorLayoutView = (CoordinatorLayout) findViewById(R.id.main_coordinator_layout);
-                Snackbar.make(mainCoordinatorLayoutView, R.string.agreement_copied, Snackbar.LENGTH_INDEFINITE).setAction(R.string.okay, null).show();
+                Snackbar agreementCopiedSnackbar = Snackbar.make(mainCoordinatorLayoutView,
+                        R.string.agreement_copied,
+                        Snackbar.LENGTH_INDEFINITE);
+
+                agreementCopiedSnackbar.setActionTextColor(getResources().getColor(R.color.aliceblue, this.getTheme()));
+
+                // get snackbar view
+                View snackbarView = agreementCopiedSnackbar.getView();
+                snackbarView.setBackgroundColor(getResources().getColor(R.color.colorButton, this.getTheme()));
+
+                agreementCopiedSnackbar.setAction(R.string.okay,
+                        new View.OnClickListener() {
+                            @Override
+                            public void onClick(View view) {
+                                return;
+                            }
+                        }).show();
                 SharedPreferences.Editor editor = this.getSharedPreferences(MithrilApplication.getSharedPreferencesName(), Context.MODE_PRIVATE).edit();
                 editor.putBoolean(MithrilApplication.getPrefKeyShouldShowAgreementSnackbar(), false);
                 editor.apply();
