@@ -25,6 +25,7 @@ import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.Toast;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -560,20 +561,27 @@ public class MainActivity extends AppCompatActivity
         if (requestCode == MithrilApplication.ACTIVITY_RESULT_CODE_USER_CONSENT_RECEIVED) {
             if (resultCode == Activity.RESULT_OK) {
                 startMainActivityTasks();
-            } else {
-                Bundle returnedData = data.getExtras();
-                // User pressed back on agreement screen!
-                if (returnedData.containsKey(MithrilApplication.getBackPressedUserAgreementScreen()) &&
-                        returnedData.getBoolean(MithrilApplication.getBackPressedUserAgreementScreen(), false))
+            } else if (resultCode == Activity.RESULT_CANCELED) {
+                try {
+                    Bundle returnedData = data.getExtras();
+                    // User pressed back on agreement screen!
+                    if (returnedData.containsKey(MithrilApplication.getBackPressedUserAgreementScreen())) {
+                        if (returnedData.getBoolean(MithrilApplication.getBackPressedUserAgreementScreen(), false))
+                            finish();
+                        else {
+                            PermissionHelper.quitMithril(this);
+                            finish();
+                        /*
+                         * We did not get the consent, perhaps we should finish?
+                         * Something is obviously wrong!
+                         * We should never reach this state, ever...
+                         */
+                        }
+                    }
+                } catch (NullPointerException e) {
+                    Log.d(MithrilApplication.getDebugTag(), "An unexpected end! The Dev will have to look into this. Please report the problem... " + e.getMessage());
+                    Toast.makeText(this, "An unexpected end! The Dev will have to look into this. Please report the problem... " + e.getMessage(), Toast.LENGTH_LONG).show();
                     finish();
-                else {
-                    PermissionHelper.quitMithril(this);
-                    finish();
-                    /*
-                     * We did not get the consent, perhaps we should finish?
-                     * Something is obviously wrong!
-                     * We should never reach this state, ever...
-                     */
                 }
             }
         }
