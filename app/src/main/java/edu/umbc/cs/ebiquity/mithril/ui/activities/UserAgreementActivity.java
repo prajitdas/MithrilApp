@@ -10,6 +10,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 
@@ -48,6 +49,12 @@ public class UserAgreementActivity extends AppCompatActivity {
         returnIntent.putExtra(MithrilApplication.getBackPressedUserAgreementScreen(), true);
         setResult(Activity.RESULT_CANCELED, returnIntent);
         finish();
+    }
+
+    @Override
+    public void onDestroy() {
+        closeDB();
+        super.onDestroy();
     }
 
     private void initViews() {
@@ -145,17 +152,30 @@ public class UserAgreementActivity extends AppCompatActivity {
     }
 
     private void initHousekeepingTasks() {
-        /**
-         * Initiate database creation and default data insertion, happens only once.
-         */
-        mithrilDBHelper = new MithrilDBHelper(this);
-        mithrilDB = mithrilDBHelper.getWritableDatabase();
+        initDB();
 
-        //And close db instance
-        mithrilDB.close();
         if (PermissionHelper.isExplicitPermissionAcquisitionNecessary()) {
             requestAllNecessaryPermissions();
         }
+    }
+
+    private void initDB() {
+        /**
+         * Initiate database creation and default data insertion, happens only once.
+         */
+        try {
+            mithrilDBHelper = new MithrilDBHelper(this);
+            mithrilDB = mithrilDBHelper.getWritableDatabase();
+            //And close db instance
+            mithrilDB.close();
+        } catch (NullPointerException e) {
+            Log.d(MithrilApplication.getDebugTag(), e.getMessage());
+        }
+    }
+
+    private void closeDB(){
+        if(mithrilDB != null)
+            mithrilDB.close();
     }
 
     public void requestAllNecessaryPermissions() {

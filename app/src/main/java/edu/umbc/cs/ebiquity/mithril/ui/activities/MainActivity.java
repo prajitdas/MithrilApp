@@ -76,16 +76,19 @@ public class MainActivity extends AppCompatActivity
 
     private final File downloadsDirectory = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS);
     private final String agreementFile = MithrilApplication.getFlierPdfFileName();
+
     private MithrilDBHelper mithrilDBHelper;
     private SQLiteDatabase mithrilDB;
     private SharedPreferences sharedPreferences;
+
     private Violation violationItemSelected = null;
-    private DrawerLayout drawer;
-    private ActionBarDrawerToggle toggle;
-    private NavigationView navigationView;
     private List<AppData> appDataItemsSelected = null;
     private List<Violation> violationItems;
     private FloatingActionButton fab;
+
+    private DrawerLayout drawer;
+    private ActionBarDrawerToggle toggle;
+    private NavigationView navigationView;
     private View headerView;
 
     @Override
@@ -164,6 +167,12 @@ public class MainActivity extends AppCompatActivity
         getUserConsent();
     }
 
+    @Override
+    public void onDestroy() {
+        closeDB();
+        super.onDestroy();
+    }
+
     private void getUserConsent() {
         /*
          * If the user has already consented, we just go to the MainActivity, or else we are stuck here!
@@ -208,34 +217,6 @@ public class MainActivity extends AppCompatActivity
             PermissionHelper.getUsageStatsPermission(this);
     }
 
-    private void showAgreementDownloadedSnackbar() {
-        if (sharedPreferences.getBoolean(MithrilApplication.getPrefKeyShouldShowAgreementSnackbar(), true)) {
-            if (isAgreementDownloaded()) {
-                CoordinatorLayout mainCoordinatorLayoutView = (CoordinatorLayout) findViewById(R.id.main_coordinator_layout);
-                Snackbar agreementCopiedSnackbar = Snackbar.make(mainCoordinatorLayoutView,
-                        R.string.agreement_copied,
-                        Snackbar.LENGTH_INDEFINITE);
-
-                agreementCopiedSnackbar.setActionTextColor(getResources().getColor(R.color.white, this.getTheme()));
-
-                // get snackbar view
-                View snackbarView = agreementCopiedSnackbar.getView();
-                snackbarView.setBackgroundColor(getResources().getColor(R.color.colorPrimary, this.getTheme()));
-
-                agreementCopiedSnackbar.setAction(R.string.okay,
-                        new View.OnClickListener() {
-                            @Override
-                            public void onClick(View view) {
-                                return;
-                            }
-                        }).show();
-                SharedPreferences.Editor editor = this.getSharedPreferences(MithrilApplication.getSharedPreferencesName(), Context.MODE_PRIVATE).edit();
-                editor.putBoolean(MithrilApplication.getPrefKeyShouldShowAgreementSnackbar(), false);
-                editor.apply();
-            }
-        }
-    }
-
     private void initViews() {
         setContentView(R.layout.activity_main);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar_main);
@@ -264,10 +245,45 @@ public class MainActivity extends AppCompatActivity
         navigationView.setNavigationItemSelectedListener(this);
 
         applyHeaderView();
-        
-        // Let's get the DB instances loaded too
-        mithrilDBHelper = new MithrilDBHelper(this);
-        mithrilDB = mithrilDBHelper.getWritableDatabase();
+        initDB();
+    }
+
+    private void initDB() {
+        try {
+            // Let's get the DB instances loaded too
+            mithrilDBHelper = new MithrilDBHelper(this);
+            mithrilDB = mithrilDBHelper.getWritableDatabase();
+        } catch (NullPointerException e) {
+            Log.d(MithrilApplication.getDebugTag(), e.getMessage());
+        }
+    }
+
+    private void showAgreementDownloadedSnackbar() {
+        if (sharedPreferences.getBoolean(MithrilApplication.getPrefKeyShouldShowAgreementSnackbar(), true)) {
+            if (isAgreementDownloaded()) {
+                CoordinatorLayout mainCoordinatorLayoutView = (CoordinatorLayout) findViewById(R.id.main_coordinator_layout);
+                Snackbar agreementCopiedSnackbar = Snackbar.make(mainCoordinatorLayoutView,
+                        R.string.agreement_copied,
+                        Snackbar.LENGTH_INDEFINITE);
+
+                agreementCopiedSnackbar.setActionTextColor(getResources().getColor(R.color.white, this.getTheme()));
+
+                // get snackbar view
+                View snackbarView = agreementCopiedSnackbar.getView();
+                snackbarView.setBackgroundColor(getResources().getColor(R.color.colorPrimary, this.getTheme()));
+
+                agreementCopiedSnackbar.setAction(R.string.okay,
+                        new View.OnClickListener() {
+                            @Override
+                            public void onClick(View view) {
+                                return;
+                            }
+                        }).show();
+                SharedPreferences.Editor editor = this.getSharedPreferences(MithrilApplication.getSharedPreferencesName(), Context.MODE_PRIVATE).edit();
+                editor.putBoolean(MithrilApplication.getPrefKeyShouldShowAgreementSnackbar(), false);
+                editor.apply();
+            }
+        }
     }
 
     private void applyHeaderView() {
@@ -288,6 +304,11 @@ public class MainActivity extends AppCompatActivity
             headerView.setBackground(ResourcesCompat.getDrawable(getResources(), R.drawable.csee_afternoon, getTheme()));
         else
             headerView.setBackground(ResourcesCompat.getDrawable(getResources(), R.drawable.csee_evening, getTheme()));
+    }
+
+    private void closeDB() {
+        if(mithrilDB != null)
+            mithrilDB.close();
     }
 
     private void defaultFragmentLoad() {
@@ -580,7 +601,7 @@ public class MainActivity extends AppCompatActivity
                     }
                 } catch (NullPointerException e) {
                     Log.d(MithrilApplication.getDebugTag(), "An unexpected end! The Dev will have to look into this. Please report the problem... " + e.getMessage());
-                    Toast.makeText(this, "An unexpected end! The Dev will have to look into this. Please report the problem... " + e.getMessage(), Toast.LENGTH_LONG).show();
+//                    Toast.makeText(this, "An unexpected end! The Dev will have to look into this. Please report the problem... " + e.getMessage(), Toast.LENGTH_LONG).show();
                     finish();
                 }
             }
