@@ -5,7 +5,7 @@ import android.widget.Toast;
 
 import java.io.IOException;
 
-/**
+/*
  * Created by prajit on 8/26/2016.
  * Original source: http://www.stealthcopter.com/blog/2010/01/android-requesting-root-access-in-your-app/
  */
