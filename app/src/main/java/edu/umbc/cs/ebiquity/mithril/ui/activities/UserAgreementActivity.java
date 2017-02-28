@@ -10,7 +10,6 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 
@@ -152,25 +151,17 @@ public class UserAgreementActivity extends AppCompatActivity {
     }
 
     private void initHousekeepingTasks() {
-        initDB();
+        initDB(this);
 
         if (PermissionHelper.isExplicitPermissionAcquisitionNecessary()) {
             requestAllNecessaryPermissions();
         }
     }
 
-    private void initDB() {
-        /**
-         * Initiate database creation and default data insertion, happens only once.
-         */
-        try {
-            mithrilDBHelper = new MithrilDBHelper(this);
-            mithrilDB = mithrilDBHelper.getWritableDatabase();
-            //And close db instance
-            mithrilDB.close();
-        } catch (NullPointerException e) {
-            Log.d(MithrilApplication.getDebugTag(), e.getMessage());
-        }
+    private void initDB(Context context) {
+        // Let's get the DB instances loaded too
+        mithrilDBHelper = new MithrilDBHelper(context);
+        mithrilDB = mithrilDBHelper.getWritableDatabase();
     }
 
     private void closeDB(){

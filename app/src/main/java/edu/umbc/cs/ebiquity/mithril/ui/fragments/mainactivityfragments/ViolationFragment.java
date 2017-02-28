@@ -8,7 +8,6 @@ import android.os.Bundle;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -144,13 +143,9 @@ public class ViolationFragment extends Fragment {
     }
 
     private void initDB(Context context) {
-        try {
-            // Let's get the DB instances loaded too
-            mithrilDBHelper = new MithrilDBHelper(context);
-            mithrilDB = mithrilDBHelper.getWritableDatabase();
-        } catch (NullPointerException e) {
-            Log.d(MithrilApplication.getDebugTag(), e.getMessage());
-        }
+        // Let's get the DB instances loaded too
+        mithrilDBHelper = new MithrilDBHelper(context);
+        mithrilDB = mithrilDBHelper.getWritableDatabase();
     }
 
     private void closeDB() {

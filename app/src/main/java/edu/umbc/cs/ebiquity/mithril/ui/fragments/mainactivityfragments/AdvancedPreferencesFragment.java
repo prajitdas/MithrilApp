@@ -7,14 +7,12 @@ import android.content.DialogInterface;
 import android.database.sqlite.SQLiteDatabase;
 import android.net.Uri;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.Toast;
 
-import edu.umbc.cs.ebiquity.mithril.MithrilApplication;
 import edu.umbc.cs.ebiquity.mithril.R;
 import edu.umbc.cs.ebiquity.mithril.data.dbhelpers.MithrilDBHelper;
 
@@ -138,13 +136,9 @@ public class AdvancedPreferencesFragment extends Fragment {
     }
 
     private void initDB(Context context) {
-        try {
-            // Let's get the DB instances loaded too
-            mithrilDBHelper = new MithrilDBHelper(context);
-            mithrilDB = mithrilDBHelper.getWritableDatabase();
-        } catch (NullPointerException e) {
-            Log.d(MithrilApplication.getDebugTag(), e.getMessage());
-        }
+        // Let's get the DB instances loaded too
+        mithrilDBHelper = new MithrilDBHelper(context);
+        mithrilDB = mithrilDBHelper.getWritableDatabase();
     }
 
     private void closeDB() {

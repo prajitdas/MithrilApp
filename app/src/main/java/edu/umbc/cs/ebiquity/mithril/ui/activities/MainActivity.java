@@ -25,7 +25,6 @@ import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.Toast;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -245,18 +244,15 @@ public class MainActivity extends AppCompatActivity
         navigationView.setNavigationItemSelectedListener(this);
 
         applyHeaderView();
-        initDB();
+        initDB(this);
     }
 
-    private void initDB() {
-        try {
-            // Let's get the DB instances loaded too
-            mithrilDBHelper = new MithrilDBHelper(this);
-            mithrilDB = mithrilDBHelper.getWritableDatabase();
-        } catch (NullPointerException e) {
-            Log.d(MithrilApplication.getDebugTag(), e.getMessage());
-        }
+    private void initDB(Context context) {
+        // Let's get the DB instances loaded too
+        mithrilDBHelper = new MithrilDBHelper(context);
+        mithrilDB = mithrilDBHelper.getWritableDatabase();
     }
+
 
     private void showAgreementDownloadedSnackbar() {
         if (sharedPreferences.getBoolean(MithrilApplication.getPrefKeyShouldShowAgreementSnackbar(), true)) {

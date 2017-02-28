@@ -47,7 +47,7 @@ import edu.umbc.cs.ebiquity.mithril.util.specialtasks.errorsnexceptions.Permissi
 
 public class MithrilDBHelper extends SQLiteOpenHelper {
 	// Database declarations
-    private final static int DATABASE_VERSION = 10001;
+    private final static int DATABASE_VERSION = 1;
     // (int) System.currentTimeMillis();
     // DO NOT DO THIS!!!
     // THIS IS CREATING A NEW VERSION OF DATABASE ON EACH APP LAUNCH THUS TAKING UP HUGE AMOUNTS OF STORAGE SPACE AND SLOWING DOWN THE COMPLETE APP!

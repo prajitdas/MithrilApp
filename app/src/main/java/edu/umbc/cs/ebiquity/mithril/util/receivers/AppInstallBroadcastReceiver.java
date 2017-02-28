@@ -9,7 +9,6 @@ import android.content.pm.PackageManager;
 import android.database.sqlite.SQLiteDatabase;
 import android.graphics.BitmapFactory;
 import android.graphics.drawable.BitmapDrawable;
-import android.util.Log;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -172,13 +171,9 @@ public class AppInstallBroadcastReceiver extends BroadcastReceiver {
     }
 
     private void initDB(Context context) {
-        try {
-            // Let's get the DB instances loaded too
-            mithrilDBHelper = new MithrilDBHelper(context);
-            mithrilDB = mithrilDBHelper.getWritableDatabase();
-        } catch (NullPointerException e) {
-            Log.d(MithrilApplication.getDebugTag(), e.getMessage());
-        }
+        // Let's get the DB instances loaded too
+        mithrilDBHelper = new MithrilDBHelper(context);
+        mithrilDB = mithrilDBHelper.getWritableDatabase();
     }
 
     private void closeDB() {
