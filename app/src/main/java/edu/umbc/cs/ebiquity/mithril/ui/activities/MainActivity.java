@@ -561,8 +561,10 @@ public class MainActivity extends AppCompatActivity
             if (resultCode == Activity.RESULT_OK) {
                 startMainActivityTasks();
             } else {
+                Bundle returnedData = data.getExtras();
                 // User pressed back on agreement screen!
-                if (data.getBooleanExtra(MithrilApplication.getBackPressedUserAgreementScreen(), false))
+                if (returnedData.containsKey(MithrilApplication.getBackPressedUserAgreementScreen()) &&
+                        returnedData.getBoolean(MithrilApplication.getBackPressedUserAgreementScreen(), false))
                     finish();
                 else {
                     PermissionHelper.quitMithril(this);

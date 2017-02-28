@@ -137,7 +137,7 @@ public class MithrilDBHelper extends SQLiteOpenHelper {
     private final static String APPINSTALLTIME = "installdate";
     private final static String APPREQID = "requesters_id";
 
-    private final static String CREATE_APP_DATA_TABLE = " CREATE TABLE " + getAppsTableName() + " (" +
+    private final static String CREATE_APPS_TABLE = " CREATE TABLE " + getAppsTableName() + " (" +
             APPID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
             APPUID + " INTEGER NOT NULL, " +
             APPDESCRIPTION + " TEXT NULL, " +
@@ -488,7 +488,7 @@ public class MithrilDBHelper extends SQLiteOpenHelper {
         try {
             db.execSQL(CREATE_REQUESTERS_TABLE);
             db.execSQL(CREATE_RESOURCES_TABLE);
-            db.execSQL(CREATE_APP_DATA_TABLE);
+            db.execSQL(CREATE_APPS_TABLE);
             db.execSQL(CREATE_PERMISSIONS_TABLE);
             db.execSQL(CREATE_APP_PERM_TABLE);
             db.execSQL(CREATE_POLICY_RULES_TABLE);
@@ -552,8 +552,8 @@ public class MithrilDBHelper extends SQLiteOpenHelper {
 
         db.execSQL("DROP TABLE IF EXISTS " + getViolationsTableName());
         db.execSQL("DROP TABLE IF EXISTS " + getActionTableName());
-        db.execSQL("DROP TABLE IF EXISTS " + getPolicyRulesTableName());
         db.execSQL("DROP TABLE IF EXISTS " + getContextTableName());
+        db.execSQL("DROP TABLE IF EXISTS " + getPolicyRulesTableName());
         db.execSQL("DROP TABLE IF EXISTS " + getAppPermTableName());
         db.execSQL("DROP TABLE IF EXISTS " + getPermissionsTableName());
         db.execSQL("DROP TABLE IF EXISTS " + getAppsTableName());
@@ -1686,7 +1686,8 @@ public class MithrilDBHelper extends SQLiteOpenHelper {
 			String groupName = permissionGroupInfo == null ? null : permissionGroupInfo.name;
 			try {
 				for (PermissionInfo permissionInfo : packageManager.queryPermissionsByGroup(groupName, 0)) {
-                    if (permissionInfo.group == null)
+//                    if (permissionInfo.group == null)
+                    if (groupName.equals(null))
                         addPermission(db, getPermData(packageManager, permissionInfo));
                     else
                         addPermission(db, getPermData(packageManager, groupName, permissionInfo));
@@ -1694,7 +1695,7 @@ public class MithrilDBHelper extends SQLiteOpenHelper {
             } catch (NameNotFoundException exception) {
                 Log.e(MithrilApplication.getDebugTag(), "Some error due to " + exception.getMessage());
             } catch (PermissionWasUpdateException exception) {
-                Log.e(MithrilApplication.getDebugTag(), "Ignore this? " + exception.getMessage());
+                Log.e(MithrilApplication.getDebugTag(), "PermissionWasUpdateException: Ignore this? " + exception.getMessage());
             }
         }
 	}
