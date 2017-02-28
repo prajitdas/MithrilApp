@@ -414,11 +414,11 @@ public class MithrilDBHelper extends SQLiteOpenHelper {
 	 * Table creation statements complete
 	 * -------------------------------------------------------------------------------------------------------------------------------------------------------------------
 	 * Database creation constructor
-	 * @param aContext
-	 */
-	public MithrilDBHelper(Context aContext) {
-		super(aContext, DATABASE_NAME, null, DATABASE_VERSION);
-		setContext(aContext);
+     * @param aContext needs context to create DB
+     */
+    public MithrilDBHelper(Context aContext) {
+        super(aContext, DATABASE_NAME, null, DATABASE_VERSION);
+        setContext(aContext);
 	}
 
 	/**
@@ -426,45 +426,45 @@ public class MithrilDBHelper extends SQLiteOpenHelper {
 	 *
 	 * @return the table name
 	 */
-	public static String getPolicyRulesTableName() {
-		return POLICY_RULES_TABLE_NAME;
-	}
+    private static String getPolicyRulesTableName() {
+        return POLICY_RULES_TABLE_NAME;
+    }
 
-	public static String getRequestersTableName() {
-		return REQUESTERS_TABLE_NAME;
-	}
+    private static String getRequestersTableName() {
+        return REQUESTERS_TABLE_NAME;
+    }
 
-	public static String getResourcesTableName() {
-		return RESOURCES_TABLE_NAME;
-	}
+    private static String getResourcesTableName() {
+        return RESOURCES_TABLE_NAME;
+    }
 
-	public static String getContextTableName() {
-		return CONTEXT_TABLE_NAME;
-	}
+    private static String getContextTableName() {
+        return CONTEXT_TABLE_NAME;
+    }
 
-	public static String getActionTableName() {
-		return ACTION_TABLE_NAME;
-	}
+    private static String getActionTableName() {
+        return ACTION_TABLE_NAME;
+    }
 
-	public static String getViolationsTableName() {
-		return VIOLATIONS_TABLE_NAME;
-	}
+    private static String getViolationsTableName() {
+        return VIOLATIONS_TABLE_NAME;
+    }
 
-    public static String getAppsTableName() {
+    private static String getAppsTableName() {
         return APPS_TABLE_NAME;
     }
 
-	public static String getPermissionsTableName() {
-		return PERMISSIONS_TABLE_NAME;
-	}
+    private static String getPermissionsTableName() {
+        return PERMISSIONS_TABLE_NAME;
+    }
 
-	public static String getAppPermTableName() {
-		return APP_PERM_TABLE_NAME;
-	}
+    private static String getAppPermTableName() {
+        return APP_PERM_TABLE_NAME;
+    }
 
-	public static String getAppPermViewName() {
-		return APP_PERM_VIEW_NAME;
-	}
+    private static String getAppPermViewName() {
+        return APP_PERM_VIEW_NAME;
+    }
 
 	private static byte[] getBitmapAsByteArray(Bitmap bitmap) {
 		ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
@@ -533,11 +533,11 @@ public class MithrilDBHelper extends SQLiteOpenHelper {
 
 	/**
 	 * Method to drop all tables in the database; Very dangerous
-	 * @param db
-	 */
-	public void deleteAllData(SQLiteDatabase db) {
-		dropDBObjects(db);
-	}
+     * @param db database instance
+     */
+    public void deleteAllData(SQLiteDatabase db) {
+        dropDBObjects(db);
+    }
 
 	@Override
 	public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
@@ -653,49 +653,53 @@ public class MithrilDBHelper extends SQLiteOpenHelper {
 	public long addAppPerm(SQLiteDatabase db, AppData anAppData, long appId) {
         int flags = PackageManager.GET_META_DATA;
         Map<String, Boolean> appPermissions = anAppData.getPermissions();
+//        if(appPermissions == null)
+//            Log.d(MithrilApplication.getDebugTag(), "we got null for: "+anAppData.getAppName());
         long insertedRowId = -1;
-        ContentValues values = new ContentValues();
-		values.put(APPPERMRESAPPID, appId);
-        for (Map.Entry<String, Boolean> appPermission : appPermissions.entrySet()) {
-            long permId = findPermissionsByName(db, appPermission.getKey());
-            if (permId == -1) {
-                PackageManager packageManager = getContext().getPackageManager();
-                PermissionInfo permissionInfo = null;
+        if (appPermissions != null) {
+            ContentValues values = new ContentValues();
+            values.put(APPPERMRESAPPID, appId);
+            for (Map.Entry<String, Boolean> appPermission : appPermissions.entrySet()) {
+                long permId = findPermissionsByName(db, appPermission.getKey());
+                if (permId == -1) {
+                    PackageManager packageManager = getContext().getPackageManager();
+                    PermissionInfo permissionInfo;
 
-                try {
-                    permissionInfo = packageManager.getPermissionInfo(appPermission.getKey(), flags);
-                } catch (NameNotFoundException e) {
-                    Log.e(MithrilApplication.getDebugTag(), "Something wrong " + e.getMessage());
-                    continue;
-                    //TODO This is a big problem. Why are we not getting the permission info for certain installed permissions???
-                }
+                    try {
+                        permissionInfo = packageManager.getPermissionInfo(appPermission.getKey(), flags);
+                    } catch (NameNotFoundException e) {
+                        Log.e(MithrilApplication.getDebugTag(), "Something wrong " + e.getMessage());
+                        continue;
+                        //TODO This is a big problem. Why are we not getting the permission info for certain installed permissions???
+                    }
 
-                try {
-                    if (permissionInfo.group == null)
-                        permId = addPermission(db, getPermData(packageManager, permissionInfo));
-                    else
-                        permId = addPermission(db, getPermData(packageManager, permissionInfo.group, permissionInfo));
-                } catch (PermissionWasUpdateException e) {
-                    Log.e(MithrilApplication.getDebugTag(), "So the permission was potentially updated, search for the id again " + e.getMessage());
-                    permId = findPermissionsByName(db, appPermission.getKey());
+                    try {
+                        if (permissionInfo.group == null)
+                            permId = addPermission(db, getPermData(packageManager, permissionInfo));
+                        else
+                            permId = addPermission(db, getPermData(packageManager, permissionInfo.group, permissionInfo));
+                    } catch (PermissionWasUpdateException e) {
+                        Log.e(MithrilApplication.getDebugTag(), "So the permission was potentially updated, search for the id again " + e.getMessage());
+                        permId = findPermissionsByName(db, appPermission.getKey());
+                    }
                 }
-            }
-            values.put(APPPERMRESPERID, permId);
-            values.put(APPPERMGRANTED, appPermission.getValue());
-            try {
-                insertedRowId = db.insertOrThrow(getAppPermTableName(), null, values);
-            } catch (SQLiteConstraintException e) {
-                Log.e(MithrilApplication.getDebugTag(), "there was a SQLite Constraint Exception " + values, e);
-                return -1;
-            } catch (SQLException e) {
-                Log.e(MithrilApplication.getDebugTag(), "Error inserting " + values, e);
-                return -1;
+                values.put(APPPERMRESPERID, permId);
+                values.put(APPPERMGRANTED, appPermission.getValue());
+                try {
+                    insertedRowId = db.insertOrThrow(getAppPermTableName(), null, values);
+                } catch (SQLiteConstraintException e) {
+                    Log.e(MithrilApplication.getDebugTag(), "there was a SQLite Constraint Exception " + values, e);
+                    return -1;
+                } catch (SQLException e) {
+                    Log.e(MithrilApplication.getDebugTag(), "Error inserting " + values, e);
+                    return -1;
+                }
             }
         }
         return insertedRowId;
 	}
 
-    public long addPermission(SQLiteDatabase db, PermData aPermData) throws PermissionWasUpdateException {
+    private long addPermission(SQLiteDatabase db, PermData aPermData) throws PermissionWasUpdateException {
         long insertedRowId = -1;
         ContentValues values = new ContentValues();
 		values.put(PERMNAME, aPermData.getPermissionName());
@@ -713,7 +717,6 @@ public class MithrilDBHelper extends SQLiteOpenHelper {
             throw new PermissionWasUpdateException("Exception occured for " + aPermData.getPermissionName());
         } catch (SQLException e) {
             Log.e(MithrilApplication.getDebugTag(), "Error inserting " + values, e);
-            return -1;
 		}
 		return insertedRowId;
 	}
@@ -741,13 +744,13 @@ public class MithrilDBHelper extends SQLiteOpenHelper {
 
 	/**
 	 * method to insert into violations table the violation
-	 * @param db
-	 * @param aViolation
-	 * @return
-	 */
-	public long addViolation(SQLiteDatabase db, Violation aViolation) {
-		long insertedRowId;
-		ContentValues values = new ContentValues();
+     * @param db database instance
+     * @param aViolation a violation
+     * @return returns the inserted row id
+     */
+    public long addViolation(SQLiteDatabase db, Violation aViolation) {
+        long insertedRowId;
+        ContentValues values = new ContentValues();
 		if(aViolation.getRuleId()==-1)
 			throw new SQLException("Value error!");
 		values.put(VIOLATIONDESC, aViolation.getViolationDescription());
@@ -766,12 +769,12 @@ public class MithrilDBHelper extends SQLiteOpenHelper {
 
 	/**
 	 * Finds all apps
-	 * @param db
-	 * @return
-	 */
-	public List<AppData> findAllApps(SQLiteDatabase db) {
-		// Select AppData Query
-		String selectQuery = "SELECT " +
+     * @param db database instance
+     * @return returns list of apps
+     */
+    public List<AppData> findAllApps(SQLiteDatabase db) {
+        // Select AppData Query
+        String selectQuery = "SELECT " +
                 getAppsTableName() + "." + APPDESCRIPTION + ", " +
                 getAppsTableName() + "." + APPASSOCIATEDPROCNAME + ", " +
                 getAppsTableName() + "." + APPTARGETSDKVERSION + ", " +
@@ -783,11 +786,11 @@ public class MithrilDBHelper extends SQLiteOpenHelper {
                 getAppsTableName() + "." + APPUID +
                 " FROM " + getAppsTableName() + ";";
 
-		List<AppData> apps = new ArrayList<AppData>();
-		Cursor cursor = db.rawQuery(selectQuery, null);
-		try{
-			if (cursor.moveToFirst()) {
-				do {
+        List<AppData> apps = new ArrayList<>();
+        Cursor cursor = db.rawQuery(selectQuery, null);
+        try {
+            if (cursor.moveToFirst()) {
+                do {
 					apps.add(
 							new AppData(
 									cursor.getString(0),
@@ -814,11 +817,11 @@ public class MithrilDBHelper extends SQLiteOpenHelper {
 	/**
 	 * Finds app by name
 	 *
-	 * @param db
-	 * @return AppData
-	 */
-	public AppData findAppByName(SQLiteDatabase db, String appName) {
-		// Select AppData Query
+     * @param db database instance
+     * @return AppData
+     */
+    public AppData findAppByName(SQLiteDatabase db, String appName) {
+        // Select AppData Query
 		String selectQuery = "SELECT " +
                 getAppsTableName() + "." + APPDESCRIPTION + ", " +
                 getAppsTableName() + "." + APPASSOCIATEDPROCNAME + ", " +
@@ -863,11 +866,11 @@ public class MithrilDBHelper extends SQLiteOpenHelper {
 	/**
 	 * Finds app by id
 	 *
-	 * @param db
-	 * @return AppData
-	 */
-	public AppData findAppById(SQLiteDatabase db, int appId) {
-		// Select AppData Query
+     * @param db database instance
+     * @return AppData
+     */
+    public AppData findAppById(SQLiteDatabase db, int appId) {
+        // Select AppData Query
 		String selectQuery = "SELECT " +
                 getAppsTableName() + "." + APPDESCRIPTION + ", " +
                 getAppsTableName() + "." + APPASSOCIATEDPROCNAME + ", " +
@@ -911,8 +914,8 @@ public class MithrilDBHelper extends SQLiteOpenHelper {
     /**
      * Finds appType by appPkgName
      *
-     * @param db
-     * @param appPkgName
+     * @param db database instance
+     * @param appPkgName app pkg name
      * @return AppData
      */
     public String findAppTypeByAppPkgName(SQLiteDatabase db, String appPkgName) {
@@ -941,11 +944,11 @@ public class MithrilDBHelper extends SQLiteOpenHelper {
 	/**
 	 * Temporary solution setup but eventually we will the join and populate with data from our servers
 	 *
-	 * @param db
-	 * @param appPackageName
-	 * @return List of PermData objects
-	 */
-	public List<PermData> findAppPermissionsByAppPackageName(SQLiteDatabase db, String appPackageName) {
+     * @param db database instance
+     * @param appPackageName app pkg name
+     * @return List of PermData objects
+     */
+    public List<PermData> findAppPermissionsByAppPackageName(SQLiteDatabase db, String appPackageName) {
 		// Select AppPermData Query
 		String selectQuery = "SELECT " +
 				getAppPermViewName() + "." + APPPERMVIEWPERMNAME + ", " +
@@ -957,10 +960,10 @@ public class MithrilDBHelper extends SQLiteOpenHelper {
 				" WHERE " +
 				getAppPermViewName() + "." + APPPERMVIEWAPPPKGNAME + " = '" + appPackageName + "';";
 
-		List<PermData> permDataList = new ArrayList<PermData>();
-		Cursor cursor = db.rawQuery(selectQuery, null);
-		try {
-			if (cursor.moveToFirst()) {
+        List<PermData> permDataList = new ArrayList<>();
+        Cursor cursor = db.rawQuery(selectQuery, null);
+        try {
+            if (cursor.moveToFirst()) {
 				do {
 					PermData permData = new PermData();
 					permData.setPermissionName(cursor.getString(0));
@@ -982,11 +985,11 @@ public class MithrilDBHelper extends SQLiteOpenHelper {
 	/**
 	 * Finds permissions by name
 	 *
-	 * @param db
-	 * @return permissionName
-	 */
-	public long findPermissionsByName(SQLiteDatabase db, String permissionName) {
-		// Select AppData Query
+     * @param db database instance
+     * @return permissionName
+     */
+    public long findPermissionsByName(SQLiteDatabase db, String permissionName) {
+        // Select AppData Query
 		String selectQuery = "SELECT " +
 				getPermissionsTableName() + "." + PERMID +
 				" FROM " + getPermissionsTableName() +
@@ -1012,26 +1015,26 @@ public class MithrilDBHelper extends SQLiteOpenHelper {
 
 	/**
 	 * Finds all violations
-	 * @param db
-	 * @return
-	 */
-	public List<Violation> findAllViolations(SQLiteDatabase db) {
-		// Select Violation Query
+     * @param db database instance
+     * @return all violations
+     */
+    public List<Violation> findAllViolations(SQLiteDatabase db) {
+        // Select Violation Query
 		String selectQuery = "SELECT " +
 				getViolationsTableName() + "." + VIOLATIONID + ", " +
 				getViolationsTableName() + "." + VIOLATIONDESC + ", " +
 				getViolationsTableName() + "." + VIOLATIONMARKER +
 				" FROM " + getViolationsTableName() + ";";
 
-		List<Violation> violations = new ArrayList<Violation>();
-		Cursor cursor = db.rawQuery(selectQuery, null);
-		try{
-			if (cursor.moveToFirst()) {
+        List<Violation> violations = new ArrayList<>();
+        Cursor cursor = db.rawQuery(selectQuery, null);
+        try {
+            if (cursor.moveToFirst()) {
 				do {
-					Violation tempViolation = new Violation();
-					if(Integer.parseInt(cursor.getString(3)) == 0)
-						tempViolation = new Violation(
-								Integer.parseInt(cursor.getString(0)),
+                    Violation tempViolation;
+                    if (Integer.parseInt(cursor.getString(3)) == 0)
+                        tempViolation = new Violation(
+                                Integer.parseInt(cursor.getString(0)),
 								cursor.getString(1),
 								Integer.parseInt(cursor.getString(2)),
 								Integer.parseInt(cursor.getString(3)),
@@ -1056,11 +1059,11 @@ public class MithrilDBHelper extends SQLiteOpenHelper {
 
 	/**
 	 * Finds all violations
-	 * @param db
-	 * @return
-	 */
-	public List<Violation> findAllViolationsWithMarkerUnset(SQLiteDatabase db) {
-		// Select Violation Query
+     * @param db database instance
+     * @return all violations
+     */
+    public List<Violation> findAllViolationsWithMarkerUnset(SQLiteDatabase db) {
+        // Select Violation Query
 		String selectQuery = "SELECT " +
 				getViolationsTableName() + "." + VIOLATIONID + ", " +
 				getViolationsTableName() + "." + VIOLATIONDESC + ", " +
@@ -1068,15 +1071,15 @@ public class MithrilDBHelper extends SQLiteOpenHelper {
 				" FROM " + getViolationsTableName() +
 				" WHERE " + getViolationsTableName() + "." + VIOLATIONMARKER + " = 0;";
 
-		List<Violation> violations = new ArrayList<Violation>();
-		Cursor cursor = db.rawQuery(selectQuery, null);
-		try{
-			if (cursor.moveToFirst()) {
+        List<Violation> violations = new ArrayList<>();
+        Cursor cursor = db.rawQuery(selectQuery, null);
+        try {
+            if (cursor.moveToFirst()) {
 				do {
-					Violation tempViolation = new Violation();
-					if(Integer.parseInt(cursor.getString(3)) == 0)
-						tempViolation = new Violation(
-								Integer.parseInt(cursor.getString(0)),
+                    Violation tempViolation;
+                    if (Integer.parseInt(cursor.getString(3)) == 0)
+                        tempViolation = new Violation(
+                                Integer.parseInt(cursor.getString(0)),
 								cursor.getString(1),
 								Integer.parseInt(cursor.getString(2)),
 								Integer.parseInt(cursor.getString(3)),
@@ -1101,14 +1104,14 @@ public class MithrilDBHelper extends SQLiteOpenHelper {
 
 	/**
 	 * Getting all policies
-	 * @param db
-	 * @return
-	 */
-	public ArrayList<PolicyRule> findAllPolicies(SQLiteDatabase db) {
-		ArrayList<PolicyRule> policyRules = new ArrayList<PolicyRule>();
-		// Select All Query
-		String selectQuery = "SELECT " +
-				getPolicyRulesTableName() + "." + POLRULID + ", " +
+     * @param db database instance
+     * @return all policies
+     */
+    public ArrayList<PolicyRule> findAllPolicies(SQLiteDatabase db) {
+        ArrayList<PolicyRule> policyRules = new ArrayList<>();
+        // Select All Query
+        String selectQuery = "SELECT " +
+                getPolicyRulesTableName() + "." + POLRULID + ", " +
 				getPolicyRulesTableName() + "." + POLRULNAME + ", " +
 				getRequestersTableName() + "." + REQNAME + ", " +
 				getResourcesTableName() + "." + RESNAME + ", " +
@@ -1165,11 +1168,11 @@ public class MithrilDBHelper extends SQLiteOpenHelper {
 
 	/**
      * Finds a policy based on the application being accessed
-     * @param db
-	 * @return
-	 */
+     * @param db database instance
+     * @return all policies
+     */
     public ArrayList<PolicyRule> findAllPoliciesByReq(SQLiteDatabase db, String requester) {
-        ArrayList<PolicyRule> policyRules = new ArrayList<PolicyRule>();
+        ArrayList<PolicyRule> policyRules = new ArrayList<>();
         // Select Policy Query
         String selectQuery = "SELECT " +
 				getPolicyRulesTableName() + "." + POLRULID + ", " +
@@ -1232,11 +1235,11 @@ public class MithrilDBHelper extends SQLiteOpenHelper {
 
 	/**
 	 * Finds a policy based on the policy id
-	 * @param db
-	 * @param id
-	 * @return
-	 */
-	public PolicyRule findPolicyByID(SQLiteDatabase db, int id) {
+     * @param db database instance
+     * @param id policy id
+     * @return policy info
+     */
+    public PolicyRule findPolicyByID(SQLiteDatabase db, int id) {
 		// Select Policy Query
 		String selectQuery = "SELECT "+
 				getPolicyRulesTableName() + "." + POLRULID + ", " +
@@ -1290,11 +1293,11 @@ public class MithrilDBHelper extends SQLiteOpenHelper {
 
 	/**
 	 * Finds a requester based on the requester id
-	 * @param db
-	 * @param id
-	 * @return
-	 */
-	public Requester findRequesterByID(SQLiteDatabase db, int id) {
+     * @param db database instance
+     * @param id requester id
+     * @return requester info
+     */
+    public Requester findRequesterByID(SQLiteDatabase db, int id) {
 		// Select Query
 		String selectQuery = "SELECT " +
 				getRequestersTableName() + "." + REQID + ", " +
@@ -1321,11 +1324,11 @@ public class MithrilDBHelper extends SQLiteOpenHelper {
 
 	/**
 	 * Finds a resource based on the resource id
-	 * @param db
-	 * @param id
-	 * @return
-	 */
-	public Resource findResourceByID(SQLiteDatabase db, int id) {
+     * @param db database instance
+     * @param id resource id
+     * @return resource info
+     */
+    public Resource findResourceByID(SQLiteDatabase db, int id) {
 		// Select Query
 		String selectQuery = "SELECT "+
 				getResourcesTableName() + "." + RESID + ", " +
@@ -1352,11 +1355,11 @@ public class MithrilDBHelper extends SQLiteOpenHelper {
 
 	/**
 	 * Finds a resource based on the resource id
-	 * @param db
-	 * @param id
-	 * @return
-	 */
-	public RuleAction findActionByID(SQLiteDatabase db, int id) {
+     * @param db database instance
+     * @param id action id
+     * @return action info
+     */
+    public RuleAction findActionByID(SQLiteDatabase db, int id) {
 		// Select Query
 		String selectQuery = "SELECT "+
 				getActionTableName() + "." + ACTIONID + ", " +
@@ -1388,10 +1391,10 @@ public class MithrilDBHelper extends SQLiteOpenHelper {
 
 	/**
 	 * Finds a resource based on the resource id
-	 * @param db
-	 * @param id
-	 * @return
-	 */
+     * @param db database instance
+     * @param id context id
+     * @return context info
+     */
     public SemanticUserContext findContextByID(SQLiteDatabase db, int id) {
         // Select Query
 		String selectQuery = "SELECT "+
@@ -1412,7 +1415,7 @@ public class MithrilDBHelper extends SQLiteOpenHelper {
 			if (cursor.moveToFirst()) {
 				userContext.setId(Integer.parseInt(cursor.getString(0)));
 
-                ArrayList<SemanticIdentity> presenceIdList = new ArrayList<SemanticIdentity>();
+                ArrayList<SemanticIdentity> presenceIdList = new ArrayList<>();
                 presenceIdList.add(new SemanticIdentity(cursor.getString(1)));
                 SemanticNearActors semanticNearActors = new SemanticNearActors(presenceIdList);
                 userContext.setSemanticNearActors(semanticNearActors);
@@ -1469,7 +1472,7 @@ public class MithrilDBHelper extends SQLiteOpenHelper {
      * method to update conflicted Google permissions
      * We found extra information about the Google permissions and we are adding those in the table
      */
-    public int updateConflictedGooglePermissions(SQLiteDatabase db, PermData aPermData) {
+    private int updateConflictedGooglePermissions(SQLiteDatabase db, PermData aPermData) {
 //        name, protectionlvl, permgrp, flags (these four columns should already be present)
         ContentValues values = new ContentValues();
         values.put(PERMDESC, aPermData.getPermissionDescription());
@@ -1490,11 +1493,11 @@ public class MithrilDBHelper extends SQLiteOpenHelper {
 
 	/**
 	 * method to delete a row from a table based on the identifier
-	 * @param db
-	 */
-	public void deleteViolation(SQLiteDatabase db, Violation aViolation) {
-		try {
-			db.delete(getViolationsTableName(), VIOLATIONID + " = ?",
+     * @param db database instance
+     */
+    public void deleteViolation(SQLiteDatabase db, Violation aViolation) {
+        try {
+            db.delete(getViolationsTableName(), VIOLATIONID + " = ?",
 					new String[] { String.valueOf(aViolation.getId()) });
 		} catch (SQLException e) {
 			throw new SQLException("Could not find " + e);
@@ -1504,11 +1507,11 @@ public class MithrilDBHelper extends SQLiteOpenHelper {
 	/**
 	 * Given a certain app uid deletes app from the database
 	 *
-	 * @param db
-	 * @param uid
-	 */
-	public void deleteAppByUID(SQLiteDatabase db, int uid) {
-		try {
+     * @param db database instance
+     * @param uid app linux UID
+     */
+    public void deleteAppByUID(SQLiteDatabase db, int uid) {
+        try {
 //            Log.d(MithrilApplication.getDebugTag(), "Deleting this: " + Integer.toString(uid));
             db.delete(getAppsTableName(), APPUID + " = ?",
                     new String[]{String.valueOf(uid)});
@@ -1576,7 +1579,7 @@ public class MithrilDBHelper extends SQLiteOpenHelper {
      * End of CRUD methods
      */
 
-	public void loadRealAppDataIntoDB(SQLiteDatabase db) {
+    private void loadRealAppDataIntoDB(SQLiteDatabase db) {
         PackageManager packageManager = getContext().getPackageManager();
         int flags = PackageManager.GET_META_DATA |
                 PackageManager.GET_SHARED_LIBRARY_FILES |
@@ -1629,11 +1632,10 @@ public class MithrilDBHelper extends SQLiteOpenHelper {
 
 						//App permissions
                         if (pack.requestedPermissions != null) {
-                            Map<String, Boolean> requestedPermissions = new HashMap<String, Boolean>();
-                            String[] packageUsesPermissions = pack.requestedPermissions;
-                            for (int permCount = 0; permCount < packageUsesPermissions.length; permCount++) {
-                                requestedPermissions.put(packageUsesPermissions[permCount], false);
-                                /**
+                            Map<String, Boolean> requestedPermissionsMap = new HashMap<>();
+                            for (String packagePermission : pack.requestedPermissions) {
+                                requestedPermissionsMap.put(packagePermission, false);
+                                /*
                                  * The following fix is no longer required. There was a flaw in insert permission we should have used insertOrThrow
                                  * - PKD, Dec 27, 2016. Carrie Fisher AKA Princess Leia Organa (Skywalker) passed away today at 0855 PST. The world will miss her. :(
                                  * ---------------------------------------------------------------------------------------------------------------------------------------------
@@ -1653,7 +1655,7 @@ public class MithrilDBHelper extends SQLiteOpenHelper {
                                  adb shell dumpsys package com.google.android.youtube | grep -A $numLinesInstalledPermission "install permissions:" | cut -f1 -d"=" | tr -d ' '
                                  * ---------------------------------------------------------------------------------------------------------------------------------------------
                                  */
-                                tempAppData.setPermissions(requestedPermissions);
+                                tempAppData.setPermissions(requestedPermissionsMap);
                             }
                         }
                     }
@@ -1665,12 +1667,12 @@ public class MithrilDBHelper extends SQLiteOpenHelper {
 
 //                    long insertedRowId = addAppData(db, tempAppData);
 //                    Log.d(MithrilApplication.getDebugTag(), "Inserted record id is: "+Long.toString(insertedRowId));
-				} catch (ClassCastException e){
-					Log.d(MithrilApplication.getDebugTag(), e.getMessage());
-				} catch (Exception e) {
-					Log.d(MithrilApplication.getDebugTag(), e.getMessage());
-				}
-			}
+//				} catch (ClassCastException e){
+//					Log.d(MithrilApplication.getDebugTag(), e.getMessage());
+                } catch (Exception e) {
+                    Log.d(MithrilApplication.getDebugTag(), e.getMessage());
+                }
+            }
 		}
 	}
 
@@ -1683,12 +1685,15 @@ public class MithrilDBHelper extends SQLiteOpenHelper {
         permisisonGroupInfoList.add(null);
 
 		for (PermissionGroupInfo permissionGroupInfo : permisisonGroupInfoList) {
-            Log.d(MithrilApplication.getDebugTag(), permissionGroupInfo.name);
             String groupName = permissionGroupInfo == null ? null : permissionGroupInfo.name;
-			try {
-				for (PermissionInfo permissionInfo : packageManager.queryPermissionsByGroup(groupName, 0)) {
+//            if(groupName == null)
+//                Log.d(MithrilApplication.getDebugTag(), "Result is: null");
+//            else
+//                Log.d(MithrilApplication.getDebugTag(), "Result is: "+groupName);
+            try {
+                for (PermissionInfo permissionInfo : packageManager.queryPermissionsByGroup(groupName, 0)) {
 //                    if (permissionInfo.group == null)
-                    if (groupName.equals(null))
+                    if (groupName == null)
                         addPermission(db, getPermData(packageManager, permissionInfo));
                     else
                         addPermission(db, getPermData(packageManager, groupName, permissionInfo));
@@ -1701,7 +1706,7 @@ public class MithrilDBHelper extends SQLiteOpenHelper {
         }
 	}
 
-    public PermData getPermData(PackageManager packageManager, String groupName, PermissionInfo permissionInfo) {
+    private PermData getPermData(PackageManager packageManager, String groupName, PermissionInfo permissionInfo) {
         PermData tempPermData = new PermData();
 
         tempPermData.setPermissionName(permissionInfo.name);
@@ -1755,7 +1760,7 @@ public class MithrilDBHelper extends SQLiteOpenHelper {
         return tempPermData;
     }
 
-    public PermData getPermData(PackageManager packageManager, PermissionInfo permissionInfo) {
+    private PermData getPermData(PackageManager packageManager, PermissionInfo permissionInfo) {
         PermData tempPermData = new PermData();
 
         tempPermData.setPermissionName(permissionInfo.name);
