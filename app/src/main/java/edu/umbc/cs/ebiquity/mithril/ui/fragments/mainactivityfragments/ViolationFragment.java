@@ -8,6 +8,7 @@ import android.os.Bundle;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -96,8 +97,7 @@ public class ViolationFragment extends Fragment {
     }
 
     private void initData() {
-        mithrilDBHelper = new MithrilDBHelper(view.getContext());
-        mithrilDB = mithrilDBHelper.getWritableDatabase();
+        initDB(view.getContext());
         violationItems = mithrilDBHelper.findAllViolations(mithrilDB);
 
         //TODO remove this later. This is for demo purposes.
@@ -123,7 +123,7 @@ public class ViolationFragment extends Fragment {
         // Add some violation items.
         for (Violation item : violationItems)
             violationItemsMap.put(item.getId(), item);
-        mithrilDB.close();
+        closeDB();
     }
 
     @Override
@@ -141,6 +141,21 @@ public class ViolationFragment extends Fragment {
     public void onDetach() {
         super.onDetach();
         mListener = null;
+    }
+
+    private void initDB(Context context) {
+        try {
+            // Let's get the DB instances loaded too
+            mithrilDBHelper = new MithrilDBHelper(context);
+            mithrilDB = mithrilDBHelper.getWritableDatabase();
+        } catch (NullPointerException e) {
+            Log.d(MithrilApplication.getDebugTag(), e.getMessage());
+        }
+    }
+
+    private void closeDB() {
+        if (mithrilDB != null)
+            mithrilDB.close();
     }
 
     /**

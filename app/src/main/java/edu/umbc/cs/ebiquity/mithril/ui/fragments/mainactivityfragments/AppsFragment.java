@@ -9,6 +9,7 @@ import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -118,8 +119,7 @@ public class AppsFragment extends Fragment {
      * Finds all the applications on the phone and stores them in a database accessible to the whole app
      */
     private void initData() {
-        mithrilDBHelper = new MithrilDBHelper(view.getContext());
-        mithrilDB = mithrilDBHelper.getWritableDatabase();
+        initDB();
         sharedPreferences = view.getContext().getSharedPreferences(MithrilApplication.getSharedPreferencesName(), Context.MODE_PRIVATE);
 
         if (mAppDisplayType.equals(MithrilApplication.getPrefKeyAllAppsDisplay())) {
@@ -161,7 +161,22 @@ public class AppsFragment extends Fragment {
             appMetadataMap.clear();
         }
 
-        mithrilDB.close();
+        closeDB();
+    }
+
+    private void initDB() {
+        try {
+            // Let's get the DB instances loaded too
+            mithrilDBHelper = new MithrilDBHelper(view.getContext());
+            mithrilDB = mithrilDBHelper.getWritableDatabase();
+        } catch (NullPointerException e) {
+            Log.d(MithrilApplication.getDebugTag(), e.getMessage());
+        }
+    }
+
+    private void closeDB() {
+        if (mithrilDB != null)
+            mithrilDB.close();
     }
 
     /**

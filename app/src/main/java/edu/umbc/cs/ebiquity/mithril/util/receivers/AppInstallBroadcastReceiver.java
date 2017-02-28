@@ -9,6 +9,7 @@ import android.content.pm.PackageManager;
 import android.database.sqlite.SQLiteDatabase;
 import android.graphics.BitmapFactory;
 import android.graphics.drawable.BitmapDrawable;
+import android.util.Log;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -32,8 +33,7 @@ public class AppInstallBroadcastReceiver extends BroadcastReceiver {
     @Override
     public void onReceive(Context context, Intent intent) {
         packageManager = context.getPackageManager();
-        mithrilDBHelper = new MithrilDBHelper(context);
-        mithrilDB = mithrilDBHelper.getWritableDatabase();
+        initDB(context);
 //        Log.d(MithrilApplication.getDebugTag(), "Action: "+intent.getAction());
 //        Log.d(MithrilApplication.getDebugTag(), "Uid: "+Integer.toString(intent.getIntExtra(Intent.EXTRA_UID, 0)));
 
@@ -168,6 +168,21 @@ public class AppInstallBroadcastReceiver extends BroadcastReceiver {
              * Don't send data on update for now
              */
 //        }
-        mithrilDB.close();
+        closeDB();
+    }
+
+    private void initDB(Context context) {
+        try {
+            // Let's get the DB instances loaded too
+            mithrilDBHelper = new MithrilDBHelper(context);
+            mithrilDB = mithrilDBHelper.getWritableDatabase();
+        } catch (NullPointerException e) {
+            Log.d(MithrilApplication.getDebugTag(), e.getMessage());
+        }
+    }
+
+    private void closeDB() {
+        if (mithrilDB != null)
+            mithrilDB.close();
     }
 }
