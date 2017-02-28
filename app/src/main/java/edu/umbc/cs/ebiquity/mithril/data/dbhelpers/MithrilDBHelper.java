@@ -1683,7 +1683,8 @@ public class MithrilDBHelper extends SQLiteOpenHelper {
         permisisonGroupInfoList.add(null);
 
 		for (PermissionGroupInfo permissionGroupInfo : permisisonGroupInfoList) {
-			String groupName = permissionGroupInfo == null ? null : permissionGroupInfo.name;
+            Log.d(MithrilApplication.getDebugTag(), permissionGroupInfo.name);
+            String groupName = permissionGroupInfo == null ? null : permissionGroupInfo.name;
 			try {
 				for (PermissionInfo permissionInfo : packageManager.queryPermissionsByGroup(groupName, 0)) {
 //                    if (permissionInfo.group == null)
