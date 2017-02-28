@@ -7,12 +7,14 @@ import android.content.DialogInterface;
 import android.database.sqlite.SQLiteDatabase;
 import android.net.Uri;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.Toast;
 
+import edu.umbc.cs.ebiquity.mithril.MithrilApplication;
 import edu.umbc.cs.ebiquity.mithril.R;
 import edu.umbc.cs.ebiquity.mithril.data.dbhelpers.MithrilDBHelper;
 
@@ -33,6 +35,8 @@ public class AdvancedPreferencesFragment extends Fragment {
     // TODO: Rename and change types of parameters
     private String mParam1;
     private String mParam2;
+    private MithrilDBHelper mithrilDBHelper;
+    private SQLiteDatabase mithrilDB;
     private View view;
     private Button mButtonReloadDefaultAppData;
 
@@ -75,8 +79,7 @@ public class AdvancedPreferencesFragment extends Fragment {
         // Inflate the layout for this fragment
         view = inflater.inflate(R.layout.fragment_advanced_prefs, container, false);
 
-        final MithrilDBHelper mithrilDBHelper = new MithrilDBHelper(view.getContext());
-        final SQLiteDatabase mithrilDB = mithrilDBHelper.getWritableDatabase();
+        initDB(view.getContext());
 
         mButtonReloadDefaultAppData = (Button) view.findViewById(R.id.buttonReloadDefaultAppData);
         mButtonReloadDefaultAppData.setOnClickListener(new View.OnClickListener() {
@@ -90,13 +93,13 @@ public class AdvancedPreferencesFragment extends Fragment {
                             public void onClick(DialogInterface dialog, int id) {
                                 mithrilDBHelper.deleteAllData(mithrilDB);
                                 Toast.makeText(context, "Database was reset!", Toast.LENGTH_SHORT).show();
-                                mithrilDB.close();
+                                closeDB();
                             }
                         })
                         .setNegativeButton(R.string.dialog_resp_NO, new DialogInterface.OnClickListener() {
                             public void onClick(DialogInterface dialog, int id) {
                                 Toast.makeText(context, "Database was not reset!", Toast.LENGTH_SHORT).show();
-                                mithrilDB.close();
+                                closeDB();
                             }
                         });
 
@@ -132,6 +135,21 @@ public class AdvancedPreferencesFragment extends Fragment {
     public void onDetach() {
         super.onDetach();
         mListener = null;
+    }
+
+    private void initDB(Context context) {
+        try {
+            // Let's get the DB instances loaded too
+            mithrilDBHelper = new MithrilDBHelper(context);
+            mithrilDB = mithrilDBHelper.getWritableDatabase();
+        } catch (NullPointerException e) {
+            Log.d(MithrilApplication.getDebugTag(), e.getMessage());
+        }
+    }
+
+    private void closeDB() {
+        if (mithrilDB != null)
+            mithrilDB.close();
     }
 
     /**
