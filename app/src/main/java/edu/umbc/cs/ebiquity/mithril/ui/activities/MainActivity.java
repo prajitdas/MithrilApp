@@ -12,7 +12,6 @@ import android.database.sqlite.SQLiteDatabase;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
-import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
 import android.support.design.widget.Snackbar;
@@ -229,8 +228,7 @@ public class MainActivity extends AppCompatActivity
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Snackbar.make(view, "Functionality not active right now. Once clicked, apps will be sent to server!", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
+                showSnackbar(view, view.getResources().getString(R.string.functionality_not_active_yet));
             }
         });
 
@@ -253,33 +251,36 @@ public class MainActivity extends AppCompatActivity
         mithrilDB = mithrilDBHelper.getWritableDatabase();
     }
 
-
     private void showAgreementDownloadedSnackbar() {
         if (sharedPreferences.getBoolean(MithrilApplication.getPrefKeyShouldShowAgreementSnackbar(), true)) {
             if (isAgreementDownloaded()) {
-                CoordinatorLayout mainCoordinatorLayoutView = (CoordinatorLayout) findViewById(R.id.main_coordinator_layout);
-                Snackbar agreementCopiedSnackbar = Snackbar.make(mainCoordinatorLayoutView,
-                        R.string.agreement_copied,
-                        Snackbar.LENGTH_INDEFINITE);
+                showSnackbar(findViewById(R.id.main_coordinator_layout),
+                        getResources().getString(R.string.agreement_copied));
 
-                agreementCopiedSnackbar.setActionTextColor(getResources().getColor(R.color.white, this.getTheme()));
-
-                // get snackbar view
-                View snackbarView = agreementCopiedSnackbar.getView();
-                snackbarView.setBackgroundColor(getResources().getColor(R.color.colorPrimary, this.getTheme()));
-
-                agreementCopiedSnackbar.setAction(R.string.okay,
-                        new View.OnClickListener() {
-                            @Override
-                            public void onClick(View view) {
-                                return;
-                            }
-                        }).show();
                 SharedPreferences.Editor editor = this.getSharedPreferences(MithrilApplication.getSharedPreferencesName(), Context.MODE_PRIVATE).edit();
                 editor.putBoolean(MithrilApplication.getPrefKeyShouldShowAgreementSnackbar(), false);
                 editor.apply();
             }
         }
+    }
+
+    private void showSnackbar(View view, String message) {
+        Snackbar snackbar = Snackbar.make(view,
+                message,
+                Snackbar.LENGTH_INDEFINITE);
+
+        snackbar.setActionTextColor(getResources().getColor(R.color.white, this.getTheme()));
+
+        // get snackbar view
+        View snackbarView = snackbar.getView();
+        snackbarView.setBackgroundColor(getResources().getColor(R.color.colorAccent, this.getTheme()));
+
+        snackbar.setAction(R.string.okay,
+                new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                    }
+                }).show();
     }
 
     private void applyHeaderView() {
