@@ -1680,11 +1680,11 @@ public class MithrilDBHelper extends SQLiteOpenHelper {
 //		Log.d(MithrilApplication.getDebugTag(), "I came to loadAndroidPermissionsIntoDB");
         PackageManager packageManager = getContext().getPackageManager();
 
-        List<PermissionGroupInfo> permisisonGroupInfoList = packageManager.getAllPermissionGroups(PackageManager.GET_META_DATA);
+        List<PermissionGroupInfo> permissionGroupInfoList = packageManager.getAllPermissionGroups(PackageManager.GET_META_DATA);
 //		Log.d(MithrilApplication.getDebugTag(), "Size is: " + Integer.toString(permisisonGroupInfoList.size()));
-        permisisonGroupInfoList.add(null);
+        permissionGroupInfoList.add(null);
 
-		for (PermissionGroupInfo permissionGroupInfo : permisisonGroupInfoList) {
+        for (PermissionGroupInfo permissionGroupInfo : permissionGroupInfoList) {
             String groupName = permissionGroupInfo == null ? null : permissionGroupInfo.name;
 //            if(groupName == null)
 //                Log.d(MithrilApplication.getDebugTag(), "Result is: null");
@@ -1756,6 +1756,7 @@ public class MithrilDBHelper extends SQLiteOpenHelper {
 
         tempPermData.setPermissionIcon(getPermissionIconBitmap(permissionInfo));
         tempPermData.setPermissionLabel(permissionInfo.loadLabel(packageManager).toString());
+//        Log.d(MithrilApplication.getDebugTag(), "Label: "+permissionInfo.loadLabel(packageManager).toString()+", end label");
 
         return tempPermData;
     }
@@ -1806,6 +1807,7 @@ public class MithrilDBHelper extends SQLiteOpenHelper {
 
         tempPermData.setPermissionIcon(getPermissionIconBitmap(permissionInfo));
         tempPermData.setPermissionLabel(permissionInfo.loadLabel(packageManager).toString());
+//        Log.d(MithrilApplication.getDebugTag(), "Label: "+permissionInfo.loadLabel(packageManager).toString()+", end label");
 
         return tempPermData;
     }

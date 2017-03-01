@@ -69,7 +69,7 @@ public class AppDetailRecyclerViewAdapter extends RecyclerView.Adapter<AppDetail
 //            cardView.setCardBackgroundColor(Color.GRAY);
         }
 
-        if (mValues.get(position).getPermissionGroup() != MithrilApplication.getPermissionNoGroup()) {
+        if (!mValues.get(position).getPermissionGroup().equals(MithrilApplication.getPermissionNoGroup())) {
             String[] words = mValues.get(position).getPermissionGroup().split(Pattern.quote("."));
             //In a group, the last word is most important for group identification, so use that I guess!
             holder.mPermissionGroup.setText(words[words.length - 1]);
@@ -94,14 +94,14 @@ public class AppDetailRecyclerViewAdapter extends RecyclerView.Adapter<AppDetail
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder {
-        public final View mView;
-        public final ImageView mPermissionProtectionLevel;
-        public final TextView mPermissionLabel;
-        public final TextView mPermissionName;
-        public final TextView mPermissionGroup;
-        public PermData mItem;
+        private final View mView;
+        private final ImageView mPermissionProtectionLevel;
+        private final TextView mPermissionLabel;
+        private final TextView mPermissionName;
+        private final TextView mPermissionGroup;
+        private PermData mItem;
 
-        public ViewHolder(View view) {
+        private ViewHolder(View view) {
             super(view);
             mView = view;
 

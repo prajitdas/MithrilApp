@@ -64,13 +64,13 @@ public class InstalledBroadcastReceiversRecyclerViewAdapter extends RecyclerView
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder {
-        public final View mView;
-        public final ImageView mBcastIcon;
-        public final TextView mBcastLabel;
-        public final TextView mBcastName;
-        public BCastRecvData mItem;
+        private final View mView;
+        private final ImageView mBcastIcon;
+        private final TextView mBcastLabel;
+        private final TextView mBcastName;
+        private BCastRecvData mItem;
 
-        public ViewHolder(View view) {
+        private ViewHolder(View view) {
             super(view);
             mView = view;
             mBcastIcon = (ImageView) view.findViewById(R.id.bcast_icon);

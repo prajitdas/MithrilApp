@@ -5,7 +5,7 @@ import android.support.annotation.NonNull;
 
 import edu.umbc.cs.ebiquity.mithril.data.model.rules.protectedresources.Resource;
 
-/**
+/*
  * Created by prajit on 11/14/16.
  */
 
@@ -29,7 +29,10 @@ public class PermData implements Comparable<PermData>{
         this.permissionFlag = permissionFlag;
         this.permissionDescription = permissionDescription;
         this.permissionIcon = permissionIcon;
-        this.permissionLabel = permissionLabel;
+        if (permissionLabel == null || permissionLabel.equals(""))
+            this.permissionLabel = permissionName;
+        else
+            this.permissionLabel = permissionLabel;
         this.resource = resource;
     }
 
@@ -159,7 +162,7 @@ public class PermData implements Comparable<PermData>{
         return "Some apps are using this permission!";
     }
 
-    /**
+    /*
      * Android Permission Group Metadata
      * ---------------------------------
      * Permission information from https://material.google.com/patterns/permissions.html

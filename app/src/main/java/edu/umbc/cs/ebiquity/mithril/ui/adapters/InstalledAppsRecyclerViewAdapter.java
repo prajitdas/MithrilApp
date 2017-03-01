@@ -79,14 +79,14 @@ public class InstalledAppsRecyclerViewAdapter extends RecyclerView.Adapter<Insta
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder {
-        public final View mView;
-        public final ImageView mAppIcon;
-        public final TextView mAppName;
-        public final TextView mAppVersion;
-//        public final CheckBox mAppSelected;
-        public AppData mItem;
+        private final View mView;
+        private final ImageView mAppIcon;
+        private final TextView mAppName;
+        private final TextView mAppVersion;
+        //        private final CheckBox mAppSelected;
+        private AppData mItem;
 
-        public ViewHolder(View view) {
+        private ViewHolder(View view) {
             super(view);
             mView = view;
             mAppIcon = (ImageView) view.findViewById(R.id.app_icon);

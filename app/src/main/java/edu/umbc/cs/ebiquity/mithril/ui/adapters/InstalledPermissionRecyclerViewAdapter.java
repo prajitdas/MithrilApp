@@ -56,7 +56,7 @@ public class InstalledPermissionRecyclerViewAdapter extends RecyclerView.Adapter
 //            cardView.setCardBackgroundColor(Color.YELLOW);
         } else if (permProtLvl.equals(MithrilApplication.getPermissionProtectionLevelPrivileged())) {
             holder.mPermIcon.setImageDrawable(view.getContext().getResources().getDrawable(R.drawable.comment_remove_outline, view.getContext().getTheme()));
-//            cardView.setCardBackgroundColor(Color.BLUE);
+//            cardView.setCardBackgroundColor(Color.OrangeRed);
         } else {
             holder.mPermIcon.setImageDrawable(view.getContext().getResources().getDrawable(R.drawable.comment_question_outline, view.getContext().getTheme()));
 //            cardView.setCardBackgroundColor(Color.GRAY);
@@ -82,13 +82,13 @@ public class InstalledPermissionRecyclerViewAdapter extends RecyclerView.Adapter
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder {
-        public final View mView;
-        public final ImageView mPermIcon;
-        public final TextView mPermLabel;
-        public final TextView mAppsUsingPerm;
-        public PermData mItem;
+        private final View mView;
+        private final ImageView mPermIcon;
+        private final TextView mPermLabel;
+        private final TextView mAppsUsingPerm;
+        private PermData mItem;
 
-        public ViewHolder(View view) {
+        private ViewHolder(View view) {
             super(view);
             mView = view;
             mPermIcon = (ImageView) view.findViewById(R.id.protectionLvlImageView);

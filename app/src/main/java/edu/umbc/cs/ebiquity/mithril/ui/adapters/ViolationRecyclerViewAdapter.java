@@ -81,16 +81,16 @@ public class ViolationRecyclerViewAdapter extends RecyclerView.Adapter<Violation
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder {
-        public final View mView;
-        public final ImageView mViolatingAppIcon;
-        public final TextView mViolationText;
-        public final ImageView mContextImage;
-        public final Button mResponseYesButton;
-        public final Button mResponseNoButton;
+        private final View mView;
+        private final ImageView mViolatingAppIcon;
+        private final TextView mViolationText;
+        private final ImageView mContextImage;
+        private final Button mResponseYesButton;
+        private final Button mResponseNoButton;
 
-        public Violation mItem;
+        private Violation mItem;
 
-        public ViewHolder(View view) {
+        private ViewHolder(View view) {
             super(view);
             mView = view;
             mViolatingAppIcon = (ImageView) view.findViewById(R.id.violatingAppIcon);

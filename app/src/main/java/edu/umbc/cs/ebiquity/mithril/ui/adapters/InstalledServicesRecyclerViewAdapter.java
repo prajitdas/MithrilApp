@@ -73,14 +73,14 @@ public class InstalledServicesRecyclerViewAdapter extends RecyclerView.Adapter<I
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder {
-        public final View mView;
-        public final ImageView mServIcon;
-        public final TextView mServLbl;
-        public final TextView mServAppName;
-        public final TextView mServName;
-        public ServData mItem;
+        private final View mView;
+        private final ImageView mServIcon;
+        private final TextView mServLbl;
+        private final TextView mServAppName;
+        private final TextView mServName;
+        private ServData mItem;
 
-        public ViewHolder(View view) {
+        private ViewHolder(View view) {
             super(view);
             mView = view;
             mServIcon = (ImageView) view.findViewById(R.id.serv_icon);

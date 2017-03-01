@@ -68,13 +68,13 @@ public class InstalledContentProvidersRecyclerViewAdapter extends RecyclerView.A
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder {
-        public final View mView;
-        public final ImageView mContentProvExported;
-        public final TextView mContentProvName;
-        public final TextView mContentProvProcessName;
-        public ContentProvData mItem;
+        private final View mView;
+        private final ImageView mContentProvExported;
+        private final TextView mContentProvName;
+        private final TextView mContentProvProcessName;
+        private ContentProvData mItem;
 
-        public ViewHolder(View view) {
+        private ViewHolder(View view) {
             super(view);
             mView = view;
             mContentProvExported = (ImageView) view.findViewById(R.id.contentProvExportedImageView);
