@@ -9,5 +9,5 @@
     android:layout_marginLeft="16dp"
     android:layout_marginRight="16dp"
     app:layoutManager="LinearLayoutManager"
-    tools:context="edu.umbc.cs.ebiquity.mithril.ui.fragments.mainactivityfragments.BroadcastReceiversFragment"
+    tools:context=".ui.fragments.mainactivityfragments.BroadcastReceiversFragment"
     tools:listitem="@layout/fragment_broadcastreceivers" />
