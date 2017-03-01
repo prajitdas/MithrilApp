@@ -12,6 +12,7 @@ import android.database.sqlite.SQLiteDatabase;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
+import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
 import android.support.design.widget.Snackbar;
@@ -79,8 +80,8 @@ public class MainActivity extends AppCompatActivity
     private SQLiteDatabase mithrilDB;
     private SharedPreferences sharedPreferences;
 
-    private Violation violationItemSelected = null;
-    private List<AppData> appDataItemsSelected = null;
+    //    private Violation violationItemSelected = null;
+//    private List<AppData> appDataItemsSelected = null;
     private List<Violation> violationItems;
     private FloatingActionButton fab;
 
@@ -90,7 +91,7 @@ public class MainActivity extends AppCompatActivity
     private View headerView;
 
     @Override
-    public boolean onNavigationItemSelected(MenuItem item) {
+    public boolean onNavigationItemSelected(@NonNull MenuItem item) {
         // Handle navigation view item clicks here.
         int id = item.getItemId();
 
@@ -531,13 +532,13 @@ public class MainActivity extends AppCompatActivity
     @Override
     public void onListFragmentInteraction(Violation item) {
         //TODO Do something with the Violation selected
-        violationItemSelected = item;
+//        violationItemSelected = item;
     }
 
     @Override
     public void onListFragmentLongInteraction(List<AppData> items) {
         //TODO Do something with the Apps selected
-        appDataItemsSelected = items;
+//        appDataItemsSelected = items;
     }
 
     @Override
