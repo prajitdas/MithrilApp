@@ -178,6 +178,7 @@ public class MainActivity extends AppCompatActivity
          */
         sharedPreferences = getApplicationContext().getSharedPreferences(MithrilApplication.getSharedPreferencesName(), Context.MODE_PRIVATE);
 
+//        Log.d(MithrilApplication.getDebugTag(), sharedPreferences.getString(MithrilApplication.getPrefKeyUserConsent(), "NULL"));
         if (sharedPreferences.getString(MithrilApplication.getPrefKeyUserConsent(), null) == null) {
             Intent consentActivity = new Intent(getApplicationContext(), UserAgreementActivity.class);
             startActivityForResult(consentActivity, MithrilApplication.ACTIVITY_RESULT_CODE_USER_CONSENT_RECEIVED);

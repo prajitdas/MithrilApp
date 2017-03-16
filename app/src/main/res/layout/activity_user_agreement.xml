@@ -2,114 +2,76 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/white"
+    android:paddingBottom="@dimen/fab_margin"
+    android:paddingLeft="@dimen/fab_margin"
+    android:paddingRight="@dimen/fab_margin"
+    android:paddingTop="@dimen/fab_margin"
     tools:context=".ui.activities.UserAgreementActivity">
-    <!--android:background="@drawable/privacy"-->
+
+    <ImageView
+        android:id="@+id/icon"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true"
+        android:adjustViewBounds="true"
+        android:elevation="24dp"
+        android:maxHeight="200dp"
+        android:maxWidth="200dp"
+        android:paddingBottom="@dimen/fab_margin"
+        android:src="@drawable/logo" />
+
+    <TextView
+        android:id="@+id/project_name_TextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/icon"
+        android:layout_centerInParent="true"
+        android:fontFamily="sans-serif-smallcaps"
+        android:paddingBottom="@dimen/fab_margin"
+        android:text="@string/app_name"
+        android:textAlignment="center"
+        android:textColor="@color/colorPrimary"
+        android:textSize="24sp" />
+
+    <Button
+        android:id="@+id/showUserAgreementBtn"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/project_name_TextView"
+        android:layout_centerHorizontal="true"
+        android:text="@string/show_user_agreement_btn_label"
+        android:theme="@style/AppTheme.Button" />
+
+    <TextView
+        android:id="@+id/fullscreen_user_agreement_please_read_TextView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/showUserAgreementBtn"
+        android:paddingLeft="@dimen/card_view_margin"
+        android:paddingRight="@dimen/card_view_margin"
+        android:paddingTop="@dimen/fab_margin"
+        android:text="@string/fullscreen_user_agreement_consent_text"
+        android:textAlignment="center"
+        android:textAppearance="@android:style/TextAppearance.Holo.Medium"
+        android:textColor="@color/colorPrimaryDark"
+        android:textSize="20sp" />
 
     <Button
         android:id="@+id/iDisagreeBtn"
-        android:layout_width="match_parent"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
         android:layout_alignParentEnd="true"
-        android:layout_alignParentStart="true"
         android:text="@string/fullscreen_user_disagreement_button_label"
         android:theme="@style/AppTheme.Button" />
 
     <Button
         android:id="@+id/iAgreeBtn"
-        android:layout_width="match_parent"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_above="@id/iDisagreeBtn"
-        android:layout_alignParentEnd="true"
-        android:layout_alignParentStart="true"
-        android:paddingBottom="@dimen/card_view_margin"
+        android:layout_alignParentBottom="true"
+        android:layout_toLeftOf="@+id/iDisagreeBtn"
         android:text="@string/fullscreen_user_agreement_button_label"
         android:theme="@style/AppTheme.Button" />
-
-    <android.support.v7.widget.CardView
-        android:id="@+id/fullscreen_user_agreement_project_details_text_CardView"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="@color/whitesmoke">
-        <!--card_view:cardCornerRadius="10dp">-->
-
-        <RelativeLayout
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:gravity="center">
-
-            <ImageView
-                android:id="@+id/icon"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignParentTop="true"
-                android:layout_centerInParent="true"
-                android:adjustViewBounds="true"
-                android:elevation="24dp"
-                android:maxHeight="200dp"
-                android:maxWidth="200dp"
-                android:paddingBottom="@dimen/card_view_margin"
-                android:paddingTop="@dimen/card_view_margin"
-                android:src="@drawable/logo" />
-
-            <TextView
-                android:id="@+id/fullscreen_user_agreement_consent_Header_TextView"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_below="@id/icon"
-                android:layout_centerInParent="true"
-                android:fontFamily="sans-serif-smallcaps"
-                android:paddingBottom="@dimen/card_view_margin"
-                android:paddingLeft="@dimen/card_view_margin"
-                android:paddingRight="@dimen/card_view_margin"
-                android:paddingTop="@dimen/card_view_margin"
-                android:text="@string/app_name"
-                android:textAlignment="center"
-                android:textColor="@color/colorPrimary"
-                android:textSize="24sp" />
-        </RelativeLayout>
-    </android.support.v7.widget.CardView>
-
-    <android.support.v7.widget.CardView
-        android:id="@+id/fullscreen_user_agreement_please_read_text_CardView"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/fullscreen_user_agreement_project_details_text_CardView"
-        android:background="@color/whitesmoke">
-        <!--card_view:cardCornerRadius="10dp">-->
-
-        <RelativeLayout
-            android:layout_width="match_parent"
-            android:layout_height="match_parent">
-
-            <Button
-                android:id="@+id/showUserAgreementBtn"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_alignParentEnd="true"
-                android:layout_alignParentStart="true"
-                android:layout_alignParentTop="true"
-                android:layout_centerVertical="true"
-                android:text="@string/show_user_agreement_btn_label"
-                android:theme="@style/AppTheme.Button" />
-
-            <TextView
-                android:id="@+id/fullscreen_user_agreement_please_read_TextView"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_alignParentEnd="true"
-                android:layout_alignParentStart="true"
-                android:layout_below="@id/showUserAgreementBtn"
-                android:paddingBottom="@dimen/card_view_margin"
-                android:paddingLeft="@dimen/card_view_margin"
-                android:paddingRight="@dimen/card_view_margin"
-                android:paddingTop="@dimen/card_view_margin"
-                android:text="@string/fullscreen_user_agreement_consent_text"
-                android:textAlignment="center"
-                android:textAppearance="@android:style/TextAppearance.Holo.Medium"
-                android:textColor="@color/colorPrimaryDark"
-                android:textSize="20sp" />
-        </RelativeLayout>
-    </android.support.v7.widget.CardView>
 </RelativeLayout>
