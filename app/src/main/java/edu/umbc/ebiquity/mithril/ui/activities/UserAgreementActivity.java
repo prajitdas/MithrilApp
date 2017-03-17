@@ -6,7 +6,6 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.database.sqlite.SQLiteDatabase;
-import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AppCompatActivity;
@@ -104,10 +103,7 @@ public class UserAgreementActivity extends AppCompatActivity {
         mIDisagreeBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Uri packageUri = Uri.parse("package:" + MithrilApplication.MITHRIL_APP_PACKAGE_NAME);
-                Intent uninstallIntent =
-                        new Intent(Intent.ACTION_DELETE, packageUri);
-                startActivity(uninstallIntent);
+                PermissionHelper.quitMithril(v.getContext(), "Bye! Thanks for helping with our survey...");
 //                The following line should be unreachable.
 //                resultCanceled();
             }

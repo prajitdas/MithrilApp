@@ -20,6 +20,7 @@ public class MithrilApplication extends Application {
      * Public stuff! Make them private if you can...
      */
     public static final int ALL_PERMISSIONS_MITHRIL_REQUEST_CODE = 100;
+    public static final int USAGE_STATS_PERMISSION_REQUEST_CODE = 200;
 
     public static final int ACTIVITY_RESULT_CODE_USER_AGREEMENT_READ = 10;
     public static final int ACTIVITY_RESULT_CODE_USER_CONSENT_RECEIVED = 11;

@@ -2,8 +2,10 @@ package edu.umbc.ebiquity.mithril.ui.activities;
 
 import android.Manifest;
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.app.FragmentManager;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
@@ -12,6 +14,7 @@ import android.database.sqlite.SQLiteDatabase;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
+import android.provider.Settings;
 import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
@@ -75,6 +78,8 @@ public class MainActivity extends AppCompatActivity
 
     private final File downloadsDirectory = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS);
     private final String agreementFile = MithrilApplication.getFlierPdfFileName();
+
+    private final String quittingMessageUponUsageStatsDenial = "Bye! The " + Manifest.permission.PACKAGE_USAGE_STATS + " permission was necessary for app functionality. Please uninstall the app...";
 
     private MithrilDBHelper mithrilDBHelper;
     private SQLiteDatabase mithrilDB;
@@ -207,14 +212,44 @@ public class MainActivity extends AppCompatActivity
     private void initHouseKeepingTasks() {
         if (PermissionHelper.isPermissionGranted(this, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED)
             startService(new Intent(this, LocationUpdateService.class));
-        if (sharedPreferences.getBoolean(MithrilApplication.getPrefKeyUserDeniedUsageStatsPermissions(), false)) {
-            if (PermissionHelper.needsUsageStatsPermission(this)) {
-                PermissionHelper.quitMithril(this, "The " + Manifest.permission.PACKAGE_USAGE_STATS + " permission is required for app functionality. Please enable in settings and relaunch me...");
-                finish();
+        if (!PermissionHelper.needsUsageStatsPermission(this))
+            startService(new Intent(this, AppLaunchDetectorService.class));
+        else {
+            if (sharedPreferences.contains(MithrilApplication.getPrefKeyUserDeniedUsageStatsPermissions())) {
+                if (sharedPreferences.getBoolean(MithrilApplication.getPrefKeyUserDeniedUsageStatsPermissions(), false))
+                    PermissionHelper.quitMithril(this, quittingMessageUponUsageStatsDenial);
+                else
+                    startService(new Intent(this, AppLaunchDetectorService.class));
             } else
-                startService(new Intent(this, AppLaunchDetectorService.class));
-        } else
-            PermissionHelper.getUsageStatsPermission(this);
+                usageStatsDialog();
+        }
+    }
+
+    private void usageStatsDialog() {
+        final AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setMessage(R.string.allow_usage_stats_permission)
+                .setPositiveButton(R.string.dialog_resp_allow, new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+//                        SharedPreferences.Editor editor = builder.getContext().getSharedPreferences(MithrilApplication.getSharedPreferencesName(), Context.MODE_PRIVATE).edit();
+//                        editor.putBoolean(MithrilApplication.getPrefKeyUserDeniedUsageStatsPermissions(), false);
+////                         editor.apply(); //Apply method is asynchronous.
+//                        // It does not get stored if we kill the process right after. So only in this place have we used editor.commit();
+//                        editor.commit();
+                        startActivityForResult(new Intent(Settings.ACTION_USAGE_ACCESS_SETTINGS), MithrilApplication.USAGE_STATS_PERMISSION_REQUEST_CODE);
+                    }
+                })
+                .setNegativeButton(R.string.dialog_resp_deny, new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+                        SharedPreferences.Editor editor = builder.getContext().getSharedPreferences(MithrilApplication.getSharedPreferencesName(), Context.MODE_PRIVATE).edit();
+                        editor.putBoolean(MithrilApplication.getPrefKeyUserDeniedUsageStatsPermissions(), true);
+//                         editor.apply(); //Apply method is asynchronous.
+                        // It does not get stored if we kill the process right after. So only in this place have we used editor.commit();
+                        editor.commit();
+                        PermissionHelper.quitMithril(getApplicationContext(), quittingMessageUponUsageStatsDenial);
+                    }
+                });
+        AlertDialog alertDialog = builder.create();
+        alertDialog.show();
     }
 
     private void initViews() {
@@ -600,9 +635,14 @@ public class MainActivity extends AppCompatActivity
                     }
                 } catch (NullPointerException e) {
                     Log.d(MithrilApplication.getDebugTag(), "An unexpected end! The Dev will have to look into this. Please report the problem... " + e.getMessage());
-//                    Toast.makeText(this, "An unexpected end! The Dev will have to look into this. Please report the problem... " + e.getMessage(), Toast.LENGTH_LONG).show();
-                    finish();
+                    PermissionHelper.toastAndFinish(this, "An unexpected end! The Dev will have to look into this. Please report the problem... " + e.getMessage());
                 }
+            }
+        } else if (requestCode == MithrilApplication.USAGE_STATS_PERMISSION_REQUEST_CODE) {
+            if (resultCode == Activity.RESULT_OK)
+                startService(new Intent(this, AppLaunchDetectorService.class));
+            else {
+                PermissionHelper.quitMithril(this, quittingMessageUponUsageStatsDenial);
             }
         }
     }

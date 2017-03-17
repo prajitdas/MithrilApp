@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Handler;
 import android.os.IBinder;
+import android.util.Log;
 
 import java.util.Timer;
 import java.util.TimerTask;
@@ -28,15 +29,15 @@ public class AppLaunchDetectorService extends Service {
     @Override
     public void onCreate() {
         context = this;
-//        if (PermissionHelper.postLollipop())
-        appLaunchDetector = new AppLaunchDetector();
-//        else
-//            detector = new PreLollipopDetector();
-        // cancel if already existed
-        if (mTimer != null) {
-            mTimer.cancel();
-        } else {// recreate new
-            mTimer = new Timer();
+        try {
+            appLaunchDetector = new AppLaunchDetector();
+            if (mTimer != null) {
+                mTimer.cancel();
+            } else {// recreate new
+                mTimer = new Timer();
+            }
+        } catch (NullPointerException e) {
+            Log.d(MithrilApplication.getDebugTag(), "Check if we have the right permissions, we probably could not instantiate the detector");
         }
     }
 
