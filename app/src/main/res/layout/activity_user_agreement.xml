@@ -2,10 +2,12 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/colorPrimaryLight"
     android:paddingBottom="@dimen/fab_margin"
     android:paddingLeft="@dimen/fab_margin"
     android:paddingRight="@dimen/fab_margin"
     android:paddingTop="@dimen/fab_margin"
+    android:theme="@style/AppTheme.NoActionBar"
     tools:context=".ui.activities.UserAgreementActivity">
 
     <Button
@@ -43,7 +45,7 @@
         android:paddingTop="@dimen/fab_margin"
         android:text="@string/app_name"
         android:textAlignment="center"
-        android:textColor="@color/colorAccent"
+        android:textColor="@color/colorPrimaryDark"
         android:textSize="24sp" />
 
     <ImageView
