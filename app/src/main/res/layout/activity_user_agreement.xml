@@ -9,7 +9,7 @@
     tools:context=".ui.activities.UserAgreementActivity">
 
     <Button
-        android:id="@+id/showUserAgreementBtn"
+        android:id="@+id/continueToUserAgreementBtn"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
@@ -21,14 +21,15 @@
         android:id="@+id/fullscreen_user_agreement_please_read_TextView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_above="@id/showUserAgreementBtn"
+        android:layout_above="@id/continueToUserAgreementBtn"
+        android:paddingBottom="@dimen/fab_margin"
         android:paddingLeft="@dimen/card_view_margin"
         android:paddingRight="@dimen/card_view_margin"
         android:paddingTop="@dimen/fab_margin"
         android:text="@string/fullscreen_user_agreement_consent_text"
         android:textAlignment="center"
         android:textAppearance="@android:style/TextAppearance.Holo.Medium"
-        android:textColor="@color/colorPrimaryDark"
+        android:textColor="@color/colorPrimaryText"
         android:textSize="20sp" />
 
     <TextView
@@ -39,18 +40,20 @@
         android:layout_centerInParent="true"
         android:fontFamily="sans-serif-smallcaps"
         android:paddingBottom="@dimen/fab_margin"
+        android:paddingTop="@dimen/fab_margin"
         android:text="@string/app_name"
         android:textAlignment="center"
-        android:textColor="@color/colorPrimary"
+        android:textColor="@color/colorButton"
         android:textSize="24sp" />
 
     <ImageView
         android:id="@+id/icon"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_centerInParent="true"
+        android:layout_above="@+id/project_name_TextView"
+        android:layout_centerHorizontal="true"
         android:adjustViewBounds="true"
-        android:elevation="24dp"
+        android:elevation="200dp"
         android:maxHeight="200dp"
         android:maxWidth="200dp"
         android:paddingBottom="@dimen/fab_margin"

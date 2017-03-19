@@ -1,27 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <!--    Main theme colors                                           -->
-    <!--    your app branding color for the app bar
-            #4b8df8
-            rgb(75, 141, 248)
-            hsl(217, 93%, 63%) -->
-    <color name="colorPrimary">#4B8DF8</color>
-    <!--    darker variant for the status bar and contextual app bars
-            #153184
-            rgb(21, 49, 132)
-            hsl(225, 73%, 30%) -->
-    <color name="colorPrimaryDark">#153184</color>
-    <!--    theme UI controls like checkboxes and text fields
-            #00660a
-            rgb(0, 102, 10)
-            hsl(126, 100%, 20%) -->
-    <color name="colorAccent">#00660a</color>
-    <!--    button colors for app
-            #d0fbd5
-            rgb(208, 251, 213)
-            hsl(127, 84%, 90%) -->
-    <color name="colorButton">#d0fbd5</color>
-    <!--    End of theme colors                                         -->
+    <!--From: https://www.materialpalette.com/blue/blue -->
+    <color name="colorPrimary">#2196F3</color>
+    <color name="colorPrimaryDark">#1976D2</color>
+    <color name="colorPrimaryLight">#BBDEFB</color>
+    <color name="colorAccent">#448AFF</color>
+    <color name="colorPrimaryText">#212121</color>
+    <color name="colorSecondaryText">#757575</color>
+    <color name="colorButton">#FFFFFF</color>
+    <color name="colorDivider">#BDBDBD</color>
 
     <color name="white">#ffffff</color>
     <color name="ivory">#fffff0</color>

@@ -21,7 +21,7 @@ import edu.umbc.ebiquity.mithril.util.specialtasks.permissions.PermissionHelper;
 
 public class UserAgreementActivity extends AppCompatActivity {
     //    private final Handler handler = new Handler();
-    private Button mShowUserAgreementBtn;
+    private Button mContinueToUserAgreementBtn;
 
     private SharedPreferences sharedPreferences;
     private boolean isResultOkay = false;
@@ -56,7 +56,7 @@ public class UserAgreementActivity extends AppCompatActivity {
 
     private void initViews() {
         setContentView(R.layout.activity_user_agreement);
-        mShowUserAgreementBtn = (Button) findViewById(R.id.showUserAgreementBtn);
+        mContinueToUserAgreementBtn = (Button) findViewById(R.id.continueToUserAgreementBtn);
 
         makeFullScreen();
         setOnClickListeners();
@@ -73,7 +73,7 @@ public class UserAgreementActivity extends AppCompatActivity {
     }
 
     private void setOnClickListeners() {
-        mShowUserAgreementBtn.setOnClickListener(new View.OnClickListener() {
+        mContinueToUserAgreementBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Intent showUserAgreementIntent = new Intent(v.getContext(), ShowUserAgreementActivity.class);
