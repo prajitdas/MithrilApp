@@ -66,12 +66,13 @@ public class ShowUserAgreementActivity extends AppCompatActivity {
     protected void onCreate(Bundle aSavedInstanceState) {
         savedInstanceState = aSavedInstanceState;
         super.onCreate(savedInstanceState);
-        testUserAgreementAndLaunchNextActivity();
+//        testUserAgreementAndLaunchNextActivity();
     }
 
     @Override
     public void onResume() {
         super.onResume();
+        overridePendingTransition(0, 0);
         makeFullScreen();
         initViews();
         try {
@@ -93,25 +94,16 @@ public class ShowUserAgreementActivity extends AppCompatActivity {
                         | View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY);
     }
 
-    private void testUserAgreementAndLaunchNextActivity() {
-        /*
-         * If the user has already consented, we just go back tp the CoreActivity
-         */
-        sharedPreferences = getSharedPreferences(MithrilApplication.getSharedPreferencesName(), Context.MODE_PRIVATE);
-        if (sharedPreferences.contains(MithrilApplication.getPrefKeyUserConsent()) &&
-                sharedPreferences.getBoolean(MithrilApplication.getPrefKeyUserConsent(), false) != false &&
-                sharedPreferences.contains(MithrilApplication.getPrefKeyUserDeniedPermissions())) {
-            if (sharedPreferences.getBoolean(MithrilApplication.getPrefKeyUserDeniedPermissions(), true) != true)
-                startNextActivity(this, CoreActivity.class);
-            else
-                startNextActivity(this, PermissionAcquisitionActivity.class);
-        }
-    }
+//    private void testUserAgreementAndLaunchNextActivity() {
+//        if (PermissionHelper.isAllRequiredPermissionsGranted(this) && !PermissionHelper.needsUsageStatsPermission(this))
+//            startNextActivity(this, CoreActivity.class);
+//        else
+//            startNextActivity(this, PermissionAcquisitionActivity.class);
+//    }
 
     private void initViews() {
         setContentView(R.layout.activity_show_user_agreement);
-
-        sharedPreferences = getApplicationContext().getSharedPreferences(MithrilApplication.getSharedPreferencesName(), Context.MODE_PRIVATE);
+        sharedPreferences = getSharedPreferences(MithrilApplication.getSharedPreferencesName(), Context.MODE_PRIVATE);
 
         mImageView = (ImageView) findViewById(R.id.image);
         mButtonNext = (Button) findViewById(R.id.next);
@@ -305,6 +297,7 @@ public class ShowUserAgreementActivity extends AppCompatActivity {
         } catch (IOException e) {
             e.printStackTrace();
         }
+        overridePendingTransition(0, 0);
         super.onPause();
     }
 

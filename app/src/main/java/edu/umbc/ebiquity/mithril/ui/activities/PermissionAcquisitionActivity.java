@@ -35,10 +35,17 @@ public class PermissionAcquisitionActivity extends AppCompatActivity {
     }
 
     @Override
-    public void onResume() {
+    protected void onResume() {
         super.onResume();
+        overridePendingTransition(0, 0);
         makeFullScreen();
         initViews();
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        overridePendingTransition(0, 0);
     }
 
     private void makeFullScreen() {
@@ -174,7 +181,7 @@ public class PermissionAcquisitionActivity extends AppCompatActivity {
     }
 
     private boolean isPermissionAcquisitionComplete() {
-        return mSpecialPermToggleButton.isChecked() && mGenericPermToggleButton.isChecked();
+        return PermissionHelper.isAllRequiredPermissionsGranted(this) && !PermissionHelper.needsUsageStatsPermission(this);
     }
 
     @Override

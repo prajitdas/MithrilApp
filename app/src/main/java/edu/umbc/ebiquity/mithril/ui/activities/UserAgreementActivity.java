@@ -10,6 +10,7 @@ import android.widget.Button;
 
 import edu.umbc.ebiquity.mithril.MithrilApplication;
 import edu.umbc.ebiquity.mithril.R;
+import edu.umbc.ebiquity.mithril.util.specialtasks.permissions.PermissionHelper;
 
 public class UserAgreementActivity extends AppCompatActivity {
     private Button mContinueToUserAgreementBtn;
@@ -24,8 +25,15 @@ public class UserAgreementActivity extends AppCompatActivity {
     @Override
     protected void onResume() {
         super.onResume();
+        overridePendingTransition(0, 0);
         makeFullScreen();
         initViews();
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        overridePendingTransition(0, 0);
     }
 
     private void makeFullScreen() {
@@ -39,19 +47,13 @@ public class UserAgreementActivity extends AppCompatActivity {
     }
 
     private void testUserAgreementAndLaunchNextActivity() {
-        /*
-         * If the user has already consented, we just go back tp the CoreActivity
-         */
-        sharedPreferences = getSharedPreferences(MithrilApplication.getSharedPreferencesName(), Context.MODE_PRIVATE);
-        if (sharedPreferences.contains(MithrilApplication.getPrefKeyUserConsent()) &&
-                sharedPreferences.getBoolean(MithrilApplication.getPrefKeyUserConsent(), false) != false) {
-            if (sharedPreferences.contains(MithrilApplication.getPrefKeyUserDeniedPermissions())) {
-                if (sharedPreferences.getBoolean(MithrilApplication.getPrefKeyUserDeniedPermissions(), true) != true)
-                    startNextActivity(this, CoreActivity.class);
-                else
-                    startNextActivity(this, PermissionAcquisitionActivity.class);
-            } else
-                startNextActivity(this, ShowUserAgreementActivity.class);
+        if (PermissionHelper.isAllRequiredPermissionsGranted(this) && !PermissionHelper.needsUsageStatsPermission(this))
+            startNextActivity(this, CoreActivity.class);
+        else {
+            sharedPreferences = getSharedPreferences(MithrilApplication.getSharedPreferencesName(), Context.MODE_PRIVATE);
+            if (sharedPreferences.contains(MithrilApplication.getPrefKeyUserConsent()) &&
+                    sharedPreferences.getBoolean(MithrilApplication.getPrefKeyUserConsent(), false) != false)
+                startNextActivity(this, PermissionAcquisitionActivity.class);
         }
     }
 
@@ -78,9 +80,9 @@ public class UserAgreementActivity extends AppCompatActivity {
 
     private void startNextActivity(Context context, Class activityClass) {
         Intent launchNextActivity = new Intent(context, activityClass);
+        launchNextActivity.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
         launchNextActivity.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         launchNextActivity.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
-        launchNextActivity.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
         startActivity(launchNextActivity);
     }
 }
