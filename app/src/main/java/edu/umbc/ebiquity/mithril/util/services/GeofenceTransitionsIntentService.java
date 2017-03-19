@@ -131,7 +131,7 @@ public class GeofenceTransitionsIntentService extends IntentService {
 
     /**
      * Posts a notification in the notification bar when a transition is detected.
-     * If the user clicks the notification, control goes to the MainActivity.
+     * If the user clicks the notification, control goes to the CoreActivity.
      */
     private void sendNotification(String notificationDetails) {
         // Create an explicit content Intent that starts the main Activity.

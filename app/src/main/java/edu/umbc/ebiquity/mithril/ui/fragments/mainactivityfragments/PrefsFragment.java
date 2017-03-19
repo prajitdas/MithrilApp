@@ -36,7 +36,7 @@ import java.util.Map;
 
 import edu.umbc.ebiquity.mithril.MithrilApplication;
 import edu.umbc.ebiquity.mithril.R;
-import edu.umbc.ebiquity.mithril.ui.activities.MainActivity;
+import edu.umbc.ebiquity.mithril.ui.activities.CoreActivity;
 import edu.umbc.ebiquity.mithril.util.receivers.AddressResultReceiver;
 import edu.umbc.ebiquity.mithril.util.services.FetchAddressIntentService;
 import edu.umbc.ebiquity.mithril.util.services.GeofenceTransitionsIntentService;
@@ -311,7 +311,7 @@ public class PrefsFragment extends PreferenceFragment implements
                 editor.apply();
 
                 if (mSwitchPrefAllDone.isChecked())
-                    context.startActivity(new Intent(context, MainActivity.class));
+                    context.startActivity(new Intent(context, CoreActivity.class));
 
                 return true;
             }

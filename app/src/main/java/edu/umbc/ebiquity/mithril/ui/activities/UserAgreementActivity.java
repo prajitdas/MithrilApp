@@ -123,7 +123,7 @@ public class UserAgreementActivity extends AppCompatActivity {
 
     private void ifUserConsentedGoBackToMainApp() {
         /**
-         * If the user has already consented, we just go back tp the MainActivity, or else we are stuck here!
+         * If the user has already consented, we just go back tp the CoreActivity, or else we are stuck here!
          */
         sharedPreferences = getApplicationContext().getSharedPreferences(MithrilApplication.getSharedPreferencesName(), Context.MODE_PRIVATE);
         if (sharedPreferences.getString(MithrilApplication.getPrefKeyUserConsent(), null) != null)

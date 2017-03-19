@@ -62,7 +62,7 @@ import edu.umbc.ebiquity.mithril.util.services.AppLaunchDetectorService;
 import edu.umbc.ebiquity.mithril.util.services.LocationUpdateService;
 import edu.umbc.ebiquity.mithril.util.specialtasks.permissions.PermissionHelper;
 
-public class MainActivity extends AppCompatActivity
+public class CoreActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener,
         AppsFragment.OnListFragmentInteractionListener,
         AppsFragment.OnListFragmentLongInteractionListener,
@@ -179,7 +179,7 @@ public class MainActivity extends AppCompatActivity
 
     private void getUserConsent() {
         /*
-         * If the user has already consented, we just go to the MainActivity, or else we are stuck here!
+         * If the user has already consented, we just go to the CoreActivity, or else we are stuck here!
          */
         sharedPreferences = getApplicationContext().getSharedPreferences(MithrilApplication.getSharedPreferencesName(), Context.MODE_PRIVATE);
 
