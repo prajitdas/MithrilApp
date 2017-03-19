@@ -238,7 +238,7 @@
 
     <string name="user_accepts_button_label">Accept</string>
     <string name="user_declines_button_label">Decline</string>
-    <string name="fullscreen_user_agreement_consent_text">Welcome!\nPlease click \"Continue\" to read the user agreement statement and details of the study&#8230;</string>
+    <string name="fullscreen_user_agreement_consent_text">Welcome!\nPlease click \"Continue\" to read the user agreement &amp; study details&#8230;</string>
     <string name="user_agreement_information_text">We collect anonymous feedback about your privacy preferences.</string>
     <string name="continue_user_agreement_btn_label">Continue</string>
     <string name="agreement_copied">User agreement in downloads folder&#8230;</string>
