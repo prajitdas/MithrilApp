@@ -10,7 +10,6 @@ import android.widget.Button;
 
 import edu.umbc.ebiquity.mithril.MithrilApplication;
 import edu.umbc.ebiquity.mithril.R;
-import edu.umbc.ebiquity.mithril.util.specialtasks.permissions.PermissionHelper;
 
 public class UserAgreementActivity extends AppCompatActivity {
     private Button mContinueToUserAgreementBtn;
@@ -44,20 +43,16 @@ public class UserAgreementActivity extends AppCompatActivity {
          * If the user has already consented, we just go back tp the CoreActivity
          */
         sharedPreferences = getSharedPreferences(MithrilApplication.getSharedPreferencesName(), Context.MODE_PRIVATE);
-        if (sharedPreferences.contains(MithrilApplication.getPrefKeyUserConsent())) {
-            if (sharedPreferences.getBoolean(MithrilApplication.getPrefKeyUserConsent(), false) == false)
-                PermissionHelper.quitMithril(this, MithrilApplication.MITHRIL_BYE_BYE_MESSAGE);
-            else {
-                if (sharedPreferences.contains(MithrilApplication.getPrefKeyUserDeniedPermissions())) {
-                    if (sharedPreferences.getBoolean(MithrilApplication.getPrefKeyUserDeniedPermissions(), true) != true)
-                        startNextActivity(this, CoreActivity.class);
-                    else
-                        startNextActivity(this, PermissionAcquisitionActivity.class);
-                } else
-                    startNextActivity(this, ShowUserAgreementActivity.class);
-            }
-        } else
-            startNextActivity(this, ShowUserAgreementActivity.class);
+        if (sharedPreferences.contains(MithrilApplication.getPrefKeyUserConsent()) &&
+                sharedPreferences.getBoolean(MithrilApplication.getPrefKeyUserConsent(), false) != false) {
+            if (sharedPreferences.contains(MithrilApplication.getPrefKeyUserDeniedPermissions())) {
+                if (sharedPreferences.getBoolean(MithrilApplication.getPrefKeyUserDeniedPermissions(), true) != true)
+                    startNextActivity(this, CoreActivity.class);
+                else
+                    startNextActivity(this, PermissionAcquisitionActivity.class);
+            } else
+                startNextActivity(this, ShowUserAgreementActivity.class);
+        }
     }
 
     private void initViews() {
