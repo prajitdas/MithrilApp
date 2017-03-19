@@ -71,6 +71,7 @@
 
     <application
         android:icon="@mipmap/ic_launcher"
+        android:label="@string/short_app_name"
         android:supportsRtl="true">
         <activity
             android:name=".ui.activities.UserAgreementActivity"

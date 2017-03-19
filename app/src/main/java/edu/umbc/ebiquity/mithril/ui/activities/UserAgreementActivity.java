@@ -18,13 +18,13 @@ public class UserAgreementActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        testUserAgreementAndLaunchNextActivity();
     }
 
     @Override
     protected void onResume() {
         super.onResume();
         makeFullScreen();
-        testUserAgreementAndLaunchNextActivity();
         initViews();
     }
 

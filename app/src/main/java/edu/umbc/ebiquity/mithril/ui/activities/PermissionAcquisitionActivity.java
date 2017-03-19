@@ -31,15 +31,14 @@ public class PermissionAcquisitionActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        testPermissionsAndLaunchNextActivity();
     }
 
     @Override
     public void onResume() {
         super.onResume();
         makeFullScreen();
-        editor = getSharedPreferences(MithrilApplication.getSharedPreferencesName(), Context.MODE_PRIVATE).edit();
         initViews();
-        testPermissionsAndLaunchNextActivity();
     }
 
     private void makeFullScreen() {
@@ -54,7 +53,8 @@ public class PermissionAcquisitionActivity extends AppCompatActivity {
 
     private void initViews() {
         setContentView(R.layout.activity_permission_acquisition);
-        sharedPreferences = getApplicationContext().getSharedPreferences(MithrilApplication.getSharedPreferencesName(), Context.MODE_PRIVATE);
+        sharedPreferences = getSharedPreferences(MithrilApplication.getSharedPreferencesName(), Context.MODE_PRIVATE);
+        editor = getSharedPreferences(MithrilApplication.getSharedPreferencesName(), Context.MODE_PRIVATE).edit();
 
         mGenericPermToggleButton = (ToggleButton) findViewById(R.id.genericPermToggleButton);
         mSpecialPermToggleButton = (ToggleButton) findViewById(R.id.specialPermToggleButton);
@@ -169,7 +169,7 @@ public class PermissionAcquisitionActivity extends AppCompatActivity {
     }
 
     private void testPermissionsAndLaunchNextActivity() {
-        if (isPermissionAcquisitionComplete())
+        if (PermissionHelper.isAllRequiredPermissionsGranted(this) && !PermissionHelper.needsUsageStatsPermission(this))
             startNextActivity(this, CoreActivity.class);
     }
 

@@ -66,14 +66,13 @@ public class ShowUserAgreementActivity extends AppCompatActivity {
     protected void onCreate(Bundle aSavedInstanceState) {
         savedInstanceState = aSavedInstanceState;
         super.onCreate(savedInstanceState);
-        makeFullScreen();
+        testUserAgreementAndLaunchNextActivity();
     }
 
     @Override
     public void onResume() {
         super.onResume();
         makeFullScreen();
-        testUserAgreementAndLaunchNextActivity();
         initViews();
         try {
             openRenderer();
