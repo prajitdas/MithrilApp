@@ -32,8 +32,8 @@ public class UserAgreementActivity extends AppCompatActivity {
 
     @Override
     protected void onPause() {
-        super.onPause();
         overridePendingTransition(0, 0);
+        super.onPause();
     }
 
     private void makeFullScreen() {

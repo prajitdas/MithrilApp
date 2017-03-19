@@ -44,8 +44,8 @@ public class PermissionAcquisitionActivity extends AppCompatActivity {
 
     @Override
     protected void onPause() {
-        super.onPause();
         overridePendingTransition(0, 0);
+        super.onPause();
     }
 
     private void makeFullScreen() {
@@ -191,9 +191,9 @@ public class PermissionAcquisitionActivity extends AppCompatActivity {
 
     private void startNextActivity(Context context, Class activityClass) {
         Intent launchNextActivity = new Intent(context, activityClass);
+        launchNextActivity.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
         launchNextActivity.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         launchNextActivity.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
-        launchNextActivity.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
         startActivity(launchNextActivity);
     }
 }
