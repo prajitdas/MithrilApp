@@ -6,25 +6,28 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
-import android.widget.Button;
+import android.widget.ToggleButton;
 
 import edu.umbc.ebiquity.mithril.MithrilApplication;
 import edu.umbc.ebiquity.mithril.R;
+import edu.umbc.ebiquity.mithril.util.specialtasks.permissions.PermissionHelper;
 
-public class UserAgreementActivity extends AppCompatActivity {
-    private Button mContinueToUserAgreementBtn;
+public class PermissionAcquisitionActivity extends AppCompatActivity {
     private SharedPreferences sharedPreferences;
+    private ToggleButton mGenericPermToggleButton;
+    private ToggleButton mSpecialPermToggleButton;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        makeFullScreen();
     }
 
     @Override
-    protected void onResume() {
+    public void onResume() {
         super.onResume();
         makeFullScreen();
-        testUserAgreementAndLaunchNextActivity();
+//        testUserAgreementAndLaunchNextActivity();
         initViews();
     }
 
@@ -38,33 +41,41 @@ public class UserAgreementActivity extends AppCompatActivity {
                         | View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY);
     }
 
-    private void testUserAgreementAndLaunchNextActivity() {
-        /*
-         * If the user has already consented, we just go back tp the CoreActivity, or else we are going to make them uninstall the app!
-         */
-        sharedPreferences = getSharedPreferences(MithrilApplication.getSharedPreferencesName(), Context.MODE_PRIVATE);
-        if (sharedPreferences.contains(MithrilApplication.getPrefKeyUserConsent()) &&
-                sharedPreferences.getBoolean(MithrilApplication.getPrefKeyUserConsent(), false) != false)
-            startNextActivity(this, ShowUserAgreementActivity.class);
-//            else
-//                PermissionHelper.quitMithril(this, MithrilApplication.MITHRIL_BYE_BYE_MESSAGE);
-//        }
-    }
-
     private void initViews() {
-        setContentView(R.layout.activity_user_agreement);
-        mContinueToUserAgreementBtn = (Button) findViewById(R.id.continueToUserAgreementBtn);
+        setContentView(R.layout.activity_permission_acquisition);
+        sharedPreferences = getApplicationContext().getSharedPreferences(MithrilApplication.getSharedPreferencesName(), Context.MODE_PRIVATE);
+
+        mGenericPermToggleButton = (ToggleButton) findViewById(R.id.genericPermToggleButton);
+        mSpecialPermToggleButton = (ToggleButton) findViewById(R.id.specialPermToggleButton);
 
         setOnClickListeners();
     }
 
     private void setOnClickListeners() {
-        mContinueToUserAgreementBtn.setOnClickListener(new View.OnClickListener() {
+        mGenericPermToggleButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                startNextActivity(v.getContext(), ShowUserAgreementActivity.class);
             }
         });
+        mSpecialPermToggleButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+            }
+        });
+    }
+
+    private void testUserAgreementAndLaunchNextActivity() {
+        /*
+         * If the user has already consented, we just go back tp the CoreActivity, or else we are going to make them uninstall the app!
+         */
+        sharedPreferences = getSharedPreferences(MithrilApplication.getSharedPreferencesName(), Context.MODE_PRIVATE);
+        if (sharedPreferences.contains(MithrilApplication.getPrefKeyUserConsent())) {
+            if (sharedPreferences.getBoolean(MithrilApplication.getPrefKeyUserConsent(), false) != false)
+                startNextActivity(this, CoreActivity.class);
+            else
+                PermissionHelper.quitMithril(this, MithrilApplication.MITHRIL_BYE_BYE_MESSAGE);
+        }
     }
 
     @Override

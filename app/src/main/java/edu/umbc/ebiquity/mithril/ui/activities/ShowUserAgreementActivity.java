@@ -1,6 +1,5 @@
 package edu.umbc.ebiquity.mithril.ui.activities;
 
-import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -10,6 +9,7 @@ import android.graphics.pdf.PdfRenderer;
 import android.os.Bundle;
 import android.os.ParcelFileDescriptor;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
@@ -66,11 +66,14 @@ public class ShowUserAgreementActivity extends AppCompatActivity {
     protected void onCreate(Bundle aSavedInstanceState) {
         savedInstanceState = aSavedInstanceState;
         super.onCreate(savedInstanceState);
+        makeFullScreen();
     }
 
     @Override
     public void onResume() {
         super.onResume();
+        makeFullScreen();
+        testUserAgreementAndLaunchNextActivity();
         initViews();
         try {
             openRenderer();
@@ -79,14 +82,6 @@ public class ShowUserAgreementActivity extends AppCompatActivity {
             Toast.makeText(this, "Error! " + e.getMessage(), Toast.LENGTH_SHORT).show();
             finish();
         }
-
-        mIAgreeBtn = (Button) findViewById(R.id.iAgreeBtn);
-        mIDisagreeBtn = (Button) findViewById(R.id.iDisagreeBtn);
-
-//        if (!isResultOkay)
-        mIAgreeBtn.setVisibility(View.GONE);
-//        else
-//            mIAgreeBtn.setVisibility(View.VISIBLE);
     }
 
     private void makeFullScreen() {
@@ -99,33 +94,33 @@ public class ShowUserAgreementActivity extends AppCompatActivity {
                         | View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY);
     }
 
+    private void testUserAgreementAndLaunchNextActivity() {
+        /*
+         * If the user has already consented, we just go back tp the CoreActivity, or else we are going to make them uninstall the app!
+         */
+        sharedPreferences = getSharedPreferences(MithrilApplication.getSharedPreferencesName(), Context.MODE_PRIVATE);
+        if (sharedPreferences.contains(MithrilApplication.getPrefKeyUserConsent()) &&
+                sharedPreferences.getBoolean(MithrilApplication.getPrefKeyUserConsent(), false) != false)
+            startNextActivity(this, PermissionAcquisitionActivity.class);
+//            else
+//                PermissionHelper.quitMithril(this, MithrilApplication.MITHRIL_BYE_BYE_MESSAGE);
+//        }
+    }
+
     private void initViews() {
         setContentView(R.layout.activity_show_user_agreement);
 
         sharedPreferences = getApplicationContext().getSharedPreferences(MithrilApplication.getSharedPreferencesName(), Context.MODE_PRIVATE);
 
         mImageView = (ImageView) findViewById(R.id.image);
-//        mButtonOkay = (Button) findViewById(R.id.okay);
-//        mButtonCancel = (Button) findViewById(R.id.cancel);
         mButtonNext = (Button) findViewById(R.id.next);
+        mIAgreeBtn = (Button) findViewById(R.id.iAgreeBtn);
+        mIDisagreeBtn = (Button) findViewById(R.id.iDisagreeBtn);
 
-        makeFullScreen();
         setOnClickListeners();
     }
 
     private void setOnClickListeners() {
-//        mButtonOkay.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                resultOkay();
-//            }
-//        });
-//        mButtonCancel.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                resultCanceled();
-//            }
-//        });
         mButtonNext.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -142,18 +137,19 @@ public class ShowUserAgreementActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 SharedPreferences.Editor editor = v.getContext().getSharedPreferences(MithrilApplication.getSharedPreferencesName(), Context.MODE_PRIVATE).edit();
-                editor.putString(MithrilApplication.getPrefKeyUserConsent(), "agreed");
+                editor.putBoolean(MithrilApplication.getPrefKeyUserConsent(), true);
                 editor.apply();
-                // User has agreed, ask for the other permissions
-//                initHousekeepingTasks();
+                // User has agreed, ask for permissions
+                startNextActivity(v.getContext(), PermissionAcquisitionActivity.class);
             }
         });
         mIDisagreeBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                PermissionHelper.quitMithril(v.getContext(), "Bye! Thanks for helping with our survey...");
-//                The following line should be unreachable.
-//                resultCanceled();
+                SharedPreferences.Editor editor = v.getContext().getSharedPreferences(MithrilApplication.getSharedPreferencesName(), Context.MODE_PRIVATE).edit();
+                editor.putBoolean(MithrilApplication.getPrefKeyUserConsent(), false);
+                editor.apply();
+                PermissionHelper.quitMithril(v.getContext(), MithrilApplication.MITHRIL_BYE_BYE_MESSAGE);
             }
         });
     }
@@ -187,22 +183,9 @@ public class ShowUserAgreementActivity extends AppCompatActivity {
             // Showing initial page
             showPage(0);
         } catch (FileNotFoundException e) {
-//            Log.d(MithrilApplication.getDebugTag(), MithrilApplication.getFlierPdfFileName() + " not found. Make sure the file name/path is correct!");
+            Log.e(MithrilApplication.getDebugTag(), MithrilApplication.getFlierPdfFileName() + " not found. Make sure the file name/path is correct!");
             // File could not be found!
-            resultCanceled();
         }
-    }
-
-    private void resultOkay() {
-        Intent returnIntent = new Intent();
-        setResult(Activity.RESULT_OK, returnIntent);
-        finish();
-    }
-
-    private void resultCanceled() {
-        Intent returnIntent = new Intent();
-        setResult(Activity.RESULT_CANCELED, returnIntent);
-        finish();
     }
 
     private void copyAssets(File parent, String child) {
@@ -212,9 +195,10 @@ public class ShowUserAgreementActivity extends AppCompatActivity {
             try {
                 writeFile(openFileOutput(file.getName(), Context.MODE_PRIVATE));
             } catch (FileNotFoundException e) {
-//                Log.e(MithrilApplication.getDebugTag(), e.getMessage());
+                Log.e(MithrilApplication.getDebugTag(), MithrilApplication.getFlierPdfFileName() + " not found. Make sure the file name/path is correct!");
+                // File could not be found!
             }
-        } else {
+//        } else {
 //            Log.d(MithrilApplication.getDebugTag(), "file already exists");
         }
     }
@@ -329,5 +313,18 @@ public class ShowUserAgreementActivity extends AppCompatActivity {
         if (null != mCurrentPage) {
             outState.putInt(STATE_CURRENT_PAGE_INDEX, mCurrentPage.getIndex());
         }
+    }
+
+    @Override
+    public void onBackPressed() {
+        finish(); // quit app
+    }
+
+    private void startNextActivity(Context context, Class activityClass) {
+        Intent launchNextActivity = new Intent(context, activityClass);
+        launchNextActivity.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        launchNextActivity.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
+        launchNextActivity.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
+        startActivity(launchNextActivity);
     }
 }

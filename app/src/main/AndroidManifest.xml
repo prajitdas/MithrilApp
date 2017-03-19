@@ -8,16 +8,18 @@
     <uses-permission
         android:name="android.permission.PACKAGE_USAGE_STATS"
         tools:ignore="ProtectedPermissions" />
-    <!--<uses-permission android:name="android.permission.GET_TASKS" />-->
-    <!--<uses-permission android:name="android.permission.WAKE_LOCK" />-->
+    <!-- <uses-permission android:name="android.permission.GET_TASKS" /> -->
+    <!-- <uses-permission android:name="android.permission.WAKE_LOCK" /> -->
     <!-- <uses-permission android:name="android.permission.READ_LOGS" /> -->
+
 
     <!-- dangerous permission type; request to be made explicitly; protectionLevel: PROTECTION_DANGEROUS; list as follows -->
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
 
-    <!-- permission automatically available to app; protectionLevel: PROTECTION_NORMAL; not a dangerous permission; list as follows:-
+    <!--
+         permission automatically available to app; protectionLevel: PROTECTION_NORMAL; not a dangerous permission; list as follows:-
         ACCESS_LOCATION_EXTRA_COMMANDS
         ACCESS_NETWORK_STATE
         ACCESS_NOTIFICATION_POLICY
@@ -54,12 +56,13 @@
         WRITE_SYNC_SETTINGS
     -->
     <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
-    <!--<uses-permission android:name="android.permission.INTERNET" />-->
+    <!-- <uses-permission android:name="android.permission.INTERNET" /> -->
     <uses-permission android:name="android.permission.NFC" />
 
-    <!--<uses-feature-->
-    <!--android:name="android.hardware.nfc"-->
-    <!--android:required="true" />-->
+    <!-- <uses-feature -->
+    <!-- android:name="android.hardware.nfc" -->
+    <!-- android:required="true" /> -->
+
 
     <!-- Google Places API Key -->
     <meta-data
@@ -71,7 +74,6 @@
         android:supportsRtl="true">
         <activity
             android:name=".ui.activities.UserAgreementActivity"
-            android:configChanges="orientation|keyboardHidden|screenSize"
             android:label="@string/short_app_name"
             android:theme="@style/FullscreenTheme">
             <intent-filter>
@@ -83,19 +85,16 @@
         <activity
             android:name=".ui.activities.ShowUserAgreementActivity"
             android:label="@string/title_activity_show_user_agreement"
-            android:parentActivityName=".ui.activities.UserAgreementActivity"
+            android:theme="@style/FullscreenTheme"></activity>
+        <activity
+            android:name=".ui.activities.PermissionAcquisitionActivity"
+            android:label="@string/title_activity_permission_acquisition"
             android:theme="@style/FullscreenTheme">
-            <meta-data
-                android:name="android.support.PARENT_ACTIVITY"
-                android:value=".ui.activities.UserAgreementActivity" />
         </activity>
         <activity
             android:name=".ui.activities.CoreActivity"
             android:label="@string/title_activity_core"
             android:theme="@style/AppTheme.NoActionBar">
-            <meta-data
-                android:name="android.support.PARENT_ACTIVITY"
-                android:value=".ui.activities.ShowUserAgreementActivity" />
         </activity>
         <activity
             android:name=".ui.activities.ViewAppDetailsActivity"
@@ -171,5 +170,7 @@
         <service
             android:name=".util.services.GeofenceTransitionsIntentService"
             android:exported="false" />
+
     </application>
+
 </manifest>

@@ -58,6 +58,8 @@
     <string name="dialog_resp_delete">Yes</string>
     <string name="dialog_resp_NO">No</string>
 
+    <string name="allow_generic_permissions">Permissions required for app functionality</string>
+    <string name="allow_special_usage_stats_permission">PACKAGE_USAGE_STATS is a special permission we need for app functionality</string>
     <string name="allow_access_fine_location_permission">ACCESS_FINE_LOCATION permission is mandatory for app functionality</string>
     <string name="allow_write_external_storage_permission">WRITE_EXTERNAL_STORAGE permission is mandatory for app functionality</string>
     <string name="allow_usage_stats_permission">PACKAGE_USAGE_STATS permission required, please enable in settings</string>
@@ -204,6 +206,7 @@
     <string name="title_activity_rule_change">Modify rules</string>
     <string name="title_activity_user_agreement">User consent</string>
     <string name="title_activity_show_user_agreement">User agreement</string>
+    <string name="title_activity_permission_acquisition">Permission acquisition</string>
     <string name="title_activity_user_feedback">User policy control</string>
     <string name="title_activity_change_rule">Change rule</string>
     <string name="title_activity_create_new_rule">Create new rule</string>
@@ -250,7 +253,4 @@
 
     <string name="you_are_all_done_text">You\'re all done!</string>
     <string name="nothing_here">Nothing here!</string>
-
-    <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
 </resources>

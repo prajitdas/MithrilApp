@@ -38,10 +38,11 @@ public class PermissionHelper {
     }
 
     public static void quitMithril(Context context, String message) {
-        Toast.makeText(context, message, Toast.LENGTH_SHORT).show();
+//        Toast.makeText(context, message, Toast.LENGTH_SHORT).show();
         context.startActivity(new Intent(
                 Intent.ACTION_DELETE, Uri.parse(
                 "package:" + context.getPackageName())));
+        toastAndFinish(context, message);
     }
 
     public static void toastAndFinish(Context context, String message) {

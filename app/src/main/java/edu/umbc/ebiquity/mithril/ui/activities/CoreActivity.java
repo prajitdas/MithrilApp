@@ -14,6 +14,7 @@ import android.database.sqlite.SQLiteDatabase;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
+import android.os.Handler;
 import android.provider.Settings;
 import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
@@ -28,6 +29,7 @@ import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.Toast;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -78,9 +80,8 @@ public class CoreActivity extends AppCompatActivity
 
     private final File downloadsDirectory = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS);
     private final String agreementFile = MithrilApplication.getFlierPdfFileName();
-
     private final String quittingMessageUponUsageStatsDenial = "Bye! The " + Manifest.permission.PACKAGE_USAGE_STATS + " permission was necessary for app functionality. Please uninstall the app...";
-
+    private Boolean exit = false;
     private MithrilDBHelper mithrilDBHelper;
     private SQLiteDatabase mithrilDB;
     private SharedPreferences sharedPreferences;
@@ -145,7 +146,7 @@ public class CoreActivity extends AppCompatActivity
             else
                 loadContentProvidersFragment();
         } else if (id == R.id.nav_exit) {
-            PermissionHelper.quitMithril(this, "Bye! Thanks for helping with our survey...");
+            PermissionHelper.quitMithril(this, MithrilApplication.MITHRIL_BYE_BYE_MESSAGE);
         } else if (id == R.id.nav_settings) {
             loadPrefsFragment();
         } else if (id == R.id.nav_about) {
@@ -607,7 +608,20 @@ public class CoreActivity extends AppCompatActivity
         if (drawer.isDrawerOpen(GravityCompat.START)) {
             drawer.closeDrawer(GravityCompat.START);
         } else {
-            finish();
+            if (exit) {
+                finish(); // quit app
+            } else {
+                Toast.makeText(this, "Press Back again to Exit.",
+                        Toast.LENGTH_SHORT).show();
+                exit = true;
+                new Handler().postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        exit = false;
+                    }
+                }, 3 * 1000);
+
+            }
         }
     }
 
@@ -645,5 +659,13 @@ public class CoreActivity extends AppCompatActivity
                 PermissionHelper.quitMithril(this, quittingMessageUponUsageStatsDenial);
             }
         }
+    }
+
+    private void startNextActivity(Context context, Class activityClass) {
+        Intent launchNextActivity = new Intent(context, activityClass);
+        launchNextActivity.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        launchNextActivity.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
+        launchNextActivity.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
+        startActivity(launchNextActivity);
     }
 }
