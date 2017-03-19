@@ -55,8 +55,6 @@ public class ShowUserAgreementActivity extends AppCompatActivity {
      */
     private ImageView mImageView;
 
-    private Button mButtonOkay;
-    private Button mButtonCancel;
     private Button mButtonNext;
     private Button mIAgreeBtn;
     private Button mIDisagreeBtn;
