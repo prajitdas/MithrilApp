@@ -1,12 +1,20 @@
 package edu.umbc.ebiquity.mithril.ui.activities;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.pm.PackageManager;
 import android.os.Bundle;
+import android.provider.Settings;
+import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
+import android.widget.Button;
+import android.widget.CompoundButton;
 import android.widget.ToggleButton;
+
+import java.util.List;
 
 import edu.umbc.ebiquity.mithril.MithrilApplication;
 import edu.umbc.ebiquity.mithril.R;
@@ -14,21 +22,24 @@ import edu.umbc.ebiquity.mithril.util.specialtasks.permissions.PermissionHelper;
 
 public class PermissionAcquisitionActivity extends AppCompatActivity {
     private SharedPreferences sharedPreferences;
+    private SharedPreferences.Editor editor;
+
     private ToggleButton mGenericPermToggleButton;
     private ToggleButton mSpecialPermToggleButton;
+    private Button mQuitAppButton;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        makeFullScreen();
     }
 
     @Override
     public void onResume() {
         super.onResume();
         makeFullScreen();
-//        testUserAgreementAndLaunchNextActivity();
+        editor = getSharedPreferences(MithrilApplication.getSharedPreferencesName(), Context.MODE_PRIVATE).edit();
         initViews();
+        testPermissionsAndLaunchNextActivity();
     }
 
     private void makeFullScreen() {
@@ -47,35 +58,123 @@ public class PermissionAcquisitionActivity extends AppCompatActivity {
 
         mGenericPermToggleButton = (ToggleButton) findViewById(R.id.genericPermToggleButton);
         mSpecialPermToggleButton = (ToggleButton) findViewById(R.id.specialPermToggleButton);
+        mQuitAppButton = (Button) findViewById(R.id.quitAppButton);
+
+        if (PermissionHelper.isAllRequiredPermissionsGranted(this))
+            mGenericPermToggleButton.setChecked(true);
+        if (!PermissionHelper.needsUsageStatsPermission(this))
+            mSpecialPermToggleButton.setChecked(true);
 
         setOnClickListeners();
+        setOnCheckedChangeListener();
     }
 
     private void setOnClickListeners() {
-        mGenericPermToggleButton.setOnClickListener(new View.OnClickListener() {
+        mQuitAppButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-            }
-        });
-        mSpecialPermToggleButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-
+                PermissionHelper.quitMithril(v.getContext(), MithrilApplication.MITHRIL_BYE_BYE_MESSAGE);
             }
         });
     }
 
-    private void testUserAgreementAndLaunchNextActivity() {
-        /*
-         * If the user has already consented, we just go back tp the CoreActivity, or else we are going to make them uninstall the app!
-         */
-        sharedPreferences = getSharedPreferences(MithrilApplication.getSharedPreferencesName(), Context.MODE_PRIVATE);
-        if (sharedPreferences.contains(MithrilApplication.getPrefKeyUserConsent())) {
-            if (sharedPreferences.getBoolean(MithrilApplication.getPrefKeyUserConsent(), false) != false)
-                startNextActivity(this, CoreActivity.class);
-            else
-                PermissionHelper.quitMithril(this, MithrilApplication.MITHRIL_BYE_BYE_MESSAGE);
+    private void setOnCheckedChangeListener() {
+        mGenericPermToggleButton.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                if (!buttonView.isChecked())
+                    buttonView.setChecked(true);
+                else
+                    buttonView.setChecked(false);
+                requestAllNecessaryPermissions();
+            }
+        });
+        mSpecialPermToggleButton.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                if (!buttonView.isChecked())
+                    buttonView.setChecked(true);
+                else
+                    buttonView.setChecked(false);
+                if (PermissionHelper.needsUsageStatsPermission(buttonView.getContext()))
+                    startActivityForResult(new Intent(Settings.ACTION_USAGE_ACCESS_SETTINGS), MithrilApplication.USAGE_STATS_PERMISSION_REQUEST_CODE);
+            }
+        });
+    }
+
+    public void requestAllNecessaryPermissions() {
+        List<String> permissionsThatCanBeRequested = PermissionHelper.getPermissionsThatCanBeRequested(this);
+        String[] permissionStrings = new String[permissionsThatCanBeRequested.size()];
+        int permIdx = 0;
+        StringBuffer stringBuffer = new StringBuffer();
+        for (String permission : permissionsThatCanBeRequested) {
+            permissionStrings[permIdx++] = permission;
+            stringBuffer.append(permission);
         }
+        if (permissionStrings.length > 0)
+            ActivityCompat.requestPermissions(this, permissionStrings, MithrilApplication.ALL_PERMISSIONS_MITHRIL_REQUEST_CODE);
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
+        switch (requestCode) {
+            case MithrilApplication.ALL_PERMISSIONS_MITHRIL_REQUEST_CODE: {
+                // If request is cancelled, the result arrays are empty.
+                if (grantResults.length > 0) {
+                    for (int i = 0; i < grantResults.length; i++) {
+                        if (grantResults[i] == PackageManager.PERMISSION_DENIED) {
+                            // permission denied, boo! Disable the
+                            // functionality that depends on this permission.
+                            resultCanceled();
+                        } else {
+                            resultOkay();
+                            // permission was granted, yay! Do the
+                            // contacts-related task you need to do.
+                        }
+                    }
+                }
+            }
+            // other 'case' lines to check for other
+            // permissions this app might request
+        }
+    }
+
+    private void resultOkay() {
+        editor.putBoolean(MithrilApplication.getPrefKeyUserDeniedPermissions(), false);
+        editor.apply();
+        if (isPermissionAcquisitionComplete())
+            startNextActivity(this, CoreActivity.class);
+    }
+
+    private void resultCanceled() {
+        editor.putBoolean(MithrilApplication.getPrefKeyUserDeniedPermissions(), true);
+        editor.apply();
+        PermissionHelper.quitMithril(this);
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (requestCode == MithrilApplication.USAGE_STATS_PERMISSION_REQUEST_CODE) {
+            if (resultCode == Activity.RESULT_OK) {
+                editor.putBoolean(MithrilApplication.getPrefKeyUserDeniedPermissions(), false);
+                editor.apply();
+                if (isPermissionAcquisitionComplete()) {
+                    startNextActivity(this, CoreActivity.class);
+                }
+            } else {
+                editor.putBoolean(MithrilApplication.getPrefKeyUserDeniedPermissions(), true);
+                editor.apply();
+            }
+        }
+    }
+
+    private void testPermissionsAndLaunchNextActivity() {
+        if (isPermissionAcquisitionComplete())
+            startNextActivity(this, CoreActivity.class);
+    }
+
+    private boolean isPermissionAcquisitionComplete() {
+        return mSpecialPermToggleButton.isChecked() && mGenericPermToggleButton.isChecked();
     }
 
     @Override

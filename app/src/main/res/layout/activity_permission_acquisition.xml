@@ -23,7 +23,7 @@
 
     <ToggleButton
         android:id="@+id/genericPermToggleButton"
-        android:layout_width="wrap_content"
+        android:layout_width="300dp"
         android:layout_height="wrap_content"
         android:layout_alignParentEnd="true"
         android:layout_alignParentTop="true"
@@ -51,5 +51,13 @@
         android:layout_toRightOf="@+id/specialPermTextView"
         android:paddingTop="@dimen/activity_horizontal_margin"
         android:text="ToggleButton" />
+
+    <Button
+        android:id="@+id/quitAppButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+        android:text="@string/quit_app_label" />
 
 </RelativeLayout>

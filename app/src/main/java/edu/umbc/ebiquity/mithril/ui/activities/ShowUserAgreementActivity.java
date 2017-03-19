@@ -96,15 +96,17 @@ public class ShowUserAgreementActivity extends AppCompatActivity {
 
     private void testUserAgreementAndLaunchNextActivity() {
         /*
-         * If the user has already consented, we just go back tp the CoreActivity, or else we are going to make them uninstall the app!
+         * If the user has already consented, we just go back tp the CoreActivity
          */
         sharedPreferences = getSharedPreferences(MithrilApplication.getSharedPreferencesName(), Context.MODE_PRIVATE);
         if (sharedPreferences.contains(MithrilApplication.getPrefKeyUserConsent()) &&
-                sharedPreferences.getBoolean(MithrilApplication.getPrefKeyUserConsent(), false) != false)
-            startNextActivity(this, PermissionAcquisitionActivity.class);
-//            else
-//                PermissionHelper.quitMithril(this, MithrilApplication.MITHRIL_BYE_BYE_MESSAGE);
-//        }
+                sharedPreferences.getBoolean(MithrilApplication.getPrefKeyUserConsent(), false) != false &&
+                sharedPreferences.contains(MithrilApplication.getPrefKeyUserDeniedPermissions())) {
+            if (sharedPreferences.getBoolean(MithrilApplication.getPrefKeyUserDeniedPermissions(), true) != true)
+                startNextActivity(this, CoreActivity.class);
+            else
+                startNextActivity(this, PermissionAcquisitionActivity.class);
+        }
     }
 
     private void initViews() {

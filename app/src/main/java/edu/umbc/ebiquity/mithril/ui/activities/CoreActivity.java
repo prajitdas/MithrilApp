@@ -1,11 +1,8 @@
 package edu.umbc.ebiquity.mithril.ui.activities;
 
 import android.Manifest;
-import android.app.Activity;
-import android.app.AlertDialog;
 import android.app.FragmentManager;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
@@ -15,7 +12,6 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
 import android.os.Handler;
-import android.provider.Settings;
 import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
@@ -163,47 +159,6 @@ public class CoreActivity extends AppCompatActivity
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-    }
-
-    @Override
-    protected void onResume() {
-        super.onResume();
-
-        getUserConsent();
-    }
-
-    @Override
-    public void onDestroy() {
-        closeDB();
-        super.onDestroy();
-    }
-
-    private void getUserConsent() {
-        /*
-         * If the user has already consented, we just go to the CoreActivity, or else we are stuck here!
-         */
-        sharedPreferences = getApplicationContext().getSharedPreferences(MithrilApplication.getSharedPreferencesName(), Context.MODE_PRIVATE);
-
-//        Log.d(MithrilApplication.getDebugTag(), sharedPreferences.getString(MithrilApplication.getPrefKeyUserConsent(), "NULL"));
-        if (sharedPreferences.getString(MithrilApplication.getPrefKeyUserConsent(), null) == null) {
-            Intent consentActivity = new Intent(getApplicationContext(), UserAgreementActivity.class);
-            startActivityForResult(consentActivity, MithrilApplication.ACTIVITY_RESULT_CODE_USER_CONSENT_RECEIVED);
-        } else
-            startMainActivityTasks();
-    }
-
-    private void startMainActivityTasks() {
-        //Checking if we got all the necessary permissions, if we didn't we allow the user to uninstall the app.
-        if (sharedPreferences.getBoolean(MithrilApplication.getPrefKeyUserDeniedPermissions(), false)) {
-            if (!PermissionHelper.isAllRequiredPermissionsGranted(this)) {
-                PermissionHelper.quitMithril(this);
-                finish();
-            }
-        }
-
-        //Agreement has not been copied to downloads folder yet, do it now
-        if (!isAgreementDownloaded())
-            copyAssets(downloadsDirectory, agreementFile);
 
         initHouseKeepingTasks();
         initViews();
@@ -211,46 +166,17 @@ public class CoreActivity extends AppCompatActivity
     }
 
     private void initHouseKeepingTasks() {
-        if (PermissionHelper.isPermissionGranted(this, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED)
+        if (PermissionHelper.isPermissionGranted(this, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED &&
+                !PermissionHelper.needsUsageStatsPermission(this)) {
             startService(new Intent(this, LocationUpdateService.class));
-        if (!PermissionHelper.needsUsageStatsPermission(this))
             startService(new Intent(this, AppLaunchDetectorService.class));
-        else {
-            if (sharedPreferences.contains(MithrilApplication.getPrefKeyUserDeniedUsageStatsPermissions())) {
-                if (sharedPreferences.getBoolean(MithrilApplication.getPrefKeyUserDeniedUsageStatsPermissions(), false))
-                    PermissionHelper.quitMithril(this, quittingMessageUponUsageStatsDenial);
-                else
-                    startService(new Intent(this, AppLaunchDetectorService.class));
-            } else
-                usageStatsDialog();
-        }
-    }
-
-    private void usageStatsDialog() {
-        final AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        builder.setMessage(R.string.allow_usage_stats_permission)
-                .setPositiveButton(R.string.dialog_resp_allow, new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int id) {
-//                        SharedPreferences.Editor editor = builder.getContext().getSharedPreferences(MithrilApplication.getSharedPreferencesName(), Context.MODE_PRIVATE).edit();
-//                        editor.putBoolean(MithrilApplication.getPrefKeyUserDeniedUsageStatsPermissions(), false);
-////                         editor.apply(); //Apply method is asynchronous.
-//                        // It does not get stored if we kill the process right after. So only in this place have we used editor.commit();
-//                        editor.commit();
-                        startActivityForResult(new Intent(Settings.ACTION_USAGE_ACCESS_SETTINGS), MithrilApplication.USAGE_STATS_PERMISSION_REQUEST_CODE);
-                    }
-                })
-                .setNegativeButton(R.string.dialog_resp_deny, new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int id) {
-                        SharedPreferences.Editor editor = builder.getContext().getSharedPreferences(MithrilApplication.getSharedPreferencesName(), Context.MODE_PRIVATE).edit();
-                        editor.putBoolean(MithrilApplication.getPrefKeyUserDeniedUsageStatsPermissions(), true);
-//                         editor.apply(); //Apply method is asynchronous.
-                        // It does not get stored if we kill the process right after. So only in this place have we used editor.commit();
-                        editor.commit();
-                        PermissionHelper.quitMithril(getApplicationContext(), quittingMessageUponUsageStatsDenial);
-                    }
-                });
-        AlertDialog alertDialog = builder.create();
-        alertDialog.show();
+        } else
+            PermissionHelper.quitMithril(this, MithrilApplication.MITHRIL_BYE_BYE_MESSAGE);
+        initDB(this);
+        sharedPreferences = getApplicationContext().getSharedPreferences(MithrilApplication.getSharedPreferencesName(), Context.MODE_PRIVATE);
+        //Agreement has not been copied to downloads folder yet, do it now
+        if (!isAgreementDownloaded())
+            copyAssets(downloadsDirectory, agreementFile);
     }
 
     private void initViews() {
@@ -280,7 +206,6 @@ public class CoreActivity extends AppCompatActivity
         navigationView.setNavigationItemSelectedListener(this);
 
         applyHeaderView();
-        initDB(this);
     }
 
     private void initDB(Context context) {
@@ -339,11 +264,6 @@ public class CoreActivity extends AppCompatActivity
             headerView.setBackground(ResourcesCompat.getDrawable(getResources(), R.drawable.csee_afternoon, getTheme()));
         else
             headerView.setBackground(ResourcesCompat.getDrawable(getResources(), R.drawable.csee_evening, getTheme()));
-    }
-
-    private void closeDB() {
-        if (mithrilDB != null)
-            mithrilDB.close();
     }
 
     private void defaultFragmentLoad() {
@@ -625,47 +545,22 @@ public class CoreActivity extends AppCompatActivity
         }
     }
 
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        if (requestCode == MithrilApplication.ACTIVITY_RESULT_CODE_USER_CONSENT_RECEIVED) {
-            if (resultCode == Activity.RESULT_OK) {
-                startMainActivityTasks();
-            } else if (resultCode == Activity.RESULT_CANCELED) {
-                try {
-                    Bundle returnedData = data.getExtras();
-                    // User pressed back on agreement screen!
-                    if (returnedData.containsKey(MithrilApplication.getBackPressedUserAgreementScreen())) {
-                        if (returnedData.getBoolean(MithrilApplication.getBackPressedUserAgreementScreen(), false))
-                            finish();
-                        else {
-                            PermissionHelper.quitMithril(this);
-                            finish();
-                        /*
-                         * We did not get the consent, perhaps we should finish?
-                         * Something is obviously wrong!
-                         * We should never reach this state, ever...
-                         */
-                        }
-                    }
-                } catch (NullPointerException e) {
-                    Log.d(MithrilApplication.getDebugTag(), "An unexpected end! The Dev will have to look into this. Please report the problem... " + e.getMessage());
-                    PermissionHelper.toastAndFinish(this, "An unexpected end! The Dev will have to look into this. Please report the problem... " + e.getMessage());
-                }
-            }
-        } else if (requestCode == MithrilApplication.USAGE_STATS_PERMISSION_REQUEST_CODE) {
-            if (resultCode == Activity.RESULT_OK)
-                startService(new Intent(this, AppLaunchDetectorService.class));
-            else {
-                PermissionHelper.quitMithril(this, quittingMessageUponUsageStatsDenial);
-            }
-        }
-    }
-
     private void startNextActivity(Context context, Class activityClass) {
         Intent launchNextActivity = new Intent(context, activityClass);
         launchNextActivity.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         launchNextActivity.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
         launchNextActivity.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
         startActivity(launchNextActivity);
+    }
+
+    @Override
+    public void onDestroy() {
+        closeDB();
+        super.onDestroy();
+    }
+
+    private void closeDB() {
+        if (mithrilDB != null)
+            mithrilDB.close();
     }
 }

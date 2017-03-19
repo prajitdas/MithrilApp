@@ -58,8 +58,8 @@
     <string name="dialog_resp_delete">Yes</string>
     <string name="dialog_resp_NO">No</string>
 
-    <string name="allow_generic_permissions">Permissions required for app functionality</string>
-    <string name="allow_special_usage_stats_permission">PACKAGE_USAGE_STATS is a special permission we need for app functionality</string>
+    <string name="allow_generic_permissions">Allow general permissions required for app functionality</string>
+    <string name="allow_special_usage_stats_permission">Allow PACKAGE_USAGE_STATS special permission required for app functionality</string>
     <string name="allow_access_fine_location_permission">ACCESS_FINE_LOCATION permission is mandatory for app functionality</string>
     <string name="allow_write_external_storage_permission">WRITE_EXTERNAL_STORAGE permission is mandatory for app functionality</string>
     <string name="allow_usage_stats_permission">PACKAGE_USAGE_STATS permission required, please enable in settings</string>
@@ -242,6 +242,7 @@
 
     <string name="user_accepts_button_label">Accept</string>
     <string name="user_declines_button_label">Decline</string>
+    <string name="quit_app_label">Quit app</string>
     <string name="fullscreen_user_agreement_consent_text">Welcome!\nPlease click \"Continue\" to read the user agreement &amp; study details&#8230;</string>
     <string name="user_agreement_information_text">We collect anonymous feedback about your privacy preferences.</string>
     <string name="continue_user_agreement_btn_label">Continue</string>
