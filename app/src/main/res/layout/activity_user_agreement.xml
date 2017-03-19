@@ -8,46 +8,20 @@
     android:paddingTop="@dimen/fab_margin"
     tools:context=".ui.activities.UserAgreementActivity">
 
-    <ImageView
-        android:id="@+id/icon"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentTop="true"
-        android:layout_centerHorizontal="true"
-        android:adjustViewBounds="true"
-        android:elevation="24dp"
-        android:maxHeight="200dp"
-        android:maxWidth="200dp"
-        android:paddingBottom="@dimen/fab_margin"
-        android:src="@drawable/logo" />
-
-    <TextView
-        android:id="@+id/project_name_TextView"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/icon"
-        android:layout_centerInParent="true"
-        android:fontFamily="sans-serif-smallcaps"
-        android:paddingBottom="@dimen/fab_margin"
-        android:text="@string/app_name"
-        android:textAlignment="center"
-        android:textColor="@color/colorPrimary"
-        android:textSize="24sp" />
-
     <Button
         android:id="@+id/showUserAgreementBtn"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/project_name_TextView"
-        android:layout_centerHorizontal="true"
-        android:text="@string/show_user_agreement_btn_label"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentEnd="true"
+        android:text="@string/continue_user_agreement_btn_label"
         android:theme="@style/AppTheme.Button" />
 
     <TextView
         android:id="@+id/fullscreen_user_agreement_please_read_TextView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@id/showUserAgreementBtn"
+        android:layout_above="@id/showUserAgreementBtn"
         android:paddingLeft="@dimen/card_view_margin"
         android:paddingRight="@dimen/card_view_margin"
         android:paddingTop="@dimen/fab_margin"
@@ -57,21 +31,28 @@
         android:textColor="@color/colorPrimaryDark"
         android:textSize="20sp" />
 
-    <Button
-        android:id="@+id/iDisagreeBtn"
+    <TextView
+        android:id="@+id/project_name_TextView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:layout_alignParentEnd="true"
-        android:text="@string/fullscreen_user_disagreement_button_label"
-        android:theme="@style/AppTheme.Button" />
+        android:layout_above="@id/fullscreen_user_agreement_please_read_TextView"
+        android:layout_centerInParent="true"
+        android:fontFamily="sans-serif-smallcaps"
+        android:paddingBottom="@dimen/fab_margin"
+        android:text="@string/app_name"
+        android:textAlignment="center"
+        android:textColor="@color/colorPrimary"
+        android:textSize="24sp" />
 
-    <Button
-        android:id="@+id/iAgreeBtn"
+    <ImageView
+        android:id="@+id/icon"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:layout_toLeftOf="@+id/iDisagreeBtn"
-        android:text="@string/fullscreen_user_agreement_button_label"
-        android:theme="@style/AppTheme.Button" />
+        android:layout_centerInParent="true"
+        android:adjustViewBounds="true"
+        android:elevation="24dp"
+        android:maxHeight="200dp"
+        android:maxWidth="200dp"
+        android:paddingBottom="@dimen/fab_margin"
+        android:src="@drawable/logo" />
 </RelativeLayout>

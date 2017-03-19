@@ -22,8 +22,7 @@ import edu.umbc.ebiquity.mithril.util.specialtasks.permissions.PermissionHelper;
 public class UserAgreementActivity extends AppCompatActivity {
     //    private final Handler handler = new Handler();
     private Button mShowUserAgreementBtn;
-    private Button mIAgreeBtn;
-    private Button mIDisagreeBtn;
+
     private SharedPreferences sharedPreferences;
     private boolean isResultOkay = false;
     private MithrilDBHelper mithrilDBHelper;
@@ -58,13 +57,6 @@ public class UserAgreementActivity extends AppCompatActivity {
     private void initViews() {
         setContentView(R.layout.activity_user_agreement);
         mShowUserAgreementBtn = (Button) findViewById(R.id.showUserAgreementBtn);
-        mIAgreeBtn = (Button) findViewById(R.id.iAgreeBtn);
-        mIDisagreeBtn = (Button) findViewById(R.id.iDisagreeBtn);
-
-        if (!isResultOkay)
-            mIAgreeBtn.setVisibility(View.GONE);
-        else
-            mIAgreeBtn.setVisibility(View.VISIBLE);
 
         makeFullScreen();
         setOnClickListeners();
@@ -86,26 +78,6 @@ public class UserAgreementActivity extends AppCompatActivity {
             public void onClick(View v) {
                 Intent showUserAgreementIntent = new Intent(v.getContext(), ShowUserAgreementActivity.class);
                 startActivityForResult(showUserAgreementIntent, MithrilApplication.ACTIVITY_RESULT_CODE_USER_AGREEMENT_READ);
-            }
-        });
-
-        mIAgreeBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                SharedPreferences.Editor editor = v.getContext().getSharedPreferences(MithrilApplication.getSharedPreferencesName(), Context.MODE_PRIVATE).edit();
-                editor.putString(MithrilApplication.getPrefKeyUserConsent(), "agreed");
-                editor.apply();
-                // User has agreed, ask for the other permissions
-                initHousekeepingTasks();
-            }
-        });
-
-        mIDisagreeBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                PermissionHelper.quitMithril(v.getContext(), "Bye! Thanks for helping with our survey...");
-//                The following line should be unreachable.
-//                resultCanceled();
             }
         });
     }
@@ -133,7 +105,7 @@ public class UserAgreementActivity extends AppCompatActivity {
     private void resultOkay() {
         Intent returnIntent = new Intent();
         setResult(Activity.RESULT_OK, returnIntent);
-        finish();
+//        finish();
     }
 
     private void resultCanceled() {
@@ -143,7 +115,7 @@ public class UserAgreementActivity extends AppCompatActivity {
 
         Intent returnIntent = new Intent();
         setResult(Activity.RESULT_CANCELED, returnIntent);
-        finish();
+//        finish();
     }
 
     private void initHousekeepingTasks() {

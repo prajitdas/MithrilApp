@@ -23,6 +23,7 @@ import java.io.OutputStream;
 
 import edu.umbc.ebiquity.mithril.MithrilApplication;
 import edu.umbc.ebiquity.mithril.R;
+import edu.umbc.ebiquity.mithril.util.specialtasks.permissions.PermissionHelper;
 
 /**
  * This fragment has a big {@ImageView} that shows PDF pages, and 2 {@link android.widget.Button}s to move between
@@ -57,6 +58,8 @@ public class ShowUserAgreementActivity extends AppCompatActivity {
     private Button mButtonOkay;
     private Button mButtonCancel;
     private Button mButtonNext;
+    private Button mIAgreeBtn;
+    private Button mIDisagreeBtn;
 
     private SharedPreferences sharedPreferences;
     private Bundle savedInstanceState;
@@ -78,6 +81,14 @@ public class ShowUserAgreementActivity extends AppCompatActivity {
             Toast.makeText(this, "Error! " + e.getMessage(), Toast.LENGTH_SHORT).show();
             finish();
         }
+
+        mIAgreeBtn = (Button) findViewById(R.id.iAgreeBtn);
+        mIDisagreeBtn = (Button) findViewById(R.id.iDisagreeBtn);
+
+//        if (!isResultOkay)
+        mIAgreeBtn.setVisibility(View.GONE);
+//        else
+//            mIAgreeBtn.setVisibility(View.VISIBLE);
     }
 
     private void makeFullScreen() {
@@ -96,8 +107,8 @@ public class ShowUserAgreementActivity extends AppCompatActivity {
         sharedPreferences = getApplicationContext().getSharedPreferences(MithrilApplication.getSharedPreferencesName(), Context.MODE_PRIVATE);
 
         mImageView = (ImageView) findViewById(R.id.image);
-        mButtonOkay = (Button) findViewById(R.id.okay);
-        mButtonCancel = (Button) findViewById(R.id.cancel);
+//        mButtonOkay = (Button) findViewById(R.id.okay);
+//        mButtonCancel = (Button) findViewById(R.id.cancel);
         mButtonNext = (Button) findViewById(R.id.next);
 
         makeFullScreen();
@@ -105,18 +116,18 @@ public class ShowUserAgreementActivity extends AppCompatActivity {
     }
 
     private void setOnClickListeners() {
-        mButtonOkay.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                resultOkay();
-            }
-        });
-        mButtonCancel.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                resultCanceled();
-            }
-        });
+//        mButtonOkay.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                resultOkay();
+//            }
+//        });
+//        mButtonCancel.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                resultCanceled();
+//            }
+//        });
         mButtonNext.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -127,6 +138,24 @@ public class ShowUserAgreementActivity extends AppCompatActivity {
                     showPage(1);
                     mButtonNext.setText(R.string.previous);
                 }
+            }
+        });
+        mIAgreeBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                SharedPreferences.Editor editor = v.getContext().getSharedPreferences(MithrilApplication.getSharedPreferencesName(), Context.MODE_PRIVATE).edit();
+                editor.putString(MithrilApplication.getPrefKeyUserConsent(), "agreed");
+                editor.apply();
+                // User has agreed, ask for the other permissions
+//                initHousekeepingTasks();
+            }
+        });
+        mIDisagreeBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                PermissionHelper.quitMithril(v.getContext(), "Bye! Thanks for helping with our survey...");
+//                The following line should be unreachable.
+//                resultCanceled();
             }
         });
     }

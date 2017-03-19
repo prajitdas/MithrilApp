@@ -26,28 +26,28 @@
         android:paddingTop="@dimen/fab_margin">
 
         <Button
-            android:id="@+id/okay"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:text="@string/okay"
-            android:theme="@style/AppTheme.Button" />
-
-        <Button
-            android:id="@+id/cancel"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:text="@android:string/cancel"
-            android:theme="@style/AppTheme.Button" />
-
-        <Button
             android:id="@+id/next"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:text="@string/next"
             android:theme="@style/AppTheme.Button" />
+
+        <Button
+            android:id="@+id/iDisagreeBtn"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="@string/user_declines_button_label"
+            android:theme="@style/AppTheme.Button" />
+        <Button
+            android:id="@+id/iAgreeBtn"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="@string/user_accepts_button_label"
+            android:theme="@style/AppTheme.Button" />
+
     </LinearLayout>
 
 </LinearLayout>
