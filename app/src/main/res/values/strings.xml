@@ -199,6 +199,7 @@
     <string name="title_activity_about">About this app</string>
     <string name="title_activity_view_app_detail">App details</string>
     <string name="title_activity_show_app_detail">Show app details</string>
+    <string name="title_activity_core">Mithril Core</string>
     <string name="title_activity_test_main">Test activity</string>
     <string name="title_activity_user_agreement">User consent</string>
     <string name="title_activity_show_user_agreement">User agreement</string>

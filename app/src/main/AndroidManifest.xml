@@ -75,7 +75,7 @@
         <activity
             android:name=".ui.activities.UserAgreementActivity"
             android:configChanges="orientation|keyboardHidden|screenSize"
-            android:label="@string/title_activity_user_agreement"
+            android:label="@string/short_app_name"
             android:theme="@style/FullscreenTheme">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -94,7 +94,7 @@
         </activity>
         <activity
             android:name=".ui.activities.CoreActivity"
-            android:label="@string/short_app_name"
+            android:label="@string/title_activity_core"
             android:theme="@style/AppTheme.NoActionBar">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
