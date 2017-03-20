@@ -72,7 +72,8 @@
     <application
         android:icon="@mipmap/ic_launcher"
         android:label="@string/short_app_name"
-        android:supportsRtl="true">
+        android:supportsRtl="true"
+        android:theme="@style/AppTheme.NoActionBar">
         <activity
             android:name=".ui.activities.UserAgreementActivity"
             android:label="@string/short_app_name"
