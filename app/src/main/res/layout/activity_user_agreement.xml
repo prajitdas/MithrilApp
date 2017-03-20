@@ -2,10 +2,6 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:paddingBottom="@dimen/fab_margin"
-    android:paddingLeft="@dimen/fab_margin"
-    android:paddingRight="@dimen/fab_margin"
-    android:paddingTop="@dimen/fab_margin"
     android:theme="@style/FullscreenTheme"
     tools:context=".ui.activities.UserAgreementActivity">
 
@@ -14,9 +10,16 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
-        android:layout_alignParentEnd="true"
+        android:layout_centerHorizontal="true"
+        android:background="@color/colorButton"
         android:text="@string/continue_user_agreement_btn_label"
         android:theme="@style/AppTheme.Button" />
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="2dp"
+        android:layout_above="@+id/continueToUserAgreementBtn"
+        android:background="@color/colorDivider" />
 
     <TextView
         android:id="@+id/fullscreen_user_agreement_please_read_TextView"
@@ -24,8 +27,8 @@
         android:layout_height="wrap_content"
         android:layout_above="@id/continueToUserAgreementBtn"
         android:paddingBottom="@dimen/fab_margin"
-        android:paddingLeft="@dimen/card_view_margin"
-        android:paddingRight="@dimen/card_view_margin"
+        android:paddingLeft="@dimen/fab_margin"
+        android:paddingRight="@dimen/fab_margin"
         android:paddingTop="@dimen/fab_margin"
         android:text="@string/fullscreen_user_agreement_consent_text"
         android:textAlignment="center"
@@ -41,6 +44,8 @@
         android:layout_centerInParent="true"
         android:fontFamily="sans-serif-smallcaps"
         android:paddingBottom="@dimen/fab_margin"
+        android:paddingLeft="@dimen/fab_margin"
+        android:paddingRight="@dimen/fab_margin"
         android:paddingTop="@dimen/fab_margin"
         android:text="@string/app_name"
         android:textAlignment="center"

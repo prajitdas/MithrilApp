@@ -60,7 +60,9 @@ import edu.umbc.ebiquity.mithril.ui.fragments.coreactivityfragments.ServicesFrag
 import edu.umbc.ebiquity.mithril.ui.fragments.coreactivityfragments.ViolationFragment;
 import edu.umbc.ebiquity.mithril.util.services.AppLaunchDetectorService;
 import edu.umbc.ebiquity.mithril.util.services.LocationUpdateService;
+import edu.umbc.ebiquity.mithril.util.specialtasks.errorsnexceptions.PhoneNotRootedException;
 import edu.umbc.ebiquity.mithril.util.specialtasks.permissions.PermissionHelper;
+import edu.umbc.ebiquity.mithril.util.specialtasks.root.RootAccess;
 
 public class CoreActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener,
@@ -298,8 +300,13 @@ public class CoreActivity extends AppCompatActivity
         builder.setMessage(R.string.dialog_reload_data)
                 .setPositiveButton(R.string.dialog_resp_delete, new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
+                        try {
+                            RootAccess rootAccess = new RootAccess(builder.getContext());
+                            rootAccess.runScript(new String[]{MithrilApplication.getCmdRevokePackageUsageStatsPermissionForApp()});
+                        } catch (PhoneNotRootedException phoneNotRootedException) {
+                            Log.d(MithrilApplication.getDebugTag(), "Phone is not rooted do non-root behavior" + phoneNotRootedException.getMessage());
+                        }
                         ((ActivityManager) builder.getContext().getSystemService(ACTIVITY_SERVICE)).clearApplicationUserData();
-
                         Toast.makeText(builder.getContext(), "App was reset!", Toast.LENGTH_SHORT).show();
                     }
                 })

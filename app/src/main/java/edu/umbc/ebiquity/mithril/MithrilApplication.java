@@ -85,7 +85,8 @@ public class MithrilApplication extends Application {
     // Set the minimum displacement between location updates in meters. By default this is 0.
     private static final float SMALLEST_DISPLACEMENT = new Float(10.0);
     private static final String CMD_READ_LOGS_PERMISSION_FOR_APP = "pm grant edu.umbc.cs.ebiquity.mithril android.permission.READ_LOGS";
-    private static final String CMD_PACKAGE_USAGE_STATS_PERMISSION_FOR_APP = "pm grant edu.umbc.cs.ebiquity.mithril android.permission.PACKAGE_USAGE_STATS";
+    private static final String CMD_GRANT_PACKAGE_USAGE_STATS_PERMISSION_FOR_APP = "pm grant edu.umbc.cs.ebiquity.mithril android.permission.PACKAGE_USAGE_STATS";
+    private static final String CMD_REVOKE_PACKAGE_USAGE_STATS_PERMISSION_FOR_APP = "pm revoke edu.umbc.cs.ebiquity.mithril android.permission.PACKAGE_USAGE_STATS";
     private static final String CMD_ROOT_PRIVILEGE = "su -c";
     private static final String CMD_DETECT_APP_LAUNCH = "logcat -d ActivityManager:I *:S | grep 'LAUNCHER'";
     //    private static final String CMD_DETECT_APP_LAUNCH = "logcat -d ActivityManager:I *:S | grep 'LAUNCHER' | cut -f5 -d'=' | cut -f1 -d'/'";
@@ -628,8 +629,12 @@ public class MithrilApplication extends Application {
         return CMD_READ_LOGS_PERMISSION_FOR_APP;
     }
 
-    public static String getCmdPackageUsageStatsPermissionForApp() {
-        return CMD_PACKAGE_USAGE_STATS_PERMISSION_FOR_APP;
+    public static String getCmdGrantPackageUsageStatsPermissionForApp() {
+        return CMD_GRANT_PACKAGE_USAGE_STATS_PERMISSION_FOR_APP;
+    }
+
+    public static String getCmdRevokePackageUsageStatsPermissionForApp() {
+        return CMD_REVOKE_PACKAGE_USAGE_STATS_PERMISSION_FOR_APP;
     }
 
     public static String getCmdRootPrivilege() {
