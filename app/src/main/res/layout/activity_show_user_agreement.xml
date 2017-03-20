@@ -37,6 +37,7 @@
             android:layout_weight="1"
             android:text="@string/user_declines_button_label"
             android:theme="@style/AppTheme.Button" />
+
         <Button
             android:id="@+id/iAgreeBtn"
             android:layout_width="0dp"
