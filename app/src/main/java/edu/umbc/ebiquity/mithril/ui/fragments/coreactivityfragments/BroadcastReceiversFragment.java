@@ -1,4 +1,4 @@
-package edu.umbc.ebiquity.mithril.ui.fragments.mainactivityfragments;
+package edu.umbc.ebiquity.mithril.ui.fragments.coreactivityfragments;
 
 import android.app.Fragment;
 import android.content.Context;
@@ -13,8 +13,8 @@ import android.view.ViewGroup;
 import java.util.List;
 
 import edu.umbc.ebiquity.mithril.R;
-import edu.umbc.ebiquity.mithril.data.model.components.ContentProvData;
-import edu.umbc.ebiquity.mithril.ui.adapters.InstalledContentProvidersRecyclerViewAdapter;
+import edu.umbc.ebiquity.mithril.data.model.components.BCastRecvData;
+import edu.umbc.ebiquity.mithril.ui.adapters.InstalledBroadcastReceiversRecyclerViewAdapter;
 
 /**
  * A fragment representing a list of Items.
@@ -22,26 +22,26 @@ import edu.umbc.ebiquity.mithril.ui.adapters.InstalledContentProvidersRecyclerVi
  * Activities containing this fragment MUST implement the {@link OnListFragmentInteractionListener}
  * interface.
  */
-public class ContentProvidersFragment extends Fragment {
+public class BroadcastReceiversFragment extends Fragment {
 
     // TODO: Customize parameter argument names
     private static final String ARG_COLUMN_COUNT = "column-count";
     // TODO: Customize parameters
     private int mColumnCount = 1;
     private OnListFragmentInteractionListener mListener;
-    private List<ContentProvData> contentProvDataList;
+    private List<BCastRecvData> bCastRecvDataList;
 
     /**
      * Mandatory empty constructor for the fragment manager to instantiate the
      * fragment (e.g. upon screen orientation changes).
      */
-    public ContentProvidersFragment() {
+    public BroadcastReceiversFragment() {
     }
 
     // TODO: Customize parameter initialization
     @SuppressWarnings("unused")
-    public static ContentProvidersFragment newInstance(int columnCount) {
-        ContentProvidersFragment fragment = new ContentProvidersFragment();
+    public static BroadcastReceiversFragment newInstance(int columnCount) {
+        BroadcastReceiversFragment fragment = new BroadcastReceiversFragment();
         Bundle args = new Bundle();
         args.putInt(ARG_COLUMN_COUNT, columnCount);
         fragment.setArguments(args);
@@ -60,7 +60,7 @@ public class ContentProvidersFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_contentproviders_list, container, false);
+        View view = inflater.inflate(R.layout.fragment_broadcastreceivers_list, container, false);
 
         // Set the adapter
         if (view instanceof RecyclerView) {
@@ -71,7 +71,7 @@ public class ContentProvidersFragment extends Fragment {
             } else {
                 recyclerView.setLayoutManager(new GridLayoutManager(context, mColumnCount));
             }
-            recyclerView.setAdapter(new InstalledContentProvidersRecyclerViewAdapter(contentProvDataList, mListener));
+            recyclerView.setAdapter(new InstalledBroadcastReceiversRecyclerViewAdapter(bCastRecvDataList, mListener));
         }
         return view;
     }
@@ -106,6 +106,6 @@ public class ContentProvidersFragment extends Fragment {
      */
     public interface OnListFragmentInteractionListener {
         // TODO: Update argument type and name
-        void onListFragmentInteraction(ContentProvData item);
+        void onListFragmentInteraction(BCastRecvData item);
     }
 }

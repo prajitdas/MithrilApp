@@ -10,54 +10,66 @@
     android:theme="@style/FullscreenTheme"
     tools:context=".ui.activities.PermissionAcquisitionActivity">
 
-    <TextView
-        android:id="@+id/genericPermTextView"
-        android:layout_width="300dp"
+    <LinearLayout
+        android:id="@+id/genericPerm"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_alignParentStart="true"
         android:layout_alignParentTop="true"
-        android:text="@string/allow_generic_permissions"
-        android:textAppearance="@android:style/TextAppearance.Holo.Medium"
-        android:textColor="@color/colorPrimaryText"
-        android:textSize="20sp" />
+        android:orientation="horizontal"
+        android:paddingBottom="@dimen/fab_margin"
+        android:paddingTop="@dimen/fab_margin">
 
-    <ToggleButton
-        android:id="@+id/genericPermToggleButton"
-        android:layout_width="300dp"
-        android:layout_height="wrap_content"
-        android:layout_alignParentEnd="true"
-        android:layout_alignParentTop="true"
-        android:layout_toRightOf="@+id/genericPermTextView"
-        android:text="ToggleButton" />
+        <TextView
+            android:id="@+id/genericPermTextView"
+            android:layout_width="0dp"
+            android:layout_height="100dp"
+            android:layout_weight="1"
+            android:text="@string/allow_generic_permissions"
+            android:textAppearance="@android:style/TextAppearance.Holo.Medium"
+            android:textColor="@color/colorPrimaryText"
+            android:textSize="20sp" />
 
-    <TextView
-        android:id="@+id/specialPermTextView"
-        android:layout_width="300dp"
-        android:layout_height="wrap_content"
-        android:layout_alignParentStart="true"
-        android:layout_below="@+id/genericPermTextView"
-        android:paddingTop="@dimen/activity_horizontal_margin"
-        android:text="@string/allow_special_usage_stats_permission"
-        android:textAppearance="@android:style/TextAppearance.Holo.Medium"
-        android:textColor="@color/colorPrimaryText"
-        android:textSize="20sp" />
+        <ToggleButton
+            android:id="@+id/genericPermToggleButton"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="0.25"
+            android:theme="@style/AppTheme.Button" />
+    </LinearLayout>
 
-    <ToggleButton
-        android:id="@+id/specialPermToggleButton"
-        android:layout_width="wrap_content"
+    <LinearLayout
+        android:id="@+id/specialPerm"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_alignParentEnd="true"
-        android:layout_below="@+id/genericPermToggleButton"
-        android:layout_toRightOf="@+id/specialPermTextView"
-        android:paddingTop="@dimen/activity_horizontal_margin"
-        android:text="ToggleButton" />
+        android:layout_below="@+id/genericPerm"
+        android:orientation="horizontal"
+        android:paddingBottom="@dimen/fab_margin"
+        android:paddingTop="@dimen/fab_margin">
+
+        <TextView
+            android:id="@+id/specialPermTextView"
+            android:layout_width="0dp"
+            android:layout_height="100dp"
+            android:layout_weight="1"
+            android:text="@string/allow_special_usage_stats_permission"
+            android:textAppearance="@android:style/TextAppearance.Holo.Medium"
+            android:textColor="@color/colorPrimaryText"
+            android:textSize="20sp" />
+
+        <ToggleButton
+            android:id="@+id/specialPermToggleButton"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="0.25"
+            android:theme="@style/AppTheme.Button" />
+    </LinearLayout>
 
     <Button
         android:id="@+id/quitAppButton"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
-        android:layout_centerHorizontal="true"
-        android:text="@string/quit_app_label" />
-
+        android:layout_weight="0.25"
+        android:text="@string/quit_app_label"
+        android:theme="@style/AppTheme.Button" />
 </RelativeLayout>

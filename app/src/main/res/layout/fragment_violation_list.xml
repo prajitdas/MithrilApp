@@ -11,5 +11,5 @@
     android:layout_marginRight="5dp"
     android:layout_marginTop="5dp"
     app:layoutManager="LinearLayoutManager"
-    tools:context=".ui.fragments.mainactivityfragments.ViolationFragment"
+    tools:context=".ui.fragments.coreactivityfragments.ViolationFragment"
     tools:listitem="@layout/fragment_violations" />

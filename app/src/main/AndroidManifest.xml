@@ -114,9 +114,9 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".ui.activities.CoreActivity" />
         </activity>
-        <!-- This TestMainActivity was used for the IEEE CIC paper. This will possibly be removed or modified in the future. -->
+        <!-- TTestActivityvity was used for the IEEE CIC paper. This will possibly be removed or modified in the future. -->
         <activity
-            android:name=".ui.activities.TestMainActivity"
+            android:name=".ui.activities.TestActivity"
             android:label="@string/title_activity_test_main"
             android:theme="@style/AppTheme.NoActionBar">
             <intent-filter>

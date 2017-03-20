@@ -12,7 +12,7 @@ import java.util.List;
 
 import edu.umbc.ebiquity.mithril.R;
 import edu.umbc.ebiquity.mithril.data.model.components.BCastRecvData;
-import edu.umbc.ebiquity.mithril.ui.fragments.mainactivityfragments.BroadcastReceiversFragment.OnListFragmentInteractionListener;
+import edu.umbc.ebiquity.mithril.ui.fragments.coreactivityfragments.BroadcastReceiversFragment.OnListFragmentInteractionListener;
 
 /**
  * {@link RecyclerView.Adapter} that can display a {@link BCastRecvData} and makes a call to the

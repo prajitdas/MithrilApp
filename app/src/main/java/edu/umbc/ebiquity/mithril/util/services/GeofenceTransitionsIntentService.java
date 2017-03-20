@@ -34,7 +34,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import edu.umbc.ebiquity.mithril.R;
-import edu.umbc.ebiquity.mithril.ui.fragments.mainactivityfragments.PrefsFragment;
+import edu.umbc.ebiquity.mithril.ui.fragments.coreactivityfragments.PrefsFragment;
 import edu.umbc.ebiquity.mithril.util.specialtasks.errorsnexceptions.GeofenceErrorMessages;
 
 /*

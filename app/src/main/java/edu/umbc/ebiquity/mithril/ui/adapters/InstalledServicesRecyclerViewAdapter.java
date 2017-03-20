@@ -13,7 +13,7 @@ import java.util.List;
 import edu.umbc.ebiquity.mithril.MithrilApplication;
 import edu.umbc.ebiquity.mithril.R;
 import edu.umbc.ebiquity.mithril.data.model.components.ServData;
-import edu.umbc.ebiquity.mithril.ui.fragments.mainactivityfragments.ServicesFragment.OnListFragmentInteractionListener;
+import edu.umbc.ebiquity.mithril.ui.fragments.coreactivityfragments.ServicesFragment.OnListFragmentInteractionListener;
 
 /**
  * {@link RecyclerView.Adapter} that can display a {@link ServData} and makes a call to the

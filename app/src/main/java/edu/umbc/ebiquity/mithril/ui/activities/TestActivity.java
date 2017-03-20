@@ -30,7 +30,7 @@ import edu.umbc.ebiquity.mithril.R;
  * Pink - rule3
  * Black - rule4
  */
-public class TestMainActivity extends AppCompatActivity {
+public class TestActivity extends AppCompatActivity {
 
     private static final String MIME_TEXT_PLAIN = "text/plain";
     private TextView mTextViewNFC;
@@ -81,7 +81,7 @@ public class TestMainActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_test_main);
+        setContentView(R.layout.activity_test);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar_test_main);
         setSupportActionBar(toolbar);
 

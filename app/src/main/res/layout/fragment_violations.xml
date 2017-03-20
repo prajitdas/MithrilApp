@@ -47,7 +47,7 @@
                 android:paddingRight="5dp"
                 android:paddingStart="5dp"
                 android:text="@string/placeholder_text_violation_info"
-                android:textColor="@color/colorPrimaryDark"
+                android:textColor="@color/colorPrimaryText"
                 android:textSize="22dp" />
 
             <!-- We do not have context info in our violations right now :( -->
@@ -73,13 +73,11 @@
                 android:layout_alignParentLeft="true"
                 android:layout_alignParentStart="true"
                 android:layout_below="@+id/violatingAppIcon"
-                android:backgroundTint="@color/colorButton"
                 android:paddingEnd="5dp"
                 android:paddingLeft="5dp"
                 android:paddingRight="5dp"
                 android:paddingStart="5dp"
                 android:text="@string/button_true_violation"
-                android:textColor="@color/colorAccent"
                 android:theme="@style/AppTheme.Button" />
 
             <Button
@@ -89,13 +87,11 @@
                 android:layout_alignParentEnd="true"
                 android:layout_alignParentRight="true"
                 android:layout_below="@+id/violatingAppIcon"
-                android:backgroundTint="@color/colorButton"
                 android:paddingEnd="5dp"
                 android:paddingLeft="5dp"
                 android:paddingRight="5dp"
                 android:paddingStart="5dp"
                 android:text="@string/button_false_violation"
-                android:textColor="@color/colorAccent"
                 android:theme="@style/AppTheme.Button" />
 
         </RelativeLayout>

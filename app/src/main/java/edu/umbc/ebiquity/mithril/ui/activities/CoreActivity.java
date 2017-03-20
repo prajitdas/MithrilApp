@@ -1,8 +1,11 @@
 package edu.umbc.ebiquity.mithril.ui.activities;
 
 import android.Manifest;
+import android.app.ActivityManager;
+import android.app.AlertDialog;
 import android.app.FragmentManager;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
@@ -47,15 +50,14 @@ import edu.umbc.ebiquity.mithril.data.model.components.PermData;
 import edu.umbc.ebiquity.mithril.data.model.components.ServData;
 import edu.umbc.ebiquity.mithril.ui.fragments.EmptyFragment;
 import edu.umbc.ebiquity.mithril.ui.fragments.NothingHereFragment;
-import edu.umbc.ebiquity.mithril.ui.fragments.mainactivityfragments.AboutFragment;
-import edu.umbc.ebiquity.mithril.ui.fragments.mainactivityfragments.AdvancedPreferencesFragment;
-import edu.umbc.ebiquity.mithril.ui.fragments.mainactivityfragments.AppsFragment;
-import edu.umbc.ebiquity.mithril.ui.fragments.mainactivityfragments.BroadcastReceiversFragment;
-import edu.umbc.ebiquity.mithril.ui.fragments.mainactivityfragments.ContentProvidersFragment;
-import edu.umbc.ebiquity.mithril.ui.fragments.mainactivityfragments.PermissionsFragment;
-import edu.umbc.ebiquity.mithril.ui.fragments.mainactivityfragments.PrefsFragment;
-import edu.umbc.ebiquity.mithril.ui.fragments.mainactivityfragments.ServicesFragment;
-import edu.umbc.ebiquity.mithril.ui.fragments.mainactivityfragments.ViolationFragment;
+import edu.umbc.ebiquity.mithril.ui.fragments.coreactivityfragments.AboutFragment;
+import edu.umbc.ebiquity.mithril.ui.fragments.coreactivityfragments.AppsFragment;
+import edu.umbc.ebiquity.mithril.ui.fragments.coreactivityfragments.BroadcastReceiversFragment;
+import edu.umbc.ebiquity.mithril.ui.fragments.coreactivityfragments.ContentProvidersFragment;
+import edu.umbc.ebiquity.mithril.ui.fragments.coreactivityfragments.PermissionsFragment;
+import edu.umbc.ebiquity.mithril.ui.fragments.coreactivityfragments.PrefsFragment;
+import edu.umbc.ebiquity.mithril.ui.fragments.coreactivityfragments.ServicesFragment;
+import edu.umbc.ebiquity.mithril.ui.fragments.coreactivityfragments.ViolationFragment;
 import edu.umbc.ebiquity.mithril.util.services.AppLaunchDetectorService;
 import edu.umbc.ebiquity.mithril.util.services.LocationUpdateService;
 import edu.umbc.ebiquity.mithril.util.specialtasks.permissions.PermissionHelper;
@@ -70,7 +72,6 @@ public class CoreActivity extends AppCompatActivity
         ServicesFragment.OnListFragmentInteractionListener,
         AboutFragment.OnFragmentInteractionListener,
         ViolationFragment.OnListFragmentInteractionListener,
-        AdvancedPreferencesFragment.OnFragmentInteractionListener,
         EmptyFragment.OnFragmentInteractionListener,
         NothingHereFragment.OnFragmentInteractionListener {
 
@@ -147,8 +148,8 @@ public class CoreActivity extends AppCompatActivity
             loadPrefsFragment();
         } else if (id == R.id.nav_about) {
             loadAboutFragment();
-        } else if (id == R.id.nav_advanced_settings) {
-            loadAdvancedPreferencesFragment();
+        } else if (id == R.id.nav_reset_app) {
+            resetApp();
         }
 
         drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
@@ -191,7 +192,7 @@ public class CoreActivity extends AppCompatActivity
     }
 
     private void initViews() {
-        setContentView(R.layout.activity_main);
+        setContentView(R.layout.activity_core);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar_main);
         setSupportActionBar(toolbar);
 
@@ -304,10 +305,27 @@ public class CoreActivity extends AppCompatActivity
                 .commit();
     }
 
-    private void loadAdvancedPreferencesFragment() {
-        FragmentManager fragmentManager = getFragmentManager();
-        fragmentManager.beginTransaction().replace(R.id.container_main, new AdvancedPreferencesFragment())
-                .commit();
+    private void resetApp() {
+        // Use the Builder class for convenient dialog construction
+        final AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setMessage(R.string.dialog_reload_data)
+                .setPositiveButton(R.string.dialog_resp_delete, new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+                        ((ActivityManager) builder.getContext().getSystemService(ACTIVITY_SERVICE)).clearApplicationUserData();
+                        Toast.makeText(builder.getContext(), "App was reset!", Toast.LENGTH_SHORT).show();
+                    }
+                })
+                .setNegativeButton(R.string.dialog_resp_NO, new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+                        Toast.makeText(builder.getContext(), "App was not reset!", Toast.LENGTH_SHORT).show();
+                    }
+                });
+
+        // create alert dialog
+        AlertDialog alertDialog = builder.create();
+
+        // show it
+        alertDialog.show();
     }
 
     private void loadPrefsFragment() {

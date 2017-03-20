@@ -12,7 +12,7 @@ import java.util.List;
 
 import edu.umbc.ebiquity.mithril.R;
 import edu.umbc.ebiquity.mithril.data.model.components.ContentProvData;
-import edu.umbc.ebiquity.mithril.ui.fragments.mainactivityfragments.ContentProvidersFragment.OnListFragmentInteractionListener;
+import edu.umbc.ebiquity.mithril.ui.fragments.coreactivityfragments.ContentProvidersFragment.OnListFragmentInteractionListener;
 
 /**
  * {@link RecyclerView.Adapter} that can display a {@link ContentProvData} and makes a call to the

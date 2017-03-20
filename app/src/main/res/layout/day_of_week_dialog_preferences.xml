@@ -13,7 +13,7 @@
         android:layout_height="wrap_content"
         android:layout_alignParentTop="true"
         android:text="@string/pref_monday"
-        android:textColor="@color/colorPrimaryDark"
+        android:textColor="@color/colorPrimaryText"
         android:textSize="20sp" />
 
     <CheckBox
@@ -22,7 +22,7 @@
         android:layout_height="wrap_content"
         android:layout_below="@+id/monday"
         android:text="@string/pref_tuesday"
-        android:textColor="@color/colorPrimaryDark"
+        android:textColor="@color/colorPrimaryText"
         android:textSize="20sp" />
 
     <CheckBox
@@ -31,7 +31,7 @@
         android:layout_height="wrap_content"
         android:layout_below="@+id/tuesday"
         android:text="@string/pref_wednesday"
-        android:textColor="@color/colorPrimaryDark"
+        android:textColor="@color/colorPrimaryText"
         android:textSize="20sp" />
 
     <CheckBox
@@ -40,7 +40,7 @@
         android:layout_height="wrap_content"
         android:layout_below="@+id/wednesday"
         android:text="@string/pref_thursday"
-        android:textColor="@color/colorPrimaryDark"
+        android:textColor="@color/colorPrimaryText"
         android:textSize="20sp" />
 
     <CheckBox
@@ -49,7 +49,7 @@
         android:layout_height="wrap_content"
         android:layout_below="@+id/thursday"
         android:text="@string/pref_friday"
-        android:textColor="@color/colorPrimaryDark"
+        android:textColor="@color/colorPrimaryText"
         android:textSize="20sp" />
 
     <CheckBox
@@ -58,7 +58,7 @@
         android:layout_height="wrap_content"
         android:layout_below="@+id/friday"
         android:text="@string/pref_saturday"
-        android:textColor="@color/colorPrimaryDark"
+        android:textColor="@color/colorPrimaryText"
         android:textSize="20sp" />
 
     <CheckBox
@@ -67,7 +67,7 @@
         android:layout_height="wrap_content"
         android:layout_below="@+id/saturday"
         android:text="@string/pref_sunday"
-        android:textColor="@color/colorPrimaryDark"
+        android:textColor="@color/colorPrimaryText"
         android:textSize="20sp" />
 
 </RelativeLayout>

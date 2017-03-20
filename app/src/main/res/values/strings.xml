@@ -54,7 +54,7 @@
     <string name="action_advanced_settings">Advanced settings</string>
 
     <string name="action_reload_data">Reload Data</string>
-    <string name="dialog_reload_data">Do you really want to delete all data from the database and reset to default data?</string>
+    <string name="dialog_reload_data">Do you really want to reset the app?</string>
     <string name="dialog_resp_delete">Yes</string>
     <string name="dialog_resp_NO">No</string>
 
@@ -211,7 +211,7 @@
     <string name="title_activity_change_rule">Change rule</string>
     <string name="title_activity_create_new_rule">Create new rule</string>
 
-    <string name="reset_app">Click to reload default app data</string>
+    <string name="reset_app">Reset app</string>
 
     <!-- Geofence Error strings -->
     <string name="not_connected">GoogleApiClient no yet connected. Try again.</string>

@@ -12,6 +12,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.Button;
 import android.widget.CompoundButton;
+import android.widget.Toast;
 import android.widget.ToggleButton;
 
 import java.util.List;
@@ -105,6 +106,8 @@ public class PermissionAcquisitionActivity extends AppCompatActivity {
                     buttonView.setChecked(false);
                 if (PermissionHelper.needsUsageStatsPermission(buttonView.getContext()))
                     startActivityForResult(new Intent(Settings.ACTION_USAGE_ACCESS_SETTINGS), MithrilApplication.USAGE_STATS_PERMISSION_REQUEST_CODE);
+                else
+                    Toast.makeText(buttonView.getContext(), "We have PACKAGE_USAGE_STATS permission already. Thank you!", Toast.LENGTH_LONG).show();
             }
         });
     }

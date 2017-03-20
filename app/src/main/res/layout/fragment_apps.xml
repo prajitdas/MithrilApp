@@ -46,7 +46,7 @@
                 android:paddingStart="5dp"
                 android:text="@string/app_name_placeholder_text"
                 android:textAppearance="@android:style/TextAppearance.Holo.Medium"
-                android:textColor="@color/colorPrimaryDark"
+                android:textColor="@color/colorPrimaryText"
                 android:textSize="25sp" />
 
             <TextView
@@ -62,7 +62,7 @@
                 android:paddingStart="5dp"
                 android:text="@string/app_version_placeholder_text"
                 android:textAppearance="@android:style/TextAppearance.Holo.Small"
-                android:textColor="@color/colorAccent"
+                android:textColor="@color/colorSecondaryText"
                 android:textSize="15sp" />
 
             <!--<CheckBox-->

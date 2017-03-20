@@ -1,4 +1,4 @@
-package edu.umbc.ebiquity.mithril.ui.fragments.mainactivityfragments;
+package edu.umbc.ebiquity.mithril.ui.fragments.coreactivityfragments;
 
 import android.app.Fragment;
 import android.content.Context;

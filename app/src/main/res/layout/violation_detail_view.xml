@@ -34,7 +34,7 @@
                 android:paddingRight="5dp"
                 android:paddingStart="5dp"
                 android:text="@string/policy_tbl_policy_rule_info"
-                android:textColor="@color/colorPrimaryDark"
+                android:textColor="@color/colorPrimaryText"
                 android:textSize="25dp" />
 
             <TextView
@@ -49,7 +49,7 @@
                 android:paddingRight="5dp"
                 android:paddingStart="5dp"
                 android:text="@string/policy_tbl_data_policy_name"
-                android:textColor="@color/colorAccent"
+                android:textColor="@color/colorSecondaryText"
                 android:textSize="20dp" />
 
         </RelativeLayout>
@@ -83,7 +83,7 @@
                 android:paddingRight="5dp"
                 android:paddingStart="5dp"
                 android:text="@string/policy_tbl_lbl_violation_info"
-                android:textColor="@color/colorPrimaryDark"
+                android:textColor="@color/colorPrimaryText"
                 android:textSize="25dp" />
 
             <TextView
@@ -98,7 +98,7 @@
                 android:paddingRight="5dp"
                 android:paddingStart="5dp"
                 android:text="@string/placeholder_text_violation_info"
-                android:textColor="@color/colorAccent"
+                android:textColor="@color/colorSecondaryText"
                 android:textSize="20dp" />
         </RelativeLayout>
     </android.support.v7.widget.CardView>

@@ -30,7 +30,7 @@
             android:paddingTop="@dimen/activity_horizontal_margin"
             android:text="@string/nothing_here"
             android:textAlignment="center"
-            android:textColor="@color/colorPrimaryDark"
+            android:textColor="@color/colorPrimaryText"
             android:textSize="25sp" />
     </RelativeLayout>
 </RelativeLayout>
