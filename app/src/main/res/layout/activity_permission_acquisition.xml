@@ -73,4 +73,11 @@
         android:background="@color/colorButton"
         android:text="@string/quit_app_label"
         android:theme="@style/AppTheme.Button" />
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="2dp"
+        android:layout_above="@+id/quitAppButton"
+        android:background="@color/colorDivider" />
+
 </RelativeLayout>
