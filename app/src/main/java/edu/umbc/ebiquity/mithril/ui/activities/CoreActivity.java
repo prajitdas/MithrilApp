@@ -77,7 +77,6 @@ public class CoreActivity extends AppCompatActivity
 
     private final File downloadsDirectory = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS);
     private final String agreementFile = MithrilApplication.getFlierPdfFileName();
-    private final String quittingMessageUponUsageStatsDenial = "Bye! The " + Manifest.permission.PACKAGE_USAGE_STATS + " permission was necessary for app functionality. Please uninstall the app...";
     private Boolean exit = false;
     private MithrilDBHelper mithrilDBHelper;
     private SQLiteDatabase mithrilDB;
@@ -263,7 +262,7 @@ public class CoreActivity extends AppCompatActivity
          * We wanted to show different banner at different times during the day. The following sub-section of the method takes care of that.
          * http://stackoverflow.com/questions/33560219/in-android-how-to-set-navigation-drawer-header-image-and-name-programmatically-i
          * As mentioned in the bug 190226, Since version 23.1.0 getting header layout view with: navigationView.findViewById(R.id.navigation_header_text) no longer works.
-         * A workaround is to inflate the headerview programatically and find view by ID from the inflated header view.
+         * A workaround is to inflate the headerview programmatically and find view by ID from the inflated header view.
          * mNavHeaderMain = (LinearLayout) findViewById(R.id.drawer_view);
          */
         headerView = navigationView.inflateHeaderView(R.layout.nav_header_main);
@@ -293,18 +292,6 @@ public class CoreActivity extends AppCompatActivity
         }
     }
 
-    private void loadNothingHereFragment() {
-        FragmentManager fragmentManager = getFragmentManager();
-        fragmentManager.beginTransaction().replace(R.id.container_main, new NothingHereFragment())
-                .commit();
-    }
-
-    private void loadEmptyFragment() {
-        FragmentManager fragmentManager = getFragmentManager();
-        fragmentManager.beginTransaction().replace(R.id.container_main, new EmptyFragment())
-                .commit();
-    }
-
     private void resetApp() {
         // Use the Builder class for convenient dialog construction
         final AlertDialog.Builder builder = new AlertDialog.Builder(this);
@@ -312,6 +299,7 @@ public class CoreActivity extends AppCompatActivity
                 .setPositiveButton(R.string.dialog_resp_delete, new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
                         ((ActivityManager) builder.getContext().getSystemService(ACTIVITY_SERVICE)).clearApplicationUserData();
+
                         Toast.makeText(builder.getContext(), "App was reset!", Toast.LENGTH_SHORT).show();
                     }
                 })
@@ -326,6 +314,18 @@ public class CoreActivity extends AppCompatActivity
 
         // show it
         alertDialog.show();
+    }
+
+    private void loadNothingHereFragment() {
+        FragmentManager fragmentManager = getFragmentManager();
+        fragmentManager.beginTransaction().replace(R.id.container_main, new NothingHereFragment())
+                .commit();
+    }
+
+    private void loadEmptyFragment() {
+        FragmentManager fragmentManager = getFragmentManager();
+        fragmentManager.beginTransaction().replace(R.id.container_main, new EmptyFragment())
+                .commit();
     }
 
     private void loadPrefsFragment() {

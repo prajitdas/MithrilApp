@@ -94,7 +94,10 @@ public class PermissionAcquisitionActivity extends AppCompatActivity {
                     buttonView.setChecked(true);
                 else
                     buttonView.setChecked(false);
-                requestAllNecessaryPermissions();
+                if (!PermissionHelper.isAllRequiredPermissionsGranted(buttonView.getContext()))
+                    requestAllNecessaryPermissions();
+                else
+                    Toast.makeText(buttonView.getContext(), "We have the permissions already. Thank you!", Toast.LENGTH_LONG).show();
             }
         });
         mSpecialPermToggleButton.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
