@@ -247,11 +247,11 @@ public class CoreActivity extends AppCompatActivity
                 message,
                 Snackbar.LENGTH_INDEFINITE);
 
-        snackbar.setActionTextColor(getResources().getColor(R.color.colorPrimaryText, this.getTheme()));
+        snackbar.setActionTextColor(getResources().getColor(R.color.white, this.getTheme()));
 
         // get snackbar view
         View snackbarView = snackbar.getView();
-        snackbarView.setBackgroundColor(getResources().getColor(R.color.colorAccent, this.getTheme()));
+        snackbarView.setBackgroundColor(getResources().getColor(R.color.colorPrimary, this.getTheme()));
 
         snackbar.setAction(R.string.okay,
                 new View.OnClickListener() {
