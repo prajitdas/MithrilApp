@@ -30,9 +30,9 @@
         android:layout_gravity="bottom|end"
         android:layout_margin="@dimen/fab_margin"
         android:elevation="@dimen/fab_margin"
-        app:backgroundTint="@color/colorButton"
+        app:backgroundTint="@color/colorPrimary"
         app:fabSize="auto"
-        app:rippleColor="@color/colorPrimaryText"
+        app:rippleColor="@color/colorPrimaryDark"
         app:srcCompat="@drawable/email" />
 
 </android.support.design.widget.CoordinatorLayout>

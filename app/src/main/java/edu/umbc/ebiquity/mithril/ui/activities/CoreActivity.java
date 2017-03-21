@@ -26,6 +26,7 @@ import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Toast;
@@ -83,8 +84,9 @@ public class CoreActivity extends AppCompatActivity
     private MithrilDBHelper mithrilDBHelper;
     private SQLiteDatabase mithrilDB;
     private SharedPreferences sharedPreferences;
+    private RootAccess rootAccess;
 
-    //    private Violation violationItemSelected = null;
+//    private Violation violationItemSelected = null;
 //    private List<AppData> appDataItemsSelected = null;
     private List<Violation> violationItems;
     private FloatingActionButton fab;
@@ -245,7 +247,7 @@ public class CoreActivity extends AppCompatActivity
                 message,
                 Snackbar.LENGTH_INDEFINITE);
 
-        snackbar.setActionTextColor(getResources().getColor(R.color.white, this.getTheme()));
+        snackbar.setActionTextColor(getResources().getColor(R.color.colorPrimaryText, this.getTheme()));
 
         // get snackbar view
         View snackbarView = snackbar.getView();
@@ -301,7 +303,7 @@ public class CoreActivity extends AppCompatActivity
                 .setPositiveButton(R.string.dialog_resp_delete, new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
                         try {
-                            RootAccess rootAccess = new RootAccess(builder.getContext());
+                            rootAccess = new RootAccess(builder.getContext());
                             rootAccess.runScript(new String[]{MithrilApplication.getCmdRevokePackageUsageStatsPermissionForApp()});
                         } catch (PhoneNotRootedException phoneNotRootedException) {
                             Log.d(MithrilApplication.getDebugTag(), "Phone is not rooted do non-root behavior" + phoneNotRootedException.getMessage());
@@ -579,6 +581,25 @@ public class CoreActivity extends AppCompatActivity
 
             }
         }
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        // Inflate the menu; this adds items to the action bar if it is present.
+        getMenuInflater().inflate(R.menu.menu_core, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        // Handle action bar item clicks here. The action bar will
+        // automatically handle clicks on the Home/Up button, so long
+        // as you specify a parent activity in AndroidManifest.xml.
+        int id = item.getItemId();
+        if (id == R.id.capture_exec_settings) {
+            return true;
+        }
+        return super.onOptionsItemSelected(item);
     }
 
     private void startNextActivity(Context context, Class activityClass) {

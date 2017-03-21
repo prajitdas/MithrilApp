@@ -22,7 +22,6 @@ import edu.umbc.ebiquity.mithril.R;
 import edu.umbc.ebiquity.mithril.util.specialtasks.permissions.PermissionHelper;
 
 public class PermissionAcquisitionActivity extends AppCompatActivity {
-    private SharedPreferences sharedPreferences;
     private SharedPreferences.Editor editor;
 
     private ToggleButton mGenericPermToggleButton;
@@ -32,13 +31,13 @@ public class PermissionAcquisitionActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        testPermissionsAndLaunchNextActivity();
     }
 
     @Override
     protected void onResume() {
         super.onResume();
         overridePendingTransition(0, 0);
+        testPermissionsAndLaunchNextActivity();
         makeFullScreen();
         initViews();
     }
@@ -61,7 +60,6 @@ public class PermissionAcquisitionActivity extends AppCompatActivity {
 
     private void initViews() {
         setContentView(R.layout.activity_permission_acquisition);
-        sharedPreferences = getSharedPreferences(MithrilApplication.getSharedPreferencesName(), Context.MODE_PRIVATE);
         editor = getSharedPreferences(MithrilApplication.getSharedPreferencesName(), Context.MODE_PRIVATE).edit();
 
         mGenericPermToggleButton = (ToggleButton) findViewById(R.id.genericPermToggleButton);

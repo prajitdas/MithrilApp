@@ -73,7 +73,7 @@
                 android:id="@+id/nav_settings"
                 android:checkable="true"
                 android:icon="@drawable/settings"
-                android:title="@string/action_settings" />
+                android:title="@string/instance_population" />
             <item
                 android:id="@+id/nav_reset_app"
                 android:checkable="true"

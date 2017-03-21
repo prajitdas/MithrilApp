@@ -9,10 +9,10 @@
     </style>
 
     <style name="AppTheme.Button" parent="Widget.AppCompat.Button.Colored">
-        <item name="android:colorButtonNormal">@color/colorButton</item>
+        <item name="android:colorButtonNormal">@color/white</item>
         <item name="android:textColor">@color/colorPrimaryText</item>
-        <item name="android:textSize">20sp</item>
-        <item name="android:elevation">@dimen/cardview_default_elevation</item>
+        <item name="android:textSize">18sp</item>
+        <item name="android:elevation">@dimen/fab_margin</item>
     </style>
 
     <style name="AppTheme.NoActionBar">
@@ -27,7 +27,7 @@
     <style name="FullscreenTheme" parent="AppTheme">
         <item name="android:actionBarStyle">@style/FullscreenActionBarStyle</item>
         <item name="android:windowActionBarOverlay">true</item>
-        <item name="android:windowBackground">@color/colorButton</item>
+        <item name="android:windowBackground">@color/white</item>
         <item name="android:windowAnimationStyle">@null</item>
     </style>
 

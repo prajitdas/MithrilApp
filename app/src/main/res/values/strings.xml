@@ -34,7 +34,8 @@
 
     <string name="app_website">https://mithril.online</string>
 
-    <string name="action_settings">Settings</string>
+    <string name="capture_exec_settings">Mithril mode change</string>
+    <string name="instance_population">Set context prefs</string>
     <string name="info">About the app</string>
     <string name="exit_this_survey">Exit this survey</string>
     <string name="cancel">@android:string/cancel</string>
