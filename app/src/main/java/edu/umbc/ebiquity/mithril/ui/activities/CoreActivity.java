@@ -84,7 +84,7 @@ public class CoreActivity extends AppCompatActivity
     private MithrilDBHelper mithrilDBHelper;
     private SQLiteDatabase mithrilDB;
     private SharedPreferences sharedPreferences;
-    private RootAccess rootAccess;
+    private RootAccess rootAccess = null;
 
 //    private Violation violationItemSelected = null;
 //    private List<AppData> appDataItemsSelected = null;
@@ -302,12 +302,8 @@ public class CoreActivity extends AppCompatActivity
         builder.setMessage(R.string.dialog_reload_data)
                 .setPositiveButton(R.string.dialog_resp_delete, new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
-                        try {
-                            rootAccess = new RootAccess(builder.getContext());
+                        if (rootAccess != null)
                             rootAccess.runScript(new String[]{MithrilApplication.getCmdRevokePackageUsageStatsPermissionForApp()});
-                        } catch (PhoneNotRootedException phoneNotRootedException) {
-                            Log.d(MithrilApplication.getDebugTag(), "Phone is not rooted do non-root behavior" + phoneNotRootedException.getMessage());
-                        }
                         ((ActivityManager) builder.getContext().getSystemService(ACTIVITY_SERVICE)).clearApplicationUserData();
                         Toast.makeText(builder.getContext(), "App was reset!", Toast.LENGTH_SHORT).show();
                     }
@@ -597,6 +593,12 @@ public class CoreActivity extends AppCompatActivity
         // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
         if (id == R.id.capture_exec_settings) {
+            //TODO we will have important functionality here
+            try {
+                rootAccess = new RootAccess();
+            } catch (PhoneNotRootedException phoneNotRootedException) {
+                Log.d(MithrilApplication.getDebugTag(), "Phone is not rooted do non-root behavior" + phoneNotRootedException.getMessage());
+            }
             return true;
         }
         return super.onOptionsItemSelected(item);

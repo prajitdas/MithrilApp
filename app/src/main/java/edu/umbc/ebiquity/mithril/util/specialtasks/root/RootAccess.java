@@ -1,11 +1,11 @@
 package edu.umbc.ebiquity.mithril.util.specialtasks.root;
 
-import android.content.Context;
-import android.widget.Toast;
+import android.util.Log;
 
 import java.io.File;
 import java.io.IOException;
 
+import edu.umbc.ebiquity.mithril.MithrilApplication;
 import edu.umbc.ebiquity.mithril.util.specialtasks.errorsnexceptions.PhoneNotRootedException;
 
 /*
@@ -15,12 +15,12 @@ import edu.umbc.ebiquity.mithril.util.specialtasks.errorsnexceptions.PhoneNotRoo
 
 public class RootAccess {
     private Process rootProcess;
-    private Context appContext;
 
-    public RootAccess(Context context) throws PhoneNotRootedException {
+    public RootAccess() throws PhoneNotRootedException {
         if (!isRooted())
             throw new PhoneNotRootedException();
-        appContext = context;
+        else
+            runScript(new String[]{"su"});
     }
 
     public boolean runScript(String[] statementsToRun) {
@@ -39,20 +39,20 @@ public class RootAccess {
                 rootProcess.waitFor();
                 if (rootProcess.exitValue() != 255) {
                     // TODO Code to run on success
-                    Toast.makeText(appContext, "root", Toast.LENGTH_LONG).show();
+                    Log.d(MithrilApplication.getDebugTag(), "root");
                 } else {
                     // TODO Code to run on unsuccessful
-                    Toast.makeText(appContext, "can't root", Toast.LENGTH_LONG).show();
+                    Log.d(MithrilApplication.getDebugTag(), "can't root");
                     return false;
                 }
             } catch (InterruptedException e) {
                 // TODO Code to run in interrupted exception
-                Toast.makeText(appContext, "can't root", Toast.LENGTH_LONG).show();
+                Log.d(MithrilApplication.getDebugTag(), "can't root");
                 return false;
             }
         } catch (IOException e) {
             // TODO Code to run in input/output exception
-            Toast.makeText(appContext, "can't root", Toast.LENGTH_LONG).show();
+            Log.d(MithrilApplication.getDebugTag(), "can't root");
             return false;
         }
         return true;
