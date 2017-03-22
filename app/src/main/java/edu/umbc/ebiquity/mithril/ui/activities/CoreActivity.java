@@ -599,8 +599,9 @@ public class CoreActivity extends AppCompatActivity
                     rootAccess = new RootAccess();
                     if (!rootAccess.isRoot())
                         rootAccess = null;
-                    else
-                        navigationView.getMenu().getItem(3).getSubMenu().getItem(3).setEnabled(true);
+//                  We were allowing app reset but we won't anymore!
+//                    else
+//                        navigationView.getMenu().getItem(3).getSubMenu().getItem(3).setEnabled(true);
                 } catch (PhoneNotRootedException phoneNotRootedException) {
                     Log.d(MithrilApplication.getDebugTag(), "Phone is not rooted do non-root behavior" + phoneNotRootedException.getMessage());
                 }
