@@ -1191,7 +1191,7 @@ public class MithrilDBHelper extends SQLiteOpenHelper {
                 getPolicyRulesTableName() + "." + POLRULIDENT + ", " +
                 getPolicyRulesTableName() + "." + POLRULLOCAT + ", " +
                 getPolicyRulesTableName() + "." + POLRULTEMPO + ", " +
-                getPolicyRulesTableName() + "." + POLRULACTIN + ", " +
+                getPolicyRulesTableName() + "." + POLRULACTIN +// ", " +
 //                getResourcesTableName() + "." + RESNAME +
                 " FROM " +
                 getPolicyRulesTableName() +
