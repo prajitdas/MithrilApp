@@ -2,6 +2,7 @@ package edu.umbc.ebiquity.mithril.util.specialtasks.detect.policyconflicts;
 
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
 import android.location.Address;
 import android.location.Location;
@@ -112,95 +113,99 @@ public class ViolationDetector {
         MithrilDBHelper mithrilDBHelper = new MithrilDBHelper(context);
         SQLiteDatabase mithrilDB = mithrilDBHelper.getWritableDatabase();
 
-        List<PolicyRule> rulesForApp = mithrilDBHelper.findAllPoliciesByReq(mithrilDB, currentPackageName);
-        //No rules found! We have a violation...
-        if (rulesForApp.size() > 0) {
-            for (PolicyRule rule : rulesForApp) {
-                if (rule.getAction().equals(Action.ALLOW)) {
-                    //Is this allowed?
-                    //Do we need location?
-                    if (rule.getSemanticUserContext().getSemanticLocation() != null)
-                        weNeedLocation(context);
-                    //Do we need activity?
-                    if (rule.getSemanticUserContext().getSemanticActivity() != null)
-                        weNeedActivity();
-                    //Do we need temporal context?
-                    if (rule.getSemanticUserContext().getSemanticTime() != null)
-                        weNeedTime();
-                    //Do we need nearby actors?
-                    if (rule.getSemanticUserContext().getSemanticNearActors() != null)
-                        weNeedNearActors();
-                    //Do we need identity context?
-                    if (rule.getSemanticUserContext().getSemanticIdentity() != null)
-                        weNeedIdentity();
-                } else {
-                    Log.e(MithrilApplication.getDebugTag(), "Serious error! DB contains deny rules. This violates our CWA");
-                    throw new CWAException(); //Something is wrong!!!! We have a Closed World Assumption we cannot have deny rules...
+        try {
+            List<PolicyRule> rulesForApp = mithrilDBHelper.findAllPoliciesByReq(mithrilDB, currentPackageName);
+            //No rules found! We have a violation...
+            if (rulesForApp.size() > 0) {
+                for (PolicyRule rule : rulesForApp) {
+                    if (rule.getAction().equals(Action.ALLOW)) {
+                        //Is this allowed?
+                        //Do we need location?
+                        if (rule.getSemanticUserContext().getSemanticLocation() != null)
+                            weNeedLocation(context);
+                        //Do we need activity?
+                        if (rule.getSemanticUserContext().getSemanticActivity() != null)
+                            weNeedActivity();
+                        //Do we need temporal context?
+                        if (rule.getSemanticUserContext().getSemanticTime() != null)
+                            weNeedTime();
+                        //Do we need nearby actors?
+                        if (rule.getSemanticUserContext().getSemanticNearActors() != null)
+                            weNeedNearActors();
+                        //Do we need identity context?
+                        if (rule.getSemanticUserContext().getSemanticIdentity() != null)
+                            weNeedIdentity();
+                    } else {
+                        Log.e(MithrilApplication.getDebugTag(), "Serious error! DB contains deny rules. This violates our CWA");
+                        throw new CWAException(); //Something is wrong!!!! We have a Closed World Assumption we cannot have deny rules...
+                    }
                 }
             }
-        }
-        if (mithrilDBHelper.findAppTypeByAppPkgName(mithrilDB, currentPackageName).equals(MithrilApplication.getPrefKeyUserAppsDisplay())) {
+            if (mithrilDBHelper.findAppTypeByAppPkgName(mithrilDB, currentPackageName).equals(MithrilApplication.getPrefKeyUserAppsDisplay())) {
 
-//            Toast.makeText(context, "Mithril detects user app launch: " + currentPackageName, Toast.LENGTH_SHORT).show();
-//            Log.d(MithrilApplication.getDebugTag(), "Mithril detects user app launch: " + currentPackageName);
-            /**
-             * PolicyConflictDetector object to be created and sent the requester, resource, context combo to receive a decision!!!
-             */
-            /**
-             * TODO if an app is launched at a certain Semantic location, does the location we know match any policy?
-             * TODO If it does then, can we determine if this is a violation?
-             * TODO if this is a violation, then insert the information into the violation table.
-             * TODO if it is not a violation, then what do we do? **DECIDE**
-             * TODO !!!!DUMMY POLICY!!!!
-             * REMOVE THIS AFTER DEMO
-             * com.google.android.youtube launch is not allowed in US!
-             * change policy to allowed in
-             */
-//            SemanticUserContext currSemanticUserContext = getCurrentSemanticUserContext();
-//            if (currSemanticUserContext != null) {
-//                //Rule 1 is allow youtube at home
-//                if (contextLevel.equals(MithrilApplication.getPrefKeyCurrentLocation())
-//                        && !currSemanticUserContext.getSemanticLocation().getInferredLocation().equals("21227")) {
-//                    if (currentPackageName.equals("com.google.android.youtube")) {
-//                        editor.putString(MithrilApplication.getPrefKeyAppPkgName(), currentPackageName);
-//                        editor.putString(MithrilApplication.getPrefKeyCurrentLocation(), "Home");
-////                        Toast.makeText(context, "Rule 1 violation detected!", Toast.LENGTH_LONG).show();
-//                        Log.d(MithrilApplication.getDebugTag(), "Rule 1 violation detected!");
-//                    }
-//                }
-//                //Rule 2 is allow youtube at work during lunch hours
-//                else if (contextLevel.equals("loctime")
-//                        && !currSemanticUserContext.getSemanticLocation().getInferredLocation().equals("21250")
-//                        && !currSemanticUserContext.getSemanticTime().getDeviceTime().equals("Lunch")) {
-//                    if (currentPackageName.equals("com.google.android.youtube")) {
-//                        editor.putString(MithrilApplication.getPrefKeyAppPkgName(), currentPackageName);
-//                        editor.putString(MithrilApplication.getPrefKeyCurrentLocation(), "Work");
-//                        editor.putString(MithrilApplication.getPrefKeyCurrentTime(), "Lunch");
-////                        editor.apply();
-////                        Toast.makeText(context, "Rule 2 violation detected!", Toast.LENGTH_LONG).show();
-//                        Log.d(MithrilApplication.getDebugTag(), "Rule 2 violation detected!");
-//                    }
-//                }
-//                //Rule 3 is allow SQLite at work
-//                else if (contextLevel.equals(MithrilApplication.getPrefKeyCurrentLocation())
-//                        && !currSemanticUserContext.getSemanticLocation().getInferredLocation().equals("21250")) {
-//                    if (currentPackageName.equals("oliver.ehrenmueller.dbadmin")) {
-//                        editor.putString(MithrilApplication.getPrefKeyAppPkgName(), currentPackageName);
-//                        editor.putString(MithrilApplication.getPrefKeyCurrentLocation(), "Work");
-////                editor.apply();
-////                        Toast.makeText(context, "Rule 3 violation detected!", Toast.LENGTH_LONG).show();
-//                        Log.d(MithrilApplication.getDebugTag(), "Rule 2 violation detected!");
-//                    }
-//                }
-////            // If no rules are broken then we will show no violations
-////            else {
-////                editor.remove(MithrilApplication.getPrefKeyCurrentLocation());
-////                editor.remove(MithrilApplication.getPrefKeyCurrentTime());
-////                Toast.makeText(context, "All good!", Toast.LENGTH_LONG).show();
-////            }
-//
-//                editor.apply();
-//            }
+                //            Toast.makeText(context, "Mithril detects user app launch: " + currentPackageName, Toast.LENGTH_SHORT).show();
+                //            Log.d(MithrilApplication.getDebugTag(), "Mithril detects user app launch: " + currentPackageName);
+                /**
+                 * PolicyConflictDetector object to be created and sent the requester, resource, context combo to receive a decision!!!
+                 */
+                /**
+                 * TODO if an app is launched at a certain Semantic location, does the location we know match any policy?
+                 * TODO If it does then, can we determine if this is a violation?
+                 * TODO if this is a violation, then insert the information into the violation table.
+                 * TODO if it is not a violation, then what do we do? **DECIDE**
+                 * TODO !!!!DUMMY POLICY!!!!
+                 * REMOVE THIS AFTER DEMO
+                 * com.google.android.youtube launch is not allowed in US!
+                 * change policy to allowed in
+                 */
+                //            SemanticUserContext currSemanticUserContext = getCurrentSemanticUserContext();
+                //            if (currSemanticUserContext != null) {
+                //                //Rule 1 is allow youtube at home
+                //                if (contextLevel.equals(MithrilApplication.getPrefKeyCurrentLocation())
+                //                        && !currSemanticUserContext.getSemanticLocation().getInferredLocation().equals("21227")) {
+                //                    if (currentPackageName.equals("com.google.android.youtube")) {
+                //                        editor.putString(MithrilApplication.getPrefKeyAppPkgName(), currentPackageName);
+                //                        editor.putString(MithrilApplication.getPrefKeyCurrentLocation(), "Home");
+                ////                        Toast.makeText(context, "Rule 1 violation detected!", Toast.LENGTH_LONG).show();
+                //                        Log.d(MithrilApplication.getDebugTag(), "Rule 1 violation detected!");
+                //                    }
+                //                }
+                //                //Rule 2 is allow youtube at work during lunch hours
+                //                else if (contextLevel.equals("loctime")
+                //                        && !currSemanticUserContext.getSemanticLocation().getInferredLocation().equals("21250")
+                //                        && !currSemanticUserContext.getSemanticTime().getDeviceTime().equals("Lunch")) {
+                //                    if (currentPackageName.equals("com.google.android.youtube")) {
+                //                        editor.putString(MithrilApplication.getPrefKeyAppPkgName(), currentPackageName);
+                //                        editor.putString(MithrilApplication.getPrefKeyCurrentLocation(), "Work");
+                //                        editor.putString(MithrilApplication.getPrefKeyCurrentTime(), "Lunch");
+                ////                        editor.apply();
+                ////                        Toast.makeText(context, "Rule 2 violation detected!", Toast.LENGTH_LONG).show();
+                //                        Log.d(MithrilApplication.getDebugTag(), "Rule 2 violation detected!");
+                //                    }
+                //                }
+                //                //Rule 3 is allow SQLite at work
+                //                else if (contextLevel.equals(MithrilApplication.getPrefKeyCurrentLocation())
+                //                        && !currSemanticUserContext.getSemanticLocation().getInferredLocation().equals("21250")) {
+                //                    if (currentPackageName.equals("oliver.ehrenmueller.dbadmin")) {
+                //                        editor.putString(MithrilApplication.getPrefKeyAppPkgName(), currentPackageName);
+                //                        editor.putString(MithrilApplication.getPrefKeyCurrentLocation(), "Work");
+                ////                editor.apply();
+                ////                        Toast.makeText(context, "Rule 3 violation detected!", Toast.LENGTH_LONG).show();
+                //                        Log.d(MithrilApplication.getDebugTag(), "Rule 2 violation detected!");
+                //                    }
+                //                }
+                ////            // If no rules are broken then we will show no violations
+                ////            else {
+                ////                editor.remove(MithrilApplication.getPrefKeyCurrentLocation());
+                ////                editor.remove(MithrilApplication.getPrefKeyCurrentTime());
+                ////                Toast.makeText(context, "All good!", Toast.LENGTH_LONG).show();
+                ////            }
+                //
+                //                editor.apply();
+                //            }
+            }
+        } catch (SQLException e) {
+            Log.e(MithrilApplication.getDebugTag(), e.getMessage() + " it seems there is no policy for this app!");
         }
         mithrilDB.close();
     }

@@ -1186,13 +1186,13 @@ public class MithrilDBHelper extends SQLiteOpenHelper {
                 getPolicyRulesTableName() + "." + POLRULID + ", " +
                 getPolicyRulesTableName() + "." + POLRULNAME + ", " +
                 getRequestersTableName() + "." + REQNAME + ", " +
-                getResourcesTableName() + "." + RESNAME + ", " +
                 getPolicyRulesTableName() + "." + POLRULNEARA + ", " +
                 getPolicyRulesTableName() + "." + POLRULACTIV + ", " +
                 getPolicyRulesTableName() + "." + POLRULIDENT + ", " +
                 getPolicyRulesTableName() + "." + POLRULLOCAT + ", " +
                 getPolicyRulesTableName() + "." + POLRULTEMPO + ", " +
-                getPolicyRulesTableName() + "." + POLRULACTIN +
+                getPolicyRulesTableName() + "." + POLRULACTIN + ", " +
+//                getResourcesTableName() + "." + RESNAME +
                 " FROM " +
                 getPolicyRulesTableName() +
                 " LEFT JOIN " + getRequestersTableName() +
@@ -1212,21 +1212,22 @@ public class MithrilDBHelper extends SQLiteOpenHelper {
                     policyRule.setId(Integer.parseInt(cursor.getString(0)));
                     policyRule.setName(cursor.getString(1));
                     policyRule.setRequester(new Requester(cursor.getString(2)));
-                    policyRule.setResource(new Resource(cursor.getString(3)));
 
                     policyRule.setSemanticUserContext(
                             new SemanticUserContext(
-                                    new SemanticNearActors(cursor.getString(4)),
-                                    new SemanticActivity(cursor.getString(5)),
-                                    new SemanticIdentity(cursor.getString(6)),
-                                    new SemanticLocation(cursor.getString(7)),
-                                    new SemanticTime(cursor.getString(8))
+                                    new SemanticNearActors(cursor.getString(3)),
+                                    new SemanticActivity(cursor.getString(4)),
+                                    new SemanticIdentity(cursor.getString(5)),
+                                    new SemanticLocation(cursor.getString(6)),
+                                    new SemanticTime(cursor.getString(7))
                             ));
 
-                    if (Integer.parseInt(cursor.getString(9)) == 1)
+                    if (Integer.parseInt(cursor.getString(8)) == 1)
                         policyRule.setAction(new RuleAction(Action.ALLOW));
                     else
                         policyRule.setAction(new RuleAction(Action.DENY));
+
+//                    policyRule.setResource(new Resource(cursor.getString(9)));
 
                     // Adding policies to list
                     policyRules.add(policyRule);
