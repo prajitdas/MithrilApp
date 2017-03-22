@@ -2,6 +2,7 @@ package edu.umbc.ebiquity.mithril.util.specialtasks.root;
 
 import android.util.Log;
 
+import java.io.DataOutputStream;
 import java.io.File;
 import java.io.IOException;
 
@@ -19,22 +20,21 @@ public class RootAccess {
     public RootAccess() throws PhoneNotRootedException {
         if (!isRooted())
             throw new PhoneNotRootedException();
-        else
-            runScript(new String[]{"su"});
     }
 
-    public boolean runScript(String[] statementsToRun) {
+    public boolean isRoot() {
         try {
             // Preform su to get root privileges
-            rootProcess = Runtime.getRuntime().exec(statementsToRun);
+            rootProcess = Runtime.getRuntime().exec("su");
 
-//            // Attempt to write a file to a root-only
-//            DataOutputStream os = new DataOutputStream(rootProcess.getOutputStream());
-//            os.writeBytes("echo \"Do I have root?\" >/system/sd/temporary.txt\n");
+            // Attempt to write a file to a root-only
+            DataOutputStream os = new DataOutputStream(rootProcess.getOutputStream());
+            os.writeBytes("echo \"Do I have root?\" >/system/sd/temporary.txt\n");
+            os.writeBytes("rm /system/sd/temporary.txt\n");
 
-            // Close the terminal
-//            os.writeBytes("exit\n");
-//            os.flush();
+//             Close the terminal
+            os.writeBytes("exit\n");
+            os.flush();
             try {
                 rootProcess.waitFor();
                 if (rootProcess.exitValue() != 255) {
@@ -57,6 +57,47 @@ public class RootAccess {
         }
         return true;
     }
+
+    public boolean runScript(String[] statementsToRun) {
+        if (!isRoot())
+            return false;
+        try {
+            // Preform su to get root privileges
+            rootProcess = Runtime.getRuntime().exec("su");
+
+            // Attempt to write a file to a root-only
+            DataOutputStream os = new DataOutputStream(rootProcess.getOutputStream());
+            for (int commandCount = 0; commandCount < statementsToRun.length; commandCount++) {
+                String command = statementsToRun[commandCount] + "\n";
+                os.writeBytes(command);
+            }
+
+//             Close the terminal
+            os.writeBytes("exit\n");
+            os.flush();
+            try {
+                rootProcess.waitFor();
+                if (rootProcess.exitValue() != 255) {
+                    // TODO Code to run on success
+                    Log.d(MithrilApplication.getDebugTag(), "root");
+                } else {
+                    // TODO Code to run on unsuccessful
+                    Log.d(MithrilApplication.getDebugTag(), "can't root");
+                    return false;
+                }
+            } catch (InterruptedException e) {
+                // TODO Code to run in interrupted exception
+                Log.d(MithrilApplication.getDebugTag(), "can't root");
+                return false;
+            }
+        } catch (IOException e) {
+            // TODO Code to run in input/output exception
+            Log.d(MithrilApplication.getDebugTag(), "can't root");
+            return false;
+        }
+        return true;
+    }
+
 
     /**
      * Checks if the device is rooted.

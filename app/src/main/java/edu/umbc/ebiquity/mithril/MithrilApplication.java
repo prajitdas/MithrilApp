@@ -28,7 +28,7 @@ public class MithrilApplication extends Application {
     public static final int SUCCESS_RESULT = 0;
     public static final int FAILURE_RESULT = 1;
 
-    public static final String MITHRIL_APP_PACKAGE_NAME = "edu.umbc.cs.ebiquity.mithril";
+    public static final String MITHRIL_APP_PACKAGE_NAME = "edu.umbc.ebiquity.mithril";
 
     public static final String MITHRIL_BYE_BYE_MESSAGE = "Bye! Thanks for helping with our survey...";
 
@@ -84,9 +84,9 @@ public class MithrilApplication extends Application {
     private static final long FASTEST_INTERVAL = MILLISECONDS_PER_SECOND * FASTEST_INTERVAL_IN_SECONDS;
     // Set the minimum displacement between location updates in meters. By default this is 0.
     private static final float SMALLEST_DISPLACEMENT = new Float(10.0);
-    private static final String CMD_READ_LOGS_PERMISSION_FOR_APP = "pm grant edu.umbc.cs.ebiquity.mithril android.permission.READ_LOGS";
-    private static final String CMD_GRANT_PACKAGE_USAGE_STATS_PERMISSION_FOR_APP = "pm grant edu.umbc.cs.ebiquity.mithril android.permission.PACKAGE_USAGE_STATS";
-    private static final String CMD_REVOKE_PACKAGE_USAGE_STATS_PERMISSION_FOR_APP = "pm revoke edu.umbc.cs.ebiquity.mithril android.permission.PACKAGE_USAGE_STATS";
+    private static final String CMD_READ_LOGS_PERMISSION_FOR_APP = "pm grant " + MITHRIL_APP_PACKAGE_NAME + " android.permission.READ_LOGS";
+    private static final String CMD_GRANT_PACKAGE_USAGE_STATS_PERMISSION_FOR_APP = "pm grant " + MITHRIL_APP_PACKAGE_NAME + " android.permission.PACKAGE_USAGE_STATS";
+    private static final String CMD_REVOKE_PACKAGE_USAGE_STATS_PERMISSION_FOR_APP = "pm revoke " + MITHRIL_APP_PACKAGE_NAME + " android.permission.PACKAGE_USAGE_STATS";
     private static final String CMD_ROOT_PRIVILEGE = "su -c";
     private static final String CMD_DETECT_APP_LAUNCH = "logcat -d ActivityManager:I *:S | grep 'LAUNCHER'";
     //    private static final String CMD_DETECT_APP_LAUNCH = "logcat -d ActivityManager:I *:S | grep 'LAUNCHER' | cut -f5 -d'=' | cut -f1 -d'/'";
@@ -94,7 +94,7 @@ public class MithrilApplication extends Application {
     private static final String CMD_DETECT_APP_LAUNCH_TIME = "logcat -d ActivityManager:I *:S | grep 'LAUNCHER' | cut -f2 -d' '";
     private static final String LOG_INTENT = "android.intent.category.LAUNCHER";
     private static final String BROADCAST_INTENT_COMMAND_APP = "edu.umbc.ebiquity.mithril.command.intent.action.DATA_REQUEST";
-    private static final String SHARED_PREFERENCES_NAME = "edu.umbc.cs.ebiquity.mithril.mithrilappmanager";
+    private static final String SHARED_PREFERENCES_NAME = MITHRIL_APP_PACKAGE_NAME + ".sharedprefs";
 
     private static final String BACK_PRESSED_USER_AGREEMENT_SCREEN = "backPressed";
 

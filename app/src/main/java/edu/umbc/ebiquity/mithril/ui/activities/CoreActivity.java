@@ -593,11 +593,17 @@ public class CoreActivity extends AppCompatActivity
         // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
         if (id == R.id.capture_exec_settings) {
-            //TODO we will have important functionality here
-            try {
-                rootAccess = new RootAccess();
-            } catch (PhoneNotRootedException phoneNotRootedException) {
-                Log.d(MithrilApplication.getDebugTag(), "Phone is not rooted do non-root behavior" + phoneNotRootedException.getMessage());
+            if (rootAccess == null) {
+                //TODO we will have important functionality here
+                try {
+                    rootAccess = new RootAccess();
+                    if (!rootAccess.isRoot())
+                        rootAccess = null;
+                    else
+                        navigationView.getMenu().getItem(3).getSubMenu().getItem(3).setEnabled(true);
+                } catch (PhoneNotRootedException phoneNotRootedException) {
+                    Log.d(MithrilApplication.getDebugTag(), "Phone is not rooted do non-root behavior" + phoneNotRootedException.getMessage());
+                }
             }
             return true;
         }
