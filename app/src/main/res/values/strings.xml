@@ -210,7 +210,7 @@
     <string name="title_activity_user_feedback">User policy control</string>
     <string name="title_activity_change_rule">Change rule</string>
     <string name="title_activity_create_new_rule">Create new rule</string>
-    <string name="title_activity_prefs">Manage context instances</string>
+    <string name="title_activity_prefs">Manage context info</string>
 
     <string name="reset_app">Reset app</string>
 

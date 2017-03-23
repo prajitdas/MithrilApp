@@ -216,6 +216,8 @@ public class PrefsFragment extends PreferenceFragment implements
         stringValue = sharedPrefs.getString(MithrilApplication.getPrefPresenceInfoColleagueKey(), getResources().getString(R.string.pref_presence_info_colleague_summary));
         mEditTextPrefPresenceInfoColleague.setSummary(sharedPrefs.getString(MithrilApplication.getPrefPresenceInfoColleagueKey(), getResources().getString(R.string.pref_presence_info_colleague_summary)));
         editor.putString(MithrilApplication.getPrefPresenceInfoColleagueKey(), stringValue);
+
+        editor.apply();
     }
 
     private void appOps() {

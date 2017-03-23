@@ -1,12 +1,16 @@
 package edu.umbc.ebiquity.mithril.ui.activities;
 
+import android.content.Context;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
+import android.widget.Toast;
 
+import edu.umbc.ebiquity.mithril.MithrilApplication;
 import edu.umbc.ebiquity.mithril.R;
 import edu.umbc.ebiquity.mithril.ui.fragments.prefsactivityfragments.PrefsFragment;
 
@@ -32,6 +36,15 @@ public class PrefsActivity extends AppCompatActivity {
                         .setAction("Action", null).show();
             }
         });
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(false);
+    }
+
+    @Override
+    public void onBackPressed() {
+        SharedPreferences sharedPreferences = getSharedPreferences(MithrilApplication.getSharedPreferencesName(), Context.MODE_PRIVATE);
+        if (!sharedPreferences.getBoolean(MithrilApplication.getPrefAllDoneKey(), false))
+            Toast.makeText(this, "Click on \"" + this.getResources().getString(R.string.pref_all_done_title) + "\" at the top, to go to app home", Toast.LENGTH_SHORT).show();
+        else
+            super.onBackPressed();
     }
 }

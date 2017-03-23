@@ -168,6 +168,10 @@ public class CoreActivity extends AppCompatActivity
     @Override
     protected void onResume() {
         super.onResume();
+        doStart();
+    }
+
+    private void doStart() {
         overridePendingTransition(0, 0);
         initHouseKeepingTasks();
         initViews();
@@ -406,7 +410,7 @@ public class CoreActivity extends AppCompatActivity
     }
 
     private void launchPrefsActivity() {
-        startActivityForResult(new Intent(this, PrefsActivity.class), MithrilApplication.ACTIVITY_RESULT_CODE_PREFS_SET);
+        startActivity(new Intent(this, PrefsActivity.class));
     }
 
     private boolean isViolationListEmpty() {
@@ -553,17 +557,6 @@ public class CoreActivity extends AppCompatActivity
     @Override
     public void onListFragmentInteraction(BCastRecvData item) {
         //TODO do something when the broadcast receiver data is requested
-    }
-
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        if (requestCode == MithrilApplication.ACTIVITY_RESULT_CODE_PREFS_SET) {
-            if (resultCode == RESULT_OK) {
-
-            } else if (resultCode == RESULT_CANCELED) {
-
-            }
-        }
     }
 
     @Override

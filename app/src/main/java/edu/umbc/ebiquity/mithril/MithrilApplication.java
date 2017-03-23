@@ -22,8 +22,6 @@ public class MithrilApplication extends Application {
     public static final int ALL_PERMISSIONS_MITHRIL_REQUEST_CODE = 100;
     public static final int USAGE_STATS_PERMISSION_REQUEST_CODE = 200;
 
-    public static final int ACTIVITY_RESULT_CODE_PREFS_SET = 10;
-
     public static final int SUCCESS_RESULT = 0;
     public static final int FAILURE_RESULT = 1;
 
