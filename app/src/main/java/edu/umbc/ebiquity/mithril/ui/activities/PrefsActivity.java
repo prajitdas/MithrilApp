@@ -21,7 +21,7 @@ public class PrefsActivity extends AppCompatActivity {
 
         // Display the fragment as the main content.
         getFragmentManager().beginTransaction()
-                .replace(android.R.id.content, new PrefsFragment())
+                .replace(R.id.container_prefs, new PrefsFragment())
                 .commit();
 
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab_prefs);
@@ -34,5 +34,4 @@ public class PrefsActivity extends AppCompatActivity {
         });
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
     }
-
 }

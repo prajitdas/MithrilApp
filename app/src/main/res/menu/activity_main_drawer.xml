@@ -57,7 +57,7 @@
         </item>
     </group>
 
-    <item android:title="@string/extra_options">
+    <item android:title="@string/more_options">
         <menu>
             <item
                 android:id="@+id/nav_exit"
@@ -73,7 +73,7 @@
                 android:id="@+id/nav_settings"
                 android:checkable="true"
                 android:icon="@drawable/settings"
-                android:title="@string/instance_population" />
+                android:title="@string/title_activity_prefs" />
             <item
                 android:id="@+id/nav_reset_app"
                 android:checkable="true"

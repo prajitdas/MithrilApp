@@ -113,6 +113,15 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".ui.activities.CoreActivity" />
         </activity>
+        <activity
+            android:name=".ui.activities.PrefsActivity"
+            android:label="@string/title_activity_prefs"
+            android:parentActivityName=".ui.activities.CoreActivity"
+            android:theme="@style/AppTheme.NoActionBar">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".ui.activities.CoreActivity" />
+        </activity>
         <!-- TTestActivityvity was used for the IEEE CIC paper. This will possibly be removed or modified in the future. -->
         <activity
             android:name=".ui.activities.TestActivity"
@@ -171,15 +180,6 @@
             android:name=".util.services.GeofenceTransitionsIntentService"
             android:exported="false" />
 
-        <activity
-            android:name=".ui.activities.PrefsActivity"
-            android:label="@string/title_activity_prefs"
-            android:parentActivityName=".ui.activities.CoreActivity"
-            android:theme="@style/AppTheme.NoActionBar">
-            <meta-data
-                android:name="android.support.PARENT_ACTIVITY"
-                android:value="edu.umbc.ebiquity.mithril.ui.activities.CoreActivity" />
-        </activity>
     </application>
 
 </manifest>
