@@ -80,6 +80,7 @@ public class CoreActivity extends AppCompatActivity
 
     private final File downloadsDirectory = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS);
     private final String agreementFile = MithrilApplication.getFlierPdfFileName();
+
     private Boolean exit = false;
     private MithrilDBHelper mithrilDBHelper;
     private SQLiteDatabase mithrilDB;

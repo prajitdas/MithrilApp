@@ -1,4 +1,4 @@
-package edu.umbc.ebiquity.mithril.ui.fragments.rulechangeactivityfragments;
+package edu.umbc.ebiquity.mithril.ui.adapters;
 
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -64,7 +64,7 @@ public class SemanticUserContextRecyclerViewAdapter extends RecyclerView.Adapter
         public ViewHolder(View view) {
             super(view);
             mView = view;
-            mIdView = (TextView) view.findViewById(R.id.id);
+            mIdView = (TextView) view.findViewById(R.id.app_name);
         }
 
         @Override

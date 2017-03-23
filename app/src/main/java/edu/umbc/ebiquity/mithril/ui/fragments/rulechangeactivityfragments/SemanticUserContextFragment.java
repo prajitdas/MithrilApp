@@ -14,6 +14,7 @@ import java.util.List;
 
 import edu.umbc.ebiquity.mithril.R;
 import edu.umbc.ebiquity.mithril.data.model.rules.context.SemanticUserContext;
+import edu.umbc.ebiquity.mithril.ui.adapters.SemanticUserContextRecyclerViewAdapter;
 
 /**
  * A fragment representing a list of Items.

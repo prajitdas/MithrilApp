@@ -8,15 +8,12 @@
         android:id="@+id/card_view_serv"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_alignParentTop="true"
-        android:layout_gravity="center"
         android:layout_marginBottom="@dimen/card_view_margin"
         android:layout_marginEnd="@dimen/card_view_margin"
         android:layout_marginStart="@dimen/card_view_margin"
         android:layout_marginTop="@dimen/card_view_margin"
-        android:elevation="@dimen/card_view_margin"
-        card_view:cardCornerRadius="10dp">
-
+        android:elevation="@dimen/card_view_elevation"
+        card_view:cardCornerRadius="@dimen/card_view_corner_radius">
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"

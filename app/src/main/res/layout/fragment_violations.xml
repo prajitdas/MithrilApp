@@ -1,22 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:card_view="http://schemas.android.com/apk/res-auto"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
     android:orientation="horizontal">
 
     <android.support.v7.widget.CardView xmlns:card_view="http://schemas.android.com/apk/res-auto"
-        android:id="@+id/card_view_violations"
+        android:id="@+id/violation_card_view"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_alignParentTop="true"
-        android:layout_gravity="center"
+        android:layout_height="wrap_content"
         android:layout_marginBottom="@dimen/card_view_margin"
         android:layout_marginEnd="@dimen/card_view_margin"
         android:layout_marginStart="@dimen/card_view_margin"
         android:layout_marginTop="@dimen/card_view_margin"
-        android:elevation="@dimen/card_view_margin"
-        card_view:cardCornerRadius="10dp">
+        android:elevation="@dimen/card_view_elevation"
+        card_view:cardCornerRadius="@dimen/card_view_corner_radius">
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
@@ -66,7 +63,7 @@
                 android:scaleType="centerCrop"
                 android:visibility="gone" />
 
-            <Button
+            <ImageButton
                 android:id="@+id/mResponseYesButton"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -77,10 +74,10 @@
                 android:paddingLeft="5dp"
                 android:paddingRight="5dp"
                 android:paddingStart="5dp"
-                android:text="@string/button_true_violation"
+                android:src="@drawable/wrench"
                 android:theme="@style/AppTheme.Button" />
 
-            <Button
+            <ImageButton
                 android:id="@+id/responseNoButton"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
