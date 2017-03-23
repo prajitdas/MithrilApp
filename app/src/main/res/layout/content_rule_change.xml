@@ -13,7 +13,7 @@
     tools:showIn="@layout/activity_rule_change">
 
     <FrameLayout
-        android:id="@+id/container_main"
+        android:id="@+id/container_rule_change"
         android:layout_width="match_parent"
         android:layout_height="match_parent" />
 

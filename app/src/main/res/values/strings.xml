@@ -255,4 +255,6 @@
 
     <string name="you_are_all_done_text">You\'re all done!</string>
     <string name="nothing_here">Nothing here!</string>
+    <string name="title_activity_prefs">PrefsActivity</string>
+    <string name="action_settings">Settings</string>
 </resources>

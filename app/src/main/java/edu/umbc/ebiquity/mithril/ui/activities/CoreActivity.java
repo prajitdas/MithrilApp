@@ -324,55 +324,55 @@ public class CoreActivity extends AppCompatActivity
 
     private void loadNothingHereFragment() {
         FragmentManager fragmentManager = getFragmentManager();
-        fragmentManager.beginTransaction().replace(R.id.container_main, new NothingHereFragment())
+        fragmentManager.beginTransaction().replace(R.id.container_core, new NothingHereFragment())
                 .commit();
     }
 
     private void loadEmptyFragment() {
         FragmentManager fragmentManager = getFragmentManager();
-        fragmentManager.beginTransaction().replace(R.id.container_main, new EmptyFragment())
+        fragmentManager.beginTransaction().replace(R.id.container_core, new EmptyFragment())
                 .commit();
     }
 
     private void loadPrefsFragment() {
         FragmentManager fragmentManager = getFragmentManager();
-        fragmentManager.beginTransaction().replace(R.id.container_main, new PrefsFragment())
+        fragmentManager.beginTransaction().replace(R.id.container_core, new PrefsFragment())
                 .commit();
     }
 
     private void loadAboutFragment() {
         FragmentManager fragmentManager = getFragmentManager();
-        fragmentManager.beginTransaction().replace(R.id.container_main, new AboutFragment())
+        fragmentManager.beginTransaction().replace(R.id.container_core, new AboutFragment())
                 .commit();
     }
 
     private void loadViolationsFragment() {
         FragmentManager fragmentManager = getFragmentManager();
-        fragmentManager.beginTransaction().replace(R.id.container_main, new ViolationFragment())
+        fragmentManager.beginTransaction().replace(R.id.container_core, new ViolationFragment())
                 .commit();
     }
 
     private void loadBroadcastReceiversFragment() {
         FragmentManager fragmentManager = getFragmentManager();
-        fragmentManager.beginTransaction().replace(R.id.container_main, new BroadcastReceiversFragment())
+        fragmentManager.beginTransaction().replace(R.id.container_core, new BroadcastReceiversFragment())
                 .commit();
     }
 
     private void loadContentProvidersFragment() {
         FragmentManager fragmentManager = getFragmentManager();
-        fragmentManager.beginTransaction().replace(R.id.container_main, new ContentProvidersFragment())
+        fragmentManager.beginTransaction().replace(R.id.container_core, new ContentProvidersFragment())
                 .commit();
     }
 
     private void loadServicesFragment() {
         FragmentManager fragmentManager = getFragmentManager();
-        fragmentManager.beginTransaction().replace(R.id.container_main, new ServicesFragment())
+        fragmentManager.beginTransaction().replace(R.id.container_core, new ServicesFragment())
                 .commit();
     }
 
     private void loadPermissionsFragment() {
         FragmentManager fragmentManager = getFragmentManager();
-        fragmentManager.beginTransaction().replace(R.id.container_main, new PermissionsFragment())
+        fragmentManager.beginTransaction().replace(R.id.container_core, new PermissionsFragment())
                 .commit();
     }
 
@@ -384,7 +384,7 @@ public class CoreActivity extends AppCompatActivity
         aShowappsFragment.setArguments(data);
 
         FragmentManager fragmentManager = getFragmentManager();
-        fragmentManager.beginTransaction().replace(R.id.container_main, aShowappsFragment)
+        fragmentManager.beginTransaction().replace(R.id.container_core, aShowappsFragment)
                 .commit();
     }
 
@@ -396,7 +396,7 @@ public class CoreActivity extends AppCompatActivity
         aShowappsFragment.setArguments(data);
 
         FragmentManager fragmentManager = getFragmentManager();
-        fragmentManager.beginTransaction().replace(R.id.container_main, aShowappsFragment)
+        fragmentManager.beginTransaction().replace(R.id.container_core, aShowappsFragment)
                 .commit();
     }
 
@@ -408,7 +408,7 @@ public class CoreActivity extends AppCompatActivity
         aShowappsFragment.setArguments(data);
 
         FragmentManager fragmentManager = getFragmentManager();
-        fragmentManager.beginTransaction().replace(R.id.container_main, aShowappsFragment)
+        fragmentManager.beginTransaction().replace(R.id.container_core, aShowappsFragment)
                 .commit();
     }
 

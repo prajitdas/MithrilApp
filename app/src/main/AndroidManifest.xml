@@ -87,17 +87,15 @@
         <activity
             android:name=".ui.activities.ShowUserAgreementActivity"
             android:label="@string/title_activity_show_user_agreement"
-            android:theme="@style/FullscreenTheme"></activity>
+            android:theme="@style/FullscreenTheme" />
         <activity
             android:name=".ui.activities.PermissionAcquisitionActivity"
             android:label="@string/title_activity_permission_acquisition"
-            android:theme="@style/FullscreenTheme">
-        </activity>
+            android:theme="@style/FullscreenTheme"></activity>
         <activity
             android:name=".ui.activities.CoreActivity"
             android:label="@string/title_activity_core"
-            android:theme="@style/AppTheme.NoActionBar">
-        </activity>
+            android:theme="@style/AppTheme.NoActionBar"></activity>
         <activity
             android:name=".ui.activities.ViewAppDetailsActivity"
             android:label="@string/title_activity_view_app_detail"
@@ -173,6 +171,15 @@
             android:name=".util.services.GeofenceTransitionsIntentService"
             android:exported="false" />
 
+        <activity
+            android:name=".ui.activities.PrefsActivity"
+            android:label="@string/title_activity_prefs"
+            android:parentActivityName=".ui.activities.CoreActivity"
+            android:theme="@style/AppTheme.NoActionBar">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="edu.umbc.ebiquity.mithril.ui.activities.CoreActivity" />
+        </activity>
     </application>
 
 </manifest>
