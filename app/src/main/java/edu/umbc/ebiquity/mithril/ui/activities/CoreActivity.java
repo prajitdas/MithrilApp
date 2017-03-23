@@ -56,7 +56,6 @@ import edu.umbc.ebiquity.mithril.ui.fragments.coreactivityfragments.AppsFragment
 import edu.umbc.ebiquity.mithril.ui.fragments.coreactivityfragments.BroadcastReceiversFragment;
 import edu.umbc.ebiquity.mithril.ui.fragments.coreactivityfragments.ContentProvidersFragment;
 import edu.umbc.ebiquity.mithril.ui.fragments.coreactivityfragments.PermissionsFragment;
-import edu.umbc.ebiquity.mithril.ui.fragments.coreactivityfragments.PrefsFragment;
 import edu.umbc.ebiquity.mithril.ui.fragments.coreactivityfragments.ServicesFragment;
 import edu.umbc.ebiquity.mithril.ui.fragments.coreactivityfragments.ViolationFragment;
 import edu.umbc.ebiquity.mithril.util.services.AppLaunchDetectorService;
@@ -149,7 +148,7 @@ public class CoreActivity extends AppCompatActivity
         } else if (id == R.id.nav_exit) {
             PermissionHelper.quitMithril(this, MithrilApplication.MITHRIL_BYE_BYE_MESSAGE);
         } else if (id == R.id.nav_settings) {
-            loadPrefsFragment();
+            launchPrefsActivity();
         } else if (id == R.id.nav_about) {
             loadAboutFragment();
         } else if (id == R.id.nav_reset_app) {
@@ -197,7 +196,7 @@ public class CoreActivity extends AppCompatActivity
 
     private void initViews() {
         setContentView(R.layout.activity_core);
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar_main);
+        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar_core);
         setSupportActionBar(toolbar);
 
         //If we are here, we have usage stats permission which means all asynchronous tasks are complete. User is on main screen and we may show the snackbar, once.
@@ -284,7 +283,7 @@ public class CoreActivity extends AppCompatActivity
 
     private void defaultFragmentLoad() {
         if (!isContextInfoSet())
-            loadPrefsFragment();
+            launchPrefsActivity();
         else {
         /*
          * If we are loading the app list we don't need the above two lines
@@ -331,12 +330,6 @@ public class CoreActivity extends AppCompatActivity
     private void loadEmptyFragment() {
         FragmentManager fragmentManager = getFragmentManager();
         fragmentManager.beginTransaction().replace(R.id.container_core, new EmptyFragment())
-                .commit();
-    }
-
-    private void loadPrefsFragment() {
-        FragmentManager fragmentManager = getFragmentManager();
-        fragmentManager.beginTransaction().replace(R.id.container_core, new PrefsFragment())
                 .commit();
     }
 
@@ -410,6 +403,10 @@ public class CoreActivity extends AppCompatActivity
         FragmentManager fragmentManager = getFragmentManager();
         fragmentManager.beginTransaction().replace(R.id.container_core, aShowappsFragment)
                 .commit();
+    }
+
+    private void launchPrefsActivity() {
+        startActivityForResult(new Intent(this, PrefsActivity.class), MithrilApplication.ACTIVITY_RESULT_CODE_PREFS_SET);
     }
 
     private boolean isViolationListEmpty() {
@@ -559,6 +556,17 @@ public class CoreActivity extends AppCompatActivity
     }
 
     @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (requestCode == MithrilApplication.ACTIVITY_RESULT_CODE_PREFS_SET) {
+            if (resultCode == RESULT_OK) {
+
+            } else if (resultCode == RESULT_CANCELED) {
+
+            }
+        }
+    }
+
+    @Override
     public void onBackPressed() {
         if (drawer.isDrawerOpen(GravityCompat.START)) {
             drawer.closeDrawer(GravityCompat.START);
@@ -600,9 +608,8 @@ public class CoreActivity extends AppCompatActivity
                     rootAccess = new RootAccess();
                     if (!rootAccess.isRoot())
                         rootAccess = null;
-//                  We were allowing app reset but we won't anymore!
-//                    else
-//                        navigationView.getMenu().getItem(3).getSubMenu().getItem(3).setEnabled(true);
+                    else
+                        navigationView.getMenu().getItem(3).getSubMenu().getItem(3).setEnabled(true);
                 } catch (PhoneNotRootedException phoneNotRootedException) {
                     Log.d(MithrilApplication.getDebugTag(), "Phone is not rooted do non-root behavior" + phoneNotRootedException.getMessage());
                 }
@@ -610,14 +617,6 @@ public class CoreActivity extends AppCompatActivity
             return true;
         }
         return super.onOptionsItemSelected(item);
-    }
-
-    private void startNextActivity(Context context, Class activityClass) {
-        Intent launchNextActivity = new Intent(context, activityClass);
-        launchNextActivity.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
-        launchNextActivity.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-        launchNextActivity.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
-        startActivity(launchNextActivity);
     }
 
     @Override

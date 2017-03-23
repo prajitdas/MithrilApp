@@ -2,11 +2,11 @@
 <android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/main_coordinator_layout"
+    android:id="@+id/rule_chain_coordinator_layout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:fitsSystemWindows="true"
-    tools:context=".ui.activities.CoreActivity">
+    tools:context=".ui.activities.PrefsActivity">
 
     <android.support.design.widget.AppBarLayout
         android:layout_width="match_parent"
@@ -14,17 +14,17 @@
         android:theme="@style/AppTheme.AppBarOverlay">
 
         <android.support.v7.widget.Toolbar
-            android:id="@+id/toolbar_core"
+            android:id="@+id/toolbar_prefs"
             android:layout_width="match_parent"
             android:layout_height="?attr/actionBarSize"
             app:popupTheme="@style/AppTheme.PopupOverlay" />
 
     </android.support.design.widget.AppBarLayout>
 
-    <include layout="@layout/content_core" />
+    <include layout="@layout/content_prefs" />
 
     <android.support.design.widget.FloatingActionButton
-        android:id="@+id/fab_main"
+        android:id="@+id/fab_prefs"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="bottom|end"
@@ -33,6 +33,6 @@
         app:backgroundTint="@color/colorPrimary"
         app:fabSize="auto"
         app:rippleColor="@color/lightgreen"
-        app:srcCompat="@drawable/cloud_upload" />
+        app:srcCompat="@drawable/plus" />
 
 </android.support.design.widget.CoordinatorLayout>

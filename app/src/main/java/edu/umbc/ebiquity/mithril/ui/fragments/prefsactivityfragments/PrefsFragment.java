@@ -1,4 +1,4 @@
-package edu.umbc.ebiquity.mithril.ui.fragments.coreactivityfragments;
+package edu.umbc.ebiquity.mithril.ui.fragments.prefsactivityfragments;
 
 import android.app.Activity;
 import android.app.AppOpsManager;
@@ -47,9 +47,8 @@ import edu.umbc.ebiquity.mithril.util.specialtasks.errorsnexceptions.GeofenceErr
 import static android.content.Context.MODE_PRIVATE;
 
 /**
- * Created by Prajit Kumar Das on 6/11/2016.
+ * A placeholder fragment containing a simple view.
  */
-
 public class PrefsFragment extends PreferenceFragment implements
         GoogleApiClient.ConnectionCallbacks,
         GoogleApiClient.OnConnectionFailedListener,
@@ -91,6 +90,7 @@ public class PrefsFragment extends PreferenceFragment implements
      * Used to persist application state about whether geofences were added.
      */
     private SharedPreferences sharedPrefs;
+    private SharedPreferences.Editor editor;
 
     private SwitchPreference mSwitchPrefAllDone;
 
@@ -118,6 +118,8 @@ public class PrefsFragment extends PreferenceFragment implements
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         context = getActivity();
+        sharedPrefs = context.getSharedPreferences(MithrilApplication.getSharedPreferencesName(), MODE_PRIVATE);
+        editor = sharedPrefs.edit();
 
         mResultReceiver = new AddressResultReceiver(new Handler(), context);
         // Set defaults, then update using values stored in the Bundle.
@@ -130,28 +132,90 @@ public class PrefsFragment extends PreferenceFragment implements
         setOnPreferenceChangeListeners();
     }
 
+
+    private void initViews() {
+        // Load the preferences from an XML resource
+        addPreferencesFromResource(R.xml.preferences);
+
+        mSwitchPrefAllDone = (SwitchPreference) getPreferenceManager().findPreference(MithrilApplication.getPrefAllDoneKey());
+
+        mSwitchPrefEnableLocation = (SwitchPreference) getPreferenceManager().findPreference(MithrilApplication.getPrefLocationContextEnableKey());
+        mEditTextPrefHomeLocation = (EditTextPreference) getPreferenceManager().findPreference(MithrilApplication.getPrefHomeLocationKey());
+        mEditTextPrefWorkLocation = (EditTextPreference) getPreferenceManager().findPreference(MithrilApplication.getPrefWorkLocationKey());
+
+        mSwitchPrefEnableTemporal = (SwitchPreference) getPreferenceManager().findPreference(MithrilApplication.getPrefTemporalContextEnableKey());
+
+        mDayOfWeekPrefWorkDays = (DayOfWeekPreference) getPreferenceManager().findPreference(MithrilApplication.getPrefWorkDaysKey());
+        mTimePrefWorkHoursStart = (TimePreference) getPreferenceManager().findPreference(MithrilApplication.getPrefWorkHoursStartKey());
+        mTimePrefWorkHoursEnd = (TimePreference) getPreferenceManager().findPreference(MithrilApplication.getPrefWorkHoursEndKey());
+
+        mDayOfWeekPrefDNDDays = (DayOfWeekPreference) getPreferenceManager().findPreference(MithrilApplication.getPrefDndDaysKey());
+        mTimePrefDNDHoursStart = (TimePreference) getPreferenceManager().findPreference(MithrilApplication.getPrefDndHoursStartKey());
+        mTimePrefDNDHoursEnd = (TimePreference) getPreferenceManager().findPreference(MithrilApplication.getPrefDndHoursEndKey());
+
+        mSwitchPrefEnablePresenceInfo = (SwitchPreference) getPreferenceManager().findPreference(MithrilApplication.getPrefPresenceInfoContextEnableKey());
+        mEditTextPrefPresenceInfoSupervisor = (EditTextPreference) getPreferenceManager().findPreference(MithrilApplication.getPrefPresenceInfoSupervisorKey());
+        mEditTextPrefPresenceInfoColleague = (EditTextPreference) getPreferenceManager().findPreference(MithrilApplication.getPrefPresenceInfoColleagueKey());
+
+        setEnabledEditTexts();
+    }
+
     private void initData() {
-        sharedPrefs = context.getSharedPreferences(MithrilApplication.getSharedPreferencesName(), MODE_PRIVATE);
+        boolean isChecked = sharedPrefs.getBoolean(MithrilApplication.getPrefAllDoneKey(), false);
+        mSwitchPrefAllDone.setChecked(isChecked);
+        editor.putBoolean(MithrilApplication.getPrefAllDoneKey(), isChecked);
 
-        mSwitchPrefAllDone.setChecked(sharedPrefs.getBoolean(MithrilApplication.getPrefAllDoneKey(), false));
+        isChecked = sharedPrefs.getBoolean(MithrilApplication.getPrefLocationContextEnableKey(), false);
+        mSwitchPrefEnableLocation.setChecked(isChecked);
+        editor.putBoolean(MithrilApplication.getPrefLocationContextEnableKey(), isChecked);
 
-        mSwitchPrefEnableLocation.setChecked(sharedPrefs.getBoolean(MithrilApplication.getPrefLocationContextEnableKey(), false));
+        isChecked = sharedPrefs.getBoolean(MithrilApplication.getPrefTemporalContextEnableKey(), false);
+        mSwitchPrefEnableTemporal.setChecked(isChecked);
+        editor.putBoolean(MithrilApplication.getPrefTemporalContextEnableKey(), isChecked);
+
+        isChecked = sharedPrefs.getBoolean(MithrilApplication.getPrefPresenceInfoContextEnableKey(), false);
+        mSwitchPrefEnablePresenceInfo.setChecked(isChecked);
+        editor.putBoolean(MithrilApplication.getPrefPresenceInfoContextEnableKey(), isChecked);
+
+        String stringValue = sharedPrefs.getString(MithrilApplication.getPrefHomeLocationKey(), getResources().getString(R.string.pref_home_location_summary));
         mEditTextPrefHomeLocation.setSummary(sharedPrefs.getString(MithrilApplication.getPrefHomeLocationKey(), getResources().getString(R.string.pref_home_location_summary)));
+        editor.putString(MithrilApplication.getPrefHomeLocationKey(), stringValue);
+
+        stringValue = sharedPrefs.getString(MithrilApplication.getPrefWorkLocationKey(), getResources().getString(R.string.pref_work_location_summary));
         mEditTextPrefWorkLocation.setSummary(sharedPrefs.getString(MithrilApplication.getPrefWorkLocationKey(), getResources().getString(R.string.pref_work_location_summary)));
+        editor.putString(MithrilApplication.getPrefWorkLocationKey(), stringValue);
 
-        mSwitchPrefEnableTemporal.setChecked(sharedPrefs.getBoolean(MithrilApplication.getPrefTemporalContextEnableKey(), false));
-
+        stringValue = sharedPrefs.getString(MithrilApplication.getPrefWorkDaysKey(), getResources().getString(R.string.pref_work_days));
         mDayOfWeekPrefWorkDays.setSummary(sharedPrefs.getString(MithrilApplication.getPrefWorkDaysKey(), getResources().getString(R.string.pref_work_days)));
+        editor.putString(MithrilApplication.getPrefWorkDaysKey(), stringValue);
+
+        stringValue = sharedPrefs.getString(MithrilApplication.getPrefWorkHoursStartKey(), getResources().getString(R.string.pref_work_hours_start));
         mTimePrefWorkHoursStart.setSummary(sharedPrefs.getString(MithrilApplication.getPrefWorkHoursStartKey(), getResources().getString(R.string.pref_work_hours_start)));
+        editor.putString(MithrilApplication.getPrefWorkHoursStartKey(), stringValue);
+
+        stringValue = sharedPrefs.getString(MithrilApplication.getPrefWorkHoursEndKey(), getResources().getString(R.string.pref_work_hours_end));
         mTimePrefWorkHoursEnd.setSummary(sharedPrefs.getString(MithrilApplication.getPrefWorkHoursEndKey(), getResources().getString(R.string.pref_work_hours_end)));
+        editor.putString(MithrilApplication.getPrefWorkHoursEndKey(), stringValue);
 
+        stringValue = sharedPrefs.getString(MithrilApplication.getPrefDndDaysKey(), getResources().getString(R.string.pref_DND_days));
         mDayOfWeekPrefDNDDays.setSummary(sharedPrefs.getString(MithrilApplication.getPrefDndDaysKey(), getResources().getString(R.string.pref_DND_days)));
-        mTimePrefDNDHoursStart.setSummary(sharedPrefs.getString(MithrilApplication.getPrefDndHoursStartKey(), getResources().getString(R.string.pref_DND_hours_start)));
-        mTimePrefDNDHoursEnd.setSummary(sharedPrefs.getString(MithrilApplication.getPrefDndHoursEndKey(), getResources().getString(R.string.pref_DND_hours_end)));
+        editor.putString(MithrilApplication.getPrefDndDaysKey(), stringValue);
 
-        mSwitchPrefEnablePresenceInfo.setChecked(sharedPrefs.getBoolean(MithrilApplication.getPrefPresenceInfoContextEnableKey(), false));
+        stringValue = sharedPrefs.getString(MithrilApplication.getPrefDndHoursStartKey(), getResources().getString(R.string.pref_DND_hours_start));
+        mTimePrefDNDHoursStart.setSummary(sharedPrefs.getString(MithrilApplication.getPrefDndHoursStartKey(), getResources().getString(R.string.pref_DND_hours_start)));
+        editor.putString(MithrilApplication.getPrefDndHoursStartKey(), stringValue);
+
+        stringValue = sharedPrefs.getString(MithrilApplication.getPrefDndHoursEndKey(), getResources().getString(R.string.pref_DND_hours_end));
+        mTimePrefDNDHoursEnd.setSummary(sharedPrefs.getString(MithrilApplication.getPrefDndHoursEndKey(), getResources().getString(R.string.pref_DND_hours_end)));
+        editor.putString(MithrilApplication.getPrefDndHoursEndKey(), stringValue);
+
+        stringValue = sharedPrefs.getString(MithrilApplication.getPrefPresenceInfoSupervisorKey(), getResources().getString(R.string.pref_presence_info_supervisor_summary));
         mEditTextPrefPresenceInfoSupervisor.setSummary(sharedPrefs.getString(MithrilApplication.getPrefPresenceInfoSupervisorKey(), getResources().getString(R.string.pref_presence_info_supervisor_summary)));
+        editor.putString(MithrilApplication.getPrefPresenceInfoSupervisorKey(), stringValue);
+
+        stringValue = sharedPrefs.getString(MithrilApplication.getPrefPresenceInfoColleagueKey(), getResources().getString(R.string.pref_presence_info_colleague_summary));
         mEditTextPrefPresenceInfoColleague.setSummary(sharedPrefs.getString(MithrilApplication.getPrefPresenceInfoColleagueKey(), getResources().getString(R.string.pref_presence_info_colleague_summary)));
+        editor.putString(MithrilApplication.getPrefPresenceInfoColleagueKey(), stringValue);
     }
 
     private void appOps() {
@@ -218,33 +282,6 @@ public class PrefsFragment extends PreferenceFragment implements
         buildGoogleApiClient();
     }
 
-    private void initViews() {
-        // Load the preferences from an XML resource
-        addPreferencesFromResource(R.xml.preferences);
-
-        mSwitchPrefAllDone = (SwitchPreference) getPreferenceManager().findPreference(MithrilApplication.getPrefAllDoneKey());
-
-        mSwitchPrefEnableLocation = (SwitchPreference) getPreferenceManager().findPreference(MithrilApplication.getPrefLocationContextEnableKey());
-        mEditTextPrefHomeLocation = (EditTextPreference) getPreferenceManager().findPreference(MithrilApplication.getPrefHomeLocationKey());
-        mEditTextPrefWorkLocation = (EditTextPreference) getPreferenceManager().findPreference(MithrilApplication.getPrefWorkLocationKey());
-
-        mSwitchPrefEnableTemporal = (SwitchPreference) getPreferenceManager().findPreference(MithrilApplication.getPrefTemporalContextEnableKey());
-
-        mDayOfWeekPrefWorkDays = (DayOfWeekPreference) getPreferenceManager().findPreference(MithrilApplication.getPrefWorkDaysKey());
-        mTimePrefWorkHoursStart = (TimePreference) getPreferenceManager().findPreference(MithrilApplication.getPrefWorkHoursStartKey());
-        mTimePrefWorkHoursEnd = (TimePreference) getPreferenceManager().findPreference(MithrilApplication.getPrefWorkHoursEndKey());
-
-        mDayOfWeekPrefDNDDays = (DayOfWeekPreference) getPreferenceManager().findPreference(MithrilApplication.getPrefDndDaysKey());
-        mTimePrefDNDHoursStart = (TimePreference) getPreferenceManager().findPreference(MithrilApplication.getPrefDndHoursStartKey());
-        mTimePrefDNDHoursEnd = (TimePreference) getPreferenceManager().findPreference(MithrilApplication.getPrefDndHoursEndKey());
-
-        mSwitchPrefEnablePresenceInfo = (SwitchPreference) getPreferenceManager().findPreference(MithrilApplication.getPrefPresenceInfoContextEnableKey());
-        mEditTextPrefPresenceInfoSupervisor = (EditTextPreference) getPreferenceManager().findPreference(MithrilApplication.getPrefPresenceInfoSupervisorKey());
-        mEditTextPrefPresenceInfoColleague = (EditTextPreference) getPreferenceManager().findPreference(MithrilApplication.getPrefPresenceInfoColleagueKey());
-
-        setEnabledEditTexts();
-    }
-
     private void setEnabledEditTexts() {
         mEditTextPrefHomeLocation.setEnabled(mSwitchPrefEnableLocation.isChecked());
         mEditTextPrefWorkLocation.setEnabled(mSwitchPrefEnableLocation.isChecked());
@@ -300,8 +337,6 @@ public class PrefsFragment extends PreferenceFragment implements
     }
 
     private void setOnPreferenceChangeListeners() {
-        final SharedPreferences.Editor editor = context.getSharedPreferences(MithrilApplication.getSharedPreferencesName(), Context.MODE_PRIVATE).edit();
-
         mSwitchPrefAllDone.setOnPreferenceChangeListener(new Preference.OnPreferenceChangeListener() {
             @Override
             public boolean onPreferenceChange(Preference preference, Object o) {

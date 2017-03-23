@@ -8,6 +8,7 @@ import android.support.v7.widget.Toolbar;
 import android.view.View;
 
 import edu.umbc.ebiquity.mithril.R;
+import edu.umbc.ebiquity.mithril.ui.fragments.prefsactivityfragments.PrefsFragment;
 
 public class PrefsActivity extends AppCompatActivity {
 
@@ -15,10 +16,15 @@ public class PrefsActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_prefs);
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar_prefs);
         setSupportActionBar(toolbar);
 
-        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
+        // Display the fragment as the main content.
+        getFragmentManager().beginTransaction()
+                .replace(android.R.id.content, new PrefsFragment())
+                .commit();
+
+        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab_prefs);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
