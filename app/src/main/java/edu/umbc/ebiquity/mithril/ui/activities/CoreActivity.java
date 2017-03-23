@@ -168,10 +168,6 @@ public class CoreActivity extends AppCompatActivity
     @Override
     protected void onResume() {
         super.onResume();
-        doStart();
-    }
-
-    private void doStart() {
         overridePendingTransition(0, 0);
         initHouseKeepingTasks();
         initViews();
