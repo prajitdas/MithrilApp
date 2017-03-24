@@ -15,6 +15,7 @@ import edu.umbc.ebiquity.mithril.ui.fragments.prefsactivityfragments.PrefsFragme
 import edu.umbc.ebiquity.mithril.util.specialtasks.permissions.PermissionHelper;
 
 public class PrefsActivity extends AppCompatActivity {
+    private FloatingActionButton fab;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -28,11 +29,11 @@ public class PrefsActivity extends AppCompatActivity {
                 .replace(R.id.container_prefs, new PrefsFragment())
                 .commit();
 
-        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab_prefs);
+        fab = (FloatingActionButton) findViewById(R.id.fab_prefs);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                showSnackbar(view, view.getResources().getString(R.string.functionality_not_active_yet));
+                showSnackbar(view, view.getContext().getResources().getString(R.string.functionality_not_active_yet));
             }
         });
         getSupportActionBar().setDisplayHomeAsUpEnabled(false);
@@ -54,7 +55,7 @@ public class PrefsActivity extends AppCompatActivity {
                     @Override
                     public void onClick(View view) {
                     }
-                });
+                }).show();
     }
 
     @Override

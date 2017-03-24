@@ -207,7 +207,7 @@ public class CoreActivity extends AppCompatActivity
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                showSnackbar(view, view.getResources().getString(R.string.functionality_not_active_yet));
+                showSnackbar(view, view.getContext().getResources().getString(R.string.functionality_not_active_yet));
             }
         });
 
@@ -258,7 +258,7 @@ public class CoreActivity extends AppCompatActivity
                     @Override
                     public void onClick(View view) {
                     }
-                });
+                }).show();
     }
 
     private void applyHeaderView() {
