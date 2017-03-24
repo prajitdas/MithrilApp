@@ -9,13 +9,13 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import java.util.List;
 
 import edu.umbc.ebiquity.mithril.R;
 import edu.umbc.ebiquity.mithril.data.model.Violation;
 import edu.umbc.ebiquity.mithril.ui.fragments.coreactivityfragments.ViolationFragment.OnListFragmentInteractionListener;
+import edu.umbc.ebiquity.mithril.util.specialtasks.permissions.PermissionHelper;
 
 /**
  * {@link RecyclerView.Adapter} that can display a {@link Violation} and makes a call to the
@@ -53,13 +53,13 @@ public class ViolationRecyclerViewAdapter extends RecyclerView.Adapter<Violation
         holder.mResponseYesButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Toast.makeText(view.getContext(), "Yes!!!", Toast.LENGTH_LONG).show();
+                PermissionHelper.toast(view.getContext(), "Yes!!!");
             }
         });
         holder.mResponseNoButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Toast.makeText(view.getContext(), "No!!", Toast.LENGTH_LONG).show();
+                PermissionHelper.toast(view.getContext(), "No!!");
             }
         });
 

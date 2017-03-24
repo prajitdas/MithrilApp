@@ -58,7 +58,8 @@ public class ViewAppDetailsActivity extends AppCompatActivity
         }
         mTxtViewAppName.setText(
                 (
-                        applicationInfo != null ? packageManager.getApplicationLabel(applicationInfo).toString() : MithrilApplication.getPermissionProtectionLevelUnknown()
+                        applicationInfo !=
+                                null ? packageManager.getApplicationLabel(applicationInfo).toString() : MithrilApplication.getPermissionProtectionLevelUnknown()
                 ) +
                         " (" +
                         packageName +

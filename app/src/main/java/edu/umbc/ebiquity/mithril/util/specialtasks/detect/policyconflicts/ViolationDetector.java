@@ -143,7 +143,7 @@ public class ViolationDetector {
             }
             if (mithrilDBHelper.findAppTypeByAppPkgName(mithrilDB, currentPackageName).equals(MithrilApplication.getPrefKeyUserAppsDisplay())) {
 
-                //            Toast.makeText(context, "Mithril detects user app launch: " + currentPackageName, Toast.LENGTH_SHORT).show();
+                //            PermissionHelper.toast(context, "Mithril detects user app launch: " + currentPackageName, Toast.LENGTH_SHORT).show();
                 //            Log.d(MithrilApplication.getDebugTag(), "Mithril detects user app launch: " + currentPackageName);
                 /**
                  * PolicyConflictDetector object to be created and sent the requester, resource, context combo to receive a decision!!!
@@ -166,7 +166,7 @@ public class ViolationDetector {
                 //                    if (currentPackageName.equals("com.google.android.youtube")) {
                 //                        editor.putString(MithrilApplication.getPrefKeyAppPkgName(), currentPackageName);
                 //                        editor.putString(MithrilApplication.getPrefKeyCurrentLocation(), "Home");
-                ////                        Toast.makeText(context, "Rule 1 violation detected!", Toast.LENGTH_LONG).show();
+                ////                        PermissionHelper.toast(context, "Rule 1 violation detected!");
                 //                        Log.d(MithrilApplication.getDebugTag(), "Rule 1 violation detected!");
                 //                    }
                 //                }
@@ -179,7 +179,7 @@ public class ViolationDetector {
                 //                        editor.putString(MithrilApplication.getPrefKeyCurrentLocation(), "Work");
                 //                        editor.putString(MithrilApplication.getPrefKeyCurrentTime(), "Lunch");
                 ////                        editor.apply();
-                ////                        Toast.makeText(context, "Rule 2 violation detected!", Toast.LENGTH_LONG).show();
+                ////                        PermissionHelper.toast(context, "Rule 2 violation detected!");
                 //                        Log.d(MithrilApplication.getDebugTag(), "Rule 2 violation detected!");
                 //                    }
                 //                }
@@ -190,7 +190,7 @@ public class ViolationDetector {
                 //                        editor.putString(MithrilApplication.getPrefKeyAppPkgName(), currentPackageName);
                 //                        editor.putString(MithrilApplication.getPrefKeyCurrentLocation(), "Work");
                 ////                editor.apply();
-                ////                        Toast.makeText(context, "Rule 3 violation detected!", Toast.LENGTH_LONG).show();
+                ////                        PermissionHelper.toast(context, "Rule 3 violation detected!");
                 //                        Log.d(MithrilApplication.getDebugTag(), "Rule 2 violation detected!");
                 //                    }
                 //                }
@@ -198,7 +198,7 @@ public class ViolationDetector {
                 ////            else {
                 ////                editor.remove(MithrilApplication.getPrefKeyCurrentLocation());
                 ////                editor.remove(MithrilApplication.getPrefKeyCurrentTime());
-                ////                Toast.makeText(context, "All good!", Toast.LENGTH_LONG).show();
+                ////                PermissionHelper.toast(context, "All good!");
                 ////            }
                 //
                 //                editor.apply();

@@ -43,6 +43,7 @@ import edu.umbc.ebiquity.mithril.util.services.GeofenceTransitionsIntentService;
 import edu.umbc.ebiquity.mithril.util.specialtasks.context.DayOfWeekPreference;
 import edu.umbc.ebiquity.mithril.util.specialtasks.context.TimePreference;
 import edu.umbc.ebiquity.mithril.util.specialtasks.errorsnexceptions.GeofenceErrorMessages;
+import edu.umbc.ebiquity.mithril.util.specialtasks.permissions.PermissionHelper;
 
 import static android.content.Context.MODE_PRIVATE;
 
@@ -709,7 +710,7 @@ public class PrefsFragment extends PreferenceFragment implements
      */
     public void addGeofencesButtonHandler(View view) {
         if (!mGoogleApiClient.isConnected()) {
-            Toast.makeText(context, getString(R.string.not_connected), Toast.LENGTH_SHORT).show();
+            PermissionHelper.toast(context, getString(R.string.not_connected), Toast.LENGTH_SHORT);
             return;
         }
 
@@ -735,7 +736,7 @@ public class PrefsFragment extends PreferenceFragment implements
      */
     public void removeGeofencesButtonHandler(View view) {
         if (!mGoogleApiClient.isConnected()) {
-            Toast.makeText(context, getString(R.string.not_connected), Toast.LENGTH_SHORT).show();
+            PermissionHelper.toast(context, getString(R.string.not_connected), Toast.LENGTH_SHORT);
             return;
         }
         try {
@@ -778,12 +779,12 @@ public class PrefsFragment extends PreferenceFragment implements
             // geofences enables the Add Geofences button.
             setButtonsEnabledState();
 
-            Toast.makeText(
+            PermissionHelper.toast(
                     context,
                     getString(mGeofencesAdded ? R.string.geofences_added :
                             R.string.geofences_removed),
                     Toast.LENGTH_SHORT
-            ).show();
+            );
         } else {
             // Get the status code for the error and log it using a user-friendly message.
             String errorMessage = GeofenceErrorMessages.getErrorString(context,

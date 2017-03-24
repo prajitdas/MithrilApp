@@ -8,11 +8,11 @@ import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
-import android.widget.Toast;
 
 import edu.umbc.ebiquity.mithril.MithrilApplication;
 import edu.umbc.ebiquity.mithril.R;
 import edu.umbc.ebiquity.mithril.ui.fragments.prefsactivityfragments.PrefsFragment;
+import edu.umbc.ebiquity.mithril.util.specialtasks.permissions.PermissionHelper;
 
 public class PrefsActivity extends AppCompatActivity {
 
@@ -43,7 +43,7 @@ public class PrefsActivity extends AppCompatActivity {
     public void onBackPressed() {
         SharedPreferences sharedPreferences = getSharedPreferences(MithrilApplication.getSharedPreferencesName(), Context.MODE_PRIVATE);
         if (!sharedPreferences.getBoolean(MithrilApplication.getPrefAllDoneKey(), false))
-            Toast.makeText(this, "Click on \"" + this.getResources().getString(R.string.pref_all_done_title) + "\" at the top, to go to app home", Toast.LENGTH_SHORT).show();
+            PermissionHelper.toast(this, "Click on \"" + this.getResources().getString(R.string.pref_all_done_title) + "\" at the top, to go to app home...");
         else
             super.onBackPressed();
     }

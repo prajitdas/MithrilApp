@@ -79,7 +79,7 @@ public class ShowUserAgreementActivity extends AppCompatActivity {
             openRenderer();
         } catch (IOException e) {
             e.printStackTrace();
-            Toast.makeText(this, "Error! " + e.getMessage(), Toast.LENGTH_SHORT).show();
+            PermissionHelper.toast(this, "Error! " + e.getMessage(), Toast.LENGTH_SHORT);
             finish();
         }
     }

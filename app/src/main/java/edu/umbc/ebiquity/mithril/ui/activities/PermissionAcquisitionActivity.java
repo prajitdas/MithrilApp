@@ -12,7 +12,6 @@ import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.Button;
 import android.widget.CompoundButton;
-import android.widget.Toast;
 import android.widget.ToggleButton;
 
 import java.util.List;
@@ -95,7 +94,7 @@ public class PermissionAcquisitionActivity extends AppCompatActivity {
                 if (!PermissionHelper.isAllRequiredPermissionsGranted(buttonView.getContext()))
                     requestAllNecessaryPermissions();
                 else
-                    Toast.makeText(buttonView.getContext(), "We have the permissions already. Thank you!", Toast.LENGTH_LONG).show();
+                    PermissionHelper.toast(buttonView.getContext(), "We have the permissions already. Thank you!");
             }
         });
         mSpecialPermToggleButton.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
@@ -108,7 +107,7 @@ public class PermissionAcquisitionActivity extends AppCompatActivity {
                 if (PermissionHelper.needsUsageStatsPermission(buttonView.getContext()))
                     startActivityForResult(new Intent(Settings.ACTION_USAGE_ACCESS_SETTINGS), MithrilApplication.USAGE_STATS_PERMISSION_REQUEST_CODE);
                 else
-                    Toast.makeText(buttonView.getContext(), "We have PACKAGE_USAGE_STATS permission already. Thank you!", Toast.LENGTH_LONG).show();
+                    PermissionHelper.toast(buttonView.getContext(), "We have PACKAGE_USAGE_STATS permission already. Thank you!");
             }
         });
     }

@@ -258,7 +258,7 @@ public class CoreActivity extends AppCompatActivity
                     @Override
                     public void onClick(View view) {
                     }
-                }).show();
+                });
     }
 
     private void applyHeaderView() {
@@ -305,12 +305,12 @@ public class CoreActivity extends AppCompatActivity
                         if (rootAccess != null)
                             rootAccess.runScript(new String[]{MithrilApplication.getCmdRevokePackageUsageStatsPermissionForApp()});
                         ((ActivityManager) builder.getContext().getSystemService(ACTIVITY_SERVICE)).clearApplicationUserData();
-                        Toast.makeText(builder.getContext(), "App was reset!", Toast.LENGTH_SHORT).show();
+                        PermissionHelper.toast(builder.getContext(), "App was reset!", Toast.LENGTH_SHORT);
                     }
                 })
                 .setNegativeButton(R.string.dialog_resp_NO, new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
-                        Toast.makeText(builder.getContext(), "App was not reset!", Toast.LENGTH_SHORT).show();
+                        PermissionHelper.toast(builder.getContext(), "App was not reset!", Toast.LENGTH_SHORT);
                     }
                 });
 
@@ -563,8 +563,8 @@ public class CoreActivity extends AppCompatActivity
             if (exit) {
                 finish(); // quit app
             } else {
-                Toast.makeText(this, "Press Back again to Exit.",
-                        Toast.LENGTH_SHORT).show();
+                PermissionHelper.toast(this, "Press Back again to Exit.",
+                        Toast.LENGTH_SHORT);
                 exit = true;
                 new Handler().postDelayed(new Runnable() {
                     @Override

@@ -174,7 +174,7 @@ public class LocationUpdateService extends Service implements
         int result = googleAPI.isGooglePlayServicesAvailable(this);
         if (result != ConnectionResult.SUCCESS) {
             if (googleAPI.isUserResolvableError(result)) {
-//                Toast.makeText(this, result, Toast.LENGTH_SHORT).show();
+//                PermissionHelper.toast(this, result, Toast.LENGTH_SHORT);
             }
             return false;
         }
@@ -209,7 +209,7 @@ public class LocationUpdateService extends Service implements
         // Report to the UI that the location was updated
         String msg = Double.toString(location.getLatitude()) + "," + Double.toString(location.getLongitude());
 //        Log.d(MithrilApplication.getDebugTag(), msg);
-//        Toast.makeText(this, msg, Toast.LENGTH_SHORT).show();
+//        PermissionHelper.toast(this, msg, Toast.LENGTH_SHORT);
 //        Log.d(MithrilApplication.getDebugTag(), DateFormat.getDateTimeInstance().format(new Date()) + ":" + msg);
         appendLog(DateFormat.getDateTimeInstance().format(new Date()) + ":" + msg);//, sharedPref.getString(MithrilApplication.getPrefKeyLocationFilename(), "sdcard/location.txt"));
         mCurrentLocation = location;
@@ -290,8 +290,8 @@ public class LocationUpdateService extends Service implements
             this.mGoogleApiClient = null;
         }
         // Display the connection status
-        // Toast.makeText(this, DateFormat.getDateTimeInstance().format(new Date()) + ":
-        // Disconnected. Please re-connect.", Toast.LENGTH_SHORT).show();
+        // PermissionHelper.toast(this, DateFormat.getDateTimeInstance().format(new Date()) + ":
+        // Disconnected. Please re-connect.", Toast.LENGTH_SHORT);
 
         super.onDestroy();
     }
@@ -350,7 +350,7 @@ public class LocationUpdateService extends Service implements
         // Destroy the current location client
         mGoogleApiClient = null;
         // Display the connection status
-//        Toast.makeText(this, DateFormat.getDateTimeInstance().format(new Date()) + ": Disconnected. Please re-connect.", Toast.LENGTH_SHORT).show();
+//        PermissionHelper.toast(this, DateFormat.getDateTimeInstance().format(new Date()) + ": Disconnected. Please re-connect.", Toast.LENGTH_SHORT);
 //        Log.d(MithrilApplication.getDebugTag(), DateFormat.getDateTimeInstance().format(new Date()) + ": Disconnected. Please re-connect.");
 //        appendLog(DateFormat.getDateTimeInstance().format(new Date()) + ": Disconnected", sharedPref.getString(MithrilApplication.getPrefKeyLogFilename(), "sdcard/log.txt"));
     }

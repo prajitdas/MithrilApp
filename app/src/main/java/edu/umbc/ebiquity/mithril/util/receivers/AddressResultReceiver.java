@@ -70,7 +70,7 @@ public class AddressResultReceiver extends ResultReceiver {
         // Show a toast message if an address was found.
         if (resultCode == MithrilApplication.SUCCESS_RESULT) {
 //                Log.d(MithrilApplication.getDebugTag(), getString(R.string.address_found) + ":" + mAddressOutput);
-//                Toast.makeText(context, getString(R.string.address_found) + ":" + mAddressOutput, Toast.LENGTH_LONG).show();
+//                PermissionHelper.toast(context, getString(R.string.address_found) + ":" + mAddressOutput);
             storeInSharedPreferences(resultData.getString(
                     addressKey),
                     mAddressOutput);

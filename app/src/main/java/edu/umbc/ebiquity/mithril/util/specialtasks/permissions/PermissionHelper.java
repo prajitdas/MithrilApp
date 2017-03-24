@@ -46,8 +46,16 @@ public class PermissionHelper {
     }
 
     public static void toastAndFinish(Context context, String message) {
-        Toast.makeText(context, message, Toast.LENGTH_SHORT).show();
+        toast(context, message, Toast.LENGTH_SHORT);
         android.os.Process.killProcess(android.os.Process.myPid());
+    }
+
+    public static void toast(Context context, String message) {
+        toast(context, message, Toast.LENGTH_LONG);
+    }
+
+    public static void toast(Context context, String message, int toastLength) {
+        Toast.makeText(context, message, toastLength).show();
     }
 
     private static List<String> getPermissionsRequired() {
