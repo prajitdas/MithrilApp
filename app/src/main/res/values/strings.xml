@@ -114,11 +114,11 @@
     <string name="pref_all_done_title">Context setup complete</string>
 
     <!-- Preference strings for Location context -->
-    <string name="pref_header_location_context">Location context</string>
+    <string name="pref_header_location_context">Manage location prefs</string>
 
     <string name="pref_location_context_switch_key">enableLocationContext</string>
-    <string name="pref_location_context_switch_title">Enable location context</string>
-    <string name="pref_location_context_switch_summary">Click to enable location context</string>
+    <string name="pref_location_context_switch_title">Enable location prefs</string>
+    <string name="pref_location_context_switch_summary">Click to enable following location prefs</string>
 
     <string name="pref_home_location_key">homeLocation</string>
     <string name="pref_home_location_title">Save home location</string>
@@ -133,11 +133,11 @@
     <!-- Preference strings for Temporal context -->
     <string name="pref_choose_days">Choose the days</string>
 
-    <string name="pref_header_temporal_context">Temporal context</string>
+    <string name="pref_header_temporal_context">Manage time prefs</string>
 
     <string name="pref_temporal_context_switch_key">enableTemporalContext</string>
-    <string name="pref_temporal_context_switch_title">Enable temporal context</string>
-    <string name="pref_temporal_context_switch_summary">Click to enable temporal context</string>
+    <string name="pref_temporal_context_switch_title">Enable time prefs</string>
+    <string name="pref_temporal_context_switch_summary">Click to enable following time prefs</string>
 
     <string name="pref_work_hours_start_title">Change start of work-hours</string>
     <string name="pref_work_hours_start_key">workHoursStart</string>
@@ -175,19 +175,19 @@
     <string name="pref_days_cancel">@android:string/cancel</string>
 
     <!-- Preference strings for Presence Info context -->
-    <string name="pref_header_presence_info_context">Presence info context</string>
+    <string name="pref_header_presence_info_context">Manage people prefs</string>
 
     <string name="pref_presence_info_context_switch_key">enablePresenceInfoContext</string>
-    <string name="pref_presence_info_context_switch_title">Enable presence info context</string>
-    <string name="pref_presence_info_context_switch_summary">Click to enable presence info context</string>
+    <string name="pref_presence_info_context_switch_title">Enable people prefs</string>
+    <string name="pref_presence_info_context_switch_summary">Click to enable following people prefs</string>
 
     <string name="pref_presence_info_supervisor_key">presenceInfoSupervisor</string>
-    <string name="pref_presence_info_supervisor_title">Confirm supervisor identity</string>
+    <string name="pref_presence_info_supervisor_title">Add supervisor identity</string>
     <string name="pref_presence_info_supervisor_summary">BluetoothIDSupervisor</string>
 
     <string name="pref_presence_info_colleague_key">presenceInfoColleague</string>
     <string name="pref_presence_info_colleague_summary">BluetoothIDColleague</string>
-    <string name="pref_presence_info_colleague_title">Confirm colleague identity</string>
+    <string name="pref_presence_info_colleague_title">Add colleague identity</string>
 
     <!-- End of Strings related to PrefsFragment -->
 
