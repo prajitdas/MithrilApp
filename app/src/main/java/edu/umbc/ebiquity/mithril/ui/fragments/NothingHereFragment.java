@@ -7,12 +7,15 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 
+import edu.umbc.ebiquity.mithril.MithrilApplication;
 import edu.umbc.ebiquity.mithril.R;
 
 public class NothingHereFragment extends Fragment {
 
     private OnFragmentInteractionListener mListener;
+    private String fragmentType;
 
     public NothingHereFragment() {
         // Required empty public constructor
@@ -28,13 +31,20 @@ public class NothingHereFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        if (getArguments() != null) {
+            fragmentType = getArguments().getString(MithrilApplication.getPrefWhatFragmentKey());
+        }
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_nothing_here, container, false);
+        View view = inflater.inflate(R.layout.fragment_nothing_here, container, false);
+        TextView textToShow = (TextView) view.findViewById(R.id.nothingHereText);
+        textToShow.setText(textToShow.getText() + fragmentType + "!");
+        return view;
     }
 
     // TODO: Rename method, update argument and hook method into UI event

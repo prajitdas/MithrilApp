@@ -105,6 +105,8 @@ public class MithrilApplication extends Application {
     //Make sure they match the values from preferences.xml
     private static final String PREF_ALL_DONE_KEY = "prefsDone";
 
+    private static final String PREF_WHAT_FRAGMENT_KEY = "whatFragment";
+
     private static final String PREF_LOCATION_CONTEXT_ENABLE_KEY = "enableLocationContext";
     private static final String PREF_HOME_LOCATION_KEY = "homeLocation";
     private static final String PREF_WORK_LOCATION_KEY = "workLocation";
@@ -932,6 +934,10 @@ public class MithrilApplication extends Application {
 
     public static String getPrefAllDoneKey() {
         return PREF_ALL_DONE_KEY;
+    }
+
+    public static String getPrefWhatFragmentKey() {
+        return PREF_WHAT_FRAGMENT_KEY;
     }
 
     public static String getPrefKeyShouldShowAgreementSnackbar() {

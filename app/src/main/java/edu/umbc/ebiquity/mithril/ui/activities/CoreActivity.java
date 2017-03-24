@@ -112,37 +112,37 @@ public class CoreActivity extends AppCompatActivity
                 loadViolationsFragment();
         } else if (id == R.id.nav_perm) {
             if (isPermissionsListEmpty())
-                loadNothingHereFragment();
+                loadNothingHereFragment("permissions");
             else
                 loadPermissionsFragment();
         } else if (id == R.id.nav_user) {
             if (isUserAppsListEmpty())
-                loadNothingHereFragment();
+                loadNothingHereFragment("user apps");
             else
                 loadUserAppsFragment();
         } else if (id == R.id.nav_system) {
             if (isSystemAppsListEmpty())
-                loadNothingHereFragment();
+                loadNothingHereFragment("system apps");
             else
                 loadSystemAppsFragment();
         } else if (id == R.id.nav_all) {
             if (isAllAppsListEmpty())
-                loadNothingHereFragment();
+                loadNothingHereFragment("apps");
             else
                 loadAllAppsFragment();
         } else if (id == R.id.nav_services) {
             if (isServicesListEmpty())
-                loadNothingHereFragment();
+                loadNothingHereFragment("services");
             else
                 loadServicesFragment();
         } else if (id == R.id.nav_bcastreceivers) {
             if (isBroadcastReceiverListEmpty())
-                loadNothingHereFragment();
+                loadNothingHereFragment("broadcast receivers");
             else
                 loadBroadcastReceiversFragment();
         } else if (id == R.id.nav_contentproviders) {
             if (isContentProvidersListEmpty())
-                loadNothingHereFragment();
+                loadNothingHereFragment("content providers");
             else
                 loadContentProvidersFragment();
         } else if (id == R.id.nav_exit) {
@@ -321,9 +321,15 @@ public class CoreActivity extends AppCompatActivity
         alertDialog.show();
     }
 
-    private void loadNothingHereFragment() {
+    private void loadNothingHereFragment(String what) {
+        Bundle data = new Bundle();
+        data.putString(MithrilApplication.getPrefWhatFragmentKey(), what);
+
+        NothingHereFragment aNothingHereFragment = new NothingHereFragment();
+        aNothingHereFragment.setArguments(data);
+
         FragmentManager fragmentManager = getFragmentManager();
-        fragmentManager.beginTransaction().replace(R.id.container_core, new NothingHereFragment())
+        fragmentManager.beginTransaction().replace(R.id.container_core, aNothingHereFragment)
                 .commit();
     }
 
