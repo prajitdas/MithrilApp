@@ -6,19 +6,22 @@ import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.res.Resources;
 import android.location.Location;
-import android.location.LocationManager;
+import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
-import android.preference.EditTextPreference;
 import android.preference.Preference;
 import android.preference.PreferenceFragment;
 import android.preference.SwitchPreference;
+import android.text.Html;
+import android.text.Spanned;
 import android.util.Log;
 import android.view.View;
 import android.widget.Toast;
 
 import com.google.android.gms.common.ConnectionResult;
+import com.google.android.gms.common.GoogleApiAvailability;
 import com.google.android.gms.common.GooglePlayServicesNotAvailableException;
 import com.google.android.gms.common.GooglePlayServicesRepairableException;
 import com.google.android.gms.common.api.GoogleApiClient;
@@ -38,7 +41,6 @@ import edu.umbc.ebiquity.mithril.MithrilApplication;
 import edu.umbc.ebiquity.mithril.R;
 import edu.umbc.ebiquity.mithril.ui.activities.CoreActivity;
 import edu.umbc.ebiquity.mithril.util.receivers.AddressResultReceiver;
-import edu.umbc.ebiquity.mithril.util.services.FetchAddressIntentService;
 import edu.umbc.ebiquity.mithril.util.services.GeofenceTransitionsIntentService;
 import edu.umbc.ebiquity.mithril.util.specialtasks.context.DayOfWeekPreference;
 import edu.umbc.ebiquity.mithril.util.specialtasks.context.TimePreference;
@@ -96,8 +98,8 @@ public class PrefsFragment extends PreferenceFragment implements
     private SwitchPreference mSwitchPrefAllDone;
 
     private SwitchPreference mSwitchPrefEnableLocation;
-    private EditTextPreference mEditTextPrefHomeLocation;
-    private EditTextPreference mEditTextPrefWorkLocation;
+    private Preference mPrefHomeLocation;
+    private Preference mPrefWorkLocation;
 
     private SwitchPreference mSwitchPrefEnableTemporal;
 
@@ -110,10 +112,21 @@ public class PrefsFragment extends PreferenceFragment implements
     private TimePreference mTimePrefDNDHoursEnd;
 
     private SwitchPreference mSwitchPrefEnablePresenceInfo;
-    private EditTextPreference mEditTextPrefPresenceInfoSupervisor;
-    private EditTextPreference mEditTextPrefPresenceInfoColleague;
+    private Preference mPrefPresenceInfoSupervisor;
+    private Preference mPrefPresenceInfoColleague;
 
     private Context context;
+
+    /**
+     * Helper method to format information about a place nicely.
+     */
+    private static Spanned formatPlaceDetails(Resources res, CharSequence name, String id,
+                                              CharSequence address, CharSequence phoneNumber, Uri websiteUri) {
+        Log.e(MithrilApplication.getDebugTag(), res.getString(R.string.place_details, name, id, address, phoneNumber,
+                websiteUri));
+        return Html.fromHtml(res.getString(R.string.place_details, name, id, address, phoneNumber,
+                websiteUri));
+    }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -133,7 +146,6 @@ public class PrefsFragment extends PreferenceFragment implements
         setOnPreferenceChangeListeners();
     }
 
-
     private void initViews() {
         // Load the preferences from an XML resource
         addPreferencesFromResource(R.xml.preferences);
@@ -141,8 +153,8 @@ public class PrefsFragment extends PreferenceFragment implements
         mSwitchPrefAllDone = (SwitchPreference) getPreferenceManager().findPreference(MithrilApplication.getPrefAllDoneKey());
 
         mSwitchPrefEnableLocation = (SwitchPreference) getPreferenceManager().findPreference(MithrilApplication.getPrefLocationContextEnableKey());
-        mEditTextPrefHomeLocation = (EditTextPreference) getPreferenceManager().findPreference(MithrilApplication.getPrefHomeLocationKey());
-        mEditTextPrefWorkLocation = (EditTextPreference) getPreferenceManager().findPreference(MithrilApplication.getPrefWorkLocationKey());
+        mPrefHomeLocation = getPreferenceManager().findPreference(MithrilApplication.getPrefHomeLocationKey());
+        mPrefWorkLocation = getPreferenceManager().findPreference(MithrilApplication.getPrefWorkLocationKey());
 
         mSwitchPrefEnableTemporal = (SwitchPreference) getPreferenceManager().findPreference(MithrilApplication.getPrefTemporalContextEnableKey());
 
@@ -155,8 +167,8 @@ public class PrefsFragment extends PreferenceFragment implements
         mTimePrefDNDHoursEnd = (TimePreference) getPreferenceManager().findPreference(MithrilApplication.getPrefDndHoursEndKey());
 
         mSwitchPrefEnablePresenceInfo = (SwitchPreference) getPreferenceManager().findPreference(MithrilApplication.getPrefPresenceInfoContextEnableKey());
-        mEditTextPrefPresenceInfoSupervisor = (EditTextPreference) getPreferenceManager().findPreference(MithrilApplication.getPrefPresenceInfoSupervisorKey());
-        mEditTextPrefPresenceInfoColleague = (EditTextPreference) getPreferenceManager().findPreference(MithrilApplication.getPrefPresenceInfoColleagueKey());
+        mPrefPresenceInfoSupervisor = getPreferenceManager().findPreference(MithrilApplication.getPrefPresenceInfoSupervisorKey());
+        mPrefPresenceInfoColleague = getPreferenceManager().findPreference(MithrilApplication.getPrefPresenceInfoColleagueKey());
 
         setEnabledEditTexts();
     }
@@ -179,11 +191,11 @@ public class PrefsFragment extends PreferenceFragment implements
         editor.putBoolean(MithrilApplication.getPrefPresenceInfoContextEnableKey(), isChecked);
 
         String stringValue = sharedPrefs.getString(MithrilApplication.getPrefHomeLocationKey(), getResources().getString(R.string.pref_home_location_summary));
-        mEditTextPrefHomeLocation.setSummary(sharedPrefs.getString(MithrilApplication.getPrefHomeLocationKey(), getResources().getString(R.string.pref_home_location_summary)));
+        mPrefHomeLocation.setSummary(sharedPrefs.getString(MithrilApplication.getPrefHomeLocationKey(), getResources().getString(R.string.pref_home_location_summary)));
         editor.putString(MithrilApplication.getPrefHomeLocationKey(), stringValue);
 
         stringValue = sharedPrefs.getString(MithrilApplication.getPrefWorkLocationKey(), getResources().getString(R.string.pref_work_location_summary));
-        mEditTextPrefWorkLocation.setSummary(sharedPrefs.getString(MithrilApplication.getPrefWorkLocationKey(), getResources().getString(R.string.pref_work_location_summary)));
+        mPrefWorkLocation.setSummary(sharedPrefs.getString(MithrilApplication.getPrefWorkLocationKey(), getResources().getString(R.string.pref_work_location_summary)));
         editor.putString(MithrilApplication.getPrefWorkLocationKey(), stringValue);
 
         stringValue = sharedPrefs.getString(MithrilApplication.getPrefWorkDaysKey(), getResources().getString(R.string.pref_work_days));
@@ -211,11 +223,11 @@ public class PrefsFragment extends PreferenceFragment implements
         editor.putString(MithrilApplication.getPrefDndHoursEndKey(), stringValue);
 
         stringValue = sharedPrefs.getString(MithrilApplication.getPrefPresenceInfoSupervisorKey(), getResources().getString(R.string.pref_presence_info_supervisor_summary));
-        mEditTextPrefPresenceInfoSupervisor.setSummary(sharedPrefs.getString(MithrilApplication.getPrefPresenceInfoSupervisorKey(), getResources().getString(R.string.pref_presence_info_supervisor_summary)));
+        mPrefPresenceInfoSupervisor.setSummary(sharedPrefs.getString(MithrilApplication.getPrefPresenceInfoSupervisorKey(), getResources().getString(R.string.pref_presence_info_supervisor_summary)));
         editor.putString(MithrilApplication.getPrefPresenceInfoSupervisorKey(), stringValue);
 
         stringValue = sharedPrefs.getString(MithrilApplication.getPrefPresenceInfoColleagueKey(), getResources().getString(R.string.pref_presence_info_colleague_summary));
-        mEditTextPrefPresenceInfoColleague.setSummary(sharedPrefs.getString(MithrilApplication.getPrefPresenceInfoColleagueKey(), getResources().getString(R.string.pref_presence_info_colleague_summary)));
+        mPrefPresenceInfoColleague.setSummary(sharedPrefs.getString(MithrilApplication.getPrefPresenceInfoColleagueKey(), getResources().getString(R.string.pref_presence_info_colleague_summary)));
         editor.putString(MithrilApplication.getPrefPresenceInfoColleagueKey(), stringValue);
 
         editor.apply();
@@ -286,8 +298,8 @@ public class PrefsFragment extends PreferenceFragment implements
     }
 
     private void setEnabledEditTexts() {
-        mEditTextPrefHomeLocation.setEnabled(mSwitchPrefEnableLocation.isChecked());
-        mEditTextPrefWorkLocation.setEnabled(mSwitchPrefEnableLocation.isChecked());
+        mPrefHomeLocation.setEnabled(mSwitchPrefEnableLocation.isChecked());
+        mPrefWorkLocation.setEnabled(mSwitchPrefEnableLocation.isChecked());
 
         mDayOfWeekPrefWorkDays.setEnabled(mSwitchPrefEnableTemporal.isChecked());
         mTimePrefWorkHoursStart.setEnabled(mSwitchPrefEnableTemporal.isChecked());
@@ -297,47 +309,137 @@ public class PrefsFragment extends PreferenceFragment implements
         mTimePrefDNDHoursStart.setEnabled(mSwitchPrefEnableTemporal.isChecked());
         mTimePrefDNDHoursEnd.setEnabled(mSwitchPrefEnableTemporal.isChecked());
 
-        mEditTextPrefPresenceInfoColleague.setEnabled(mSwitchPrefEnablePresenceInfo.isChecked());
-        mEditTextPrefPresenceInfoSupervisor.setEnabled(mSwitchPrefEnablePresenceInfo.isChecked());
+        mPrefPresenceInfoColleague.setEnabled(mSwitchPrefEnablePresenceInfo.isChecked());
+        mPrefPresenceInfoSupervisor.setEnabled(mSwitchPrefEnablePresenceInfo.isChecked());
     }
 
     private void setOnPreferenceClickListeners() {
-        mEditTextPrefHomeLocation.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
+        mPrefHomeLocation.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
             @Override
             public boolean onPreferenceClick(Preference preference) {
-                try {
-                    Intent intent =
-                            new PlaceAutocomplete.IntentBuilder(PlaceAutocomplete.MODE_FULLSCREEN)
-                                    .build(getActivity());
-                    startActivityForResult(intent, PLACE_AUTOCOMPLETE_REQUEST_CODE_HOME);
-                } catch (GooglePlayServicesRepairableException e) {
-                    // TODO: Handle the error.
-                } catch (GooglePlayServicesNotAvailableException e) {
-                    // TODO: Handle the error.
-                }
-
-                return false;
+                openAutocompleteActivity(PLACE_AUTOCOMPLETE_REQUEST_CODE_HOME);
+                return true;
             }
         });
 
-        mEditTextPrefWorkLocation.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
+        mPrefWorkLocation.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
             @Override
             public boolean onPreferenceClick(Preference preference) {
-                try {
-                    Intent intent =
-                            new PlaceAutocomplete.IntentBuilder(PlaceAutocomplete.MODE_FULLSCREEN)
-                                    .build(getActivity());
-                    startActivityForResult(intent, PLACE_AUTOCOMPLETE_REQUEST_CODE_WORK);
-                } catch (GooglePlayServicesRepairableException e) {
-                    // TODO: Handle the error.
-                } catch (GooglePlayServicesNotAvailableException e) {
-                    // TODO: Handle the error.
-                }
-
+                openAutocompleteActivity(PLACE_AUTOCOMPLETE_REQUEST_CODE_WORK);
                 return false;
             }
         });
     }
+
+    private void openAutocompleteActivity(int requestCode) {
+        try {
+            // The autocomplete activity requires Google Play Services to be available. The intent
+            // builder checks this and throws an exception if it is not the case.
+            Intent intent = new PlaceAutocomplete.IntentBuilder(PlaceAutocomplete.MODE_FULLSCREEN).build(getActivity());
+            startActivityForResult(intent, requestCode);
+        } catch (GooglePlayServicesRepairableException e) {
+            // Indicates that Google Play Services is either not installed or not up to date. Prompt
+            // the user to correct the issue.
+            GoogleApiAvailability.getInstance().getErrorDialog(getActivity(), e.getConnectionStatusCode(),
+                    0 /* requestCode */).show();
+        } catch (GooglePlayServicesNotAvailableException e) {
+            // Indicates that Google Play Services is not available and the problem is not easily
+            // resolvable.
+            String message = "Google Play Services is not available: " +
+                    GoogleApiAvailability.getInstance().getErrorString(e.errorCode);
+
+            Log.e(MithrilApplication.getDebugTag(), message);
+            PermissionHelper.toast(getActivity(), message, Toast.LENGTH_SHORT);
+        }
+    }
+
+    /**
+     * A location was selected by the user for their home/work address
+     * EDUCATION MOMENT (from http://android-er.blogspot.com/2013/02/convert-between-latlng-and-location.html):
+     * //Convert LatLng to Location
+     * Location location = new Location("Test");
+     * location.setLatitude(point.latitude);
+     * location.setLongitude(point.longitude);
+     * location.setTime(new Date().getTime()); //Set time as current Date
+     * info.setText(location.toString());
+     * <p>
+     * //Convert Location to LatLng
+     * LatLng newLatLng = new LatLng(location.getLatitude(), location.getLongitude());
+     * Called after the autocomplete activity has finished to return its result.
+     *
+     * @param requestCode
+     * @param resultCode
+     * @param data
+     */
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        switch (requestCode) {
+            case PLACE_AUTOCOMPLETE_REQUEST_CODE_HOME: {
+                if (resultCode == Activity.RESULT_OK) {
+                    // Get the user's selected place from the Intent.
+                    Place place = PlaceAutocomplete.getPlace(getActivity(), data);
+                    Log.i(MithrilApplication.getDebugTag(), "Place Selected: " + place.getName());
+
+                    // Format the place's details and display them in the TextView.
+                    mPrefHomeLocation.setDefaultValue(formatPlaceDetails(getResources(), place.getName(),
+                            place.getId(), place.getAddress(), place.getPhoneNumber(),
+                            place.getWebsiteUri()).toString());
+
+//                    // Display attributions if required.
+//                    CharSequence attributions = place.getAttributions();
+//                    if (!TextUtils.isEmpty(attributions)) {
+//                        mPlaceAttribution.setText(Html.fromHtml(attributions.toString()));
+//                    } else {
+//                        mPlaceAttribution.setText("");
+//                    }
+                } else if (resultCode == PlaceAutocomplete.RESULT_ERROR) {
+                    Status status = PlaceAutocomplete.getStatus(getActivity(), data);
+                    Log.e(MithrilApplication.getDebugTag(), "Error: Status = " + status.toString());
+                } else if (resultCode == Activity.RESULT_CANCELED) {
+                    // Indicates that the activity closed before a selection was made. For example if
+                    // the user pressed the back button.
+                }
+            }
+            case PLACE_AUTOCOMPLETE_REQUEST_CODE_WORK: {
+                if (resultCode == Activity.RESULT_OK) {
+                    Place place = PlaceAutocomplete.getPlace(getActivity(), data);
+                    Log.i(MithrilApplication.getDebugTag(), "Place Selected: " + place.getName());
+
+                    mPrefHomeLocation.setDefaultValue(formatPlaceDetails(getResources(), place.getName(),
+                            place.getId(), place.getAddress(), place.getPhoneNumber(),
+                            place.getWebsiteUri()).toString());
+                } else if (resultCode == PlaceAutocomplete.RESULT_ERROR) {
+                    Status status = PlaceAutocomplete.getStatus(getActivity(), data);
+                    Log.e(MithrilApplication.getDebugTag(), "Error: Status = " + status.toString());
+                } else if (resultCode == Activity.RESULT_CANCELED) {
+                }
+            }
+        }
+    }
+
+//    /**
+//     * Creates an intent, adds location data to it as an extra, and starts the intent service for
+//     * fetching an address.
+//     */
+//    protected void startSearchAddressIntentService(String key) {
+//        // Create an intent for passing to the intent service responsible for fetching the address.
+//        Intent intent = new Intent(context, FetchAddressIntentService.class);
+//
+//        intent.putExtra(MithrilApplication.ADDRESS_REQUESTED_EXTRA, mAddressRequested);
+//        intent.putExtra(MithrilApplication.ADDRESS_KEY, key);
+//
+//        // Pass the result receiver as an extra to the service.
+//        intent.putExtra(MithrilApplication.RECEIVER, mResultReceiver);
+//
+//        // Pass the location data as an extra to the service.
+//        intent.putExtra(MithrilApplication.LOCATION_DATA_EXTRA, mSelectedLocation);
+//
+//        // Start the service. If the service isn't already running, it is instantiated and started
+//        // (creating a process for it if needed); if it is running then it remains running. The
+//        // service kills itself automatically once all intents are processed.
+//        context.startService(intent);
+//    }
 
     private void setOnPreferenceChangeListeners() {
         mSwitchPrefAllDone.setOnPreferenceChangeListener(new Preference.OnPreferenceChangeListener() {
@@ -363,8 +465,8 @@ public class PrefsFragment extends PreferenceFragment implements
                 editor.putBoolean(MithrilApplication.getPrefLocationContextEnableKey(), mSwitchPrefEnableLocation.isChecked());
                 editor.apply();
 
-                mEditTextPrefHomeLocation.setEnabled(mSwitchPrefEnableLocation.isChecked());
-                mEditTextPrefWorkLocation.setEnabled(mSwitchPrefEnableLocation.isChecked());
+                mPrefHomeLocation.setEnabled(mSwitchPrefEnableLocation.isChecked());
+                mPrefWorkLocation.setEnabled(mSwitchPrefEnableLocation.isChecked());
                 return true;
                 /**
                  * When the user enables the location settings, we set up the geo fences but we have to be careful about how we set this up.
@@ -376,7 +478,7 @@ public class PrefsFragment extends PreferenceFragment implements
             }
         });
 
-        mEditTextPrefHomeLocation.setOnPreferenceChangeListener(new Preference.OnPreferenceChangeListener() {
+        mPrefHomeLocation.setOnPreferenceChangeListener(new Preference.OnPreferenceChangeListener() {
             @Override
             public boolean onPreferenceChange(Preference preference, Object o) {
                 //TODO Add code for searching home location and storing it for now we don't do anything and have hardcoded the options
@@ -390,7 +492,7 @@ public class PrefsFragment extends PreferenceFragment implements
             }
         });
 
-        mEditTextPrefWorkLocation.setOnPreferenceChangeListener(new Preference.OnPreferenceChangeListener() {
+        mPrefWorkLocation.setOnPreferenceChangeListener(new Preference.OnPreferenceChangeListener() {
             @Override
             public boolean onPreferenceChange(Preference preference, Object o) {
                 //TODO Add code for storing preferences
@@ -517,13 +619,13 @@ public class PrefsFragment extends PreferenceFragment implements
                 editor.putBoolean(MithrilApplication.getPrefPresenceInfoContextEnableKey(), mSwitchPrefEnablePresenceInfo.isChecked());
                 editor.apply();
 
-                mEditTextPrefPresenceInfoColleague.setEnabled(mSwitchPrefEnablePresenceInfo.isChecked());
-                mEditTextPrefPresenceInfoSupervisor.setEnabled(mSwitchPrefEnablePresenceInfo.isChecked());
+                mPrefPresenceInfoColleague.setEnabled(mSwitchPrefEnablePresenceInfo.isChecked());
+                mPrefPresenceInfoSupervisor.setEnabled(mSwitchPrefEnablePresenceInfo.isChecked());
                 return true;
             }
         });
 
-        mEditTextPrefPresenceInfoSupervisor.setOnPreferenceChangeListener(new Preference.OnPreferenceChangeListener() {
+        mPrefPresenceInfoSupervisor.setOnPreferenceChangeListener(new Preference.OnPreferenceChangeListener() {
             @Override
             public boolean onPreferenceChange(Preference preference, Object o) {
                 //TODO Add code for storing preferences
@@ -537,7 +639,7 @@ public class PrefsFragment extends PreferenceFragment implements
             }
         });
 
-        mEditTextPrefPresenceInfoColleague.setOnPreferenceChangeListener(new Preference.OnPreferenceChangeListener() {
+        mPrefPresenceInfoColleague.setOnPreferenceChangeListener(new Preference.OnPreferenceChangeListener() {
             @Override
             public boolean onPreferenceChange(Preference preference, Object o) {
                 //TODO Add code for storing preferences
@@ -550,92 +652,6 @@ public class PrefsFragment extends PreferenceFragment implements
                 return false;
             }
         });
-    }
-
-    /**
-     * A location was selected by the user for their home/work address
-     * EDUCATION MOMENT (from http://android-er.blogspot.com/2013/02/convert-between-latlng-and-location.html):
-     * //Convert LatLng to Location
-     * Location location = new Location("Test");
-     * location.setLatitude(point.latitude);
-     * location.setLongitude(point.longitude);
-     * location.setTime(new Date().getTime()); //Set time as current Date
-     * info.setText(location.toString());
-     * <p>
-     * //Convert Location to LatLng
-     * LatLng newLatLng = new LatLng(location.getLatitude(), location.getLongitude());
-     *
-     * @param requestCode
-     * @param resultCode
-     * @param data
-     */
-    @Override
-    public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        switch (requestCode) {
-            case PLACE_AUTOCOMPLETE_REQUEST_CODE_HOME: {
-                if (resultCode == Activity.RESULT_OK) {
-                    Place place = PlaceAutocomplete.getPlace(getActivity(), data);
-
-                    mSelectedLocation = new Location(LocationManager.GPS_PROVIDER);
-                    mSelectedLocation.setLatitude(place.getLatLng().latitude);
-                    mSelectedLocation.setLongitude(place.getLatLng().longitude);
-
-                    startSearchAddressIntentService(MithrilApplication.getPrefHomeLocationKey());
-
-                    Log.i(MithrilApplication.getDebugTag(), "Place: " + place.getAddress());
-                } else if (resultCode == PlaceAutocomplete.RESULT_ERROR) {
-                    Status status = PlaceAutocomplete.getStatus(getActivity(), data);
-                    // TODO: Handle the error.
-                    Log.i(MithrilApplication.getDebugTag(), status.getStatusMessage());
-
-                } else if (resultCode == Activity.RESULT_CANCELED) {
-                    // The user canceled the operation.
-                }
-            }
-            case PLACE_AUTOCOMPLETE_REQUEST_CODE_WORK: {
-                if (resultCode == Activity.RESULT_OK) {
-                    Place place = PlaceAutocomplete.getPlace(getActivity(), data);
-
-                    mSelectedLocation = new Location(LocationManager.GPS_PROVIDER);
-                    mSelectedLocation.setLatitude(place.getLatLng().latitude);
-                    mSelectedLocation.setLongitude(place.getLatLng().longitude);
-
-                    startSearchAddressIntentService(MithrilApplication.getPrefWorkLocationKey());
-
-                    Log.i(MithrilApplication.getDebugTag(), "Place: " + place.getAddress());
-                } else if (resultCode == PlaceAutocomplete.RESULT_ERROR) {
-                    Status status = PlaceAutocomplete.getStatus(getActivity(), data);
-                    // TODO: Handle the error.
-                    Log.i(MithrilApplication.getDebugTag(), status.getStatusMessage());
-
-                } else if (resultCode == Activity.RESULT_CANCELED) {
-                    // The user canceled the operation.
-                }
-            }
-        }
-    }
-
-    /**
-     * Creates an intent, adds location data to it as an extra, and starts the intent service for
-     * fetching an address.
-     */
-    protected void startSearchAddressIntentService(String key) {
-        // Create an intent for passing to the intent service responsible for fetching the address.
-        Intent intent = new Intent(context, FetchAddressIntentService.class);
-
-        intent.putExtra(MithrilApplication.ADDRESS_REQUESTED_EXTRA, mAddressRequested);
-        intent.putExtra(MithrilApplication.ADDRESS_KEY, key);
-
-        // Pass the result receiver as an extra to the service.
-        intent.putExtra(MithrilApplication.RECEIVER, mResultReceiver);
-
-        // Pass the location data as an extra to the service.
-        intent.putExtra(MithrilApplication.LOCATION_DATA_EXTRA, mSelectedLocation);
-
-        // Start the service. If the service isn't already running, it is instantiated and started
-        // (creating a process for it if needed); if it is running then it remains running. The
-        // service kills itself automatically once all intents are processed.
-        context.startService(intent);
     }
 
     /**************************************START OF GEOFENCE CODE*********************************************************/

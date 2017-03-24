@@ -15,13 +15,13 @@
             android:key="@string/pref_location_context_switch_key"
             android:summary="@string/pref_location_context_switch_summary"
             android:title="@string/pref_location_context_switch_title" />
-        <EditTextPreference
+        <Preference
             android:defaultValue="@string/pref_home_location_summary"
             android:enabled="false"
             android:key="@string/pref_home_location_key"
             android:summary="@string/pref_home_location_summary"
             android:title="@string/pref_home_location_title" />
-        <EditTextPreference
+        <Preference
             android:defaultValue="@string/pref_work_location_summary"
             android:enabled="false"
             android:key="@string/pref_work_location_key"
@@ -83,13 +83,13 @@
             android:key="@string/pref_presence_info_context_switch_key"
             android:summary="@string/pref_presence_info_context_switch_summary"
             android:title="@string/pref_presence_info_context_switch_title" />
-        <EditTextPreference
+        <Preference
             android:defaultValue="@string/pref_presence_info_supervisor_summary"
             android:enabled="false"
             android:key="@string/pref_presence_info_supervisor_key"
             android:summary="@string/pref_presence_info_supervisor_summary"
             android:title="@string/pref_presence_info_supervisor_title" />
-        <EditTextPreference
+        <Preference
             android:defaultValue="@string/pref_presence_info_colleague_summary"
             android:enabled="false"
             android:key="@string/pref_presence_info_colleague_key"
