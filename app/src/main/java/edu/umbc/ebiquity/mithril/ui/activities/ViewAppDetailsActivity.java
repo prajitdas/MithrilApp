@@ -97,11 +97,8 @@ public class ViewAppDetailsActivity extends AppCompatActivity
 //                    intent.addCategory(Intent.CATEGORY_LAUNCHER);
 //                    startActivity(intent);
 //                } else {
-//                    Toast.makeText(
-//                            v.getContext(),
-//                            "The application " + packageName + " was not launchable! Possibly because it's not meant to be!",
-//                            Toast.LENGTH_LONG)
-//                            .show();
+//                    PermissionHelper.toast(v.getContext(),
+//                            "The application " + packageName + " was not launchable! Possibly because it's not meant to be!");
 //                }
 //            }
 //        });
@@ -110,11 +107,9 @@ public class ViewAppDetailsActivity extends AppCompatActivity
 //
 //            @Override
 //            public void onClick(View v) {
-//                Toast.makeText(
-//                        v.getContext(),
+//                PermissionHelper.toast(v.getContext(),
 //                        "Thanks for your feedback on app: " + packageName + " but right now I will be doing nothing with it. Sorry!",
-//                        Toast.LENGTH_SHORT)
-//                        .show();
+//                        Toast.LENGTH_SHORT);
 //            }
 //        });
 //
@@ -122,11 +117,9 @@ public class ViewAppDetailsActivity extends AppCompatActivity
 //
 //            @Override
 //            public void onClick(View v) {
-//                Toast.makeText(
-//                        v.getContext(),
+//                PermissionHelper.toast(v.getContext(),
 //                        "Thanks for your feedback on app: " + packageName + " but right now I will be doing nothing with it. Sorry!",
-//                        Toast.LENGTH_SHORT)
-//                        .show();
+//                        Toast.LENGTH_SHORT);
 //            }
 //        });
     }
