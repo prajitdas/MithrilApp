@@ -76,7 +76,6 @@ public class CoreActivity extends AppCompatActivity
         ViolationFragment.OnListFragmentInteractionListener,
         EmptyFragment.OnFragmentInteractionListener,
         NothingHereFragment.OnFragmentInteractionListener {
-
     private final File downloadsDirectory = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS);
     private final String agreementFile = MithrilApplication.getFlierPdfFileName();
 
@@ -180,6 +179,65 @@ public class CoreActivity extends AppCompatActivity
         super.onPause();
     }
 
+    @Override
+    public void onBackPressed() {
+        if (drawer.isDrawerOpen(GravityCompat.START)) {
+            drawer.closeDrawer(GravityCompat.START);
+        } else {
+            if (exit) {
+                finish(); // quit app
+            } else {
+                PermissionHelper.toast(this, "Press Back again to Exit.",
+                        Toast.LENGTH_SHORT);
+                exit = true;
+                new Handler().postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        exit = false;
+                    }
+                }, 3 * 1000);
+
+            }
+        }
+    }
+
+    @Override
+    public void onDestroy() {
+        closeDB();
+        super.onDestroy();
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        // Inflate the menu; this adds items to the action bar if it is present.
+        getMenuInflater().inflate(R.menu.menu_core, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        // Handle action bar item clicks here. The action bar will
+        // automatically handle clicks on the Home/Up button, so long
+        // as you specify a parent activity in AndroidManifest.xml.
+        int id = item.getItemId();
+        if (id == R.id.capture_exec_settings) {
+            if (rootAccess == null) {
+                //TODO we will have important functionality here
+                try {
+                    rootAccess = new RootAccess();
+                    if (!rootAccess.isRoot())
+                        rootAccess = null;
+                    else
+                        navigationView.getMenu().getItem(3).getSubMenu().getItem(3).setEnabled(true);
+                } catch (PhoneNotRootedException phoneNotRootedException) {
+                    Log.d(MithrilApplication.getDebugTag(), "Phone is not rooted do non-root behavior" + phoneNotRootedException.getMessage());
+                }
+            }
+            return true;
+        }
+        return super.onOptionsItemSelected(item);
+    }
+
     private void initHouseKeepingTasks() {
         if (PermissionHelper.isPermissionGranted(this, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED &&
                 !PermissionHelper.needsUsageStatsPermission(this)) {
@@ -227,6 +285,11 @@ public class CoreActivity extends AppCompatActivity
         // Let's get the DB instances loaded too
         mithrilDBHelper = new MithrilDBHelper(context);
         mithrilDB = mithrilDBHelper.getWritableDatabase();
+    }
+
+    private void closeDB() {
+        if (mithrilDB != null)
+            mithrilDB.close();
     }
 
     private void showAgreementDownloadedSnackbar() {
@@ -559,69 +622,5 @@ public class CoreActivity extends AppCompatActivity
     @Override
     public void onListFragmentInteraction(BCastRecvData item) {
         //TODO do something when the broadcast receiver data is requested
-    }
-
-    @Override
-    public void onBackPressed() {
-        if (drawer.isDrawerOpen(GravityCompat.START)) {
-            drawer.closeDrawer(GravityCompat.START);
-        } else {
-            if (exit) {
-                finish(); // quit app
-            } else {
-                PermissionHelper.toast(this, "Press Back again to Exit.",
-                        Toast.LENGTH_SHORT);
-                exit = true;
-                new Handler().postDelayed(new Runnable() {
-                    @Override
-                    public void run() {
-                        exit = false;
-                    }
-                }, 3 * 1000);
-
-            }
-        }
-    }
-
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.menu_core, menu);
-        return true;
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
-        int id = item.getItemId();
-        if (id == R.id.capture_exec_settings) {
-            if (rootAccess == null) {
-                //TODO we will have important functionality here
-                try {
-                    rootAccess = new RootAccess();
-                    if (!rootAccess.isRoot())
-                        rootAccess = null;
-                    else
-                        navigationView.getMenu().getItem(3).getSubMenu().getItem(3).setEnabled(true);
-                } catch (PhoneNotRootedException phoneNotRootedException) {
-                    Log.d(MithrilApplication.getDebugTag(), "Phone is not rooted do non-root behavior" + phoneNotRootedException.getMessage());
-                }
-            }
-            return true;
-        }
-        return super.onOptionsItemSelected(item);
-    }
-
-    @Override
-    public void onDestroy() {
-        closeDB();
-        super.onDestroy();
-    }
-
-    private void closeDB() {
-        if (mithrilDB != null)
-            mithrilDB.close();
     }
 }
