@@ -67,6 +67,7 @@
     <meta-data
         android:name="com.google.android.geo.API_KEY"
         android:value="AIzaSyD90WROn0mNgMThb2lQimn-yl-zY7ICDF0" />
+    AIzaSyD90WROn0mNgMThb2lQimn-yl-zY7ICDF0
 
     <application
         android:icon="@mipmap/ic_launcher"
