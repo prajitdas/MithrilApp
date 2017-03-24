@@ -32,11 +32,29 @@ public class PrefsActivity extends AppCompatActivity {
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
+                showSnackbar(view, view.getResources().getString(R.string.functionality_not_active_yet));
             }
         });
         getSupportActionBar().setDisplayHomeAsUpEnabled(false);
+    }
+
+    private void showSnackbar(View view, String message) {
+        Snackbar snackbar = Snackbar.make(view,
+                message,
+                Snackbar.LENGTH_INDEFINITE);
+
+        snackbar.setActionTextColor(getResources().getColor(R.color.white, this.getTheme()));
+
+        // get snackbar view
+        View snackbarView = snackbar.getView();
+        snackbarView.setBackgroundColor(getResources().getColor(R.color.colorPrimary, this.getTheme()));
+
+        snackbar.setAction(R.string.okay,
+                new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                    }
+                });
     }
 
     @Override
