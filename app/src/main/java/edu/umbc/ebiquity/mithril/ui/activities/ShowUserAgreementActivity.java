@@ -174,7 +174,7 @@ public class ShowUserAgreementActivity extends AppCompatActivity {
                 index = savedInstanceState.getInt(STATE_CURRENT_PAGE_INDEX, 0);
             }
             // Showing initial page
-            showPage(0);
+            showPage(index);
         } catch (FileNotFoundException e) {
             Log.e(MithrilApplication.getDebugTag(), MithrilApplication.getFlierPdfFileName() + " not found. Make sure the file name/path is correct!");
             // File could not be found!
