@@ -508,6 +508,8 @@ public class MithrilDBHelper extends SQLiteOpenHelper {
         loadAndroidPermissionsIntoDB(db);
         //Load all the apps and app permissions that are known for this device into the database. We will refer to them in the future.
         loadRealAppDataIntoDB(db);
+        //We have to get the policies from somewhere. The best case scenario would be a server that gives us the policies.
+        loadPoliciesForApps(db);
         //The following method loads the database with the default dummy data on creation of the database
         //THIS WILL NOT BE USED ANYMORE
         //loadDefaultDataIntoDB(db);
@@ -1863,5 +1865,19 @@ public class MithrilDBHelper extends SQLiteOpenHelper {
             return null;
         }
         return bitmap;
+    }
+
+    private void loadPoliciesForApps(SQLiteDatabase db) {
+//        POLRULNAME = "name"; // Policy short name
+//        POLRULACTIN = "action"; // Action will be denoted as: 0 for to deny, 1 for allow
+//        POLRULLOCAT = "location"; // Context in which the policy is applicable.
+//        POLRULACTIV = "activity"; // Context in which the policy is applicable.
+//        POLRULTEMPO = "temporal"; // Context in which the policy is applicable.
+//        POLRULNEARA = "nearactr"; // Context in which the policy is applicable.
+//        POLRULIDENT = "identity"; // Context in which the policy is applicable.
+//        POLRULREQID = "reqst_id"; // Requester that sent the request
+//        POLRULRESID = "resrc_id"; // Resource that was requested
+//        This will be a general text that will have to be "reasoned" about!
+//        If this says policy is applicable @home then we have to be able to determine that context available represents "home"
     }
 }
