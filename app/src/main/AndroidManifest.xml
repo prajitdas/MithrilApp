@@ -19,7 +19,7 @@
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
 
     <!--
-         permission automatically available to app; protectionLevel: PROTECTION_NORMAL; not a dangerous permission; list as follows:-
+        permissions automatically available to app; protectionLevel: PROTECTION_NORMAL; not a dangerous permission; list as follows:-
         ACCESS_LOCATION_EXTRA_COMMANDS
         ACCESS_NETWORK_STATE
         ACCESS_NOTIFICATION_POLICY
