@@ -63,16 +63,17 @@
     <!-- android:name="android.hardware.nfc" -->
     <!-- android:required="true" /> -->
 
-    <!-- Google Places API Key -->
-    <meta-data
-        android:name="com.google.android.geo.API_KEY"
-        android:value="AIzaSyBuyRKl_kn-CphjG5xuPHZgHw3FaFDJnjk" />
-
     <application
         android:icon="@mipmap/ic_launcher"
         android:label="@string/short_app_name"
         android:supportsRtl="true"
         android:theme="@style/AppTheme.NoActionBar">
+
+        <!-- Google Places API Key -->
+        <meta-data
+            android:name="com.google.android.geo.API_KEY"
+            android:value="AIzaSyBuyRKl_kn-CphjG5xuPHZgHw3FaFDJnjk" />
+
         <activity
             android:name=".ui.activities.UserAgreementActivity"
             android:label="@string/short_app_name"

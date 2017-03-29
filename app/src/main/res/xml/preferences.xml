@@ -37,37 +37,37 @@
             android:key="@string/pref_temporal_context_switch_key"
             android:summary="@string/pref_temporal_context_switch_summary"
             android:title="@string/pref_temporal_context_switch_title" />
-        <edu.umbc.ebiquity.mithril.util.specialtasks.context.DayOfWeekPreference
+        <edu.umbc.ebiquity.mithril.util.specialtasks.contextinstances.DayOfWeekPreference
             android:defaultValue="@string/pref_work_days"
             android:enabled="false"
             android:key="@string/pref_work_days_key"
             android:summary="@string/pref_work_days"
             android:title="@string/pref_work_days_title" />
-        <edu.umbc.ebiquity.mithril.util.specialtasks.context.TimePreference
+        <edu.umbc.ebiquity.mithril.util.specialtasks.contextinstances.TimePreference
             android:defaultValue="@string/pref_work_hours_start"
             android:enabled="false"
             android:key="@string/pref_work_hours_start_key"
             android:summary="@string/pref_work_hours_start"
             android:title="@string/pref_work_hours_start_title" />
-        <edu.umbc.ebiquity.mithril.util.specialtasks.context.TimePreference
+        <edu.umbc.ebiquity.mithril.util.specialtasks.contextinstances.TimePreference
             android:defaultValue="@string/pref_work_hours_end"
             android:enabled="false"
             android:key="@string/pref_work_hours_end_key"
             android:summary="@string/pref_work_hours_end"
             android:title="@string/pref_work_hours_end_title" />
-        <edu.umbc.ebiquity.mithril.util.specialtasks.context.DayOfWeekPreference
+        <edu.umbc.ebiquity.mithril.util.specialtasks.contextinstances.DayOfWeekPreference
             android:defaultValue="@string/pref_DND_days"
             android:enabled="false"
             android:key="@string/pref_DND_days_key"
             android:summary="@string/pref_DND_days"
             android:title="@string/pref_DND_days_title" />
-        <edu.umbc.ebiquity.mithril.util.specialtasks.context.TimePreference
+        <edu.umbc.ebiquity.mithril.util.specialtasks.contextinstances.TimePreference
             android:defaultValue="@string/pref_DND_hours_start"
             android:enabled="false"
             android:key="@string/pref_DND_hours_start_key"
             android:summary="@string/pref_DND_hours_start"
             android:title="@string/pref_DND_hours_start_title" />
-        <edu.umbc.ebiquity.mithril.util.specialtasks.context.TimePreference
+        <edu.umbc.ebiquity.mithril.util.specialtasks.contextinstances.TimePreference
             android:defaultValue="@string/pref_DND_hours_end"
             android:enabled="false"
             android:key="@string/pref_DND_hours_end_key"
@@ -83,13 +83,13 @@
             android:key="@string/pref_presence_info_context_switch_key"
             android:summary="@string/pref_presence_info_context_switch_summary"
             android:title="@string/pref_presence_info_context_switch_title" />
-        <Preference
+        <EditTextPreference
             android:defaultValue="@string/pref_presence_info_supervisor_summary"
             android:enabled="false"
             android:key="@string/pref_presence_info_supervisor_key"
             android:summary="@string/pref_presence_info_supervisor_summary"
             android:title="@string/pref_presence_info_supervisor_title" />
-        <Preference
+        <EditTextPreference
             android:defaultValue="@string/pref_presence_info_colleague_summary"
             android:enabled="false"
             android:key="@string/pref_presence_info_colleague_key"

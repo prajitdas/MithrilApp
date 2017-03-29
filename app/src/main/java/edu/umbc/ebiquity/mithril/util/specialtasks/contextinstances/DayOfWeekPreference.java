@@ -1,4 +1,4 @@
-package edu.umbc.ebiquity.mithril.util.specialtasks.context;
+package edu.umbc.ebiquity.mithril.util.specialtasks.contextinstances;
 
 import android.content.Context;
 import android.content.SharedPreferences;
