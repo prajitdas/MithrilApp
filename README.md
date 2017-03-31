@@ -14,3 +14,5 @@ Following are the goals of the app:
 
 
 Script to generate Android make files for the project: [generate_android_mk.py](https://github.com/WanghongLin/generate-android-mk) written by [Wanghong Lin](https://github.com/WanghongLin)
+
+Edits from [Stackoverflow](http://stackoverflow.com/questions/10148171/making-an-app-in-the-android-source-compile-into-system-app-instead-of-data-app)
