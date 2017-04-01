@@ -1,7 +1,7 @@
 <component name="libraryTable">
   <library name="DLQueryEngine">
     <CLASSES>
-      <root url="jar://$PROJECT_DIR$/app/libs/DLQueryEngine.jar!/" />
+      <root url="jar:///media/prajit/data/code/android/projects/MithrilApp/app/libs/DLQueryEngine.jar!/" />
     </CLASSES>
     <JAVADOC />
     <SOURCES />
