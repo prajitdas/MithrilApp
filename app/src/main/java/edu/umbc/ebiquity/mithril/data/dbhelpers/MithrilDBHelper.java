@@ -464,26 +464,7 @@ public class MithrilDBHelper extends SQLiteOpenHelper {
         } catch (Exception e) {
             Log.e(MithrilApplication.getDebugTag(), "Some other error occurred while creating the SQLite DB - " + e.getMessage());
         }
-        insertHardcodedGooglePermissions(db);
-        //Load all the permissions that are known for Android into the database. We will refer to them in the future.
-        loadAndroidPermissionsIntoDB(db);
-        //Load all the apps and app permissions that are known for this device into the database. We will refer to them in the future.
-        loadRealAppDataIntoDB(db);
-        //We have to get the policies from somewhere. The best case scenario would be a server that gives us the policies.
-        loadPoliciesForApps(db);
-        //The following method loads the database with the default dummy data on creation of the database
-        //THIS WILL NOT BE USED ANYMORE
-        //loadDefaultDataIntoDB(db);
-    }
-
-    private void insertHardcodedGooglePermissions(SQLiteDatabase db) {
-        try {
-            db.execSQL(MithrilApplication.getInsertStatementGooglePermissions());
-        } catch (SQLException sqlException) {
-            Log.e(MithrilApplication.getDebugTag(), "Following error occurred while inserting data in SQLite DB - " + sqlException.getMessage());
-        } catch (Exception e) {
-            Log.e(MithrilApplication.getDebugTag(), "Some other error occurred while inserting data in SQLite DB - " + e.getMessage());
-        }
+        loadDB(db);
     }
 
     @Override
@@ -525,6 +506,302 @@ public class MithrilDBHelper extends SQLiteOpenHelper {
         db.execSQL("DROP TABLE IF EXISTS " + getAppsTableName());
 
         onCreate(db);
+    }
+
+    private void loadDB(SQLiteDatabase db) {
+        insertHardcodedGooglePermissions(db);
+        //Load all the permissions that are known for Android into the database. We will refer to them in the future.
+        loadAndroidPermissionsIntoDB(db);
+        //Load all the apps and app permissions that are known for this device into the database. We will refer to them in the future.
+        loadRealAppDataIntoDB(db);
+        //We have to get the policies from somewhere. The best case scenario would be a server that gives us the policies.
+        loadPoliciesForApps(db);
+        //The following method loads the database with the default dummy data on creation of the database
+        //THIS WILL NOT BE USED ANYMORE
+        //loadDefaultDataIntoDB(db);
+    }
+
+    private void insertHardcodedGooglePermissions(SQLiteDatabase db) {
+        try {
+            db.execSQL(MithrilApplication.getInsertStatementGooglePermissions());
+        } catch (SQLException sqlException) {
+            Log.e(MithrilApplication.getDebugTag(), "Following error occurred while inserting data in SQLite DB - " + sqlException.getMessage());
+        } catch (Exception e) {
+            Log.e(MithrilApplication.getDebugTag(), "Some other error occurred while inserting data in SQLite DB - " + e.getMessage());
+        }
+    }
+
+    private void loadAndroidPermissionsIntoDB(SQLiteDatabase db) {
+//		Log.d(MithrilApplication.getDebugTag(), "I came to loadAndroidPermissionsIntoDB");
+        PackageManager packageManager = getContext().getPackageManager();
+
+        List<PermissionGroupInfo> permissionGroupInfoList = packageManager.getAllPermissionGroups(PackageManager.GET_META_DATA);
+//		Log.d(MithrilApplication.getDebugTag(), "Size is: " + Integer.toString(permisisonGroupInfoList.size()));
+        permissionGroupInfoList.add(null);
+
+        for (PermissionGroupInfo permissionGroupInfo : permissionGroupInfoList) {
+            String groupName = permissionGroupInfo == null ? null : permissionGroupInfo.name;
+//            if(groupName == null)
+//                Log.d(MithrilApplication.getDebugTag(), "Result is: null");
+//            else
+//                Log.d(MithrilApplication.getDebugTag(), "Result is: "+groupName);
+            try {
+                for (PermissionInfo permissionInfo : packageManager.queryPermissionsByGroup(groupName, 0)) {
+//                    if (permissionInfo.group == null)
+                    if (groupName == null)
+                        addPermission(db, getPermData(packageManager, permissionInfo));
+                    else
+                        addPermission(db, getPermData(packageManager, groupName, permissionInfo));
+                }
+            } catch (NameNotFoundException exception) {
+                Log.e(MithrilApplication.getDebugTag(), "Some error due to " + exception.getMessage());
+            } catch (PermissionWasUpdateException exception) {
+                Log.e(MithrilApplication.getDebugTag(), "PermissionWasUpdateException: Ignore this? " + exception.getMessage());
+            }
+        }
+    }
+
+    private void loadRealAppDataIntoDB(SQLiteDatabase db) {
+        PackageManager packageManager = getContext().getPackageManager();
+        int flags = PackageManager.GET_META_DATA |
+                PackageManager.GET_SHARED_LIBRARY_FILES |
+                PackageManager.GET_PERMISSIONS;
+
+        for (PackageInfo pack : packageManager.getInstalledPackages(flags)) {
+            if ((pack.applicationInfo.flags) != 1) {
+                try {
+                    AppData tempAppData = new AppData();
+                    if (pack.packageName != null) {
+                        //App description
+                        if (pack.applicationInfo.loadDescription(packageManager) != null)
+                            tempAppData.setAppDescription(pack.applicationInfo.loadDescription(packageManager).toString());
+                        else
+                            tempAppData.setAppDescription(MithrilApplication.getDefaultDescription());
+
+                        //App process name
+                        tempAppData.setAssociatedProcessName(pack.applicationInfo.processName);
+
+                        //App target SDK version
+                        tempAppData.setTargetSdkVersion(pack.applicationInfo.targetSdkVersion);
+
+                        //App icon
+                        if (pack.applicationInfo.loadIcon(packageManager) instanceof BitmapDrawable)
+                            tempAppData.setIcon(((BitmapDrawable) pack.applicationInfo.loadIcon(packageManager)).getBitmap());
+                        else {
+                            tempAppData.setIcon(BitmapFactory.decodeResource(getContext().getResources(), R.drawable.ic_launcher));
+                        }
+
+                        //App name
+                        tempAppData.setAppName(pack.applicationInfo.loadLabel(packageManager).toString());
+
+                        //App package name
+                        tempAppData.setPackageName(pack.packageName);
+
+                        //App version info
+                        tempAppData.setVersionInfo(pack.versionName);
+
+                        //App installed or not
+                        tempAppData.setInstalled(true);
+
+                        //App type
+                        if ((pack.applicationInfo.flags & ApplicationInfo.FLAG_SYSTEM) == 1)
+                            tempAppData.setAppType(MithrilApplication.getPrefKeySystemAppsDisplay());
+                        else
+                            tempAppData.setAppType(MithrilApplication.getPrefKeyUserAppsDisplay());
+
+                        //App uid
+                        tempAppData.setUid(pack.applicationInfo.uid);
+
+                        //App permissions
+                        if (pack.requestedPermissions != null) {
+                            Map<String, Boolean> requestedPermissionsMap = new HashMap<>();
+                            for (String packagePermission : pack.requestedPermissions) {
+                                requestedPermissionsMap.put(packagePermission, false);
+                                /*
+                                 * The following fix is no longer required. There was a flaw in insert permission we should have used insertOrThrow
+                                 * - PKD, Dec 27, 2016. Carrie Fisher AKA Princess Leia Organa (Skywalker) passed away today at 0855 PST. The world will miss her. :(
+                                 * ---------------------------------------------------------------------------------------------------------------------------------------------
+                                 * The following shell script may be used to extract exact permission data.
+                                 * However, that will require root access and adb shell code execution.
+                                 * Perhaps we should avoid that for now.
+                                 * ---------------------------------------------------------------------------------------------------------------------------------------------
+                                 findRequestedLineStart=`adb shell dumpsys package com.google.android.youtube | grep -n "requested permissions:" | cut -f1 -d ':'`
+                                 findRequestedLineEnd=`adb shell dumpsys package com.google.android.youtube | grep -n "install permissions:" | cut -f1 -d ':'`
+                                 findInstallLineStart=`adb shell dumpsys package com.google.android.youtube | grep -n "install permissions:" | cut -f1 -d ':'`
+                                 findInstallLineEnd=`adb shell dumpsys package com.google.android.youtube | grep -n "installed=true" | cut -f1 -d ':'`
+
+                                 numLinesRequestedPermission=$((findRequestedLineEnd-findRequestedLineStart-1))
+                                 adb shell dumpsys package com.google.android.youtube | grep -A $numLinesRequestedPermission "requested permissions:" | tr -d ' '
+
+                                 numLinesInstalledPermission=$((findInstallLineEnd-findInstallLineStart-1))
+                                 adb shell dumpsys package com.google.android.youtube | grep -A $numLinesInstalledPermission "install permissions:" | cut -f1 -d"=" | tr -d ' '
+                                 * ---------------------------------------------------------------------------------------------------------------------------------------------
+                                 */
+                                tempAppData.setPermissions(requestedPermissionsMap);
+                            }
+                        }
+                    }
+                    //Insert an app into database
+                    long appId = addApp(db, tempAppData);
+
+                    //Insert permissions for an app into AppPerm
+                    addAppPerm(db, tempAppData, appId);
+
+//                    long insertedRowId = addApp(db, tempAppData);
+//                    Log.d(MithrilApplication.getDebugTag(), "Inserted record id is: "+Long.toString(insertedRowId));
+//				} catch (ClassCastException e){
+//					Log.d(MithrilApplication.getDebugTag(), e.getMessage());
+                } catch (Exception e) {
+                    Log.d(MithrilApplication.getDebugTag(), e.getMessage());
+                }
+            }
+        }
+    }
+
+    private void loadPoliciesForApps(SQLiteDatabase db) {
+    }
+
+    private PermData getPermData(PackageManager packageManager, String groupName, PermissionInfo permissionInfo) {
+        PermData tempPermData = new PermData();
+
+        tempPermData.setPermissionName(permissionInfo.name);
+        //Setting the protection level
+        switch (permissionInfo.protectionLevel) {
+            case PermissionInfo.PROTECTION_NORMAL:
+                tempPermData.setPermissionProtectionLevel(MithrilApplication.getPermissionProtectionLevelNormal());
+                break;
+            case PermissionInfo.PROTECTION_DANGEROUS:
+                tempPermData.setPermissionProtectionLevel(MithrilApplication.getPermissionProtectionLevelDangerous());
+                break;
+            case PermissionInfo.PROTECTION_SIGNATURE:
+                tempPermData.setPermissionProtectionLevel(MithrilApplication.getPermissionProtectionLevelSignature());
+                break;
+            case PermissionInfo.PROTECTION_FLAG_PRIVILEGED:
+                tempPermData.setPermissionProtectionLevel(MithrilApplication.getPermissionProtectionLevelPrivileged());
+                break;
+            default:
+                tempPermData.setPermissionProtectionLevel(MithrilApplication.getPermissionProtectionLevelUnknown());
+                break;
+        }
+
+        tempPermData.setPermissionGroup(groupName);
+        String[] words = permissionInfo.group.split(Pattern.quote("."));
+        //In a group, the last word is most important for group identification, so use that I guess.
+        //The resourse signifies the possible purpose of the permission which is generally found in the last word.
+        //TODO hanging logic! The code for inserting resource isn't done yet. This has to work in tandem with that! Do that ASAP...
+        tempPermData.setResource(new Resource(words[words.length - 1]));
+
+        //Setting the protection level
+        switch (permissionInfo.flags) {
+            case PermissionInfo.FLAG_COSTS_MONEY:
+                tempPermData.setPermissionFlag(MithrilApplication.getPermissionFlagCostsMoney());
+                break;
+            case PermissionInfo.FLAG_INSTALLED:
+                tempPermData.setPermissionFlag(MithrilApplication.getPermissionFlagInstalled());
+                break;
+            default:
+                tempPermData.setPermissionFlag(MithrilApplication.getPermissionFlagNone());
+                break;
+        }
+        //Permission description can be null. We are preventing a null pointer exception here.
+        tempPermData.setPermissionDescription(permissionInfo.loadDescription(packageManager)
+                == null
+                ? context.getResources().getString(R.string.no_description_available_txt)
+                : permissionInfo.loadDescription(packageManager).toString());
+
+        tempPermData.setPermissionIcon(getPermissionIconBitmap(permissionInfo));
+        tempPermData.setPermissionLabel(permissionInfo.loadLabel(packageManager).toString());
+//        Log.d(MithrilApplication.getDebugTag(), "Label: "+permissionInfo.loadLabel(packageManager).toString()+", end label");
+
+        return tempPermData;
+    }
+
+    private PermData getPermData(PackageManager packageManager, PermissionInfo permissionInfo) {
+        PermData tempPermData = new PermData();
+
+        tempPermData.setPermissionName(permissionInfo.name);
+        //Setting the protection level
+        switch (permissionInfo.protectionLevel) {
+            case PermissionInfo.PROTECTION_NORMAL:
+                tempPermData.setPermissionProtectionLevel(MithrilApplication.getPermissionProtectionLevelNormal());
+                break;
+            case PermissionInfo.PROTECTION_DANGEROUS:
+                tempPermData.setPermissionProtectionLevel(MithrilApplication.getPermissionProtectionLevelDangerous());
+                break;
+            case PermissionInfo.PROTECTION_SIGNATURE:
+                tempPermData.setPermissionProtectionLevel(MithrilApplication.getPermissionProtectionLevelSignature());
+                break;
+            case PermissionInfo.PROTECTION_FLAG_PRIVILEGED:
+                tempPermData.setPermissionProtectionLevel(MithrilApplication.getPermissionProtectionLevelPrivileged());
+                break;
+            default:
+                tempPermData.setPermissionProtectionLevel(MithrilApplication.getPermissionProtectionLevelUnknown());
+                break;
+        }
+
+        tempPermData.setPermissionGroup(MithrilApplication.getPermissionNoGroup());
+
+        //Setting the protection level
+        switch (permissionInfo.flags) {
+            case PermissionInfo.FLAG_COSTS_MONEY:
+                tempPermData.setPermissionFlag(MithrilApplication.getPermissionFlagCostsMoney());
+                break;
+            case PermissionInfo.FLAG_INSTALLED:
+                tempPermData.setPermissionFlag(MithrilApplication.getPermissionFlagInstalled());
+                break;
+            default:
+                tempPermData.setPermissionFlag(MithrilApplication.getPermissionFlagNone());
+                break;
+        }
+        //Permission description can be null. We are preventing a null pointer exception here.
+        tempPermData.setPermissionDescription(permissionInfo.loadDescription(packageManager)
+                == null
+                ? context.getResources().getString(R.string.no_description_available_txt)
+                : permissionInfo.loadDescription(packageManager).toString());
+
+        tempPermData.setPermissionIcon(getPermissionIconBitmap(permissionInfo));
+        tempPermData.setPermissionLabel(permissionInfo.loadLabel(packageManager).toString());
+//        Log.d(MithrilApplication.getDebugTag(), "Label: "+permissionInfo.loadLabel(packageManager).toString()+", end label");
+
+        return tempPermData;
+    }
+
+    private Bitmap getPermissionIconBitmap(PermissionInfo permissionInfo) {
+        PackageManager packageManager = getContext().getPackageManager();
+
+        Drawable drawable = permissionInfo.loadIcon(packageManager);
+        Bitmap bitmap;
+        try {
+
+            bitmap = Bitmap.createBitmap(drawable.getIntrinsicWidth(), drawable.getIntrinsicHeight(), Bitmap.Config.ARGB_8888);
+
+            Canvas canvas = new Canvas(bitmap);
+            drawable.setBounds(0, 0, canvas.getWidth(), canvas.getHeight());
+            drawable.draw(canvas);
+        } catch (OutOfMemoryError e) {
+            // Handle the error
+            return null;
+        }
+        return bitmap;
+    }
+
+    private Bitmap getPermissionIconBitmap() {
+        PackageManager packageManager = getContext().getPackageManager();
+
+        Drawable drawable = context.getResources().getDrawable(R.drawable.clipboard_alert, context.getTheme());
+        Bitmap bitmap;
+        try {
+
+            bitmap = Bitmap.createBitmap(drawable.getIntrinsicWidth(), drawable.getIntrinsicHeight(), Bitmap.Config.ARGB_8888);
+
+            Canvas canvas = new Canvas(bitmap);
+            drawable.setBounds(0, 0, canvas.getWidth(), canvas.getHeight());
+            drawable.draw(canvas);
+        } catch (OutOfMemoryError e) {
+            // Handle the error
+            return null;
+        }
+        return bitmap;
     }
 
     /**
@@ -954,8 +1231,8 @@ public class MithrilDBHelper extends SQLiteOpenHelper {
         } finally {
             cursor.close();
         }
-//		if (permId == -1)
-//			Log.d(MithrilApplication.getDebugTag(), permissionName);
+//      if (permId == -1)
+//          Log.d(MithrilApplication.getDebugTag(), permissionName);
         return permId;
     }
 
@@ -1405,17 +1682,17 @@ public class MithrilDBHelper extends SQLiteOpenHelper {
      */
     public int updatePolicyRuleContextId(SQLiteDatabase db, PolicyRule aPolicyRule) {
         ContentValues values = new ContentValues();
-//		values.put(POLRULID, aPolicyRule.getId());
-//		values.put(POLRULNAME, aPolicyRule.getName());
-//		values.put(POLRULREQID, aPolicyRule.getRequester().getId());
-//		values.put(POLRULRESID, aPolicyRule.getResource().getId());
+//      values.put(POLRULID, aPolicyRule.getId());
+//      values.put(POLRULNAME, aPolicyRule.getName());
+//      values.put(POLRULREQID, aPolicyRule.getRequester().getId());
+//      values.put(POLRULRESID, aPolicyRule.getResource().getId());
         values.put(POLRULLOCAT, aPolicyRule.getSemanticUserContext().getSemanticLocation().getInferredLocation());
         values.put(POLRULTEMPO, aPolicyRule.getSemanticUserContext().getSemanticTime().getInferredTime());
         values.put(POLRULACTIV, aPolicyRule.getSemanticUserContext().getSemanticActivity().getInferredActivity());
         values.put(POLRULIDENT, aPolicyRule.getSemanticUserContext().getSemanticIdentity().getIdentity());
         values.put(POLRULNEARA, aPolicyRule.getSemanticUserContext().getSemanticNearActors().toString());
 
-//		values.put(POLRULACTID, aPolicyRule.getAction().getId());
+//      values.put(POLRULACTID, aPolicyRule.getAction().getId());
         try {
             return db.update(getPolicyRulesTableName(), values, POLRULID + " = ?",
                     new String[]{String.valueOf(aPolicyRule.getId())});
@@ -1511,282 +1788,7 @@ public class MithrilDBHelper extends SQLiteOpenHelper {
             throw new SQLException("Could not find " + e);
         }
     }
-
-    /**
-     * -----------------------------------------------------------------------------------------------------------------------------------------------------------------
-     * End of CRUD methods
-     */
-
-    private void loadRealAppDataIntoDB(SQLiteDatabase db) {
-        PackageManager packageManager = getContext().getPackageManager();
-        int flags = PackageManager.GET_META_DATA |
-                PackageManager.GET_SHARED_LIBRARY_FILES |
-                PackageManager.GET_PERMISSIONS;
-
-        for (PackageInfo pack : packageManager.getInstalledPackages(flags)) {
-            if ((pack.applicationInfo.flags) != 1) {
-                try {
-                    AppData tempAppData = new AppData();
-                    if (pack.packageName != null) {
-                        //App description
-                        if (pack.applicationInfo.loadDescription(packageManager) != null)
-                            tempAppData.setAppDescription(pack.applicationInfo.loadDescription(packageManager).toString());
-                        else
-                            tempAppData.setAppDescription(MithrilApplication.getDefaultDescription());
-
-                        //App process name
-                        tempAppData.setAssociatedProcessName(pack.applicationInfo.processName);
-
-                        //App target SDK version
-                        tempAppData.setTargetSdkVersion(pack.applicationInfo.targetSdkVersion);
-
-                        //App icon
-                        if (pack.applicationInfo.loadIcon(packageManager) instanceof BitmapDrawable)
-                            tempAppData.setIcon(((BitmapDrawable) pack.applicationInfo.loadIcon(packageManager)).getBitmap());
-                        else {
-                            tempAppData.setIcon(BitmapFactory.decodeResource(getContext().getResources(), R.drawable.ic_launcher));
-                        }
-
-                        //App name
-                        tempAppData.setAppName(pack.applicationInfo.loadLabel(packageManager).toString());
-
-                        //App package name
-                        tempAppData.setPackageName(pack.packageName);
-
-                        //App version info
-                        tempAppData.setVersionInfo(pack.versionName);
-
-                        //App installed or not
-                        tempAppData.setInstalled(true);
-
-                        //App type
-                        if ((pack.applicationInfo.flags & ApplicationInfo.FLAG_SYSTEM) == 1)
-                            tempAppData.setAppType(MithrilApplication.getPrefKeySystemAppsDisplay());
-                        else
-                            tempAppData.setAppType(MithrilApplication.getPrefKeyUserAppsDisplay());
-
-                        //App uid
-                        tempAppData.setUid(pack.applicationInfo.uid);
-
-                        //App permissions
-                        if (pack.requestedPermissions != null) {
-                            Map<String, Boolean> requestedPermissionsMap = new HashMap<>();
-                            for (String packagePermission : pack.requestedPermissions) {
-                                requestedPermissionsMap.put(packagePermission, false);
-                                /*
-                                 * The following fix is no longer required. There was a flaw in insert permission we should have used insertOrThrow
-                                 * - PKD, Dec 27, 2016. Carrie Fisher AKA Princess Leia Organa (Skywalker) passed away today at 0855 PST. The world will miss her. :(
-                                 * ---------------------------------------------------------------------------------------------------------------------------------------------
-                                 * The following shell script may be used to extract exact permission data.
-                                 * However, that will require root access and adb shell code execution.
-                                 * Perhaps we should avoid that for now.
-                                 * ---------------------------------------------------------------------------------------------------------------------------------------------
-                                 findRequestedLineStart=`adb shell dumpsys package com.google.android.youtube | grep -n "requested permissions:" | cut -f1 -d ':'`
-                                 findRequestedLineEnd=`adb shell dumpsys package com.google.android.youtube | grep -n "install permissions:" | cut -f1 -d ':'`
-                                 findInstallLineStart=`adb shell dumpsys package com.google.android.youtube | grep -n "install permissions:" | cut -f1 -d ':'`
-                                 findInstallLineEnd=`adb shell dumpsys package com.google.android.youtube | grep -n "installed=true" | cut -f1 -d ':'`
-
-                                 numLinesRequestedPermission=$((findRequestedLineEnd-findRequestedLineStart-1))
-                                 adb shell dumpsys package com.google.android.youtube | grep -A $numLinesRequestedPermission "requested permissions:" | tr -d ' '
-
-                                 numLinesInstalledPermission=$((findInstallLineEnd-findInstallLineStart-1))
-                                 adb shell dumpsys package com.google.android.youtube | grep -A $numLinesInstalledPermission "install permissions:" | cut -f1 -d"=" | tr -d ' '
-                                 * ---------------------------------------------------------------------------------------------------------------------------------------------
-                                 */
-                                tempAppData.setPermissions(requestedPermissionsMap);
-                            }
-                        }
-                    }
-                    //Insert an app into database
-                    long appId = addApp(db, tempAppData);
-
-                    //Insert permissions for an app into AppPerm
-                    addAppPerm(db, tempAppData, appId);
-
-//                    long insertedRowId = addApp(db, tempAppData);
-//                    Log.d(MithrilApplication.getDebugTag(), "Inserted record id is: "+Long.toString(insertedRowId));
-//				} catch (ClassCastException e){
-//					Log.d(MithrilApplication.getDebugTag(), e.getMessage());
-                } catch (Exception e) {
-                    Log.d(MithrilApplication.getDebugTag(), e.getMessage());
-                }
-            }
-        }
-    }
-
-    private void loadAndroidPermissionsIntoDB(SQLiteDatabase db) {
-//		Log.d(MithrilApplication.getDebugTag(), "I came to loadAndroidPermissionsIntoDB");
-        PackageManager packageManager = getContext().getPackageManager();
-
-        List<PermissionGroupInfo> permissionGroupInfoList = packageManager.getAllPermissionGroups(PackageManager.GET_META_DATA);
-//		Log.d(MithrilApplication.getDebugTag(), "Size is: " + Integer.toString(permisisonGroupInfoList.size()));
-        permissionGroupInfoList.add(null);
-
-        for (PermissionGroupInfo permissionGroupInfo : permissionGroupInfoList) {
-            String groupName = permissionGroupInfo == null ? null : permissionGroupInfo.name;
-//            if(groupName == null)
-//                Log.d(MithrilApplication.getDebugTag(), "Result is: null");
-//            else
-//                Log.d(MithrilApplication.getDebugTag(), "Result is: "+groupName);
-            try {
-                for (PermissionInfo permissionInfo : packageManager.queryPermissionsByGroup(groupName, 0)) {
-//                    if (permissionInfo.group == null)
-                    if (groupName == null)
-                        addPermission(db, getPermData(packageManager, permissionInfo));
-                    else
-                        addPermission(db, getPermData(packageManager, groupName, permissionInfo));
-                }
-            } catch (NameNotFoundException exception) {
-                Log.e(MithrilApplication.getDebugTag(), "Some error due to " + exception.getMessage());
-            } catch (PermissionWasUpdateException exception) {
-                Log.e(MithrilApplication.getDebugTag(), "PermissionWasUpdateException: Ignore this? " + exception.getMessage());
-            }
-        }
-    }
-
-    private PermData getPermData(PackageManager packageManager, String groupName, PermissionInfo permissionInfo) {
-        PermData tempPermData = new PermData();
-
-        tempPermData.setPermissionName(permissionInfo.name);
-        //Setting the protection level
-        switch (permissionInfo.protectionLevel) {
-            case PermissionInfo.PROTECTION_NORMAL:
-                tempPermData.setPermissionProtectionLevel(MithrilApplication.getPermissionProtectionLevelNormal());
-                break;
-            case PermissionInfo.PROTECTION_DANGEROUS:
-                tempPermData.setPermissionProtectionLevel(MithrilApplication.getPermissionProtectionLevelDangerous());
-                break;
-            case PermissionInfo.PROTECTION_SIGNATURE:
-                tempPermData.setPermissionProtectionLevel(MithrilApplication.getPermissionProtectionLevelSignature());
-                break;
-            case PermissionInfo.PROTECTION_FLAG_PRIVILEGED:
-                tempPermData.setPermissionProtectionLevel(MithrilApplication.getPermissionProtectionLevelPrivileged());
-                break;
-            default:
-                tempPermData.setPermissionProtectionLevel(MithrilApplication.getPermissionProtectionLevelUnknown());
-                break;
-        }
-
-        tempPermData.setPermissionGroup(groupName);
-        String[] words = permissionInfo.group.split(Pattern.quote("."));
-        //In a group, the last word is most important for group identification, so use that I guess.
-        //The resourse signifies the possible purpose of the permission which is generally found in the last word.
-        //TODO hanging logic! The code for inserting resource isn't done yet. This has to work in tandem with that! Do that ASAP...
-        tempPermData.setResource(new Resource(words[words.length - 1]));
-
-        //Setting the protection level
-        switch (permissionInfo.flags) {
-            case PermissionInfo.FLAG_COSTS_MONEY:
-                tempPermData.setPermissionFlag(MithrilApplication.getPermissionFlagCostsMoney());
-                break;
-            case PermissionInfo.FLAG_INSTALLED:
-                tempPermData.setPermissionFlag(MithrilApplication.getPermissionFlagInstalled());
-                break;
-            default:
-                tempPermData.setPermissionFlag(MithrilApplication.getPermissionFlagNone());
-                break;
-        }
-        //Permission description can be null. We are preventing a null pointer exception here.
-        tempPermData.setPermissionDescription(permissionInfo.loadDescription(packageManager)
-                == null
-                ? context.getResources().getString(R.string.no_description_available_txt)
-                : permissionInfo.loadDescription(packageManager).toString());
-
-        tempPermData.setPermissionIcon(getPermissionIconBitmap(permissionInfo));
-        tempPermData.setPermissionLabel(permissionInfo.loadLabel(packageManager).toString());
-//        Log.d(MithrilApplication.getDebugTag(), "Label: "+permissionInfo.loadLabel(packageManager).toString()+", end label");
-
-        return tempPermData;
-    }
-
-    private PermData getPermData(PackageManager packageManager, PermissionInfo permissionInfo) {
-        PermData tempPermData = new PermData();
-
-        tempPermData.setPermissionName(permissionInfo.name);
-        //Setting the protection level
-        switch (permissionInfo.protectionLevel) {
-            case PermissionInfo.PROTECTION_NORMAL:
-                tempPermData.setPermissionProtectionLevel(MithrilApplication.getPermissionProtectionLevelNormal());
-                break;
-            case PermissionInfo.PROTECTION_DANGEROUS:
-                tempPermData.setPermissionProtectionLevel(MithrilApplication.getPermissionProtectionLevelDangerous());
-                break;
-            case PermissionInfo.PROTECTION_SIGNATURE:
-                tempPermData.setPermissionProtectionLevel(MithrilApplication.getPermissionProtectionLevelSignature());
-                break;
-            case PermissionInfo.PROTECTION_FLAG_PRIVILEGED:
-                tempPermData.setPermissionProtectionLevel(MithrilApplication.getPermissionProtectionLevelPrivileged());
-                break;
-            default:
-                tempPermData.setPermissionProtectionLevel(MithrilApplication.getPermissionProtectionLevelUnknown());
-                break;
-        }
-
-        tempPermData.setPermissionGroup(MithrilApplication.getPermissionNoGroup());
-
-        //Setting the protection level
-        switch (permissionInfo.flags) {
-            case PermissionInfo.FLAG_COSTS_MONEY:
-                tempPermData.setPermissionFlag(MithrilApplication.getPermissionFlagCostsMoney());
-                break;
-            case PermissionInfo.FLAG_INSTALLED:
-                tempPermData.setPermissionFlag(MithrilApplication.getPermissionFlagInstalled());
-                break;
-            default:
-                tempPermData.setPermissionFlag(MithrilApplication.getPermissionFlagNone());
-                break;
-        }
-        //Permission description can be null. We are preventing a null pointer exception here.
-        tempPermData.setPermissionDescription(permissionInfo.loadDescription(packageManager)
-                == null
-                ? context.getResources().getString(R.string.no_description_available_txt)
-                : permissionInfo.loadDescription(packageManager).toString());
-
-        tempPermData.setPermissionIcon(getPermissionIconBitmap(permissionInfo));
-        tempPermData.setPermissionLabel(permissionInfo.loadLabel(packageManager).toString());
-//        Log.d(MithrilApplication.getDebugTag(), "Label: "+permissionInfo.loadLabel(packageManager).toString()+", end label");
-
-        return tempPermData;
-    }
-
-    private Bitmap getPermissionIconBitmap(PermissionInfo permissionInfo) {
-        PackageManager packageManager = getContext().getPackageManager();
-
-        Drawable drawable = permissionInfo.loadIcon(packageManager);
-        Bitmap bitmap;
-        try {
-
-            bitmap = Bitmap.createBitmap(drawable.getIntrinsicWidth(), drawable.getIntrinsicHeight(), Bitmap.Config.ARGB_8888);
-
-            Canvas canvas = new Canvas(bitmap);
-            drawable.setBounds(0, 0, canvas.getWidth(), canvas.getHeight());
-            drawable.draw(canvas);
-        } catch (OutOfMemoryError e) {
-            // Handle the error
-            return null;
-        }
-        return bitmap;
-    }
-
-    private Bitmap getPermissionIconBitmap() {
-        PackageManager packageManager = getContext().getPackageManager();
-
-        Drawable drawable = context.getResources().getDrawable(R.drawable.clipboard_alert, context.getTheme());
-        Bitmap bitmap;
-        try {
-
-            bitmap = Bitmap.createBitmap(drawable.getIntrinsicWidth(), drawable.getIntrinsicHeight(), Bitmap.Config.ARGB_8888);
-
-            Canvas canvas = new Canvas(bitmap);
-            drawable.setBounds(0, 0, canvas.getWidth(), canvas.getHeight());
-            drawable.draw(canvas);
-        } catch (OutOfMemoryError e) {
-            // Handle the error
-            return null;
-        }
-        return bitmap;
-    }
-
-    private void loadPoliciesForApps(SQLiteDatabase db) {
-    }
+    //-----------------------------------------------------------------------------------------------------------------------------------------------------------------
+    // End of CRUD methods
+    //
 }
