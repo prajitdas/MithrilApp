@@ -1,5 +1,5 @@
 -- Created by Vertabelo (http://vertabelo.com)
--- Last modification date: 2017-04-05 23:16:57.196
+-- Last modification date: 2017-04-06 22:23:13.036
 
 -- tables
 -- Table: actionlog
@@ -8,7 +8,7 @@ CREATE TABLE actionlog (
     time timestamp NOT NULL ON UPDATE CURRENT_TIMESTAMP,
     action int NOT NULL,
     apps_id int NOT NULL,
-    permissions_id int NOT NULL,
+    context_id int NOT NULL,
     CONSTRAINT actionlog_pk PRIMARY KEY (id)
 ) COMMENT 'Table showing actions taken for each context, resource, requester tuple';
 
@@ -17,6 +17,7 @@ CREATE TABLE appperm (
     id int NOT NULL AUTO_INCREMENT,
     apps_id int NOT NULL,
     permissions_id int NOT NULL,
+    granted int NOT NULL,
     CONSTRAINT appperm_pk PRIMARY KEY (id,apps_id,permissions_id)
 ) COMMENT 'Table showing apps and permissions';
 
@@ -87,7 +88,7 @@ CREATE TABLE violationlog (
     marker bool NULL,
     time timestamp NOT NULL ON UPDATE CURRENT_TIMESTAMP,
     apps_id int NOT NULL,
-    permissions_id int NOT NULL,
+    context_id int NOT NULL,
     CONSTRAINT violationlog_pk PRIMARY KEY (id)
 ) COMMENT 'Table showing violations recorded by MithrilAC and subsequent user feedback';
 
@@ -114,9 +115,9 @@ ap.permissions_id = p.id;
 ALTER TABLE actionlog ADD CONSTRAINT actionlog_apps FOREIGN KEY actionlog_apps (apps_id)
     REFERENCES apps (id);
 
--- Reference: actionlog_permissions (table: actionlog)
-ALTER TABLE actionlog ADD CONSTRAINT actionlog_permissions FOREIGN KEY actionlog_permissions (permissions_id)
-    REFERENCES permissions (id);
+-- Reference: actionlog_context (table: actionlog)
+ALTER TABLE actionlog ADD CONSTRAINT actionlog_context FOREIGN KEY actionlog_context (context_id)
+    REFERENCES context (id);
 
 -- Reference: appperm_apps (table: appperm)
 ALTER TABLE appperm ADD CONSTRAINT appperm_apps FOREIGN KEY appperm_apps (apps_id)
@@ -143,9 +144,9 @@ ALTER TABLE policyrules ADD CONSTRAINT policyrules_context FOREIGN KEY policyrul
 ALTER TABLE violationlog ADD CONSTRAINT violationlog_apps FOREIGN KEY violationlog_apps (apps_id)
     REFERENCES apps (id);
 
--- Reference: violationlog_permissions (table: violationlog)
-ALTER TABLE violationlog ADD CONSTRAINT violationlog_permissions FOREIGN KEY violationlog_permissions (permissions_id)
-    REFERENCES permissions (id);
+-- Reference: violationlog_context (table: violationlog)
+ALTER TABLE violationlog ADD CONSTRAINT violationlog_context FOREIGN KEY violationlog_context (context_id)
+    REFERENCES context (id);
 
 -- End of file.
 

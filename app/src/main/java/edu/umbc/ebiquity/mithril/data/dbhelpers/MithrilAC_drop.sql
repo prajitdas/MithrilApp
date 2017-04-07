@@ -1,5 +1,5 @@
 -- Created by Vertabelo (http://vertabelo.com)
--- Last modification date: 2017-04-05 23:16:57.196
+-- Last modification date: 2017-04-06 22:23:13.036
 
 -- views
 DROP VIEW apppermview;
@@ -9,7 +9,7 @@ ALTER TABLE actionlog
     DROP FOREIGN KEY actionlog_apps;
 
 ALTER TABLE actionlog
-    DROP FOREIGN KEY actionlog_permissions;
+    DROP FOREIGN KEY actionlog_context;
 
 ALTER TABLE appperm
     DROP FOREIGN KEY appperm_apps;
@@ -30,7 +30,7 @@ ALTER TABLE violationlog
     DROP FOREIGN KEY violationlog_apps;
 
 ALTER TABLE violationlog
-    DROP FOREIGN KEY violationlog_permissions;
+    DROP FOREIGN KEY violationlog_context;
 
 -- tables
 DROP TABLE actionlog;

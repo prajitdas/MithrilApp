@@ -120,7 +120,7 @@ public class AppInstallBroadcastReceiver extends BroadcastReceiver {
                         }
                     }
                     //Insert app into database
-                    long appId = mithrilDBHelper.addAppData(mithrilDB, tempAppData);
+                    long appId = mithrilDBHelper.addApp(mithrilDB, tempAppData);
 
                     //Insert permissions for app into AppPerm
                     mithrilDBHelper.addAppPerm(mithrilDB, tempAppData, appId);

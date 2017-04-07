@@ -57,73 +57,36 @@ public class MithrilDBHelper extends SQLiteOpenHelper {
     /**
      * Following are table names in our database
      */
-    private final static String REQUESTERS_TABLE_NAME = "requesters";
-    private final static String RESOURCES_TABLE_NAME = "resources";
     private final static String APPS_TABLE_NAME = "apps";
     private final static String PERMISSIONS_TABLE_NAME = "permissions";
     private final static String APP_PERM_TABLE_NAME = "appperm";
     private final static String POLICY_RULES_TABLE_NAME = "policyrules";
-    private final static String CONTEXT_TABLE_NAME = "contextlog";
-    private final static String ACTION_TABLE_NAME = "actionlog";
-    private final static String VIOLATIONS_TABLE_NAME = "violationlog";
+    private final static String CONTEXT_TABLE_NAME = "context";
+    private final static String CONTEXT_LOG_TABLE_NAME = "contextlog";
+    private final static String ACTION_LOG_TABLE_NAME = "actionlog";
+    private final static String VIOLATIONS_LOG_TABLE_NAME = "violationlog";
     private final static String APP_PERM_VIEW_NAME = "apppermview";
-
-    /*
+    /**
      * Following are table creation statements
-     */
-
-    /**
-     * -- Table 1: requesters
-     * CREATE TABLE requesters (
-     * id INTEGER PRIMARY KEY AUTOINCREMENT,
-     * name TEXT NOT NULL
-     * ) COMMENT 'Table showing metadata for requesters of user data';
-     */
-    private final static String REQID = "id"; // ID of a request
-    private final static String REQNAME = "name"; // Name from App table from which a request was received
-
-    private final static String CREATE_REQUESTERS_TABLE = "CREATE TABLE " + getRequestersTableName() + " (" +
-            REQID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
-            REQNAME + " TEXT NOT NULL " +
-            ");";
-
-    /**
-     * -- Table 2: resources
-     * CREATE TABLE resources (
-     * id INTEGER PRIMARY KEY AUTOINCREMENT,
-     * name TEXT NOT NULL
-     * ) COMMENT 'Table showing metadata for resource being requested';
-     */
-    private final static String RESID = "id"; // ID of a resource on the device
-    // Fields for the database tables
-    private final static String RESNAME = "name"; // Meaningful name of the resource on the device
-
-    private final static String CREATE_RESOURCES_TABLE = "CREATE TABLE " + getResourcesTableName() + " (" +
-            RESID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
-            RESNAME + " TEXT NOT NULL " +
-            ");";
-
-    /**
-     * -- Table 3: apps
-     * CREATE TABLE apps (
-     * id INTEGER PRIMARY KEY AUTOINCREMENT,
-     * uid INTEGER NOT NULL,
-     * description TEXT NULL,
-     * assocprocname TEXT NULL,
-     * targetsdkver INTEGER NOT NULL,
-     * icon blob NOT NULL,
-     * label TEXT NOT NULL,
-     * name TEXT NOT NULL,
-     * verinfo TEXT NOT NULL,
-     * installed bool NOT NULL DEFAULT true,
-     * type INTEGER NOT NULL,
-     * installdate timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
-     * requesters_id INTEGER NOT NULL,
-     * CONSTRAINT apps_unique_key UNIQUE(name)
-     * ) COMMENT 'Table showing metadata for apps';
+     * -- Table 1: apps
+     CREATE TABLE apps (
+     id int NOT NULL AUTO_INCREMENT,
+     uid int NOT NULL,
+     description text NULL,
+     assocprocname text NULL,
+     targetsdkver int NOT NULL,
+     icon blob,
+     label text NOT NULL,
+     name text NOT NULL,
+     verinfo text NOT NULL,
+     installed bool NOT NULL DEFAULT true,
+     type int NOT NULL,
+     installdate timestamp NOT NULL ON UPDATE CURRENT_TIMESTAMP,
+     UNIQUE INDEX apps_unique_key (name),
+     CONSTRAINT apps_pk PRIMARY KEY (id)
+     ) COMMENT 'Table showing metadata for apps';
      */
     private final static String APPID = "id"; // ID of an installed app
-    // Below columns store information colelcted on the phone about app
     private final static String APPUID = "uid";
     private final static String APPDESCRIPTION = "description";
     private final static String APPASSOCIATEDPROCNAME = "assocprocname";
@@ -135,8 +98,6 @@ public class MithrilDBHelper extends SQLiteOpenHelper {
     private final static String APPINSTALLED = "installed"; // boolean value that represents whether an app is installed or not
     private final static String APPTYPE = "type";
     private final static String APPINSTALLTIME = "installdate";
-    private final static String APPREQID = "requesters_id";
-
     private final static String CREATE_APPS_TABLE = " CREATE TABLE " + getAppsTableName() + " (" +
             APPID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
             APPUID + " INTEGER NOT NULL, " +
@@ -150,39 +111,31 @@ public class MithrilDBHelper extends SQLiteOpenHelper {
             APPINSTALLED + " BOOL NOT NULL DEFAULT 1, " +
             APPTYPE + " TEXT NOT NULL," +
             APPINSTALLTIME + " timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP," +
-            APPREQID + " INTEGER NOT NULL DEFAULT 0," +
-            "FOREIGN KEY(" + APPREQID + ") REFERENCES " + getRequestersTableName() + "(" + REQID + "), " +
             "CONSTRAINT apps_unique_key UNIQUE(" + APPPACKAGENAME + ") " +
             ");";
-
     /**
-     * -- Table 4: permissions
-     * CREATE TABLE permissions (
-     * id INTEGER PRIMARY KEY AUTOINCREMENT,
-     * name TEXT NOT NULL,
-     * label TEXT NULL,
-     * protectionlvl TEXT NOT NULL,
-     * permgrp TEXT NULL,
-     * flag TEXT NULL,
-     * description TEXT NULL,
-     * icon blob NOT NULL,
-     * resources_id INTEGER NOT NULL,
-     * CONSTRAINT permissions_unique_name UNIQUE(name)
-     * ) COMMENT 'Table showing metadata for permissions';
+     * -- Table 2: permissions
+     CREATE TABLE permissions (
+     id int NOT NULL AUTO_INCREMENT,
+     name text NOT NULL,
+     label text NOT NULL,
+     protectionlvl text NOT NULL,
+     permgrp text NULL,
+     flag text NULL,
+     description text NULL,
+     icon blob,
+     UNIQUE INDEX permissions_unique_name (name),
+     CONSTRAINT permissions_pk PRIMARY KEY (id)
+     ) COMMENT 'Table showing metadata for permissions';
      */
     private final static String PERMID = "id"; // ID of a known permission on the device
-    // Once a permission is known, we will get the meta information about them
     private final static String PERMNAME = "name";
     private final static String PERMLABEL = "label";
     private final static String PERMPROTECTIONLEVEL = "protectionlvl";
     private final static String PERMGROUP = "permgrp";
-    private final static String PERMFLAG = "flags";
+    private final static String PERMFLAG = "flag";
     private final static String PERMDESC = "description";
     private final static String PERMICON = "icon";
-    private final static String PERMRESNAME = "resources_id";
-    private final static String PERMURI = "uri";
-    private final static String PERMAPILVL = "apilvl";
-
     private final static String CREATE_PERMISSIONS_TABLE = "CREATE TABLE " + getPermissionsTableName() + " (" +
             PERMID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
             PERMNAME + " TEXT NOT NULL, " +
@@ -192,88 +145,49 @@ public class MithrilDBHelper extends SQLiteOpenHelper {
             PERMFLAG + " TEXT NULL, " +
             PERMDESC + " TEXT NULL, " +
             PERMICON + " BLOB, " +
-            PERMRESNAME + " INTEGER NOT NULL DEFAULT 0, " +
-            PERMURI + " TEXT NULL, " +
-            PERMAPILVL + " INTEGER NULL, " +
-            "FOREIGN KEY(resources_id) REFERENCES resources(id), " +
             "CONSTRAINT permissions_unique_name UNIQUE(" + PERMNAME + ") " +
             ");";
-
     /**
-     * -- Table 5: appperm
-     * CREATE TABLE appperm (
-     * apps_id INTEGER NOT NULL,
-     * permissions_id INTEGER NOT NULL
-     * ) COMMENT 'Table showing apps and permissions';
+     * -- Table 3: appperm
+     CREATE TABLE appperm (
+     id int NOT NULL AUTO_INCREMENT,
+     apps_id int NOT NULL,
+     permissions_id int NOT NULL,
+     granted int NOT NULL,
+     CONSTRAINT appperm_pk PRIMARY KEY (id,apps_id,permissions_id)
+     ) COMMENT 'Table showing apps and permissions';
+
+     ALTER TABLE appperm ADD CONSTRAINT appperm_apps FOREIGN KEY appperm_apps (apps_id)
+     REFERENCES apps (id) ON DELETE CASCADE;
+
+     ALTER TABLE appperm ADD CONSTRAINT appperm_permissions FOREIGN KEY appperm_permissions (permissions_id)
+     REFERENCES permissions (id);
      * ----------------------------------------------------------------------------------------------------------------
      * This table represents all the apps and their corresponding permissions. We also want to store the association between an app and an api call or a resource access.
      */
-    private final static String APPPERMRESAPPID = "apps_id"; // ID from resource table
-    private final static String APPPERMRESPERID = "permissions_id"; // ID from permission table
-    private final static String APPPERMGRANTED = "granted"; //Is this permission granted to the app?
-
+    private final static String APPPERMRESAPPID = "appsid"; // ID from resource table
+    private final static String APPPERMRESPERID = "permissionsid"; // ID from permission table
+    private final static String APPPERMGRANTED = "granted"; // Is this permission granted to the app?
     private final static String CREATE_APP_PERM_TABLE = "CREATE TABLE " + getAppPermTableName() + " (" +
             APPPERMRESAPPID + " INTEGER NOT NULL, " +
             APPPERMRESPERID + " INTEGER NOT NULL, " +
             APPPERMGRANTED + " INTEGER NOT NULL, " +
             "FOREIGN KEY(" + APPPERMRESAPPID + ") REFERENCES " + getAppsTableName() + "(" + APPID + ") ON DELETE CASCADE, " +
             "FOREIGN KEY(" + APPPERMRESPERID + ") REFERENCES " + getPermissionsTableName() + "(" + PERMID + "), " +
-            "CONSTRAINT appperm_pk PRIMARY KEY (" +
-            APPPERMRESAPPID + "," +
-            APPPERMRESPERID + ")" +
+            "CONSTRAINT appperm_pk PRIMARY KEY (" + APPPERMRESAPPID + "," + APPPERMRESPERID + ")" +
             ");";
-
     /**
-     * -- Table 6: policyrules
-     * CREATE TABLE policyrules (
-     * id INTEGER PRIMARY KEY AUTOINCREMENT,
-     * name TEXT NOT NULL,
-     * action INTEGER NOT NULL,
-     * context_id INTEGER NOT NULL,
-     * requesters_id INTEGER NOT NULL,
-     * resources_id INTEGER NOT NULL
-     * ) COMMENT 'Table showing policy rules defined for apps and requested resources in given context';
-     */
-    private final static String POLRULID = "id"; // ID of policy defined
-    private final static String POLRULNAME = "name"; // Policy short name
-    private final static String POLRULACTIN = "action"; // Action will be denoted as: 0 for to deny, 1 for allow
-    private final static String POLRULLOCAT = "location"; // Context in which the policy is applicable.
-    private final static String POLRULACTIV = "activity"; // Context in which the policy is applicable.
-    private final static String POLRULTEMPO = "temporal"; // Context in which the policy is applicable.
-    private final static String POLRULNEARA = "nearactr"; // Context in which the policy is applicable.
-    private final static String POLRULIDENT = "identity"; // Context in which the policy is applicable.
-    private final static String POLRULREQID = "reqst_id"; // Requester that sent the request
-    private final static String POLRULRESID = "resrc_id"; // Resource that was requested
-    // This will be a general text that will have to be "reasoned" about!
-    // If this says policy is applicable @home then we have to be able to determine that context available represents "home"
-
-    private final static String CREATE_POLICY_RULES_TABLE = "CREATE TABLE " + getPolicyRulesTableName() + " (" +
-            POLRULID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
-            POLRULNAME + " TEXT NOT NULL, " +
-            POLRULACTIN + " TEXT DEFAULT NULL, " +
-            POLRULLOCAT + " TEXT DEFAULT NULL, " +
-            POLRULACTIV + " TEXT DEFAULT NULL, " +
-            POLRULTEMPO + " TEXT DEFAULT NULL, " +
-            POLRULNEARA + " TEXT DEFAULT NULL, " +
-            POLRULIDENT + " TEXT DEFAULT NULL, " +
-            POLRULREQID + " INTEGER NOT NULL, " +
-            POLRULRESID + " INTEGER DEFAULT NULL, " +
-            "FOREIGN KEY(" + POLRULREQID + ") REFERENCES " + getRequestersTableName() + "(" + REQID + ")" +
-            ");";
-
-    /*
-     * -- Table 7: contextlog
-     * CREATE TABLE contextlog (
-     * id INTEGER PRIMARY KEY AUTOINCREMENT,
-     * identity TEXT NOT NULL DEFAULT 'user',
-     * location TEXT NULL,
-     * activity TEXT NULL,
-     * temporal TEXT NULL,
-     * presenceinfo TEXT NULL,
-     * time timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP
-     * ) COMMENT 'Table showing log of current user context';
+     * -- Table 4: context
+     CREATE TABLE context (
+     id int NOT NULL AUTO_INCREMENT,
+     location text NULL,
+     activity text NULL,
+     temporal text NULL,
+     presence_info text NULL DEFAULT user,
+     CONSTRAINT context_pk PRIMARY KEY (id)
+     ) COMMENT 'Table showing context instances';
      * --------------------------------------------------------------------------------------------------------------------------
-     * An entry is made into this table everytime we determine a change in context.
+     * An entry is made into this table every time we determine a change in context.
      * This could be where we could do energy efficient stuff as in we can save battery by determining context from historical data or some other way.
      */
     private final static String CONTEXTID = "id"; // ID of the context instance
@@ -283,7 +197,6 @@ public class MithrilDBHelper extends SQLiteOpenHelper {
     private final static String PRESENCEINFO = "presenceinfo"; // If we could get presence information of others then we can do relationship based privacy solutions
     private final static String TEMPORAL = "temporal"; // SemanticTemporal information; the time instance when the current context was captured
     private final static String CONTEXTTIME = "time"; // SemanticTemporal information; the time instance when the current context was captured
-
     private final static String CREATE_CONTEXT_TABLE = "CREATE TABLE " + getContextTableName() + " (" +
             CONTEXTID + " INTEGER PRIMARY KEY AUTOINCREMENT," +
             IDENTITY + " TEXT NOT NULL DEFAULT 'user'," +
@@ -293,104 +206,159 @@ public class MithrilDBHelper extends SQLiteOpenHelper {
             PRESENCEINFO + " TEXT NULL," +
             CONTEXTTIME + " timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP " +
             ");";
-
-    /* -- Table 8: actionlog
-     * CREATE TABLE actionlog (
-     * id INTEGER PRIMARY KEY AUTOINCREMENT,
-     * resources_id INTEGER NOT NULL,
-     * context_id INTEGER NOT NULL,
-     * requesters_id INTEGER NOT NULL,
-     * time timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
-     * action INTEGER NOT NULL
-     * ) COMMENT 'Table showing actions taken for each context, resource, requester tuple';
-     * ----------------------------------------------------------------------------------------------------------------
-     * 0 for denied, 1 for allowed
-     * Makes a record everytime an action is taken for a certain requester, resource, context and applicable policy
-     * This is the action log table. Stores every action taken whether
-     */
-    private final static String ACTIONID = "id"; // ID of an action taken
-    //    private final static String ACTIONRESID = "resources_id"; // Resource that was requested
-    private final static String ACTIONCONID = "context_id"; // Context in which the request was made
-    private final static String ACTIONREQID = "requesters_id"; // Requester that sent the request
-    private final static String ACTIONTIME = "time"; // Time when action was taken
-    private final static String ACTION = "action"; // Action that was taken for a certain scenario
-
-    private final static String CREATE_ACTION_TABLE = "CREATE TABLE " + getActionTableName() + " (" +
-            ACTIONID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
-            ACTIONREQID + " INTEGER NOT NULL, " +
-//            ACTIONRESID + " INTEGER NOT NULL, " +
-            ACTIONCONID + " INTEGER NOT NULL, " +
-            ACTIONTIME + " INTEGER NOT NULL  DEFAULT CURRENT_TIMESTAMP, " +
-            ACTION + " INTEGER NOT NULL, " +
-            "FOREIGN KEY(" + ACTIONCONID + ") REFERENCES " + getContextTableName() + "(" + CONTEXTID + "), " +
-            "FOREIGN KEY(" + ACTIONREQID + ") REFERENCES " + getRequestersTableName() + "(" + REQID + ") " +
-//            "FOREIGN KEY("+ACTIONRESID+") REFERENCES "+RESOURCES_TABLE_NAME+"("+RESID+") " +
-            ");";
-    //    private final static String ACTIONPRLID = "polrulid"; // Policy rule id from the policy table that was used to determine the action
-
     /**
-     * -- Table 9: violationlog
-     * CREATE TABLE violationlog (
-     * id INTEGER PRIMARY KEY AUTOINCREMENT,
-     * resources_id INTEGER NOT NULL,
-     * requesters_id INTEGER NOT NULL,
-     * context_id INTEGER NOT NULL,
-     * description TEXT NOT NULL,
-     * marker bool DEFAULT,
-     * time timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP
-     * ) COMMENT 'Table showing violations recorded by MithrilAC and subsequent user feedback';
+     * -- Table 5: policyrules
+     CREATE TABLE policyrules (
+     id int NOT NULL AUTO_INCREMENT,
+     name text NOT NULL,
+     action int NOT NULL,
+     apps_id int NOT NULL,
+     context_id int NOT NULL,
+     CONSTRAINT policyrules_pk PRIMARY KEY (id)
+     ) COMMENT 'Table showing policy rules defined for apps and requested resources in given context';
+
+     ALTER TABLE policyrules ADD CONSTRAINT policyrules_apps FOREIGN KEY policyrules_apps (apps_id)
+     REFERENCES apps (id);
+
+     ALTER TABLE policyrules ADD CONSTRAINT policyrules_context FOREIGN KEY policyrules_context (context_id)
+     REFERENCES context (id);
+     */
+    private final static String POLRULID = "id"; // ID of policy defined
+    private final static String POLRULNAME = "name"; // Policy short name
+    private final static String POLRULACTIN = "action"; // Action will be denoted as: 0 for to deny, 1 for allow
+    private final static String POLRULAPPID = "appid"; // App id that sent the request
+    private final static String POLRULCTXID = "ctxid"; // context id in which requested
+    private final static String CREATE_POLICY_RULES_TABLE = "CREATE TABLE " + getPolicyRulesTableName() + " (" +
+            POLRULID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
+            POLRULNAME + " TEXT NOT NULL, " +
+            POLRULACTIN + " INTEGER NOT NULL, " +
+            POLRULAPPID + " INTEGER NOT NULL, " +
+            POLRULCTXID + " INTEGER NOT NULL, " +
+            "FOREIGN KEY(" + POLRULAPPID + ") REFERENCES " + getAppsTableName() + "(" + APPID + ") ON DELETE CASCADE, " +
+            "FOREIGN KEY(" + POLRULCTXID + ") REFERENCES " + getContextTableName() + "(" + CONTEXTID + ")" +
+            ");";
+    /**
+     * -- Table 6: contextlog
+     CREATE TABLE contextlog (
+     id int NOT NULL AUTO_INCREMENT,
+     time timestamp NOT NULL ON UPDATE CURRENT_TIMESTAMP,
+     context_id int NOT NULL,
+     CONSTRAINT contextlog_pk PRIMARY KEY (id)
+     ) COMMENT 'Table showing log of current user context';
+
+     ALTER TABLE contextlog ADD CONSTRAINT contextlog_context FOREIGN KEY contextlog_context (context_id)
+     REFERENCES context (id);
+     * --------------------------------------------------------------------------------------------------------------------------
+     * An entry is made into this table every time we determine a change in context.
+     * This could be where we could do energy efficient stuff as in we can save battery by determining context from historical data or some other way.
+     */
+    private final static String CTXTLOGID = "id"; // ID of the context instance
+    private final static String CTXTID = "contextid"; // Semantic context id
+    private final static String CTXTTIME = "time"; // when this context was observed
+    private final static String CREATE_CONTEXT_LOG_TABLE = "CREATE TABLE " + getContextLogTableName() + " (" +
+            CTXTLOGID + " INTEGER PRIMARY KEY AUTOINCREMENT," +
+            CTXTID + " INTEGER NOT NULL, " +
+            CTXTTIME + " timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP, " +
+            "FOREIGN KEY(" + CTXTID + ") REFERENCES " + getContextTableName() + "(" + CONTEXTID + ")" +
+            ");";
+    /**
+     * -- Table 7: violationlog
+     CREATE TABLE violationlog (
+     id int NOT NULL AUTO_INCREMENT,
+     description text NOT NULL,
+     marker bool NULL,
+     time timestamp NOT NULL ON UPDATE CURRENT_TIMESTAMP,
+     apps_id int NOT NULL,
+     context_id int NOT NULL,
+     CONSTRAINT violationlog_pk PRIMARY KEY (id)
+     ) COMMENT 'Table showing violations recorded by MithrilAC and subsequent user feedback';
+
+     ALTER TABLE violationlog ADD CONSTRAINT violationlog_apps FOREIGN KEY violationlog_apps (apps_id)
+     REFERENCES apps (id);
+
+     ALTER TABLE violationlog ADD CONSTRAINT violationlog_context FOREIGN KEY violationlog_context (context_id)
+     REFERENCES context (id);
      */
     private final static String VIOLATIONID = "id"; // ID of violation captured
-    private final static String VIOLATIONRESID = "resources_id";
-    private final static String VIOLATIONREQID = "requesters_id";
-    private final static String VIOLATIONCTXID = "context_id";
+    private final static String VIOLATIONAPPID = "appid";
+    private final static String VIOLATIONCTXID = "contextid";
     private final static String VIOLATIONDESC = "description"; // An appropriate description of the violation. No idea how this will be generated but
-    // we could simply use the requester, resource, context, policy name and action taken as a summary description. We could also concatenate information with the notice that
-    // we have a violation of a policy - "policy name". Additionally we could state that
-//    private final static String VIOLATIONOFRULID = "polrulid"; // policy rule id that was violated
+    // This will be a general text that will have to be "reasoned" about!
+    // If this says policy is applicable @home then we have to be able to determine that context available represents "home"
     private final static String VIOLATIONMARKER = "marker";
     private final static String VIOLATIONTIME = "time";
-
-    private final static String CREATE_VIOLATIONS_TABLE = "CREATE TABLE " + getViolationsTableName() + " (" +
+    private final static String CREATE_VIOLATIONS_LOG_TABLE = "CREATE TABLE " + getViolationsLogTableName() + " (" +
             VIOLATIONID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
-            VIOLATIONRESID + " INTEGER NOT NULL, " +
-            VIOLATIONREQID + " INTEGER NOT NULL, " +
+            VIOLATIONAPPID + " INTEGER NOT NULL, " +
             VIOLATIONCTXID + " INTEGER NOT NULL, " +
             VIOLATIONDESC + " TEXT, " +
             VIOLATIONMARKER + " INTEGER NOT NULL DEFAULT 0, " +
             VIOLATIONTIME + " timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP, " +
-            "FOREIGN KEY(" + VIOLATIONCTXID + ") REFERENCES " + getContextTableName() + "(" + CONTEXTID + "), " +
-            "FOREIGN KEY(" + VIOLATIONREQID + ") REFERENCES " + getRequestersTableName() + "(" + REQID + "), " +
-            "FOREIGN KEY(" + VIOLATIONRESID + ") REFERENCES " + getResourcesTableName() + "(" + RESID + ") " +
+            "FOREIGN KEY(" + VIOLATIONAPPID + ") REFERENCES " + getAppsTableName() + "(" + APPID + ") ON DELETE CASCADE, " +
+            "FOREIGN KEY(" + VIOLATIONCTXID + ") REFERENCES " + getContextTableName() + "(" + CONTEXTID + ")" +
             ");";
+    /**
+     * -- Table 8: actionlog
+     CREATE TABLE actionlog (
+     id int NOT NULL AUTO_INCREMENT,
+     time timestamp NOT NULL ON UPDATE CURRENT_TIMESTAMP,
+     action int NOT NULL,
+     apps_id int NOT NULL,
+     context_id int NOT NULL,
+     CONSTRAINT actionlog_pk PRIMARY KEY (id)
+     ) COMMENT 'Table showing actions taken for each context, resource, requester tuple';
 
+     ALTER TABLE actionlog ADD CONSTRAINT actionlog_apps FOREIGN KEY actionlog_apps (apps_id)
+     REFERENCES apps (id);
+
+     ALTER TABLE actionlog ADD CONSTRAINT actionlog_context FOREIGN KEY actionlog_context (context_id)
+     REFERENCES context (id);
+     * ----------------------------------------------------------------------------------------------------------------
+     * 0 for denied, 1 for allowed
+     * Makes a record every time an action is taken for a certain requester, resource, context and applicable policy
+     * This is the action log table. Stores every action taken whether
+     */
+    private final static String ACTIONID = "id"; // ID of an action taken
+    private final static String ACTIONCTXID = "contextid"; // Context in which the request was made
+    private final static String ACTIONAPPID = "appid"; // App id by which request was made
+    private final static String ACTIONTIME = "time"; // Time when action was taken
+    private final static String ACTION = "action"; // Action that was taken for a certain scenario
+    private final static String CREATE_ACTION_LOG_TABLE = "CREATE TABLE " + getActionLogTableName() + " (" +
+            ACTIONID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
+            ACTIONAPPID + " INTEGER NOT NULL, " +
+            ACTIONCTXID + " INTEGER NOT NULL, " +
+            ACTIONTIME + " INTEGER NOT NULL  DEFAULT CURRENT_TIMESTAMP, " +
+            ACTION + " INTEGER NOT NULL, " +
+            "FOREIGN KEY(" + ACTIONAPPID + ") REFERENCES " + getAppsTableName() + "(" + APPID + ") ON DELETE CASCADE, " +
+            "FOREIGN KEY(" + ACTIONCTXID + ") REFERENCES " + getContextTableName() + "(" + CONTEXTID + ")" +
+            ");";
     /**
      * -- views
      * -- View: apppermview
-     * CREATE VIEW `mithril.db`.apppermview AS
-     * SELECT
-     * a.name as apppkgname,
-     * p.name as permname,
-     * p.protectionlvl as protectionlevel,
-     * p.label as permlabel,
-     * p.permgrp as permgroup
-     * FROM
-     * apps a,
-     * permissions p,
-     * appperm ap
-     * WHERE
-     * ap.apps_id = a.id
-     * AND
-     * ap.permissions_id = p.id;
+     CREATE VIEW `mithril.db`.apppermview AS
+     SELECT
+     a.name as apppkgname,
+     p.name as permname,
+     p.protectionlvl as protectionlevel,
+     p.label as permlabel,
+     p.permgrp as permgroup
+     FROM
+     apps a,
+     permissions p,
+     appperm ap
+     WHERE
+     ap.apps_id = a.id
+     AND
+     ap.permissions_id = p.id;
+     ----------------------------
+     View 1 for App permissions
+     This table represents all the apps and their corresponding permissions. We also want to store the association between an app and an api call or a resource access.
      */
-    // View 1 for App permissions
-    // This table represents all the apps and their corresponding permissions. We also want to store the association between an app and an api call or a resource access.
     private final static String APPPERMVIEWAPPPKGNAME = "apppkgname"; // app package name
     private final static String APPPERMVIEWPERMNAME = "permname"; // app permission name
     private final static String APPPERMVIEWPERMPROLVL = "protectionlevel"; // app permission protection level
     private final static String APPPERMVIEWPERMLABEL = "permlabel"; // app permission label
     private final static String APPPERMVIEWPERMGROUP = "permgroup"; // app permission group
-
     private final static String CREATE_APP_PERM_VIEW = "CREATE VIEW " + getAppPermViewName() + " AS " +
             "SELECT " +
             getAppsTableName() + "." + APPPACKAGENAME + " AS " + APPPERMVIEWAPPPKGNAME + ", " +
@@ -406,9 +374,7 @@ public class MithrilDBHelper extends SQLiteOpenHelper {
             getAppPermTableName() + "." + APPPERMRESAPPID + " = " + getAppsTableName() + "." + APPID +
             " AND " +
             getAppPermTableName() + "." + APPPERMRESPERID + " = " + getPermissionsTableName() + "." + PERMID + ";";
-
     private Context context;
-
     /**
      * -------------------------------------------------------------------------------------------------------------------------------------------------------------------
      * Table creation statements complete
@@ -431,24 +397,20 @@ public class MithrilDBHelper extends SQLiteOpenHelper {
         return POLICY_RULES_TABLE_NAME;
     }
 
-    private static String getRequestersTableName() {
-        return REQUESTERS_TABLE_NAME;
-    }
-
-    private static String getResourcesTableName() {
-        return RESOURCES_TABLE_NAME;
-    }
-
     private static String getContextTableName() {
         return CONTEXT_TABLE_NAME;
     }
 
-    private static String getActionTableName() {
-        return ACTION_TABLE_NAME;
+    private static String getContextLogTableName() {
+        return CONTEXT_LOG_TABLE_NAME;
     }
 
-    private static String getViolationsTableName() {
-        return VIOLATIONS_TABLE_NAME;
+    private static String getActionLogTableName() {
+        return ACTION_LOG_TABLE_NAME;
+    }
+
+    private static String getViolationsLogTableName() {
+        return VIOLATIONS_LOG_TABLE_NAME;
     }
 
     private static String getAppsTableName() {
@@ -487,15 +449,14 @@ public class MithrilDBHelper extends SQLiteOpenHelper {
     @Override
     public void onCreate(SQLiteDatabase db) {
         try {
-            db.execSQL(CREATE_REQUESTERS_TABLE);
-            db.execSQL(CREATE_RESOURCES_TABLE);
             db.execSQL(CREATE_APPS_TABLE);
             db.execSQL(CREATE_PERMISSIONS_TABLE);
             db.execSQL(CREATE_APP_PERM_TABLE);
-            db.execSQL(CREATE_POLICY_RULES_TABLE);
             db.execSQL(CREATE_CONTEXT_TABLE);
-            db.execSQL(CREATE_ACTION_TABLE);
-            db.execSQL(CREATE_VIOLATIONS_TABLE);
+            db.execSQL(CREATE_POLICY_RULES_TABLE);
+            db.execSQL(CREATE_CONTEXT_LOG_TABLE);
+            db.execSQL(CREATE_VIOLATIONS_LOG_TABLE);
+            db.execSQL(CREATE_ACTION_LOG_TABLE);
 
             db.execSQL(CREATE_APP_PERM_VIEW);
         } catch (SQLException sqlException) {
@@ -554,15 +515,14 @@ public class MithrilDBHelper extends SQLiteOpenHelper {
     private void dropDBObjects(SQLiteDatabase db) {
         db.execSQL("DROP VIEW IF EXISTS " + getAppPermViewName());
 
-        db.execSQL("DROP TABLE IF EXISTS " + getViolationsTableName());
-        db.execSQL("DROP TABLE IF EXISTS " + getActionTableName());
-        db.execSQL("DROP TABLE IF EXISTS " + getContextTableName());
+        db.execSQL("DROP TABLE IF EXISTS " + getActionLogTableName());
+        db.execSQL("DROP TABLE IF EXISTS " + getViolationsLogTableName());
+        db.execSQL("DROP TABLE IF EXISTS " + getContextLogTableName());
         db.execSQL("DROP TABLE IF EXISTS " + getPolicyRulesTableName());
+        db.execSQL("DROP TABLE IF EXISTS " + getContextTableName());
         db.execSQL("DROP TABLE IF EXISTS " + getAppPermTableName());
         db.execSQL("DROP TABLE IF EXISTS " + getPermissionsTableName());
         db.execSQL("DROP TABLE IF EXISTS " + getAppsTableName());
-        db.execSQL("DROP TABLE IF EXISTS " + getResourcesTableName());
-        db.execSQL("DROP TABLE IF EXISTS " + getRequestersTableName());
 
         onCreate(db);
     }
@@ -571,63 +531,7 @@ public class MithrilDBHelper extends SQLiteOpenHelper {
      * -----------------------------------------------------------------------------------------------------------------------------------------------------------------
      * All CRUD(Create, Read, Update, Delete) Operations
      */
-    public long addRequester(SQLiteDatabase db, Requester aRequester) {
-        long insertedRowId;
-        ContentValues values = new ContentValues();
-        values.put(REQNAME, aRequester.getRequesterName());
-        try {
-            insertedRowId = db.insertOrThrow(getRequestersTableName(), null, values);
-        } catch (SQLException e) {
-            Log.e(MithrilApplication.getDebugTag(), "Error inserting " + values, e);
-            return -1;
-        }
-        return insertedRowId;
-    }
-
-    public long addResource(SQLiteDatabase db, Resource aResource) {
-        long insertedRowId;
-        ContentValues values = new ContentValues();
-        values.put(RESNAME, aResource.getResourceName());
-        try {
-            insertedRowId = db.insertOrThrow(getResourcesTableName(), null, values);
-        } catch (SQLException e) {
-            Log.e(MithrilApplication.getDebugTag(), "Error inserting " + values, e);
-            return -1;
-        }
-        return insertedRowId;
-    }
-
-    public long addContext(SQLiteDatabase db, SemanticUserContext aUserContext) {
-        long insertedRowId;
-        ContentValues values = new ContentValues();
-        values.put(LOCATION, aUserContext.getSemanticLocation().toString());
-        values.put(IDENTITY, aUserContext.getSemanticIdentity().toString());
-        values.put(ACTIVITY, aUserContext.getSemanticActivity().toString());
-        values.put(PRESENCEINFO, aUserContext.getSemanticNearActors().toString());
-        values.put(TEMPORAL, aUserContext.getSemanticTime().toString());
-        try {
-            insertedRowId = db.insertOrThrow(getContextTableName(), null, values);
-        } catch (SQLException e) {
-            Log.e(MithrilApplication.getDebugTag(), "Error inserting " + values, e);
-            return -1;
-        }
-        return insertedRowId;
-    }
-
-    public long addRuleAction(SQLiteDatabase db, RuleAction aRuleAction) {
-        long insertedRowId;
-        ContentValues values = new ContentValues();
-        values.put(ACTION, aRuleAction.getAction().getStatusCode());
-        try {
-            insertedRowId = db.insertOrThrow(getActionTableName(), null, values);
-        } catch (SQLException e) {
-            Log.e(MithrilApplication.getDebugTag(), "Error inserting " + values, e);
-            return -1;
-        }
-        return insertedRowId;
-    }
-
-    public long addAppData(SQLiteDatabase db, AppData anAppData) {
+    public long addApp(SQLiteDatabase db, AppData anAppData) {
         long insertedRowId;
         ContentValues values = new ContentValues();
         values.put(APPDESCRIPTION, anAppData.getAppDescription());
@@ -653,7 +557,27 @@ public class MithrilDBHelper extends SQLiteOpenHelper {
         return insertedRowId;
     }
 
-    //TODO We have to do a join across 3 tables and return the permissions for an app
+    private long addPermission(SQLiteDatabase db, PermData aPermData) throws PermissionWasUpdateException {
+        long insertedRowId = -1;
+        ContentValues values = new ContentValues();
+        values.put(PERMNAME, aPermData.getPermissionName());
+        values.put(PERMLABEL, aPermData.getPermissionLabel());
+        values.put(PERMPROTECTIONLEVEL, aPermData.getPermissionProtectionLevel());
+        values.put(PERMGROUP, aPermData.getPermissionGroup());
+        values.put(PERMFLAG, aPermData.getPermissionFlag());
+        values.put(PERMDESC, aPermData.getPermissionDescription());
+        values.put(PERMICON, getBitmapAsByteArray(aPermData.getPermissionIcon()));
+        try {
+            insertedRowId = db.insertOrThrow(getPermissionsTableName(), null, values);
+        } catch (SQLiteConstraintException e) {
+            updateConflictedGooglePermissions(db, aPermData);
+            throw new PermissionWasUpdateException("Exception occured for " + aPermData.getPermissionName());
+        } catch (SQLException e) {
+            Log.e(MithrilApplication.getDebugTag(), "Error inserting " + values, e);
+        }
+        return insertedRowId;
+    }
+
     public long addAppPerm(SQLiteDatabase db, AppData anAppData, long appId) {
         int flags = PackageManager.GET_META_DATA;
         Map<String, Boolean> appPermissions = anAppData.getPermissions();
@@ -703,24 +627,45 @@ public class MithrilDBHelper extends SQLiteOpenHelper {
         return insertedRowId;
     }
 
-    private long addPermission(SQLiteDatabase db, PermData aPermData) throws PermissionWasUpdateException {
-        long insertedRowId = -1;
+    public long addContext(SQLiteDatabase db, SemanticUserContext aUserContext) {
+        long insertedRowId;
         ContentValues values = new ContentValues();
-        values.put(PERMNAME, aPermData.getPermissionName());
-        values.put(PERMPROTECTIONLEVEL, aPermData.getPermissionProtectionLevel());
-        values.put(PERMGROUP, aPermData.getPermissionGroup());
-        values.put(PERMFLAG, aPermData.getPermissionFlag());
-        values.put(PERMDESC, aPermData.getPermissionDescription());
-        values.put(PERMICON, getBitmapAsByteArray(aPermData.getPermissionIcon()));
-        values.put(PERMLABEL, aPermData.getPermissionLabel());
-        values.put(PERMRESNAME, aPermData.getResource().getResourceName());
+        values.put(LOCATION, aUserContext.getSemanticLocation().toString());
+        values.put(IDENTITY, aUserContext.getSemanticIdentity().toString());
+        values.put(ACTIVITY, aUserContext.getSemanticActivity().toString());
+        values.put(PRESENCEINFO, aUserContext.getSemanticNearActors().toString());
+        values.put(TEMPORAL, aUserContext.getSemanticTime().toString());
         try {
-            insertedRowId = db.insertOrThrow(getPermissionsTableName(), null, values);
-        } catch (SQLiteConstraintException e) {
-            updateConflictedGooglePermissions(db, aPermData);
-            throw new PermissionWasUpdateException("Exception occured for " + aPermData.getPermissionName());
+            insertedRowId = db.insertOrThrow(getContextTableName(), null, values);
         } catch (SQLException e) {
             Log.e(MithrilApplication.getDebugTag(), "Error inserting " + values, e);
+            return -1;
+        }
+        return insertedRowId;
+    }
+
+    public long addContextLog(SQLiteDatabase db, int contextId) {
+        long insertedRowId;
+        ContentValues values = new ContentValues();
+        values.put(CTXTID, contextId);
+        try {
+            insertedRowId = db.insertOrThrow(getContextLogTableName(), null, values);
+        } catch (SQLException e) {
+            Log.e(MithrilApplication.getDebugTag(), "Error inserting " + values, e);
+            return -1;
+        }
+        return insertedRowId;
+    }
+
+    public long addActionLog(SQLiteDatabase db, RuleAction aRuleAction) {
+        long insertedRowId;
+        ContentValues values = new ContentValues();
+        values.put(ACTION, aRuleAction.getAction().getStatusCode());
+        try {
+            insertedRowId = db.insertOrThrow(getActionLogTableName(), null, values);
+        } catch (SQLException e) {
+            Log.e(MithrilApplication.getDebugTag(), "Error inserting " + values, e);
+            return -1;
         }
         return insertedRowId;
     }
@@ -729,14 +674,9 @@ public class MithrilDBHelper extends SQLiteOpenHelper {
         long insertedRowId;
         ContentValues values = new ContentValues();
         values.put(POLRULNAME, aPolicyRule.getName());
-        values.put(POLRULREQID, aPolicyRule.getRequester().getId());
-        values.put(POLRULRESID, aPolicyRule.getResource().getId());
-        values.put(POLRULLOCAT, aPolicyRule.getSemanticUserContext().getSemanticLocation().getInferredLocation());
-        values.put(POLRULACTIV, aPolicyRule.getSemanticUserContext().getSemanticActivity().getInferredActivity());
-        values.put(POLRULTEMPO, aPolicyRule.getSemanticUserContext().getSemanticTime().getInferredTime());
-        values.put(POLRULIDENT, aPolicyRule.getSemanticUserContext().getSemanticIdentity().getIdentity());
-        values.put(POLRULNEARA, aPolicyRule.getSemanticUserContext().getSemanticNearActors().toString());
         values.put(POLRULACTIN, aPolicyRule.getAction().getId());
+        values.put(POLRULAPPID, aPolicyRule.getAppId());
+        values.put(POLRULCTXID, aPolicyRule.getCtxId());
         try {
             insertedRowId = db.insertOrThrow(getPolicyRulesTableName(), null, values);
         } catch (SQLException e) {
@@ -764,7 +704,7 @@ public class MithrilDBHelper extends SQLiteOpenHelper {
         else
             values.put(VIOLATIONMARKER, 0);
         try {
-            insertedRowId = db.insertOrThrow(getViolationsTableName(), null, values);
+            insertedRowId = db.insertOrThrow(getViolationsLogTableName(), null, values);
         } catch (SQLException e) {
             Log.e(MithrilApplication.getDebugTag(), "Error inserting " + values, e);
             return -1;
@@ -1028,10 +968,10 @@ public class MithrilDBHelper extends SQLiteOpenHelper {
     public List<Violation> findAllViolations(SQLiteDatabase db) {
         // Select Violation Query
         String selectQuery = "SELECT " +
-                getViolationsTableName() + "." + VIOLATIONID + ", " +
-                getViolationsTableName() + "." + VIOLATIONDESC + ", " +
-                getViolationsTableName() + "." + VIOLATIONMARKER +
-                " FROM " + getViolationsTableName() + ";";
+                getViolationsLogTableName() + "." + VIOLATIONID + ", " +
+                getViolationsLogTableName() + "." + VIOLATIONDESC + ", " +
+                getViolationsLogTableName() + "." + VIOLATIONMARKER +
+                " FROM " + getViolationsLogTableName() + ";";
 
         List<Violation> violations = new ArrayList<>();
         Cursor cursor = db.rawQuery(selectQuery, null);
@@ -1073,11 +1013,11 @@ public class MithrilDBHelper extends SQLiteOpenHelper {
     public List<Violation> findAllViolationsWithMarkerUnset(SQLiteDatabase db) {
         // Select Violation Query
         String selectQuery = "SELECT " +
-                getViolationsTableName() + "." + VIOLATIONID + ", " +
-                getViolationsTableName() + "." + VIOLATIONDESC + ", " +
-                getViolationsTableName() + "." + VIOLATIONMARKER +
-                " FROM " + getViolationsTableName() +
-                " WHERE " + getViolationsTableName() + "." + VIOLATIONMARKER + " = 0;";
+                getViolationsLogTableName() + "." + VIOLATIONID + ", " +
+                getViolationsLogTableName() + "." + VIOLATIONDESC + ", " +
+                getViolationsLogTableName() + "." + VIOLATIONMARKER +
+                " FROM " + getViolationsLogTableName() +
+                " WHERE " + getViolationsLogTableName() + "." + VIOLATIONMARKER + " = 0;";
 
         List<Violation> violations = new ArrayList<>();
         Cursor cursor = db.rawQuery(selectQuery, null);
@@ -1377,12 +1317,12 @@ public class MithrilDBHelper extends SQLiteOpenHelper {
     public RuleAction findActionByID(SQLiteDatabase db, int id) {
         // Select Query
         String selectQuery = "SELECT " +
-                getActionTableName() + "." + ACTIONID + ", " +
-                getActionTableName() + "." + ACTION +
+                getActionLogTableName() + "." + ACTIONID + ", " +
+                getActionLogTableName() + "." + ACTION +
                 " FROM " +
-                getActionTableName() +
+                getActionLogTableName() +
                 " WHERE " +
-                getActionTableName() + "." + ACTIONID + " = " + id + ";";
+                getActionLogTableName() + "." + ACTIONID + " = " + id + ";";
 
         RuleAction action = new RuleAction();
         Cursor cursor = db.rawQuery(selectQuery, null);
@@ -1414,16 +1354,16 @@ public class MithrilDBHelper extends SQLiteOpenHelper {
     public SemanticUserContext findContextByID(SQLiteDatabase db, int id) {
         // Select Query
         String selectQuery = "SELECT " +
-                getContextTableName() + "." + CONTEXTID + ", " +
-                getContextTableName() + "." + PRESENCEINFO + ", " +
-                getContextTableName() + "." + ACTIVITY + ", " +
-                getContextTableName() + "." + LOCATION + ", " +
-                getContextTableName() + "." + IDENTITY + ", " +
-                getContextTableName() + "." + TEMPORAL +
+                getContextLogTableName() + "." + CONTEXTID + ", " +
+                getContextLogTableName() + "." + PRESENCEINFO + ", " +
+                getContextLogTableName() + "." + ACTIVITY + ", " +
+                getContextLogTableName() + "." + LOCATION + ", " +
+                getContextLogTableName() + "." + IDENTITY + ", " +
+                getContextLogTableName() + "." + TEMPORAL +
                 " FROM " +
-                getContextTableName() +
+                getContextLogTableName() +
                 " WHERE " +
-                getContextTableName() + "." + RESID + " = " + id + ";";
+                getContextLogTableName() + "." + RESID + " = " + id + ";";
 
         SemanticUserContext userContext = new SemanticUserContext();
         Cursor cursor = db.rawQuery(selectQuery, null);
@@ -1455,7 +1395,7 @@ public class MithrilDBHelper extends SQLiteOpenHelper {
         ContentValues values = new ContentValues();
         values.put(VIOLATIONDESC, aViolation.getViolationDescription());
         values.put(VIOLATIONMARKER, 1);
-        return db.update(getViolationsTableName(), values, VIOLATIONID + " = ?",
+        return db.update(getViolationsLogTableName(), values, VIOLATIONID + " = ?",
                 new String[]{String.valueOf(aViolation.getId())});
     }
 
@@ -1494,7 +1434,6 @@ public class MithrilDBHelper extends SQLiteOpenHelper {
         values.put(PERMDESC, aPermData.getPermissionDescription());
         values.put(PERMICON, getBitmapAsByteArray(aPermData.getPermissionIcon()));
         values.put(PERMLABEL, aPermData.getPermissionLabel());
-        values.put(PERMRESNAME, aPermData.getResource().getResourceName());
         if (aPermData.getPermissionGroup().equals(MithrilApplication.getPermissionNoGroup()))
             values.put(PERMGROUP, aPermData.getPermissionGroup());
         if (aPermData.getPermissionFlag().equals(MithrilApplication.getPermissionFlagNone()))
@@ -1514,7 +1453,7 @@ public class MithrilDBHelper extends SQLiteOpenHelper {
      */
     public void deleteViolation(SQLiteDatabase db, Violation aViolation) {
         try {
-            db.delete(getViolationsTableName(), VIOLATIONID + " = ?",
+            db.delete(getViolationsLogTableName(), VIOLATIONID + " = ?",
                     new String[]{String.valueOf(aViolation.getId())});
         } catch (SQLException e) {
             throw new SQLException("Could not find " + e);
@@ -1537,27 +1476,9 @@ public class MithrilDBHelper extends SQLiteOpenHelper {
         }
     }
 
-    public void deleteRequester(SQLiteDatabase db, Requester aRequester) {
-        try {
-            db.delete(getRequestersTableName(), REQID + " = ?",
-                    new String[]{String.valueOf(aRequester.getId())});
-        } catch (SQLException e) {
-            throw new SQLException("Could not find " + e);
-        }
-    }
-
-    public void deleteResource(SQLiteDatabase db, Resource aResource) {
-        try {
-            db.delete(getResourcesTableName(), RESID + " = ?",
-                    new String[]{String.valueOf(aResource.getId())});
-        } catch (SQLException e) {
-            throw new SQLException("Could not find " + e);
-        }
-    }
-
     public void deleteContext(SQLiteDatabase db, SemanticUserContext aUserContext) {
         try {
-            db.delete(getContextTableName(), CONTEXTID + " = ?",
+            db.delete(getContextLogTableName(), CONTEXTID + " = ?",
                     new String[]{String.valueOf(aUserContext.getId())});
         } catch (SQLException e) {
             throw new SQLException("Could not find " + e);
@@ -1566,7 +1487,7 @@ public class MithrilDBHelper extends SQLiteOpenHelper {
 
     public void deleteRuleAction(SQLiteDatabase db, RuleAction aRuleAction) {
         try {
-            db.delete(getActionTableName(), ACTIONID + " = ?",
+            db.delete(getActionLogTableName(), ACTIONID + " = ?",
                     new String[]{String.valueOf(aRuleAction.getId())});
         } catch (SQLException e) {
             throw new SQLException("Could not find " + e);
@@ -1677,12 +1598,12 @@ public class MithrilDBHelper extends SQLiteOpenHelper {
                         }
                     }
                     //Insert an app into database
-                    long appId = addAppData(db, tempAppData);
+                    long appId = addApp(db, tempAppData);
 
                     //Insert permissions for an app into AppPerm
                     addAppPerm(db, tempAppData, appId);
 
-//                    long insertedRowId = addAppData(db, tempAppData);
+//                    long insertedRowId = addApp(db, tempAppData);
 //                    Log.d(MithrilApplication.getDebugTag(), "Inserted record id is: "+Long.toString(insertedRowId));
 //				} catch (ClassCastException e){
 //					Log.d(MithrilApplication.getDebugTag(), e.getMessage());
@@ -1802,7 +1723,6 @@ public class MithrilDBHelper extends SQLiteOpenHelper {
         }
 
         tempPermData.setPermissionGroup(MithrilApplication.getPermissionNoGroup());
-        tempPermData.setResource(new Resource("nada"));
 
         //Setting the protection level
         switch (permissionInfo.flags) {
@@ -1868,16 +1788,5 @@ public class MithrilDBHelper extends SQLiteOpenHelper {
     }
 
     private void loadPoliciesForApps(SQLiteDatabase db) {
-//        POLRULNAME = "name"; // Policy short name
-//        POLRULACTIN = "action"; // Action will be denoted as: 0 for to deny, 1 for allow
-//        POLRULLOCAT = "location"; // Context in which the policy is applicable.
-//        POLRULACTIV = "activity"; // Context in which the policy is applicable.
-//        POLRULTEMPO = "temporal"; // Context in which the policy is applicable.
-//        POLRULNEARA = "nearactr"; // Context in which the policy is applicable.
-//        POLRULIDENT = "identity"; // Context in which the policy is applicable.
-//        POLRULREQID = "reqst_id"; // Requester that sent the request
-//        POLRULRESID = "resrc_id"; // Resource that was requested
-//        This will be a general text that will have to be "reasoned" about!
-//        If this says policy is applicable @home then we have to be able to determine that context available represents "home"
     }
 }

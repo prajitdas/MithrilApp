@@ -118,18 +118,6 @@ appperm_permissions                            </a>
 actionlog_apps                            </a>
                         </li>
                         <li>
-                            <a href="#referenceViolationlogApps">
-violationlog_apps                            </a>
-                        </li>
-                        <li>
-                            <a href="#referenceActionlogPermissions">
-actionlog_permissions                            </a>
-                        </li>
-                        <li>
-                            <a href="#referenceViolationlogPermissions">
-violationlog_permissions                            </a>
-                        </li>
-                        <li>
                             <a href="#referencePolicyrulesApps">
 policyrules_apps                            </a>
                         </li>
@@ -140,6 +128,18 @@ policyrules_context                            </a>
                         <li>
                             <a href="#referenceContextlogContext">
 contextlog_context                            </a>
+                        </li>
+                        <li>
+                            <a href="#referenceViolationlogApps">
+                                violationlog_apps </a>
+                        </li>
+                        <li>
+                            <a href="#referenceActionlogContext">
+                                actionlog_context </a>
+                        </li>
+                        <li>
+                            <a href="#referenceViolationlogContext">
+                                violationlog_context </a>
                         </li>
                     </ol>
                 </li>
@@ -452,7 +452,8 @@ int                        </td>
                     </tr>
                     <tr>
                         <td>
-permissions_id                        </td>
+                            context_id
+                        </td>
                         <td>
 int                        </td>
                         <td>
@@ -738,7 +739,8 @@ int                        </td>
                     </tr>
                     <tr>
                         <td>
-permissions_id                        </td>
+                            context_id
+                        </td>
                         <td>
 int                        </td>
                         <td>
@@ -795,6 +797,18 @@ int                        </td>
 permissions_id                        </td>
                         <td>
 int                        </td>
+                        <td>
+                        </td>
+                        <td>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            granted
+                        </td>
+                        <td>
+                            int
+                        </td>
                         <td>
                         </td>
                         <td>
@@ -1055,8 +1069,8 @@ id                    </td>
 apps_id                    </td>
                 </tr>
             </table>
-            <h3 id="referenceViolationlogApps">
-3.4. Reference violationlog_apps            </h3>
+            <h3 id="referencePolicyrulesApps">
+                3.4. Reference policyrules_apps </h3>
             <h4>
 3.4.1. Columns            </h4>
             <table class="referencesTable">
@@ -1068,86 +1082,8 @@ apps                        </a>
                     <td>
 0..*                    </td>
                     <td>
-                        <a href="#tableViolationlog">
-violationlog                        </a>
-                    </td>
-                </tr>
-                <tr>
-                    <td>
-id                    </td>
-                    <td>
-<->                    </td>
-                    <td>
-apps_id                    </td>
-                </tr>
-            </table>
-            <h3 id="referenceActionlogPermissions">
-3.5. Reference actionlog_permissions            </h3>
-            <h4>
-3.5.1. Columns            </h4>
-            <table class="referencesTable">
-                <tr>
-                    <td>
-                        <a href="#tablePermissions">
-permissions                        </a>
-                    </td>
-                    <td>
-0..*                    </td>
-                    <td>
-                        <a href="#tableActionlog">
-actionlog                        </a>
-                    </td>
-                </tr>
-                <tr>
-                    <td>
-id                    </td>
-                    <td>
-<->                    </td>
-                    <td>
-permissions_id                    </td>
-                </tr>
-            </table>
-            <h3 id="referenceViolationlogPermissions">
-3.6. Reference violationlog_permissions            </h3>
-            <h4>
-3.6.1. Columns            </h4>
-            <table class="referencesTable">
-                <tr>
-                    <td>
-                        <a href="#tablePermissions">
-permissions                        </a>
-                    </td>
-                    <td>
-0..*                    </td>
-                    <td>
-                        <a href="#tableViolationlog">
-violationlog                        </a>
-                    </td>
-                </tr>
-                <tr>
-                    <td>
-id                    </td>
-                    <td>
-<->                    </td>
-                    <td>
-permissions_id                    </td>
-                </tr>
-            </table>
-            <h3 id="referencePolicyrulesApps">
-3.7. Reference policyrules_apps            </h3>
-            <h4>
-3.7.1. Columns            </h4>
-            <table class="referencesTable">
-                <tr>
-                    <td>
-                        <a href="#tableApps">
-apps                        </a>
-                    </td>
-                    <td>
-0..*                    </td>
-                    <td>
                         <a href="#tablePolicyrules">
-policyrules                        </a>
+                            policyrules </a>
                     </td>
                 </tr>
                 <tr>
@@ -1160,7 +1096,87 @@ apps_id                    </td>
                 </tr>
             </table>
             <h3 id="referencePolicyrulesContext">
-3.8. Reference policyrules_context            </h3>
+                3.5. Reference policyrules_context </h3>
+            <h4>
+3.5.1. Columns            </h4>
+            <table class="referencesTable">
+                <tr>
+                    <td>
+                        <a href="#tableContext">
+                            context </a>
+                    </td>
+                    <td>
+0..*                    </td>
+                    <td>
+                        <a href="#tablePolicyrules">
+                            policyrules </a>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+id                    </td>
+                    <td>
+<->                    </td>
+                    <td>
+                        context_id
+                    </td>
+                </tr>
+            </table>
+            <h3 id="referenceContextlogContext">
+                3.6. Reference contextlog_context </h3>
+            <h4>
+3.6.1. Columns            </h4>
+            <table class="referencesTable">
+                <tr>
+                    <td>
+                        <a href="#tableContext">
+                            context </a>
+                    </td>
+                    <td>
+0..*                    </td>
+                    <td>
+                        <a href="#tableContextlog">
+                            contextlog </a>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+id                    </td>
+                    <td>
+<->                    </td>
+                    <td>
+                        context_id
+                    </td>
+                </tr>
+            </table>
+            <h3 id="referenceViolationlogApps">
+                3.7. Reference violationlog_apps </h3>
+            <h4>
+3.7.1. Columns            </h4>
+            <table class="referencesTable">
+                <tr>
+                    <td>
+                        <a href="#tableApps">
+apps                        </a>
+                    </td>
+                    <td>
+0..*                    </td>
+                    <td>
+                        <a href="#tableViolationlog">
+                            violationlog </a>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+id                    </td>
+                    <td>
+<->                    </td>
+                    <td>
+apps_id                    </td>
+                </tr>
+            </table>
+            <h3 id="referenceActionlogContext">
+                3.8. Reference actionlog_context </h3>
             <h4>
 3.8.1. Columns            </h4>
             <table class="referencesTable">
@@ -1172,8 +1188,8 @@ context                        </a>
                     <td>
 0..*                    </td>
                     <td>
-                        <a href="#tablePolicyrules">
-policyrules                        </a>
+                        <a href="#tableActionlog">
+                            actionlog </a>
                     </td>
                 </tr>
                 <tr>
@@ -1185,8 +1201,8 @@ id                    </td>
 context_id                    </td>
                 </tr>
             </table>
-            <h3 id="referenceContextlogContext">
-3.9. Reference contextlog_context            </h3>
+            <h3 id="referenceViolationlogContext">
+                3.9. Reference violationlog_context </h3>
             <h4>
 3.9.1. Columns            </h4>
             <table class="referencesTable">
@@ -1198,8 +1214,8 @@ context                        </a>
                     <td>
 0..*                    </td>
                     <td>
-                        <a href="#tableContextlog">
-contextlog                        </a>
+                        <a href="#tableViolationlog">
+                            violationlog </a>
                     </td>
                 </tr>
                 <tr>
@@ -1241,18 +1257,6 @@ appperm_permissions                    </a>
 actionlog_apps                    </a>
                 </li>
                 <li>
-                    <a href="#referenceViolationlogApps">
-violationlog_apps                    </a>
-                </li>
-                <li>
-                    <a href="#referenceActionlogPermissions">
-actionlog_permissions                    </a>
-                </li>
-                <li>
-                    <a href="#referenceViolationlogPermissions">
-violationlog_permissions                    </a>
-                </li>
-                <li>
                     <a href="#referencePolicyrulesApps">
 policyrules_apps                    </a>
                 </li>
@@ -1263,6 +1267,18 @@ policyrules_context                    </a>
                 <li>
                     <a href="#referenceContextlogContext">
 contextlog_context                    </a>
+                </li>
+                <li>
+                    <a href="#referenceViolationlogApps">
+                        violationlog_apps </a>
+                </li>
+                <li>
+                    <a href="#referenceActionlogContext">
+                        actionlog_context </a>
+                </li>
+                <li>
+                    <a href="#referenceViolationlogContext">
+                        violationlog_context </a>
                 </li>
             </ul>
             <h3 id="areaResource">
@@ -1291,18 +1307,6 @@ appperm_permissions                    </a>
 actionlog_apps                    </a>
                 </li>
                 <li>
-                    <a href="#referenceViolationlogApps">
-violationlog_apps                    </a>
-                </li>
-                <li>
-                    <a href="#referenceActionlogPermissions">
-actionlog_permissions                    </a>
-                </li>
-                <li>
-                    <a href="#referenceViolationlogPermissions">
-violationlog_permissions                    </a>
-                </li>
-                <li>
                     <a href="#referencePolicyrulesApps">
 policyrules_apps                    </a>
                 </li>
@@ -1313,6 +1317,18 @@ policyrules_context                    </a>
                 <li>
                     <a href="#referenceContextlogContext">
 contextlog_context                    </a>
+                </li>
+                <li>
+                    <a href="#referenceViolationlogApps">
+                        violationlog_apps </a>
+                </li>
+                <li>
+                    <a href="#referenceActionlogContext">
+                        actionlog_context </a>
+                </li>
+                <li>
+                    <a href="#referenceViolationlogContext">
+                        violationlog_context </a>
                 </li>
             </ul>
             <h3 id="areaLogs">
@@ -1349,18 +1365,6 @@ appperm_permissions                    </a>
 actionlog_apps                    </a>
                 </li>
                 <li>
-                    <a href="#referenceViolationlogApps">
-violationlog_apps                    </a>
-                </li>
-                <li>
-                    <a href="#referenceActionlogPermissions">
-actionlog_permissions                    </a>
-                </li>
-                <li>
-                    <a href="#referenceViolationlogPermissions">
-violationlog_permissions                    </a>
-                </li>
-                <li>
                     <a href="#referencePolicyrulesApps">
 policyrules_apps                    </a>
                 </li>
@@ -1371,6 +1375,18 @@ policyrules_context                    </a>
                 <li>
                     <a href="#referenceContextlogContext">
 contextlog_context                    </a>
+                </li>
+                <li>
+                    <a href="#referenceViolationlogApps">
+                        violationlog_apps </a>
+                </li>
+                <li>
+                    <a href="#referenceActionlogContext">
+                        actionlog_context </a>
+                </li>
+                <li>
+                    <a href="#referenceViolationlogContext">
+                        violationlog_context </a>
                 </li>
             </ul>
         </div>
