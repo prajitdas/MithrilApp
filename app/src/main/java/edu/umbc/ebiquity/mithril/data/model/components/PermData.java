@@ -3,8 +3,6 @@ package edu.umbc.ebiquity.mithril.data.model.components;
 import android.graphics.Bitmap;
 import android.support.annotation.NonNull;
 
-import edu.umbc.ebiquity.mithril.data.model.rules.protectedresources.Resource;
-
 /*
  * Created by prajit on 11/14/16.
  */

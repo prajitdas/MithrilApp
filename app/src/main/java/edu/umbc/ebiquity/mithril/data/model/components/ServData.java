@@ -2,8 +2,6 @@ package edu.umbc.ebiquity.mithril.data.model.components;
 
 import android.support.annotation.NonNull;
 
-import edu.umbc.ebiquity.mithril.data.model.rules.protectedresources.Resource;
-
 /**
  * Created by Prajit on 1/25/2017.
  * Constants

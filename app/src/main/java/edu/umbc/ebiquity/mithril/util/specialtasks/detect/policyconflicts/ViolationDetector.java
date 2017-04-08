@@ -19,7 +19,6 @@ import edu.umbc.ebiquity.mithril.data.model.rules.actions.Action;
 import edu.umbc.ebiquity.mithril.data.model.rules.context.SemanticUserContext;
 import edu.umbc.ebiquity.mithril.data.model.rules.context.contextpieces.SemanticLocation;
 import edu.umbc.ebiquity.mithril.data.model.rules.context.contextpieces.SemanticTime;
-import edu.umbc.ebiquity.mithril.data.model.rules.protectedresources.Resource;
 import edu.umbc.ebiquity.mithril.data.model.rules.requesters.Requester;
 import edu.umbc.ebiquity.mithril.util.specialtasks.errorsnexceptions.CWAException;
 

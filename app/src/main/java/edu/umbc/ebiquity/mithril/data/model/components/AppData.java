@@ -20,6 +20,17 @@ public class AppData implements Comparable<AppData> {
     private String appType;
     private int uid;
 
+    private boolean adLibraryUsed; // This information should either come from PrivacyGrade or it should be extracted
+    private int id;
+    private String requesterCategory; // app_category: 54 Google Play Store Categories
+    private String requesterContentRating; // content_rating
+    private String requesterCreatorName; // developer_name
+    private String requesterName; // app_name
+    private String requesterPrivilegeLevel; // privilege_level: /data/app/ /system/app/ /system/priv-app/ /system/framework/ /vendor/app/
+    private String requesterReviewCount; // review_count
+    private String requesterReviewRating; // review_rating
+    private String requesterUsageCount;    // installs
+
     public AppData(String appDescription,
                    String associatedProcessName,
                    int targetSdkVersion,

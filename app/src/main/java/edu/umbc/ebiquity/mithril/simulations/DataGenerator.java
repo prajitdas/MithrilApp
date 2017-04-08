@@ -14,7 +14,6 @@ import edu.umbc.ebiquity.mithril.data.model.rules.context.contextpieces.Semantic
 import edu.umbc.ebiquity.mithril.data.model.rules.context.contextpieces.SemanticLocation;
 import edu.umbc.ebiquity.mithril.data.model.rules.context.contextpieces.SemanticNearActors;
 import edu.umbc.ebiquity.mithril.data.model.rules.context.contextpieces.SemanticTime;
-import edu.umbc.ebiquity.mithril.data.model.rules.protectedresources.Resource;
 import edu.umbc.ebiquity.mithril.data.model.rules.requesters.Requester;
 
 public class DataGenerator {
