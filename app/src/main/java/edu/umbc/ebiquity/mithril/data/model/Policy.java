@@ -2,8 +2,6 @@ package edu.umbc.ebiquity.mithril.data.model;
 
 import java.util.ArrayList;
 
-import edu.umbc.ebiquity.mithril.data.model.rules.PolicyRule;
-
 public class Policy {
     private ArrayList<PolicyRule> policyRules;
 

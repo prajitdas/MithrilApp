@@ -1,4 +1,4 @@
-package edu.umbc.ebiquity.mithril.data.model.rules;
+package edu.umbc.ebiquity.mithril.data.model;
 
 import edu.umbc.ebiquity.mithril.data.model.rules.actions.RuleAction;
 import edu.umbc.ebiquity.mithril.data.model.rules.context.SemanticUserContext;
