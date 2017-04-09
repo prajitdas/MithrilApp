@@ -22,7 +22,6 @@ public class ServData implements Comparable<ServData> {
     private String label;
     private String appName;
     private String appType;
-    private Resource resource;
 
     public String getPermission() {
         return permission;
@@ -104,14 +103,6 @@ public class ServData implements Comparable<ServData> {
         this.appType = appType;
     }
 
-    public Resource getResource() {
-        return resource;
-    }
-
-    public void setResource(Resource resource) {
-        this.resource = resource;
-    }
-
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -128,9 +119,7 @@ public class ServData implements Comparable<ServData> {
         if (!getPackageName().equals(servData.getPackageName())) return false;
         if (!getLabel().equals(servData.getLabel())) return false;
         if (!getAppName().equals(servData.getAppName())) return false;
-        if (!getAppType().equals(servData.getAppType())) return false;
-        return getResource().equals(servData.getResource());
-
+        return getAppType().equals(servData.getAppType());
     }
 
     @Override
@@ -145,7 +134,6 @@ public class ServData implements Comparable<ServData> {
         result = 31 * result + getLabel().hashCode();
         result = 31 * result + getAppName().hashCode();
         result = 31 * result + getAppType().hashCode();
-        result = 31 * result + getResource().hashCode();
         return result;
     }
 
@@ -161,8 +149,7 @@ public class ServData implements Comparable<ServData> {
                 ", packageName='" + packageName + '\'' +
                 ", label='" + label + '\'' +
                 ", appName='" + appName + '\'' +
-                ", appType='" + appType + '\'' +
-                ", resource=" + resource +
+                ", appType='" + appType +
                 '}';
     }
 

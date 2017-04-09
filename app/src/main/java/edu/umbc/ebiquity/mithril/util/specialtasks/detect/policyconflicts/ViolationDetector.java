@@ -19,7 +19,6 @@ import edu.umbc.ebiquity.mithril.data.model.rules.actions.Action;
 import edu.umbc.ebiquity.mithril.data.model.rules.context.SemanticUserContext;
 import edu.umbc.ebiquity.mithril.data.model.rules.context.contextpieces.SemanticLocation;
 import edu.umbc.ebiquity.mithril.data.model.rules.context.contextpieces.SemanticTime;
-import edu.umbc.ebiquity.mithril.data.model.rules.requesters.Requester;
 import edu.umbc.ebiquity.mithril.util.specialtasks.errorsnexceptions.CWAException;
 
 /**
@@ -28,8 +27,6 @@ import edu.umbc.ebiquity.mithril.util.specialtasks.errorsnexceptions.CWAExceptio
 
 public class ViolationDetector {
     private static SemanticUserContext semanticUserContext;
-    private static Requester requester;
-    private static Resource resource;
     private static Action action;
 
     private static Address detectedAddress;
@@ -69,22 +66,6 @@ public class ViolationDetector {
 //        }
     }
 
-    public static Requester getRequester() {
-        return requester;
-    }
-
-    public static void setRequester(Requester aRequester) {
-        requester = aRequester;
-    }
-
-    public static Resource getResource() {
-        return resource;
-    }
-
-    public static void setResource(Resource aResource) {
-        resource = aResource;
-    }
-
     public static Action getAction() {
         return action;
     }
@@ -113,7 +94,7 @@ public class ViolationDetector {
         SQLiteDatabase mithrilDB = mithrilDBHelper.getWritableDatabase();
 
         try {
-            List<PolicyRule> rulesForApp = mithrilDBHelper.findAllPoliciesByReq(mithrilDB, currentPackageName);
+            List<PolicyRule> rulesForApp = mithrilDBHelper.findAllPoliciesByAppPkgName(mithrilDB, currentPackageName);
             //No rules found! We have a violation...
             if (rulesForApp.size() > 0) {
                 for (PolicyRule rule : rulesForApp) {

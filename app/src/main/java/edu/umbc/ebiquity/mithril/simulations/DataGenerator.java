@@ -14,20 +14,21 @@ import edu.umbc.ebiquity.mithril.data.model.rules.context.contextpieces.Semantic
 import edu.umbc.ebiquity.mithril.data.model.rules.context.contextpieces.SemanticLocation;
 import edu.umbc.ebiquity.mithril.data.model.rules.context.contextpieces.SemanticNearActors;
 import edu.umbc.ebiquity.mithril.data.model.rules.context.contextpieces.SemanticTime;
-import edu.umbc.ebiquity.mithril.data.model.rules.requesters.Requester;
 
 public class DataGenerator {
     /**
      * This data generator is used in the loadDefaultDataIntoDB method in {@link MithrilDBHelper} to generate default policies
      *
-     * @param aRequester
-     * @param aResource
-     * @param aSemanticUserContext
-     * @param aRuleAction
+     * @param id
+     * @param name
+     * @param ctxId
+     * @param appId
+     * @param action
+     * @param semanticUserContext
      * @return
      */
-    public static PolicyRule generateSocialMediaCameraAccessRule(Requester aRequester, Resource aResource, SemanticUserContext aSemanticUserContext, RuleAction aRuleAction) {
-        PolicyRule policyRule = new PolicyRule(MithrilApplication.getPolRulNameSocialMediaCameraAccessRule(), aRequester, aResource, aSemanticUserContext, aRuleAction);
+    public static PolicyRule generateSocialMediaCameraAccessRule(int id, String name, int ctxId, int appId, RuleAction action, SemanticUserContext semanticUserContext) {
+        PolicyRule policyRule = new PolicyRule(id, name, ctxId, appId, action, semanticUserContext);
         return policyRule;
     }
 
@@ -77,25 +78,5 @@ public class DataGenerator {
 
     public static RuleAction generateDenyAction() {
         return new RuleAction(Action.DENY);
-    }
-
-    /**
-     * Resources generated
-     */
-    public static List<Resource> generateResources() {
-        List<Resource> tempList = new ArrayList<Resource>();
-        for (String aResourceString : MithrilApplication.getContextArrayResourceCategory())
-            tempList.add(new Resource(aResourceString));
-        return tempList;
-    }
-
-    /**
-     * Requesters generated
-     */
-    public static List<Requester> generateRequesters() {
-        List<Requester> tempList = new ArrayList<Requester>();
-        for (String aRequesterString : MithrilApplication.getContextArrayRequesterCategory())
-            tempList.add(new Requester(aRequesterString));
-        return tempList;
     }
 }

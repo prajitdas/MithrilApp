@@ -15,12 +15,11 @@ public class PermData implements Comparable<PermData> {
     private String permissionDescription;
     private Bitmap permissionIcon;
     private String permissionLabel;
-    private Resource resource;
 
     public PermData() {
     }
 
-    public PermData(String permissionName, String permissionProtectionLevel, String permissionGroup, String permissionFlag, String permissionDescription, Bitmap permissionIcon, String permissionLabel, Resource resource) {
+    public PermData(String permissionName, String permissionProtectionLevel, String permissionGroup, String permissionFlag, String permissionDescription, Bitmap permissionIcon, String permissionLabel) {
         this.permissionName = permissionName;
         this.permissionProtectionLevel = permissionProtectionLevel;
         this.permissionGroup = permissionGroup;
@@ -31,7 +30,6 @@ public class PermData implements Comparable<PermData> {
             this.permissionLabel = permissionName;
         else
             this.permissionLabel = permissionLabel;
-        this.resource = resource;
     }
 
     public String getPermissionName() {
@@ -90,14 +88,6 @@ public class PermData implements Comparable<PermData> {
         this.permissionLabel = permissionLabel;
     }
 
-    public Resource getResource() {
-        return resource;
-    }
-
-    public void setResource(Resource resource) {
-        this.resource = resource;
-    }
-
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -117,10 +107,7 @@ public class PermData implements Comparable<PermData> {
             return false;
         if (getPermissionIcon() != null ? !getPermissionIcon().equals(permData.getPermissionIcon()) : permData.getPermissionIcon() != null)
             return false;
-        if (getPermissionLabel() != null ? !getPermissionLabel().equals(permData.getPermissionLabel()) : permData.getPermissionLabel() != null)
-            return false;
-        return getResource() != null ? getResource().equals(permData.getResource()) : permData.getResource() == null;
-
+        return getPermissionLabel() != null ? !getPermissionLabel().equals(permData.getPermissionLabel()) : permData.getPermissionLabel() != null;
     }
 
     @Override
@@ -132,7 +119,6 @@ public class PermData implements Comparable<PermData> {
         result = 31 * result + (getPermissionDescription() != null ? getPermissionDescription().hashCode() : 0);
         result = 31 * result + (getPermissionIcon() != null ? getPermissionIcon().hashCode() : 0);
         result = 31 * result + (getPermissionLabel() != null ? getPermissionLabel().hashCode() : 0);
-        result = 31 * result + (getResource() != null ? getResource().hashCode() : 0);
         return result;
     }
 
@@ -145,8 +131,7 @@ public class PermData implements Comparable<PermData> {
                 ", permissionFlag='" + permissionFlag + '\'' +
                 ", permissionDescription='" + permissionDescription + '\'' +
                 ", permissionIcon=" + permissionIcon +
-                ", permissionLabel='" + permissionLabel + '\'' +
-                ", resource=" + resource +
+                ", permissionLabel='" + permissionLabel +
                 '}';
     }
 
