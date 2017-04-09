@@ -28,10 +28,10 @@ import java.util.Map;
 
 import edu.umbc.ebiquity.mithril.MithrilApplication;
 import edu.umbc.ebiquity.mithril.R;
+import edu.umbc.ebiquity.mithril.data.model.PolicyRule;
 import edu.umbc.ebiquity.mithril.data.model.Violation;
 import edu.umbc.ebiquity.mithril.data.model.components.AppData;
 import edu.umbc.ebiquity.mithril.data.model.components.PermData;
-import edu.umbc.ebiquity.mithril.data.model.rules.PolicyRule;
 import edu.umbc.ebiquity.mithril.data.model.rules.actions.Action;
 import edu.umbc.ebiquity.mithril.data.model.rules.actions.RuleAction;
 import edu.umbc.ebiquity.mithril.data.model.rules.context.SemanticUserContext;

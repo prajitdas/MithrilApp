@@ -5,7 +5,7 @@ import java.util.List;
 
 import edu.umbc.ebiquity.mithril.MithrilApplication;
 import edu.umbc.ebiquity.mithril.data.dbhelpers.MithrilDBHelper;
-import edu.umbc.ebiquity.mithril.data.model.rules.PolicyRule;
+import edu.umbc.ebiquity.mithril.data.model.PolicyRule;
 import edu.umbc.ebiquity.mithril.data.model.rules.actions.Action;
 import edu.umbc.ebiquity.mithril.data.model.rules.actions.RuleAction;
 import edu.umbc.ebiquity.mithril.data.model.rules.context.SemanticUserContext;
