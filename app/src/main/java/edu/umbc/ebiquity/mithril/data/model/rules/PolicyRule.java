@@ -1,6 +1,7 @@
 package edu.umbc.ebiquity.mithril.data.model.rules;
 
 import edu.umbc.ebiquity.mithril.data.model.rules.actions.RuleAction;
+import edu.umbc.ebiquity.mithril.data.model.rules.context.SemanticUserContext;
 
 public class PolicyRule {
     private int id;
@@ -8,17 +9,44 @@ public class PolicyRule {
     private int ctxId;
     private int appId;
     private RuleAction action;
+    private SemanticUserContext semanticUserContext;
 
-    public PolicyRule() {
-        super();
-    }
-
-    public PolicyRule(int id, String name, int ctxId, int appId, RuleAction action) {
+    public PolicyRule(int id, String name, int ctxId, int appId, RuleAction action, SemanticUserContext semanticUserContext) {
         this.id = id;
         this.name = name;
         this.ctxId = ctxId;
         this.appId = appId;
         this.action = action;
+        this.semanticUserContext = semanticUserContext;
+    }
+
+    public PolicyRule() {
+        super();
+    }
+
+    @Override
+    public int hashCode() {
+        return super.hashCode();
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        return super.equals(obj);
+    }
+
+    @Override
+    protected Object clone() throws CloneNotSupportedException {
+        return super.clone();
+    }
+
+    @Override
+    public String toString() {
+        return super.toString();
+    }
+
+    @Override
+    protected void finalize() throws Throwable {
+        super.finalize();
     }
 
     public int getId() {
@@ -61,42 +89,11 @@ public class PolicyRule {
         this.action = action;
     }
 
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (!(o instanceof PolicyRule)) return false;
-
-        PolicyRule that = (PolicyRule) o;
-
-        if (getId() != that.getId()) return false;
-        if (getCtxId() != that.getCtxId()) return false;
-        if (getAppId() != that.getAppId()) return false;
-        if (!getName().equals(that.getName())) return false;
-        return getAction().equals(that.getAction());
+    public SemanticUserContext getSemanticUserContext() {
+        return semanticUserContext;
     }
 
-    @Override
-    protected Object clone() throws CloneNotSupportedException {
-        return super.clone();
-    }
-
-    @Override
-    public String toString() {
-        return super.toString();
-    }
-
-    @Override
-    protected void finalize() throws Throwable {
-        super.finalize();
-    }
-
-    @Override
-    public int hashCode() {
-        int result = getId();
-        result = 31 * result + getName().hashCode();
-        result = 31 * result + getCtxId();
-        result = 31 * result + getAppId();
-        result = 31 * result + getAction().hashCode();
-        return result;
+    public void setSemanticUserContext(SemanticUserContext semanticUserContext) {
+        this.semanticUserContext = semanticUserContext;
     }
 }
