@@ -62,7 +62,6 @@
     <!-- <uses-feature -->
     <!-- android:name="android.hardware.nfc" -->
     <!-- android:required="true" /> -->
-
     <application
         android:icon="@mipmap/ic_launcher"
         android:label="@string/short_app_name"
@@ -91,11 +90,15 @@
         <activity
             android:name=".ui.activities.PermissionAcquisitionActivity"
             android:label="@string/title_activity_permission_acquisition"
-            android:theme="@style/FullscreenTheme"></activity>
+            android:theme="@style/FullscreenTheme" />
+        <activity
+            android:name=".ui.activities.LoadKBActivity"
+            android:label="@string/title_activity_load_db"
+            android:theme="@style/FullscreenTheme" />
         <activity
             android:name=".ui.activities.CoreActivity"
             android:label="@string/title_activity_core"
-            android:theme="@style/AppTheme.NoActionBar"></activity>
+            android:theme="@style/AppTheme.NoActionBar" />
         <activity
             android:name=".ui.activities.ViewAppDetailsActivity"
             android:label="@string/title_activity_view_app_detail"
