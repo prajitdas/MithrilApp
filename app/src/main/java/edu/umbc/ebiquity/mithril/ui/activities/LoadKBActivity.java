@@ -14,11 +14,7 @@ import edu.umbc.ebiquity.mithril.data.dbhelpers.MithrilDBHelper;
 
 public class LoadKBActivity extends AppCompatActivity {
     private static final int KBLOADED = 0;
-    private MithrilDBHelper mithrilDBHelper;
-    private SQLiteDatabase mithrilDB;
     private Handler handler;
-
-//    private ProgressBar progressBar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -26,7 +22,6 @@ public class LoadKBActivity extends AppCompatActivity {
 
         overridePendingTransition(0, 0);
         makeFullScreen();
-
         final Context context = this;
         handler = new Handler() {
             @Override
@@ -36,23 +31,7 @@ public class LoadKBActivity extends AppCompatActivity {
                 }
             }
         };
-
         initViews();
-    }
-
-    private void initViews() {
-        setContentView(R.layout.activity_load_kb);
-
-//        progressBar = (ProgressBar) findViewById(R.id.progressBar);
-//        progressBar.setVisibility(View.VISIBLE);
-
-        // Start lengthy operation in a background thread
-        new Thread(new Runnable() {
-            public void run() {
-                initDB();
-                handler.sendEmptyMessage(KBLOADED);
-            }
-        }).start();
     }
 
     @Override
@@ -71,19 +50,25 @@ public class LoadKBActivity extends AppCompatActivity {
                         | View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY);
     }
 
-    private void initDB() {
-        // We have it here so that we can just load the animation running first time the db instances are loaded
-        mithrilDBHelper = new MithrilDBHelper(this);
-        mithrilDB = mithrilDBHelper.getWritableDatabase();
-    }
+    private void initViews() {
+        setContentView(R.layout.activity_load_kb);
 
-    private void closeDB() {
-        if (mithrilDB != null)
-            mithrilDB.close();
+        // Start lengthy operation in a background thread
+        new Thread(new Runnable() {
+            public void run() {
+                MithrilDBHelper mithrilDBHelper;
+                SQLiteDatabase mithrilDB;
+                // We have it here so that we can just load the animation running first time the db instances are loaded
+                mithrilDBHelper = new MithrilDBHelper(getApplicationContext());
+                mithrilDB = mithrilDBHelper.getWritableDatabase();
+                if (mithrilDB != null)
+                    mithrilDB.close();
+                handler.sendEmptyMessage(KBLOADED);
+            }
+        }).start();
     }
 
     private void startNextActivity(Context context, Class activityClass) {
-        closeDB();
         Intent launchNextActivity = new Intent(context, activityClass);
         launchNextActivity.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
         launchNextActivity.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
