@@ -36,8 +36,8 @@ public class PermissionAcquisitionActivity extends AppCompatActivity {
     protected void onResume() {
         super.onResume();
         overridePendingTransition(0, 0);
-        testPermissionsAndLaunchNextActivity();
         makeFullScreen();
+        testPermissionsAndLaunchNextActivity();
         initViews();
     }
 

@@ -6,8 +6,13 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.res.Resources;
+import android.location.Address;
+import android.location.Location;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.ResultReceiver;
 import android.preference.EditTextPreference;
 import android.preference.Preference;
 import android.preference.PreferenceFragment;
@@ -23,10 +28,13 @@ import com.google.android.gms.common.GooglePlayServicesRepairableException;
 import com.google.android.gms.common.api.Status;
 import com.google.android.gms.location.places.Place;
 import com.google.android.gms.location.places.ui.PlaceAutocomplete;
+import com.google.gson.Gson;
+import com.google.gson.JsonSyntaxException;
 
 import edu.umbc.ebiquity.mithril.MithrilApplication;
 import edu.umbc.ebiquity.mithril.R;
 import edu.umbc.ebiquity.mithril.ui.activities.CoreActivity;
+import edu.umbc.ebiquity.mithril.util.services.FetchAddressIntentService;
 import edu.umbc.ebiquity.mithril.util.specialtasks.contextinstances.DayOfWeekPreference;
 import edu.umbc.ebiquity.mithril.util.specialtasks.contextinstances.TimePreference;
 import edu.umbc.ebiquity.mithril.util.specialtasks.permissions.PermissionHelper;
@@ -43,6 +51,17 @@ public class PrefsFragment extends PreferenceFragment {
 
     private final int PLACE_AUTOCOMPLETE_REQUEST_CODE_HOME = 1;
     private final int PLACE_AUTOCOMPLETE_REQUEST_CODE_WORK = 2;
+
+    /**
+     * Tracks whether the user has requested an address. Becomes true when the user requests an
+     * address and false when the address (or an error message) is delivered.
+     * The user requests an address by pressing the Fetch Address button. This may happen
+     * before GoogleApiClient connects. This activity uses this boolean to keep track of the
+     * user's intent. If the value is true, the activity tries to fetch the address as soon as
+     * GoogleApiClient connects.
+     */
+    private boolean mAddressRequested;
+    private AddressResultReceiver mResultReceiver;
 
     private SharedPreferences sharedPrefs;
     private SharedPreferences.Editor editor;
@@ -120,6 +139,10 @@ public class PrefsFragment extends PreferenceFragment {
     }
 
     private void initData() {
+        mResultReceiver = new AddressResultReceiver(new Handler(), context);
+        // Set defaults, then update using values stored in the Bundle.
+        mAddressRequested = false;
+
         boolean isChecked = sharedPrefs.getBoolean(MithrilApplication.getPrefAllDoneKey(), false);
         mSwitchPrefAllDone.setChecked(isChecked);
         editor.putBoolean(MithrilApplication.getPrefAllDoneKey(), isChecked);
@@ -300,22 +323,19 @@ public class PrefsFragment extends PreferenceFragment {
             if (resultCode == Activity.RESULT_OK) {
                 // Get the user's selected place from the Intent.
                 Place place = PlaceAutocomplete.getPlace(getActivity(), data);
-//                    String getId();
-//                    List<Integer> getPlaceTypes();
-//                    CharSequence getAddress();
-//                    Locale getLocale();
-//                    CharSequence getName();
-//                    LatLng getLatLng();
-//                    LatLngBounds getViewport();
-//                    Uri getWebsiteUri();
-//                    CharSequence getPhoneNumber();
-//                    float getRating();
-//                    int getPriceLevel();
-//                    CharSequence getAttributions();
 
                 mPrefHomeLocation.setSummary(place.getAddress());
                 editor.putString(MithrilApplication.getPrefHomeLocationKey(), place.getAddress().toString());
                 editor.apply();
+
+                Location location = new Location("placesAPI");
+                location.setLatitude(place.getLatLng().latitude);
+                location.setLongitude(place.getLatLng().longitude);
+                /**
+                 * We know the location has changed, let's check the address
+                 */
+                mAddressRequested = true;
+                startSearchAddressIntentService(location, MithrilApplication.getPrefHomeLocationKey());
             } else if (resultCode == PlaceAutocomplete.RESULT_ERROR) {
                 Status status = PlaceAutocomplete.getStatus(getActivity(), data);
                 Log.e(MithrilApplication.getDebugTag(), "Error: Status = " + status.toString());
@@ -331,12 +351,43 @@ public class PrefsFragment extends PreferenceFragment {
                 editor.putString(MithrilApplication.getPrefWorkLocationKey(), place.getAddress().toString());
                 editor.apply();
 
+                Location location = new Location("placesAPI");
+                location.setLatitude(place.getLatLng().latitude);
+                location.setLongitude(place.getLatLng().longitude);
+                /**
+                 * We know the location has changed, let's check the address
+                 */
+                mAddressRequested = true;
+                startSearchAddressIntentService(location, MithrilApplication.getPrefWorkLocationKey());
             } else if (resultCode == PlaceAutocomplete.RESULT_ERROR) {
                 Status status = PlaceAutocomplete.getStatus(getActivity(), data);
                 Log.e(MithrilApplication.getDebugTag(), "Error: Status = " + status.toString());
             } else if (resultCode == Activity.RESULT_CANCELED) {
             }
         }
+    }
+
+    /**
+     * Creates an intent, adds location data to it as an extra, and starts the intent service for
+     * fetching an address.
+     */
+    protected void startSearchAddressIntentService(Location location, String key) {
+        // Create an intent for passing to the intent service responsible for fetching the address.
+        Intent intent = new Intent(context, FetchAddressIntentService.class);
+
+        intent.putExtra(MithrilApplication.ADDRESS_REQUESTED_EXTRA, mAddressRequested);
+        intent.putExtra(MithrilApplication.ADDRESS_KEY, key);
+
+        // Pass the result receiver as an extra to the service.
+        intent.putExtra(MithrilApplication.RECEIVER, mResultReceiver);
+
+        // Pass the location data as an extra to the service.
+        intent.putExtra(MithrilApplication.LOCATION_DATA_EXTRA, location);
+
+        // Start the service. If the service isn't already running, it is instantiated and started
+        // (creating a process for it if needed); if it is running then it remains running. The
+        // service kills itself automatically once all intents are processed.
+        context.startService(intent);
     }
 
     private void setOnPreferenceChangeListeners() {
@@ -544,5 +595,84 @@ public class PrefsFragment extends PreferenceFragment {
                 return true;
             }
         });
+    }
+
+    class AddressResultReceiver extends ResultReceiver {
+        private Context context;
+        private SharedPreferences sharedPref;
+        /**
+         * The formatted location address.
+         */
+        private Address mAddressOutput;
+        /**
+         * Tracks whether the user has requested an address. Becomes true when the user requests an
+         * address and false when the address (or an error message) is delivered.
+         * The user requests an address by pressing the Fetch Address button. This may happen
+         * before GoogleApiClient connects. This activity uses this boolean to keep track of the
+         * user's intent. If the value is true, the activity tries to fetch the address as soon as
+         * GoogleApiClient connects.
+         */
+        private boolean mAddressRequested;
+
+        public AddressResultReceiver(Handler handler, Context aContext) {
+            super(handler);
+
+            context = aContext;
+            // Set defaults, then update using values stored in the Bundle.
+            mAddressRequested = false;
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N)
+                mAddressOutput = new Address(context.getResources().getConfiguration().getLocales().get(0));
+            else
+                mAddressOutput = new Address(context.getResources().getConfiguration().locale);
+            sharedPref = context.getSharedPreferences(MithrilApplication.getSharedPreferencesName(), Context.MODE_PRIVATE);
+        }
+
+        @Override
+        protected void onReceiveResult(int resultCode, Bundle resultData) {
+            mAddressRequested = resultData.getBoolean(MithrilApplication.ADDRESS_REQUESTED_EXTRA, false);
+            String addressKey = resultData.getString(MithrilApplication.ADDRESS_KEY, null);
+            if (addressKey.equals(null))
+                addressKey = MithrilApplication.getPrefKeyCurrentAddress();
+//            throw new AddressKeyMissingError();
+            // Display the address string
+            // or an error message sent from the intent service.
+            Gson gson = new Gson();
+            String json = resultData.getString(MithrilApplication.RESULT_DATA_KEY, "");
+            try {
+                mAddressOutput = gson.fromJson(json, Address.class);
+            } catch (JsonSyntaxException e) {
+                Log.d(MithrilApplication.getDebugTag(), e.getMessage());
+            }
+//            displayAddressOutput();
+
+            Log.d(MithrilApplication.getDebugTag(), "Prajit error " + resultData.getString(MithrilApplication.ADDRESS_KEY) + mAddressRequested + addressKey + json);
+            // Show a toast message if an address was found.
+            if (resultCode == MithrilApplication.SUCCESS_RESULT) {
+//                Log.d(MithrilApplication.getDebugTag(), getString(R.string.address_found) + ":" + mAddressOutput);
+//                PermissionHelper.toast(context, getString(R.string.address_found) + ":" + mAddressOutput);
+                storeInSharedPreferences(resultData.getString(
+                        addressKey),
+                        mAddressOutput);
+            }
+            // Reset. Enable the Fetch Address button and stop showing the progress bar.
+            mAddressRequested = false;
+        }
+
+        /**
+         * From http://stackoverflow.com/a/18463758/1816861
+         *
+         * @param key
+         * @param address To Retreive
+         *                Gson gson = new Gson();
+         *                String json = mPrefs.getString("MyObject", "");
+         *                MyObject obj = gson.fromJson(json, MyObject.class);
+         */
+        public void storeInSharedPreferences(String key, Address address) {
+            SharedPreferences.Editor editor = context.getSharedPreferences(MithrilApplication.getSharedPreferencesName(), Context.MODE_PRIVATE).edit();
+            Gson gson = new Gson();
+            String json = gson.toJson(address);
+            editor.putString(key, json);
+            editor.apply();
+        }
     }
 }

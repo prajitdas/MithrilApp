@@ -4,11 +4,15 @@ import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.location.Address;
 import android.location.Location;
 import android.os.Binder;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.IBinder;
+import android.os.ResultReceiver;
+import android.util.Log;
 
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GoogleApiAvailability;
@@ -21,6 +25,7 @@ import com.google.android.gms.location.LocationRequest;
 import com.google.android.gms.location.LocationServices;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import com.google.gson.JsonSyntaxException;
 
 import java.io.BufferedWriter;
 import java.io.File;
@@ -32,7 +37,6 @@ import java.util.ArrayList;
 import java.util.Date;
 
 import edu.umbc.ebiquity.mithril.MithrilApplication;
-import edu.umbc.ebiquity.mithril.util.receivers.AddressResultReceiver;
 
 /**
  * Getting Location Updates.
@@ -378,6 +382,85 @@ public class LocationUpdateService extends Service implements
     public class LocalBinder extends Binder {
         public LocationUpdateService getServerInstance() {
             return LocationUpdateService.this;
+        }
+    }
+
+    class AddressResultReceiver extends ResultReceiver {
+        private Context context;
+        private SharedPreferences sharedPref;
+        /**
+         * The formatted location address.
+         */
+        private Address mAddressOutput;
+        /**
+         * Tracks whether the user has requested an address. Becomes true when the user requests an
+         * address and false when the address (or an error message) is delivered.
+         * The user requests an address by pressing the Fetch Address button. This may happen
+         * before GoogleApiClient connects. This activity uses this boolean to keep track of the
+         * user's intent. If the value is true, the activity tries to fetch the address as soon as
+         * GoogleApiClient connects.
+         */
+        private boolean mAddressRequested;
+
+        public AddressResultReceiver(Handler handler, Context aContext) {
+            super(handler);
+
+            context = aContext;
+            // Set defaults, then update using values stored in the Bundle.
+            mAddressRequested = false;
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N)
+                mAddressOutput = new Address(context.getResources().getConfiguration().getLocales().get(0));
+            else
+                mAddressOutput = new Address(context.getResources().getConfiguration().locale);
+            sharedPref = context.getSharedPreferences(MithrilApplication.getSharedPreferencesName(), Context.MODE_PRIVATE);
+        }
+
+        @Override
+        protected void onReceiveResult(int resultCode, Bundle resultData) {
+            mAddressRequested = resultData.getBoolean(MithrilApplication.ADDRESS_REQUESTED_EXTRA, false);
+            String addressKey = resultData.getString(MithrilApplication.ADDRESS_KEY, null);
+            if (addressKey.equals(null))
+                addressKey = MithrilApplication.getPrefKeyCurrentAddress();
+//            throw new AddressKeyMissingError();
+            // Display the address string
+            // or an error message sent from the intent service.
+            Gson gson = new Gson();
+            String json = resultData.getString(MithrilApplication.RESULT_DATA_KEY, "");
+            try {
+                mAddressOutput = gson.fromJson(json, Address.class);
+            } catch (JsonSyntaxException e) {
+                Log.d(MithrilApplication.getDebugTag(), e.getMessage());
+            }
+//            displayAddressOutput();
+
+            Log.d(MithrilApplication.getDebugTag(), "Prajit error " + resultData.getString(MithrilApplication.ADDRESS_KEY) + mAddressRequested + addressKey + json);
+            // Show a toast message if an address was found.
+            if (resultCode == MithrilApplication.SUCCESS_RESULT) {
+//                Log.d(MithrilApplication.getDebugTag(), getString(R.string.address_found) + ":" + mAddressOutput);
+//                PermissionHelper.toast(context, getString(R.string.address_found) + ":" + mAddressOutput);
+                storeInSharedPreferences(resultData.getString(
+                        addressKey),
+                        mAddressOutput);
+            }
+            // Reset. Enable the Fetch Address button and stop showing the progress bar.
+            mAddressRequested = false;
+        }
+
+        /**
+         * From http://stackoverflow.com/a/18463758/1816861
+         *
+         * @param key
+         * @param address To Retreive
+         *                Gson gson = new Gson();
+         *                String json = mPrefs.getString("MyObject", "");
+         *                MyObject obj = gson.fromJson(json, MyObject.class);
+         */
+        public void storeInSharedPreferences(String key, Address address) {
+            SharedPreferences.Editor editor = context.getSharedPreferences(MithrilApplication.getSharedPreferencesName(), Context.MODE_PRIVATE).edit();
+            Gson gson = new Gson();
+            String json = gson.toJson(address);
+            editor.putString(key, json);
+            editor.apply();
         }
     }
 }
