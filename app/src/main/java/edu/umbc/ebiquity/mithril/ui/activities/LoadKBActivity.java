@@ -22,12 +22,11 @@ public class LoadKBActivity extends AppCompatActivity {
 
         overridePendingTransition(0, 0);
         makeFullScreen();
-        final Context context = this;
         handler = new Handler() {
             @Override
             public void handleMessage(Message message) {
                 if(message.what == KBLOADED) {
-                    startNextActivity(context, CoreActivity.class);
+                    startNextActivity(getApplicationContext(), CoreActivity.class);
                 }
             }
         };
