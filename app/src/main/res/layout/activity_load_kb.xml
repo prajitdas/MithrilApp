@@ -12,8 +12,8 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_centerInParent="true"
-        android:layout_marginEnd="@dimen/top_margin_fullscreen"
-        android:layout_marginStart="@dimen/top_margin_fullscreen"
+        android:layout_marginEnd="@dimen/side_margin_fullscreen"
+        android:layout_marginStart="@dimen/side_margin_fullscreen"
         android:indeterminate="true"
         android:theme="@style/LinearProgress" />
 
