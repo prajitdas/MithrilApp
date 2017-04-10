@@ -74,7 +74,7 @@
             android:value="AIzaSyBuyRKl_kn-CphjG5xuPHZgHw3FaFDJnjk" />
 
         <activity
-            android:name=".ui.activities.UserAgreementActivity"
+            android:name=".ui.activities.LauncherActivity"
             android:label="@string/short_app_name"
             android:theme="@style/FullscreenTheme">
             <intent-filter>
@@ -125,7 +125,7 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".ui.activities.CoreActivity" />
         </activity>
-        <!-- TTestActivityvity was used for the IEEE CIC paper. This will possibly be removed or modified in the future. -->
+        <!-- TestActivity was used for the IEEE CIC paper. This will possibly be removed or modified in the future. -->
         <activity
             android:name=".ui.activities.TestActivity"
             android:label="@string/title_activity_test_main"
