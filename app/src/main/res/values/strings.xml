@@ -25,7 +25,7 @@
 
     <string name="mithril_service_name">Mithril App Launch Detector Service</string>
 
-    <string name="loading">Loading\nMithril\'s\nknowledge base&#8230;</string>
+    <string name="loading">Loading Mithril\'s\nKnowledge-Base&#8230;</string>
     <string name="explanation">Tap device with NFC tag</string>
     <string name="no_description_available_txt">No description available!</string>
     <string name="no_data">No permission information is available for this app or this app doesn\'t use any permissions!</string>
@@ -49,7 +49,7 @@
     <string name="button_false_violation">"Not a violation"</string>
 
     <string name="action_delete_rule">Delete Rule</string>
-    <string name="action_rule_ok">Rule is @android:string/ok</string>
+    <string name="action_rule_ok">Rule is @android:string/OK</string>
     <string name="action_reload_database">Reload Database</string>
 
     <string name="action_advanced_settings">Advanced settings</string>
@@ -95,7 +95,7 @@
     <string name="pol_rule_change_header_txt">Current rule details</string>
     <string name="pol_rule_del_btn_label">Delete Rule</string>
     <string name="pol_rule_change_save_btn_label">Save rule changes</string>
-    <string name="pol_rule_ok_btn_label">Rule @android:string/ok</string>
+    <string name="pol_rule_ok_btn_label">Rule @android:string/OK</string>
     <string name="pol_rule_create_new_btn_label">Create New Rule</string>
 
     <string name="pol_rule_changing_done_btn_label">Done with changes</string>
