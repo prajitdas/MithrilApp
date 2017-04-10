@@ -29,7 +29,6 @@
 
         <ToggleButton
             android:id="@+id/genericPermToggleButton"
-            style="@android:style/Widget.Material.Button.Toggle"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="0.25"
@@ -59,7 +58,6 @@
 
         <ToggleButton
             android:id="@+id/specialPermToggleButton"
-            style="@android:style/Widget.Material.Button.Toggle"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="0.25"
