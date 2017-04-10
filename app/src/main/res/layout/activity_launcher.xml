@@ -3,7 +3,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:theme="@style/FullscreenTheme"
-    tools:context=".ui.activities.UserAgreementActivity">
+    tools:context=".ui.activities.LauncherActivity">
 
     <Button
         android:id="@+id/continueToUserAgreementBtn"

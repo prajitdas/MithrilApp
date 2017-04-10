@@ -12,7 +12,7 @@ import edu.umbc.ebiquity.mithril.MithrilApplication;
 import edu.umbc.ebiquity.mithril.R;
 import edu.umbc.ebiquity.mithril.util.specialtasks.permissions.PermissionHelper;
 
-public class UserAgreementActivity extends AppCompatActivity {
+public class LauncherActivity extends AppCompatActivity {
     private Button mContinueToUserAgreementBtn;
     private SharedPreferences sharedPreferences;
 
@@ -58,7 +58,7 @@ public class UserAgreementActivity extends AppCompatActivity {
     }
 
     private void initViews() {
-        setContentView(R.layout.activity_user_agreement);
+        setContentView(R.layout.activity_launcher);
         mContinueToUserAgreementBtn = (Button) findViewById(R.id.continueToUserAgreementBtn);
 
         setOnClickListeners();
