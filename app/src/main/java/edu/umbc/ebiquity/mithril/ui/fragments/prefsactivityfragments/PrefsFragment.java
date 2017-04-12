@@ -33,10 +33,12 @@ import com.google.gson.JsonSyntaxException;
 
 import edu.umbc.ebiquity.mithril.MithrilApplication;
 import edu.umbc.ebiquity.mithril.R;
+import edu.umbc.ebiquity.mithril.data.model.rules.context.contextpieces.SemanticLocation;
 import edu.umbc.ebiquity.mithril.ui.activities.CoreActivity;
 import edu.umbc.ebiquity.mithril.util.services.FetchAddressIntentService;
 import edu.umbc.ebiquity.mithril.util.specialtasks.contextinstances.DayOfWeekPreference;
 import edu.umbc.ebiquity.mithril.util.specialtasks.contextinstances.TimePreference;
+import edu.umbc.ebiquity.mithril.util.specialtasks.errorsnexceptions.AddressKeyMissingError;
 import edu.umbc.ebiquity.mithril.util.specialtasks.permissions.PermissionHelper;
 
 import static android.content.Context.MODE_PRIVATE;
@@ -62,6 +64,8 @@ public class PrefsFragment extends PreferenceFragment {
      */
     private boolean mAddressRequested;
     private AddressResultReceiver mResultReceiver;
+    private SemanticLocation homeSemanticLocation;
+    private SemanticLocation workSemanticLocation;
 
     private SharedPreferences sharedPrefs;
     private SharedPreferences.Editor editor;
@@ -331,6 +335,7 @@ public class PrefsFragment extends PreferenceFragment {
                 Location location = new Location("placesAPI");
                 location.setLatitude(place.getLatLng().latitude);
                 location.setLongitude(place.getLatLng().longitude);
+                homeSemanticLocation = new SemanticLocation(MithrilApplication.getPrefHomeLocationKey(), location);
                 /**
                  * We know the location has changed, let's check the address
                  */
@@ -354,6 +359,7 @@ public class PrefsFragment extends PreferenceFragment {
                 Location location = new Location("placesAPI");
                 location.setLatitude(place.getLatLng().latitude);
                 location.setLongitude(place.getLatLng().longitude);
+                workSemanticLocation = new SemanticLocation(MithrilApplication.getPrefWorkLocationKey(), location);
                 /**
                  * We know the location has changed, let's check the address
                  */
@@ -630,10 +636,14 @@ public class PrefsFragment extends PreferenceFragment {
         @Override
         protected void onReceiveResult(int resultCode, Bundle resultData) {
             mAddressRequested = resultData.getBoolean(MithrilApplication.ADDRESS_REQUESTED_EXTRA, false);
-            String addressKey = resultData.getString(MithrilApplication.ADDRESS_KEY, null);
-            if (addressKey.equals(null))
-                addressKey = MithrilApplication.getPrefKeyCurrentAddress();
-//            throw new AddressKeyMissingError();
+            String key = resultData.getString(MithrilApplication.ADDRESS_KEY, null);
+            if (key.equals(null))
+                throw new AddressKeyMissingError();
+            else
+                storeAddressInDB(key, resultCode, resultData);
+        }
+
+        protected void storeAddressInDB(String key, int resultCode, Bundle resultData) {
             // Display the address string
             // or an error message sent from the intent service.
             Gson gson = new Gson();
@@ -643,15 +653,14 @@ public class PrefsFragment extends PreferenceFragment {
             } catch (JsonSyntaxException e) {
                 Log.d(MithrilApplication.getDebugTag(), e.getMessage());
             }
-//            displayAddressOutput();
 
-            Log.d(MithrilApplication.getDebugTag(), "Prajit error " + resultData.getString(MithrilApplication.ADDRESS_KEY) + mAddressRequested + addressKey + json);
+            Log.d(MithrilApplication.getDebugTag(), "Prefs address " + resultData.getString(MithrilApplication.ADDRESS_KEY) + mAddressRequested + key + json);
             // Show a toast message if an address was found.
             if (resultCode == MithrilApplication.SUCCESS_RESULT) {
 //                Log.d(MithrilApplication.getDebugTag(), getString(R.string.address_found) + ":" + mAddressOutput);
 //                PermissionHelper.toast(context, getString(R.string.address_found) + ":" + mAddressOutput);
                 storeInSharedPreferences(resultData.getString(
-                        addressKey),
+                        key),
                         mAddressOutput);
             }
             // Reset. Enable the Fetch Address button and stop showing the progress bar.

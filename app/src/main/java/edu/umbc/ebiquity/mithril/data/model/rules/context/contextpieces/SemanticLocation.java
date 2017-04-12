@@ -18,6 +18,15 @@ public class SemanticLocation {
         this.address = address;
     }
 
+    public SemanticLocation(String locationkey, Location location) {
+        this.location = location;
+
+        if (locationkey == MithrilApplication.getPrefHomeLocationKey())
+            this.inferredLocation = "home";
+        else
+            this.inferredLocation = "work";
+    }
+
     public SemanticLocation(Address address, Location location, Context context) {
         this.address = address;
         this.location = location;
