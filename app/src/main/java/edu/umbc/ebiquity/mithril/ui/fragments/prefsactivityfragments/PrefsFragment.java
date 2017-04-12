@@ -212,7 +212,8 @@ public class PrefsFragment extends PreferenceFragment {
 //        String mPackageName = null;
 //        boolean newState = false;
         AppOpsManager mAppOps = (AppOpsManager) context.getSystemService(Context.APP_OPS_SERVICE);
-/*
+//        mAppOps.setPrivacyGuardSettingForPackage(app.uid, app.packageName, app.privacyGuardEnabled);
+        /*
         mAppOps.setMode(AppOpsManager.OP_WRITE_SETTINGS,
                 mPackageInfo.applicationInfo.uid, mPackageName, newState
                         ? AppOpsManager.MODE_ALLOWED : AppOpsManager.MODE_ERRORED);
