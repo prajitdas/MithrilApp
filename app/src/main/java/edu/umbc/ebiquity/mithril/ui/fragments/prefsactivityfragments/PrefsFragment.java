@@ -31,6 +31,9 @@ import com.google.android.gms.location.places.ui.PlaceAutocomplete;
 import com.google.gson.Gson;
 import com.google.gson.JsonSyntaxException;
 
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
+
 import edu.umbc.ebiquity.mithril.MithrilApplication;
 import edu.umbc.ebiquity.mithril.R;
 import edu.umbc.ebiquity.mithril.data.model.rules.context.contextpieces.SemanticLocation;
@@ -99,6 +102,48 @@ public class PrefsFragment extends PreferenceFragment {
                 websiteUri));
         return Html.fromHtml(res.getString(R.string.place_details, name, id, address, phoneNumber,
                 websiteUri));
+    }
+
+    /**
+     * See this: https://forums.xamarin.com/discussion/64456/c-java-reflection-access-private-methods-on-underlying-native-instance
+     *
+     * @param context
+     * @param code
+     * @param uid
+     * @param mode
+     * @return
+     */
+    private static boolean setMode(Context context, int code,
+                                   int uid, int mode) {
+        AppOpsManager appOpsManager =
+                (AppOpsManager) context.getSystemService(Context.APP_OPS_SERVICE);
+        Class appOpsManagerClass = appOpsManager.getClass();
+
+        try {
+            Class[] types = new Class[4];
+            types[0] = Integer.TYPE;
+            types[1] = Integer.TYPE;
+            types[2] = String.class;
+            types[3] = Integer.TYPE;
+            Method setModeMethod =
+                    appOpsManagerClass.getMethod("setMode", types);
+
+            Object[] args = new Object[4];
+            args[0] = Integer.valueOf(code);
+            args[1] = Integer.valueOf(uid);
+            args[2] = context.getPackageName();
+            args[3] = Integer.valueOf(mode);
+            setModeMethod.invoke(appOpsManager, args);
+
+            return true;
+        } catch (NoSuchMethodException e) {
+            e.printStackTrace();
+        } catch (InvocationTargetException e) {
+            e.printStackTrace();
+        } catch (IllegalAccessException e) {
+            e.printStackTrace();
+        }
+        return false;
     }
 
     @Override
@@ -213,10 +258,10 @@ public class PrefsFragment extends PreferenceFragment {
 //        boolean newState = false;
         AppOpsManager mAppOps = (AppOpsManager) context.getSystemService(Context.APP_OPS_SERVICE);
 //        mAppOps.setPrivacyGuardSettingForPackage(app.uid, app.packageName, app.privacyGuardEnabled);
+       /*
         mAppOps.setMode(AppOpsManager.OP_WRITE_SETTINGS,
                 mPackageInfo.applicationInfo.uid, mPackageName, newState
                         ? AppOpsManager.MODE_ALLOWED : AppOpsManager.MODE_ERRORED);
-       /*
         mCurSysAppOpMode = mAppOps.checkOp(AppOpsManager.OP_SYSTEM_ALERT_WINDOW, uid, pkg);
         mCurToastAppOpMode = mAppOps.checkOp(AppOpsManager.OP_TOAST_WINDOW, uid, pkg);
         mAppOps.setMode(AppOpsManager.OP_SYSTEM_ALERT_WINDOW, uid, pkg, AppOpsManager.MODE_IGNORED);
