@@ -39,20 +39,20 @@ public class RootAccess {
                 rootProcess.waitFor();
                 if (rootProcess.exitValue() != 255) {
                     // TODO Code to run on success
-                    Log.d(MithrilApplication.getDebugTag(), "root");
+                    Log.d(MithrilApplication.getDebugTag(), "Got root!");
                 } else {
                     // TODO Code to run on unsuccessful
-                    Log.d(MithrilApplication.getDebugTag(), "can't root");
+                    Log.d(MithrilApplication.getDebugTag(), "Can't root, exit value = " + Integer.toString(rootProcess.exitValue()));
                     return false;
                 }
             } catch (InterruptedException e) {
                 // TODO Code to run in interrupted exception
-                Log.d(MithrilApplication.getDebugTag(), "can't root");
+                Log.d(MithrilApplication.getDebugTag(), "Can't root, interrupted exception: " + e.getMessage());
                 return false;
             }
         } catch (IOException e) {
             // TODO Code to run in input/output exception
-            Log.d(MithrilApplication.getDebugTag(), "can't root");
+            Log.d(MithrilApplication.getDebugTag(), "Can't root, I/O exception: " + e.getMessage());
             return false;
         }
         return true;
@@ -79,20 +79,20 @@ public class RootAccess {
                 rootProcess.waitFor();
                 if (rootProcess.exitValue() != 255) {
                     // TODO Code to run on success
-                    Log.d(MithrilApplication.getDebugTag(), "root");
+                    Log.d(MithrilApplication.getDebugTag(), "Got root!");
                 } else {
                     // TODO Code to run on unsuccessful
-                    Log.d(MithrilApplication.getDebugTag(), "can't root");
+                    Log.d(MithrilApplication.getDebugTag(), "Can't root, exit value = " + Integer.toString(rootProcess.exitValue()));
                     return false;
                 }
             } catch (InterruptedException e) {
                 // TODO Code to run in interrupted exception
-                Log.d(MithrilApplication.getDebugTag(), "can't root");
+                Log.d(MithrilApplication.getDebugTag(), "Can't root, interrupted exception: " + e.getMessage());
                 return false;
             }
         } catch (IOException e) {
             // TODO Code to run in input/output exception
-            Log.d(MithrilApplication.getDebugTag(), "can't root");
+            Log.d(MithrilApplication.getDebugTag(), "Can't root, I/O exception: " + e.getMessage());
             return false;
         }
         return true;
