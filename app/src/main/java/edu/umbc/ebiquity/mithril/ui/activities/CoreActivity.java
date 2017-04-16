@@ -3,11 +3,13 @@ package edu.umbc.ebiquity.mithril.ui.activities;
 import android.Manifest;
 import android.app.ActivityManager;
 import android.app.AlertDialog;
+import android.app.AppOpsManager;
 import android.app.FragmentManager;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageManager;
 import android.content.res.AssetManager;
 import android.database.sqlite.SQLiteDatabase;
@@ -61,6 +63,7 @@ import edu.umbc.ebiquity.mithril.ui.fragments.coreactivityfragments.ViolationFra
 import edu.umbc.ebiquity.mithril.util.services.AppLaunchDetectorService;
 import edu.umbc.ebiquity.mithril.util.services.LocationUpdateService;
 import edu.umbc.ebiquity.mithril.util.specialtasks.errorsnexceptions.PhoneNotRootedException;
+import edu.umbc.ebiquity.mithril.util.specialtasks.execute.AppOps;
 import edu.umbc.ebiquity.mithril.util.specialtasks.permissions.PermissionHelper;
 import edu.umbc.ebiquity.mithril.util.specialtasks.root.RootAccess;
 
@@ -84,6 +87,7 @@ public class CoreActivity extends AppCompatActivity
     private SQLiteDatabase mithrilDB;
     private SharedPreferences sharedPreferences;
     private RootAccess rootAccess = null;
+    private AppOps appOps;
 
 //    private Violation violationItemSelected = null;
 //    private List<AppData> appDataItemsSelected = null;
@@ -225,6 +229,7 @@ public class CoreActivity extends AppCompatActivity
                 //TODO we will have important functionality here
                 try {
                     rootAccess = new RootAccess();
+                    weHaveRootLetsExecute();
                     if (!rootAccess.isRoot())
                         rootAccess = null;
                     else
@@ -236,6 +241,29 @@ public class CoreActivity extends AppCompatActivity
             return true;
         }
         return super.onOptionsItemSelected(item);
+    }
+
+    private void weHaveRootLetsExecute() {
+        getSpecialPermissions();
+        appOps = new AppOps((AppOpsManager) getSystemService(Context.APP_OPS_SERVICE));
+        String packageName = "com.google.android.youtube";
+        PackageManager packageManager = this.getPackageManager();
+        int uid = -1;
+        try {
+            ApplicationInfo applicationInfo = packageManager.getApplicationInfo(packageName, PackageManager.GET_META_DATA);
+            uid = applicationInfo.uid;
+        } catch (PackageManager.NameNotFoundException e) {
+            Log.d(MithrilApplication.getDebugTag(), e.getMessage());
+        }
+        AppOps.setMode(MithrilApplication.OP_READ_CONTACTS, uid, packageName, AppOpsManager.MODE_DEFAULT);
+        AppOps.setMode(MithrilApplication.OP_WRITE_CONTACTS, uid, packageName, AppOpsManager.MODE_DEFAULT);
+    }
+
+    private void getSpecialPermissions() {
+        rootAccess.runScript(new String[]{
+                MithrilApplication.getCmdGrantUpdateAppOpsStats(),
+                MithrilApplication.getCmdGrantGetAppOpsStats()
+        });
     }
 
     private void initHouseKeepingTasks() {

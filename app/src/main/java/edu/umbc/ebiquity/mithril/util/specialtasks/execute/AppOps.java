@@ -1,7 +1,6 @@
 package edu.umbc.ebiquity.mithril.util.specialtasks.execute;
 
 import android.app.AppOpsManager;
-import android.content.Context;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
@@ -11,28 +10,24 @@ import java.lang.reflect.Method;
  */
 
 public class AppOps {
+    private static AppOpsManager appOpsManager;
+    private static Class appOpsManagerClass;
 
-    private AppOpsManager appOpsManager;
-
-    public AppOps(AppOpsManager appOpsManager) {
-        this.appOpsManager = appOpsManager;
+    public AppOps(AppOpsManager anAppOpsManager) {
+        appOpsManager = anAppOpsManager;
+        appOpsManagerClass = appOpsManager.getClass();
     }
 
     /**
      * See this: https://forums.xamarin.com/discussion/64456/c-java-reflection-access-private-methods-on-underlying-native-instance
      *
-     * @param context
+     * Original signature: public void setMode(int code, int uid, String packageName, int mode)
      * @param code
      * @param uid
      * @param mode
      * @return
      */
-    private boolean setMode(Context context, int code,
-                            int uid, int mode) {
-        AppOpsManager appOpsManager =
-                (AppOpsManager) context.getSystemService(Context.APP_OPS_SERVICE);
-        Class appOpsManagerClass = appOpsManager.getClass();
-
+    public static boolean setMode(int code, int uid, String packageName, int mode) {
         try {
             Class[] types = new Class[4];
             types[0] = Integer.TYPE;
@@ -45,7 +40,7 @@ public class AppOps {
             Object[] args = new Object[4];
             args[0] = Integer.valueOf(code);
             args[1] = Integer.valueOf(uid);
-            args[2] = context.getPackageName();
+            args[2] = packageName;
             args[3] = Integer.valueOf(mode);
             setModeMethod.invoke(appOpsManager, args);
 

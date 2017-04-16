@@ -53,6 +53,158 @@ public class MithrilApplication extends Application {
     public static final HashMap<String, LatLng> BALTIMORE_COUNTY_LANDMARKS = new HashMap<String, LatLng>();
 
     /**
+     * AppOps constants:
+     * No operation specified.
+     */
+    public static final int OP_NONE = -1;
+    /**
+     * Access to coarse location information.
+     */
+    public static final int OP_COARSE_LOCATION = 0;
+    /**
+     * Access to fine location information.
+     */
+    public static final int OP_FINE_LOCATION = 1;
+    /**
+     * Causing GPS to run.
+     */
+    public static final int OP_GPS = 2;
+    public static final int OP_VIBRATE = 3;
+    public static final int OP_READ_CONTACTS = 4;
+    public static final int OP_WRITE_CONTACTS = 5;
+    public static final int OP_READ_CALL_LOG = 6;
+    public static final int OP_WRITE_CALL_LOG = 7;
+    public static final int OP_READ_CALENDAR = 8;
+    public static final int OP_WRITE_CALENDAR = 9;
+    public static final int OP_WIFI_SCAN = 10;
+    public static final int OP_POST_NOTIFICATION = 11;
+    public static final int OP_NEIGHBORING_CELLS = 12;
+    public static final int OP_CALL_PHONE = 13;
+    public static final int OP_READ_SMS = 14;
+    public static final int OP_WRITE_SMS = 15;
+    public static final int OP_RECEIVE_SMS = 16;
+    public static final int OP_RECEIVE_EMERGECY_SMS = 17;
+    public static final int OP_RECEIVE_MMS = 18;
+    public static final int OP_RECEIVE_WAP_PUSH = 19;
+    public static final int OP_SEND_SMS = 20;
+    public static final int OP_READ_ICC_SMS = 21;
+    public static final int OP_WRITE_ICC_SMS = 22;
+    public static final int OP_WRITE_SETTINGS = 23;
+    public static final int OP_SYSTEM_ALERT_WINDOW = 24;
+    public static final int OP_ACCESS_NOTIFICATIONS = 25;
+    public static final int OP_CAMERA = 26;
+    public static final int OP_RECORD_AUDIO = 27;
+    public static final int OP_PLAY_AUDIO = 28;
+    public static final int OP_READ_CLIPBOARD = 29;
+    public static final int OP_WRITE_CLIPBOARD = 30;
+    public static final int OP_TAKE_MEDIA_BUTTONS = 31;
+    public static final int OP_TAKE_AUDIO_FOCUS = 32;
+    public static final int OP_AUDIO_MASTER_VOLUME = 33;
+    public static final int OP_AUDIO_VOICE_VOLUME = 34;
+    public static final int OP_AUDIO_RING_VOLUME = 35;
+    public static final int OP_AUDIO_MEDIA_VOLUME = 36;
+    public static final int OP_AUDIO_ALARM_VOLUME = 37;
+    public static final int OP_AUDIO_NOTIFICATION_VOLUME = 38;
+    public static final int OP_AUDIO_BLUETOOTH_VOLUME = 39;
+    public static final int OP_WAKE_LOCK = 40;
+    /**
+     * Continually monitoring location data.
+     */
+    public static final int OP_MONITOR_LOCATION = 41;
+    /**
+     * Continually monitoring location data with a relatively high power request.
+     */
+    public static final int OP_MONITOR_HIGH_POWER_LOCATION = 42;
+    /**
+     * Retrieve current usage stats
+     */
+    public static final int OP_GET_USAGE_STATS = 43;
+    public static final int OP_MUTE_MICROPHONE = 44;
+    public static final int OP_TOAST_WINDOW = 45;
+    /**
+     * Capture the device's display contents and/or audio
+     */
+    public static final int OP_PROJECT_MEDIA = 46;
+    /**
+     * Activate a VPN connection without user intervention.
+     */
+    public static final int OP_ACTIVATE_VPN = 47;
+    /**
+     * Access the WallpaperManagerAPI to write wallpapers.
+     */
+    public static final int OP_WRITE_WALLPAPER = 48;
+    /**
+     * Received the assist structure from an app.
+     */
+    public static final int OP_ASSIST_STRUCTURE = 49;
+    /**
+     * Received a screenshot from assist.
+     */
+    public static final int OP_ASSIST_SCREENSHOT = 50;
+    /**
+     * Read the phone state.
+     */
+    public static final int OP_READ_PHONE_STATE = 51;
+    /**
+     * Add voicemail messages to the voicemail content provider.
+     */
+    public static final int OP_ADD_VOICEMAIL = 52;
+    /**
+     * Access APIs for SIP calling over VOIP or WiFi.
+     */
+    public static final int OP_USE_SIP = 53;
+    /**
+     * Intercept outgoing calls.
+     */
+    public static final int OP_PROCESS_OUTGOING_CALLS = 54;
+    /**
+     * User the fingerprint API.
+     */
+    public static final int OP_USE_FINGERPRINT = 55;
+    /**
+     * Access to body sensors such as heart rate, etc.
+     */
+    public static final int OP_BODY_SENSORS = 56;
+    /**
+     * Read previously received cell broadcast messages.
+     */
+    public static final int OP_READ_CELL_BROADCASTS = 57;
+    /**
+     * Inject mock location into the system.
+     */
+    public static final int OP_MOCK_LOCATION = 58;
+    /**
+     * Read external storage.
+     */
+    public static final int OP_READ_EXTERNAL_STORAGE = 59;
+    /**
+     * Write external storage.
+     */
+    public static final int OP_WRITE_EXTERNAL_STORAGE = 60;
+    /**
+     * Turned on the screen.
+     */
+    public static final int OP_TURN_SCREEN_ON = 61;
+    /**
+     * Get device accounts.
+     */
+    public static final int OP_GET_ACCOUNTS = 62;
+    /**
+     * Control whether an application is allowed to run in the background.
+     */
+    public static final int OP_RUN_IN_BACKGROUND = 63;
+    /**
+     * Wifi state change
+     **/
+    public static final int OP_CHANGE_WIFI_STATE = 64;
+    public static final int OP_BLUETOOTH_CHANGE = 65;
+    public static final int OP_BOOT_COMPLETED = 66;
+    public static final int OP_NFC_CHANGE = 67;
+    public static final int OP_DATA_CONNECT_CHANGE = 68;
+    public static final int OP_SU = 69;
+    public static final int _NUM_OP = 70;
+    
+    /**
      * Private variables start
      */
     private static final String FLIER_PDF_FILE_NAME = "irbconsent.pdf";
@@ -81,14 +233,26 @@ public class MithrilApplication extends Application {
     private static final long FASTEST_INTERVAL = MILLISECONDS_PER_SECOND * FASTEST_INTERVAL_IN_SECONDS;
     // Set the minimum displacement between location updates in meters. By default this is 0.
     private static final float SMALLEST_DISPLACEMENT = new Float(10.0);
-    private static final String CMD_READ_LOGS_PERMISSION_FOR_APP = "pm grant " + MITHRIL_APP_PACKAGE_NAME + " android.permission.READ_LOGS";
+
+    private static final String CMD_GRANT_READ_LOGS_PERMISSION_FOR_APP = "pm grant " + MITHRIL_APP_PACKAGE_NAME + " android.permission.READ_LOGS";
+    private static final String CMD_REVOKE_READ_LOGS_PERMISSION_FOR_APP = "pm revoke " + MITHRIL_APP_PACKAGE_NAME + " android.permission.READ_LOGS";
+
     private static final String CMD_GRANT_PACKAGE_USAGE_STATS_PERMISSION_FOR_APP = "pm grant " + MITHRIL_APP_PACKAGE_NAME + " android.permission.PACKAGE_USAGE_STATS";
     private static final String CMD_REVOKE_PACKAGE_USAGE_STATS_PERMISSION_FOR_APP = "pm revoke " + MITHRIL_APP_PACKAGE_NAME + " android.permission.PACKAGE_USAGE_STATS";
+
+    private static final String CMD_GRANT_UPDATE_APP_OPS_STATS = "pm grant " + MITHRIL_APP_PACKAGE_NAME + " android.permission.UPDATE_APP_OPS_STATS";
+    private static final String CMD_REVOKE_UPDATE_APP_OPS_STATS = "pm revoke " + MITHRIL_APP_PACKAGE_NAME + " android.permission.UPDATE_APP_OPS_STATS";
+
+    private static final String CMD_GRANT_GET_APP_OPS_STATS = "pm grant " + MITHRIL_APP_PACKAGE_NAME + " android.permission.GET_APP_OPS_STATS";
+    private static final String CMD_REVOKE_GET_APP_OPS_STATS = "pm revoke " + MITHRIL_APP_PACKAGE_NAME + " android.permission.GET_APP_OPS_STATS";
+
     private static final String CMD_ROOT_PRIVILEGE = "su -c";
+
     private static final String CMD_DETECT_APP_LAUNCH = "logcat -d ActivityManager:I *:S | grep 'LAUNCHER'";
     //    private static final String CMD_DETECT_APP_LAUNCH = "logcat -d ActivityManager:I *:S | grep 'LAUNCHER' | cut -f5 -d'=' | cut -f1 -d'/'";
     private static final String CMD_DETECT_APP_LAUNCH_DATE = "logcat -d ActivityManager:I *:S | grep 'LAUNCHER' | cut -f1 -d' '";
     private static final String CMD_DETECT_APP_LAUNCH_TIME = "logcat -d ActivityManager:I *:S | grep 'LAUNCHER' | cut -f2 -d' '";
+
     private static final String LOG_INTENT = "android.intent.category.LAUNCHER";
     private static final String BROADCAST_INTENT_COMMAND_APP = "edu.umbc.ebiquity.mithril.command.intent.action.DATA_REQUEST";
     private static final String SHARED_PREFERENCES_NAME = MITHRIL_APP_PACKAGE_NAME + ".sharedprefs";
@@ -624,34 +788,6 @@ public class MithrilApplication extends Application {
         return FASTEST_INTERVAL;
     }
 
-    public static String getCmdReadLogsPermissionForApp() {
-        return CMD_READ_LOGS_PERMISSION_FOR_APP;
-    }
-
-    public static String getCmdGrantPackageUsageStatsPermissionForApp() {
-        return CMD_GRANT_PACKAGE_USAGE_STATS_PERMISSION_FOR_APP;
-    }
-
-    public static String getCmdRevokePackageUsageStatsPermissionForApp() {
-        return CMD_REVOKE_PACKAGE_USAGE_STATS_PERMISSION_FOR_APP;
-    }
-
-    public static String getCmdRootPrivilege() {
-        return CMD_ROOT_PRIVILEGE;
-    }
-
-    public static String getCmdDetectAppLaunch() {
-        return CMD_DETECT_APP_LAUNCH;
-    }
-
-    public static String getCmdDetectAppLaunchDate() {
-        return CMD_DETECT_APP_LAUNCH_DATE;
-    }
-
-    public static String getCmdDetectAppLaunchTime() {
-        return CMD_DETECT_APP_LAUNCH_TIME;
-    }
-
     public static String getLogIntent() {
         return LOG_INTENT;
     }
@@ -954,6 +1090,54 @@ public class MithrilApplication extends Application {
 
     public static String getBackPressedUserAgreementScreen() {
         return BACK_PRESSED_USER_AGREEMENT_SCREEN;
+    }
+
+    public static String getCmdGrantReadLogsPermissionForApp() {
+        return CMD_GRANT_READ_LOGS_PERMISSION_FOR_APP;
+    }
+
+    public static String getCmdRevokeReadLogsPermissionForApp() {
+        return CMD_REVOKE_READ_LOGS_PERMISSION_FOR_APP;
+    }
+
+    public static String getCmdGrantPackageUsageStatsPermissionForApp() {
+        return CMD_GRANT_PACKAGE_USAGE_STATS_PERMISSION_FOR_APP;
+    }
+
+    public static String getCmdRevokePackageUsageStatsPermissionForApp() {
+        return CMD_REVOKE_PACKAGE_USAGE_STATS_PERMISSION_FOR_APP;
+    }
+
+    public static String getCmdGrantUpdateAppOpsStats() {
+        return CMD_GRANT_UPDATE_APP_OPS_STATS;
+    }
+
+    public static String getCmdRevokeUpdateAppOpsStats() {
+        return CMD_REVOKE_UPDATE_APP_OPS_STATS;
+    }
+
+    public static String getCmdGrantGetAppOpsStats() {
+        return CMD_GRANT_GET_APP_OPS_STATS;
+    }
+
+    public static String getCmdRevokeGetAppOpsStats() {
+        return CMD_REVOKE_GET_APP_OPS_STATS;
+    }
+
+    public static String getCmdRootPrivilege() {
+        return CMD_ROOT_PRIVILEGE;
+    }
+
+    public static String getCmdDetectAppLaunch() {
+        return CMD_DETECT_APP_LAUNCH;
+    }
+
+    public static String getCmdDetectAppLaunchDate() {
+        return CMD_DETECT_APP_LAUNCH_DATE;
+    }
+
+    public static String getCmdDetectAppLaunchTime() {
+        return CMD_DETECT_APP_LAUNCH_TIME;
     }
 
     public static String getLauncherName(Context context) {
