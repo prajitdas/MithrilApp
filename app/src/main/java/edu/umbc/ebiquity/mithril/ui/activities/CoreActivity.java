@@ -227,17 +227,17 @@ public class CoreActivity extends AppCompatActivity
         if (id == R.id.capture_exec_settings) {
             if (rootAccess == null) {
                 //TODO we will have important functionality here
-                executeRules();
                 try {
                     rootAccess = new RootAccess();
-                    getSpecialPermissions();
                     if (!rootAccess.isRoot())
                         rootAccess = null;
                     else
                         navigationView.getMenu().getItem(3).getSubMenu().getItem(3).setEnabled(true);
+                    getSpecialPermissions();
                 } catch (PhoneNotRootedException phoneNotRootedException) {
                     Log.d(MithrilApplication.getDebugTag(), "Phone is not rooted do non-root behavior" + phoneNotRootedException.getMessage());
                 }
+                executeRules();
             }
             return true;
         }
@@ -255,6 +255,7 @@ public class CoreActivity extends AppCompatActivity
         } catch (PackageManager.NameNotFoundException e) {
             Log.d(MithrilApplication.getDebugTag(), "AppOps execute: " + e.getMessage());
         }
+        Toast.makeText(this, "Executing: " + packageName, Toast.LENGTH_LONG).show();
         AppOps.setMode(MithrilApplication.OP_READ_CONTACTS, uid, packageName, AppOpsManager.MODE_DEFAULT);
         AppOps.setMode(MithrilApplication.OP_WRITE_CONTACTS, uid, packageName, AppOpsManager.MODE_DEFAULT);
     }
