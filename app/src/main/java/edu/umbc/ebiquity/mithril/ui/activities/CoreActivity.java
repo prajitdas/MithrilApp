@@ -227,9 +227,10 @@ public class CoreActivity extends AppCompatActivity
         if (id == R.id.capture_exec_settings) {
             if (rootAccess == null) {
                 //TODO we will have important functionality here
+                executeRules();
                 try {
                     rootAccess = new RootAccess();
-                    weHaveRootLetsExecute();
+                    getSpecialPermissions();
                     if (!rootAccess.isRoot())
                         rootAccess = null;
                     else
@@ -243,8 +244,7 @@ public class CoreActivity extends AppCompatActivity
         return super.onOptionsItemSelected(item);
     }
 
-    private void weHaveRootLetsExecute() {
-        getSpecialPermissions();
+    private void executeRules() {
         appOps = new AppOps((AppOpsManager) getSystemService(Context.APP_OPS_SERVICE));
         String packageName = "com.google.android.youtube";
         PackageManager packageManager = this.getPackageManager();
@@ -253,7 +253,7 @@ public class CoreActivity extends AppCompatActivity
             ApplicationInfo applicationInfo = packageManager.getApplicationInfo(packageName, PackageManager.GET_META_DATA);
             uid = applicationInfo.uid;
         } catch (PackageManager.NameNotFoundException e) {
-            Log.d(MithrilApplication.getDebugTag(), e.getMessage());
+            Log.d(MithrilApplication.getDebugTag(), "AppOps execute: " + e.getMessage());
         }
         AppOps.setMode(MithrilApplication.OP_READ_CONTACTS, uid, packageName, AppOpsManager.MODE_DEFAULT);
         AppOps.setMode(MithrilApplication.OP_WRITE_CONTACTS, uid, packageName, AppOpsManager.MODE_DEFAULT);
