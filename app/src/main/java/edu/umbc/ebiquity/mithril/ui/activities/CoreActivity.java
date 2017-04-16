@@ -262,7 +262,8 @@ public class CoreActivity extends AppCompatActivity
     private void getSpecialPermissions() {
         rootAccess.runScript(new String[]{
                 MithrilApplication.getCmdGrantUpdateAppOpsStats(),
-                MithrilApplication.getCmdGrantGetAppOpsStats()
+                MithrilApplication.getCmdGrantGetAppOpsStats(),
+                MithrilApplication.getCmdGrantManageAppOpsRestrictions()
         });
     }
 

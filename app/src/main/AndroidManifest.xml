@@ -8,11 +8,17 @@
     <uses-permission
         android:name="android.permission.PACKAGE_USAGE_STATS"
         tools:ignore="ProtectedPermissions" />
-    <uses-permission android:name="android.permission.UPDATE_APP_OPS_STATS" />
-    <uses-permission android:name="android.permission.GET_APP_OPS_STATS" />
-    <uses-permission android:name="android.permission.WRITE_SETTINGS" />
+    <!-- @SystemApi @hide Allows an application to collect battery statistics -->
     <uses-permission
-        android:name="android.permission.WRITE_SECURE_SETTINGS"
+        android:name="android.permission.GET_APP_OPS_STATS"
+        tools:ignore="ProtectedPermissions" />
+    <!-- @SystemApi Allows an application to update application operation statistics. Not for use by third party apps. -->
+    <uses-permission
+        android:name="android.permission.UPDATE_APP_OPS_STATS"
+        tools:ignore="ProtectedPermissions" />
+    <!-- @SystemApi Allows an application to update the user app op restrictions. Not for use by third party apps. -->
+    <uses-permission
+        android:name="android.permission.MANAGE_APP_OPS_RESTRICTIONS"
         tools:ignore="ProtectedPermissions" />
     <!-- <uses-permission android:name="android.permission.GET_TASKS" /> -->
     <!-- <uses-permission android:name="android.permission.WAKE_LOCK" /> -->

@@ -246,6 +246,9 @@ public class MithrilApplication extends Application {
     private static final String CMD_GRANT_GET_APP_OPS_STATS = "pm grant " + MITHRIL_APP_PACKAGE_NAME + " android.permission.GET_APP_OPS_STATS";
     private static final String CMD_REVOKE_GET_APP_OPS_STATS = "pm revoke " + MITHRIL_APP_PACKAGE_NAME + " android.permission.GET_APP_OPS_STATS";
 
+    private static final String CMD_GRANT_MANAGE_APP_OPS_RESTRICTIONS = "pm grant " + MITHRIL_APP_PACKAGE_NAME + " android.permission.MANAGE_APP_OPS_RESTRICTIONS";
+    private static final String CMD_REVOKE_MANAGE_APP_OPS_RESTRICTIONS = "pm revoke " + MITHRIL_APP_PACKAGE_NAME + " android.permission.MANAGE_APP_OPS_RESTRICTIONS";
+
     private static final String CMD_ROOT_PRIVILEGE = "su -c";
 
     private static final String CMD_DETECT_APP_LAUNCH = "logcat -d ActivityManager:I *:S | grep 'LAUNCHER'";
@@ -1122,6 +1125,14 @@ public class MithrilApplication extends Application {
 
     public static String getCmdRevokeGetAppOpsStats() {
         return CMD_REVOKE_GET_APP_OPS_STATS;
+    }
+
+    public static String getCmdGrantManageAppOpsRestrictions() {
+        return CMD_GRANT_MANAGE_APP_OPS_RESTRICTIONS;
+    }
+
+    public static String getCmdRevokeManageAppOpsRestrictions() {
+        return CMD_REVOKE_MANAGE_APP_OPS_RESTRICTIONS;
     }
 
     public static String getCmdRootPrivilege() {
