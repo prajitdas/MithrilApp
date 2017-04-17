@@ -52,7 +52,7 @@ public class RootAccess {
 //            DataOutputStream os = new DataOutputStream(rootProcess.getOutputStream());
 //            os.writeBytes("echo \"Do I have root?\" >/system/temporary.txt\n");
 //            os.writeBytes("rm /system/temporary.txt\n");
-            runOnSU(rootProcess, statementsToRun);
+            runOnSU(statementsToRun);
         } catch (IOException e) {
             // TODO Code to run in input/output exception
             Log.d(MithrilApplication.getDebugTag(), "Can't root, I/O exception: " + e.getMessage());
@@ -61,7 +61,8 @@ public class RootAccess {
         return true;
     }
 
-    private void runOnSU(Process rootProcess, String[] statementsToRun) throws PhoneNotRootedException {
+    private void runOnSU(String[] statementsToRun) throws PhoneNotRootedException {
+        StringBuffer output = new StringBuffer();
         try {
             DataOutputStream os = new DataOutputStream(rootProcess.getOutputStream());
             for (int commandCount = 0; commandCount < statementsToRun.length; commandCount++) {
@@ -69,18 +70,23 @@ public class RootAccess {
                 os.writeBytes(command);
             }
 
-            BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(rootProcess.getInputStream()));
+//            // Reads stdout.
+//            // NOTE: You can write to stdin of the command using
+//            //       process.getOutputStream().
+//            BufferedReader reader = new BufferedReader(
+//                    new InputStreamReader(rootProcess.getInputStream()));
+//            int read;
+//            char[] buffer = new char[4096];
+//            while ((read = reader.read(buffer)) > 0) {
+//                output.append(buffer, 0, read);
+//            }
+//            reader.close();
 
-            // Grab the results
-            StringBuilder log = new StringBuilder();
-            String line;
-            while ((line = bufferedReader.readLine()) != null)
-                log.append(line);
-
-    //             Close the terminal
+            // Close the terminal
             os.writeBytes("exit\n");
             os.flush();
             try {
+                // Waits for the command to finish.
                 rootProcess.waitFor();
                 if (rootProcess.exitValue() != 255) {
                     // TODO Code to run on success
@@ -100,6 +106,7 @@ public class RootAccess {
             Log.d(MithrilApplication.getDebugTag(), "Can't root, I/O exception: " + e.getMessage());
             throw new PhoneNotRootedException();
         }
+//        return output.toString();
     }
 
 
@@ -129,8 +136,10 @@ public class RootAccess {
         }
 
         // try executing commands
-        if (canExecuteCommand("/system/xbin/which su | tr -d '\\n'") || canExecuteCommand("/system/bin/which su | tr -d '\\n'") || canExecuteCommand("which su | tr -d '\\n'"))
+        if (canExecuteCommand("/system/xbin/which su | tr -d '\\n'") || canExecuteCommand("/system/bin/which su | tr -d '\\n'") || canExecuteCommand("which su | tr -d '\\n'")) {
             setRooted(true);
+            return;
+        }
 
         setRooted(false);
         //Phone is not rooted
@@ -142,7 +151,7 @@ public class RootAccess {
         boolean executedSuccessfully;
         try {
             rootProcess = Runtime.getRuntime().exec("su");
-            runOnSU(rootProcess, new String[]{command});
+            runOnSU(new String[]{command});
             executedSuccessfully = true;
         } catch (Exception e) {
             executedSuccessfully = false;

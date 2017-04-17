@@ -63,6 +63,7 @@ import edu.umbc.ebiquity.mithril.ui.fragments.coreactivityfragments.ViolationFra
 import edu.umbc.ebiquity.mithril.util.services.AppLaunchDetectorService;
 import edu.umbc.ebiquity.mithril.util.services.LocationUpdateService;
 import edu.umbc.ebiquity.mithril.util.specialtasks.errorsnexceptions.PhoneNotRootedException;
+import edu.umbc.ebiquity.mithril.util.specialtasks.errorsnexceptions.UpdateAppOpsStatsException;
 import edu.umbc.ebiquity.mithril.util.specialtasks.execute.AppOps;
 import edu.umbc.ebiquity.mithril.util.specialtasks.permissions.PermissionHelper;
 import edu.umbc.ebiquity.mithril.util.specialtasks.root.RootAccess;
@@ -233,11 +234,11 @@ public class CoreActivity extends AppCompatActivity
                         rootAccess = null;
                     else {
                         navigationView.getMenu().getItem(3).getSubMenu().getItem(3).setEnabled(true);
-                        rootAccess.runScript(new String[]{
-                                MithrilApplication.getCmdGrantUpdateAppOpsStats(),
-                                MithrilApplication.getCmdGrantGetAppOpsStats(),
-                                MithrilApplication.getCmdGrantManageAppOpsRestrictions()
-                        });
+//                        rootAccess.runScript(new String[]{
+//                                MithrilApplication.getCmdGrantUpdateAppOpsStats(),
+//                                MithrilApplication.getCmdGrantGetAppOpsStats(),
+//                                MithrilApplication.getCmdGrantManageAppOpsRestrictions()
+//                        });
                     }
                 } catch (PhoneNotRootedException phoneNotRootedException) {
                     Log.d(MithrilApplication.getDebugTag(), "Phone is not rooted do non-root behavior" + phoneNotRootedException.getMessage());
@@ -251,19 +252,41 @@ public class CoreActivity extends AppCompatActivity
     }
 
     private void executeRules() {
-        appOps = new AppOps((AppOpsManager) getSystemService(Context.APP_OPS_SERVICE));
-        String packageName = "com.google.android.youtube";
-        PackageManager packageManager = this.getPackageManager();
-        int uid = -1;
+        AppOpsManager appOpsManager = (AppOpsManager) getSystemService(Context.APP_OPS_SERVICE);
+        appOps = new AppOps(appOpsManager);
+
         try {
+            // Let's try to block contacts permission for YouTube!
+            String packageName = "com.google.android.youtube";
+            PackageManager packageManager = this.getPackageManager();
             ApplicationInfo applicationInfo = packageManager.getApplicationInfo(packageName, PackageManager.GET_META_DATA);
-            uid = applicationInfo.uid;
+            int uid = applicationInfo.uid;
+
+            int mode = AppOps.checkOpNoThrow(AppOps.OPSTR_READ_CONTACTS, uid, packageName);
+            // Without being a privileged app we cannot execute the next line!
+//            int altMode = appOpsManager.checkOpNoThrow(AppOpsManager.OPSTR_READ_CONTACTS, uid, packageName);
+            // Testing if we can do this for our own app. It works!
+            int altMode = appOpsManager.checkOpNoThrow(AppOpsManager.OPSTR_READ_CONTACTS, android.os.Process.myUid(), this.getPackageName());
+
+            PermissionHelper.toast(this, "Executing: " + packageName + " got mode: " + Integer.toString(mode), Toast.LENGTH_SHORT);
+            Log.d(MithrilApplication.getDebugTag(), "Executing: " + packageName + " got mode: " + Integer.toString(mode));
+
+            Log.d(MithrilApplication.getDebugTag(), "Alt mode: " + Integer.toString(altMode));
+
+            Log.d(MithrilApplication.getDebugTag(), "Mode allowed: " + Integer.toString(AppOpsManager.MODE_ALLOWED));
+            Log.d(MithrilApplication.getDebugTag(), "Mode default: " + Integer.toString(AppOpsManager.MODE_DEFAULT));
+            Log.d(MithrilApplication.getDebugTag(), "Mode error: " + Integer.toString(AppOpsManager.MODE_ERRORED));
+            Log.d(MithrilApplication.getDebugTag(), "Mode ignored: " + Integer.toString(AppOpsManager.MODE_IGNORED));
+
+            //            AppOps.setMode(MithrilApplication.OP_READ_CONTACTS, uid, packageName, AppOpsManager.MODE_DEFAULT);
+//            PermissionHelper.toast(this, "Done executing: " + packageName + " got mode: " + Integer.toString(mode), Toast.LENGTH_SHORT);
+//            Log.d(MithrilApplication.getDebugTag(), "Executing: " + packageName + " got mode: " + Integer.toString(mode));
+//            AppOps.setMode(MithrilApplication.OP_WRITE_CONTACTS, uid, packageName, AppOpsManager.MODE_DEFAULT);
+        } catch (UpdateAppOpsStatsException e) {
+            PermissionHelper.toast(this, "We don't have UPDATE_APP_OPS_STATS permission!", Toast.LENGTH_SHORT);
         } catch (PackageManager.NameNotFoundException e) {
             Log.d(MithrilApplication.getDebugTag(), "AppOps execute: " + e.getMessage());
         }
-        PermissionHelper.toast(this, "Executing: " + packageName, Toast.LENGTH_SHORT);
-        AppOps.setMode(MithrilApplication.OP_READ_CONTACTS, uid, packageName, AppOpsManager.MODE_DEFAULT);
-        AppOps.setMode(MithrilApplication.OP_WRITE_CONTACTS, uid, packageName, AppOpsManager.MODE_DEFAULT);
     }
 
     private void initHouseKeepingTasks() {
