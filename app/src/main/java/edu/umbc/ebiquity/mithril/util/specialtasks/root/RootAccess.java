@@ -2,9 +2,11 @@ package edu.umbc.ebiquity.mithril.util.specialtasks.root;
 
 import android.util.Log;
 
+import java.io.BufferedReader;
 import java.io.DataOutputStream;
 import java.io.File;
 import java.io.IOException;
+import java.io.InputStreamReader;
 
 import edu.umbc.ebiquity.mithril.MithrilApplication;
 import edu.umbc.ebiquity.mithril.util.specialtasks.errorsnexceptions.PhoneNotRootedException;
@@ -16,63 +18,66 @@ import edu.umbc.ebiquity.mithril.util.specialtasks.errorsnexceptions.PhoneNotRoo
 
 public class RootAccess {
     private Process rootProcess;
+    private boolean rooted;
+
+    public Process getRootProcess() {
+        return rootProcess;
+    }
+
+    public void setRootProcess(Process rootProcess) {
+        this.rootProcess = rootProcess;
+    }
+
+    public void setRooted(boolean rooted) {
+        this.rooted = rooted;
+    }
+
+    public boolean isRooted() {
+        return rooted;
+    }
 
     public RootAccess() throws PhoneNotRootedException {
+        testRooted();
         if (!isRooted())
             throw new PhoneNotRootedException();
     }
 
-    public boolean isRoot() {
+    public boolean runScript(String[] statementsToRun) throws PhoneNotRootedException {
+        if (!isRooted())
+            throw new PhoneNotRootedException();
         try {
             // Preform su to get root privileges
             rootProcess = Runtime.getRuntime().exec("su");
-
-            // Attempt to write a file to a root-only
-            DataOutputStream os = new DataOutputStream(rootProcess.getOutputStream());
-            os.writeBytes("echo \"Do I have root?\" >/system/sd/temporary.txt\n");
-            os.writeBytes("rm /system/sd/temporary.txt\n");
-
-//             Close the terminal
-            os.writeBytes("exit\n");
-            os.flush();
-            try {
-                rootProcess.waitFor();
-                if (rootProcess.exitValue() != 255) {
-                    // TODO Code to run on success
-                    Log.d(MithrilApplication.getDebugTag(), "Got root!");
-                } else {
-                    // TODO Code to run on unsuccessful
-                    Log.d(MithrilApplication.getDebugTag(), "Can't root, exit value = " + Integer.toString(rootProcess.exitValue()));
-                    return false;
-                }
-            } catch (InterruptedException e) {
-                // TODO Code to run in interrupted exception
-                Log.d(MithrilApplication.getDebugTag(), "Can't root, interrupted exception: " + e.getMessage());
-                return false;
-            }
+//            // Attempt to write a file to a root-only
+//            DataOutputStream os = new DataOutputStream(rootProcess.getOutputStream());
+//            os.writeBytes("echo \"Do I have root?\" >/system/temporary.txt\n");
+//            os.writeBytes("rm /system/temporary.txt\n");
+            runOnSU(rootProcess, statementsToRun);
         } catch (IOException e) {
             // TODO Code to run in input/output exception
             Log.d(MithrilApplication.getDebugTag(), "Can't root, I/O exception: " + e.getMessage());
-            return false;
+            throw new PhoneNotRootedException();
         }
         return true;
     }
 
-    public boolean runScript(String[] statementsToRun) {
-        if (!isRoot())
-            return false;
+    private void runOnSU(Process rootProcess, String[] statementsToRun) throws PhoneNotRootedException {
         try {
-            // Preform su to get root privileges
-            rootProcess = Runtime.getRuntime().exec("su");
-
-            // Attempt to write a file to a root-only
             DataOutputStream os = new DataOutputStream(rootProcess.getOutputStream());
             for (int commandCount = 0; commandCount < statementsToRun.length; commandCount++) {
                 String command = statementsToRun[commandCount] + "\n";
                 os.writeBytes(command);
             }
 
-//             Close the terminal
+            BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(rootProcess.getInputStream()));
+
+            // Grab the results
+            StringBuilder log = new StringBuilder();
+            String line;
+            while ((line = bufferedReader.readLine()) != null)
+                log.append(line);
+
+    //             Close the terminal
             os.writeBytes("exit\n");
             os.flush();
             try {
@@ -83,19 +88,18 @@ public class RootAccess {
                 } else {
                     // TODO Code to run on unsuccessful
                     Log.d(MithrilApplication.getDebugTag(), "Can't root, exit value = " + Integer.toString(rootProcess.exitValue()));
-                    return false;
+                    throw new PhoneNotRootedException();
                 }
             } catch (InterruptedException e) {
                 // TODO Code to run in interrupted exception
                 Log.d(MithrilApplication.getDebugTag(), "Can't root, interrupted exception: " + e.getMessage());
-                return false;
+                throw new PhoneNotRootedException();
             }
         } catch (IOException e) {
             // TODO Code to run in input/output exception
             Log.d(MithrilApplication.getDebugTag(), "Can't root, I/O exception: " + e.getMessage());
-            return false;
+            throw new PhoneNotRootedException();
         }
-        return true;
     }
 
 
@@ -104,34 +108,41 @@ public class RootAccess {
      *
      * @return <code>true</code> if the device is rooted, <code>false</code> otherwise.
      */
-    public boolean isRooted() {
+    public void testRooted() throws PhoneNotRootedException {
 
         // get from build info
         String buildTags = android.os.Build.TAGS;
         if (buildTags != null && buildTags.contains("test-keys")) {
-            return true;
+            setRooted(true);
+            return;
         }
 
         // check if /system/app/Superuser.apk is present
         try {
             File file = new File("/system/app/Superuser.apk");
             if (file.exists()) {
-                return true;
+                setRooted(true);
+                return;
             }
         } catch (Exception e1) {
             // ignore
         }
 
         // try executing commands
-        return canExecuteCommand("/system/xbin/which su")
-                || canExecuteCommand("/system/bin/which su") || canExecuteCommand("which su");
+        if (canExecuteCommand("/system/xbin/which su | tr -d '\\n'") || canExecuteCommand("/system/bin/which su | tr -d '\\n'") || canExecuteCommand("which su | tr -d '\\n'"))
+            setRooted(true);
+
+        setRooted(false);
+        //Phone is not rooted
+        throw new PhoneNotRootedException();
     }
 
     // executes a command on the system
     private boolean canExecuteCommand(String command) {
         boolean executedSuccessfully;
         try {
-            Runtime.getRuntime().exec(command);
+            rootProcess = Runtime.getRuntime().exec("su");
+            runOnSU(rootProcess, new String[]{command});
             executedSuccessfully = true;
         } catch (Exception e) {
             executedSuccessfully = false;

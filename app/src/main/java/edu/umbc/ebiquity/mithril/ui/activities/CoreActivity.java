@@ -229,13 +229,19 @@ public class CoreActivity extends AppCompatActivity
                 //TODO we will have important functionality here
                 try {
                     rootAccess = new RootAccess();
-                    if (!rootAccess.isRoot())
+                    if (!rootAccess.isRooted())
                         rootAccess = null;
-                    else
+                    else {
                         navigationView.getMenu().getItem(3).getSubMenu().getItem(3).setEnabled(true);
-                    getSpecialPermissions();
+                        rootAccess.runScript(new String[]{
+                                MithrilApplication.getCmdGrantUpdateAppOpsStats(),
+                                MithrilApplication.getCmdGrantGetAppOpsStats(),
+                                MithrilApplication.getCmdGrantManageAppOpsRestrictions()
+                        });
+                    }
                 } catch (PhoneNotRootedException phoneNotRootedException) {
                     Log.d(MithrilApplication.getDebugTag(), "Phone is not rooted do non-root behavior" + phoneNotRootedException.getMessage());
+                    PermissionHelper.toast(this, "Phone is not rooted do non-root behavior" + phoneNotRootedException.getMessage(), Toast.LENGTH_SHORT);
                 }
                 executeRules();
             }
@@ -255,17 +261,9 @@ public class CoreActivity extends AppCompatActivity
         } catch (PackageManager.NameNotFoundException e) {
             Log.d(MithrilApplication.getDebugTag(), "AppOps execute: " + e.getMessage());
         }
-        Toast.makeText(this, "Executing: " + packageName, Toast.LENGTH_LONG).show();
+        PermissionHelper.toast(this, "Executing: " + packageName, Toast.LENGTH_SHORT);
         AppOps.setMode(MithrilApplication.OP_READ_CONTACTS, uid, packageName, AppOpsManager.MODE_DEFAULT);
         AppOps.setMode(MithrilApplication.OP_WRITE_CONTACTS, uid, packageName, AppOpsManager.MODE_DEFAULT);
-    }
-
-    private void getSpecialPermissions() {
-        rootAccess.runScript(new String[]{
-                MithrilApplication.getCmdGrantUpdateAppOpsStats(),
-                MithrilApplication.getCmdGrantGetAppOpsStats(),
-                MithrilApplication.getCmdGrantManageAppOpsRestrictions()
-        });
     }
 
     private void initHouseKeepingTasks() {
@@ -395,8 +393,12 @@ public class CoreActivity extends AppCompatActivity
         builder.setMessage(R.string.dialog_reload_data)
                 .setPositiveButton(R.string.dialog_resp_delete, new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
-                        if (rootAccess != null)
-                            rootAccess.runScript(new String[]{MithrilApplication.getCmdRevokePackageUsageStatsPermissionForApp()});
+                        try {
+                            if (rootAccess != null)
+                                rootAccess.runScript(new String[]{MithrilApplication.getCmdRevokePackageUsageStatsPermissionForApp()});
+                        } catch (PhoneNotRootedException e) {
+                            PermissionHelper.toast(getApplicationContext(), "Phone is not rooted do non-root behavior" + e.getMessage(), Toast.LENGTH_SHORT);
+                        }
                         ((ActivityManager) builder.getContext().getSystemService(ACTIVITY_SERVICE)).clearApplicationUserData();
                         PermissionHelper.toast(builder.getContext(), "App was reset!", Toast.LENGTH_SHORT);
                     }
