@@ -262,26 +262,30 @@ public class CoreActivity extends AppCompatActivity
             ApplicationInfo applicationInfo = packageManager.getApplicationInfo(packageName, PackageManager.GET_META_DATA);
             int uid = applicationInfo.uid;
 
-            int mode = AppOps.checkOpNoThrow(AppOps.OPSTR_READ_CONTACTS, uid, packageName);
             // Without being a privileged app we cannot execute the next line!
 //            int altMode = appOpsManager.checkOpNoThrow(AppOpsManager.OPSTR_READ_CONTACTS, uid, packageName);
             // Testing if we can do this for our own app. It works!
-            int altMode = appOpsManager.checkOpNoThrow(AppOpsManager.OPSTR_READ_CONTACTS, android.os.Process.myUid(), this.getPackageName());
-
-            PermissionHelper.toast(this, "Executing: " + packageName + " got mode: " + Integer.toString(mode), Toast.LENGTH_SHORT);
-            Log.d(MithrilApplication.getDebugTag(), "Executing: " + packageName + " got mode: " + Integer.toString(mode));
-
-            Log.d(MithrilApplication.getDebugTag(), "Alt mode: " + Integer.toString(altMode));
+//            int altMode = appOpsManager.checkOpNoThrow(AppOpsManager.OPSTR_READ_CONTACTS, android.os.Process.myUid(), this.getPackageName());
 
             Log.d(MithrilApplication.getDebugTag(), "Mode allowed: " + Integer.toString(AppOpsManager.MODE_ALLOWED));
             Log.d(MithrilApplication.getDebugTag(), "Mode default: " + Integer.toString(AppOpsManager.MODE_DEFAULT));
             Log.d(MithrilApplication.getDebugTag(), "Mode error: " + Integer.toString(AppOpsManager.MODE_ERRORED));
             Log.d(MithrilApplication.getDebugTag(), "Mode ignored: " + Integer.toString(AppOpsManager.MODE_IGNORED));
 
-            //            AppOps.setMode(MithrilApplication.OP_READ_CONTACTS, uid, packageName, AppOpsManager.MODE_DEFAULT);
-//            PermissionHelper.toast(this, "Done executing: " + packageName + " got mode: " + Integer.toString(mode), Toast.LENGTH_SHORT);
-//            Log.d(MithrilApplication.getDebugTag(), "Executing: " + packageName + " got mode: " + Integer.toString(mode));
-//            AppOps.setMode(MithrilApplication.OP_WRITE_CONTACTS, uid, packageName, AppOpsManager.MODE_DEFAULT);
+//            Log.d(MithrilApplication.getDebugTag(), "Alt mode: " + Integer.toString(altMode));
+
+            int mode = AppOps.checkOpNoThrow(AppOps.OPSTR_READ_CONTACTS, uid, packageName);
+            PermissionHelper.toast(this, "Executing: " + packageName + " got mode: " + Integer.toString(mode), Toast.LENGTH_SHORT);
+            Log.d(MithrilApplication.getDebugTag(), "Executing: " + packageName + " got mode: " + Integer.toString(mode));
+
+            int modeToSet = AppOpsManager.MODE_ALLOWED;
+            if(mode == AppOpsManager.MODE_ALLOWED)
+                modeToSet = AppOpsManager.MODE_IGNORED;
+            AppOps.setMode(MithrilApplication.OP_READ_CONTACTS, uid, packageName, modeToSet);
+
+            mode = AppOps.checkOpNoThrow(AppOps.OPSTR_READ_CONTACTS, uid, packageName);
+            PermissionHelper.toast(this, "Executing: " + packageName + " got mode: " + Integer.toString(mode), Toast.LENGTH_SHORT);
+            Log.d(MithrilApplication.getDebugTag(), "Executing: " + packageName + " got mode: " + Integer.toString(mode));
         } catch (UpdateAppOpsStatsException e) {
             PermissionHelper.toast(this, "We don't have UPDATE_APP_OPS_STATS permission!", Toast.LENGTH_SHORT);
         } catch (PackageManager.NameNotFoundException e) {
