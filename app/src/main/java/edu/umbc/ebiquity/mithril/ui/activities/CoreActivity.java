@@ -88,7 +88,6 @@ public class CoreActivity extends AppCompatActivity
     private SQLiteDatabase mithrilDB;
     private SharedPreferences sharedPreferences;
     private RootAccess rootAccess = null;
-    private AppOps appOps;
 
 //    private Violation violationItemSelected = null;
 //    private List<AppData> appDataItemsSelected = null;
@@ -234,6 +233,7 @@ public class CoreActivity extends AppCompatActivity
                         rootAccess = null;
                     else {
                         navigationView.getMenu().getItem(3).getSubMenu().getItem(3).setEnabled(true);
+
 //                        rootAccess.runScript(new String[]{
 //                                MithrilApplication.getCmdGrantUpdateAppOpsStats(),
 //                                MithrilApplication.getCmdGrantGetAppOpsStats(),
@@ -253,7 +253,7 @@ public class CoreActivity extends AppCompatActivity
 
     private void executeRules() {
         AppOpsManager appOpsManager = (AppOpsManager) getSystemService(Context.APP_OPS_SERVICE);
-        appOps = new AppOps(appOpsManager);
+        AppOps appOps = new AppOps(appOpsManager);
 
         try {
             // Let's try to block contacts permission for YouTube!
@@ -274,16 +274,16 @@ public class CoreActivity extends AppCompatActivity
 
 //            Log.d(MithrilApplication.getDebugTag(), "Alt mode: " + Integer.toString(altMode));
 
-            int mode = AppOps.checkOpNoThrow(AppOps.OPSTR_READ_CONTACTS, uid, packageName);
+            int mode = appOps.checkOpNoThrow(AppOps.OPSTR_READ_CONTACTS, uid, packageName);
             PermissionHelper.toast(this, "Executing: " + packageName + " got mode: " + Integer.toString(mode), Toast.LENGTH_SHORT);
             Log.d(MithrilApplication.getDebugTag(), "Executing: " + packageName + " got mode: " + Integer.toString(mode));
 
             int modeToSet = AppOpsManager.MODE_ALLOWED;
             if(mode == AppOpsManager.MODE_ALLOWED)
                 modeToSet = AppOpsManager.MODE_IGNORED;
-            AppOps.setMode(MithrilApplication.OP_READ_CONTACTS, uid, packageName, modeToSet);
+            appOps.setMode(AppOps.OP_READ_CONTACTS, uid, packageName, modeToSet);
 
-            mode = AppOps.checkOpNoThrow(AppOps.OPSTR_READ_CONTACTS, uid, packageName);
+            mode = appOps.checkOpNoThrow(AppOps.OPSTR_READ_CONTACTS, uid, packageName);
             PermissionHelper.toast(this, "Executing: " + packageName + " got mode: " + Integer.toString(mode), Toast.LENGTH_SHORT);
             Log.d(MithrilApplication.getDebugTag(), "Executing: " + packageName + " got mode: " + Integer.toString(mode));
         } catch (UpdateAppOpsStatsException e) {
@@ -420,12 +420,9 @@ public class CoreActivity extends AppCompatActivity
         builder.setMessage(R.string.dialog_reload_data)
                 .setPositiveButton(R.string.dialog_resp_delete, new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
-                        try {
-                            if (rootAccess != null)
-                                rootAccess.runScript(new String[]{MithrilApplication.getCmdRevokePackageUsageStatsPermissionForApp()});
-                        } catch (PhoneNotRootedException e) {
-                            PermissionHelper.toast(getApplicationContext(), "Phone is not rooted do non-root behavior" + e.getMessage(), Toast.LENGTH_SHORT);
-                        }
+                        AppOpsManager appOpsManager = (AppOpsManager) getSystemService(Context.APP_OPS_SERVICE);
+                        AppOps appOps = new AppOps(appOpsManager);
+                        appOps.setMode(AppOps.OP_GET_USAGE_STATS, android.os.Process.myUid(), getApplicationContext().getPackageName(), AppOpsManager.MODE_DEFAULT);
                         ((ActivityManager) builder.getContext().getSystemService(ACTIVITY_SERVICE)).clearApplicationUserData();
                         PermissionHelper.toast(builder.getContext(), "App was reset!", Toast.LENGTH_SHORT);
                     }

@@ -2,7 +2,6 @@ package edu.umbc.ebiquity.mithril.util.specialtasks.execute;
 
 import android.Manifest;
 import android.app.AppOpsManager;
-import android.app.admin.DevicePolicyManager;
 import android.app.usage.UsageStatsManager;
 import android.os.UserManager;
 
@@ -17,9 +16,6 @@ import edu.umbc.ebiquity.mithril.util.specialtasks.errorsnexceptions.UpdateAppOp
  */
 
 public class AppOps {
-    private static AppOpsManager appOpsManager;
-    private static Class appOpsManagerClass;
-
     /**
      *  From UserManager class
      *
@@ -33,137 +29,7 @@ public class AppOps {
      * The default value is <code>false</code>.
      */
     public static final String DISALLOW_RECORD_AUDIO = "no_record_audio";
-
     public static final String DISALLOW_WALLPAPER = "no_wallpaper";
-
-    public AppOps(AppOpsManager anAppOpsManager) {
-        appOpsManager = anAppOpsManager;
-        appOpsManagerClass = appOpsManager.getClass();
-    }
-
-    public static int checkOpNoThrow(String op, int uid, String packageName) throws UpdateAppOpsStatsException {
-        return checkOpNoThrow(AppOps.strOpToOp(op), uid, packageName);
-    }
-
-    private static int strOpToOp(String op) {
-        Integer val = sOpStrToOp.get(op);
-        if (val == null) {
-            throw new IllegalArgumentException("Unknown operation string: " + op);
-        }
-        return val;
-    }
-
-    private static int checkOpNoThrow(int op, int uid, String packageName) throws UpdateAppOpsStatsException {
-        int result = Integer.MIN_VALUE;
-        try {
-            Class[] types = new Class[3];
-            types[0] = Integer.TYPE;
-            types[1] = Integer.TYPE;
-            types[2] = String.class;
-            Method checkOpNoThrow =
-                    appOpsManagerClass.getMethod("checkOpNoThrow", types);
-
-            Object[] args = new Object[3];
-            args[0] = Integer.valueOf(op);
-            args[1] = Integer.valueOf(uid);
-            args[2] = packageName;
-            result = (Integer) checkOpNoThrow.invoke(appOpsManager, args);
-
-        } catch (NoSuchMethodException e) {
-            e.printStackTrace();
-        } catch (InvocationTargetException e) {
-            e.printStackTrace();
-        } catch (IllegalAccessException e) {
-            e.printStackTrace();
-        }
-        if (result == Integer.MIN_VALUE)
-            throw new UpdateAppOpsStatsException();
-        return result;
-    }
-
-    /**
-     * See this: https://forums.xamarin.com/discussion/64456/c-java-reflection-access-private-methods-on-underlying-native-instance
-     *
-     * Original signature: public void setMode(int code, int uid, String packageName, int mode)
-     * @param code
-     * @param uid
-     * @param mode
-     * @return
-     */
-    public static boolean setMode(int code, int uid, String packageName, int mode) {
-        try {
-            Class[] types = new Class[4];
-            types[0] = Integer.TYPE;
-            types[1] = Integer.TYPE;
-            types[2] = String.class;
-            types[3] = Integer.TYPE;
-            Method setModeMethod =
-                    appOpsManagerClass.getMethod("setMode", types);
-
-            Object[] args = new Object[4];
-            args[0] = Integer.valueOf(code);
-            args[1] = Integer.valueOf(uid);
-            args[2] = packageName;
-            args[3] = Integer.valueOf(mode);
-            setModeMethod.invoke(appOpsManager, args);
-
-            return true;
-        } catch (NoSuchMethodException e) {
-            e.printStackTrace();
-        } catch (InvocationTargetException e) {
-            e.printStackTrace();
-        } catch (IllegalAccessException e) {
-            e.printStackTrace();
-        }
-        return false;
-    }
-
-    private void appOps() {
-//        PackageInfo mPackageInfo = null;
-//        String mPackageName = null;
-//        boolean newState = false;
-//        AppOpsManager mAppOps = (AppOpsManager) context.getSystemService(Context.APP_OPS_SERVICE);
-//        mAppOps.setPrivacyGuardSettingForPackage(app.uid, app.packageName, app.privacyGuardEnabled);
-/*
-        mAppOps.setMode(AppOpsManager.OP_WRITE_SETTINGS,
-                mPackageInfo.applicationInfo.uid, mPackageName, newState
-                        ? AppOpsManager.MODE_ALLOWED : AppOpsManager.MODE_ERRORED);
-        mCurSysAppOpMode = mAppOps.checkOp(AppOpsManager.OP_SYSTEM_ALERT_WINDOW, uid, pkg);
-        mCurToastAppOpMode = mAppOps.checkOp(AppOpsManager.OP_TOAST_WINDOW, uid, pkg);
-        mAppOps.setMode(AppOpsManager.OP_SYSTEM_ALERT_WINDOW, uid, pkg, AppOpsManager.MODE_IGNORED);
-        mAppOps.setMode(AppOpsManager.OP_TOAST_WINDOW, uid, pkg, AppOpsManager.MODE_IGNORED);
-        mAppOps.setMode(AppOpsManager.OP_SYSTEM_ALERT_WINDOW, uid, pkg, mCurSysAppOpMode);
-        mAppOps.setMode(AppOpsManager.OP_TOAST_WINDOW, uid, pkg, mCurToastAppOpMode);
-        final int switchOp = AppOpsManager.opToSwitch(firstOp.getOp());
-        int mode = mAppOps.checkOp(switchOp, entry.getPackageOps().getUid(), entry.getPackageOps().getPackageName());
-        mAppOps.setMode(switchOp, entry.getPackageOps().getUid(), entry.getPackageOps().getPackageName(), positionToMode(position));
-        sw.setChecked(mAppOps.checkOp(switchOp, entry.getPackageOps()
-                .getUid(), entry.getPackageOps().getPackageName()) == AppOpsManager.MODE_ALLOWED);
-        sw.setOnCheckedChangeListener(new Switch.OnCheckedChangeListener() {
-            public void onCheckedChanged(CompoundButton buttonView,
-                                         boolean isChecked) {
-                mAppOps.setMode(switchOp, entry.getPackageOps()
-                                .getUid(), entry.getPackageOps()
-                                .getPackageName(),
-                        isChecked ? AppOpsManager.MODE_ALLOWED
-                                : AppOpsManager.MODE_IGNORED);
-            }
-        });
-        List<AppOpsManager.PackageOps> pkgs;
-        if (packageName != null) {
-            pkgs = mAppOps.getOpsForPackage(uid, packageName, tpl.ops);
-        } else {
-            pkgs = mAppOps.getPackagesForOps(tpl.ops);
-        }
-*/
-    }
-
-    // when adding one of these:
-    //  - increment _NUM_OP
-    //  - add rows to sOpToSwitch, sOpToString, sOpNames, sOpToPerms, sOpDefault
-    //  - add descriptive strings to Settings/res/values/arrays.xml
-    //  - add the op to the appropriate template in AppOpsState.OpsTemplate (settings app)
-
     /** @hide No operation specified. */
     public static final int OP_NONE = -1;
     /** @hide Access to coarse location information. */
@@ -180,6 +46,12 @@ public class AppOps {
     public static final int OP_WRITE_CONTACTS = 5;
     /** @hide */
     public static final int OP_READ_CALL_LOG = 6;
+
+    // when adding one of these:
+    //  - increment _NUM_OP
+    //  - add rows to sOpToSwitch, sOpToString, sOpNames, sOpToPerms, sOpDefault
+    //  - add descriptive strings to Settings/res/values/arrays.xml
+    //  - add the op to the appropriate template in AppOpsState.OpsTemplate (settings app)
     /** @hide */
     public static final int OP_WRITE_CALL_LOG = 7;
     /** @hide */
@@ -296,7 +168,6 @@ public class AppOps {
     public static final int OP_RUN_IN_BACKGROUND = 63;
     /** @hide */
     public static final int _NUM_OP = 64;
-
     /** Access to coarse location information. */
     public static final String OPSTR_COARSE_LOCATION = "android:coarse_location";
     /** Access to fine location information. */
@@ -392,7 +263,6 @@ public class AppOps {
     /** @hide Get device accounts. */
     public static final String OPSTR_GET_ACCOUNTS
             = "android:get_accounts";
-
     private static final int[] RUNTIME_PERMISSIONS_OPS = {
             // Contacts
             OP_READ_CONTACTS,
@@ -429,7 +299,6 @@ public class AppOps {
             // Body sensors
             OP_BODY_SENSORS
     };
-
     /**
      * This maps each operation to the operation that serves as the
      * switch to determine whether it is allowed.  Generally this is
@@ -504,7 +373,6 @@ public class AppOps {
             OP_GET_ACCOUNTS,
             OP_RUN_IN_BACKGROUND,
     };
-
     /**
      * This maps each operation to the public string constant for it.
      * If it doesn't have a public string constant, it maps to null.
@@ -575,7 +443,6 @@ public class AppOps {
             OPSTR_GET_ACCOUNTS,
             null,
     };
-
     /**
      * This provides a simple name for each operation to be used
      * in debug output.
@@ -646,7 +513,6 @@ public class AppOps {
             "GET_ACCOUNTS",
             "RUN_IN_BACKGROUND",
     };
-
     /**
      * This optionally maps a permission to an operation.  If there
      * is no permission associated with an operation, it is null.
@@ -717,7 +583,6 @@ public class AppOps {
             Manifest.permission.GET_ACCOUNTS,
             null, // no permission for running in background
     };
-
     /**
      * Specifies whether an Op should be restricted by a user restriction.
      * Each Op should be filled with a restriction string from UserManager or
@@ -789,7 +654,6 @@ public class AppOps {
             null, // GET_ACCOUNTS
             null, // RUN_IN_BACKGROUND
     };
-
     /**
      * This specifies whether each option should allow the system
      * (and system ui) to bypass the user restriction when active.
@@ -860,7 +724,6 @@ public class AppOps {
             false, // GET_ACCOUNTS
             false, // RUN_IN_BACKGROUND
     };
-
     /**
      * This specifies the default mode for each operation.
      */
@@ -930,7 +793,6 @@ public class AppOps {
             AppOpsManager.MODE_ALLOWED,
             AppOpsManager.MODE_ALLOWED,  // OP_RUN_IN_BACKGROUND
     };
-
     /**
      * This specifies whether each option is allowed to be reset
      * when resetting all app preferences.  Disable reset for
@@ -1004,12 +866,10 @@ public class AppOps {
             false,
             false,
     };
-
     /**
      * Mapping from an app op name to the app op code.
      */
     private static HashMap<String, Integer> sOpStrToOp = new HashMap<>();
-
     /**
      * Mapping from a permission to the corresponding app op.
      */
@@ -1058,5 +918,131 @@ public class AppOps {
                 sRuntimePermToOp.put(sOpPerms[op], op);
             }
         }
+    }
+
+    private AppOpsManager appOpsManager;
+    private Class appOpsManagerClass;
+
+    public AppOps(AppOpsManager anAppOpsManager) {
+        appOpsManager = anAppOpsManager;
+        appOpsManagerClass = appOpsManager.getClass();
+    }
+
+    public int checkOpNoThrow(String op, int uid, String packageName) throws UpdateAppOpsStatsException {
+        return checkOpNoThrow(strOpToOp(op), uid, packageName);
+    }
+
+    private int strOpToOp(String op) {
+        Integer val = sOpStrToOp.get(op);
+        if (val == null) {
+            throw new IllegalArgumentException("Unknown operation string: " + op);
+        }
+        return val;
+    }
+
+    private int checkOpNoThrow(int op, int uid, String packageName) throws UpdateAppOpsStatsException {
+        int result = Integer.MIN_VALUE;
+        try {
+            Class[] types = new Class[3];
+            types[0] = Integer.TYPE;
+            types[1] = Integer.TYPE;
+            types[2] = String.class;
+            Method checkOpNoThrow =
+                    appOpsManagerClass.getMethod("checkOpNoThrow", types);
+
+            Object[] args = new Object[3];
+            args[0] = Integer.valueOf(op);
+            args[1] = Integer.valueOf(uid);
+            args[2] = packageName;
+            result = (Integer) checkOpNoThrow.invoke(appOpsManager, args);
+
+        } catch (NoSuchMethodException e) {
+            e.printStackTrace();
+        } catch (InvocationTargetException e) {
+            e.printStackTrace();
+        } catch (IllegalAccessException e) {
+            e.printStackTrace();
+        }
+        if (result == Integer.MIN_VALUE)
+            throw new UpdateAppOpsStatsException();
+        return result;
+    }
+
+    /**
+     * See this: https://forums.xamarin.com/discussion/64456/c-java-reflection-access-private-methods-on-underlying-native-instance
+     * <p>
+     * Original signature: public void setMode(int code, int uid, String packageName, int mode)
+     *
+     * @param code
+     * @param uid
+     * @param mode
+     * @return
+     */
+    public boolean setMode(int code, int uid, String packageName, int mode) {
+        try {
+            Class[] types = new Class[4];
+            types[0] = Integer.TYPE;
+            types[1] = Integer.TYPE;
+            types[2] = String.class;
+            types[3] = Integer.TYPE;
+            Method setModeMethod =
+                    appOpsManagerClass.getMethod("setMode", types);
+
+            Object[] args = new Object[4];
+            args[0] = Integer.valueOf(code);
+            args[1] = Integer.valueOf(uid);
+            args[2] = packageName;
+            args[3] = Integer.valueOf(mode);
+            setModeMethod.invoke(appOpsManager, args);
+
+            return true;
+        } catch (NoSuchMethodException e) {
+            e.printStackTrace();
+        } catch (InvocationTargetException e) {
+            e.printStackTrace();
+        } catch (IllegalAccessException e) {
+            e.printStackTrace();
+        }
+        return false;
+    }
+
+    private void appOps() {
+//        PackageInfo mPackageInfo = null;
+//        String mPackageName = null;
+//        boolean newState = false;
+//        AppOpsManager mAppOps = (AppOpsManager) context.getSystemService(Context.APP_OPS_SERVICE);
+//        mAppOps.setPrivacyGuardSettingForPackage(app.uid, app.packageName, app.privacyGuardEnabled);
+/*
+        mAppOps.setMode(AppOpsManager.OP_WRITE_SETTINGS,
+                mPackageInfo.applicationInfo.uid, mPackageName, newState
+                        ? AppOpsManager.MODE_ALLOWED : AppOpsManager.MODE_ERRORED);
+        mCurSysAppOpMode = mAppOps.checkOp(AppOpsManager.OP_SYSTEM_ALERT_WINDOW, uid, pkg);
+        mCurToastAppOpMode = mAppOps.checkOp(AppOpsManager.OP_TOAST_WINDOW, uid, pkg);
+        mAppOps.setMode(AppOpsManager.OP_SYSTEM_ALERT_WINDOW, uid, pkg, AppOpsManager.MODE_IGNORED);
+        mAppOps.setMode(AppOpsManager.OP_TOAST_WINDOW, uid, pkg, AppOpsManager.MODE_IGNORED);
+        mAppOps.setMode(AppOpsManager.OP_SYSTEM_ALERT_WINDOW, uid, pkg, mCurSysAppOpMode);
+        mAppOps.setMode(AppOpsManager.OP_TOAST_WINDOW, uid, pkg, mCurToastAppOpMode);
+        final int switchOp = AppOpsManager.opToSwitch(firstOp.getOp());
+        int mode = mAppOps.checkOp(switchOp, entry.getPackageOps().getUid(), entry.getPackageOps().getPackageName());
+        mAppOps.setMode(switchOp, entry.getPackageOps().getUid(), entry.getPackageOps().getPackageName(), positionToMode(position));
+        sw.setChecked(mAppOps.checkOp(switchOp, entry.getPackageOps()
+                .getUid(), entry.getPackageOps().getPackageName()) == AppOpsManager.MODE_ALLOWED);
+        sw.setOnCheckedChangeListener(new Switch.OnCheckedChangeListener() {
+            public void onCheckedChanged(CompoundButton buttonView,
+                                         boolean isChecked) {
+                mAppOps.setMode(switchOp, entry.getPackageOps()
+                                .getUid(), entry.getPackageOps()
+                                .getPackageName(),
+                        isChecked ? AppOpsManager.MODE_ALLOWED
+                                : AppOpsManager.MODE_IGNORED);
+            }
+        });
+        List<AppOpsManager.PackageOps> pkgs;
+        if (packageName != null) {
+            pkgs = mAppOps.getOpsForPackage(uid, packageName, tpl.ops);
+        } else {
+            pkgs = mAppOps.getPackagesForOps(tpl.ops);
+        }
+*/
     }
 }

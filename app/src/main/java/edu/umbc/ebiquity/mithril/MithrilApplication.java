@@ -51,158 +51,6 @@ public class MithrilApplication extends Application {
      * Map for storing information about airports in the San Francisco bay area.
      */
     public static final HashMap<String, LatLng> BALTIMORE_COUNTY_LANDMARKS = new HashMap<String, LatLng>();
-
-    /**
-     * AppOps constants:
-     * No operation specified.
-     */
-    public static final int OP_NONE = -1;
-    /**
-     * Access to coarse location information.
-     */
-    public static final int OP_COARSE_LOCATION = 0;
-    /**
-     * Access to fine location information.
-     */
-    public static final int OP_FINE_LOCATION = 1;
-    /**
-     * Causing GPS to run.
-     */
-    public static final int OP_GPS = 2;
-    public static final int OP_VIBRATE = 3;
-    public static final int OP_READ_CONTACTS = 4;
-    public static final int OP_WRITE_CONTACTS = 5;
-    public static final int OP_READ_CALL_LOG = 6;
-    public static final int OP_WRITE_CALL_LOG = 7;
-    public static final int OP_READ_CALENDAR = 8;
-    public static final int OP_WRITE_CALENDAR = 9;
-    public static final int OP_WIFI_SCAN = 10;
-    public static final int OP_POST_NOTIFICATION = 11;
-    public static final int OP_NEIGHBORING_CELLS = 12;
-    public static final int OP_CALL_PHONE = 13;
-    public static final int OP_READ_SMS = 14;
-    public static final int OP_WRITE_SMS = 15;
-    public static final int OP_RECEIVE_SMS = 16;
-    public static final int OP_RECEIVE_EMERGECY_SMS = 17;
-    public static final int OP_RECEIVE_MMS = 18;
-    public static final int OP_RECEIVE_WAP_PUSH = 19;
-    public static final int OP_SEND_SMS = 20;
-    public static final int OP_READ_ICC_SMS = 21;
-    public static final int OP_WRITE_ICC_SMS = 22;
-    public static final int OP_WRITE_SETTINGS = 23;
-    public static final int OP_SYSTEM_ALERT_WINDOW = 24;
-    public static final int OP_ACCESS_NOTIFICATIONS = 25;
-    public static final int OP_CAMERA = 26;
-    public static final int OP_RECORD_AUDIO = 27;
-    public static final int OP_PLAY_AUDIO = 28;
-    public static final int OP_READ_CLIPBOARD = 29;
-    public static final int OP_WRITE_CLIPBOARD = 30;
-    public static final int OP_TAKE_MEDIA_BUTTONS = 31;
-    public static final int OP_TAKE_AUDIO_FOCUS = 32;
-    public static final int OP_AUDIO_MASTER_VOLUME = 33;
-    public static final int OP_AUDIO_VOICE_VOLUME = 34;
-    public static final int OP_AUDIO_RING_VOLUME = 35;
-    public static final int OP_AUDIO_MEDIA_VOLUME = 36;
-    public static final int OP_AUDIO_ALARM_VOLUME = 37;
-    public static final int OP_AUDIO_NOTIFICATION_VOLUME = 38;
-    public static final int OP_AUDIO_BLUETOOTH_VOLUME = 39;
-    public static final int OP_WAKE_LOCK = 40;
-    /**
-     * Continually monitoring location data.
-     */
-    public static final int OP_MONITOR_LOCATION = 41;
-    /**
-     * Continually monitoring location data with a relatively high power request.
-     */
-    public static final int OP_MONITOR_HIGH_POWER_LOCATION = 42;
-    /**
-     * Retrieve current usage stats
-     */
-    public static final int OP_GET_USAGE_STATS = 43;
-    public static final int OP_MUTE_MICROPHONE = 44;
-    public static final int OP_TOAST_WINDOW = 45;
-    /**
-     * Capture the device's display contents and/or audio
-     */
-    public static final int OP_PROJECT_MEDIA = 46;
-    /**
-     * Activate a VPN connection without user intervention.
-     */
-    public static final int OP_ACTIVATE_VPN = 47;
-    /**
-     * Access the WallpaperManagerAPI to write wallpapers.
-     */
-    public static final int OP_WRITE_WALLPAPER = 48;
-    /**
-     * Received the assist structure from an app.
-     */
-    public static final int OP_ASSIST_STRUCTURE = 49;
-    /**
-     * Received a screenshot from assist.
-     */
-    public static final int OP_ASSIST_SCREENSHOT = 50;
-    /**
-     * Read the phone state.
-     */
-    public static final int OP_READ_PHONE_STATE = 51;
-    /**
-     * Add voicemail messages to the voicemail content provider.
-     */
-    public static final int OP_ADD_VOICEMAIL = 52;
-    /**
-     * Access APIs for SIP calling over VOIP or WiFi.
-     */
-    public static final int OP_USE_SIP = 53;
-    /**
-     * Intercept outgoing calls.
-     */
-    public static final int OP_PROCESS_OUTGOING_CALLS = 54;
-    /**
-     * User the fingerprint API.
-     */
-    public static final int OP_USE_FINGERPRINT = 55;
-    /**
-     * Access to body sensors such as heart rate, etc.
-     */
-    public static final int OP_BODY_SENSORS = 56;
-    /**
-     * Read previously received cell broadcast messages.
-     */
-    public static final int OP_READ_CELL_BROADCASTS = 57;
-    /**
-     * Inject mock location into the system.
-     */
-    public static final int OP_MOCK_LOCATION = 58;
-    /**
-     * Read external storage.
-     */
-    public static final int OP_READ_EXTERNAL_STORAGE = 59;
-    /**
-     * Write external storage.
-     */
-    public static final int OP_WRITE_EXTERNAL_STORAGE = 60;
-    /**
-     * Turned on the screen.
-     */
-    public static final int OP_TURN_SCREEN_ON = 61;
-    /**
-     * Get device accounts.
-     */
-    public static final int OP_GET_ACCOUNTS = 62;
-    /**
-     * Control whether an application is allowed to run in the background.
-     */
-    public static final int OP_RUN_IN_BACKGROUND = 63;
-    /**
-     * Wifi state change
-     **/
-    public static final int OP_CHANGE_WIFI_STATE = 64;
-    public static final int OP_BLUETOOTH_CHANGE = 65;
-    public static final int OP_BOOT_COMPLETED = 66;
-    public static final int OP_NFC_CHANGE = 67;
-    public static final int OP_DATA_CONNECT_CHANGE = 68;
-    public static final int OP_SU = 69;
-    public static final int _NUM_OP = 70;
     
     /**
      * Private variables start
@@ -268,6 +116,7 @@ public class MithrilApplication extends Application {
     private static final String PREF_KEY_LOCATION = "location";
     private static final String PREF_KEY_CURRENT_ADDRESS = "curraddr";
     private static final String PREF_KEY_WHAT_LEVEL = "level";
+    private static final String PREF_KEY_RESET_ENABLED = "reset";
 
     //Make sure they match the values from preferences.xml
     private static final String PREF_ALL_DONE_KEY = "prefsDone";
@@ -326,7 +175,7 @@ public class MithrilApplication extends Application {
      * TODO Change the constants as per the ontology and ensure that you generate some rules to be modified by the automated script
      * The following constants are made up and not in sync with the ontology
      */
-    private static final String CONTEXT_ARRAY_ACTIVITY[] = {"Activity", "Personal_Activity", "Professional_Activity", "Date", "Enterntainment",
+    private static final String CONTEXT_ARRAY_ACTIVITY[] = {"Activity", "Personal_Activity", "Professional_Activity", "Date", "Entertainment",
             "Exercising", "Sleeping", "Partying", "Playing", "Running"};
     private static final String CONTEXT_ARRAY_LOCATION[] = {"Location", "Place", "Classroom", "Home", "Library", "Movie_Theatre", "Office",
             "Department_Office", "Lab", "Supervisor_Office", "Government_Office", "Post_Office", "Secure_Government_Office"};
@@ -1149,6 +998,10 @@ public class MithrilApplication extends Application {
 
     public static String getCmdDetectAppLaunchTime() {
         return CMD_DETECT_APP_LAUNCH_TIME;
+    }
+
+    public static String getPrefKeyResetEnabled() {
+        return PREF_KEY_RESET_ENABLED;
     }
 
     public static String getLauncherName(Context context) {
