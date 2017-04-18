@@ -962,9 +962,10 @@ public class AppOps {
             e.printStackTrace();
         } catch (IllegalAccessException e) {
             e.printStackTrace();
+        } catch (SecurityException e) {
+//        if (result == Integer.MIN_VALUE)
+            throw new UpdateAppOpsStatsException(e.getMessage());
         }
-        if (result == Integer.MIN_VALUE)
-            throw new UpdateAppOpsStatsException();
         return result;
     }
 

@@ -18,7 +18,6 @@ import java.util.Arrays;
 import java.util.List;
 
 import edu.umbc.ebiquity.mithril.MithrilApplication;
-import edu.umbc.ebiquity.mithril.util.specialtasks.execute.AppOps;
 
 /**
  * Created by Prajit on 11/21/2016.
@@ -101,8 +100,8 @@ public class PermissionHelper {
     }
 
     private static boolean hasUsageStatsPermission(Context context) {
-        AppOpsManager appOps = (AppOpsManager) context.getSystemService(Context.APP_OPS_SERVICE);
-        int mode = appOps.checkOpNoThrow(AppOpsManager.OPSTR_GET_USAGE_STATS, android.os.Process.myUid(), context.getPackageName());
+        AppOpsManager appOpsManager = (AppOpsManager) context.getSystemService(Context.APP_OPS_SERVICE);
+        int mode = appOpsManager.checkOpNoThrow(AppOpsManager.OPSTR_GET_USAGE_STATS, android.os.Process.myUid(), context.getPackageName());
         Log.d(MithrilApplication.getDebugTag(), "hasUsageStatsPermission: " + Integer.toString(mode));
         return mode == AppOpsManager.MODE_ALLOWED;
     }

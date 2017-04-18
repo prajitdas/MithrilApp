@@ -62,11 +62,9 @@ import edu.umbc.ebiquity.mithril.ui.fragments.coreactivityfragments.ServicesFrag
 import edu.umbc.ebiquity.mithril.ui.fragments.coreactivityfragments.ViolationFragment;
 import edu.umbc.ebiquity.mithril.util.services.AppLaunchDetectorService;
 import edu.umbc.ebiquity.mithril.util.services.LocationUpdateService;
-import edu.umbc.ebiquity.mithril.util.specialtasks.errorsnexceptions.PhoneNotRootedException;
 import edu.umbc.ebiquity.mithril.util.specialtasks.errorsnexceptions.UpdateAppOpsStatsException;
 import edu.umbc.ebiquity.mithril.util.specialtasks.execute.AppOps;
 import edu.umbc.ebiquity.mithril.util.specialtasks.permissions.PermissionHelper;
-import edu.umbc.ebiquity.mithril.util.specialtasks.root.RootAccess;
 
 public class CoreActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener,
@@ -87,7 +85,7 @@ public class CoreActivity extends AppCompatActivity
     private MithrilDBHelper mithrilDBHelper;
     private SQLiteDatabase mithrilDB;
     private SharedPreferences sharedPreferences;
-    private RootAccess rootAccess = null;
+//    private RootAccess rootAccess = null;
 
 //    private Violation violationItemSelected = null;
 //    private List<AppData> appDataItemsSelected = null;
@@ -225,27 +223,29 @@ public class CoreActivity extends AppCompatActivity
         // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
         if (id == R.id.capture_exec_settings) {
-            if (rootAccess == null) {
-                //TODO we will have important functionality here
-                try {
-                    rootAccess = new RootAccess();
-                    if (!rootAccess.isRooted())
-                        rootAccess = null;
-                    else {
-                        navigationView.getMenu().getItem(3).getSubMenu().getItem(3).setEnabled(true);
-
+            executeRules();
+            navigationView.getMenu().getItem(3).getSubMenu().getItem(3).setEnabled(true);
+            SharedPreferences.Editor editor = this.getSharedPreferences(MithrilApplication.getSharedPreferencesName(), Context.MODE_PRIVATE).edit();
+            editor.putBoolean(MithrilApplication.getPrefKeyResetEnabled(), true);
+            editor.apply();
+//            We do not need root access if we are a privileged app.
+//            if (rootAccess == null) {
+//                try {
+//                    rootAccess = new RootAccess();
+//                    if (!rootAccess.isRooted())
+//                        rootAccess = null;
+//                    else {
 //                        rootAccess.runScript(new String[]{
 //                                MithrilApplication.getCmdGrantUpdateAppOpsStats(),
 //                                MithrilApplication.getCmdGrantGetAppOpsStats(),
 //                                MithrilApplication.getCmdGrantManageAppOpsRestrictions()
 //                        });
-                    }
-                } catch (PhoneNotRootedException phoneNotRootedException) {
-                    Log.d(MithrilApplication.getDebugTag(), "Phone is not rooted do non-root behavior" + phoneNotRootedException.getMessage());
-                    PermissionHelper.toast(this, "Phone is not rooted do non-root behavior" + phoneNotRootedException.getMessage(), Toast.LENGTH_SHORT);
-                }
-                executeRules();
-            }
+//                    }
+//                } catch (PhoneNotRootedException phoneNotRootedException) {
+//                    Log.d(MithrilApplication.getDebugTag(), "Phone is not rooted do non-root behavior" + phoneNotRootedException.getMessage());
+//                    PermissionHelper.toast(this, "Phone is not rooted do non-root behavior" + phoneNotRootedException.getMessage(), Toast.LENGTH_SHORT);
+//                }
+//            }
             return true;
         }
         return super.onOptionsItemSelected(item);
@@ -257,7 +257,7 @@ public class CoreActivity extends AppCompatActivity
 
         try {
             // Let's try to block contacts permission for YouTube!
-            String packageName = "com.google.android.youtube";
+            String packageName = "com.google.android.gm";
             PackageManager packageManager = this.getPackageManager();
             ApplicationInfo applicationInfo = packageManager.getApplicationInfo(packageName, PackageManager.GET_META_DATA);
             int uid = applicationInfo.uid;
@@ -274,6 +274,9 @@ public class CoreActivity extends AppCompatActivity
 
 //            Log.d(MithrilApplication.getDebugTag(), "Alt mode: " + Integer.toString(altMode));
 
+            /*
+             * Check and block read contacts for Gmail app
+             */
             int mode = appOps.checkOpNoThrow(AppOps.OPSTR_READ_CONTACTS, uid, packageName);
             PermissionHelper.toast(this, "Executing: " + packageName + " got mode: " + Integer.toString(mode), Toast.LENGTH_SHORT);
             Log.d(MithrilApplication.getDebugTag(), "Executing: " + packageName + " got mode: " + Integer.toString(mode));
@@ -286,8 +289,25 @@ public class CoreActivity extends AppCompatActivity
             mode = appOps.checkOpNoThrow(AppOps.OPSTR_READ_CONTACTS, uid, packageName);
             PermissionHelper.toast(this, "Executing: " + packageName + " got mode: " + Integer.toString(mode), Toast.LENGTH_SHORT);
             Log.d(MithrilApplication.getDebugTag(), "Executing: " + packageName + " got mode: " + Integer.toString(mode));
+
+            /*
+             * Check and block write contacts for Gmail app
+             */
+            mode = appOps.checkOpNoThrow(AppOps.OPSTR_WRITE_CONTACTS, uid, packageName);
+            PermissionHelper.toast(this, "Executing: " + packageName + " got mode: " + Integer.toString(mode), Toast.LENGTH_SHORT);
+            Log.d(MithrilApplication.getDebugTag(), "Executing: " + packageName + " got mode: " + Integer.toString(mode));
+
+            modeToSet = AppOpsManager.MODE_ALLOWED;
+            if (mode == AppOpsManager.MODE_ALLOWED)
+                modeToSet = AppOpsManager.MODE_IGNORED;
+            appOps.setMode(AppOps.OP_WRITE_CONTACTS, uid, packageName, modeToSet);
+
+            mode = appOps.checkOpNoThrow(AppOps.OPSTR_WRITE_CONTACTS, uid, packageName);
+            PermissionHelper.toast(this, "Executing: " + packageName + " got mode: " + Integer.toString(mode), Toast.LENGTH_SHORT);
+            Log.d(MithrilApplication.getDebugTag(), "Executing: " + packageName + " got mode: " + Integer.toString(mode));
         } catch (UpdateAppOpsStatsException e) {
-            PermissionHelper.toast(this, "We don't have UPDATE_APP_OPS_STATS permission!", Toast.LENGTH_SHORT);
+            PermissionHelper.toast(this, "Mithril does not seem to have UPDATE_APP_OPS_STATS permission. Cannot execute any rules. Sorry!", Toast.LENGTH_SHORT);
+            Log.d(MithrilApplication.getDebugTag(), "Mithril does not seem to have UPDATE_APP_OPS_STATS permission. Cannot execute any rules. Sorry!" + e.getMessage());
         } catch (PackageManager.NameNotFoundException e) {
             Log.d(MithrilApplication.getDebugTag(), "AppOps execute: " + e.getMessage());
         }
@@ -332,6 +352,9 @@ public class CoreActivity extends AppCompatActivity
 
         navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
+
+        if (sharedPreferences.getBoolean(MithrilApplication.getPrefKeyResetEnabled(), false)) ;
+        navigationView.getMenu().getItem(3).getSubMenu().getItem(3).setEnabled(true);
 
         applyHeaderView();
     }
