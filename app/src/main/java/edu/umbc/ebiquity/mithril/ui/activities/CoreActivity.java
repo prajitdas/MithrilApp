@@ -62,7 +62,7 @@ import edu.umbc.ebiquity.mithril.ui.fragments.coreactivityfragments.ServicesFrag
 import edu.umbc.ebiquity.mithril.ui.fragments.coreactivityfragments.ViolationFragment;
 import edu.umbc.ebiquity.mithril.util.services.AppLaunchDetectorService;
 import edu.umbc.ebiquity.mithril.util.services.LocationUpdateService;
-import edu.umbc.ebiquity.mithril.util.specialtasks.errorsnexceptions.UpdateAppOpsStatsException;
+import edu.umbc.ebiquity.mithril.util.specialtasks.errorsnexceptions.AppOpsException;
 import edu.umbc.ebiquity.mithril.util.specialtasks.execute.AppOps;
 import edu.umbc.ebiquity.mithril.util.specialtasks.permissions.PermissionHelper;
 
@@ -305,9 +305,9 @@ public class CoreActivity extends AppCompatActivity
             mode = appOps.checkOpNoThrow(AppOps.OPSTR_WRITE_CONTACTS, uid, packageName);
             PermissionHelper.toast(this, "Executing: " + packageName + " got mode: " + Integer.toString(mode), Toast.LENGTH_SHORT);
             Log.d(MithrilApplication.getDebugTag(), "Executing: " + packageName + " got mode: " + Integer.toString(mode));
-        } catch (UpdateAppOpsStatsException e) {
+        } catch (AppOpsException e) {
             PermissionHelper.toast(this, "Mithril does not seem to have UPDATE_APP_OPS_STATS permission. Cannot execute any rules. Sorry!", Toast.LENGTH_SHORT);
-            Log.d(MithrilApplication.getDebugTag(), "Mithril does not seem to have UPDATE_APP_OPS_STATS permission. Cannot execute any rules. Sorry!" + e.getMessage());
+            Log.d(MithrilApplication.getDebugTag(), "Mithril does not seem to have UPDATE_APP_OPS_STATS permission. Cannot execute any rules. Sorry! " + e.getMessage());
         } catch (PackageManager.NameNotFoundException e) {
             Log.d(MithrilApplication.getDebugTag(), "AppOps execute: " + e.getMessage());
         }
@@ -445,7 +445,11 @@ public class CoreActivity extends AppCompatActivity
                     public void onClick(DialogInterface dialog, int id) {
                         AppOpsManager appOpsManager = (AppOpsManager) getSystemService(Context.APP_OPS_SERVICE);
                         AppOps appOps = new AppOps(appOpsManager);
-                        appOps.setMode(AppOps.OP_GET_USAGE_STATS, android.os.Process.myUid(), getApplicationContext().getPackageName(), AppOpsManager.MODE_DEFAULT);
+                        try {
+                            appOps.setMode(AppOps.OP_GET_USAGE_STATS, android.os.Process.myUid(), getApplicationContext().getPackageName(), AppOpsManager.MODE_DEFAULT);
+                        } catch (AppOpsException e) {
+                            Log.e(MithrilApplication.getDebugTag(), e.getMessage());
+                        }
                         ((ActivityManager) builder.getContext().getSystemService(ACTIVITY_SERVICE)).clearApplicationUserData();
                         PermissionHelper.toast(builder.getContext(), "App was reset!", Toast.LENGTH_SHORT);
                     }

@@ -4,22 +4,25 @@ package edu.umbc.ebiquity.mithril.util.specialtasks.errorsnexceptions;
  * Created by prajit on 4/17/17.
  */
 
-public class UpdateAppOpsStatsException extends Exception {
+public class AppOpsException extends Exception {
     private String message;
-    public UpdateAppOpsStatsException() {
+    public AppOpsException() {
         super();
     }
 
-    public UpdateAppOpsStatsException(String message) {
+    public AppOpsException(String message) {
         super();
         setMessage(message);
     }
 
+    @Override
     public String getMessage() {
+        if(message == null)
+            return super.getMessage();
         return message;
     }
 
-    public void setMessage(String message) {
+    private void setMessage(String message) {
         this.message = message;
     }
 

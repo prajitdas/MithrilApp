@@ -4,12 +4,14 @@ import android.Manifest;
 import android.app.AppOpsManager;
 import android.app.usage.UsageStatsManager;
 import android.os.UserManager;
+import android.util.Log;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.HashMap;
 
-import edu.umbc.ebiquity.mithril.util.specialtasks.errorsnexceptions.UpdateAppOpsStatsException;
+import edu.umbc.ebiquity.mithril.MithrilApplication;
+import edu.umbc.ebiquity.mithril.util.specialtasks.errorsnexceptions.AppOpsException;
 
 /**
  * Created by Prajit on 4/13/2017.
@@ -928,7 +930,7 @@ public class AppOps {
         appOpsManagerClass = appOpsManager.getClass();
     }
 
-    public int checkOpNoThrow(String op, int uid, String packageName) throws UpdateAppOpsStatsException {
+    public int checkOpNoThrow(String op, int uid, String packageName) throws AppOpsException {
         return checkOpNoThrow(strOpToOp(op), uid, packageName);
     }
 
@@ -940,7 +942,7 @@ public class AppOps {
         return val;
     }
 
-    private int checkOpNoThrow(int op, int uid, String packageName) throws UpdateAppOpsStatsException {
+    private int checkOpNoThrow(int op, int uid, String packageName) throws AppOpsException {
         int result = Integer.MIN_VALUE;
         try {
             Class[] types = new Class[3];
@@ -957,15 +959,18 @@ public class AppOps {
             result = (Integer) checkOpNoThrow.invoke(appOpsManager, args);
 
         } catch (NoSuchMethodException e) {
-            e.printStackTrace();
+            Log.e(MithrilApplication.getDebugTag(), e.getCause().toString());
+            throw new AppOpsException(e.getCause().toString());
         } catch (InvocationTargetException e) {
-            e.printStackTrace();
+            Log.e(MithrilApplication.getDebugTag(), e.getCause().toString());
+            throw new AppOpsException(e.getCause().toString());
         } catch (IllegalAccessException e) {
-            e.printStackTrace();
-        } catch (SecurityException e) {
-//        if (result == Integer.MIN_VALUE)
-            throw new UpdateAppOpsStatsException(e.getMessage());
+            Log.e(MithrilApplication.getDebugTag(), e.getCause().toString());
+            throw new AppOpsException(e.getCause().toString());
         }
+
+        if (result == Integer.MIN_VALUE)
+            throw new AppOpsException();
         return result;
     }
 
@@ -979,7 +984,7 @@ public class AppOps {
      * @param mode
      * @return
      */
-    public boolean setMode(int code, int uid, String packageName, int mode) {
+    public boolean setMode(int code, int uid, String packageName, int mode) throws AppOpsException {
         try {
             Class[] types = new Class[4];
             types[0] = Integer.TYPE;
@@ -996,15 +1001,17 @@ public class AppOps {
             args[3] = Integer.valueOf(mode);
             setModeMethod.invoke(appOpsManager, args);
 
-            return true;
         } catch (NoSuchMethodException e) {
-            e.printStackTrace();
+            Log.e(MithrilApplication.getDebugTag(), e.getCause().toString());
+            throw new AppOpsException(e.getCause().toString());
         } catch (InvocationTargetException e) {
-            e.printStackTrace();
+            Log.e(MithrilApplication.getDebugTag(), e.getCause().toString());
+            throw new AppOpsException(e.getCause().toString());
         } catch (IllegalAccessException e) {
-            e.printStackTrace();
+            Log.e(MithrilApplication.getDebugTag(), e.getCause().toString());
+            throw new AppOpsException(e.getCause().toString());
         }
-        return false;
+        return true;
     }
 
     private void appOps() {
