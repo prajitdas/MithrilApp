@@ -194,7 +194,9 @@
         <service
             android:name=".util.services.GeofenceTransitionsIntentService"
             android:exported="false" />
-
+        <service
+            android:name=".util.services.ExecuteRulesIntentService"
+            android:exported="false"></service>
     </application>
 
 </manifest>

@@ -10,7 +10,6 @@ import android.support.v4.content.ContextCompat;
 
 import edu.umbc.ebiquity.mithril.MithrilApplication;
 import edu.umbc.ebiquity.mithril.util.services.AppLaunchDetectorService;
-import edu.umbc.ebiquity.mithril.util.services.LocationUpdateService;
 import edu.umbc.ebiquity.mithril.util.specialtasks.permissions.PermissionHelper;
 
 public class StartServicesOnBootReceiver extends BroadcastReceiver {
@@ -34,9 +33,9 @@ public class StartServicesOnBootReceiver extends BroadcastReceiver {
                         if (sharedPref.contains(MithrilApplication.getPrefKeyLocationUpdateServiceState())) {
                             updatesRequested = sharedPref.getBoolean(MithrilApplication.getPrefKeyLocationUpdateServiceState(), false);
                         }
-                        if (updatesRequested) {
-                            context.startService(new Intent(context, LocationUpdateService.class));
-                        }
+//                        if (updatesRequested) {
+//                            context.startService(new Intent(context, LocationUpdateService.class));
+//                        }
                     }
                 }
             }
