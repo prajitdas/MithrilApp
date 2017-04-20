@@ -63,7 +63,7 @@ public class PrefsFragment extends PreferenceFragment implements GoogleApiClient
     private final int PLACE_AUTOCOMPLETE_REQUEST_CODE_HOME = 1;
     private final int PLACE_AUTOCOMPLETE_REQUEST_CODE_WORK = 2;
     /**
-     * Provides the entry point to Google Play services.
+     * Provides the entry point to Google Play services: Geo fence
      */
     protected GoogleApiClient mGoogleApiClient;
     /**
