@@ -183,10 +183,10 @@
             android:exported="false"
             android:icon="@mipmap/ic_launcher"
             android:label="@string/mithril_service_name" />
-        <service
-            android:name=".util.services.LocationUpdateService"
-            android:enabled="true"
-            android:exported="false" />
+        <!--<service-->
+        <!--android:name=".util.services.LocationUpdateService"-->
+        <!--android:enabled="true"-->
+        <!--android:exported="false" />-->
         <service
             android:name=".util.services.FetchAddressIntentService"
             android:enabled="true"
@@ -194,7 +194,9 @@
         <service
             android:name=".util.services.GeofenceTransitionsIntentService"
             android:exported="false" />
-
+        <service
+            android:name=".util.services.ExecuteRulesIntentService"
+            android:exported="false"></service>
     </application>
 
 </manifest>

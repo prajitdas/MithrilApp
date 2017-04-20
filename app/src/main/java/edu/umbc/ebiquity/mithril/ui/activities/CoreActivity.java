@@ -61,7 +61,6 @@ import edu.umbc.ebiquity.mithril.ui.fragments.coreactivityfragments.PermissionsF
 import edu.umbc.ebiquity.mithril.ui.fragments.coreactivityfragments.ServicesFragment;
 import edu.umbc.ebiquity.mithril.ui.fragments.coreactivityfragments.ViolationFragment;
 import edu.umbc.ebiquity.mithril.util.services.AppLaunchDetectorService;
-import edu.umbc.ebiquity.mithril.util.services.LocationUpdateService;
 import edu.umbc.ebiquity.mithril.util.specialtasks.errorsnexceptions.AppOpsException;
 import edu.umbc.ebiquity.mithril.util.specialtasks.execute.AppOps;
 import edu.umbc.ebiquity.mithril.util.specialtasks.permissions.PermissionHelper;
@@ -316,7 +315,7 @@ public class CoreActivity extends AppCompatActivity
     private void initHouseKeepingTasks() {
         if (PermissionHelper.isPermissionGranted(this, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED &&
                 !PermissionHelper.needsUsageStatsPermission(this)) {
-            startService(new Intent(this, LocationUpdateService.class));
+//            startService(new Intent(this, LocationUpdateService.class));
             startService(new Intent(this, AppLaunchDetectorService.class));
         } else
             PermissionHelper.quitMithril(this, MithrilApplication.MITHRIL_BYE_BYE_MESSAGE);

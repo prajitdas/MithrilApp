@@ -1,14 +1,13 @@
 package edu.umbc.ebiquity.mithril.util.services;
-
-/*
+/**
  * Copyright 2014 Google Inc. All Rights Reserved.
- * <p>
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * <p>
+ *
  * http://www.apache.org/licenses/LICENSE-2.0
- * <p>
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -26,6 +25,7 @@ import android.graphics.Color;
 import android.support.v4.app.NotificationCompat;
 import android.support.v4.app.TaskStackBuilder;
 import android.text.TextUtils;
+import android.util.Log;
 
 import com.google.android.gms.location.Geofence;
 import com.google.android.gms.location.GeofencingEvent;
@@ -34,12 +34,12 @@ import java.util.ArrayList;
 import java.util.List;
 
 import edu.umbc.ebiquity.mithril.R;
-import edu.umbc.ebiquity.mithril.ui.fragments.prefsactivityfragments.PrefsFragment;
+import edu.umbc.ebiquity.mithril.ui.activities.CoreActivity;
 import edu.umbc.ebiquity.mithril.util.specialtasks.errorsnexceptions.GeofenceErrorMessages;
 
-/*
+/**
  * Listener for geofence transition changes.
- * <p>
+ *
  * Receives geofence transition events from Location Services in the form of an Intent containing
  * the transition type and geofence id(s) that triggered the transition. Creates a notification
  * as the output.
@@ -64,7 +64,6 @@ public class GeofenceTransitionsIntentService extends IntentService {
 
     /**
      * Handles incoming intents.
-     *
      * @param intent sent by Location Services. This Intent is provided to Location
      *               Services (inside a PendingIntent) when addGeofences() is called.
      */
@@ -74,7 +73,7 @@ public class GeofenceTransitionsIntentService extends IntentService {
         if (geofencingEvent.hasError()) {
             String errorMessage = GeofenceErrorMessages.getErrorString(this,
                     geofencingEvent.getErrorCode());
-//            Log.e(TAG, errorMessage);
+            Log.e(TAG, errorMessage);
             return;
         }
 
@@ -97,19 +96,19 @@ public class GeofenceTransitionsIntentService extends IntentService {
 
             // Send notification and log the transition details.
             sendNotification(geofenceTransitionDetails);
-//            Log.i(TAG, geofenceTransitionDetails);
-        } //else {
-        // Log the error.
-//            Log.e(TAG, getString(R.string.geofence_transition_invalid_type, geofenceTransition));
-//        }
+            Log.i(TAG, geofenceTransitionDetails);
+        } else {
+            // Log the error.
+            Log.e(TAG, getString(R.string.geofence_transition_invalid_type, geofenceTransition));
+        }
     }
 
     /**
      * Gets transition details and returns them as a formatted string.
      *
-     * @param context             The app context.
-     * @param geofenceTransition  The ID of the geofence transition.
-     * @param triggeringGeofences The geofence(s) triggered.
+     * @param context               The app context.
+     * @param geofenceTransition    The ID of the geofence transition.
+     * @param triggeringGeofences   The geofence(s) triggered.
      * @return The transition details formatted as String.
      */
     private String getGeofenceTransitionDetails(
@@ -131,17 +130,17 @@ public class GeofenceTransitionsIntentService extends IntentService {
 
     /**
      * Posts a notification in the notification bar when a transition is detected.
-     * If the user clicks the notification, control goes to the CoreActivity.
+     * If the user clicks the notification, control goes to the MainActivity.
      */
     private void sendNotification(String notificationDetails) {
         // Create an explicit content Intent that starts the main Activity.
-        Intent notificationIntent = new Intent(getApplicationContext(), PrefsFragment.class);
+        Intent notificationIntent = new Intent(getApplicationContext(), CoreActivity.class);
 
         // Construct a task stack.
         TaskStackBuilder stackBuilder = TaskStackBuilder.create(this);
 
         // Add the main Activity to the task stack as the parent.
-        stackBuilder.addParentStack(PrefsFragment.class);
+        stackBuilder.addParentStack(CoreActivity.class);
 
         // Push the content Intent onto the stack.
         stackBuilder.addNextIntent(notificationIntent);
@@ -178,7 +177,7 @@ public class GeofenceTransitionsIntentService extends IntentService {
     /**
      * Maps geofence transition types to their human-readable equivalents.
      *
-     * @param transitionType A transition type constant defined in Geofence
+     * @param transitionType    A transition type constant defined in Geofence
      * @return A String indicating the type of transition
      */
     private String getTransitionString(int transitionType) {
