@@ -816,13 +816,13 @@ public class MithrilApplication extends Application {
         return TOAST_MESSAGE_DATABASE_NOT_RELOADED;
     }
 
-    public static String getPrefKeyCurrentLocation() {
-        return PREF_KEY_CURRENT_LOCATION;
-    }
-
-    public static String getPrefKeyCurrentAddress() {
-        return PREF_KEY_CURRENT_ADDRESS;
-    }
+//    public static String getPrefKeyCurrentLocation() {
+//        return PREF_KEY_CURRENT_LOCATION;
+//    }
+//
+//    public static String getPrefKeyCurrentAddress() {
+//        return PREF_KEY_CURRENT_ADDRESS;
+//    }
 
     public static String getPrefKeyWhatLevel() {
         return PREF_KEY_WHAT_LEVEL;

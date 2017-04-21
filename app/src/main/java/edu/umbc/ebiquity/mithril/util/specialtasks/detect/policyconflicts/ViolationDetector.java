@@ -15,6 +15,7 @@ import java.util.List;
 import edu.umbc.ebiquity.mithril.MithrilApplication;
 import edu.umbc.ebiquity.mithril.data.dbhelpers.MithrilDBHelper;
 import edu.umbc.ebiquity.mithril.data.model.PolicyRule;
+import edu.umbc.ebiquity.mithril.data.model.Violation;
 import edu.umbc.ebiquity.mithril.data.model.rules.actions.Action;
 import edu.umbc.ebiquity.mithril.data.model.rules.context.SemanticUserContext;
 import edu.umbc.ebiquity.mithril.data.model.rules.context.contextpieces.SemanticLocation;
@@ -99,22 +100,29 @@ public class ViolationDetector {
             if (rulesForApp.size() > 0) {
                 for (PolicyRule rule : rulesForApp) {
                     if (rule.getAction().equals(Action.ALLOW)) {
+                        Violation violation;
                         //Is this allowed?
-                        //Do we need location?
-                        if (rule.getSemanticUserContext().getSemanticLocation() != null)
-                            weNeedLocation(context);
-                        //Do we need activity?
-                        if (rule.getSemanticUserContext().getSemanticActivity() != null)
-                            weNeedActivity();
                         //Do we need temporal context?
-                        if (rule.getSemanticUserContext().getSemanticTime() != null)
-                            weNeedTime();
+                        if (rule.getSemanticUserContext().getSemanticTime() != null) {
+                            violation = weNeedTimeViolationCheck(context, rule.getSemanticUserContext().getSemanticTime());
+                            if(violation != null)
+                                mithrilDBHelper.addViolation(mithrilDB, violation);
+                        }
+                        //Do we need location?
+                        else if (rule.getSemanticUserContext().getSemanticLocation() != null) {
+                            violation = weNeedLocationViolationCheck(context, rule.getSemanticUserContext().getSemanticLocation());
+                            if(violation != null)
+                                mithrilDBHelper.addViolation(mithrilDB, violation);
+                        }
+                        //Do we need activity?
+                        else if (rule.getSemanticUserContext().getSemanticActivity() != null)
+                            weNeedActivityViolationCheck();
                         //Do we need nearby actors?
-                        if (rule.getSemanticUserContext().getSemanticNearActors() != null)
-                            weNeedNearActors();
+                        else if (rule.getSemanticUserContext().getSemanticNearActors() != null)
+                            weNeedNearActorsViolationCheck();
                         //Do we need identity context?
-                        if (rule.getSemanticUserContext().getSemanticIdentity() != null)
-                            weNeedIdentity();
+                        else if (rule.getSemanticUserContext().getSemanticIdentity() != null)
+                            weNeedIdentityViolationCheck();
                     } else {
                         Log.e(MithrilApplication.getDebugTag(), "Serious error! DB contains deny rules. This violates our CWA");
                         throw new CWAException(); //Something is wrong!!!! We have a Closed World Assumption we cannot have deny rules...
@@ -190,23 +198,25 @@ public class ViolationDetector {
         mithrilDB.close();
     }
 
-    private static void weNeedIdentity() {
+    private static void weNeedIdentityViolationCheck() {
 
     }
 
-    private static void weNeedNearActors() {
+    private static void weNeedNearActorsViolationCheck() {
 
     }
 
-    private static void weNeedTime() {
+    private static Violation weNeedTimeViolationCheck(Context context, SemanticTime semanticTime) {
+        if(semanticTime.getInferredTime() != currentTime)
+            return new Violation();
+        return null;
+    }
+
+    private static void weNeedActivityViolationCheck() {
 
     }
 
-    private static void weNeedActivity() {
-
-    }
-
-    private static void weNeedLocation(Context context) {
+    private static Violation weNeedLocationViolationCheck(Context context, SemanticLocation semanticLocation) {
         SharedPreferences sharedPref = context.getSharedPreferences(MithrilApplication.getSharedPreferencesName(), Context.MODE_PRIVATE);
 
         Gson gson = new Gson();
@@ -217,5 +227,8 @@ public class ViolationDetector {
 
         json = sharedPref.getString(MithrilApplication.getPrefKeyCurrentLocation(), null);
         detectedLocation = gson.fromJson(json, Location.class);
+        if(semanticLocation.getInferredLocation() != currentLocation)
+            return new Violation();
+        return null;
     }
 }
