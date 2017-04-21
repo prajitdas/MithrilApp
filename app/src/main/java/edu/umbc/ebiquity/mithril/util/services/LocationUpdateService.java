@@ -331,8 +331,6 @@ public class LocationUpdateService extends Service implements
 //        if (mRequestingLocationUpdates) {
 //            startLocationUpdates();
 //        }
-        // Request location updates using static settings
-//        Intent intent = new Intent(this, LocationUpdateReceiver.class);
         try {
             LocationServices.FusedLocationApi.requestLocationUpdates(this.mGoogleApiClient,
                     mLocationRequest, this);
