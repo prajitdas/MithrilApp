@@ -32,6 +32,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Toast;
+import com.android.settings.Settings.AppOpsSummaryActivity;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -223,6 +224,7 @@ public class CoreActivity extends AppCompatActivity
         int id = item.getItemId();
         if (id == R.id.capture_exec_settings) {
             executeRules();
+            loadAdvancedAppOps();
             navigationView.getMenu().getItem(3).getSubMenu().getItem(3).setEnabled(true);
             SharedPreferences.Editor editor = this.getSharedPreferences(MithrilApplication.getSharedPreferencesName(), Context.MODE_PRIVATE).edit();
             editor.putBoolean(MithrilApplication.getPrefKeyResetEnabled(), true);
@@ -248,6 +250,12 @@ public class CoreActivity extends AppCompatActivity
             return true;
         }
         return super.onOptionsItemSelected(item);
+    }
+
+    private void loadAdvancedAppOps() {
+        Intent i = new Intent(Intent.ACTION_MAIN);
+        i.setClass(this, AppOpsSummaryActivity.class);
+        startActivity(i);
     }
 
     private void executeRules() {
