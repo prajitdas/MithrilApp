@@ -3,8 +3,10 @@
     <string name="mithril_app_icon_description">This is Mithril\'s icon</string>
 
     <string name="violationsMenu">Policy violation list</string>
+    <string name="usage_stats">Usage stats</string>
+    <string name="usage_list">App usage list</string>
     <string name="permissions">Permission info</string>
-    <string name="permissionsList">Permissions list</string>
+    <string name="permissions_list">Permissions list</string>
     <string name="components">Component info</string>
     <string name="userApps">User apps</string>
     <string name="systemApps">System apps</string>
@@ -202,6 +204,7 @@
     <string name="title_activity_show_app_detail">Show app details</string>
     <string name="title_activity_core">Mithril Core</string>
     <string name="title_activity_test_main">Test activity</string>
+    <string name="title_activity_usage_stats">Usage stats</string>
     <string name="title_activity_rule_change">Modify rules</string>
     <string name="title_activity_user_agreement">User consent</string>
     <string name="title_activity_show_user_agreement">User agreement</string>

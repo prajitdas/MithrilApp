@@ -15,6 +15,7 @@ package edu.umbc.ebiquity.mithril.ui.activities;
  * License for the specific language governing permissions and limitations
  * under the License.
  */
+
 import android.app.Activity;
 import android.app.usage.UsageStats;
 import android.app.usage.UsageStatsManager;
@@ -35,6 +36,7 @@ import android.widget.BaseAdapter;
 import android.widget.ListView;
 import android.widget.Spinner;
 import android.widget.TextView;
+
 import java.text.DateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -56,6 +58,34 @@ public class UsageStatsActivity extends Activity implements OnItemSelectedListen
     private LayoutInflater mInflater;
     private UsageStatsAdapter mAdapter;
     private PackageManager mPm;
+
+    /**
+     * Called when the activity is first created.
+     */
+    @Override
+    protected void onCreate(Bundle icicle) {
+        super.onCreate(icicle);
+        setContentView(R.layout.activity_usage_stats);
+        mUsageStatsManager = (UsageStatsManager) getSystemService(Context.USAGE_STATS_SERVICE);
+        mInflater = (LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        mPm = getPackageManager();
+        Spinner typeSpinner = (Spinner) findViewById(R.id.typeSpinner);
+        typeSpinner.setOnItemSelectedListener(this);
+        ListView listView = (ListView) findViewById(R.id.pkg_list);
+        mAdapter = new UsageStatsAdapter();
+        listView.setAdapter(mAdapter);
+    }
+
+    @Override
+    public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+        mAdapter.sortList(position);
+    }
+
+    @Override
+    public void onNothingSelected(AdapterView<?> parent) {
+        // do nothing
+    }
+
     public static class AppNameComparator implements Comparator<UsageStats> {
         private Map<String, String> mAppLabelList;
         AppNameComparator(Map<String, String> appList) {
@@ -68,6 +98,7 @@ public class UsageStatsActivity extends Activity implements OnItemSelectedListen
             return alabel.compareTo(blabel);
         }
     }
+
     public static class LastTimeUsedComparator implements Comparator<UsageStats> {
         @Override
         public final int compare(UsageStats a, UsageStats b) {
@@ -75,29 +106,33 @@ public class UsageStatsActivity extends Activity implements OnItemSelectedListen
             return (int)(b.getLastTimeUsed() - a.getLastTimeUsed());
         }
     }
+
     public static class UsageTimeComparator implements Comparator<UsageStats> {
         @Override
         public final int compare(UsageStats a, UsageStats b) {
             return (int)(b.getTotalTimeInForeground() - a.getTotalTimeInForeground());
         }
     }
+
     // View Holder used when displaying views
     static class AppViewHolder {
         TextView pkgName;
         TextView lastTimeUsed;
         TextView usageTime;
     }
+
     class UsageStatsAdapter extends BaseAdapter {
         // Constants defining order for display order
         private static final int _DISPLAY_ORDER_USAGE_TIME = 0;
         private static final int _DISPLAY_ORDER_LAST_TIME_USED = 1;
         private static final int _DISPLAY_ORDER_APP_NAME = 2;
+        private final ArrayMap<String, String> mAppLabelMap = new ArrayMap<>();
+        private final ArrayList<UsageStats> mPackageStats = new ArrayList<>();
         private int mDisplayOrder = _DISPLAY_ORDER_USAGE_TIME;
         private LastTimeUsedComparator mLastTimeUsedComparator = new LastTimeUsedComparator();
         private UsageTimeComparator mUsageTimeComparator = new UsageTimeComparator();
         private AppNameComparator mAppLabelComparator;
-        private final ArrayMap<String, String> mAppLabelMap = new ArrayMap<>();
-        private final ArrayList<UsageStats> mPackageStats = new ArrayList<>();
+
         UsageStatsAdapter() {
             Calendar cal = Calendar.getInstance();
             cal.add(Calendar.DAY_OF_YEAR, -5);
@@ -132,18 +167,22 @@ public class UsageStatsActivity extends Activity implements OnItemSelectedListen
             mAppLabelComparator = new AppNameComparator(mAppLabelMap);
             sortList();
         }
+
         @Override
         public int getCount() {
             return mPackageStats.size();
         }
+
         @Override
         public Object getItem(int position) {
             return mPackageStats.get(position);
         }
+
         @Override
         public long getItemId(int position) {
             return position;
         }
+
         @Override
         public View getView(int position, View convertView, ViewGroup parent) {
             // A ViewHolder keeps references to children views to avoid unneccessary calls
@@ -180,6 +219,7 @@ public class UsageStatsActivity extends Activity implements OnItemSelectedListen
             }
             return convertView;
         }
+
         void sortList(int sortOrder) {
             if (mDisplayOrder == sortOrder) {
                 // do nothing
@@ -188,6 +228,7 @@ public class UsageStatsActivity extends Activity implements OnItemSelectedListen
             mDisplayOrder= sortOrder;
             sortList();
         }
+
         private void sortList() {
             if (mDisplayOrder == _DISPLAY_ORDER_USAGE_TIME) {
                 if (localLOGV) Log.i(TAG, "Sorting by usage time");
@@ -201,27 +242,5 @@ public class UsageStatsActivity extends Activity implements OnItemSelectedListen
             }
             notifyDataSetChanged();
         }
-    }
-    /** Called when the activity is first created. */
-    @Override
-    protected void onCreate(Bundle icicle) {
-        super.onCreate(icicle);
-        setContentView(R.layout.activity_usage_stats);
-        mUsageStatsManager = (UsageStatsManager) getSystemService(Context.USAGE_STATS_SERVICE);
-        mInflater = (LayoutInflater)getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-        mPm = getPackageManager();
-        Spinner typeSpinner = (Spinner) findViewById(R.id.typeSpinner);
-        typeSpinner.setOnItemSelectedListener(this);
-        ListView listView = (ListView) findViewById(R.id.pkg_list);
-        mAdapter = new UsageStatsAdapter();
-        listView.setAdapter(mAdapter);
-    }
-    @Override
-    public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-        mAdapter.sortList(position);
-    }
-    @Override
-    public void onNothingSelected(AdapterView<?> parent) {
-        // do nothing
     }
 }

@@ -150,6 +150,10 @@
                 <data android:mimeType="text/plain" />
             </intent-filter>
         </activity>
+        <activity
+            android:name=".ui.activities.UsageStatsActivity"
+            android:label="@string/title_activity_usage_stats"
+            android:theme="@style/AppTheme.NoActionBar"></activity>
 
         <receiver
             android:name=".util.receivers.AppInstallBroadcastReceiver"
@@ -194,7 +198,6 @@
             android:name=".util.services.ExecuteRulesIntentService"
             android:exported="false" />
 
-        <activity android:name=".ui.activities.UsageStatsActivity"></activity>
     </application>
 
 </manifest>

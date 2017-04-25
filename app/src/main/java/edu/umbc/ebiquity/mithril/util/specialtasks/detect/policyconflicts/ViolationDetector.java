@@ -207,8 +207,8 @@ public class ViolationDetector {
     }
 
     private static Violation weNeedTimeViolationCheck(Context context, SemanticTime semanticTime) {
-        if(semanticTime.getInferredTime() != currentTime)
-            return new Violation();
+//        if(semanticTime.getInferredTime() != currentTime)
+//            return new Violation();
         return null;
     }
 
@@ -227,8 +227,8 @@ public class ViolationDetector {
 
         json = sharedPref.getString(MithrilApplication.getPrefKeyCurrentLocation(), null);
         detectedLocation = gson.fromJson(json, Location.class);
-        if(semanticLocation.getInferredLocation() != currentLocation)
-            return new Violation();
+//        if(semanticLocation.getInferredLocation() != currentLocation)
+//            return new Violation();
         return null;
     }
 }

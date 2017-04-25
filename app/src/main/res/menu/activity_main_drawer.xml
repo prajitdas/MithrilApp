@@ -7,6 +7,18 @@
             android:icon="@drawable/rules"
             android:title="@string/violationsMenu" />
         <item
+            android:id="@+id/usagestats"
+            android:icon="@drawable/view_list"
+            android:title="@string/usage_stats">
+            <menu>
+                <item
+                    android:id="@+id/nav_usage"
+                    android:checkable="true"
+                    android:icon="@drawable/format_list_checks"
+                    android:title="@string/usage_list" />
+            </menu>
+        </item>
+        <item
             android:id="@+id/permissions"
             android:icon="@drawable/view_list"
             android:title="@string/permissions">
@@ -15,7 +27,7 @@
                     android:id="@+id/nav_perm"
                     android:checkable="true"
                     android:icon="@drawable/account_settings_variant"
-                    android:title="@string/permissionsList" />
+                    android:title="@string/permissions_list" />
             </menu>
         </item>
         <item
