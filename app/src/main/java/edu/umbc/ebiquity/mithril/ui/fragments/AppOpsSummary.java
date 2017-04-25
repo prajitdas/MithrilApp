@@ -1,7 +1,23 @@
 package edu.umbc.ebiquity.mithril.ui.fragments;
-import android.app.AppOpsManager;
+
+/**
+ * Copyright (C) 2013 The Android Open Source Project
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may not
+ * use this file except in compliance with the License. You may obtain a copy
+ * of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
+ * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
+ * License for the specific language governing permissions and limitations
+ * under the License.
+ */
 import android.app.Fragment;
 import android.app.FragmentManager;
+import android.content.res.TypedArray;
 import android.os.Bundle;
 import android.preference.PreferenceFrameLayout;
 import android.support.v13.app.FragmentPagerAdapter;
@@ -10,9 +26,11 @@ import android.support.v4.view.ViewPager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import com.android.internal.logging.MetricsProto.MetricsEvent;
+import com.android.settings.InstrumentedFragment;
 import com.android.settings.R;
 
-public class AppOpsSummary extends Fragment {
+public class AppOpsSummary extends InstrumentedFragment {
     // layout inflater object used to inflate views
     private LayoutInflater mInflater;
 
@@ -20,40 +38,29 @@ public class AppOpsSummary extends Fragment {
     private View mRootView;
     private ViewPager mViewPager;
     CharSequence[] mPageNames;
-    static int[][] sPageOps = new int[][] {
-            // "Location" page.
-            new int[] { AppOpsManager.OP_COARSE_LOCATION, AppOpsManager.OP_FINE_LOCATION,
-                    AppOpsManager.OP_GPS },
-            // "Personal" page.
-            new int[] { AppOpsManager.OP_READ_CONTACTS, AppOpsManager.OP_WRITE_CONTACTS,
-                    AppOpsManager.OP_READ_CALL_LOG, AppOpsManager.OP_WRITE_CALL_LOG },
-            // "Device" page.
-            new int[] { AppOpsManager.OP_VIBRATE },
-    };
-    static String[][] sPagePerms = new String[][] {
-            // "Location" page.
-            new String[] { android.Manifest.permission.ACCESS_COARSE_LOCATION,
-                    android.Manifest.permission.ACCESS_FINE_LOCATION },
-            // "Personal" page.
-            new String[] { android.Manifest.permission.READ_CONTACTS,
-                    android.Manifest.permission.WRITE_CONTACTS,
-                    android.Manifest.permission.READ_CALL_LOG,
-                    android.Manifest.permission.WRITE_CALL_LOG },
-            // "Device" page.
-            new String[] { android.Manifest.permission.VIBRATE },
+    static AppOpsState.OpsTemplate[] sPageTemplates = new AppOpsState.OpsTemplate[] {
+            AppOpsState.LOCATION_TEMPLATE,
+            AppOpsState.PERSONAL_TEMPLATE,
+            AppOpsState.MESSAGING_TEMPLATE,
+            AppOpsState.MEDIA_TEMPLATE,
+            AppOpsState.DEVICE_TEMPLATE
     };
     int mCurPos;
+    @Override
+    protected int getMetricsCategory() {
+        return MetricsEvent.APP_OPS_SUMMARY;
+    }
     class MyPagerAdapter extends FragmentPagerAdapter implements ViewPager.OnPageChangeListener {
         public MyPagerAdapter(FragmentManager fm) {
             super(fm);
         }
         @Override
         public Fragment getItem(int position) {
-            return new AppOpsCategory(sPageOps[position], sPagePerms[position]);
+            return new AppOpsCategory(sPageTemplates[position]);
         }
         @Override
         public int getCount() {
-            return sPageOps.length;
+            return sPageTemplates.length;
         }
         @Override
         public CharSequence getPageTitle(int position) {
@@ -87,7 +94,13 @@ public class AppOpsSummary extends Fragment {
         mViewPager.setAdapter(adapter);
         mViewPager.setOnPageChangeListener(adapter);
         PagerTabStrip tabs = (PagerTabStrip) rootView.findViewById(R.id.tabs);
-        tabs.setTabIndicatorColorResource(android.R.color.holo_blue_light);
+        // This should be set in the XML layout, but PagerTabStrip lives in
+        // support-v4 and doesn't have styleable attributes.
+        final TypedArray ta = tabs.getContext().obtainStyledAttributes(
+                new int[] { android.R.attr.colorAccent });
+        final int colorAccent = ta.getColor(0, 0);
+        ta.recycle();
+        tabs.setTabIndicatorColorResource(colorAccent);
         // We have to do this now because PreferenceFrameLayout looks at it
         // only when the view is added.
         if (container instanceof PreferenceFrameLayout) {
