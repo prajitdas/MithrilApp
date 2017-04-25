@@ -40,4 +40,9 @@
 
     <style name="AppTheme.NoActionBar.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
 
+    <style name="TextAppearance.PagerTabs" parent="@android:style/TextAppearance.Material.Widget.TabWidget" />
+
+    <!-- Scrollbar style OUTSIDE_OVERLAY -->
+    <integer name="preference_scrollbar_style">33554432</integer>
+
 </resources>

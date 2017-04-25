@@ -61,11 +61,9 @@ import edu.umbc.ebiquity.mithril.ui.fragments.coreactivityfragments.PermissionsF
 import edu.umbc.ebiquity.mithril.ui.fragments.coreactivityfragments.ServicesFragment;
 import edu.umbc.ebiquity.mithril.ui.fragments.coreactivityfragments.ViolationFragment;
 import edu.umbc.ebiquity.mithril.util.services.AppLaunchDetectorService;
+import edu.umbc.ebiquity.mithril.util.specialtasks.appops.MithrilAppOpsManager;
 import edu.umbc.ebiquity.mithril.util.specialtasks.errorsnexceptions.AppOpsException;
-import edu.umbc.ebiquity.mithril.util.specialtasks.execute.AppOps;
 import edu.umbc.ebiquity.mithril.util.specialtasks.permissions.PermissionHelper;
-
-//import com.android.settings.Settings.AppOpsSummaryActivity;
 
 public class CoreActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener,
@@ -227,7 +225,6 @@ public class CoreActivity extends AppCompatActivity
         int id = item.getItemId();
         if (id == R.id.capture_exec_settings) {
             executeRules();
-//            loadAdvancedAppOps();
             navigationView.getMenu().getItem(3).getSubMenu().getItem(3).setEnabled(true);
             SharedPreferences.Editor editor = this.getSharedPreferences(MithrilApplication.getSharedPreferencesName(), Context.MODE_PRIVATE).edit();
             editor.putBoolean(MithrilApplication.getPrefKeyResetEnabled(), true);
@@ -255,15 +252,9 @@ public class CoreActivity extends AppCompatActivity
         return super.onOptionsItemSelected(item);
     }
 
-//    private void loadAdvancedAppOps() {
-//        Intent i = new Intent(Intent.ACTION_MAIN);
-//        i.setClass(this, AppOpsSummaryActivity.class);
-//        startActivity(i);
-//    }
-
     private void executeRules() {
         AppOpsManager appOpsManager = (AppOpsManager) getSystemService(Context.APP_OPS_SERVICE);
-        AppOps appOps = new AppOps(appOpsManager);
+        MithrilAppOpsManager mithrilAppOpsManager = new MithrilAppOpsManager(appOpsManager);
 
         try {
             // Let's try to block contacts permission for YouTube!
@@ -287,39 +278,39 @@ public class CoreActivity extends AppCompatActivity
             /*
              * Check and block read contacts for Gmail app
              */
-            int mode = appOps.checkOpNoThrow(AppOps.OPSTR_READ_CONTACTS, uid, packageName);
+            int mode = mithrilAppOpsManager.checkOpNoThrow(MithrilAppOpsManager.OPSTR_READ_CONTACTS, uid, packageName);
             PermissionHelper.toast(this, "Executing: " + packageName + " got mode: " + Integer.toString(mode), Toast.LENGTH_SHORT);
             Log.d(MithrilApplication.getDebugTag(), "Executing: " + packageName + " got mode: " + Integer.toString(mode));
 
             int modeToSet = AppOpsManager.MODE_ALLOWED;
             if(mode == AppOpsManager.MODE_ALLOWED)
                 modeToSet = AppOpsManager.MODE_IGNORED;
-            appOps.setMode(AppOps.OP_READ_CONTACTS, uid, packageName, modeToSet);
+            mithrilAppOpsManager.setMode(MithrilAppOpsManager.OP_READ_CONTACTS, uid, packageName, modeToSet);
 
-            mode = appOps.checkOpNoThrow(AppOps.OPSTR_READ_CONTACTS, uid, packageName);
+            mode = mithrilAppOpsManager.checkOpNoThrow(MithrilAppOpsManager.OPSTR_READ_CONTACTS, uid, packageName);
             PermissionHelper.toast(this, "Executing: " + packageName + " got mode: " + Integer.toString(mode), Toast.LENGTH_SHORT);
             Log.d(MithrilApplication.getDebugTag(), "Executing: " + packageName + " got mode: " + Integer.toString(mode));
 
             /*
              * Check and block write contacts for Gmail app
              */
-            mode = appOps.checkOpNoThrow(AppOps.OPSTR_WRITE_CONTACTS, uid, packageName);
+            mode = mithrilAppOpsManager.checkOpNoThrow(MithrilAppOpsManager.OPSTR_WRITE_CONTACTS, uid, packageName);
             PermissionHelper.toast(this, "Executing: " + packageName + " got mode: " + Integer.toString(mode), Toast.LENGTH_SHORT);
             Log.d(MithrilApplication.getDebugTag(), "Executing: " + packageName + " got mode: " + Integer.toString(mode));
 
             modeToSet = AppOpsManager.MODE_ALLOWED;
             if (mode == AppOpsManager.MODE_ALLOWED)
                 modeToSet = AppOpsManager.MODE_IGNORED;
-            appOps.setMode(AppOps.OP_WRITE_CONTACTS, uid, packageName, modeToSet);
+            mithrilAppOpsManager.setMode(MithrilAppOpsManager.OP_WRITE_CONTACTS, uid, packageName, modeToSet);
 
-            mode = appOps.checkOpNoThrow(AppOps.OPSTR_WRITE_CONTACTS, uid, packageName);
+            mode = mithrilAppOpsManager.checkOpNoThrow(MithrilAppOpsManager.OPSTR_WRITE_CONTACTS, uid, packageName);
             PermissionHelper.toast(this, "Executing: " + packageName + " got mode: " + Integer.toString(mode), Toast.LENGTH_SHORT);
             Log.d(MithrilApplication.getDebugTag(), "Executing: " + packageName + " got mode: " + Integer.toString(mode));
         } catch (AppOpsException e) {
             PermissionHelper.toast(this, "Mithril does not seem to have UPDATE_APP_OPS_STATS permission. Cannot execute any rules. Sorry!", Toast.LENGTH_SHORT);
             Log.d(MithrilApplication.getDebugTag(), "Mithril does not seem to have UPDATE_APP_OPS_STATS permission. Cannot execute any rules. Sorry! " + e.getMessage());
         } catch (PackageManager.NameNotFoundException e) {
-            Log.d(MithrilApplication.getDebugTag(), "AppOps execute: " + e.getMessage());
+            Log.d(MithrilApplication.getDebugTag(), "MithrilAppOpsManager execute: " + e.getMessage());
         }
     }
 
@@ -454,9 +445,9 @@ public class CoreActivity extends AppCompatActivity
                 .setPositiveButton(R.string.dialog_resp_delete, new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
                         AppOpsManager appOpsManager = (AppOpsManager) getSystemService(Context.APP_OPS_SERVICE);
-                        AppOps appOps = new AppOps(appOpsManager);
+                        MithrilAppOpsManager mithrilAppOpsManager = new MithrilAppOpsManager(appOpsManager);
                         try {
-                            appOps.setMode(AppOps.OP_GET_USAGE_STATS, android.os.Process.myUid(), getApplicationContext().getPackageName(), AppOpsManager.MODE_DEFAULT);
+                            mithrilAppOpsManager.setMode(MithrilAppOpsManager.OP_GET_USAGE_STATS, android.os.Process.myUid(), getApplicationContext().getPackageName(), AppOpsManager.MODE_DEFAULT);
                         } catch (AppOpsException e) {
                             Log.e(MithrilApplication.getDebugTag(), e.getMessage());
                         }

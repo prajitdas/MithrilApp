@@ -153,7 +153,7 @@
         <activity
             android:name=".ui.activities.UsageStatsActivity"
             android:label="@string/title_activity_usage_stats"
-            android:theme="@style/AppTheme.NoActionBar"></activity>
+            android:theme="@style/AppTheme.NoActionBar" />
 
         <receiver
             android:name=".util.receivers.AppInstallBroadcastReceiver"
@@ -198,6 +198,10 @@
             android:name=".util.services.ExecuteRulesIntentService"
             android:exported="false" />
 
+        <activity
+            android:name=".ui.activities.AppOpsDetailsActivity"
+            android:label="@string/title_activity_app_ops_details"
+            android:theme="@style/AppTheme.NoActionBar"></activity>
     </application>
 
 </manifest>

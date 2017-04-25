@@ -14,4 +14,7 @@
     <!-- For fullscreen stuff -->
     <dimen name="top_margin_fullscreen">30dp</dimen>
     <dimen name="side_margin_fullscreen">50dp</dimen>
+    <dimen name="pager_tabs_padding">0dp</dimen>
+    <dimen name="pager_tabs_title_padding">16dp</dimen>
+    <dimen name="pager_tabs_selected_indicator_height">3dp</dimen>
 </resources>

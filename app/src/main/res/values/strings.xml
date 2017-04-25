@@ -283,4 +283,5 @@
     <string name="display_order_text">Sort by:</string>
     <!-- label for application name -->
     <string name="app_name_label">App</string>
+    <string name="title_activity_app_ops_details">AppOpsDetailsActivity</string>
 </resources>
