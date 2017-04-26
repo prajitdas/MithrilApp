@@ -1,9 +1,13 @@
 package edu.umbc.ebiquity.mithril.ui.activities;
 
+import android.app.Activity;
 import android.app.AppOpsManager;
+import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
+import android.content.pm.PermissionGroupInfo;
+import android.content.pm.PermissionInfo;
 import android.content.res.Resources;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
@@ -11,12 +15,18 @@ import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
+import android.widget.CompoundButton;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.Switch;
+import android.widget.TextView;
 
 import java.util.List;
 
 import edu.umbc.ebiquity.mithril.R;
 import edu.umbc.ebiquity.mithril.util.specialtasks.appops.AppOpsState;
+import edu.umbc.ebiquity.mithril.util.specialtasks.appops.MithrilAppOpsManager;
 
 public class AppOpsDetailsActivity extends AppCompatActivity {
     public static final String ARG_PACKAGE_NAME = "package";
@@ -71,7 +81,7 @@ public class AppOpsDetailsActivity extends AppCompatActivity {
             List<AppOpsState.AppOpEntry> entries = mState.buildState(tpl,
                     mPackageInfo.applicationInfo.uid, mPackageInfo.packageName);
             for (final AppOpsState.AppOpEntry entry : entries) {
-                final AppOpsManager.OpEntry firstOp = entry.getOpEntry(0);
+                final MithrilAppOpsManager.OpEntry firstOp = entry.getOpEntry(0);
                 final View view = mInflater.inflate(R.layout.app_ops_details_item,
                         mOperationsSection, false);
                 mOperationsSection.addView(view);
@@ -87,7 +97,7 @@ public class AppOpsDetailsActivity extends AppCompatActivity {
                                         pgi.loadIcon(mPm));
                             }
                         }
-                    } catch (NameNotFoundException e) {
+                    } catch (PackageManager.NameNotFoundException e) {
                     }
                 }
                 ((TextView) view.findViewById(R.id.op_name)).setText(
