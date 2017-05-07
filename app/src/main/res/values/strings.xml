@@ -1,4 +1,4 @@
-<resources>
+<resources xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">
     <string name="short_app_name">MithrilAC</string>
     <string name="mithril_app_icon_description">This is Mithril\'s icon</string>
 
@@ -263,6 +263,9 @@
     <string name="nothing_here">Nothing to show for\n</string>
 
     <string name="action_settings">Settings</string>
+
+    <!-- Manage applications, version string displayed in app snippet -->
+    <string name="version_text">version <xliff:g id="version_num">%1$s</xliff:g></string>
 
     <string name="place_details">
     <![CDATA[
