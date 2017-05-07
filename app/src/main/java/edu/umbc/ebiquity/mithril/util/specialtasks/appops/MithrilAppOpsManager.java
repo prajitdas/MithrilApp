@@ -8,6 +8,7 @@ import android.os.Parcelable;
 import android.os.UserManager;
 import android.util.Log;
 
+import java.lang.reflect.Array;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
@@ -1131,138 +1132,21 @@ public class MithrilAppOpsManager {
     }
 
     /**
-     * Class holding the information about one unique operation of an application.
+     * Retrieve the op switch that controls the given operation.
+     *
+     * @hide
      */
-    public static class OpEntry implements Parcelable {
-        private int mOp;
-        private int mMode;
-        private long mTime;
-        private long mRejectTime;
-        private int mDuration;
-        private int mProxyUid;
-        private String mProxyPackageName;
-
-        public OpEntry(int op, int mode, long time, long rejectTime, int duration,
-                       int proxyUid, String proxyPackage) {
-            mOp = op;
-            mMode = mode;
-            mTime = time;
-            mRejectTime = rejectTime;
-            mDuration = duration;
-            mProxyUid = proxyUid;
-            mProxyPackageName = proxyPackage;
-        }
-
-        public int getOp() {
-            return mOp;
-        }
-        public int getMode() {
-            return mMode;
-        }
-        public long getTime() {
-            return mTime;
-        }
-        public long getRejectTime() {
-            return mRejectTime;
-        }
-        public boolean isRunning() {
-            return mDuration == -1;
-        }
-        public int getDuration() {
-            return mDuration == -1 ? (int)(System.currentTimeMillis()-mTime) : mDuration;
-        }
-        public int getProxyUid() {
-            return  mProxyUid;
-        }
-        public String getProxyPackageName() {
-            return mProxyPackageName;
-        }
-
-        @Override
-        public int describeContents() {
-            return 0;
-        }
-
-        @Override
-        public void writeToParcel(Parcel dest, int flags) {
-
-        }
-
-        OpEntry(Parcel source) {
-            mOp = source.readInt();
-            mMode = source.readInt();
-            mTime = source.readLong();
-            mRejectTime = source.readLong();
-            mDuration = source.readInt();
-            mProxyUid = source.readInt();
-            mProxyPackageName = source.readString();
-        }
-
-        public static final Creator<OpEntry> CREATOR = new Creator<OpEntry>() {
-            @Override public OpEntry createFromParcel(Parcel source) {
-                return new OpEntry(source);
-            }
-            @Override public OpEntry[] newArray(int size) {
-                return new OpEntry[size];
-            }
-        };
+    public static int opToSwitch(int op) {
+        return sOpToSwitch[op];
     }
 
     /**
-     * Class holding all of the operation information associated with an app.
+     * Retrieve the permission associated with an operation, or null if there is not one.
+     *
+     * @hide
      */
-    public static class PackageOps implements Parcelable {
-        private final String mPackageName;
-        private final int mUid;
-        private final List<OpEntry> mEntries;
-        public PackageOps(String packageName, int uid, List<OpEntry> entries) {
-            mPackageName = packageName;
-            mUid = uid;
-            mEntries = entries;
-        }
-        public String getPackageName() {
-            return mPackageName;
-        }
-        public int getUid() {
-            return mUid;
-        }
-        public List<OpEntry> getOps() {
-            return mEntries;
-        }
-        @Override
-        public int describeContents() {
-            return 0;
-        }
-        @Override
-        public void writeToParcel(Parcel dest, int flags) {
-            dest.writeString(mPackageName);
-            dest.writeInt(mUid);
-            dest.writeInt(mEntries.size());
-            for (int i=0; i<mEntries.size(); i++) {
-                mEntries.get(i).writeToParcel(dest, flags);
-            }
-        }
-        PackageOps(Parcel source) {
-            mPackageName = source.readString();
-            mUid = source.readInt();
-            mEntries = new ArrayList<OpEntry>();
-            final int N = source.readInt();
-            for (int i=0; i<N; i++) {
-                mEntries.add(OpEntry.CREATOR.createFromParcel(source));
-            }
-        }
-        public static final Creator<PackageOps> CREATOR = new Creator<PackageOps>() {
-            @Override public PackageOps createFromParcel(Parcel source) {
-                return new PackageOps(source);
-            }
-            @Override public PackageOps[] newArray(int size) {
-                return new PackageOps[size];
-            }
-        };
-    }
-
-    public int checkOpNoThrow(String op, int uid, String packageName) throws AppOpsException {
-        return checkOpNoThrow(strOpToOp(op), uid, packageName);
+    public static String opToPermission(int op) {
+        return sOpPerms[op];
     }
 
     private int strOpToOp(String op) {
@@ -1273,7 +1157,141 @@ public class MithrilAppOpsManager {
         return val;
     }
 
-    private int checkOpNoThrow(int op, int uid, String packageName) throws AppOpsException {
+    /**
+     * Retrieve current operation state for one application.
+     *
+     * @param uid         The uid of the application of interest.
+     * @param packageName The name of the application of interest.
+     * @param ops         The set of operations you are interested in, or null if you want all of them.
+     * @hide
+     */
+    public List<PackageOps> getOpsForPackage(int uid, String packageName, int[] ops) throws AppOpsException {
+        List<PackageOps> result;
+        int[] intArray = (int[]) Array.newInstance(int.class, ops.length);
+        for (int index = 0; index < ops.length; index++) {
+            Array.set(intArray, index, ops[index]);
+        }
+        try {
+            Class[] types = new Class[3];
+            types[0] = Integer.TYPE;
+            types[1] = String.class;
+            types[2] = Integer[].class;
+            Method getOpsForPackage = appOpsManagerClass.getMethod("getOpsForPackage", types);
+
+            Object[] args = new Object[3];
+            args[0] = Integer.valueOf(uid);
+            args[1] = packageName;
+            args[2] = intArray;
+            result = (List<PackageOps>) getOpsForPackage.invoke(appOpsManager, args);
+
+        } catch (NoSuchMethodException e) {
+            Log.e(MithrilApplication.getDebugTag(), e.getCause().toString());
+            throw new AppOpsException(e.getCause().toString());
+        } catch (InvocationTargetException e) {
+            Log.e(MithrilApplication.getDebugTag(), e.getCause().toString());
+            throw new AppOpsException(e.getCause().toString());
+        } catch (IllegalAccessException e) {
+            Log.e(MithrilApplication.getDebugTag(), e.getCause().toString());
+            throw new AppOpsException(e.getCause().toString());
+        }
+        if (result.size() == 0)
+            throw new AppOpsException();
+        return result;
+    }
+
+    /**
+     * Retrieve current operation state for all applications.
+     *
+     * @param ops The set of operations you are interested in, or null if you want all of them.
+     * @hide
+     */
+    public List<PackageOps> getPackagesForOps(int[] ops) throws AppOpsException {
+        List<PackageOps> result;
+        int[] intArray = (int[]) Array.newInstance(int.class, ops.length);
+        for (int index = 0; index < ops.length; index++) {
+            Array.set(intArray, index, ops[index]);
+        }
+        try {
+            Class[] types = new Class[1];
+            types[0] = Integer[].class;
+            Method getPackagesForOps = appOpsManagerClass.getMethod("getPackagesForOps", types);
+
+            Object[] args = new Object[1];
+            args[0] = intArray;
+            result = (List<PackageOps>) getPackagesForOps.invoke(appOpsManager, args);
+
+        } catch (NoSuchMethodException e) {
+            Log.e(MithrilApplication.getDebugTag(), e.getCause().toString());
+            throw new AppOpsException(e.getCause().toString());
+        } catch (InvocationTargetException e) {
+            Log.e(MithrilApplication.getDebugTag(), e.getCause().toString());
+            throw new AppOpsException(e.getCause().toString());
+        } catch (IllegalAccessException e) {
+            Log.e(MithrilApplication.getDebugTag(), e.getCause().toString());
+            throw new AppOpsException(e.getCause().toString());
+        }
+        if (result.size() == 0)
+            throw new AppOpsException();
+        return result;
+    }
+
+    /**
+     * Do a quick check for whether an application might be able to perform an operation.
+     * This is <em>not</em> a security check; you must use { #noteOp(int, int, String)}
+     * or { #startOp(int, int, String)} for your actual security checks, which also
+     * ensure that the given uid and package name are consistent.  This function can just be
+     * used for a quick check to see if an operation has been disabled for the application,
+     * as an early reject of some work.  This does not modify the time stamp or other data
+     * about the operation.
+     *
+     * @param op          The operation to check.  One of the OP_* constants.
+     * @param uid         The user id of the application attempting to perform the operation.
+     * @param packageName The name of the application attempting to perform the operation.
+     * @return Returns { #MODE_ALLOWED} if the operation is allowed, or
+     * { #MODE_IGNORED} if it is not allowed and should be silently ignored (without
+     * causing the app to crash).
+     * @throws SecurityException If the app has been configured to crash on this op.
+     * @hide
+     */
+    public int checkOp(int op, int uid, String packageName) throws AppOpsException {
+        int result = Integer.MIN_VALUE;
+        try {
+            Class[] types = new Class[3];
+            types[0] = Integer.TYPE;
+            types[1] = Integer.TYPE;
+            types[2] = String.class;
+            Method checkOp =
+                    appOpsManagerClass.getMethod("checkOp", types);
+
+            Object[] args = new Object[3];
+            args[0] = Integer.valueOf(op);
+            args[1] = Integer.valueOf(uid);
+            args[2] = packageName;
+            result = (Integer) checkOp.invoke(appOpsManager, args);
+
+        } catch (NoSuchMethodException e) {
+            Log.e(MithrilApplication.getDebugTag(), e.getCause().toString());
+            throw new AppOpsException(e.getCause().toString());
+        } catch (InvocationTargetException e) {
+            Log.e(MithrilApplication.getDebugTag(), e.getCause().toString());
+            throw new AppOpsException(e.getCause().toString());
+        } catch (IllegalAccessException e) {
+            Log.e(MithrilApplication.getDebugTag(), e.getCause().toString());
+            throw new AppOpsException(e.getCause().toString());
+        }
+
+        if (result == Integer.MIN_VALUE)
+            throw new AppOpsException();
+        return result;
+    }
+
+    /**
+     * Like {@link #checkOp} but instead of throwing a {@link SecurityException} it
+     * returns { #MODE_ERRORED}.
+     *
+     * @hide
+     */
+    public int checkOpNoThrow(int op, int uid, String packageName) throws AppOpsException {
         int result = Integer.MIN_VALUE;
         try {
             Class[] types = new Class[3];
@@ -1303,6 +1321,35 @@ public class MithrilAppOpsManager {
         if (result == Integer.MIN_VALUE)
             throw new AppOpsException();
         return result;
+    }
+
+    /**
+     * Do a quick check for whether an application might be able to perform an operation.
+     * This is <em>not</em> a security check; you must use { #noteOp(String, int, String)}
+     * or { #startOp(String, int, String)} for your actual security checks, which also
+     * ensure that the given uid and package name are consistent.  This function can just be
+     * used for a quick check to see if an operation has been disabled for the application,
+     * as an early reject of some work.  This does not modify the time stamp or other data
+     * about the operation.
+     *
+     * @param op          The operation to check.  One of the OPSTR_* constants.
+     * @param uid         The user id of the application attempting to perform the operation.
+     * @param packageName The name of the application attempting to perform the operation.
+     * @return Returns { #MODE_ALLOWED} if the operation is allowed, or
+     * { #MODE_IGNORED} if it is not allowed and should be silently ignored (without
+     * causing the app to crash).
+     * @throws SecurityException If the app has been configured to crash on this op.
+     */
+    public int checkOp(String op, int uid, String packageName) throws AppOpsException {
+        return checkOp(strOpToOp(op), uid, packageName);
+    }
+
+    /**
+     * Like {@link #checkOp} but instead of throwing a {@link SecurityException} it
+     * returns { #MODE_ERRORED}.
+     */
+    public int checkOpNoThrow(String op, int uid, String packageName) throws AppOpsException {
+        return checkOpNoThrow(strOpToOp(op), uid, packageName);
     }
 
     /**
@@ -1343,6 +1390,156 @@ public class MithrilAppOpsManager {
             throw new AppOpsException(e.getCause().toString());
         }
         return true;
+    }
+
+    /**
+     * Class holding the information about one unique operation of an application.
+     */
+    public static class OpEntry implements Parcelable {
+        public static final Creator<OpEntry> CREATOR = new Creator<OpEntry>() {
+            @Override
+            public OpEntry createFromParcel(Parcel source) {
+                return new OpEntry(source);
+            }
+
+            @Override
+            public OpEntry[] newArray(int size) {
+                return new OpEntry[size];
+            }
+        };
+        private int mOp;
+        private int mMode;
+        private long mTime;
+        private long mRejectTime;
+        private int mDuration;
+        private int mProxyUid;
+        private String mProxyPackageName;
+
+        public OpEntry(int op, int mode, long time, long rejectTime, int duration,
+                       int proxyUid, String proxyPackage) {
+            mOp = op;
+            mMode = mode;
+            mTime = time;
+            mRejectTime = rejectTime;
+            mDuration = duration;
+            mProxyUid = proxyUid;
+            mProxyPackageName = proxyPackage;
+        }
+
+        OpEntry(Parcel source) {
+            mOp = source.readInt();
+            mMode = source.readInt();
+            mTime = source.readLong();
+            mRejectTime = source.readLong();
+            mDuration = source.readInt();
+            mProxyUid = source.readInt();
+            mProxyPackageName = source.readString();
+        }
+
+        public int getOp() {
+            return mOp;
+        }
+
+        public int getMode() {
+            return mMode;
+        }
+
+        public long getTime() {
+            return mTime;
+        }
+
+        public long getRejectTime() {
+            return mRejectTime;
+        }
+
+        public boolean isRunning() {
+            return mDuration == -1;
+        }
+
+        public int getDuration() {
+            return mDuration == -1 ? (int)(System.currentTimeMillis()-mTime) : mDuration;
+        }
+
+        public int getProxyUid() {
+            return  mProxyUid;
+        }
+
+        public String getProxyPackageName() {
+            return mProxyPackageName;
+        }
+
+        @Override
+        public int describeContents() {
+            return 0;
+        }
+
+        @Override
+        public void writeToParcel(Parcel dest, int flags) {
+
+        }
+    }
+
+    /**
+     * Class holding all of the operation information associated with an app.
+     */
+    public static class PackageOps implements Parcelable {
+        public static final Creator<PackageOps> CREATOR = new Creator<PackageOps>() {
+            @Override
+            public PackageOps createFromParcel(Parcel source) {
+                return new PackageOps(source);
+            }
+
+            @Override
+            public PackageOps[] newArray(int size) {
+                return new PackageOps[size];
+            }
+        };
+        private final String mPackageName;
+        private final int mUid;
+        private final List<OpEntry> mEntries;
+
+        public PackageOps(String packageName, int uid, List<OpEntry> entries) {
+            mPackageName = packageName;
+            mUid = uid;
+            mEntries = entries;
+        }
+
+        PackageOps(Parcel source) {
+            mPackageName = source.readString();
+            mUid = source.readInt();
+            mEntries = new ArrayList<OpEntry>();
+            final int N = source.readInt();
+            for (int i = 0; i < N; i++) {
+                mEntries.add(OpEntry.CREATOR.createFromParcel(source));
+            }
+        }
+
+        public String getPackageName() {
+            return mPackageName;
+        }
+
+        public int getUid() {
+            return mUid;
+        }
+
+        public List<OpEntry> getOps() {
+            return mEntries;
+        }
+
+        @Override
+        public int describeContents() {
+            return 0;
+        }
+
+        @Override
+        public void writeToParcel(Parcel dest, int flags) {
+            dest.writeString(mPackageName);
+            dest.writeInt(mUid);
+            dest.writeInt(mEntries.size());
+            for (int i=0; i<mEntries.size(); i++) {
+                mEntries.get(i).writeToParcel(dest, flags);
+            }
+        }
     }
 }
 ///*

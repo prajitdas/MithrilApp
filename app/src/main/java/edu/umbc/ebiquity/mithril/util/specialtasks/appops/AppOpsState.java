@@ -56,6 +56,9 @@ import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 
+import edu.umbc.ebiquity.mithril.R;
+import edu.umbc.ebiquity.mithril.util.specialtasks.errorsnexceptions.AppOpsException;
+
 public class AppOpsState {
     public static final OpsTemplate LOCATION_TEMPLATE = new OpsTemplate(
             new int[]{MithrilAppOpsManager.OP_COARSE_LOCATION,
@@ -209,7 +212,7 @@ public class AppOpsState {
     static final String TAG = "AppOpsState";
     static final boolean DEBUG = false;
     final Context mContext;
-    final AppOpsManager mAppOps;
+    final MithrilAppOpsManager mAppOps;
     final PackageManager mPm;
     final CharSequence[] mOpSummaries;
     final CharSequence[] mOpLabels;
@@ -217,7 +220,7 @@ public class AppOpsState {
 
     public AppOpsState(Context context) {
         mContext = context;
-        mAppOps = (AppOpsManager) context.getSystemService(Context.APP_OPS_SERVICE);
+        mAppOps = new MithrilAppOpsManager((AppOpsManager) context.getSystemService(Context.APP_OPS_SERVICE));
         mPm = context.getPackageManager();
         mOpSummaries = context.getResources().getTextArray(R.array.app_ops_summaries);
         mOpLabels = context.getResources().getTextArray(R.array.app_ops_labels);
@@ -300,11 +303,19 @@ public class AppOpsState {
                 }
             }
         }
-        List<MithrilAppOpsManager.PackageOps> pkgs;
+        List<MithrilAppOpsManager.PackageOps> pkgs = null;
         if (packageName != null) {
-            pkgs = mAppOps.getOpsForPackage(uid, packageName, tpl.ops);
+            try {
+                pkgs = mAppOps.getOpsForPackage(uid, packageName, tpl.ops);
+            } catch (AppOpsException e) {
+                e.printStackTrace();
+            }
         } else {
-            pkgs = mAppOps.getPackagesForOps(tpl.ops);
+            try {
+                pkgs = mAppOps.getPackagesForOps(tpl.ops);
+            } catch (AppOpsException e) {
+                e.printStackTrace();
+            }
         }
         if (pkgs != null) {
             for (int i = 0; i < pkgs.size(); i++) {
@@ -369,7 +380,7 @@ public class AppOpsState {
                                     appInfo.packageName, appInfo.applicationInfo.uid, dummyOps);
                         }
                         MithrilAppOpsManager.OpEntry opEntry = new MithrilAppOpsManager.OpEntry(
-                                permOps.get(k), MithrilAppOpsManager.MODE_ALLOWED, 0, 0, 0, -1, null);
+                                permOps.get(k), AppOpsManager.MODE_ALLOWED, 0, 0, 0, -1, null);
                         dummyOps.add(opEntry);
                         addOp(entries, pkgOps, appEntry, opEntry, packageName == null,
                                 packageName == null ? 0 : opToOrder[opEntry.getOp()]);

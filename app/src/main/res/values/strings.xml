@@ -214,6 +214,7 @@
     <string name="title_activity_create_new_rule">Create new rule</string>
     <string name="title_activity_prefs">Manage context info</string>
     <string name="title_activity_load_db">Loading knowledge</string>
+    <string name="title_activity_app_ops_details">AppOpsDetailsActivity</string>
 
     <string name="reset_app">Reset app</string>
 
@@ -244,6 +245,8 @@
     <string name="project_details_txt_for_About">This is the MithrilAC app. It is capable of handling access control on Android devices.</string>
     <string name="project_details_txt_for_fullscreen">MithrilAC: Mobile access control app</string>
 
+    <!-- label for application name -->
+    <string name="app_name_label">App</string>
     <string name="user_accepts_button_label">Accept</string>
     <string name="user_declines_button_label">Decline</string>
     <string name="quit_app_label">Quit app</string>
@@ -281,7 +284,13 @@
     <string name="usage_time_label">Usage time</string>
     <!-- label for text to indicate sort options -->
     <string name="display_order_text">Sort by:</string>
-    <!-- label for application name -->
-    <string name="app_name_label">App</string>
-    <string name="title_activity_app_ops_details">AppOpsDetailsActivity</string>
+
+    <!-- App Ops Settings -->
+    <skip />
+    <!-- [CHAR LIMIT=NONE] App ops settings title, on main settings screen. If clicked, the user is taken to a settings screen for app operations -->
+    <string name="app_ops_settings">App ops</string>
+    <!-- [CHAR LIMIT=NONE] Time label for an operation that is currently running. -->
+    <string name="app_ops_running">Running</string>
+    <!-- [CHAR LIMIT=NONE] Time label for an operation that has never executed. -->
+    <string name="app_ops_never_used">(Never used)</string>
 </resources>
