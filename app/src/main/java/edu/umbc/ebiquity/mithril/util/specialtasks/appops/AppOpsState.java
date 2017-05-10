@@ -56,6 +56,7 @@ import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 
+import edu.umbc.ebiquity.mithril.MithrilApplication;
 import edu.umbc.ebiquity.mithril.R;
 import edu.umbc.ebiquity.mithril.util.specialtasks.errorsnexceptions.AppOpsException;
 
@@ -234,7 +235,8 @@ public class AppOpsState {
                 boolean lastExe = last.getTime() != 0;
                 boolean entryExe = opEntry.getTime() != 0;
                 if (lastExe == entryExe) {
-                    if (DEBUG) Log.d(TAG, "Add op " + opEntry.getOp() + " to package "
+                    if (DEBUG)
+                        Log.d(MithrilApplication.getDebugTag(), "Add op " + opEntry.getOp() + " to package "
                             + pkgOps.getPackageName() + ": append to " + last);
                     last.addOp(opEntry);
                     return;
@@ -247,7 +249,8 @@ public class AppOpsState {
             return;
         }
         entry = new AppOpEntry(pkgOps, opEntry, appEntry, switchOrder);
-        if (DEBUG) Log.d(TAG, "Add op " + opEntry.getOp() + " to package "
+        if (DEBUG)
+            Log.d(MithrilApplication.getDebugTag(), "Add op " + opEntry.getOp() + " to package "
                 + pkgOps.getPackageName() + ": making new " + entry);
         entries.add(entry);
     }
@@ -270,7 +273,7 @@ public class AppOpsState {
                             PackageManager.GET_DISABLED_COMPONENTS
                                     | PackageManager.GET_UNINSTALLED_PACKAGES);
                 } catch (PackageManager.NameNotFoundException e) {
-                    Log.w(TAG, "Unable to find info for package " + packageName);
+                    Log.w(MithrilApplication.getDebugTag(), "Unable to find info for package " + packageName);
                     return null;
                 }
             }
@@ -358,18 +361,21 @@ public class AppOpsState {
                     if (appInfo.requestedPermissionsFlags != null) {
                         if ((appInfo.requestedPermissionsFlags[j]
                                 & PackageInfo.REQUESTED_PERMISSION_GRANTED) == 0) {
-                            if (DEBUG) Log.d(TAG, "Pkg " + appInfo.packageName + " perm "
+                            if (DEBUG)
+                                Log.d(MithrilApplication.getDebugTag(), "Pkg " + appInfo.packageName + " perm "
                                     + appInfo.requestedPermissions[j] + " not granted; skipping");
                             continue;
                         }
                     }
-                    if (DEBUG) Log.d(TAG, "Pkg " + appInfo.packageName + ": requested perm "
+                    if (DEBUG)
+                        Log.d(MithrilApplication.getDebugTag(), "Pkg " + appInfo.packageName + ": requested perm "
                             + appInfo.requestedPermissions[j]);
                     for (int k = 0; k < perms.size(); k++) {
                         if (!perms.get(k).equals(appInfo.requestedPermissions[j])) {
                             continue;
                         }
-                        if (DEBUG) Log.d(TAG, "Pkg " + appInfo.packageName + " perm " + perms.get(k)
+                        if (DEBUG)
+                            Log.d(MithrilApplication.getDebugTag(), "Pkg " + appInfo.packageName + " perm " + perms.get(k)
                                 + " has op " + permOps.get(k) + ": " + appEntry.hasOp(permOps.get(k)));
                         if (appEntry.hasOp(permOps.get(k))) {
                             continue;
