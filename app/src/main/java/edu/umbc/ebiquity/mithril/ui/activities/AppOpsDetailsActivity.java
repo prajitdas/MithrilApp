@@ -170,6 +170,7 @@ public class AppOpsDetailsActivity extends AppCompatActivity {
         mInflater = (LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         mAppOps = new MithrilAppOpsManager((AppOpsManager) getSystemService(Context.APP_OPS_SERVICE));
         retrieveAppEntry();
+        refreshUi();
 //        setHasOptionsMenu(true);
     }
 

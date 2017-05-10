@@ -5,7 +5,7 @@
     android:orientation="horizontal">
 
     <android.support.v7.widget.CardView xmlns:card_view="http://schemas.android.com/apk/res-auto"
-        android:id="@+id/card_view_serv"
+        android:id="@+id/card_view_usage"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginBottom="@dimen/card_view_margin"
@@ -20,7 +20,7 @@
             android:orientation="vertical">
 
             <ImageView
-                android:id="@+id/serv_icon"
+                android:id="@+id/usagestats_app_icon"
                 android:layout_width="60sp"
                 android:layout_height="60sp"
                 android:layout_alignParentLeft="true"
@@ -33,11 +33,10 @@
                 android:src="@mipmap/ic_launcher" />
 
             <TextView
-                android:id="@+id/serv_lbl"
+                android:id="@+id/usagestats_app_name"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_toEndOf="@id/serv_icon"
-                android:layout_toRightOf="@id/serv_icon"
+                android:layout_toRightOf="@id/usagestats_app_icon"
                 android:paddingEnd="5dp"
                 android:paddingLeft="5dp"
                 android:paddingRight="5dp"
@@ -48,28 +47,11 @@
                 android:textSize="20sp" />
 
             <TextView
-                android:id="@+id/serv_app_name"
+                android:id="@+id/usagestats_app_usage"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_below="@id/serv_lbl"
-                android:layout_toEndOf="@id/serv_icon"
-                android:layout_toRightOf="@id/serv_icon"
-                android:paddingEnd="5dp"
-                android:paddingLeft="5dp"
-                android:paddingRight="5dp"
-                android:paddingStart="5dp"
-                android:text="@string/app_version_placeholder_text"
-                android:textAppearance="@android:style/TextAppearance.Holo.Small"
-                android:textColor="@color/colorSecondaryText"
-                android:textSize="20sp" />
-
-            <TextView
-                android:id="@+id/serv_name"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_below="@id/serv_app_name"
-                android:layout_toEndOf="@id/serv_icon"
-                android:layout_toRightOf="@id/serv_icon"
+                android:layout_below="@id/usagestats_app_name"
+                android:layout_toRightOf="@id/usagestats_app_icon"
                 android:paddingEnd="5dp"
                 android:paddingLeft="5dp"
                 android:paddingRight="5dp"
@@ -79,6 +61,20 @@
                 android:textColor="@color/colorSecondaryText"
                 android:textSize="15sp" />
 
+            <TextView
+                android:id="@+id/usagestats_app_last_launch"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentEnd="true"
+                android:layout_below="@id/usagestats_app_name"
+                android:paddingEnd="5dp"
+                android:paddingLeft="5dp"
+                android:paddingRight="5dp"
+                android:paddingStart="5dp"
+                android:text="@string/app_version_placeholder_text"
+                android:textAppearance="@android:style/TextAppearance.Holo.Small"
+                android:textColor="@color/colorSecondaryText"
+                android:textSize="15sp" />
         </RelativeLayout>
     </android.support.v7.widget.CardView>
 </LinearLayout>

@@ -112,7 +112,7 @@
             android:label="@string/title_activity_core"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
-            android:name=".ui.activities.ViewAppDetailsActivity"
+            android:name=".ui.activities.ShowAppDetailsActivity"
             android:label="@string/title_activity_view_app_detail"
             android:parentActivityName=".ui.activities.CoreActivity"
             android:theme="@style/AppTheme.NoActionBar">

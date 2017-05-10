@@ -45,6 +45,7 @@ import java.util.List;
 import edu.umbc.ebiquity.mithril.MithrilApplication;
 import edu.umbc.ebiquity.mithril.R;
 import edu.umbc.ebiquity.mithril.data.dbhelpers.MithrilDBHelper;
+import edu.umbc.ebiquity.mithril.data.model.UsageStats;
 import edu.umbc.ebiquity.mithril.data.model.Violation;
 import edu.umbc.ebiquity.mithril.data.model.components.AppData;
 import edu.umbc.ebiquity.mithril.data.model.components.BCastRecvData;
@@ -59,6 +60,7 @@ import edu.umbc.ebiquity.mithril.ui.fragments.coreactivityfragments.BroadcastRec
 import edu.umbc.ebiquity.mithril.ui.fragments.coreactivityfragments.ContentProvidersFragment;
 import edu.umbc.ebiquity.mithril.ui.fragments.coreactivityfragments.PermissionsFragment;
 import edu.umbc.ebiquity.mithril.ui.fragments.coreactivityfragments.ServicesFragment;
+import edu.umbc.ebiquity.mithril.ui.fragments.coreactivityfragments.UsageStatsFragment;
 import edu.umbc.ebiquity.mithril.ui.fragments.coreactivityfragments.ViolationFragment;
 import edu.umbc.ebiquity.mithril.util.services.AppLaunchDetectorService;
 import edu.umbc.ebiquity.mithril.util.specialtasks.appops.MithrilAppOpsManager;
@@ -76,7 +78,8 @@ public class CoreActivity extends AppCompatActivity
         AboutFragment.OnFragmentInteractionListener,
         ViolationFragment.OnListFragmentInteractionListener,
         EmptyFragment.OnFragmentInteractionListener,
-        NothingHereFragment.OnFragmentInteractionListener {
+        NothingHereFragment.OnFragmentInteractionListener,
+        UsageStatsFragment.OnListFragmentInteractionListener {
     private final File downloadsDirectory = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS);
     private final String agreementFile = MithrilApplication.getFlierPdfFileName();
 
@@ -111,7 +114,8 @@ public class CoreActivity extends AppCompatActivity
             else
                 loadViolationsFragment();
         } else if (id == R.id.nav_usage) {
-            launchUsageStatsActivity();
+//            launchUsageStatsActivity();
+            loadUsageStatsFragment();
         } else if (id == R.id.nav_perm) {
             if (isPermissionsListEmpty())
                 loadNothingHereFragment("permissions");
@@ -522,6 +526,11 @@ public class CoreActivity extends AppCompatActivity
                 .commit();
     }
 
+    private void loadUsageStatsFragment() {
+        FragmentManager fragmentManager = getFragmentManager();
+        fragmentManager.beginTransaction().replace(R.id.container_core, new UsageStatsFragment())
+                .commit();
+    }
     private void loadAllAppsFragment() {
         Bundle data = new Bundle();
         data.putString(MithrilApplication.getPrefKeyAppDisplayType(), MithrilApplication.getPrefKeyAllAppsDisplay());
@@ -564,6 +573,11 @@ public class CoreActivity extends AppCompatActivity
 
     private void launchUsageStatsActivity() {
         startActivity(new Intent(this, UsageStatsActivity.class));
+//        Intent intent = new Intent(this, AppOpsDetailsActivity.class);
+//        Bundle b = new Bundle();
+//        b.putString("package", "com.google.android.youtube"); //Your id
+//        intent.putExtras(b); //Put your id to your next Intent
+//        startActivity(intent);
     }
 
     private boolean isViolationListEmpty() {
@@ -670,7 +684,7 @@ public class CoreActivity extends AppCompatActivity
     @Override
     public void onListFragmentInteraction(AppData item) {
         //TODO Do something with the App selected
-        Intent intent = new Intent(this, ViewAppDetailsActivity.class);
+        Intent intent = new Intent(this, ShowAppDetailsActivity.class);
         intent.putExtra(MithrilApplication.getPrefKeyAppPkgName(), item.getPackageName());
         startActivity(intent);
     }
@@ -710,5 +724,10 @@ public class CoreActivity extends AppCompatActivity
     @Override
     public void onListFragmentInteraction(BCastRecvData item) {
         //TODO do something when the broadcast receiver data is requested
+    }
+
+    @Override
+    public void onListFragmentInteraction(UsageStats item) {
+        //TODO do something when the usage stats data is requested
     }
 }

@@ -14,7 +14,7 @@ import edu.umbc.ebiquity.mithril.R;
 import edu.umbc.ebiquity.mithril.data.model.components.PermData;
 import edu.umbc.ebiquity.mithril.ui.fragments.viewappdetailsactivityfragments.AppDetailFragment;
 
-public class ViewAppDetailsActivity extends AppCompatActivity
+public class ShowAppDetailsActivity extends AppCompatActivity
         implements AppDetailFragment.OnListFragmentInteractionListener {
     private PackageManager packageManager;
     //    private ImageButton mImgBtnLaunchApp;

@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/content_test_main"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:paddingBottom="@dimen/activity_vertical_margin"
+    android:paddingLeft="@dimen/activity_horizontal_margin"
+    android:paddingRight="@dimen/activity_horizontal_margin"
+    android:paddingTop="@dimen/activity_vertical_margin"
+    app:layout_behavior="@string/appbar_scrolling_view_behavior"
+    tools:context=".ui.activities.UsageStatsActivity"
+    tools:showIn="@layout/activity_usage_stats">
+
+    <TextView
+        android:id="@+id/display_order"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/display_order_text"
+        android:textAppearance="@android:style/TextAppearance.Holo.Medium"
+        android:textColor="@color/colorPrimaryText" />
+
+    <Spinner
+        android:id="@+id/typeSpinner"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentEnd="true"
+        android:entries="@array/usage_stats_display_order_types" />
+
+    <LinearLayout
+        android:id="@+id/header"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/display_order"
+        android:orientation="horizontal">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:paddingEnd="6dip"
+            android:text="@string/app_name_label"
+            android:textAppearance="@android:style/TextAppearance.Holo.Medium"
+            android:textColor="@color/colorPrimaryText" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:paddingEnd="6dip"
+            android:text="@string/last_time_used_label"
+            android:textAppearance="@android:style/TextAppearance.Holo.Medium"
+            android:textColor="@color/colorPrimaryText" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/usage_time_label"
+            android:textAppearance="@android:style/TextAppearance.Holo.Medium"
+            android:textColor="@color/colorPrimaryText" />
+    </LinearLayout>
+
+    <ListView
+        android:id="@+id/pkg_list"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@id/header"
+        android:drawSelectorOnTop="false" />
+
+    <!--&lt;!&ndash; We do not show the above buttons for apps anymore :( &ndash;&gt;-->
+    <!--&lt;!&ndash;android:layout_above="@id/app_is_bad_btn"&ndash;&gt;-->
+    <!--<ScrollView-->
+    <!--android:id="@+id/app_details_scroll_view"-->
+    <!--android:layout_width="match_parent"-->
+    <!--android:layout_height="wrap_content"-->
+    <!--android:layout_below="@id/textViewAppDetails"-->
+    <!--android:fadeScrollbars="false"-->
+    <!--android:fillViewport="true"-->
+    <!--android:scrollbarStyle="outsideInset"-->
+    <!--android:scrollbars="horizontal|vertical">-->
+
+    <!--<LinearLayout-->
+    <!--android:layout_width="match_parent"-->
+    <!--android:layout_height="match_parent"-->
+    <!--android:orientation="vertical">-->
+
+    <!--<FrameLayout-->
+    <!--android:id="@+id/container_usage_details"-->
+    <!--android:layout_width="match_parent"-->
+    <!--android:layout_height="match_parent" />-->
+
+    <!--&lt;!&ndash;<TextView&ndash;&gt;-->
+    <!--&lt;!&ndash;android:id="@android:id/empty"&ndash;&gt;-->
+    <!--&lt;!&ndash;android:layout_width="match_parent"&ndash;&gt;-->
+    <!--&lt;!&ndash;android:layout_height="match_parent"&ndash;&gt;-->
+    <!--&lt;!&ndash;android:gravity="center"&ndash;&gt;-->
+    <!--&lt;!&ndash;android:text="@string/no_data" />&ndash;&gt;-->
+
+    <!--</LinearLayout>-->
+    <!--</ScrollView>-->
+</RelativeLayout>

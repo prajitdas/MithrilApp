@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:fitsSystemWindows="true"
-    tools:context=".ui.activities.ViewAppDetailsActivity">
+    tools:context=".ui.activities.ShowAppDetailsActivity">
 
     <android.support.design.widget.AppBarLayout
         android:layout_width="match_parent"
@@ -21,6 +21,6 @@
 
     </android.support.design.widget.AppBarLayout>
 
-    <include layout="@layout/content_view_app_details" />
+    <include layout="@layout/content_show_app_details" />
 
 </android.support.design.widget.CoordinatorLayout>
