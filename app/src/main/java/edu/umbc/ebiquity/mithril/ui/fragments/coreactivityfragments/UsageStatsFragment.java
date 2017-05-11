@@ -151,7 +151,7 @@ public class UsageStatsFragment extends Fragment {
         }
         // Sort list
         mAppLabelComparator = new AppNameComparator(mAppLabelMap);
-        sortList();
+        sortList(_DISPLAY_ORDER_USAGE_TIME);
     }
 
     public void sortList(int sortOrder) {
