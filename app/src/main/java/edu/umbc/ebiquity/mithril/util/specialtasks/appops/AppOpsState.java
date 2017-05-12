@@ -308,7 +308,6 @@ public class AppOpsState {
         List<MithrilAppOpsManager.PackageOps> pkgs = null;
         if (packageName != null) {
             try {
-//                mithrilAppOpsManager.setMode(MithrilAppOpsManager.OP_WRITE_CONTACTS, uid, packageName, AppOpsManager.MODE_ALLOWED);
                 pkgs = mithrilAppOpsManager.getOpsForPackage(uid, packageName, tpl.ops);
             } catch (AppOpsException e) {
                 e.printStackTrace();

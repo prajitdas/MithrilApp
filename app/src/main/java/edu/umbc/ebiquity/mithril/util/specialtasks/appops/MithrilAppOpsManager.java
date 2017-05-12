@@ -1189,7 +1189,6 @@ public class MithrilAppOpsManager {
             args[0] = Integer.valueOf(uid);
             args[1] = packageName;
             args[2] = intArray;
-            Log.d(MithrilApplication.getDebugTag(), args[0] + ", " + args[1] + ", " + args[2]);
             result = (List<PackageOps>) getOpsForPackage.invoke(appOpsManager, args);
         } catch (NoSuchMethodException e) {
             Log.e(MithrilApplication.getDebugTag(), Log.getStackTraceString(e));
