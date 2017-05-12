@@ -24,6 +24,7 @@ import android.widget.TextView;
 
 import java.util.List;
 
+import edu.umbc.ebiquity.mithril.MithrilApplication;
 import edu.umbc.ebiquity.mithril.R;
 import edu.umbc.ebiquity.mithril.util.specialtasks.appops.AppOpsState;
 import edu.umbc.ebiquity.mithril.util.specialtasks.appops.MetricsEvent;
@@ -31,8 +32,6 @@ import edu.umbc.ebiquity.mithril.util.specialtasks.appops.MithrilAppOpsManager;
 import edu.umbc.ebiquity.mithril.util.specialtasks.errorsnexceptions.AppOpsException;
 
 public class AppOpsDetailsActivity extends AppCompatActivity {
-    public final String ARG_PACKAGE_NAME = "package";
-    public final String TAG = "AppOpsDetails";
     private AppOpsState mState;
     private PackageManager mPm;
     private MithrilAppOpsManager mAppOps;
@@ -72,7 +71,7 @@ public class AppOpsDetailsActivity extends AppCompatActivity {
     }
 
     private String retrieveAppEntry() {
-        String args = getIntent().getExtras().getString(ARG_PACKAGE_NAME);
+        String args = getIntent().getExtras().getString("package");
         String packageName = args;
         if (packageName == null) {
             Intent intent = (args == null) ?
@@ -86,7 +85,7 @@ public class AppOpsDetailsActivity extends AppCompatActivity {
                     PackageManager.GET_DISABLED_COMPONENTS |
                             PackageManager.GET_UNINSTALLED_PACKAGES);
         } catch (PackageManager.NameNotFoundException e) {
-            Log.e(TAG, "Exception when retrieving package:" + packageName, e);
+            Log.e(MithrilApplication.getDebugTag(), "Exception when retrieving package:" + packageName, e);
             mPackageInfo = null;
         }
         return packageName;

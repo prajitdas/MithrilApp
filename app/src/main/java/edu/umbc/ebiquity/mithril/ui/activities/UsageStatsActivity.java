@@ -37,7 +37,6 @@ import edu.umbc.ebiquity.mithril.ui.adapters.UsageStatsAdapter;
  */
 
 public class UsageStatsActivity extends Activity implements OnItemSelectedListener {
-    private static final String TAG = "UsageStatsActivity";
     private static final boolean localLOGV = false;
     private UsageStatsManager mUsageStatsManager;
     private LayoutInflater mInflater;
