@@ -29,8 +29,6 @@ public class MithrilApplication extends Application {
 
     public static final String MITHRIL_BYE_BYE_MESSAGE = "Bye! Thanks for helping with our survey...";
 
-    public static final String NEVER_SEEN = "Never?!";
-
     public static final String RECEIVER = MITHRIL_APP_PACKAGE_NAME + ".RECEIVER";
     public static final String RESULT_DATA_KEY = MITHRIL_APP_PACKAGE_NAME + ".RESULT_DATA_KEY";
     public static final String ADDRESS_REQUESTED_EXTRA = "ADDRESS_REQUESTED_EXTRA";

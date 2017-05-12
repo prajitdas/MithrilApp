@@ -1,5 +1,7 @@
 package edu.umbc.ebiquity.mithril.data.model;
 
+import android.graphics.drawable.Drawable;
+
 /**
  * Created by prajit on 5/9/17.
  */
@@ -9,24 +11,13 @@ public class Resource {
     private long beginTimeStamp;
     private long endTimeStamp;
     private long lastTimeUsed;
+    private String relativeLastTimeUsed;
     private long totalTimeInForeground;
     private int launchCount;
+    private String label;
+    private Drawable icon;
 
     public Resource() {
-    }
-
-    public Resource(String resourceName,
-                    long beginTimeStamp,
-                    long endTimeStamp,
-                    long lastTimeUsed,
-                    long totalTimeInForeground,
-                    int launchCount) {
-        this.resourceName = resourceName;
-        this.beginTimeStamp = beginTimeStamp;
-        this.endTimeStamp = endTimeStamp;
-        this.lastTimeUsed = lastTimeUsed;
-        this.totalTimeInForeground = totalTimeInForeground;
-        this.launchCount = launchCount;
     }
 
     @Override
@@ -90,5 +81,29 @@ public class Resource {
 
     public void setLaunchCount(int launchCount) {
         this.launchCount = launchCount;
+    }
+
+    public String getLabel() {
+        return label;
+    }
+
+    public void setLabel(String label) {
+        this.label = label;
+    }
+
+    public Drawable getIcon() {
+        return icon;
+    }
+
+    public void setIcon(Drawable icon) {
+        this.icon = icon;
+    }
+
+    public String getRelativeLastTimeUsed() {
+        return relativeLastTimeUsed;
+    }
+
+    public void setRelativeLastTimeUsed(String relativeLastTimeUsed) {
+        this.relativeLastTimeUsed = relativeLastTimeUsed;
     }
 }

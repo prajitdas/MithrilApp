@@ -19,6 +19,7 @@ import java.util.Map;
 
 import edu.umbc.ebiquity.mithril.MithrilApplication;
 import edu.umbc.ebiquity.mithril.R;
+import edu.umbc.ebiquity.mithril.data.model.Resource;
 import edu.umbc.ebiquity.mithril.data.model.UsageStats;
 import edu.umbc.ebiquity.mithril.ui.fragments.coreactivityfragments.UsageStatsFragment.OnListFragmentInteractionListener;
 
@@ -50,11 +51,10 @@ public class UsageStatsRecyclerViewAdapter extends RecyclerView.Adapter<UsageSta
     @Override
     public void onBindViewHolder(final ViewHolder holder, int position) {
         holder.mItem = mValues.get(position);
-        String appPkgName = mValues.get(position).getPackageName();
         try {
             holder.mAppIcon.setImageDrawable(mValues.get(position).getIcon());
             holder.mAppLbl.setText(mValues.get(position).getLabel());
-            holder.mAppUsageDetail.setText(getUsageDetails(appPkgName));
+            holder.mAppUsageDetail.setText(getUsageDetails(mValues.get(position).getResourcesUsed()));
             holder.mAppLastUsedTime.setText(getStringForLastTimeUsed(mValues.get(position).getLastTimeUsed()));
 
             holder.mView.setOnClickListener(new View.OnClickListener() {
@@ -78,7 +78,7 @@ public class UsageStatsRecyclerViewAdapter extends RecyclerView.Adapter<UsageSta
         Calendar lastTime = new GregorianCalendar();
         lastTime.setTimeInMillis(lastTimeUsed);
         if (lastTime.get(Calendar.YEAR) < rightNow.get(Calendar.YEAR))
-            return MithrilApplication.NEVER_SEEN;
+            return context.getResources().getText(R.string.app_ops_never_used);
 
         return DateUtils.getRelativeTimeSpanString(lastTimeUsed,
                 rightNow.getTimeInMillis(),
@@ -86,8 +86,15 @@ public class UsageStatsRecyclerViewAdapter extends RecyclerView.Adapter<UsageSta
                 DateUtils.FORMAT_ABBREV_RELATIVE);
     }
 
-    private String getUsageDetails(String appPkgName) {
-        return "No usage data yet!";
+    private String getUsageDetails(List<Resource> resourcesUsed) {
+        StringBuffer resBuffer = new StringBuffer();
+        for (Resource res : resourcesUsed) {
+            resBuffer.append(res.getLabel());
+            resBuffer.append(", ");
+            resBuffer.append(res.getRelativeLastTimeUsed());
+            resBuffer.append(", ");
+        }
+        return resBuffer.toString();
     }
 
     @Override

@@ -22,26 +22,6 @@ public class UsageStats {
     public UsageStats() {
     }
 
-    public UsageStats(String packageName,
-                      long beginTimeStamp,
-                      long endTimeStamp,
-                      long lastTimeUsed,
-                      long totalTimeInForeground,
-                      int launchCount,
-                      List<Resource> resourcesUsed,
-                      String label,
-                      Drawable icon) {
-        this.packageName = packageName;
-        this.beginTimeStamp = beginTimeStamp;
-        this.endTimeStamp = endTimeStamp;
-        this.lastTimeUsed = lastTimeUsed;
-        this.totalTimeInForeground = totalTimeInForeground;
-        this.launchCount = launchCount;
-        this.resourcesUsed = resourcesUsed;
-        this.label = label;
-        this.icon = icon;
-    }
-
     public String getPackageName() {
         return packageName;
     }

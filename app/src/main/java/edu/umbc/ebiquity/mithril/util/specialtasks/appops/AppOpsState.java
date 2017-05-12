@@ -40,7 +40,6 @@ import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.content.pm.PackageManager.NameNotFoundException;
-import android.content.res.Resources;
 import android.graphics.drawable.Drawable;
 import android.os.Parcel;
 import android.os.Parcelable;
@@ -626,9 +625,9 @@ public class AppOpsState {
             }
         }
 
-        public CharSequence getTimeText(Resources res, boolean showEmptyText) {
+        public CharSequence getTimeText(Context context, boolean showEmptyText) {
             if (isRunning()) {
-                return res.getText(R.string.app_ops_running);
+                return context.getResources().getText(R.string.app_ops_running);
             }
             if (getTime() > 0) {
                 return DateUtils.getRelativeTimeSpanString(getTime(),
@@ -636,7 +635,7 @@ public class AppOpsState {
                         DateUtils.MINUTE_IN_MILLIS,
                         DateUtils.FORMAT_ABBREV_RELATIVE);
             }
-            return showEmptyText ? res.getText(R.string.app_ops_never_used) : "";
+            return showEmptyText ? context.getResources().getText(R.string.app_ops_never_used) : "";
         }
 
         public boolean isRunning() {
