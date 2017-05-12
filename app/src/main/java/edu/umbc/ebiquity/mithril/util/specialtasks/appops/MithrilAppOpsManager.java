@@ -1166,18 +1166,19 @@ public class MithrilAppOpsManager {
      * @hide
      */
     public List<PackageOps> getOpsForPackage(int uid, String packageName, int[] ops) throws AppOpsException {
-        List<PackageOps> result = new ArrayList<>();
-        int[] intArray = (int[]) Array.newInstance(int.class, ops.length);
-        for (int index = 0; index < ops.length; index++) {
+        List<PackageOps> result;
+        Integer[] intArray = new Integer[ops.length];
+        for (int index = 0; index < ops.length; index++)
             Array.set(intArray, index, ops[index]);
-        }
+
+        /*
+        Log.d(MithrilApplication.getDebugTag(), Integer.toString(uid)+", "+packageName+", "+Integer.toString(ops[index]));
+        // Code to verify what run time methods we are able to see
+        int count = 0;
+        for (Method method : appOpsManagerClass.getMethods())
+            Log.d(MithrilApplication.getDebugTag()+" method "+Integer.toString(count++)+": ", method.getName());
+        */
         try {
-            /* Code to verify what run time methods we are able to see
-            int count = 0;
-            for (Method method : appOpsManagerClass.getMethods()) {
-                Log.d(MithrilApplication.getDebugTag()+" method "+Integer.toString(count++)+": ", method.getName());
-            }
-            */
             Class[] types = new Class[3];
             types[0] = Integer.TYPE;
             types[1] = String.class;
@@ -1188,10 +1189,10 @@ public class MithrilAppOpsManager {
             args[0] = Integer.valueOf(uid);
             args[1] = packageName;
             args[2] = intArray;
-//            result = (List<PackageOps>)
-            getOpsForPackage.invoke(appOpsManager, args);
-
+            Log.d(MithrilApplication.getDebugTag(), args[0] + ", " + args[1] + ", " + args[2]);
+            result = (List<PackageOps>) getOpsForPackage.invoke(appOpsManager, args);
         } catch (NoSuchMethodException e) {
+            Log.e(MithrilApplication.getDebugTag(), Log.getStackTraceString(e));
             Log.e(MithrilApplication.getDebugTag(), e.getMessage());
             throw new AppOpsException(e.getMessage());
         } catch (InvocationTargetException e) {
@@ -1200,18 +1201,6 @@ public class MithrilAppOpsManager {
         } catch (IllegalAccessException e) {
             Log.e(MithrilApplication.getDebugTag(), e.getMessage());
             throw new AppOpsException(e.getMessage());
-        } catch (Exception e) {
-            for (StackTraceElement ele : e.getStackTrace()) {
-                Log.e(MithrilApplication.getDebugTag(), ele.toString());
-                Log.e(MithrilApplication.getDebugTag(), ele.getClassName());
-                Log.e(MithrilApplication.getDebugTag(), ele.getFileName());
-                Log.e(MithrilApplication.getDebugTag(), ele.getMethodName());
-                Log.e(MithrilApplication.getDebugTag(), ele.getClass().toString());
-                Log.e(MithrilApplication.getDebugTag(), "\n");
-            }
-            Log.e(MithrilApplication.getDebugTag() + " message: ", e.getLocalizedMessage());
-            Log.e(MithrilApplication.getDebugTag() + " message: ", e.getMessage());
-            throw new AppOpsException(e);
         }
         if (result.size() == 0)
             throw new AppOpsException();
@@ -1225,11 +1214,11 @@ public class MithrilAppOpsManager {
      * @hide
      */
     public List<PackageOps> getPackagesForOps(int[] ops) throws AppOpsException {
-        List<PackageOps> result = new ArrayList<>();
+        List<PackageOps> result;
         int[] intArray = (int[]) Array.newInstance(int.class, ops.length);
-        for (int index = 0; index < ops.length; index++) {
+        for (int index = 0; index < ops.length; index++)
             Array.set(intArray, index, ops[index]);
-        }
+
         try {
             Class[] types = new Class[1];
             types[0] = Integer[].class;
@@ -1238,7 +1227,6 @@ public class MithrilAppOpsManager {
             Object[] args = new Object[1];
             args[0] = intArray;
             result = (List<PackageOps>) getPackagesForOps.invoke(appOpsManager, args);
-
         } catch (NoSuchMethodException e) {
             Log.e(MithrilApplication.getDebugTag(), e.getMessage());
             throw new AppOpsException(e.getMessage());
@@ -1279,15 +1267,13 @@ public class MithrilAppOpsManager {
             types[0] = Integer.TYPE;
             types[1] = Integer.TYPE;
             types[2] = String.class;
-            Method checkOp =
-                    appOpsManagerClass.getMethod("checkOp", types);
+            Method checkOp = appOpsManagerClass.getMethod("checkOp", types);
 
             Object[] args = new Object[3];
             args[0] = Integer.valueOf(op);
             args[1] = Integer.valueOf(uid);
             args[2] = packageName;
             result = (Integer) checkOp.invoke(appOpsManager, args);
-
         } catch (NoSuchMethodException e) {
             Log.e(MithrilApplication.getDebugTag(), e.getMessage());
             throw new AppOpsException(e.getMessage());
@@ -1317,15 +1303,13 @@ public class MithrilAppOpsManager {
             types[0] = Integer.TYPE;
             types[1] = Integer.TYPE;
             types[2] = String.class;
-            Method checkOpNoThrow =
-                    appOpsManagerClass.getMethod("checkOpNoThrow", types);
+            Method checkOpNoThrow = appOpsManagerClass.getMethod("checkOpNoThrow", types);
 
             Object[] args = new Object[3];
             args[0] = Integer.valueOf(op);
             args[1] = Integer.valueOf(uid);
             args[2] = packageName;
             result = (Integer) checkOpNoThrow.invoke(appOpsManager, args);
-
         } catch (NoSuchMethodException e) {
             Log.e(MithrilApplication.getDebugTag(), e.getMessage());
             throw new AppOpsException(e.getMessage());
@@ -1388,8 +1372,7 @@ public class MithrilAppOpsManager {
             types[1] = Integer.TYPE;
             types[2] = String.class;
             types[3] = Integer.TYPE;
-            Method setModeMethod =
-                    appOpsManagerClass.getMethod("setMode", types);
+            Method setModeMethod = appOpsManagerClass.getMethod("setMode", types);
 
             Object[] args = new Object[4];
             args[0] = Integer.valueOf(code);
@@ -1397,7 +1380,6 @@ public class MithrilAppOpsManager {
             args[2] = packageName;
             args[3] = Integer.valueOf(mode);
             setModeMethod.invoke(appOpsManager, args);
-
         } catch (NoSuchMethodException e) {
             Log.e(MithrilApplication.getDebugTag(), e.getMessage());
             throw new AppOpsException(e.getMessage());

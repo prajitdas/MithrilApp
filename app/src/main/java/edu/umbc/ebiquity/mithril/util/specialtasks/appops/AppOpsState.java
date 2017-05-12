@@ -212,16 +212,16 @@ public class AppOpsState {
     static final String TAG = "AppOpsState";
     static final boolean DEBUG = false;
     final Context mContext;
-    final MithrilAppOpsManager mAppOps;
-    final PackageManager mPm;
+    final MithrilAppOpsManager mithrilAppOpsManager;
+    final PackageManager packageManager;
     final CharSequence[] mOpSummaries;
     final CharSequence[] mOpLabels;
     List<AppOpEntry> mApps;
 
     public AppOpsState(Context context) {
         mContext = context;
-        mAppOps = new MithrilAppOpsManager((AppOpsManager) context.getSystemService(Context.APP_OPS_SERVICE));
-        mPm = context.getPackageManager();
+        mithrilAppOpsManager = new MithrilAppOpsManager((AppOpsManager) context.getSystemService(Context.APP_OPS_SERVICE));
+        packageManager = context.getPackageManager();
         mOpSummaries = context.getResources().getTextArray(R.array.app_ops_summaries);
         mOpLabels = context.getResources().getTextArray(R.array.app_ops_labels);
     }
@@ -255,7 +255,7 @@ public class AppOpsState {
     }
 
     public MithrilAppOpsManager getMithrilAppOpsManager() {
-        return mAppOps;
+        return mithrilAppOpsManager;
     }
 
     public List<AppOpEntry> buildState(OpsTemplate tpl) {
@@ -268,7 +268,7 @@ public class AppOpsState {
         if (appEntry == null) {
             if (appInfo == null) {
                 try {
-                    appInfo = mPm.getApplicationInfo(packageName,
+                    appInfo = packageManager.getApplicationInfo(packageName,
                             PackageManager.GET_DISABLED_COMPONENTS
                                     | PackageManager.GET_UNINSTALLED_PACKAGES);
                 } catch (PackageManager.NameNotFoundException e) {
@@ -308,13 +308,14 @@ public class AppOpsState {
         List<MithrilAppOpsManager.PackageOps> pkgs = null;
         if (packageName != null) {
             try {
-                pkgs = mAppOps.getOpsForPackage(uid, packageName, tpl.ops);
+//                mithrilAppOpsManager.setMode(MithrilAppOpsManager.OP_WRITE_CONTACTS, uid, packageName, AppOpsManager.MODE_ALLOWED);
+                pkgs = mithrilAppOpsManager.getOpsForPackage(uid, packageName, tpl.ops);
             } catch (AppOpsException e) {
                 e.printStackTrace();
             }
         } else {
             try {
-                pkgs = mAppOps.getPackagesForOps(tpl.ops);
+                pkgs = mithrilAppOpsManager.getPackagesForOps(tpl.ops);
             } catch (AppOpsException e) {
                 e.printStackTrace();
             }
@@ -337,14 +338,14 @@ public class AppOpsState {
         if (packageName != null) {
             apps = new ArrayList<PackageInfo>();
             try {
-                PackageInfo pi = mPm.getPackageInfo(packageName, PackageManager.GET_PERMISSIONS);
+                PackageInfo pi = packageManager.getPackageInfo(packageName, PackageManager.GET_PERMISSIONS);
                 apps.add(pi);
             } catch (NameNotFoundException e) {
             }
         } else {
             String[] permsArray = new String[perms.size()];
             perms.toArray(permsArray);
-            apps = mPm.getPackagesHoldingPermissions(permsArray, 0);
+            apps = packageManager.getPackagesHoldingPermissions(permsArray, 0);
         }
         for (int i = 0; i < apps.size(); i++) {
             PackageInfo appInfo = apps.get(i);
@@ -481,7 +482,7 @@ public class AppOpsState {
         public Drawable getIcon() {
             if (mIcon == null) {
                 if (mApkFile.exists()) {
-                    mIcon = mInfo.loadIcon(mState.mPm);
+                    mIcon = mInfo.loadIcon(mState.packageManager);
                     return mIcon;
                 } else {
                     mMounted = false;
@@ -491,7 +492,7 @@ public class AppOpsState {
                 // its icon.
                 if (mApkFile.exists()) {
                     mMounted = true;
-                    mIcon = mInfo.loadIcon(mState.mPm);
+                    mIcon = mInfo.loadIcon(mState.packageManager);
                     return mIcon;
                 }
             } else {
