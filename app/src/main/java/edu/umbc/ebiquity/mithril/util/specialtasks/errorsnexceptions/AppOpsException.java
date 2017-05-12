@@ -6,8 +6,13 @@ package edu.umbc.ebiquity.mithril.util.specialtasks.errorsnexceptions;
 
 public class AppOpsException extends Exception {
     private String message;
+
     public AppOpsException() {
         super();
+    }
+
+    public AppOpsException(Exception e) {
+        super(e);
     }
 
     public AppOpsException(String message) {

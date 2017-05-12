@@ -1166,17 +1166,23 @@ public class MithrilAppOpsManager {
      * @hide
      */
     public List<PackageOps> getOpsForPackage(int uid, String packageName, int[] ops) throws AppOpsException {
-        List<PackageOps> result = null;
+        List<PackageOps> result = new ArrayList<>();
         int[] intArray = (int[]) Array.newInstance(int.class, ops.length);
         for (int index = 0; index < ops.length; index++) {
             Array.set(intArray, index, ops[index]);
         }
         try {
+            /* Code to verify what run time methods we are able to see
+            int count = 0;
+            for (Method method : appOpsManagerClass.getMethods()) {
+                Log.d(MithrilApplication.getDebugTag()+" method "+Integer.toString(count++)+": ", method.getName());
+            }
+            */
             Class[] types = new Class[3];
             types[0] = Integer.TYPE;
             types[1] = String.class;
             types[2] = Integer[].class;
-            Method getOpsForPackage = appOpsManagerClass.getMethod("getPackagesForOps", types);
+            Method getOpsForPackage = appOpsManagerClass.getMethod("getOpsForPackage", types);
 
             Object[] args = new Object[3];
             args[0] = Integer.valueOf(uid);
@@ -1186,14 +1192,26 @@ public class MithrilAppOpsManager {
             getOpsForPackage.invoke(appOpsManager, args);
 
         } catch (NoSuchMethodException e) {
-            Log.e(MithrilApplication.getDebugTag(), e.getCause().toString());
-            throw new AppOpsException(e.getCause().toString());
+            Log.e(MithrilApplication.getDebugTag(), e.getMessage());
+            throw new AppOpsException(e.getMessage());
         } catch (InvocationTargetException e) {
-            Log.e(MithrilApplication.getDebugTag(), e.getCause().toString());
-            throw new AppOpsException(e.getCause().toString());
+            Log.e(MithrilApplication.getDebugTag(), e.getMessage());
+            throw new AppOpsException(e.getMessage());
         } catch (IllegalAccessException e) {
-            Log.e(MithrilApplication.getDebugTag(), e.getCause().toString());
-            throw new AppOpsException(e.getCause().toString());
+            Log.e(MithrilApplication.getDebugTag(), e.getMessage());
+            throw new AppOpsException(e.getMessage());
+        } catch (Exception e) {
+            for (StackTraceElement ele : e.getStackTrace()) {
+                Log.e(MithrilApplication.getDebugTag(), ele.toString());
+                Log.e(MithrilApplication.getDebugTag(), ele.getClassName());
+                Log.e(MithrilApplication.getDebugTag(), ele.getFileName());
+                Log.e(MithrilApplication.getDebugTag(), ele.getMethodName());
+                Log.e(MithrilApplication.getDebugTag(), ele.getClass().toString());
+                Log.e(MithrilApplication.getDebugTag(), "\n");
+            }
+            Log.e(MithrilApplication.getDebugTag() + " message: ", e.getLocalizedMessage());
+            Log.e(MithrilApplication.getDebugTag() + " message: ", e.getMessage());
+            throw new AppOpsException(e);
         }
         if (result.size() == 0)
             throw new AppOpsException();
@@ -1207,7 +1225,7 @@ public class MithrilAppOpsManager {
      * @hide
      */
     public List<PackageOps> getPackagesForOps(int[] ops) throws AppOpsException {
-        List<PackageOps> result;
+        List<PackageOps> result = new ArrayList<>();
         int[] intArray = (int[]) Array.newInstance(int.class, ops.length);
         for (int index = 0; index < ops.length; index++) {
             Array.set(intArray, index, ops[index]);
@@ -1222,14 +1240,14 @@ public class MithrilAppOpsManager {
             result = (List<PackageOps>) getPackagesForOps.invoke(appOpsManager, args);
 
         } catch (NoSuchMethodException e) {
-            Log.e(MithrilApplication.getDebugTag(), e.getCause().toString());
-            throw new AppOpsException(e.getCause().toString());
+            Log.e(MithrilApplication.getDebugTag(), e.getMessage());
+            throw new AppOpsException(e.getMessage());
         } catch (InvocationTargetException e) {
-            Log.e(MithrilApplication.getDebugTag(), e.getCause().toString());
-            throw new AppOpsException(e.getCause().toString());
+            Log.e(MithrilApplication.getDebugTag(), e.getMessage());
+            throw new AppOpsException(e.getMessage());
         } catch (IllegalAccessException e) {
-            Log.e(MithrilApplication.getDebugTag(), e.getCause().toString());
-            throw new AppOpsException(e.getCause().toString());
+            Log.e(MithrilApplication.getDebugTag(), e.getMessage());
+            throw new AppOpsException(e.getMessage());
         }
         if (result.size() == 0)
             throw new AppOpsException();
@@ -1271,14 +1289,14 @@ public class MithrilAppOpsManager {
             result = (Integer) checkOp.invoke(appOpsManager, args);
 
         } catch (NoSuchMethodException e) {
-            Log.e(MithrilApplication.getDebugTag(), e.getCause().toString());
-            throw new AppOpsException(e.getCause().toString());
+            Log.e(MithrilApplication.getDebugTag(), e.getMessage());
+            throw new AppOpsException(e.getMessage());
         } catch (InvocationTargetException e) {
-            Log.e(MithrilApplication.getDebugTag(), e.getCause().toString());
-            throw new AppOpsException(e.getCause().toString());
+            Log.e(MithrilApplication.getDebugTag(), e.getMessage());
+            throw new AppOpsException(e.getMessage());
         } catch (IllegalAccessException e) {
-            Log.e(MithrilApplication.getDebugTag(), e.getCause().toString());
-            throw new AppOpsException(e.getCause().toString());
+            Log.e(MithrilApplication.getDebugTag(), e.getMessage());
+            throw new AppOpsException(e.getMessage());
         }
 
         if (result == Integer.MIN_VALUE)
@@ -1309,14 +1327,14 @@ public class MithrilAppOpsManager {
             result = (Integer) checkOpNoThrow.invoke(appOpsManager, args);
 
         } catch (NoSuchMethodException e) {
-            Log.e(MithrilApplication.getDebugTag(), e.getCause().toString());
-            throw new AppOpsException(e.getCause().toString());
+            Log.e(MithrilApplication.getDebugTag(), e.getMessage());
+            throw new AppOpsException(e.getMessage());
         } catch (InvocationTargetException e) {
-            Log.e(MithrilApplication.getDebugTag(), e.getCause().toString());
-            throw new AppOpsException(e.getCause().toString());
+            Log.e(MithrilApplication.getDebugTag(), e.getMessage());
+            throw new AppOpsException(e.getMessage());
         } catch (IllegalAccessException e) {
-            Log.e(MithrilApplication.getDebugTag(), e.getCause().toString());
-            throw new AppOpsException(e.getCause().toString());
+            Log.e(MithrilApplication.getDebugTag(), e.getMessage());
+            throw new AppOpsException(e.getMessage());
         }
 
         if (result == Integer.MIN_VALUE)
@@ -1381,14 +1399,14 @@ public class MithrilAppOpsManager {
             setModeMethod.invoke(appOpsManager, args);
 
         } catch (NoSuchMethodException e) {
-            Log.e(MithrilApplication.getDebugTag(), e.getCause().toString());
-            throw new AppOpsException(e.getCause().toString());
+            Log.e(MithrilApplication.getDebugTag(), e.getMessage());
+            throw new AppOpsException(e.getMessage());
         } catch (InvocationTargetException e) {
-            Log.e(MithrilApplication.getDebugTag(), e.getCause().toString());
-            throw new AppOpsException(e.getCause().toString());
+            Log.e(MithrilApplication.getDebugTag(), e.getMessage());
+            throw new AppOpsException(e.getMessage());
         } catch (IllegalAccessException e) {
-            Log.e(MithrilApplication.getDebugTag(), e.getCause().toString());
-            throw new AppOpsException(e.getCause().toString());
+            Log.e(MithrilApplication.getDebugTag(), e.getMessage());
+            throw new AppOpsException(e.getMessage());
         }
         return true;
     }
