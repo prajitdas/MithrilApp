@@ -229,7 +229,7 @@ public class CoreActivity extends AppCompatActivity
         int id = item.getItemId();
         if (id == R.id.capture_exec_settings) {
             executeRules();
-            navigationView.getMenu().getItem(3).getSubMenu().getItem(3).setEnabled(true);
+            navigationView.getMenu().getItem(4).getSubMenu().getItem(3).setEnabled(true);
             SharedPreferences.Editor editor = this.getSharedPreferences(MithrilApplication.getSharedPreferencesName(), Context.MODE_PRIVATE).edit();
             editor.putBoolean(MithrilApplication.getPrefKeyResetEnabled(), true);
             editor.apply();

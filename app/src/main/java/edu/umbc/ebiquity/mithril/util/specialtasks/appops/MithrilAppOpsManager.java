@@ -1166,7 +1166,7 @@ public class MithrilAppOpsManager {
      * @hide
      */
     public List<PackageOps> getOpsForPackage(int uid, String packageName, int[] ops) throws AppOpsException {
-        List<PackageOps> result;
+        List<PackageOps> result = null;
         int[] intArray = (int[]) Array.newInstance(int.class, ops.length);
         for (int index = 0; index < ops.length; index++) {
             Array.set(intArray, index, ops[index]);
@@ -1176,13 +1176,14 @@ public class MithrilAppOpsManager {
             types[0] = Integer.TYPE;
             types[1] = String.class;
             types[2] = Integer[].class;
-            Method getOpsForPackage = appOpsManagerClass.getMethod("getOpsForPackage", types);
+            Method getOpsForPackage = appOpsManagerClass.getMethod("getPackagesForOps", types);
 
             Object[] args = new Object[3];
             args[0] = Integer.valueOf(uid);
             args[1] = packageName;
             args[2] = intArray;
-            result = (List<PackageOps>) getOpsForPackage.invoke(appOpsManager, args);
+//            result = (List<PackageOps>)
+            getOpsForPackage.invoke(appOpsManager, args);
 
         } catch (NoSuchMethodException e) {
             Log.e(MithrilApplication.getDebugTag(), e.getCause().toString());

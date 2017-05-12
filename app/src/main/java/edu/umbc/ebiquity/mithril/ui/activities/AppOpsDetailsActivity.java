@@ -7,7 +7,6 @@ import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.content.pm.PermissionGroupInfo;
 import android.content.pm.PermissionInfo;
-import android.content.res.Resources;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
@@ -96,7 +95,6 @@ public class AppOpsDetailsActivity extends AppCompatActivity {
             return false;
         }
         setAppLabelAndIcon(mPackageInfo);
-        Resources res = getResources();
         mOperationsSection.removeAllViews();
         String lastPermGroup = "";
         for (AppOpsState.OpsTemplate tpl : AppOpsState.ALL_TEMPLATES) {
@@ -125,7 +123,7 @@ public class AppOpsDetailsActivity extends AppCompatActivity {
                 ((TextView) view.findViewById(R.id.op_name)).setText(
                         entry.getSwitchText(mState));
                 ((TextView) view.findViewById(R.id.op_time)).setText(
-                        entry.getTimeText(res, true));
+                        entry.getTimeText(this, true));
                 Switch sw = (Switch) view.findViewById(R.id.switchWidget);
                 final int switchOp = MithrilAppOpsManager.opToSwitch(firstOp.getOp());
                 try {
