@@ -54,7 +54,8 @@ public class UsageStatsRecyclerViewAdapter extends RecyclerView.Adapter<UsageSta
         try {
             holder.mAppIcon.setImageDrawable(mValues.get(position).getIcon());
             holder.mAppLbl.setText(mValues.get(position).getLabel());
-            holder.mAppUsageDetail.setText(getUsageDetails(mValues.get(position).getResourcesUsed()));
+//            holder.mAppUsageDetail.setText(getUsageDetails(mValues.get(position).getResourcesUsed()));
+            holder.mAppUsageDetail.setText(getStringForHowLongWasUsed(mValues.get(position).getTotalTimeInForeground()));
             holder.mAppLastUsedTime.setText(getStringForLastTimeUsed(mValues.get(position).getLastTimeUsed()));
 
             holder.mView.setOnClickListener(new View.OnClickListener() {
@@ -70,6 +71,13 @@ public class UsageStatsRecyclerViewAdapter extends RecyclerView.Adapter<UsageSta
         } catch (SQLException e) {
             Log.e(MithrilApplication.getDebugTag(), "Could not find " + e);
         }
+    }
+
+    private CharSequence getStringForHowLongWasUsed(long totalTimeInForeground) {
+        long second = (totalTimeInForeground / 1000) % 60;
+        long minute = (totalTimeInForeground / (1000 * 60)) % 60;
+        long hour = (totalTimeInForeground / (1000 * 60 * 60)) % 24;
+        return "Used for: " + Long.toString(hour) + "h:" + Long.toString(minute) + "m:" + Long.toString(second) + "s";
     }
 
     private CharSequence getStringForLastTimeUsed(long lastTimeUsed) {

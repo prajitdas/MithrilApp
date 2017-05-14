@@ -5,8 +5,6 @@ import android.app.usage.UsageStatsManager;
 import android.content.Context;
 import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageManager;
-import android.content.pm.PermissionGroupInfo;
-import android.content.pm.PermissionInfo;
 import android.os.Bundle;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
@@ -26,11 +24,9 @@ import java.util.Map;
 
 import edu.umbc.ebiquity.mithril.MithrilApplication;
 import edu.umbc.ebiquity.mithril.R;
-import edu.umbc.ebiquity.mithril.data.model.Resource;
 import edu.umbc.ebiquity.mithril.data.model.UsageStats;
 import edu.umbc.ebiquity.mithril.ui.adapters.UsageStatsRecyclerViewAdapter;
 import edu.umbc.ebiquity.mithril.util.specialtasks.appops.AppOpsState;
-import edu.umbc.ebiquity.mithril.util.specialtasks.appops.MithrilAppOpsManager;
 
 /**
  * A fragment representing a list of Items.
@@ -98,9 +94,14 @@ public class UsageStatsFragment extends Fragment {
         view = inflater.inflate(R.layout.fragment_usagestats_list, container, false);
         context = view.getContext();
         mState = new AppOpsState(context);
+        return view;
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
         initData();
         initViews();
-        return view;
     }
 
     private void initViews() {
@@ -153,57 +154,57 @@ public class UsageStatsFragment extends Fragment {
                 tempUsageStat.setLabel(label);
                 tempUsageStat.setIcon(appInfo.loadIcon(mPm));
 
-                List<Resource> tempListOfResource = null;
-                String lastPermGroup = "";
-                List<AppOpsState.AppOpEntry> entries = mState.buildState(AppOpsState.LOCATION_TEMPLATE,
-                        appInfo.uid, usageStat.getPackageName());
-                for (final AppOpsState.AppOpEntry entry : entries) {
-                    Resource tempRes = new Resource();
-                    final MithrilAppOpsManager.OpEntry firstOp = entry.getOpEntry(0);
-                    String perm = MithrilAppOpsManager.opToPermission(firstOp.getOp());
-                    if (perm != null) {
-                        try {
-                            PermissionInfo pi = mPm.getPermissionInfo(perm, 0);
-                            tempRes.setResourceName(pi.packageName);
-                            if (pi.group != null && !lastPermGroup.equals(pi.group)) {
-                                lastPermGroup = pi.group;
-                                PermissionGroupInfo pgi = mPm.getPermissionGroupInfo(pi.group, 0);
-                                if (pgi.icon != 0) {
-                                    tempRes.setIcon(pgi.loadIcon(mPm));
-                                }
-                            }
-                        } catch (PackageManager.NameNotFoundException e) {
-                        }
-                    }
-                    tempRes.setLabel(entry.getSwitchText(mState).toString());
-                    tempRes.setRelativeLastTimeUsed(entry.getTimeText(context, true).toString());
-//                    /**
-//                     * Code to change operations will not be used right now
-//                     */
-//                    final MithrilAppOpsManager appOps = new MithrilAppOpsManager((AppOpsManager) context.getSystemService(Context.APP_OPS_SERVICE));
-//                    Switch sw = (Switch) view.findViewById(R.id.switchWidget);
-//                    final int switchOp = MithrilAppOpsManager.opToSwitch(firstOp.getOp());
-//                    try {
-//                        int checkedVal = appOps.checkOp(switchOp, entry.getPackageOps().getUid(), entry.getPackageOps().getPackageName());
-//                        sw.setChecked(checkedVal == AppOpsManager.MODE_ALLOWED);
-//                        sw.setOnCheckedChangeListener(new Switch.OnCheckedChangeListener() {
-//                            @Override
-//                            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-//                                try {
-//                                    appOps.setMode(switchOp, entry.getPackageOps().getUid(),
-//                                            entry.getPackageOps().getPackageName(), isChecked
-//                                                    ? AppOpsManager.MODE_ALLOWED : AppOpsManager.MODE_IGNORED);
-//                                } catch (AppOpsException e) {
-//                                    Log.e(MithrilApplication.getDebugTag(), e.getMessage());
-//                                }
-//                            }
-//                        });
-//                    } catch (AppOpsException e) {
-//                        e.printStackTrace();
-//                    }
-                    tempListOfResource.add(tempRes);
+                /**
+                 * TODO Right now we are unable to get the information of what operations were used. If we are able to do that we will handle that. For now let's work with app launches only!
+                 List<Resource> tempListOfResource = null;
+                 String lastPermGroup = "";
+                 List<AppOpsState.AppOpEntry> entries = mState.buildState(AppOpsState.LOCATION_TEMPLATE,
+                 appInfo.uid, usageStat.getPackageName());
+                 for (final AppOpsState.AppOpEntry entry : entries) {
+                 Resource tempRes = new Resource();
+                 final MithrilAppOpsManager.OpEntry firstOp = entry.getOpEntry(0);
+                 String perm = MithrilAppOpsManager.opToPermission(firstOp.getOp());
+                 if (perm != null) {
+                 try {
+                 PermissionInfo pi = mPm.getPermissionInfo(perm, 0);
+                 tempRes.setResourceName(pi.packageName);
+                 if (pi.group != null && !lastPermGroup.equals(pi.group)) {
+                 lastPermGroup = pi.group;
+                 PermissionGroupInfo pgi = mPm.getPermissionGroupInfo(pi.group, 0);
+                 if (pgi.icon != 0) {
+                 tempRes.setIcon(pgi.loadIcon(mPm));
+                 }
+                 }
+                 } catch (PackageManager.NameNotFoundException e) {
+                 }
+                 }
+                 tempRes.setLabel(entry.getSwitchText(mState).toString());
+                 tempRes.setRelativeLastTimeUsed(entry.getTimeText(context, true).toString());
+                 // Code to change operations will not be used right now
+                 final MithrilAppOpsManager appOps = new MithrilAppOpsManager((AppOpsManager) context.getSystemService(Context.APP_OPS_SERVICE));
+                 Switch sw = (Switch) view.findViewById(R.id.switchWidget);
+                 final int switchOp = MithrilAppOpsManager.opToSwitch(firstOp.getOp());
+                 try {
+                 int checkedVal = appOps.checkOp(switchOp, entry.getPackageOps().getUid(), entry.getPackageOps().getPackageName());
+                 sw.setChecked(checkedVal == AppOpsManager.MODE_ALLOWED);
+                 sw.setOnCheckedChangeListener(new Switch.OnCheckedChangeListener() {
+                @Override public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                try {
+                appOps.setMode(switchOp, entry.getPackageOps().getUid(),
+                entry.getPackageOps().getPackageName(), isChecked
+                ? AppOpsManager.MODE_ALLOWED : AppOpsManager.MODE_IGNORED);
+                } catch (AppOpsException e) {
+                Log.e(MithrilApplication.getDebugTag(), e.getMessage());
                 }
-                tempUsageStat.setResourcesUsed(tempListOfResource);
+                }
+                });
+                 } catch (AppOpsException e) {
+                 e.printStackTrace();
+                 }
+                 tempListOfResource.add(tempRes);
+                 }
+                 tempUsageStat.setResourcesUsed(tempListOfResource);
+                 */
                 usageStats.add(tempUsageStat);
             } catch (PackageManager.NameNotFoundException e) {
                 // This package may be gone.
@@ -211,7 +212,7 @@ public class UsageStatsFragment extends Fragment {
         }
         // Sort list
         mAppLabelComparator = new AppNameComparator(mAppLabelMap);
-        sortList(_DISPLAY_ORDER_USAGE_TIME);
+        sortList(_DISPLAY_ORDER_LAST_TIME_USED);
     }
 
     public void sortList(int sortOrder) {
