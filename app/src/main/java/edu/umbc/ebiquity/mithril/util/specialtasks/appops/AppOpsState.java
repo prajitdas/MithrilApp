@@ -57,17 +57,16 @@ import java.util.List;
 
 import edu.umbc.ebiquity.mithril.MithrilApplication;
 import edu.umbc.ebiquity.mithril.R;
-import edu.umbc.ebiquity.mithril.util.specialtasks.errorsnexceptions.AppOpsException;
 
 public class AppOpsState {
     public static final OpsTemplate LOCATION_TEMPLATE = new OpsTemplate(
-            new int[]{MithrilAppOpsManager.OP_COARSE_LOCATION,
-                    MithrilAppOpsManager.OP_FINE_LOCATION,
-                    MithrilAppOpsManager.OP_GPS,
-                    MithrilAppOpsManager.OP_WIFI_SCAN,
-                    MithrilAppOpsManager.OP_NEIGHBORING_CELLS,
-                    MithrilAppOpsManager.OP_MONITOR_LOCATION,
-                    MithrilAppOpsManager.OP_MONITOR_HIGH_POWER_LOCATION},
+            new int[]{AppOpsManager.OP_COARSE_LOCATION,
+                    AppOpsManager.OP_FINE_LOCATION,
+                    AppOpsManager.OP_GPS,
+                    AppOpsManager.OP_WIFI_SCAN,
+                    AppOpsManager.OP_NEIGHBORING_CELLS,
+                    AppOpsManager.OP_MONITOR_LOCATION,
+                    AppOpsManager.OP_MONITOR_HIGH_POWER_LOCATION},
             new boolean[]{true,
                     true,
                     false,
@@ -77,14 +76,14 @@ public class AppOpsState {
                     false}
     );
     public static final OpsTemplate PERSONAL_TEMPLATE = new OpsTemplate(
-            new int[]{MithrilAppOpsManager.OP_READ_CONTACTS,
-                    MithrilAppOpsManager.OP_WRITE_CONTACTS,
-                    MithrilAppOpsManager.OP_READ_CALL_LOG,
-                    MithrilAppOpsManager.OP_WRITE_CALL_LOG,
-                    MithrilAppOpsManager.OP_READ_CALENDAR,
-                    MithrilAppOpsManager.OP_WRITE_CALENDAR,
-                    MithrilAppOpsManager.OP_READ_CLIPBOARD,
-                    MithrilAppOpsManager.OP_WRITE_CLIPBOARD},
+            new int[]{AppOpsManager.OP_READ_CONTACTS,
+                    AppOpsManager.OP_WRITE_CONTACTS,
+                    AppOpsManager.OP_READ_CALL_LOG,
+                    AppOpsManager.OP_WRITE_CALL_LOG,
+                    AppOpsManager.OP_READ_CALENDAR,
+                    AppOpsManager.OP_WRITE_CALENDAR,
+                    AppOpsManager.OP_READ_CLIPBOARD,
+                    AppOpsManager.OP_WRITE_CLIPBOARD},
             new boolean[]{true,
                     true,
                     true,
@@ -95,15 +94,15 @@ public class AppOpsState {
                     false}
     );
     public static final OpsTemplate MESSAGING_TEMPLATE = new OpsTemplate(
-            new int[]{MithrilAppOpsManager.OP_READ_SMS,
-                    MithrilAppOpsManager.OP_RECEIVE_SMS,
-                    MithrilAppOpsManager.OP_RECEIVE_EMERGECY_SMS,
-                    MithrilAppOpsManager.OP_RECEIVE_MMS,
-                    MithrilAppOpsManager.OP_RECEIVE_WAP_PUSH,
-                    MithrilAppOpsManager.OP_WRITE_SMS,
-                    MithrilAppOpsManager.OP_SEND_SMS,
-                    MithrilAppOpsManager.OP_READ_ICC_SMS,
-                    MithrilAppOpsManager.OP_WRITE_ICC_SMS},
+            new int[]{AppOpsManager.OP_READ_SMS,
+                    AppOpsManager.OP_RECEIVE_SMS,
+                    AppOpsManager.OP_RECEIVE_EMERGECY_SMS,
+                    AppOpsManager.OP_RECEIVE_MMS,
+                    AppOpsManager.OP_RECEIVE_WAP_PUSH,
+                    AppOpsManager.OP_WRITE_SMS,
+                    AppOpsManager.OP_SEND_SMS,
+                    AppOpsManager.OP_READ_ICC_SMS,
+                    AppOpsManager.OP_WRITE_ICC_SMS},
             new boolean[]{true,
                     true,
                     true,
@@ -115,20 +114,20 @@ public class AppOpsState {
                     true}
     );
     public static final OpsTemplate MEDIA_TEMPLATE = new OpsTemplate(
-            new int[]{MithrilAppOpsManager.OP_VIBRATE,
-                    MithrilAppOpsManager.OP_CAMERA,
-                    MithrilAppOpsManager.OP_RECORD_AUDIO,
-                    MithrilAppOpsManager.OP_PLAY_AUDIO,
-                    MithrilAppOpsManager.OP_TAKE_MEDIA_BUTTONS,
-                    MithrilAppOpsManager.OP_TAKE_AUDIO_FOCUS,
-                    MithrilAppOpsManager.OP_AUDIO_MASTER_VOLUME,
-                    MithrilAppOpsManager.OP_AUDIO_VOICE_VOLUME,
-                    MithrilAppOpsManager.OP_AUDIO_RING_VOLUME,
-                    MithrilAppOpsManager.OP_AUDIO_MEDIA_VOLUME,
-                    MithrilAppOpsManager.OP_AUDIO_ALARM_VOLUME,
-                    MithrilAppOpsManager.OP_AUDIO_NOTIFICATION_VOLUME,
-                    MithrilAppOpsManager.OP_AUDIO_BLUETOOTH_VOLUME,
-                    MithrilAppOpsManager.OP_MUTE_MICROPHONE},
+            new int[]{AppOpsManager.OP_VIBRATE,
+                    AppOpsManager.OP_CAMERA,
+                    AppOpsManager.OP_RECORD_AUDIO,
+                    AppOpsManager.OP_PLAY_AUDIO,
+                    AppOpsManager.OP_TAKE_MEDIA_BUTTONS,
+                    AppOpsManager.OP_TAKE_AUDIO_FOCUS,
+                    AppOpsManager.OP_AUDIO_MASTER_VOLUME,
+                    AppOpsManager.OP_AUDIO_VOICE_VOLUME,
+                    AppOpsManager.OP_AUDIO_RING_VOLUME,
+                    AppOpsManager.OP_AUDIO_MEDIA_VOLUME,
+                    AppOpsManager.OP_AUDIO_ALARM_VOLUME,
+                    AppOpsManager.OP_AUDIO_NOTIFICATION_VOLUME,
+                    AppOpsManager.OP_AUDIO_BLUETOOTH_VOLUME,
+                    AppOpsManager.OP_MUTE_MICROPHONE},
             new boolean[]{false,
                     true,
                     true,
@@ -145,16 +144,16 @@ public class AppOpsState {
                     false}
     );
     public static final OpsTemplate DEVICE_TEMPLATE = new OpsTemplate(
-            new int[]{MithrilAppOpsManager.OP_POST_NOTIFICATION,
-                    MithrilAppOpsManager.OP_ACCESS_NOTIFICATIONS,
-                    MithrilAppOpsManager.OP_CALL_PHONE,
-                    MithrilAppOpsManager.OP_WRITE_SETTINGS,
-                    MithrilAppOpsManager.OP_SYSTEM_ALERT_WINDOW,
-                    MithrilAppOpsManager.OP_WAKE_LOCK,
-                    MithrilAppOpsManager.OP_PROJECT_MEDIA,
-                    MithrilAppOpsManager.OP_ACTIVATE_VPN,
-                    MithrilAppOpsManager.OP_ASSIST_STRUCTURE,
-                    MithrilAppOpsManager.OP_ASSIST_SCREENSHOT},
+            new int[]{AppOpsManager.OP_POST_NOTIFICATION,
+                    AppOpsManager.OP_ACCESS_NOTIFICATIONS,
+                    AppOpsManager.OP_CALL_PHONE,
+                    AppOpsManager.OP_WRITE_SETTINGS,
+                    AppOpsManager.OP_SYSTEM_ALERT_WINDOW,
+                    AppOpsManager.OP_WAKE_LOCK,
+                    AppOpsManager.OP_PROJECT_MEDIA,
+                    AppOpsManager.OP_ACTIVATE_VPN,
+                    AppOpsManager.OP_ASSIST_STRUCTURE,
+                    AppOpsManager.OP_ASSIST_SCREENSHOT},
             new boolean[]{false,
                     true,
                     true,
@@ -167,7 +166,7 @@ public class AppOpsState {
                     false}
     );
     public static final OpsTemplate RUN_IN_BACKGROUND_TEMPLATE = new OpsTemplate(
-            new int[]{MithrilAppOpsManager.OP_RUN_IN_BACKGROUND},
+            new int[]{AppOpsManager.OP_RUN_IN_BACKGROUND},
             new boolean[]{false}
     );
     public static final OpsTemplate[] ALL_TEMPLATES = new OpsTemplate[]{
@@ -212,7 +211,7 @@ public class AppOpsState {
     static final String TAG = "AppOpsState";
     static final boolean DEBUG = false;
     final Context mContext;
-    final MithrilAppOpsManager mithrilAppOpsManager;
+    final AppOpsManager appOpsManager;
     final PackageManager packageManager;
     final CharSequence[] mOpSummaries;
     final CharSequence[] mOpLabels;
@@ -220,14 +219,14 @@ public class AppOpsState {
 
     public AppOpsState(Context context) {
         mContext = context;
-        mithrilAppOpsManager = new MithrilAppOpsManager((AppOpsManager) context.getSystemService(Context.APP_OPS_SERVICE));
+        appOpsManager = (AppOpsManager) context.getSystemService(Context.APP_OPS_SERVICE);
         packageManager = context.getPackageManager();
         mOpSummaries = context.getResources().getTextArray(R.array.app_ops_summaries);
         mOpLabels = context.getResources().getTextArray(R.array.app_ops_labels);
     }
 
-    private void addOp(List<AppOpEntry> entries, MithrilAppOpsManager.PackageOps pkgOps,
-                       AppEntry appEntry, MithrilAppOpsManager.OpEntry opEntry, boolean allowMerge, int switchOrder) {
+    private void addOp(List<AppOpEntry> entries, AppOpsManager.PackageOps pkgOps,
+                       AppEntry appEntry, AppOpsManager.OpEntry opEntry, boolean allowMerge, int switchOrder) {
         if (allowMerge && entries.size() > 0) {
             AppOpEntry last = entries.get(entries.size() - 1);
             if (last.getAppEntry() == appEntry) {
@@ -254,8 +253,8 @@ public class AppOpsState {
         entries.add(entry);
     }
 
-    public MithrilAppOpsManager getMithrilAppOpsManager() {
-        return mithrilAppOpsManager;
+    public AppOpsManager getAppOpsManager() {
+        return appOpsManager;
     }
 
     public List<AppOpEntry> buildState(OpsTemplate tpl) {
@@ -294,10 +293,10 @@ public class AppOpsState {
         final List<AppOpEntry> entries = new ArrayList<AppOpEntry>();
         final ArrayList<String> perms = new ArrayList<String>();
         final ArrayList<Integer> permOps = new ArrayList<Integer>();
-        final int[] opToOrder = new int[MithrilAppOpsManager._NUM_OP];
+        final int[] opToOrder = new int[AppOpsManager._NUM_OP];
         for (int i = 0; i < tpl.ops.length; i++) {
             if (tpl.showPerms[i]) {
-                String perm = MithrilAppOpsManager.opToPermission(tpl.ops[i]);
+                String perm = AppOpsManager.opToPermission(tpl.ops[i]);
                 if (perm != null && !perms.contains(perm)) {
                     perms.add(perm);
                     permOps.add(tpl.ops[i]);
@@ -305,29 +304,29 @@ public class AppOpsState {
                 }
             }
         }
-        List<MithrilAppOpsManager.PackageOps> pkgs = null;
+        List<AppOpsManager.PackageOps> pkgs = null;
         if (packageName != null) {
             try {
-                pkgs = mithrilAppOpsManager.getOpsForPackage(uid, packageName, tpl.ops);
-            } catch (AppOpsException e) {
+                pkgs = appOpsManager.getOpsForPackage(uid, packageName, tpl.ops);
+            } catch (Exception e) {
                 Log.e(MithrilApplication.getDebugTag(), e.getMessage());
             }
         } else {
             try {
-                pkgs = mithrilAppOpsManager.getPackagesForOps(tpl.ops);
-            } catch (AppOpsException e) {
+                pkgs = appOpsManager.getPackagesForOps(tpl.ops);
+            } catch (Exception e) {
                 Log.e(MithrilApplication.getDebugTag(), e.getMessage());
             }
         }
         if (pkgs != null) {
             for (int i = 0; i < pkgs.size(); i++) {
-                MithrilAppOpsManager.PackageOps pkgOps = pkgs.get(i);
+                AppOpsManager.PackageOps pkgOps = pkgs.get(i);
                 AppEntry appEntry = getAppEntry(context, appEntries, pkgOps.getPackageName(), null);
                 if (appEntry == null) {
                     continue;
                 }
                 for (int j = 0; j < pkgOps.getOps().size(); j++) {
-                    MithrilAppOpsManager.OpEntry opEntry = pkgOps.getOps().get(j);
+                    AppOpsManager.OpEntry opEntry = pkgOps.getOps().get(j);
                     addOp(entries, pkgOps, appEntry, opEntry, packageName == null,
                             packageName == null ? 0 : opToOrder[opEntry.getOp()]);
                 }
@@ -335,7 +334,7 @@ public class AppOpsState {
         }
         List<PackageInfo> apps;
         if (packageName != null) {
-            apps = new ArrayList<PackageInfo>();
+            apps = new ArrayList<>();
             try {
                 PackageInfo pi = packageManager.getPackageInfo(packageName, PackageManager.GET_PERMISSIONS);
                 apps.add(pi);
@@ -353,8 +352,8 @@ public class AppOpsState {
             if (appEntry == null) {
                 continue;
             }
-            List<MithrilAppOpsManager.OpEntry> dummyOps = null;
-            MithrilAppOpsManager.PackageOps pkgOps = null;
+            List<AppOpsManager.OpEntry> dummyOps = null;
+            AppOpsManager.PackageOps pkgOps = null;
             if (appInfo.requestedPermissions != null) {
                 for (int j = 0; j < appInfo.requestedPermissions.length; j++) {
                     if (appInfo.requestedPermissionsFlags != null) {
@@ -380,12 +379,13 @@ public class AppOpsState {
                             continue;
                         }
                         if (dummyOps == null) {
-                            dummyOps = new ArrayList<MithrilAppOpsManager.OpEntry>();
-                            pkgOps = new MithrilAppOpsManager.PackageOps(
+                            dummyOps = new ArrayList<>();
+                            pkgOps = new AppOpsManager.PackageOps(
                                     appInfo.packageName, appInfo.applicationInfo.uid, dummyOps);
                         }
-                        MithrilAppOpsManager.OpEntry opEntry = new MithrilAppOpsManager.OpEntry(
+                        AppOpsManager.OpEntry opEntry = new AppOpsManager.OpEntry(
                                 permOps.get(k), AppOpsManager.MODE_ALLOWED, 0, 0, 0, -1, null);
+
                         dummyOps.add(opEntry);
                         addOp(entries, pkgOps, appEntry, opEntry, packageName == null,
                                 packageName == null ? 0 : opToOrder[opEntry.getOp()]);
@@ -443,10 +443,8 @@ public class AppOpsState {
         private final AppOpsState mState;
         private final ApplicationInfo mInfo;
         private final File mApkFile;
-        private final SparseArray<MithrilAppOpsManager.OpEntry> mOps
-                = new SparseArray<MithrilAppOpsManager.OpEntry>();
-        private final SparseArray<AppOpEntry> mOpSwitches
-                = new SparseArray<AppOpEntry>();
+        private final SparseArray<AppOpsManager.OpEntry> mOps = new SparseArray<>();
+        private final SparseArray<AppOpEntry> mOpSwitches = new SparseArray<>();
         private String mLabel;
         private Drawable mIcon;
         private boolean mMounted;
@@ -457,9 +455,9 @@ public class AppOpsState {
             mApkFile = new File(info.sourceDir);
         }
 
-        public void addOp(AppOpEntry entry, MithrilAppOpsManager.OpEntry op) {
+        public void addOp(AppOpEntry entry, AppOpsManager.OpEntry op) {
             mOps.put(op.getOp(), op);
-            mOpSwitches.put(MithrilAppOpsManager.opToSwitch(op.getOp()), entry);
+            mOpSwitches.put(AppOpsManager.opToSwitch(op.getOp()), entry);
         }
 
         public boolean hasOp(int op) {
@@ -467,7 +465,7 @@ public class AppOpsState {
         }
 
         public AppOpEntry getOpSwitch(int op) {
-            return mOpSwitches.get(MithrilAppOpsManager.opToSwitch(op));
+            return mOpSwitches.get(AppOpsManager.opToSwitch(op));
         }
 
         public ApplicationInfo getApplicationInfo() {
@@ -524,16 +522,14 @@ public class AppOpsState {
      * This class holds the per-item data in our Loader.
      */
     public static class AppOpEntry {
-        private final MithrilAppOpsManager.PackageOps mPkgOps;
-        private final ArrayList<MithrilAppOpsManager.OpEntry> mOps
-                = new ArrayList<MithrilAppOpsManager.OpEntry>();
-        private final ArrayList<MithrilAppOpsManager.OpEntry> mSwitchOps
-                = new ArrayList<MithrilAppOpsManager.OpEntry>();
+        private final AppOpsManager.PackageOps mPkgOps;
+        private final ArrayList<AppOpsManager.OpEntry> mOps = new ArrayList<>();
+        private final ArrayList<AppOpsManager.OpEntry> mSwitchOps = new ArrayList<>();
         private final AppEntry mApp;
         private final int mSwitchOrder;
         private int mOverriddenPrimaryMode = -1;
 
-        public AppOpEntry(MithrilAppOpsManager.PackageOps pkg, MithrilAppOpsManager.OpEntry op, AppEntry app,
+        public AppOpEntry(AppOpsManager.PackageOps pkg, AppOpsManager.OpEntry op, AppEntry app,
                           int switchOrder) {
             mPkgOps = pkg;
             mApp = app;
@@ -543,9 +539,9 @@ public class AppOpsState {
             mSwitchOps.add(op);
         }
 
-        private static void addOp(ArrayList<MithrilAppOpsManager.OpEntry> list, MithrilAppOpsManager.OpEntry op) {
+        private static void addOp(ArrayList<AppOpsManager.OpEntry> list, AppOpsManager.OpEntry op) {
             for (int i = 0; i < list.size(); i++) {
-                MithrilAppOpsManager.OpEntry pos = list.get(i);
+                AppOpsManager.OpEntry pos = list.get(i);
                 if (pos.isRunning() != op.isRunning()) {
                     if (op.isRunning()) {
                         list.add(i, op);
@@ -561,10 +557,10 @@ public class AppOpsState {
             list.add(op);
         }
 
-        public void addOp(MithrilAppOpsManager.OpEntry op) {
+        public void addOp(AppOpsManager.OpEntry op) {
             mApp.addOp(this, op);
             addOp(mOps, op);
-            if (mApp.getOpSwitch(MithrilAppOpsManager.opToSwitch(op.getOp())) == null) {
+            if (mApp.getOpSwitch(AppOpsManager.opToSwitch(op.getOp())) == null) {
                 addOp(mSwitchOps, op);
             }
         }
@@ -577,7 +573,7 @@ public class AppOpsState {
             return mSwitchOrder;
         }
 
-        public MithrilAppOpsManager.PackageOps getPackageOps() {
+        public AppOpsManager.PackageOps getPackageOps() {
             return mPkgOps;
         }
 
@@ -585,7 +581,7 @@ public class AppOpsState {
             return mOps.size();
         }
 
-        public MithrilAppOpsManager.OpEntry getOpEntry(int pos) {
+        public AppOpsManager.OpEntry getOpEntry(int pos) {
             return mOps.get(pos);
         }
 
@@ -597,7 +593,7 @@ public class AppOpsState {
             mOverriddenPrimaryMode = mode;
         }
 
-        private CharSequence getCombinedText(ArrayList<MithrilAppOpsManager.OpEntry> ops,
+        private CharSequence getCombinedText(ArrayList<AppOpsManager.OpEntry> ops,
                                              CharSequence[] items) {
             if (ops.size() == 1) {
                 return items[ops.get(0).getOp()];

@@ -27,13 +27,12 @@ import edu.umbc.ebiquity.mithril.MithrilApplication;
 import edu.umbc.ebiquity.mithril.R;
 import edu.umbc.ebiquity.mithril.util.specialtasks.appops.AppOpsState;
 import edu.umbc.ebiquity.mithril.util.specialtasks.appops.MetricsEvent;
-import edu.umbc.ebiquity.mithril.util.specialtasks.appops.MithrilAppOpsManager;
 import edu.umbc.ebiquity.mithril.util.specialtasks.errorsnexceptions.AppOpsException;
 
 public class AppOpsDetailsActivity extends AppCompatActivity {
     private AppOpsState mState;
     private PackageManager mPm;
-    private MithrilAppOpsManager mAppOps;
+    private AppOpsManager mAppOps;
     private PackageInfo mPackageInfo;
     private LayoutInflater mInflater;
     private View mRootView;
@@ -101,11 +100,11 @@ public class AppOpsDetailsActivity extends AppCompatActivity {
             List<AppOpsState.AppOpEntry> entries = mState.buildState(tpl,
                     mPackageInfo.applicationInfo.uid, mPackageInfo.packageName);
             for (final AppOpsState.AppOpEntry entry : entries) {
-                final MithrilAppOpsManager.OpEntry firstOp = entry.getOpEntry(0);
+                final AppOpsManager.OpEntry firstOp = entry.getOpEntry(0);
                 final View view = mInflater.inflate(R.layout.app_ops_details_item,
                         mOperationsSection, false);
                 mOperationsSection.addView(view);
-                String perm = MithrilAppOpsManager.opToPermission(firstOp.getOp());
+                String perm = AppOpsManager.opToPermission(firstOp.getOp());
                 if (perm != null) {
                     try {
                         PermissionInfo pi = mPm.getPermissionInfo(perm, 0);
@@ -125,7 +124,7 @@ public class AppOpsDetailsActivity extends AppCompatActivity {
                 ((TextView) view.findViewById(R.id.op_time)).setText(
                         entry.getTimeText(this, true));
                 Switch sw = (Switch) view.findViewById(R.id.switchWidget);
-                final int switchOp = MithrilAppOpsManager.opToSwitch(firstOp.getOp());
+                final int switchOp = AppOpsManager.opToSwitch(firstOp.getOp());
                 try {
                     int checkedVal = mAppOps.checkOp(switchOp, entry.getPackageOps().getUid(), entry.getPackageOps().getPackageName());
                     sw.setChecked(checkedVal == AppOpsManager.MODE_ALLOWED);
@@ -136,12 +135,12 @@ public class AppOpsDetailsActivity extends AppCompatActivity {
                                 mAppOps.setMode(switchOp, entry.getPackageOps().getUid(),
                                         entry.getPackageOps().getPackageName(), isChecked
                                                 ? AppOpsManager.MODE_ALLOWED : AppOpsManager.MODE_IGNORED);
-                            } catch (AppOpsException e) {
+                            } catch (Exception e) {
                                 e.printStackTrace();
                             }
                         }
                     });
-                } catch (AppOpsException e) {
+                } catch (Exception e) {
                     e.printStackTrace();
                 }
             }
@@ -165,7 +164,7 @@ public class AppOpsDetailsActivity extends AppCompatActivity {
         mState = new AppOpsState(this);
         mPm = getPackageManager();
         mInflater = (LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-        mAppOps = new MithrilAppOpsManager((AppOpsManager) getSystemService(Context.APP_OPS_SERVICE));
+        mAppOps = (AppOpsManager) getSystemService(Context.APP_OPS_SERVICE);
         retrieveAppEntry();
         refreshUi();
 //        setHasOptionsMenu(true);

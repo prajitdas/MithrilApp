@@ -8,7 +8,6 @@ import android.os.Parcelable;
 import android.os.UserManager;
 import android.util.Log;
 
-import java.lang.annotation.Annotation;
 import java.lang.reflect.Array;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
@@ -1126,6 +1125,8 @@ public class MithrilAppOpsManager {
 
     private AppOpsManager appOpsManager;
     private Class appOpsManagerClass;
+    private static Class packageOpsClass;
+    private static Class opEntryClass;
 
     public MithrilAppOpsManager(AppOpsManager anAppOpsManager) {
         appOpsManager = anAppOpsManager;
@@ -1182,6 +1183,9 @@ public class MithrilAppOpsManager {
             Log.d(MithrilApplication.getDebugTag()+" method "+Integer.toString(count++)+": ", method.getName());
         }
         */
+        int count = 0;
+        for (Class someClass : appOpsManagerClass.getDeclaredClasses())
+            Log.d(MithrilApplication.getDebugTag(),"Class " + Integer.toString(count++) + someClass.getName());
 
         try {
             Class[] types = new Class[3];
@@ -1195,6 +1199,7 @@ public class MithrilAppOpsManager {
             args[1] = packageName;
             args[2] = intArray;
             result = (List<PackageOps>) getOpsForPackage.invoke(appOpsManager, args);
+//            result = convertToMithrilPackageOps(getOpsForPackage.invoke(appOpsManager, args));
         } catch (NoSuchMethodException e) {
             throw new AppOpsException("NoSuchMethodException");
         } catch (IllegalAccessException e) {
@@ -1208,6 +1213,11 @@ public class MithrilAppOpsManager {
             throw new AppOpsException();
         return result;
     }
+
+//    private List<PackageOps> convertToMithrilPackageOps(List<Object> items) {
+//        for (Object item : items)
+//            item.
+//    }
 
     /**
      * Retrieve current operation state for all applications.
