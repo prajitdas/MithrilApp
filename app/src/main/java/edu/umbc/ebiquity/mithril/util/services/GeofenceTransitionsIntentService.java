@@ -33,7 +33,9 @@ import com.google.android.gms.location.GeofencingEvent;
 import java.util.ArrayList;
 import java.util.List;
 
+import edu.umbc.ebiquity.mithril.MithrilApplication;
 import edu.umbc.ebiquity.mithril.R;
+import edu.umbc.ebiquity.mithril.data.dbhelpers.MithrilDBHelper;
 import edu.umbc.ebiquity.mithril.ui.activities.CoreActivity;
 import edu.umbc.ebiquity.mithril.util.specialtasks.errorsnexceptions.GeofenceErrorMessages;
 
@@ -53,8 +55,8 @@ public class GeofenceTransitionsIntentService extends IntentService {
      * constructor with the name for a worker thread.
      */
     public GeofenceTransitionsIntentService() {
-        // Use the TAG to name the worker thread.
-        super(TAG);
+        // Use the MithrilApplication.getDebugTag()+TAG to name the worker thread.
+        super(MithrilApplication.getDebugTag()+TAG);
     }
 
     @Override
@@ -73,7 +75,7 @@ public class GeofenceTransitionsIntentService extends IntentService {
         if (geofencingEvent.hasError()) {
             String errorMessage = GeofenceErrorMessages.getErrorString(this,
                     geofencingEvent.getErrorCode());
-            Log.e(TAG, errorMessage);
+            Log.e(MithrilApplication.getDebugTag()+TAG, errorMessage);
             return;
         }
 
@@ -96,11 +98,26 @@ public class GeofenceTransitionsIntentService extends IntentService {
 
             // Send notification and log the transition details.
             sendNotification(geofenceTransitionDetails);
-            Log.i(TAG, geofenceTransitionDetails);
+            Log.i(MithrilApplication.getDebugTag()+TAG, geofenceTransitionDetails);
+            findCurrentActivityIfAny();
+            findCurrentTemporalInfoIfAny();
+            findCurrentPresenceInfoIfAny();
         } else {
             // Log the error.
-            Log.e(TAG, getString(R.string.geofence_transition_invalid_type, geofenceTransition));
+            Log.e(MithrilApplication.getDebugTag()+TAG, getString(R.string.geofence_transition_invalid_type, geofenceTransition));
         }
+    }
+
+    private void findCurrentPresenceInfoIfAny() {
+
+    }
+
+    private void findCurrentTemporalInfoIfAny() {
+
+    }
+
+    private void findCurrentActivityIfAny() {
+
     }
 
     /**

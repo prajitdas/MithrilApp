@@ -310,13 +310,13 @@ public class AppOpsState {
             try {
                 pkgs = mithrilAppOpsManager.getOpsForPackage(uid, packageName, tpl.ops);
             } catch (AppOpsException e) {
-                e.printStackTrace();
+                Log.e(MithrilApplication.getDebugTag(), e.getMessage());
             }
         } else {
             try {
                 pkgs = mithrilAppOpsManager.getPackagesForOps(tpl.ops);
             } catch (AppOpsException e) {
-                e.printStackTrace();
+                Log.e(MithrilApplication.getDebugTag(), e.getMessage());
             }
         }
         if (pkgs != null) {

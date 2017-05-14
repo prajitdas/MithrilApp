@@ -8,6 +8,7 @@ import android.os.Parcelable;
 import android.os.UserManager;
 import android.util.Log;
 
+import java.lang.annotation.Annotation;
 import java.lang.reflect.Array;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
@@ -1167,22 +1168,26 @@ public class MithrilAppOpsManager {
      */
     public List<PackageOps> getOpsForPackage(int uid, String packageName, int[] ops) throws AppOpsException {
         List<PackageOps> result;
-        Integer[] intArray = new Integer[ops.length];
-        for (int index = 0; index < ops.length; index++)
-            Array.set(intArray, index, ops[index]);
+        int[] intArray = (int[]) Array.newInstance(int.class, ops.length);
+        for (int index = 0; index < ops.length; index++) {
+            Array.set(intArray, index, Integer.valueOf(ops[index]));
+        }
 
         /*
         Log.d(MithrilApplication.getDebugTag(), Integer.toString(uid)+", "+packageName+", "+Integer.toString(ops[index]));
         // Code to verify what run time methods we are able to see
         int count = 0;
-        for (Method method : appOpsManagerClass.getMethods())
+        for (Method method : appOpsManagerClass.getDeclaredMethods()) {
+            Log.d(MithrilApplication.getDebugTag(),"Method " + Integer.toString(count++) + method.toGenericString());
             Log.d(MithrilApplication.getDebugTag()+" method "+Integer.toString(count++)+": ", method.getName());
+        }
         */
+
         try {
             Class[] types = new Class[3];
             types[0] = Integer.TYPE;
             types[1] = String.class;
-            types[2] = Integer[].class;
+            types[2] = int[].class;
             Method getOpsForPackage = appOpsManagerClass.getMethod("getOpsForPackage", types);
 
             Object[] args = new Object[3];
@@ -1191,16 +1196,14 @@ public class MithrilAppOpsManager {
             args[2] = intArray;
             result = (List<PackageOps>) getOpsForPackage.invoke(appOpsManager, args);
         } catch (NoSuchMethodException e) {
-            Log.e(MithrilApplication.getDebugTag(), Log.getStackTraceString(e));
-            Log.e(MithrilApplication.getDebugTag(), e.getMessage());
-            throw new AppOpsException(e.getMessage());
-        } catch (InvocationTargetException e) {
-            Log.e(MithrilApplication.getDebugTag(), e.getMessage());
-            throw new AppOpsException(e.getMessage());
+            throw new AppOpsException("NoSuchMethodException");
         } catch (IllegalAccessException e) {
-            Log.e(MithrilApplication.getDebugTag(), e.getMessage());
-            throw new AppOpsException(e.getMessage());
+            throw new AppOpsException("IllegalAccessException");
+        } catch (InvocationTargetException e) {
+            throw new AppOpsException("InvocationTargetException");
         }
+//        Log.e(MithrilApplication.getDebugTag(), Log.getStackTraceString(e));
+//        Log.e(MithrilApplication.getDebugTag(), e.getMessage());
         if (result.size() == 0)
             throw new AppOpsException();
         return result;
@@ -1220,22 +1223,21 @@ public class MithrilAppOpsManager {
 
         try {
             Class[] types = new Class[1];
-            types[0] = Integer[].class;
+            types[0] = int[].class;
             Method getPackagesForOps = appOpsManagerClass.getMethod("getPackagesForOps", types);
 
             Object[] args = new Object[1];
             args[0] = intArray;
             result = (List<PackageOps>) getPackagesForOps.invoke(appOpsManager, args);
         } catch (NoSuchMethodException e) {
-            Log.e(MithrilApplication.getDebugTag(), e.getMessage());
-            throw new AppOpsException(e.getMessage());
-        } catch (InvocationTargetException e) {
-            Log.e(MithrilApplication.getDebugTag(), e.getMessage());
-            throw new AppOpsException(e.getMessage());
+            throw new AppOpsException("NoSuchMethodException");
         } catch (IllegalAccessException e) {
-            Log.e(MithrilApplication.getDebugTag(), e.getMessage());
-            throw new AppOpsException(e.getMessage());
+            throw new AppOpsException("IllegalAccessException");
+        } catch (InvocationTargetException e) {
+            throw new AppOpsException("InvocationTargetException");
         }
+//        Log.e(MithrilApplication.getDebugTag(), Log.getStackTraceString(e));
+//        Log.e(MithrilApplication.getDebugTag(), e.getMessage());
         if (result.size() == 0)
             throw new AppOpsException();
         return result;
@@ -1274,16 +1276,14 @@ public class MithrilAppOpsManager {
             args[2] = packageName;
             result = (Integer) checkOp.invoke(appOpsManager, args);
         } catch (NoSuchMethodException e) {
-            Log.e(MithrilApplication.getDebugTag(), e.getMessage());
-            throw new AppOpsException(e.getMessage());
-        } catch (InvocationTargetException e) {
-            Log.e(MithrilApplication.getDebugTag(), e.getMessage());
-            throw new AppOpsException(e.getMessage());
+            throw new AppOpsException("NoSuchMethodException");
         } catch (IllegalAccessException e) {
-            Log.e(MithrilApplication.getDebugTag(), e.getMessage());
-            throw new AppOpsException(e.getMessage());
+            throw new AppOpsException("IllegalAccessException");
+        } catch (InvocationTargetException e) {
+            throw new AppOpsException("InvocationTargetException");
         }
-
+//        Log.e(MithrilApplication.getDebugTag(), Log.getStackTraceString(e));
+//        Log.e(MithrilApplication.getDebugTag(), e.getMessage());
         if (result == Integer.MIN_VALUE)
             throw new AppOpsException();
         return result;
@@ -1310,16 +1310,14 @@ public class MithrilAppOpsManager {
             args[2] = packageName;
             result = (Integer) checkOpNoThrow.invoke(appOpsManager, args);
         } catch (NoSuchMethodException e) {
-            Log.e(MithrilApplication.getDebugTag(), e.getMessage());
-            throw new AppOpsException(e.getMessage());
-        } catch (InvocationTargetException e) {
-            Log.e(MithrilApplication.getDebugTag(), e.getMessage());
-            throw new AppOpsException(e.getMessage());
+            throw new AppOpsException("NoSuchMethodException");
         } catch (IllegalAccessException e) {
-            Log.e(MithrilApplication.getDebugTag(), e.getMessage());
-            throw new AppOpsException(e.getMessage());
+            throw new AppOpsException("IllegalAccessException");
+        } catch (InvocationTargetException e) {
+            throw new AppOpsException("InvocationTargetException");
         }
-
+//        Log.e(MithrilApplication.getDebugTag(), Log.getStackTraceString(e));
+//        Log.e(MithrilApplication.getDebugTag(), e.getMessage());
         if (result == Integer.MIN_VALUE)
             throw new AppOpsException();
         return result;
@@ -1380,15 +1378,14 @@ public class MithrilAppOpsManager {
             args[3] = Integer.valueOf(mode);
             setModeMethod.invoke(appOpsManager, args);
         } catch (NoSuchMethodException e) {
-            Log.e(MithrilApplication.getDebugTag(), e.getMessage());
-            throw new AppOpsException(e.getMessage());
-        } catch (InvocationTargetException e) {
-            Log.e(MithrilApplication.getDebugTag(), e.getMessage());
-            throw new AppOpsException(e.getMessage());
+            throw new AppOpsException("NoSuchMethodException");
         } catch (IllegalAccessException e) {
-            Log.e(MithrilApplication.getDebugTag(), e.getMessage());
-            throw new AppOpsException(e.getMessage());
+            throw new AppOpsException("IllegalAccessException");
+        } catch (InvocationTargetException e) {
+            throw new AppOpsException("InvocationTargetException");
         }
+//        Log.e(MithrilApplication.getDebugTag(), Log.getStackTraceString(e));
+//        Log.e(MithrilApplication.getDebugTag(), e.getMessage());
         return true;
     }
 
