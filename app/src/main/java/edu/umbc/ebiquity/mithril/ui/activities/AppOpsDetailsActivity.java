@@ -21,13 +21,13 @@ import android.widget.LinearLayout;
 import android.widget.Switch;
 import android.widget.TextView;
 
+import com.android.internal.logging.MetricsProto;
+
 import java.util.List;
 
 import edu.umbc.ebiquity.mithril.MithrilApplication;
 import edu.umbc.ebiquity.mithril.R;
 import edu.umbc.ebiquity.mithril.util.specialtasks.appops.AppOpsState;
-import edu.umbc.ebiquity.mithril.util.specialtasks.appops.MetricsEvent;
-import edu.umbc.ebiquity.mithril.util.specialtasks.errorsnexceptions.AppOpsException;
 
 public class AppOpsDetailsActivity extends AppCompatActivity {
     private AppOpsState mState;
@@ -181,7 +181,7 @@ public class AppOpsDetailsActivity extends AppCompatActivity {
 //    }
 
     protected int getMetricsCategory() {
-        return MetricsEvent.APP_OPS_DETAILS;
+        return MetricsProto.MetricsEvent.APP_OPS_DETAILS;
     }
 
     @Override
