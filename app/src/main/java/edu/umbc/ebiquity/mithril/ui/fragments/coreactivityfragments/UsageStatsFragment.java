@@ -17,8 +17,6 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.CompoundButton;
-import android.widget.Switch;
 
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -33,8 +31,6 @@ import edu.umbc.ebiquity.mithril.data.model.Resource;
 import edu.umbc.ebiquity.mithril.data.model.UsageStats;
 import edu.umbc.ebiquity.mithril.ui.adapters.UsageStatsRecyclerViewAdapter;
 import edu.umbc.ebiquity.mithril.util.specialtasks.appops.AppOpsState;
-import edu.umbc.ebiquity.mithril.util.specialtasks.appops.MithrilAppOpsManager;
-import edu.umbc.ebiquity.mithril.util.specialtasks.errorsnexceptions.AppOpsException;
 
 /**
  * A fragment representing a list of Items.
@@ -173,8 +169,8 @@ public class UsageStatsFragment extends Fragment {
                 Log.d(MithrilApplication.getDebugTag(), "Whoa!"+Integer.toString(entries.size()));
                 for (final AppOpsState.AppOpEntry entry : entries) {
                     Resource tempRes = new Resource();
-                    final MithrilAppOpsManager.OpEntry firstOp = entry.getOpEntry(0);
-                    String perm = MithrilAppOpsManager.opToPermission(firstOp.getOp());
+                    final AppOpsManager.OpEntry firstOp = entry.getOpEntry(0);
+                    String perm = AppOpsManager.opToPermission(firstOp.getOp());
                     if (perm != null) {
                         try {
                             PermissionInfo pi = mPm.getPermissionInfo(perm, 0);
@@ -194,9 +190,9 @@ public class UsageStatsFragment extends Fragment {
                     tempRes.setRelativeLastTimeUsed(entry.getTimeText(context, true).toString());
                     /**
                      * Code to change operations will not be used right now
-                    final MithrilAppOpsManager appOps = new MithrilAppOpsManager((AppOpsManager) context.getSystemService(Context.APP_OPS_SERVICE));
+                    final AppOpsManager appOps = (AppOpsManager) context.getSystemService(Context.APP_OPS_SERVICE);
                     Switch sw = (Switch) view.findViewById(R.id.switchWidget);
-                    final int switchOp = MithrilAppOpsManager.opToSwitch(firstOp.getOp());
+                    final int switchOp = AppOpsManager.opToSwitch(firstOp.getOp());
                     try {
                         int checkedVal = appOps.checkOp(switchOp, entry.getPackageOps().getUid(), entry.getPackageOps().getPackageName());
                         sw.setChecked(checkedVal == AppOpsManager.MODE_ALLOWED);
