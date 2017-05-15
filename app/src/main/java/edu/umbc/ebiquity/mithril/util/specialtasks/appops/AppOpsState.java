@@ -35,6 +35,8 @@ package edu.umbc.ebiquity.mithril.util.specialtasks.appops;
  */
 
 import android.app.AppOpsManager;
+import android.app.AppOpsManager.PackageOps;
+import android.app.AppOpsManager.OpEntry;
 import android.content.Context;
 import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageInfo;
@@ -225,8 +227,8 @@ public class AppOpsState {
         mOpLabels = context.getResources().getTextArray(R.array.app_ops_labels);
     }
 
-    private void addOp(List<AppOpEntry> entries, AppOpsManager.PackageOps pkgOps,
-                       AppEntry appEntry, AppOpsManager.OpEntry opEntry, boolean allowMerge, int switchOrder) {
+    private void addOp(List<AppOpEntry> entries, PackageOps pkgOps,
+                       AppEntry appEntry, OpEntry opEntry, boolean allowMerge, int switchOrder) {
         if (allowMerge && entries.size() > 0) {
             AppOpEntry last = entries.get(entries.size() - 1);
             if (last.getAppEntry() == appEntry) {
@@ -304,7 +306,7 @@ public class AppOpsState {
                 }
             }
         }
-        List<AppOpsManager.PackageOps> pkgs = null;
+        List<PackageOps> pkgs = null;
         if (packageName != null) {
             try {
                 pkgs = appOpsManager.getOpsForPackage(uid, packageName, tpl.ops);
@@ -320,13 +322,13 @@ public class AppOpsState {
         }
         if (pkgs != null) {
             for (int i = 0; i < pkgs.size(); i++) {
-                AppOpsManager.PackageOps pkgOps = pkgs.get(i);
+                PackageOps pkgOps = pkgs.get(i);
                 AppEntry appEntry = getAppEntry(context, appEntries, pkgOps.getPackageName(), null);
                 if (appEntry == null) {
                     continue;
                 }
                 for (int j = 0; j < pkgOps.getOps().size(); j++) {
-                    AppOpsManager.OpEntry opEntry = pkgOps.getOps().get(j);
+                    OpEntry opEntry = pkgOps.getOps().get(j);
                     addOp(entries, pkgOps, appEntry, opEntry, packageName == null,
                             packageName == null ? 0 : opToOrder[opEntry.getOp()]);
                 }
@@ -352,8 +354,8 @@ public class AppOpsState {
             if (appEntry == null) {
                 continue;
             }
-            List<AppOpsManager.OpEntry> dummyOps = null;
-            AppOpsManager.PackageOps pkgOps = null;
+            List<OpEntry> dummyOps = null;
+            PackageOps pkgOps = null;
             if (appInfo.requestedPermissions != null) {
                 for (int j = 0; j < appInfo.requestedPermissions.length; j++) {
                     if (appInfo.requestedPermissionsFlags != null) {
@@ -380,10 +382,10 @@ public class AppOpsState {
                         }
                         if (dummyOps == null) {
                             dummyOps = new ArrayList<>();
-                            pkgOps = new AppOpsManager.PackageOps(
+                            pkgOps = new PackageOps(
                                     appInfo.packageName, appInfo.applicationInfo.uid, dummyOps);
                         }
-                        AppOpsManager.OpEntry opEntry = new AppOpsManager.OpEntry(
+                        OpEntry opEntry = new OpEntry(
                                 permOps.get(k), AppOpsManager.MODE_ALLOWED, 0, 0, 0, -1, null, 0, 0);
 
                         dummyOps.add(opEntry);
@@ -443,7 +445,7 @@ public class AppOpsState {
         private final AppOpsState mState;
         private final ApplicationInfo mInfo;
         private final File mApkFile;
-        private final SparseArray<AppOpsManager.OpEntry> mOps = new SparseArray<>();
+        private final SparseArray<OpEntry> mOps = new SparseArray<>();
         private final SparseArray<AppOpEntry> mOpSwitches = new SparseArray<>();
         private String mLabel;
         private Drawable mIcon;
@@ -455,7 +457,7 @@ public class AppOpsState {
             mApkFile = new File(info.sourceDir);
         }
 
-        public void addOp(AppOpEntry entry, AppOpsManager.OpEntry op) {
+        public void addOp(AppOpEntry entry, OpEntry op) {
             mOps.put(op.getOp(), op);
             mOpSwitches.put(AppOpsManager.opToSwitch(op.getOp()), entry);
         }
@@ -522,14 +524,14 @@ public class AppOpsState {
      * This class holds the per-item data in our Loader.
      */
     public static class AppOpEntry {
-        private final AppOpsManager.PackageOps mPkgOps;
-        private final ArrayList<AppOpsManager.OpEntry> mOps = new ArrayList<>();
-        private final ArrayList<AppOpsManager.OpEntry> mSwitchOps = new ArrayList<>();
+        private final PackageOps mPkgOps;
+        private final ArrayList<OpEntry> mOps = new ArrayList<>();
+        private final ArrayList<OpEntry> mSwitchOps = new ArrayList<>();
         private final AppEntry mApp;
         private final int mSwitchOrder;
         private int mOverriddenPrimaryMode = -1;
 
-        public AppOpEntry(AppOpsManager.PackageOps pkg, AppOpsManager.OpEntry op, AppEntry app,
+        public AppOpEntry(PackageOps pkg, OpEntry op, AppEntry app,
                           int switchOrder) {
             mPkgOps = pkg;
             mApp = app;
@@ -539,9 +541,9 @@ public class AppOpsState {
             mSwitchOps.add(op);
         }
 
-        private static void addOp(ArrayList<AppOpsManager.OpEntry> list, AppOpsManager.OpEntry op) {
+        private static void addOp(ArrayList<OpEntry> list, OpEntry op) {
             for (int i = 0; i < list.size(); i++) {
-                AppOpsManager.OpEntry pos = list.get(i);
+                OpEntry pos = list.get(i);
                 if (pos.isRunning() != op.isRunning()) {
                     if (op.isRunning()) {
                         list.add(i, op);
@@ -557,7 +559,7 @@ public class AppOpsState {
             list.add(op);
         }
 
-        public void addOp(AppOpsManager.OpEntry op) {
+        public void addOp(OpEntry op) {
             mApp.addOp(this, op);
             addOp(mOps, op);
             if (mApp.getOpSwitch(AppOpsManager.opToSwitch(op.getOp())) == null) {
@@ -573,7 +575,7 @@ public class AppOpsState {
             return mSwitchOrder;
         }
 
-        public AppOpsManager.PackageOps getPackageOps() {
+        public PackageOps getPackageOps() {
             return mPkgOps;
         }
 
@@ -581,7 +583,7 @@ public class AppOpsState {
             return mOps.size();
         }
 
-        public AppOpsManager.OpEntry getOpEntry(int pos) {
+        public OpEntry getOpEntry(int pos) {
             return mOps.get(pos);
         }
 
@@ -593,7 +595,7 @@ public class AppOpsState {
             mOverriddenPrimaryMode = mode;
         }
 
-        private CharSequence getCombinedText(ArrayList<AppOpsManager.OpEntry> ops,
+        private CharSequence getCombinedText(ArrayList<OpEntry> ops,
                                              CharSequence[] items) {
             if (ops.size() == 1) {
                 return items[ops.get(0).getOp()];
