@@ -23,7 +23,10 @@ import edu.umbc.ebiquity.mithril.data.model.components.AppData;
 import edu.umbc.ebiquity.mithril.ui.adapters.PermissionDetailRecyclerViewAdapter;
 
 /**
- * A placeholder fragment containing a simple view.
+ * A fragment representing a list of Items.
+ * <p/>
+ * Activities containing this fragment MUST implement the {@link OnListFragmentInteractionListener}
+ * interface.
  */
 public class PermissionDetailFragment extends Fragment {
     // TODO: Customize parameter argument names

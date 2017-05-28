@@ -2,6 +2,7 @@ package edu.umbc.ebiquity.mithril.data.model.components;
 
 import android.graphics.Bitmap;
 
+import java.util.HashMap;
 import java.util.Map;
 
 /**
@@ -49,6 +50,7 @@ public class AppData implements Comparable<AppData> {
         setVersionInfo(versionInfo);
         setAppType(appType);
         setUid(uid);
+        permissions = new HashMap<>();
     }
 
     public AppData() {
@@ -73,8 +75,10 @@ public class AppData implements Comparable<AppData> {
     public String getGrantedPermissions() {
         StringBuffer permissionString = new StringBuffer();
         for (Map.Entry<String, Boolean> entry : permissions.entrySet())
-            if (entry.getValue())
-                permissionString.append(entry.getKey());
+            if (entry.getValue()) {
+                permissionString.append(entry.getKey().split("\\.")[entry.getKey().split("\\.").length - 1].toLowerCase().replace('_', ' '));
+                permissionString.append(", ");
+            }
         return permissionString.toString();
     }
 

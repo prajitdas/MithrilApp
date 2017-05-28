@@ -214,7 +214,8 @@
     <string name="title_activity_create_new_rule">Create new rule</string>
     <string name="title_activity_prefs">Manage context info</string>
     <string name="title_activity_load_db">Loading knowledge</string>
-    <string name="title_activity_app_ops_details">AppOpsDetailsActivity</string>
+    <string name="title_activity_app_ops_details">Application operations details</string>
+    <string name="title_activity_show_permission_detail">Permission group details</string>
 
     <string name="reset_app">Reset app</string>
 
@@ -296,5 +297,4 @@
     <string name="app_ops_running">Running</string>
     <!-- [CHAR LIMIT=NONE] Time label for an operation that has never executed. -->
     <string name="app_ops_never_used">(Never used)</string>
-    <string name="title_activity_show_permission_detail">ShowPermissionDetailActivity</string>
 </resources>

@@ -378,6 +378,8 @@ public class MithrilDBHelper extends SQLiteOpenHelper {
             getAppPermTableName() + "." + APPPERMRESAPPID + " = " + getAppsTableName() + "." + APPID +
             " AND " +
             getAppPermTableName() + "." + APPPERMRESPERID + " = " + getPermissionsTableName() + "." + PERMID + ";";
+    //            " AND " +
+//            getPermissionsTableName() + "." + APPPERMGRANTED + " = 1;";
     private Context context;
 
     /**
@@ -1098,9 +1100,9 @@ public class MithrilDBHelper extends SQLiteOpenHelper {
                 getAppsTableName() + "." + APPTYPE + ", " +
                 getAppsTableName() + "." + APPUID +
                 " FROM " + getAppsTableName() +
-                " WHERE " + getAppsTableName() + "." + APPNAME +
-                " = " + appName +
-                ";";
+                " WHERE " + getAppsTableName() + "." + APPPACKAGENAME +
+                " = '" + appName +
+                "';";
 
         AppData app = new AppData();
         Cursor cursor = db.rawQuery(selectQuery, null);
@@ -1252,8 +1254,7 @@ public class MithrilDBHelper extends SQLiteOpenHelper {
      */
     public List<AppData> findAppsByPermGroups(SQLiteDatabase db, String permissionGroup) {
         // Select AppPermData Query
-        String selectQuery = "SELECT " +
-                getAppPermViewName() + "." + APPPERMVIEWAPPPKGNAME +
+        String selectQuery = "SELECT DISTINCT " + getAppPermViewName() + "." + APPPERMVIEWAPPPKGNAME +
                 " FROM " +
                 getAppPermViewName() +
                 " WHERE " +
