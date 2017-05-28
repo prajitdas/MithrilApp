@@ -12,7 +12,7 @@ import android.widget.TextView;
 import edu.umbc.ebiquity.mithril.MithrilApplication;
 import edu.umbc.ebiquity.mithril.R;
 import edu.umbc.ebiquity.mithril.data.model.components.PermData;
-import edu.umbc.ebiquity.mithril.ui.fragments.showppdetailsactivityfragments.AppDetailFragment;
+import edu.umbc.ebiquity.mithril.ui.fragments.showappdetailsactivityfragments.AppDetailFragment;
 
 public class ShowAppDetailsActivity extends AppCompatActivity
         implements AppDetailFragment.OnListFragmentInteractionListener {

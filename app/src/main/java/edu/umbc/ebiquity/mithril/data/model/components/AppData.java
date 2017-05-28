@@ -70,6 +70,18 @@ public class AppData implements Comparable<AppData> {
         this.permissions = permissions;
     }
 
+    public String getGrantedPermissions() {
+        StringBuffer permissionString = new StringBuffer();
+        for (Map.Entry<String, Boolean> entry : permissions.entrySet())
+            if (entry.getValue())
+                permissionString.append(entry.getKey());
+        return permissionString.toString();
+    }
+
+    public void addPermission(String permission, boolean granted) {
+        permissions.put(permission, granted);
+    }
+
     public String getAssociatedProcessName() {
         return associatedProcessName;
     }

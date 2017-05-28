@@ -6,5 +6,5 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     app:layoutManager="LinearLayoutManager"
-    tools:context=".ui.fragments.showappdetailsactivityfragments.AppDetailFragment"
-    tools:listitem="@layout/fragment_app_detail" />
+    tools:context=".ui.fragments.showpermissiondetailsactivityfragments.PermissionDetailFragment"
+    tools:listitem="@layout/fragment_permission_detail" />

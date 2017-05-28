@@ -1117,6 +1117,9 @@ public class MithrilDBHelper extends SQLiteOpenHelper {
                         cursor.getString(7),
                         Integer.parseInt(cursor.getString(8))
                 );
+                List<PermData> permissions = findAppPermissionsByAppPackageName(db, appName);
+                for (PermData permData : permissions)
+                    app.addPermission(permData.getPermissionName(), true);
             }
         } catch (SQLException e) {
             throw new SQLException("Could not find " + e);

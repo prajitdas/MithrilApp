@@ -174,6 +174,8 @@ public class MithrilApplication extends Application {
     private static final String PREF_KEY_USER_APPS_DISPLAY = "userApps";
     private static final String PREF_KEY_APP_DISPLAY_TYPE = "AppDisplayTypeTag";
     private static final String PREF_KEY_APP_PKG_NAME = "AppPkgNameTag";
+    private static final String PREF_KEY_PERM_GROUP_NAME = "PermGroupNameTag";
+    private static final String PREF_KEY_PERM_GROUP_LABEL = "PermGroupLabelTag";
     private static final String PREF_KEY_APP_COUNT = "AppCount";
     private static final String PREF_KEY_USER_CONSENT = "UserConsent";
     private static final String PREF_KEY_USER_AGREEMENT_PAGE_NUMBER = "UserAgreementPageNumber";
@@ -823,6 +825,14 @@ public class MithrilApplication extends Application {
 
     public static String getToastMessageDatabaseNotReloaded() {
         return TOAST_MESSAGE_DATABASE_NOT_RELOADED;
+    }
+
+    public static String getPrefKeyPermGroupLabel() {
+        return PREF_KEY_PERM_GROUP_LABEL;
+    }
+
+    public static String getPrefKeyPermGroupName() {
+        return PREF_KEY_PERM_GROUP_NAME;
     }
 
     public static String getPrefKeyCurrentLocation() {

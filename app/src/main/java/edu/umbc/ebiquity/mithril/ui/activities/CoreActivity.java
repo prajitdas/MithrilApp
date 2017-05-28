@@ -710,7 +710,10 @@ public class CoreActivity extends AppCompatActivity
 
     @Override
     public void onListFragmentInteraction(String item) {
-        //TODO do something when the permission data is requested - I have an idea. Why don't you launch a list of permissions that are being used by apps.
+        //TODO Do something with the Perm group selected
+        Intent intent = new Intent(this, ShowPermissionDetailActivity.class);
+        intent.putExtra(MithrilApplication.getPrefKeyPermGroup(), item);
+        startActivity(intent);
     }
 
     @Override

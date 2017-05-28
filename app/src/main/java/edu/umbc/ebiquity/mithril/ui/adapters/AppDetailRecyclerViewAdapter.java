@@ -15,7 +15,7 @@ import java.util.regex.Pattern;
 import edu.umbc.ebiquity.mithril.MithrilApplication;
 import edu.umbc.ebiquity.mithril.R;
 import edu.umbc.ebiquity.mithril.data.model.components.PermData;
-import edu.umbc.ebiquity.mithril.ui.fragments.showppdetailsactivityfragments.AppDetailFragment.OnListFragmentInteractionListener;
+import edu.umbc.ebiquity.mithril.ui.fragments.showappdetailsactivityfragments.AppDetailFragment.OnListFragmentInteractionListener;
 
 /**
  * {@link RecyclerView.Adapter} that can display a {@link PermData} and makes a call to the
