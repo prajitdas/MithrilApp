@@ -46,31 +46,31 @@ public class InstalledPermissionRecyclerViewAdapter extends RecyclerView.Adapter
         if (mValues.get(position).equals(MithrilApplication.CONTACTS_PERMISSION_GROUP))
             holder.mPermIcon.setImageDrawable(context.getResources().getDrawable(R.drawable.contacts, context.getTheme()));
         else if (mValues.get(position).equals(MithrilApplication.CALENDAR_PERMISSION_GROUP))
-            holder.mPermIcon.setImageDrawable(context.getResources().getDrawable(R.drawable.comment_check_outline, context.getTheme()));
+            holder.mPermIcon.setImageDrawable(context.getResources().getDrawable(R.drawable.calendar, context.getTheme()));
         else if (mValues.get(position).equals(MithrilApplication.CAMERA_PERMISSION_GROUP))
-            holder.mPermIcon.setImageDrawable(context.getResources().getDrawable(R.drawable.comment_check_outline, context.getTheme()));
+            holder.mPermIcon.setImageDrawable(context.getResources().getDrawable(R.drawable.camera, context.getTheme()));
         else if (mValues.get(position).equals(MithrilApplication.CONTACTS_PERMISSION_GROUP))
-            holder.mPermIcon.setImageDrawable(context.getResources().getDrawable(R.drawable.comment_check_outline, context.getTheme()));
+            holder.mPermIcon.setImageDrawable(context.getResources().getDrawable(R.drawable.contacts, context.getTheme()));
         else if (mValues.get(position).equals(MithrilApplication.LOCATION_PERMISSION_GROUP))
-            holder.mPermIcon.setImageDrawable(context.getResources().getDrawable(R.drawable.comment_check_outline, context.getTheme()));
+            holder.mPermIcon.setImageDrawable(context.getResources().getDrawable(R.drawable.map_marker, context.getTheme()));
         else if (mValues.get(position).equals(MithrilApplication.MICROPHONE_PERMISSION_GROUP))
-            holder.mPermIcon.setImageDrawable(context.getResources().getDrawable(R.drawable.comment_check_outline, context.getTheme()));
+            holder.mPermIcon.setImageDrawable(context.getResources().getDrawable(R.drawable.microphone, context.getTheme()));
         else if (mValues.get(position).equals(MithrilApplication.PHONE_PERMISSION_GROUP))
-            holder.mPermIcon.setImageDrawable(context.getResources().getDrawable(R.drawable.comment_check_outline, context.getTheme()));
+            holder.mPermIcon.setImageDrawable(context.getResources().getDrawable(R.drawable.phone, context.getTheme()));
         else if (mValues.get(position).equals(MithrilApplication.SENSORS_PERMISSION_GROUP))
-            holder.mPermIcon.setImageDrawable(context.getResources().getDrawable(R.drawable.comment_check_outline, context.getTheme()));
+            holder.mPermIcon.setImageDrawable(context.getResources().getDrawable(R.drawable.thermometer_lines, context.getTheme()));
         else if (mValues.get(position).equals(MithrilApplication.SMS_PERMISSION_GROUP))
-            holder.mPermIcon.setImageDrawable(context.getResources().getDrawable(R.drawable.comment_check_outline, context.getTheme()));
+            holder.mPermIcon.setImageDrawable(context.getResources().getDrawable(R.drawable.message_text_outline, context.getTheme()));
         else if (mValues.get(position).equals(MithrilApplication.STORAGE_PERMISSION_GROUP))
-            holder.mPermIcon.setImageDrawable(context.getResources().getDrawable(R.drawable.comment_check_outline, context.getTheme()));
+            holder.mPermIcon.setImageDrawable(context.getResources().getDrawable(R.drawable.harddisk, context.getTheme()));
         else if (mValues.get(position).equals(MithrilApplication.SYSTEM_TOOLS_PERMISSION_GROUP))
-            holder.mPermIcon.setImageDrawable(context.getResources().getDrawable(R.drawable.comment_check_outline, context.getTheme()));
+            holder.mPermIcon.setImageDrawable(context.getResources().getDrawable(R.drawable.security, context.getTheme()));
         else if (mValues.get(position).equals(MithrilApplication.CAR_INFORMATION_PERMISSION_GROUP))
-            holder.mPermIcon.setImageDrawable(context.getResources().getDrawable(R.drawable.comment_check_outline, context.getTheme()));
+            holder.mPermIcon.setImageDrawable(context.getResources().getDrawable(R.drawable.car, context.getTheme()));
         else
-            holder.mPermIcon.setImageDrawable(context.getResources().getDrawable(R.drawable.comment_check_outline, context.getTheme()));
+            holder.mPermIcon.setImageDrawable(context.getResources().getDrawable(R.drawable.help, context.getTheme()));
 
-        holder.mPermLabel.setText(mValues.get(position).split(".")[mValues.get(position).split(".").length]);
+        holder.mPermLabel.setText(mValues.get(position).split(".")[mValues.get(position).split(".").length].toLowerCase());
         holder.mAppsUsingPerm.setText(mValues.get(position));
 
         holder.mView.setOnClickListener(new View.OnClickListener() {

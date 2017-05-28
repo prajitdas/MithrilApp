@@ -98,6 +98,38 @@ public class CoreActivity extends AppCompatActivity
     private NavigationView navigationView;
     private View headerView;
 
+    /**
+     * Following is a list of utility methods that ensure that the right fragments are launched
+     * We are not launching the BCast receivers, Services and Content provider lists yet
+     */
+    private boolean isBroadcastReceiverListEmpty() {
+        return true;
+    }
+
+    private boolean isUserAppsListEmpty() {
+        return false;
+    }
+
+    private boolean isSystemAppsListEmpty() {
+        return false;
+    }
+
+    private boolean isAllAppsListEmpty() {
+        return false;
+    }
+
+    private boolean isServicesListEmpty() {
+        return true;
+    }
+
+    private boolean isContentProvidersListEmpty() {
+        return true;
+    }
+
+    private boolean isPermissionsListEmpty() {
+        return false;
+    }
+
     @Override
     public boolean onNavigationItemSelected(@NonNull MenuItem item) {
         // Handle navigation view item clicks here.
@@ -589,34 +621,6 @@ public class CoreActivity extends AppCompatActivity
         else
             Log.d(MithrilApplication.getDebugTag(), "Null");
         return !(violationItems == null || violationItems.size() > 0);
-    }
-
-    private boolean isBroadcastReceiverListEmpty() {
-        return true;
-    }
-
-    private boolean isUserAppsListEmpty() {
-        return false;
-    }
-
-    private boolean isSystemAppsListEmpty() {
-        return false;
-    }
-
-    private boolean isAllAppsListEmpty() {
-        return false;
-    }
-
-    private boolean isServicesListEmpty() {
-        return true;
-    }
-
-    private boolean isContentProvidersListEmpty() {
-        return true;
-    }
-
-    private boolean isPermissionsListEmpty() {
-        return true;
     }
 
     private void copyAssets(File parent, String child) {
