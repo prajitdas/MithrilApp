@@ -1,5 +1,6 @@
 package edu.umbc.ebiquity.mithril.data.dbhelpers;
 
+import android.app.AppOpsManager;
 import android.content.ContentValues;
 import android.content.Context;
 import android.content.pm.ApplicationInfo;
@@ -363,13 +364,15 @@ public class MithrilDBHelper extends SQLiteOpenHelper {
     private final static String APPPERMVIEWPERMPROLVL = "protectionlevel"; // app permission protection level
     private final static String APPPERMVIEWPERMLABEL = "permlabel"; // app permission label
     private final static String APPPERMVIEWPERMGROUP = "permgroup"; // app permission group
+    private final static String APPPERMVIEWGRANTED = "granted"; // app permission granted or not
     private final static String CREATE_APP_PERM_VIEW = "CREATE VIEW " + getAppPermViewName() + " AS " +
             "SELECT " +
             getAppsTableName() + "." + APPPACKAGENAME + " AS " + APPPERMVIEWAPPPKGNAME + ", " +
             getPermissionsTableName() + "." + PERMNAME + " AS " + APPPERMVIEWPERMNAME + ", " +
             getPermissionsTableName() + "." + PERMPROTECTIONLEVEL + " AS " + APPPERMVIEWPERMPROLVL + ", " +
             getPermissionsTableName() + "." + PERMLABEL + " AS " + APPPERMVIEWPERMLABEL + ", " +
-            getPermissionsTableName() + "." + PERMGROUP + " AS " + APPPERMVIEWPERMGROUP +
+            getPermissionsTableName() + "." + PERMGROUP + " AS " + APPPERMVIEWPERMGROUP + ", " +
+            getAppPermTableName() + "." + APPPERMGRANTED + " AS " + APPPERMVIEWGRANTED +
             " FROM " +
             getAppPermTableName() + "," +
             getPermissionsTableName() + "," +
@@ -377,9 +380,9 @@ public class MithrilDBHelper extends SQLiteOpenHelper {
             " WHERE " +
             getAppPermTableName() + "." + APPPERMRESAPPID + " = " + getAppsTableName() + "." + APPID +
             " AND " +
-            getAppPermTableName() + "." + APPPERMRESPERID + " = " + getPermissionsTableName() + "." + PERMID + ";";
-    //            " AND " +
-//            getPermissionsTableName() + "." + APPPERMGRANTED + " = 1;";
+            getAppPermTableName() + "." + APPPERMRESPERID + " = " + getPermissionsTableName() + "." + PERMID + //";";
+            " AND " +
+            getPermissionsTableName() + "." + APPPERMGRANTED + " = 1;";
     private Context context;
 
     /**
@@ -574,6 +577,8 @@ public class MithrilDBHelper extends SQLiteOpenHelper {
                 PackageManager.GET_SHARED_LIBRARY_FILES |
                 PackageManager.GET_PERMISSIONS;
 
+        AppOpsManager appOpsManager = (AppOpsManager) context.getSystemService(Context.APP_OPS_SERVICE);
+
         for (PackageInfo pack : packageManager.getInstalledPackages(flags)) {
             if ((pack.applicationInfo.flags) != 1) {
                 try {
@@ -623,7 +628,12 @@ public class MithrilDBHelper extends SQLiteOpenHelper {
                         if (pack.requestedPermissions != null) {
                             Map<String, Boolean> requestedPermissionsMap = new HashMap<>();
                             for (String packagePermission : pack.requestedPermissions) {
-                                requestedPermissionsMap.put(packagePermission, false);
+                                requestedPermissionsMap.put(packagePermission,
+                                        appOpsManager.checkOpNoThrow(
+                                                packagePermission,
+                                                packageManager.getApplicationInfo(pack.packageName, PackageManager.GET_META_DATA).uid,
+                                                pack.packageName) != 0
+                                );
                                 /*
                                  * The following fix is no longer required. There was a flaw in insert permission we should have used insertOrThrow
                                  * - PKD, Dec 27, 2016. Carrie Fisher AKA Princess Leia Organa (Skywalker) passed away today at 0855 PST. The world will miss her. :(
@@ -1119,9 +1129,7 @@ public class MithrilDBHelper extends SQLiteOpenHelper {
                         cursor.getString(7),
                         Integer.parseInt(cursor.getString(8))
                 );
-                List<PermData> permissions = findAppPermissionsByAppPackageName(db, appName);
-                for (PermData permData : permissions)
-                    app.addPermission(permData.getPermissionName(), true);
+                app.setPermissions(findGrantedAppPermissionsByAppPackageName(db, appName));
             }
         } catch (SQLException e) {
             throw new SQLException("Could not find " + e);
@@ -1207,6 +1215,40 @@ public class MithrilDBHelper extends SQLiteOpenHelper {
 
     /**
      * Temporary solution setup but eventually we will the join and populate with data from our servers
+     * @param db             database instance
+     * @param appPackageName app pkg name
+     * @return List of PermData objects
+     */
+    public Map<String, Boolean> findGrantedAppPermissionsByAppPackageName(SQLiteDatabase db, String appPackageName) {
+        // Select AppPermData Query
+        String selectQuery = "SELECT " +
+                getAppPermViewName() + "." + APPPERMVIEWPERMNAME + ", " +
+                getAppPermViewName() + "." + APPPERMVIEWGRANTED +
+                " FROM " +
+                getAppPermViewName() +
+                " WHERE " +
+                getAppPermViewName() + "." + APPPERMVIEWAPPPKGNAME + " = '" + appPackageName + "';";
+
+        Map<String, Boolean> permissionMap = new HashMap<>();
+        Cursor cursor = db.rawQuery(selectQuery, null);
+        try {
+            if (cursor.moveToFirst()) {
+                do {
+                    permissionMap.put(cursor.getString(0), cursor.getInt(1) != 0);
+                } while (cursor.moveToNext());
+            }
+        } catch (SQLException e) {
+            Log.d(MithrilApplication.getDebugTag(), "Could not find " + e.getMessage());
+            return null;
+        } finally {
+            cursor.close();
+        }
+        return permissionMap;
+    }
+
+    /**
+     * Temporary solution setup but eventually we will the join and populate with data from our servers
+     *
      * @param db             database instance
      * @param appPackageName app pkg name
      * @return List of PermData objects
