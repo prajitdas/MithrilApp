@@ -739,7 +739,7 @@ public class MithrilDBHelper extends SQLiteOpenHelper {
                 break;
         }
 
-        tempPermData.setPermissionGroup(MithrilApplication.getPermissionNoGroup());
+        tempPermData.setPermissionGroup(MithrilApplication.NO_PERMISSION_GROUP);
 
         //Setting the protection level
         switch (permissionInfo.flags) {
@@ -1241,6 +1241,38 @@ public class MithrilDBHelper extends SQLiteOpenHelper {
     }
 
     /**
+     * Temporary solution setup but eventually we will the join and populate with data from our servers
+     *
+     * @param db              database instance
+     * @param permissionGroup permission group
+     * @return List of AppData objects
+     */
+    public List<AppData> findAppsByPermGroups(SQLiteDatabase db, String permissionGroup) {
+        // Select AppPermData Query
+        String selectQuery = "SELECT " +
+                getAppPermViewName() + "." + APPPERMVIEWAPPPKGNAME +
+                " FROM " +
+                getAppPermViewName() +
+                " WHERE " +
+                getAppPermViewName() + "." + APPPERMVIEWPERMGROUP + " = '" + permissionGroup + "';";
+
+        List<AppData> apps = new ArrayList<>();
+        Cursor cursor = db.rawQuery(selectQuery, null);
+        try {
+            if (cursor.moveToFirst()) {
+                do {
+                    apps.add(findAppByName(db, cursor.getString(0)));
+                } while (cursor.moveToNext());
+            }
+        } catch (SQLException e) {
+            throw new SQLException("Could not find " + e);
+        } finally {
+            cursor.close();
+        }
+        return apps;
+    }
+
+    /**
      * Finds permissions by name
      * @param db database instance
      * @return permissionName
@@ -1268,6 +1300,50 @@ public class MithrilDBHelper extends SQLiteOpenHelper {
 //      if (permId == -1)
 //          Log.d(MithrilApplication.getDebugTag(), permissionName);
         return permId;
+    }
+
+    /**
+     * Finds all permissions on phone
+     *
+     * @param db database instance
+     * @return all permissions
+     */
+    public List<PermData> findAllPermissions(SQLiteDatabase db) {
+        // Select AppData Query
+        String selectQuery = "SELECT " +
+                getPermissionsTableName() + "." + PERMNAME + ", " +
+                getPermissionsTableName() + "." + PERMPROTECTIONLEVEL + ", " +
+                getPermissionsTableName() + "." + PERMGROUP + ", " +
+                getPermissionsTableName() + "." + PERMFLAG + ", " +
+                getPermissionsTableName() + "." + PERMDESC + ", " +
+                getPermissionsTableName() + "." + PERMICON + ", " +
+                getPermissionsTableName() + "." + PERMLABEL +
+                " FROM " + getPermissionsTableName() + ";";
+
+        List<PermData> permissions = new ArrayList<>();
+        Cursor cursor = db.rawQuery(selectQuery, null);
+        try {
+            if (cursor.moveToFirst()) {
+                do {
+                    permissions.add(
+                            new PermData(
+                                    cursor.getString(0),
+                                    cursor.getString(1),
+                                    cursor.getString(2),
+                                    cursor.getString(3),
+                                    cursor.getString(4),
+                                    BitmapFactory.decodeByteArray(cursor.getBlob(5), 0, cursor.getBlob(5).length),
+                                    cursor.getString(6)
+                            )
+                    );
+                } while (cursor.moveToNext());
+            }
+        } catch (SQLException e) {
+            throw new SQLException("Could not find " + e);
+        } finally {
+            cursor.close();
+        }
+        return permissions;
     }
 
     /**
@@ -1692,7 +1768,7 @@ public class MithrilDBHelper extends SQLiteOpenHelper {
         values.put(PERMDESC, aPermData.getPermissionDescription());
         values.put(PERMICON, getBitmapAsByteArray(aPermData.getPermissionIcon()));
         values.put(PERMLABEL, aPermData.getPermissionLabel());
-        if (aPermData.getPermissionGroup().equals(MithrilApplication.getPermissionNoGroup()))
+        if (aPermData.getPermissionGroup().equals(MithrilApplication.NO_PERMISSION_GROUP))
             values.put(PERMGROUP, aPermData.getPermissionGroup());
         if (aPermData.getPermissionFlag().equals(MithrilApplication.getPermissionFlagNone()))
             values.put(PERMFLAG, aPermData.getPermissionFlag());

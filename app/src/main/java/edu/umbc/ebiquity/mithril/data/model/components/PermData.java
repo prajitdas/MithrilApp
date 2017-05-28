@@ -19,7 +19,13 @@ public class PermData implements Comparable<PermData> {
     public PermData() {
     }
 
-    public PermData(String permissionName, String permissionProtectionLevel, String permissionGroup, String permissionFlag, String permissionDescription, Bitmap permissionIcon, String permissionLabel) {
+    public PermData(String permissionName,
+                    String permissionProtectionLevel,
+                    String permissionGroup,
+                    String permissionFlag,
+                    String permissionDescription,
+                    Bitmap permissionIcon,
+                    String permissionLabel) {
         this.permissionName = permissionName;
         this.permissionProtectionLevel = permissionProtectionLevel;
         this.permissionGroup = permissionGroup;

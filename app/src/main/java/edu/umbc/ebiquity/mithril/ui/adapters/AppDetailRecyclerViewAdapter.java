@@ -69,7 +69,7 @@ public class AppDetailRecyclerViewAdapter extends RecyclerView.Adapter<AppDetail
 //            cardView.setCardBackgroundColor(Color.GRAY);
         }
 
-        if (!mValues.get(position).getPermissionGroup().equals(MithrilApplication.getPermissionNoGroup())) {
+        if (!mValues.get(position).getPermissionGroup().equals(MithrilApplication.NO_PERMISSION_GROUP)) {
             String[] words = mValues.get(position).getPermissionGroup().split(Pattern.quote("."));
             //In a group, the last word is most important for group identification, so use that I guess!
             holder.mPermissionGroup.setText(words[words.length - 1]);

@@ -10,11 +10,11 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
+import edu.umbc.ebiquity.mithril.MithrilApplication;
 import edu.umbc.ebiquity.mithril.R;
-import edu.umbc.ebiquity.mithril.data.model.components.PermData;
 import edu.umbc.ebiquity.mithril.ui.adapters.InstalledPermissionRecyclerViewAdapter;
 
 /**
@@ -30,7 +30,20 @@ public class PermissionsFragment extends Fragment {
     // TODO: Customize parameters
     private int mColumnCount = 1;
     private OnListFragmentInteractionListener mListener;
-    private List<PermData> permDataList;
+    private List<String> permissionGroups = Arrays.asList(
+            MithrilApplication.CALENDAR_PERMISSION_GROUP,
+            MithrilApplication.CAMERA_PERMISSION_GROUP,
+            MithrilApplication.CONTACTS_PERMISSION_GROUP,
+            MithrilApplication.LOCATION_PERMISSION_GROUP,
+            MithrilApplication.MICROPHONE_PERMISSION_GROUP,
+            MithrilApplication.PHONE_PERMISSION_GROUP,
+            MithrilApplication.SENSORS_PERMISSION_GROUP,
+            MithrilApplication.SMS_PERMISSION_GROUP,
+            MithrilApplication.STORAGE_PERMISSION_GROUP,
+            MithrilApplication.SYSTEM_TOOLS_PERMISSION_GROUP,
+            MithrilApplication.CAR_INFORMATION_PERMISSION_GROUP,
+            MithrilApplication.NO_PERMISSION_GROUP
+    );
 
     /**
      * Mandatory empty constructor for the fragment manager to instantiate the
@@ -63,8 +76,6 @@ public class PermissionsFragment extends Fragment {
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_permissions_list, container, false);
 
-        permDataList = new ArrayList<PermData>();
-
         // Set the adapter
         if (view instanceof RecyclerView) {
             Context context = view.getContext();
@@ -74,7 +85,7 @@ public class PermissionsFragment extends Fragment {
             } else {
                 recyclerView.setLayoutManager(new GridLayoutManager(context, mColumnCount));
             }
-            recyclerView.setAdapter(new InstalledPermissionRecyclerViewAdapter(permDataList, mListener));
+            recyclerView.setAdapter(new InstalledPermissionRecyclerViewAdapter(permissionGroups, mListener));
         }
         return view;
     }
@@ -108,6 +119,6 @@ public class PermissionsFragment extends Fragment {
      */
     public interface OnListFragmentInteractionListener {
         // TODO: Update argument type and name
-        void onListFragmentInteraction(PermData item);
+        void onListFragmentInteraction(String item);
     }
 }

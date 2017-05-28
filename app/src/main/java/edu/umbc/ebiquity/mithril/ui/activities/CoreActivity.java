@@ -52,7 +52,6 @@ import edu.umbc.ebiquity.mithril.data.model.Violation;
 import edu.umbc.ebiquity.mithril.data.model.components.AppData;
 import edu.umbc.ebiquity.mithril.data.model.components.BCastRecvData;
 import edu.umbc.ebiquity.mithril.data.model.components.ContentProvData;
-import edu.umbc.ebiquity.mithril.data.model.components.PermData;
 import edu.umbc.ebiquity.mithril.data.model.components.ServData;
 import edu.umbc.ebiquity.mithril.ui.fragments.EmptyFragment;
 import edu.umbc.ebiquity.mithril.ui.fragments.NothingHereFragment;
@@ -706,7 +705,7 @@ public class CoreActivity extends AppCompatActivity
     }
 
     @Override
-    public void onListFragmentInteraction(PermData item) {
+    public void onListFragmentInteraction(String item) {
         //TODO do something when the permission data is requested - I have an idea. Why don't you launch a list of permissions that are being used by apps.
     }
 

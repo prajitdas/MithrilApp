@@ -34,8 +34,21 @@ public class MithrilApplication extends Application {
     public static final String ADDRESS_REQUESTED_EXTRA = "ADDRESS_REQUESTED_EXTRA";
     public static final String LOCATION_DATA_EXTRA = MITHRIL_APP_PACKAGE_NAME + ".LOCATION_DATA_EXTRA";
     public static final String GEOFENCES_ADDED_KEY = MITHRIL_APP_PACKAGE_NAME + ".GEOFENCES_ADDED_KEY";
-
     public static final String ADDRESS_KEY = "ADDRESS_KEY";
+
+    public static final String CALENDAR_PERMISSION_GROUP = "android.permission-group.CALENDAR";
+    public static final String CAMERA_PERMISSION_GROUP = "android.permission-group.CAMERA";
+    public static final String CONTACTS_PERMISSION_GROUP = "android.permission-group.CONTACTS";
+    public static final String LOCATION_PERMISSION_GROUP = "android.permission-group.LOCATION";
+    public static final String MICROPHONE_PERMISSION_GROUP = "android.permission-group.MICROPHONE";
+    public static final String PHONE_PERMISSION_GROUP = "android.permission-group.PHONE";
+    public static final String SENSORS_PERMISSION_GROUP = "android.permission-group.SENSORS";
+    public static final String SMS_PERMISSION_GROUP = "android.permission-group.SMS";
+    public static final String STORAGE_PERMISSION_GROUP = "android.permission-group.STORAGE";
+    public static final String SYSTEM_TOOLS_PERMISSION_GROUP = "android.permission-group.SYSTEM_TOOLS";
+    public static final String CAR_INFORMATION_PERMISSION_GROUP = "com.google.android.gms.permission.CAR_INFORMATION";
+    public static final String NO_PERMISSION_GROUP = "no-groups";
+
     /**
      * Used to set an expiration time for a geofence. After this amount of time Location Services
      * stops tracking the geofence.
@@ -64,7 +77,7 @@ public class MithrilApplication extends Application {
     private static final String PERMISSION_FLAG_COSTS_MONEY = "costs-money";
     private static final String PERMISSION_FLAG_INSTALLED = "installed";
     private static final String PERMISSION_FLAG_NONE = "no-flags";
-    private static final String PERMISSION_NO_GROUP = "no-groups";
+
     // Milliseconds per second
     private static final int MILLISECONDS_PER_SECOND = 1000;
     // Update frequency for app launch detection in seconds
@@ -249,328 +262,328 @@ public class MithrilApplication extends Application {
             "('android.permission.CAMERA', 'dangerous', 'android.permission-group.CAMERA', '" + PERMISSION_FLAG_NONE + "'),\n" +
             "('android.permission.BODY_SENSORS', 'dangerous', 'android.permission-group.SENSORS', '" + PERMISSION_FLAG_NONE + "'),\n" +
             "('android.permission.USE_FINGERPRINT', 'normal', 'android.permission-group.SENSORS', '" + PERMISSION_FLAG_NONE + "'),\n" +
-            "('android.permission.READ_PROFILE', 'normal', '" + PERMISSION_NO_GROUP + "', 'removed'),\n" +
-            "('android.permission.WRITE_PROFILE', 'normal', '" + PERMISSION_NO_GROUP + "', 'removed'),\n" +
-            "('android.permission.READ_SOCIAL_STREAM', 'normal', '" + PERMISSION_NO_GROUP + "', 'removed'),\n" +
-            "('android.permission.WRITE_SOCIAL_STREAM', 'normal', '" + PERMISSION_NO_GROUP + "', 'removed'),\n" +
-            "('android.permission.READ_USER_DICTIONARY', 'normal', '" + PERMISSION_NO_GROUP + "', 'removed'),\n" +
-            "('android.permission.WRITE_USER_DICTIONARY', 'normal', '" + PERMISSION_NO_GROUP + "', 'removed'),\n" +
-            "('android.permission.WRITE_SMS', 'normal', '" + PERMISSION_NO_GROUP + "', 'removed'),\n" +
-            "('com.android.browser.permission.READ_HISTORY_BOOKMARKS', 'normal', '" + PERMISSION_NO_GROUP + "', 'removed'),\n" +
-            "('com.android.browser.permission.WRITE_HISTORY_BOOKMARKS', 'normal', '" + PERMISSION_NO_GROUP + "', 'removed'),\n" +
-            "('android.permission.AUTHENTICATE_ACCOUNTS', 'normal', '" + PERMISSION_NO_GROUP + "', 'removed'),\n" +
-            "('android.permission.MANAGE_ACCOUNTS', 'normal', '" + PERMISSION_NO_GROUP + "', 'removed'),\n" +
-            "('android.permission.USE_CREDENTIALS', 'normal', '" + PERMISSION_NO_GROUP + "', 'removed'),\n" +
-            "('android.permission.SUBSCRIBED_FEEDS_READ', 'normal', '" + PERMISSION_NO_GROUP + "', 'removed'),\n" +
-            "('android.permission.SUBSCRIBED_FEEDS_WRITE', 'normal', '" + PERMISSION_NO_GROUP + "', 'removed'),\n" +
-            "('android.permission.FLASHLIGHT', 'normal', '" + PERMISSION_NO_GROUP + "', 'removed'),\n" +
-            "('android.permission.SEND_RESPOND_VIA_MESSAGE', 'signature|privileged', '" + PERMISSION_NO_GROUP + "', '" + PERMISSION_FLAG_NONE + "'),\n" +
-            "('android.permission.SEND_SMS_NO_CONFIRMATION', 'signature|privileged', '" + PERMISSION_NO_GROUP + "', '" + PERMISSION_FLAG_NONE + "'),\n" +
-            "('android.permission.CARRIER_FILTER_SMS', 'signature|privileged', '" + PERMISSION_NO_GROUP + "', '" + PERMISSION_FLAG_NONE + "'),\n" +
-            "('android.permission.RECEIVE_EMERGENCY_BROADCAST', 'signature|privileged', '" + PERMISSION_NO_GROUP + "', '" + PERMISSION_FLAG_NONE + "'),\n" +
-            "('android.permission.RECEIVE_BLUETOOTH_MAP', 'signature|privileged', '" + PERMISSION_NO_GROUP + "', '" + PERMISSION_FLAG_NONE + "'),\n" +
-            "('android.permission.BIND_DIRECTORY_SEARCH', 'signature|privileged', '" + PERMISSION_NO_GROUP + "', '" + PERMISSION_FLAG_NONE + "'),\n" +
-            "('android.permission.MODIFY_CELL_BROADCASTS', 'signature|privileged', '" + PERMISSION_NO_GROUP + "', '" + PERMISSION_FLAG_NONE + "'),\n" +
-            "('com.android.alarm.permission.SET_ALARM', 'normal', '" + PERMISSION_NO_GROUP + "', '" + PERMISSION_FLAG_NONE + "'),\n" +
-            "('com.android.voicemail.permission.WRITE_VOICEMAIL', 'signature|privileged', '" + PERMISSION_NO_GROUP + "', '" + PERMISSION_FLAG_NONE + "'),\n" +
-            "('com.android.voicemail.permission.READ_VOICEMAIL', 'signature|privileged', '" + PERMISSION_NO_GROUP + "', '" + PERMISSION_FLAG_NONE + "'),\n" +
-            "('android.permission.ACCESS_LOCATION_EXTRA_COMMANDS', 'normal', '" + PERMISSION_NO_GROUP + "', '" + PERMISSION_FLAG_NONE + "'),\n" +
-            "('android.permission.INSTALL_LOCATION_PROVIDER', 'signature|privileged', '" + PERMISSION_NO_GROUP + "', '" + PERMISSION_FLAG_NONE + "'),\n" +
-            "('android.permission.HDMI_CEC', 'signature|privileged', '" + PERMISSION_NO_GROUP + "', '" + PERMISSION_FLAG_NONE + "'),\n" +
-            "('android.permission.LOCATION_HARDWARE', 'signature|privileged', '" + PERMISSION_NO_GROUP + "', '" + PERMISSION_FLAG_NONE + "'),\n" +
-            "('android.permission.ACCESS_MOCK_LOCATION', 'signature', '" + PERMISSION_NO_GROUP + "', '" + PERMISSION_FLAG_NONE + "'),\n" +
-            "('android.permission.INTERNET', 'normal', '" + PERMISSION_NO_GROUP + "', '" + PERMISSION_FLAG_NONE + "'),\n" +
-            "('android.permission.ACCESS_NETWORK_STATE', 'normal', '" + PERMISSION_NO_GROUP + "', '" + PERMISSION_FLAG_NONE + "'),\n" +
-            "('android.permission.ACCESS_WIFI_STATE', 'normal', '" + PERMISSION_NO_GROUP + "', '" + PERMISSION_FLAG_NONE + "'),\n" +
-            "('android.permission.CHANGE_WIFI_STATE', 'normal', '" + PERMISSION_NO_GROUP + "', '" + PERMISSION_FLAG_NONE + "'),\n" +
-            "('android.permission.READ_WIFI_CREDENTIAL', 'signature|privileged', '" + PERMISSION_NO_GROUP + "', '" + PERMISSION_FLAG_NONE + "'),\n" +
-            "('android.permission.TETHER_PRIVILEGED', 'signature|privileged', '" + PERMISSION_NO_GROUP + "', '" + PERMISSION_FLAG_NONE + "'),\n" +
-            "('android.permission.RECEIVE_WIFI_CREDENTIAL_CHANGE', 'signature|privileged', '" + PERMISSION_NO_GROUP + "', '" + PERMISSION_FLAG_NONE + "'),\n" +
-            "('android.permission.OVERRIDE_WIFI_CONFIG', 'signature|privileged', '" + PERMISSION_NO_GROUP + "', '" + PERMISSION_FLAG_NONE + "'),\n" +
-            "('android.permission.ACCESS_WIMAX_STATE', 'normal', '" + PERMISSION_NO_GROUP + "', '" + PERMISSION_FLAG_NONE + "'),\n" +
-            "('android.permission.CHANGE_WIMAX_STATE', 'normal', '" + PERMISSION_NO_GROUP + "', '" + PERMISSION_FLAG_NONE + "'),\n" +
-            "('android.permission.SCORE_NETWORKS', 'signature|privileged', '" + PERMISSION_NO_GROUP + "', '" + PERMISSION_FLAG_NONE + "'),\n" +
-            "('android.permission.BLUETOOTH', 'normal', '" + PERMISSION_NO_GROUP + "', '" + PERMISSION_FLAG_NONE + "'),\n" +
-            "('android.permission.BLUETOOTH_ADMIN', 'normal', '" + PERMISSION_NO_GROUP + "', '" + PERMISSION_FLAG_NONE + "'),\n" +
-            "('android.permission.BLUETOOTH_PRIVILEGED', 'signature|privileged', '" + PERMISSION_NO_GROUP + "', '" + PERMISSION_FLAG_NONE + "'),\n" +
-            "('android.permission.BLUETOOTH_MAP', 'signature', '" + PERMISSION_NO_GROUP + "', '" + PERMISSION_FLAG_NONE + "'),\n" +
-            "('android.permission.BLUETOOTH_STACK', 'signature', '" + PERMISSION_NO_GROUP + "', '" + PERMISSION_FLAG_NONE + "'),\n" +
-            "('android.permission.NFC', 'normal', '" + PERMISSION_NO_GROUP + "', '" + PERMISSION_FLAG_NONE + "'),\n" +
-            "('android.permission.CONNECTIVITY_INTERNAL', 'signature|privileged', '" + PERMISSION_NO_GROUP + "', '" + PERMISSION_FLAG_NONE + "'),\n" +
-            "('android.permission.CONNECTIVITY_USE_RESTRICTED_NETWORKS', 'signature|privileged', '" + PERMISSION_NO_GROUP + "', '" + PERMISSION_FLAG_NONE + "'),\n" +
-            "('android.permission.PACKET_KEEPALIVE_OFFLOAD', 'signature|privileged', '" + PERMISSION_NO_GROUP + "', '" + PERMISSION_FLAG_NONE + "'),\n" +
-            "('android.permission.RECEIVE_DATA_ACTIVITY_CHANGE', 'signature|privileged', '" + PERMISSION_NO_GROUP + "', '" + PERMISSION_FLAG_NONE + "'),\n" +
-            "('android.permission.LOOP_RADIO', 'signature|privileged', '" + PERMISSION_NO_GROUP + "', '" + PERMISSION_FLAG_NONE + "'),\n" +
-            "('android.permission.NFC_HANDOVER_STATUS', 'signature|privileged', '" + PERMISSION_NO_GROUP + "', '" + PERMISSION_FLAG_NONE + "'),\n" +
+            "('android.permission.READ_PROFILE', 'normal', '" + NO_PERMISSION_GROUP + "', 'removed'),\n" +
+            "('android.permission.WRITE_PROFILE', 'normal', '" + NO_PERMISSION_GROUP + "', 'removed'),\n" +
+            "('android.permission.READ_SOCIAL_STREAM', 'normal', '" + NO_PERMISSION_GROUP + "', 'removed'),\n" +
+            "('android.permission.WRITE_SOCIAL_STREAM', 'normal', '" + NO_PERMISSION_GROUP + "', 'removed'),\n" +
+            "('android.permission.READ_USER_DICTIONARY', 'normal', '" + NO_PERMISSION_GROUP + "', 'removed'),\n" +
+            "('android.permission.WRITE_USER_DICTIONARY', 'normal', '" + NO_PERMISSION_GROUP + "', 'removed'),\n" +
+            "('android.permission.WRITE_SMS', 'normal', '" + NO_PERMISSION_GROUP + "', 'removed'),\n" +
+            "('com.android.browser.permission.READ_HISTORY_BOOKMARKS', 'normal', '" + NO_PERMISSION_GROUP + "', 'removed'),\n" +
+            "('com.android.browser.permission.WRITE_HISTORY_BOOKMARKS', 'normal', '" + NO_PERMISSION_GROUP + "', 'removed'),\n" +
+            "('android.permission.AUTHENTICATE_ACCOUNTS', 'normal', '" + NO_PERMISSION_GROUP + "', 'removed'),\n" +
+            "('android.permission.MANAGE_ACCOUNTS', 'normal', '" + NO_PERMISSION_GROUP + "', 'removed'),\n" +
+            "('android.permission.USE_CREDENTIALS', 'normal', '" + NO_PERMISSION_GROUP + "', 'removed'),\n" +
+            "('android.permission.SUBSCRIBED_FEEDS_READ', 'normal', '" + NO_PERMISSION_GROUP + "', 'removed'),\n" +
+            "('android.permission.SUBSCRIBED_FEEDS_WRITE', 'normal', '" + NO_PERMISSION_GROUP + "', 'removed'),\n" +
+            "('android.permission.FLASHLIGHT', 'normal', '" + NO_PERMISSION_GROUP + "', 'removed'),\n" +
+            "('android.permission.SEND_RESPOND_VIA_MESSAGE', 'signature|privileged', '" + NO_PERMISSION_GROUP + "', '" + PERMISSION_FLAG_NONE + "'),\n" +
+            "('android.permission.SEND_SMS_NO_CONFIRMATION', 'signature|privileged', '" + NO_PERMISSION_GROUP + "', '" + PERMISSION_FLAG_NONE + "'),\n" +
+            "('android.permission.CARRIER_FILTER_SMS', 'signature|privileged', '" + NO_PERMISSION_GROUP + "', '" + PERMISSION_FLAG_NONE + "'),\n" +
+            "('android.permission.RECEIVE_EMERGENCY_BROADCAST', 'signature|privileged', '" + NO_PERMISSION_GROUP + "', '" + PERMISSION_FLAG_NONE + "'),\n" +
+            "('android.permission.RECEIVE_BLUETOOTH_MAP', 'signature|privileged', '" + NO_PERMISSION_GROUP + "', '" + PERMISSION_FLAG_NONE + "'),\n" +
+            "('android.permission.BIND_DIRECTORY_SEARCH', 'signature|privileged', '" + NO_PERMISSION_GROUP + "', '" + PERMISSION_FLAG_NONE + "'),\n" +
+            "('android.permission.MODIFY_CELL_BROADCASTS', 'signature|privileged', '" + NO_PERMISSION_GROUP + "', '" + PERMISSION_FLAG_NONE + "'),\n" +
+            "('com.android.alarm.permission.SET_ALARM', 'normal', '" + NO_PERMISSION_GROUP + "', '" + PERMISSION_FLAG_NONE + "'),\n" +
+            "('com.android.voicemail.permission.WRITE_VOICEMAIL', 'signature|privileged', '" + NO_PERMISSION_GROUP + "', '" + PERMISSION_FLAG_NONE + "'),\n" +
+            "('com.android.voicemail.permission.READ_VOICEMAIL', 'signature|privileged', '" + NO_PERMISSION_GROUP + "', '" + PERMISSION_FLAG_NONE + "'),\n" +
+            "('android.permission.ACCESS_LOCATION_EXTRA_COMMANDS', 'normal', '" + NO_PERMISSION_GROUP + "', '" + PERMISSION_FLAG_NONE + "'),\n" +
+            "('android.permission.INSTALL_LOCATION_PROVIDER', 'signature|privileged', '" + NO_PERMISSION_GROUP + "', '" + PERMISSION_FLAG_NONE + "'),\n" +
+            "('android.permission.HDMI_CEC', 'signature|privileged', '" + NO_PERMISSION_GROUP + "', '" + PERMISSION_FLAG_NONE + "'),\n" +
+            "('android.permission.LOCATION_HARDWARE', 'signature|privileged', '" + NO_PERMISSION_GROUP + "', '" + PERMISSION_FLAG_NONE + "'),\n" +
+            "('android.permission.ACCESS_MOCK_LOCATION', 'signature', '" + NO_PERMISSION_GROUP + "', '" + PERMISSION_FLAG_NONE + "'),\n" +
+            "('android.permission.INTERNET', 'normal', '" + NO_PERMISSION_GROUP + "', '" + PERMISSION_FLAG_NONE + "'),\n" +
+            "('android.permission.ACCESS_NETWORK_STATE', 'normal', '" + NO_PERMISSION_GROUP + "', '" + PERMISSION_FLAG_NONE + "'),\n" +
+            "('android.permission.ACCESS_WIFI_STATE', 'normal', '" + NO_PERMISSION_GROUP + "', '" + PERMISSION_FLAG_NONE + "'),\n" +
+            "('android.permission.CHANGE_WIFI_STATE', 'normal', '" + NO_PERMISSION_GROUP + "', '" + PERMISSION_FLAG_NONE + "'),\n" +
+            "('android.permission.READ_WIFI_CREDENTIAL', 'signature|privileged', '" + NO_PERMISSION_GROUP + "', '" + PERMISSION_FLAG_NONE + "'),\n" +
+            "('android.permission.TETHER_PRIVILEGED', 'signature|privileged', '" + NO_PERMISSION_GROUP + "', '" + PERMISSION_FLAG_NONE + "'),\n" +
+            "('android.permission.RECEIVE_WIFI_CREDENTIAL_CHANGE', 'signature|privileged', '" + NO_PERMISSION_GROUP + "', '" + PERMISSION_FLAG_NONE + "'),\n" +
+            "('android.permission.OVERRIDE_WIFI_CONFIG', 'signature|privileged', '" + NO_PERMISSION_GROUP + "', '" + PERMISSION_FLAG_NONE + "'),\n" +
+            "('android.permission.ACCESS_WIMAX_STATE', 'normal', '" + NO_PERMISSION_GROUP + "', '" + PERMISSION_FLAG_NONE + "'),\n" +
+            "('android.permission.CHANGE_WIMAX_STATE', 'normal', '" + NO_PERMISSION_GROUP + "', '" + PERMISSION_FLAG_NONE + "'),\n" +
+            "('android.permission.SCORE_NETWORKS', 'signature|privileged', '" + NO_PERMISSION_GROUP + "', '" + PERMISSION_FLAG_NONE + "'),\n" +
+            "('android.permission.BLUETOOTH', 'normal', '" + NO_PERMISSION_GROUP + "', '" + PERMISSION_FLAG_NONE + "'),\n" +
+            "('android.permission.BLUETOOTH_ADMIN', 'normal', '" + NO_PERMISSION_GROUP + "', '" + PERMISSION_FLAG_NONE + "'),\n" +
+            "('android.permission.BLUETOOTH_PRIVILEGED', 'signature|privileged', '" + NO_PERMISSION_GROUP + "', '" + PERMISSION_FLAG_NONE + "'),\n" +
+            "('android.permission.BLUETOOTH_MAP', 'signature', '" + NO_PERMISSION_GROUP + "', '" + PERMISSION_FLAG_NONE + "'),\n" +
+            "('android.permission.BLUETOOTH_STACK', 'signature', '" + NO_PERMISSION_GROUP + "', '" + PERMISSION_FLAG_NONE + "'),\n" +
+            "('android.permission.NFC', 'normal', '" + NO_PERMISSION_GROUP + "', '" + PERMISSION_FLAG_NONE + "'),\n" +
+            "('android.permission.CONNECTIVITY_INTERNAL', 'signature|privileged', '" + NO_PERMISSION_GROUP + "', '" + PERMISSION_FLAG_NONE + "'),\n" +
+            "('android.permission.CONNECTIVITY_USE_RESTRICTED_NETWORKS', 'signature|privileged', '" + NO_PERMISSION_GROUP + "', '" + PERMISSION_FLAG_NONE + "'),\n" +
+            "('android.permission.PACKET_KEEPALIVE_OFFLOAD', 'signature|privileged', '" + NO_PERMISSION_GROUP + "', '" + PERMISSION_FLAG_NONE + "'),\n" +
+            "('android.permission.RECEIVE_DATA_ACTIVITY_CHANGE', 'signature|privileged', '" + NO_PERMISSION_GROUP + "', '" + PERMISSION_FLAG_NONE + "'),\n" +
+            "('android.permission.LOOP_RADIO', 'signature|privileged', '" + NO_PERMISSION_GROUP + "', '" + PERMISSION_FLAG_NONE + "'),\n" +
+            "('android.permission.NFC_HANDOVER_STATUS', 'signature|privileged', '" + NO_PERMISSION_GROUP + "', '" + PERMISSION_FLAG_NONE + "'),\n" +
             "('android.permission.GET_ACCOUNTS', 'dangerous', 'android.permission-group.CONTACTS', '" + PERMISSION_FLAG_NONE + "'),\n" +
-            "('android.permission.ACCOUNT_MANAGER', 'signature', '" + PERMISSION_NO_GROUP + "', '" + PERMISSION_FLAG_NONE + "'),\n" +
-            "('android.permission.CHANGE_WIFI_MULTICAST_STATE', 'normal', '" + PERMISSION_NO_GROUP + "', '" + PERMISSION_FLAG_NONE + "'),\n" +
-            "('android.permission.VIBRATE', 'normal', '" + PERMISSION_NO_GROUP + "', '" + PERMISSION_FLAG_NONE + "'),\n" +
-            "('android.permission.WAKE_LOCK', 'normal', '" + PERMISSION_NO_GROUP + "', '" + PERMISSION_FLAG_NONE + "'),\n" +
-            "('android.permission.TRANSMIT_IR', 'normal', '" + PERMISSION_NO_GROUP + "', '" + PERMISSION_FLAG_NONE + "'),\n" +
-            "('android.permission.MODIFY_AUDIO_SETTINGS', 'normal', '" + PERMISSION_NO_GROUP + "', '" + PERMISSION_FLAG_NONE + "'),\n" +
-            "('android.permission.MANAGE_USB', 'signature|privileged', '" + PERMISSION_NO_GROUP + "', '" + PERMISSION_FLAG_NONE + "'),\n" +
-            "('android.permission.ACCESS_MTP', 'signature|privileged', '" + PERMISSION_NO_GROUP + "', '" + PERMISSION_FLAG_NONE + "'),\n" +
-            "('android.permission.HARDWARE_TEST', 'signature', '" + PERMISSION_NO_GROUP + "', '" + PERMISSION_FLAG_NONE + "'),\n" +
-            "('android.permission.ACCESS_FM_RADIO', 'signature|privileged', '" + PERMISSION_NO_GROUP + "', '" + PERMISSION_FLAG_NONE + "'),\n" +
-            "('android.permission.NET_ADMIN', 'signature', '" + PERMISSION_NO_GROUP + "', '" + PERMISSION_FLAG_NONE + "'),\n" +
-            "('android.permission.REMOTE_AUDIO_PLAYBACK', 'signature', '" + PERMISSION_NO_GROUP + "', '" + PERMISSION_FLAG_NONE + "'),\n" +
-            "('android.permission.TV_INPUT_HARDWARE', 'signature|privileged', '" + PERMISSION_NO_GROUP + "', '" + PERMISSION_FLAG_NONE + "'),\n" +
-            "('android.permission.CAPTURE_TV_INPUT', 'signature|privileged', '" + PERMISSION_NO_GROUP + "', '" + PERMISSION_FLAG_NONE + "'),\n" +
-            "('android.permission.DVB_DEVICE', 'signature|privileged', '" + PERMISSION_NO_GROUP + "', '" + PERMISSION_FLAG_NONE + "'),\n" +
-            "('android.permission.READ_OEM_UNLOCK_STATE', 'signature|privileged', '" + PERMISSION_NO_GROUP + "', '" + PERMISSION_FLAG_NONE + "'),\n" +
-            "('android.permission.OEM_UNLOCK_STATE', 'signature', '" + PERMISSION_NO_GROUP + "', '" + PERMISSION_FLAG_NONE + "'),\n" +
-            "('android.permission.ACCESS_PDB_STATE', 'signature', '" + PERMISSION_NO_GROUP + "', '" + PERMISSION_FLAG_NONE + "'),\n" +
-            "('android.permission.NOTIFY_PENDING_SYSTEM_UPDATE', 'signature|privileged', '" + PERMISSION_NO_GROUP + "', '" + PERMISSION_FLAG_NONE + "'),\n" +
-            "('android.permission.CAMERA_DISABLE_TRANSMIT_LED', 'signature|privileged', '" + PERMISSION_NO_GROUP + "', '" + PERMISSION_FLAG_NONE + "'),\n" +
-            "('android.permission.CAMERA_SEND_SYSTEM_EVENTS', 'signature|privileged', '" + PERMISSION_NO_GROUP + "', '" + PERMISSION_FLAG_NONE + "'),\n" +
-            "('android.permission.MODIFY_PHONE_STATE', 'signature|privileged', '" + PERMISSION_NO_GROUP + "', '" + PERMISSION_FLAG_NONE + "'),\n" +
-            "('android.permission.READ_PRECISE_PHONE_STATE', 'signature|privileged', '" + PERMISSION_NO_GROUP + "', '" + PERMISSION_FLAG_NONE + "'),\n" +
-            "('android.permission.READ_PRIVILEGED_PHONE_STATE', 'signature|privileged', '" + PERMISSION_NO_GROUP + "', '" + PERMISSION_FLAG_NONE + "'),\n" +
-            "('android.permission.REGISTER_SIM_SUBSCRIPTION', 'signature|privileged', '" + PERMISSION_NO_GROUP + "', '" + PERMISSION_FLAG_NONE + "'),\n" +
-            "('android.permission.REGISTER_CALL_PROVIDER', 'signature|privileged', '" + PERMISSION_NO_GROUP + "', '" + PERMISSION_FLAG_NONE + "'),\n" +
-            "('android.permission.REGISTER_CONNECTION_MANAGER', 'signature|privileged', '" + PERMISSION_NO_GROUP + "', '" + PERMISSION_FLAG_NONE + "'),\n" +
-            "('android.permission.BIND_INCALL_SERVICE', 'signature|privileged', '" + PERMISSION_NO_GROUP + "', '" + PERMISSION_FLAG_NONE + "'),\n" +
-            "('android.permission.BIND_SCREENING_SERVICE', 'signature|privileged', '" + PERMISSION_NO_GROUP + "', '" + PERMISSION_FLAG_NONE + "'),\n" +
-            "('android.permission.BIND_CONNECTION_SERVICE', 'signature|privileged', '" + PERMISSION_NO_GROUP + "', '" + PERMISSION_FLAG_NONE + "'),\n" +
-            "('android.permission.BIND_TELECOM_CONNECTION_SERVICE', 'signature|privileged', '" + PERMISSION_NO_GROUP + "', '" + PERMISSION_FLAG_NONE + "'),\n" +
-            "('android.permission.CONTROL_INCALL_EXPERIENCE', 'signature|privileged', '" + PERMISSION_NO_GROUP + "', '" + PERMISSION_FLAG_NONE + "'),\n" +
-            "('android.permission.RECEIVE_STK_COMMANDS', 'signature|privileged', '" + PERMISSION_NO_GROUP + "', '" + PERMISSION_FLAG_NONE + "'),\n" +
-            "('android.permission.WRITE_MEDIA_STORAGE', 'signature|privileged', '" + PERMISSION_NO_GROUP + "', '" + PERMISSION_FLAG_NONE + "'),\n" +
-            "('android.permission.MANAGE_DOCUMENTS', 'signature', '" + PERMISSION_NO_GROUP + "', '" + PERMISSION_FLAG_NONE + "'),\n" +
-            "('android.permission.CACHE_CONTENT', 'signature', '" + PERMISSION_NO_GROUP + "', '" + PERMISSION_FLAG_NONE + "'),\n" +
-            "('android.permission.DISABLE_KEYGUARD', 'normal', '" + PERMISSION_NO_GROUP + "', '" + PERMISSION_FLAG_NONE + "'),\n" +
-            "('android.permission.GET_TASKS', 'normal', '" + PERMISSION_NO_GROUP + "', '" + PERMISSION_FLAG_NONE + "'),\n" +
-            "('android.permission.REAL_GET_TASKS', 'signature|privileged', '" + PERMISSION_NO_GROUP + "', '" + PERMISSION_FLAG_NONE + "'),\n" +
-            "('android.permission.START_TASKS_FROM_RECENTS', 'signature|privileged', '" + PERMISSION_NO_GROUP + "', '" + PERMISSION_FLAG_NONE + "'),\n" +
-            "('android.permission.INTERACT_ACROSS_USERS', 'signature|privileged|development', '" + PERMISSION_NO_GROUP + "', '" + PERMISSION_FLAG_NONE + "'),\n" +
-            "('android.permission.INTERACT_ACROSS_USERS_FULL', 'signature|installer', '" + PERMISSION_NO_GROUP + "', '" + PERMISSION_FLAG_NONE + "'),\n" +
-            "('android.permission.MANAGE_USERS', 'signature|privileged', '" + PERMISSION_NO_GROUP + "', '" + PERMISSION_FLAG_NONE + "'),\n" +
-            "('android.permission.CREATE_USERS', 'signature', '" + PERMISSION_NO_GROUP + "', '" + PERMISSION_FLAG_NONE + "'),\n" +
-            "('android.permission.MANAGE_PROFILE_AND_DEVICE_OWNERS', 'signature', '" + PERMISSION_NO_GROUP + "', '" + PERMISSION_FLAG_NONE + "'),\n" +
-            "('android.permission.GET_DETAILED_TASKS', 'signature', '" + PERMISSION_NO_GROUP + "', '" + PERMISSION_FLAG_NONE + "'),\n" +
-            "('android.permission.REORDER_TASKS', 'normal', '" + PERMISSION_NO_GROUP + "', '" + PERMISSION_FLAG_NONE + "'),\n" +
-            "('android.permission.REMOVE_TASKS', 'signature', '" + PERMISSION_NO_GROUP + "', '" + PERMISSION_FLAG_NONE + "'),\n" +
-            "('android.permission.MANAGE_ACTIVITY_STACKS', 'signature|privileged', '" + PERMISSION_NO_GROUP + "', '" + PERMISSION_FLAG_NONE + "'),\n" +
-            "('android.permission.START_ANY_ACTIVITY', 'signature', '" + PERMISSION_NO_GROUP + "', '" + PERMISSION_FLAG_NONE + "'),\n" +
-            "('android.permission.RESTART_PACKAGES', 'normal', '" + PERMISSION_NO_GROUP + "', '" + PERMISSION_FLAG_NONE + "'),\n" +
-            "('android.permission.KILL_BACKGROUND_PROCESSES', 'normal', '" + PERMISSION_NO_GROUP + "', '" + PERMISSION_FLAG_NONE + "'),\n" +
-            "('android.permission.GET_PROCESS_STATE_AND_OOM_SCORE', 'signature|privileged|development', '" + PERMISSION_NO_GROUP + "', '" + PERMISSION_FLAG_NONE + "'),\n" +
-            "('android.permission.GET_PACKAGE_IMPORTANCE', 'signature|privileged', '" + PERMISSION_NO_GROUP + "', '" + PERMISSION_FLAG_NONE + "'),\n" +
-            "('android.permission.GET_INTENT_SENDER_INTENT', 'signature', '" + PERMISSION_NO_GROUP + "', '" + PERMISSION_FLAG_NONE + "'),\n" +
-            "('android.permission.SYSTEM_ALERT_WINDOW', 'signature|preinstalled|appop|pre23|development', '" + PERMISSION_NO_GROUP + "', '" + PERMISSION_FLAG_NONE + "'),\n" +
-            "('android.permission.SET_WALLPAPER', 'normal', '" + PERMISSION_NO_GROUP + "', '" + PERMISSION_FLAG_NONE + "'),\n" +
-            "('android.permission.SET_WALLPAPER_HINTS', 'normal', '" + PERMISSION_NO_GROUP + "', '" + PERMISSION_FLAG_NONE + "'),\n" +
-            "('android.permission.SET_TIME', 'signature|privileged', '" + PERMISSION_NO_GROUP + "', '" + PERMISSION_FLAG_NONE + "'),\n" +
-            "('android.permission.SET_TIME_ZONE', 'normal', '" + PERMISSION_NO_GROUP + "', '" + PERMISSION_FLAG_NONE + "'),\n" +
-            "('android.permission.EXPAND_STATUS_BAR', 'normal', '" + PERMISSION_NO_GROUP + "', '" + PERMISSION_FLAG_NONE + "'),\n" +
-            "('com.android.launcher.permission.INSTALL_SHORTCUT', 'normal', '" + PERMISSION_NO_GROUP + "', '" + PERMISSION_FLAG_NONE + "'),\n" +
-            "('com.android.launcher.permission.UNINSTALL_SHORTCUT', 'normal', '" + PERMISSION_NO_GROUP + "', '" + PERMISSION_FLAG_NONE + "'),\n" +
-            "('android.permission.READ_SYNC_SETTINGS', 'normal', '" + PERMISSION_NO_GROUP + "', '" + PERMISSION_FLAG_NONE + "'),\n" +
-            "('android.permission.WRITE_SYNC_SETTINGS', 'normal', '" + PERMISSION_NO_GROUP + "', '" + PERMISSION_FLAG_NONE + "'),\n" +
-            "('android.permission.READ_SYNC_STATS', 'normal', '" + PERMISSION_NO_GROUP + "', '" + PERMISSION_FLAG_NONE + "'),\n" +
-            "('android.permission.SET_SCREEN_COMPATIBILITY', 'signature', '" + PERMISSION_NO_GROUP + "', '" + PERMISSION_FLAG_NONE + "'),\n" +
-            "('android.permission.CHANGE_CONFIGURATION', 'signature|privileged|development', '" + PERMISSION_NO_GROUP + "', '" + PERMISSION_FLAG_NONE + "'),\n" +
-            "('android.permission.WRITE_SETTINGS', 'signature|preinstalled|appop|pre23', '" + PERMISSION_NO_GROUP + "', '" + PERMISSION_FLAG_NONE + "'),\n" +
-            "('android.permission.WRITE_GSERVICES', 'signature|privileged', '" + PERMISSION_NO_GROUP + "', '" + PERMISSION_FLAG_NONE + "'),\n" +
-            "('android.permission.FORCE_STOP_PACKAGES', 'signature|privileged', '" + PERMISSION_NO_GROUP + "', '" + PERMISSION_FLAG_NONE + "'),\n" +
-            "('android.permission.RETRIEVE_WINDOW_CONTENT', 'signature|privileged', '" + PERMISSION_NO_GROUP + "', '" + PERMISSION_FLAG_NONE + "'),\n" +
-            "('android.permission.SET_ANIMATION_SCALE', 'signature|privileged|development', '" + PERMISSION_NO_GROUP + "', '" + PERMISSION_FLAG_NONE + "'),\n" +
-            "('android.permission.PERSISTENT_ACTIVITY', 'normal', '" + PERMISSION_NO_GROUP + "', '" + PERMISSION_FLAG_NONE + "'),\n" +
-            "('android.permission.GET_PACKAGE_SIZE', 'normal', '" + PERMISSION_NO_GROUP + "', '" + PERMISSION_FLAG_NONE + "'),\n" +
-            "('android.permission.SET_PREFERRED_APPLICATIONS', 'signature', '" + PERMISSION_NO_GROUP + "', '" + PERMISSION_FLAG_NONE + "'),\n" +
-            "('android.permission.RECEIVE_BOOT_COMPLETED', 'normal', '" + PERMISSION_NO_GROUP + "', '" + PERMISSION_FLAG_NONE + "'),\n" +
-            "('android.permission.BROADCAST_STICKY', 'normal', '" + PERMISSION_NO_GROUP + "', '" + PERMISSION_FLAG_NONE + "'),\n" +
-            "('android.permission.MOUNT_UNMOUNT_FILESYSTEMS', 'signature|privileged', '" + PERMISSION_NO_GROUP + "', '" + PERMISSION_FLAG_NONE + "'),\n" +
-            "('android.permission.MOUNT_FORMAT_FILESYSTEMS', 'signature|privileged', '" + PERMISSION_NO_GROUP + "', '" + PERMISSION_FLAG_NONE + "'),\n" +
-            "('android.permission.STORAGE_INTERNAL', 'signature', '" + PERMISSION_NO_GROUP + "', '" + PERMISSION_FLAG_NONE + "'),\n" +
-            "('android.permission.ASEC_ACCESS', 'signature', '" + PERMISSION_NO_GROUP + "', '" + PERMISSION_FLAG_NONE + "'),\n" +
-            "('android.permission.ASEC_CREATE', 'signature', '" + PERMISSION_NO_GROUP + "', '" + PERMISSION_FLAG_NONE + "'),\n" +
-            "('android.permission.ASEC_DESTROY', 'signature', '" + PERMISSION_NO_GROUP + "', '" + PERMISSION_FLAG_NONE + "'),\n" +
-            "('android.permission.ASEC_MOUNT_UNMOUNT', 'signature', '" + PERMISSION_NO_GROUP + "', '" + PERMISSION_FLAG_NONE + "'),\n" +
-            "('android.permission.ASEC_RENAME', 'signature', '" + PERMISSION_NO_GROUP + "', '" + PERMISSION_FLAG_NONE + "'),\n" +
-            "('android.permission.WRITE_APN_SETTINGS', 'signature|privileged', '" + PERMISSION_NO_GROUP + "', '" + PERMISSION_FLAG_NONE + "'),\n" +
-            "('android.permission.CHANGE_NETWORK_STATE', 'normal', '" + PERMISSION_NO_GROUP + "', '" + PERMISSION_FLAG_NONE + "'),\n" +
-            "('android.permission.CLEAR_APP_CACHE', 'signature|privileged', '" + PERMISSION_NO_GROUP + "', '" + PERMISSION_FLAG_NONE + "'),\n" +
-            "('android.permission.ALLOW_ANY_CODEC_FOR_PLAYBACK', 'signature|privileged', '" + PERMISSION_NO_GROUP + "', '" + PERMISSION_FLAG_NONE + "'),\n" +
-            "('android.permission.MANAGE_CA_CERTIFICATES', 'signature|privileged', '" + PERMISSION_NO_GROUP + "', '" + PERMISSION_FLAG_NONE + "'),\n" +
-            "('android.permission.RECOVERY', 'signature|privileged', '" + PERMISSION_NO_GROUP + "', '" + PERMISSION_FLAG_NONE + "'),\n" +
-            "('android.permission.BIND_JOB_SERVICE', 'signature', '" + PERMISSION_NO_GROUP + "', '" + PERMISSION_FLAG_NONE + "'),\n" +
-            "('android.permission.UPDATE_CONFIG', 'signature|privileged', '" + PERMISSION_NO_GROUP + "', '" + PERMISSION_FLAG_NONE + "'),\n" +
-            "('android.permission.RESET_SHORTCUT_MANAGER_THROTTLING', 'signature', '" + PERMISSION_NO_GROUP + "', '" + PERMISSION_FLAG_NONE + "'),\n" +
-            "('android.permission.WRITE_SECURE_SETTINGS', 'signature|privileged|development', '" + PERMISSION_NO_GROUP + "', '" + PERMISSION_FLAG_NONE + "'),\n" +
-            "('android.permission.DUMP', 'signature|privileged|development', '" + PERMISSION_NO_GROUP + "', '" + PERMISSION_FLAG_NONE + "'),\n" +
-            "('android.permission.READ_LOGS', 'signature|privileged|development', '" + PERMISSION_NO_GROUP + "', '" + PERMISSION_FLAG_NONE + "'),\n" +
-            "('android.permission.SET_DEBUG_APP', 'signature|privileged|development', '" + PERMISSION_NO_GROUP + "', '" + PERMISSION_FLAG_NONE + "'),\n" +
-            "('android.permission.SET_PROCESS_LIMIT', 'signature|privileged|development', '" + PERMISSION_NO_GROUP + "', '" + PERMISSION_FLAG_NONE + "'),\n" +
-            "('android.permission.SET_ALWAYS_FINISH', 'signature|privileged|development', '" + PERMISSION_NO_GROUP + "', '" + PERMISSION_FLAG_NONE + "'),\n" +
-            "('android.permission.SIGNAL_PERSISTENT_PROCESSES', 'signature|privileged|development', '" + PERMISSION_NO_GROUP + "', '" + PERMISSION_FLAG_NONE + "'),\n" +
-            "('android.permission.GET_ACCOUNTS_PRIVILEGED', 'signature|privileged', '" + PERMISSION_NO_GROUP + "', '" + PERMISSION_FLAG_NONE + "'),\n" +
-            "('android.permission.GET_PASSWORD', 'signature', '" + PERMISSION_NO_GROUP + "', '" + PERMISSION_FLAG_NONE + "'),\n" +
-            "('android.permission.DIAGNOSTIC', 'signature', '" + PERMISSION_NO_GROUP + "', '" + PERMISSION_FLAG_NONE + "'),\n" +
-            "('android.permission.STATUS_BAR', 'signature|privileged', '" + PERMISSION_NO_GROUP + "', '" + PERMISSION_FLAG_NONE + "'),\n" +
-            "('android.permission.STATUS_BAR_SERVICE', 'signature', '" + PERMISSION_NO_GROUP + "', '" + PERMISSION_FLAG_NONE + "'),\n" +
-            "('android.permission.BIND_QUICK_SETTINGS_TILE', 'signature', '" + PERMISSION_NO_GROUP + "', '" + PERMISSION_FLAG_NONE + "'),\n" +
-            "('android.permission.FORCE_BACK', 'signature', '" + PERMISSION_NO_GROUP + "', '" + PERMISSION_FLAG_NONE + "'),\n" +
-            "('android.permission.UPDATE_DEVICE_STATS', 'signature|privileged', '" + PERMISSION_NO_GROUP + "', '" + PERMISSION_FLAG_NONE + "'),\n" +
-            "('android.permission.GET_APP_OPS_STATS', 'signature|privileged|development', '" + PERMISSION_NO_GROUP + "', '" + PERMISSION_FLAG_NONE + "'),\n" +
-            "('android.permission.UPDATE_APP_OPS_STATS', 'signature|privileged|installer', '" + PERMISSION_NO_GROUP + "', '" + PERMISSION_FLAG_NONE + "'),\n" +
-            "('android.permission.MANAGE_APP_OPS_RESTRICTIONS', 'signature|installer', '" + PERMISSION_NO_GROUP + "', '" + PERMISSION_FLAG_NONE + "'),\n" +
-            "('android.permission.INTERNAL_SYSTEM_WINDOW', 'signature', '" + PERMISSION_NO_GROUP + "', '" + PERMISSION_FLAG_NONE + "'),\n" +
-            "('android.permission.MANAGE_APP_TOKENS', 'signature', '" + PERMISSION_NO_GROUP + "', '" + PERMISSION_FLAG_NONE + "'),\n" +
-            "('android.permission.REGISTER_WINDOW_MANAGER_LISTENERS', 'signature', '" + PERMISSION_NO_GROUP + "', '" + PERMISSION_FLAG_NONE + "'),\n" +
-            "('android.permission.FREEZE_SCREEN', 'signature', '" + PERMISSION_NO_GROUP + "', '" + PERMISSION_FLAG_NONE + "'),\n" +
-            "('android.permission.INJECT_EVENTS', 'signature', '" + PERMISSION_NO_GROUP + "', '" + PERMISSION_FLAG_NONE + "'),\n" +
-            "('android.permission.FILTER_EVENTS', 'signature', '" + PERMISSION_NO_GROUP + "', '" + PERMISSION_FLAG_NONE + "'),\n" +
-            "('android.permission.RETRIEVE_WINDOW_TOKEN', 'signature', '" + PERMISSION_NO_GROUP + "', '" + PERMISSION_FLAG_NONE + "'),\n" +
-            "('android.permission.FRAME_STATS', 'signature', '" + PERMISSION_NO_GROUP + "', '" + PERMISSION_FLAG_NONE + "'),\n" +
-            "('android.permission.TEMPORARY_ENABLE_ACCESSIBILITY', 'signature', '" + PERMISSION_NO_GROUP + "', '" + PERMISSION_FLAG_NONE + "'),\n" +
-            "('android.permission.SET_ACTIVITY_WATCHER', 'signature', '" + PERMISSION_NO_GROUP + "', '" + PERMISSION_FLAG_NONE + "'),\n" +
-            "('android.permission.SHUTDOWN', 'signature|privileged', '" + PERMISSION_NO_GROUP + "', '" + PERMISSION_FLAG_NONE + "'),\n" +
-            "('android.permission.STOP_APP_SWITCHES', 'signature|privileged', '" + PERMISSION_NO_GROUP + "', '" + PERMISSION_FLAG_NONE + "'),\n" +
-            "('android.permission.GET_TOP_ACTIVITY_INFO', 'signature', '" + PERMISSION_NO_GROUP + "', '" + PERMISSION_FLAG_NONE + "'),\n" +
-            "('android.permission.READ_INPUT_STATE', 'signature', '" + PERMISSION_NO_GROUP + "', '" + PERMISSION_FLAG_NONE + "'),\n" +
-            "('android.permission.BIND_INPUT_METHOD', 'signature', '" + PERMISSION_NO_GROUP + "', '" + PERMISSION_FLAG_NONE + "'),\n" +
-            "('android.permission.BIND_MIDI_DEVICE_SERVICE', 'signature', '" + PERMISSION_NO_GROUP + "', '" + PERMISSION_FLAG_NONE + "'),\n" +
-            "('android.permission.BIND_ACCESSIBILITY_SERVICE', 'signature', '" + PERMISSION_NO_GROUP + "', '" + PERMISSION_FLAG_NONE + "'),\n" +
-            "('android.permission.BIND_PRINT_SERVICE', 'signature', '" + PERMISSION_NO_GROUP + "', '" + PERMISSION_FLAG_NONE + "'),\n" +
-            "('android.permission.BIND_PRINT_RECOMMENDATION_SERVICE', 'signature', '" + PERMISSION_NO_GROUP + "', '" + PERMISSION_FLAG_NONE + "'),\n" +
-            "('android.permission.BIND_NFC_SERVICE', 'signature', '" + PERMISSION_NO_GROUP + "', '" + PERMISSION_FLAG_NONE + "'),\n" +
-            "('android.permission.BIND_PRINT_SPOOLER_SERVICE', 'signature', '" + PERMISSION_NO_GROUP + "', '" + PERMISSION_FLAG_NONE + "'),\n" +
-            "('android.permission.BIND_RUNTIME_PERMISSION_PRESENTER_SERVICE', 'signature', '" + PERMISSION_NO_GROUP + "', '" + PERMISSION_FLAG_NONE + "'),\n" +
-            "('android.permission.BIND_TEXT_SERVICE', 'signature', '" + PERMISSION_NO_GROUP + "', '" + PERMISSION_FLAG_NONE + "'),\n" +
-            "('android.permission.BIND_VPN_SERVICE', 'signature', '" + PERMISSION_NO_GROUP + "', '" + PERMISSION_FLAG_NONE + "'),\n" +
-            "('android.permission.BIND_WALLPAPER', 'signature|privileged', '" + PERMISSION_NO_GROUP + "', '" + PERMISSION_FLAG_NONE + "'),\n" +
-            "('android.permission.BIND_VOICE_INTERACTION', 'signature', '" + PERMISSION_NO_GROUP + "', '" + PERMISSION_FLAG_NONE + "'),\n" +
-            "('android.permission.MANAGE_VOICE_KEYPHRASES', 'signature|privileged', '" + PERMISSION_NO_GROUP + "', '" + PERMISSION_FLAG_NONE + "'),\n" +
-            "('android.permission.BIND_REMOTE_DISPLAY', 'signature', '" + PERMISSION_NO_GROUP + "', '" + PERMISSION_FLAG_NONE + "'),\n" +
-            "('android.permission.BIND_TV_INPUT', 'signature|privileged', '" + PERMISSION_NO_GROUP + "', '" + PERMISSION_FLAG_NONE + "'),\n" +
-            "('android.permission.BIND_TV_REMOTE_SERVICE', 'signature|privileged', '" + PERMISSION_NO_GROUP + "', '" + PERMISSION_FLAG_NONE + "'),\n" +
-            "('android.permission.TV_VIRTUAL_REMOTE_CONTROLLER', 'signature|privileged', '" + PERMISSION_NO_GROUP + "', '" + PERMISSION_FLAG_NONE + "'),\n" +
-            "('android.permission.MODIFY_PARENTAL_CONTROLS', 'signature|privileged', '" + PERMISSION_NO_GROUP + "', '" + PERMISSION_FLAG_NONE + "'),\n" +
-            "('android.permission.BIND_ROUTE_PROVIDER', 'signature', '" + PERMISSION_NO_GROUP + "', '" + PERMISSION_FLAG_NONE + "'),\n" +
-            "('android.permission.BIND_DEVICE_ADMIN', 'signature', '" + PERMISSION_NO_GROUP + "', '" + PERMISSION_FLAG_NONE + "'),\n" +
-            "('android.permission.MANAGE_DEVICE_ADMINS', 'signature|privileged', '" + PERMISSION_NO_GROUP + "', '" + PERMISSION_FLAG_NONE + "'),\n" +
-            "('android.permission.SET_ORIENTATION', 'signature', '" + PERMISSION_NO_GROUP + "', '" + PERMISSION_FLAG_NONE + "'),\n" +
-            "('android.permission.SET_POINTER_SPEED', 'signature', '" + PERMISSION_NO_GROUP + "', '" + PERMISSION_FLAG_NONE + "'),\n" +
-            "('android.permission.SET_INPUT_CALIBRATION', 'signature', '" + PERMISSION_NO_GROUP + "', '" + PERMISSION_FLAG_NONE + "'),\n" +
-            "('android.permission.SET_KEYBOARD_LAYOUT', 'signature', '" + PERMISSION_NO_GROUP + "', '" + PERMISSION_FLAG_NONE + "'),\n" +
-            "('android.permission.TABLET_MODE', 'signature', '" + PERMISSION_NO_GROUP + "', '" + PERMISSION_FLAG_NONE + "'),\n" +
-            "('android.permission.REQUEST_INSTALL_PACKAGES', 'normal', '" + PERMISSION_NO_GROUP + "', '" + PERMISSION_FLAG_NONE + "'),\n" +
-            "('android.permission.INSTALL_PACKAGES', 'signature|privileged', '" + PERMISSION_NO_GROUP + "', '" + PERMISSION_FLAG_NONE + "'),\n" +
-            "('android.permission.CLEAR_APP_USER_DATA', 'signature|installer', '" + PERMISSION_NO_GROUP + "', '" + PERMISSION_FLAG_NONE + "'),\n" +
-            "('android.permission.GET_APP_GRANTED_URI_PERMISSIONS', 'signature', '" + PERMISSION_NO_GROUP + "', '" + PERMISSION_FLAG_NONE + "'),\n" +
-            "('android.permission.CLEAR_APP_GRANTED_URI_PERMISSIONS', 'signature', '" + PERMISSION_NO_GROUP + "', '" + PERMISSION_FLAG_NONE + "'),\n" +
-            "('android.permission.DELETE_CACHE_FILES', 'signature|privileged', '" + PERMISSION_NO_GROUP + "', '" + PERMISSION_FLAG_NONE + "'),\n" +
-            "('android.permission.DELETE_PACKAGES', 'signature|privileged', '" + PERMISSION_NO_GROUP + "', '" + PERMISSION_FLAG_NONE + "'),\n" +
-            "('android.permission.MOVE_PACKAGE', 'signature|privileged', '" + PERMISSION_NO_GROUP + "', '" + PERMISSION_FLAG_NONE + "'),\n" +
-            "('android.permission.CHANGE_COMPONENT_ENABLED_STATE', 'signature|privileged', '" + PERMISSION_NO_GROUP + "', '" + PERMISSION_FLAG_NONE + "'),\n" +
-            "('android.permission.GRANT_RUNTIME_PERMISSIONS', 'signature|installer|verifier', '" + PERMISSION_NO_GROUP + "', '" + PERMISSION_FLAG_NONE + "'),\n" +
-            "('android.permission.INSTALL_GRANT_RUNTIME_PERMISSIONS', 'signature|installer|verifier', '" + PERMISSION_NO_GROUP + "', '" + PERMISSION_FLAG_NONE + "'),\n" +
-            "('android.permission.REVOKE_RUNTIME_PERMISSIONS', 'signature|installer|verifier', '" + PERMISSION_NO_GROUP + "', '" + PERMISSION_FLAG_NONE + "'),\n" +
-            "('android.permission.OBSERVE_GRANT_REVOKE_PERMISSIONS', 'signature|privileged', '" + PERMISSION_NO_GROUP + "', '" + PERMISSION_FLAG_NONE + "'),\n" +
-            "('android.permission.ACCESS_SURFACE_FLINGER', 'signature', '" + PERMISSION_NO_GROUP + "', '" + PERMISSION_FLAG_NONE + "'),\n" +
-            "('android.permission.READ_FRAME_BUFFER', 'signature|privileged', '" + PERMISSION_NO_GROUP + "', '" + PERMISSION_FLAG_NONE + "'),\n" +
-            "('android.permission.ACCESS_INPUT_FLINGER', 'signature', '" + PERMISSION_NO_GROUP + "', '" + PERMISSION_FLAG_NONE + "'),\n" +
-            "('android.permission.CONFIGURE_WIFI_DISPLAY', 'signature', '" + PERMISSION_NO_GROUP + "', '" + PERMISSION_FLAG_NONE + "'),\n" +
-            "('android.permission.CONTROL_WIFI_DISPLAY', 'signature', '" + PERMISSION_NO_GROUP + "', '" + PERMISSION_FLAG_NONE + "'),\n" +
-            "('android.permission.CONFIGURE_DISPLAY_COLOR_MODE', 'signature', '" + PERMISSION_NO_GROUP + "', '" + PERMISSION_FLAG_NONE + "'),\n" +
-            "('android.permission.CONTROL_VPN', 'signature|privileged', '" + PERMISSION_NO_GROUP + "', '" + PERMISSION_FLAG_NONE + "'),\n" +
-            "('android.permission.CAPTURE_AUDIO_OUTPUT', 'signature|privileged', '" + PERMISSION_NO_GROUP + "', '" + PERMISSION_FLAG_NONE + "'),\n" +
-            "('android.permission.CAPTURE_AUDIO_HOTWORD', 'signature|privileged', '" + PERMISSION_NO_GROUP + "', '" + PERMISSION_FLAG_NONE + "'),\n" +
-            "('android.permission.MODIFY_AUDIO_ROUTING', 'signature|privileged', '" + PERMISSION_NO_GROUP + "', '" + PERMISSION_FLAG_NONE + "'),\n" +
-            "('android.permission.CAPTURE_VIDEO_OUTPUT', 'signature|privileged', '" + PERMISSION_NO_GROUP + "', '" + PERMISSION_FLAG_NONE + "'),\n" +
-            "('android.permission.CAPTURE_SECURE_VIDEO_OUTPUT', 'signature|privileged', '" + PERMISSION_NO_GROUP + "', '" + PERMISSION_FLAG_NONE + "'),\n" +
-            "('android.permission.MEDIA_CONTENT_CONTROL', 'signature|privileged', '" + PERMISSION_NO_GROUP + "', '" + PERMISSION_FLAG_NONE + "'),\n" +
-            "('android.permission.BRICK', 'signature', '" + PERMISSION_NO_GROUP + "', '" + PERMISSION_FLAG_NONE + "'),\n" +
-            "('android.permission.REBOOT', 'signature|privileged', '" + PERMISSION_NO_GROUP + "', '" + PERMISSION_FLAG_NONE + "'),\n" +
-            "('android.permission.DEVICE_POWER', 'signature', '" + PERMISSION_NO_GROUP + "', '" + PERMISSION_FLAG_NONE + "'),\n" +
-            "('android.permission.USER_ACTIVITY', 'signature|privileged', '" + PERMISSION_NO_GROUP + "', '" + PERMISSION_FLAG_NONE + "'),\n" +
-            "('android.permission.NET_TUNNELING', 'signature', '" + PERMISSION_NO_GROUP + "', '" + PERMISSION_FLAG_NONE + "'),\n" +
-            "('android.permission.FACTORY_TEST', 'signature', '" + PERMISSION_NO_GROUP + "', '" + PERMISSION_FLAG_NONE + "'),\n" +
-            "('android.permission.BROADCAST_PACKAGE_REMOVED', 'signature', '" + PERMISSION_NO_GROUP + "', '" + PERMISSION_FLAG_NONE + "'),\n" +
-            "('android.permission.BROADCAST_SMS', 'signature', '" + PERMISSION_NO_GROUP + "', '" + PERMISSION_FLAG_NONE + "'),\n" +
-            "('android.permission.BROADCAST_WAP_PUSH', 'signature', '" + PERMISSION_NO_GROUP + "', '" + PERMISSION_FLAG_NONE + "'),\n" +
-            "('android.permission.BROADCAST_NETWORK_PRIVILEGED', 'signature|privileged', '" + PERMISSION_NO_GROUP + "', '" + PERMISSION_FLAG_NONE + "'),\n" +
-            "('android.permission.MASTER_CLEAR', 'signature|privileged', '" + PERMISSION_NO_GROUP + "', '" + PERMISSION_FLAG_NONE + "'),\n" +
-            "('android.permission.CALL_PRIVILEGED', 'signature|privileged', '" + PERMISSION_NO_GROUP + "', '" + PERMISSION_FLAG_NONE + "'),\n" +
-            "('android.permission.PERFORM_CDMA_PROVISIONING', 'signature|privileged', '" + PERMISSION_NO_GROUP + "', '" + PERMISSION_FLAG_NONE + "'),\n" +
-            "('android.permission.PERFORM_SIM_ACTIVATION', 'signature|privileged', '" + PERMISSION_NO_GROUP + "', '" + PERMISSION_FLAG_NONE + "'),\n" +
-            "('android.permission.CONTROL_LOCATION_UPDATES', 'signature|privileged', '" + PERMISSION_NO_GROUP + "', '" + PERMISSION_FLAG_NONE + "'),\n" +
-            "('android.permission.ACCESS_CHECKIN_PROPERTIES', 'signature|privileged', '" + PERMISSION_NO_GROUP + "', '" + PERMISSION_FLAG_NONE + "'),\n" +
-            "('android.permission.PACKAGE_USAGE_STATS', 'signature|privileged|development|appop', '" + PERMISSION_NO_GROUP + "', '" + PERMISSION_FLAG_NONE + "'),\n" +
-            "('android.permission.CHANGE_APP_IDLE_STATE', 'signature', '" + PERMISSION_NO_GROUP + "', '" + PERMISSION_FLAG_NONE + "'),\n" +
-            "('android.permission.CHANGE_DEVICE_IDLE_TEMP_WHITELIST', 'signature|privileged', '" + PERMISSION_NO_GROUP + "', '" + PERMISSION_FLAG_NONE + "'),\n" +
-            "('android.permission.REQUEST_IGNORE_BATTERY_OPTIMIZATIONS', 'normal', '" + PERMISSION_NO_GROUP + "', '" + PERMISSION_FLAG_NONE + "'),\n" +
-            "('android.permission.BATTERY_STATS', 'signature|privileged|development', '" + PERMISSION_NO_GROUP + "', '" + PERMISSION_FLAG_NONE + "'),\n" +
-            "('android.permission.BACKUP', 'signature|privileged', '" + PERMISSION_NO_GROUP + "', '" + PERMISSION_FLAG_NONE + "'),\n" +
-            "('android.permission.CONFIRM_FULL_BACKUP', 'signature', '" + PERMISSION_NO_GROUP + "', '" + PERMISSION_FLAG_NONE + "'),\n" +
-            "('android.permission.BIND_REMOTEVIEWS', 'signature|privileged', '" + PERMISSION_NO_GROUP + "', '" + PERMISSION_FLAG_NONE + "'),\n" +
-            "('android.permission.BIND_APPWIDGET', 'signature|privileged', '" + PERMISSION_NO_GROUP + "', '" + PERMISSION_FLAG_NONE + "'),\n" +
-            "('android.permission.BIND_KEYGUARD_APPWIDGET', 'signature|privileged', '" + PERMISSION_NO_GROUP + "', '" + PERMISSION_FLAG_NONE + "'),\n" +
-            "('android.permission.MODIFY_APPWIDGET_BIND_PERMISSIONS', 'signature|privileged', '" + PERMISSION_NO_GROUP + "', '" + PERMISSION_FLAG_NONE + "'),\n" +
-            "('android.permission.CHANGE_BACKGROUND_DATA_SETTING', 'signature', '" + PERMISSION_NO_GROUP + "', '" + PERMISSION_FLAG_NONE + "'),\n" +
-            "('android.permission.GLOBAL_SEARCH', 'signature|privileged', '" + PERMISSION_NO_GROUP + "', '" + PERMISSION_FLAG_NONE + "'),\n" +
-            "('android.permission.GLOBAL_SEARCH_CONTROL', 'signature', '" + PERMISSION_NO_GROUP + "', '" + PERMISSION_FLAG_NONE + "'),\n" +
-            "('android.permission.READ_SEARCH_INDEXABLES', 'signature|privileged', '" + PERMISSION_NO_GROUP + "', '" + PERMISSION_FLAG_NONE + "'),\n" +
-            "('android.permission.SET_WALLPAPER_COMPONENT', 'signature|privileged', '" + PERMISSION_NO_GROUP + "', '" + PERMISSION_FLAG_NONE + "'),\n" +
-            "('android.permission.READ_DREAM_STATE', 'signature|privileged', '" + PERMISSION_NO_GROUP + "', '" + PERMISSION_FLAG_NONE + "'),\n" +
-            "('android.permission.WRITE_DREAM_STATE', 'signature|privileged', '" + PERMISSION_NO_GROUP + "', '" + PERMISSION_FLAG_NONE + "'),\n" +
-            "('android.permission.ACCESS_CACHE_FILESYSTEM', 'signature|privileged', '" + PERMISSION_NO_GROUP + "', '" + PERMISSION_FLAG_NONE + "'),\n" +
-            "('android.permission.COPY_PROTECTED_DATA', 'signature', '" + PERMISSION_NO_GROUP + "', '" + PERMISSION_FLAG_NONE + "'),\n" +
-            "('android.permission.CRYPT_KEEPER', 'signature|privileged', '" + PERMISSION_NO_GROUP + "', '" + PERMISSION_FLAG_NONE + "'),\n" +
-            "('android.permission.READ_NETWORK_USAGE_HISTORY', 'signature|privileged', '" + PERMISSION_NO_GROUP + "', '" + PERMISSION_FLAG_NONE + "'),\n" +
-            "('android.permission.MANAGE_NETWORK_POLICY', 'signature', '" + PERMISSION_NO_GROUP + "', '" + PERMISSION_FLAG_NONE + "'),\n" +
-            "('android.permission.MODIFY_NETWORK_ACCOUNTING', 'signature|privileged', '" + PERMISSION_NO_GROUP + "', '" + PERMISSION_FLAG_NONE + "'),\n" +
-            "('android.intent.category.MASTER_CLEAR.permission.C2D_MESSAGE', 'signature', '" + PERMISSION_NO_GROUP + "', '" + PERMISSION_FLAG_NONE + "'),\n" +
-            "('android.permission.PACKAGE_VERIFICATION_AGENT', 'signature|privileged', '" + PERMISSION_NO_GROUP + "', '" + PERMISSION_FLAG_NONE + "'),\n" +
-            "('android.permission.BIND_PACKAGE_VERIFIER', 'signature', '" + PERMISSION_NO_GROUP + "', '" + PERMISSION_FLAG_NONE + "'),\n" +
-            "('android.permission.INTENT_FILTER_VERIFICATION_AGENT', 'signature|privileged', '" + PERMISSION_NO_GROUP + "', '" + PERMISSION_FLAG_NONE + "'),\n" +
-            "('android.permission.BIND_INTENT_FILTER_VERIFIER', 'signature', '" + PERMISSION_NO_GROUP + "', '" + PERMISSION_FLAG_NONE + "'),\n" +
-            "('android.permission.SERIAL_PORT', 'signature|privileged', '" + PERMISSION_NO_GROUP + "', '" + PERMISSION_FLAG_NONE + "'),\n" +
-            "('android.permission.ACCESS_CONTENT_PROVIDERS_EXTERNALLY', 'signature', '" + PERMISSION_NO_GROUP + "', '" + PERMISSION_FLAG_NONE + "'),\n" +
-            "('android.permission.UPDATE_LOCK', 'signature|privileged', '" + PERMISSION_NO_GROUP + "', '" + PERMISSION_FLAG_NONE + "'),\n" +
-            "('android.permission.ACCESS_NOTIFICATIONS', 'signature|privileged', '" + PERMISSION_NO_GROUP + "', '" + PERMISSION_FLAG_NONE + "'),\n" +
-            "('android.permission.ACCESS_NOTIFICATION_POLICY', 'normal', '" + PERMISSION_NO_GROUP + "', '" + PERMISSION_FLAG_NONE + "'),\n" +
-            "('android.permission.MANAGE_NOTIFICATIONS', 'signature', '" + PERMISSION_NO_GROUP + "', '" + PERMISSION_FLAG_NONE + "'),\n" +
-            "('android.permission.ACCESS_KEYGUARD_SECURE_STORAGE', 'signature', '" + PERMISSION_NO_GROUP + "', '" + PERMISSION_FLAG_NONE + "'),\n" +
-            "('android.permission.MANAGE_FINGERPRINT', 'signature|privileged', '" + PERMISSION_NO_GROUP + "', '" + PERMISSION_FLAG_NONE + "'),\n" +
-            "('android.permission.RESET_FINGERPRINT_LOCKOUT', 'signature', '" + PERMISSION_NO_GROUP + "', '" + PERMISSION_FLAG_NONE + "'),\n" +
-            "('android.permission.CONTROL_KEYGUARD', 'signature', '" + PERMISSION_NO_GROUP + "', '" + PERMISSION_FLAG_NONE + "'),\n" +
-            "('android.permission.TRUST_LISTENER', 'signature', '" + PERMISSION_NO_GROUP + "', '" + PERMISSION_FLAG_NONE + "'),\n" +
-            "('android.permission.PROVIDE_TRUST_AGENT', 'signature|privileged', '" + PERMISSION_NO_GROUP + "', '" + PERMISSION_FLAG_NONE + "'),\n" +
-            "('android.permission.LAUNCH_TRUST_AGENT_SETTINGS', 'signature|privileged', '" + PERMISSION_NO_GROUP + "', '" + PERMISSION_FLAG_NONE + "'),\n" +
-            "('android.permission.BIND_TRUST_AGENT', 'signature', '" + PERMISSION_NO_GROUP + "', '" + PERMISSION_FLAG_NONE + "'),\n" +
-            "('android.permission.BIND_NOTIFICATION_LISTENER_SERVICE', 'signature', '" + PERMISSION_NO_GROUP + "', '" + PERMISSION_FLAG_NONE + "'),\n" +
-            "('android.permission.BIND_NOTIFICATION_RANKER_SERVICE', 'signature', '" + PERMISSION_NO_GROUP + "', '" + PERMISSION_FLAG_NONE + "'),\n" +
-            "('android.permission.BIND_CHOOSER_TARGET_SERVICE', 'signature', '" + PERMISSION_NO_GROUP + "', '" + PERMISSION_FLAG_NONE + "'),\n" +
-            "('android.permission.BIND_CONDITION_PROVIDER_SERVICE', 'signature', '" + PERMISSION_NO_GROUP + "', '" + PERMISSION_FLAG_NONE + "'),\n" +
-            "('android.permission.BIND_DREAM_SERVICE', 'signature', '" + PERMISSION_NO_GROUP + "', '" + PERMISSION_FLAG_NONE + "'),\n" +
-            "('android.permission.INVOKE_CARRIER_SETUP', 'signature|privileged', '" + PERMISSION_NO_GROUP + "', '" + PERMISSION_FLAG_NONE + "'),\n" +
-            "('android.permission.ACCESS_NETWORK_CONDITIONS', 'signature|privileged', '" + PERMISSION_NO_GROUP + "', '" + PERMISSION_FLAG_NONE + "'),\n" +
-            "('android.permission.ACCESS_DRM_CERTIFICATES', 'signature|privileged', '" + PERMISSION_NO_GROUP + "', '" + PERMISSION_FLAG_NONE + "'),\n" +
-            "('android.permission.MANAGE_MEDIA_PROJECTION', 'signature', '" + PERMISSION_NO_GROUP + "', '" + PERMISSION_FLAG_NONE + "'),\n" +
-            "('android.permission.READ_INSTALL_SESSIONS', 'normal', '" + PERMISSION_NO_GROUP + "', '" + PERMISSION_FLAG_NONE + "'),\n" +
-            "('android.permission.REMOVE_DRM_CERTIFICATES', 'signature|privileged', '" + PERMISSION_NO_GROUP + "', '" + PERMISSION_FLAG_NONE + "'),\n" +
-            "('android.permission.BIND_CARRIER_MESSAGING_SERVICE', 'signature|privileged', '" + PERMISSION_NO_GROUP + "', '" + PERMISSION_FLAG_NONE + "'),\n" +
-            "('android.permission.ACCESS_VOICE_INTERACTION_SERVICE', 'signature', '" + PERMISSION_NO_GROUP + "', '" + PERMISSION_FLAG_NONE + "'),\n" +
-            "('android.permission.BIND_CARRIER_SERVICES', 'signature|privileged', '" + PERMISSION_NO_GROUP + "', '" + PERMISSION_FLAG_NONE + "'),\n" +
-            "('android.permission.QUERY_DO_NOT_ASK_CREDENTIALS_ON_BOOT', 'signature', '" + PERMISSION_NO_GROUP + "', '" + PERMISSION_FLAG_NONE + "'),\n" +
-            "('android.permission.KILL_UID', 'signature|installer', '" + PERMISSION_NO_GROUP + "', '" + PERMISSION_FLAG_NONE + "'),\n" +
-            "('android.permission.LOCAL_MAC_ADDRESS', 'signature|privileged', '" + PERMISSION_NO_GROUP + "', '" + PERMISSION_FLAG_NONE + "'),\n" +
-            "('android.permission.PEERS_MAC_ADDRESS', 'signature|setup', '" + PERMISSION_NO_GROUP + "', '" + PERMISSION_FLAG_NONE + "'),\n" +
-            "('android.permission.DISPATCH_NFC_MESSAGE', 'signature|privileged', '" + PERMISSION_NO_GROUP + "', '" + PERMISSION_FLAG_NONE + "'),\n" +
-            "('android.permission.MODIFY_DAY_NIGHT_MODE', 'signature|privileged', '" + PERMISSION_NO_GROUP + "', '" + PERMISSION_FLAG_NONE + "'),\n" +
-            "('android.permission.ACCESS_EPHEMERAL_APPS', 'signature', '" + PERMISSION_NO_GROUP + "', '" + PERMISSION_FLAG_NONE + "'),\n" +
-            "('android.permission.RECEIVE_MEDIA_RESOURCE_USAGE', 'signature|privileged', '" + PERMISSION_NO_GROUP + "', '" + PERMISSION_FLAG_NONE + "'),\n" +
-            "('android.permission.MANAGE_SOUND_TRIGGER', 'signature|privileged', '" + PERMISSION_NO_GROUP + "', '" + PERMISSION_FLAG_NONE + "'),\n" +
-            "('android.permission.DISPATCH_PROVISIONING_MESSAGE', 'signature|privileged', '" + PERMISSION_NO_GROUP + "', '" + PERMISSION_FLAG_NONE + "'),\n" +
-            "('android.permission.READ_BLOCKED_NUMBERS', 'signature', '" + PERMISSION_NO_GROUP + "', '" + PERMISSION_FLAG_NONE + "'),\n" +
-            "('android.permission.WRITE_BLOCKED_NUMBERS', 'signature', '" + PERMISSION_NO_GROUP + "', '" + PERMISSION_FLAG_NONE + "'),\n" +
-            "('android.permission.BIND_VR_LISTENER_SERVICE', 'signature', '" + PERMISSION_NO_GROUP + "', '" + PERMISSION_FLAG_NONE + "'),\n" +
-            "('android.permission.ACCESS_VR_MANAGER', 'signature', '" + PERMISSION_NO_GROUP + "', '" + PERMISSION_FLAG_NONE + "'),\n" +
-            "('android.permission.UPDATE_LOCK_TASK_PACKAGES', 'signature|setup', '" + PERMISSION_NO_GROUP + "', '" + PERMISSION_FLAG_NONE + "'),\n" +
-            "('android.permission.SUBSTITUTE_NOTIFICATION_APP_NAME', 'signature|privileged', '" + PERMISSION_NO_GROUP + "', '" + PERMISSION_FLAG_NONE + "');\n";
+            "('android.permission.ACCOUNT_MANAGER', 'signature', '" + NO_PERMISSION_GROUP + "', '" + PERMISSION_FLAG_NONE + "'),\n" +
+            "('android.permission.CHANGE_WIFI_MULTICAST_STATE', 'normal', '" + NO_PERMISSION_GROUP + "', '" + PERMISSION_FLAG_NONE + "'),\n" +
+            "('android.permission.VIBRATE', 'normal', '" + NO_PERMISSION_GROUP + "', '" + PERMISSION_FLAG_NONE + "'),\n" +
+            "('android.permission.WAKE_LOCK', 'normal', '" + NO_PERMISSION_GROUP + "', '" + PERMISSION_FLAG_NONE + "'),\n" +
+            "('android.permission.TRANSMIT_IR', 'normal', '" + NO_PERMISSION_GROUP + "', '" + PERMISSION_FLAG_NONE + "'),\n" +
+            "('android.permission.MODIFY_AUDIO_SETTINGS', 'normal', '" + NO_PERMISSION_GROUP + "', '" + PERMISSION_FLAG_NONE + "'),\n" +
+            "('android.permission.MANAGE_USB', 'signature|privileged', '" + NO_PERMISSION_GROUP + "', '" + PERMISSION_FLAG_NONE + "'),\n" +
+            "('android.permission.ACCESS_MTP', 'signature|privileged', '" + NO_PERMISSION_GROUP + "', '" + PERMISSION_FLAG_NONE + "'),\n" +
+            "('android.permission.HARDWARE_TEST', 'signature', '" + NO_PERMISSION_GROUP + "', '" + PERMISSION_FLAG_NONE + "'),\n" +
+            "('android.permission.ACCESS_FM_RADIO', 'signature|privileged', '" + NO_PERMISSION_GROUP + "', '" + PERMISSION_FLAG_NONE + "'),\n" +
+            "('android.permission.NET_ADMIN', 'signature', '" + NO_PERMISSION_GROUP + "', '" + PERMISSION_FLAG_NONE + "'),\n" +
+            "('android.permission.REMOTE_AUDIO_PLAYBACK', 'signature', '" + NO_PERMISSION_GROUP + "', '" + PERMISSION_FLAG_NONE + "'),\n" +
+            "('android.permission.TV_INPUT_HARDWARE', 'signature|privileged', '" + NO_PERMISSION_GROUP + "', '" + PERMISSION_FLAG_NONE + "'),\n" +
+            "('android.permission.CAPTURE_TV_INPUT', 'signature|privileged', '" + NO_PERMISSION_GROUP + "', '" + PERMISSION_FLAG_NONE + "'),\n" +
+            "('android.permission.DVB_DEVICE', 'signature|privileged', '" + NO_PERMISSION_GROUP + "', '" + PERMISSION_FLAG_NONE + "'),\n" +
+            "('android.permission.READ_OEM_UNLOCK_STATE', 'signature|privileged', '" + NO_PERMISSION_GROUP + "', '" + PERMISSION_FLAG_NONE + "'),\n" +
+            "('android.permission.OEM_UNLOCK_STATE', 'signature', '" + NO_PERMISSION_GROUP + "', '" + PERMISSION_FLAG_NONE + "'),\n" +
+            "('android.permission.ACCESS_PDB_STATE', 'signature', '" + NO_PERMISSION_GROUP + "', '" + PERMISSION_FLAG_NONE + "'),\n" +
+            "('android.permission.NOTIFY_PENDING_SYSTEM_UPDATE', 'signature|privileged', '" + NO_PERMISSION_GROUP + "', '" + PERMISSION_FLAG_NONE + "'),\n" +
+            "('android.permission.CAMERA_DISABLE_TRANSMIT_LED', 'signature|privileged', '" + NO_PERMISSION_GROUP + "', '" + PERMISSION_FLAG_NONE + "'),\n" +
+            "('android.permission.CAMERA_SEND_SYSTEM_EVENTS', 'signature|privileged', '" + NO_PERMISSION_GROUP + "', '" + PERMISSION_FLAG_NONE + "'),\n" +
+            "('android.permission.MODIFY_PHONE_STATE', 'signature|privileged', '" + NO_PERMISSION_GROUP + "', '" + PERMISSION_FLAG_NONE + "'),\n" +
+            "('android.permission.READ_PRECISE_PHONE_STATE', 'signature|privileged', '" + NO_PERMISSION_GROUP + "', '" + PERMISSION_FLAG_NONE + "'),\n" +
+            "('android.permission.READ_PRIVILEGED_PHONE_STATE', 'signature|privileged', '" + NO_PERMISSION_GROUP + "', '" + PERMISSION_FLAG_NONE + "'),\n" +
+            "('android.permission.REGISTER_SIM_SUBSCRIPTION', 'signature|privileged', '" + NO_PERMISSION_GROUP + "', '" + PERMISSION_FLAG_NONE + "'),\n" +
+            "('android.permission.REGISTER_CALL_PROVIDER', 'signature|privileged', '" + NO_PERMISSION_GROUP + "', '" + PERMISSION_FLAG_NONE + "'),\n" +
+            "('android.permission.REGISTER_CONNECTION_MANAGER', 'signature|privileged', '" + NO_PERMISSION_GROUP + "', '" + PERMISSION_FLAG_NONE + "'),\n" +
+            "('android.permission.BIND_INCALL_SERVICE', 'signature|privileged', '" + NO_PERMISSION_GROUP + "', '" + PERMISSION_FLAG_NONE + "'),\n" +
+            "('android.permission.BIND_SCREENING_SERVICE', 'signature|privileged', '" + NO_PERMISSION_GROUP + "', '" + PERMISSION_FLAG_NONE + "'),\n" +
+            "('android.permission.BIND_CONNECTION_SERVICE', 'signature|privileged', '" + NO_PERMISSION_GROUP + "', '" + PERMISSION_FLAG_NONE + "'),\n" +
+            "('android.permission.BIND_TELECOM_CONNECTION_SERVICE', 'signature|privileged', '" + NO_PERMISSION_GROUP + "', '" + PERMISSION_FLAG_NONE + "'),\n" +
+            "('android.permission.CONTROL_INCALL_EXPERIENCE', 'signature|privileged', '" + NO_PERMISSION_GROUP + "', '" + PERMISSION_FLAG_NONE + "'),\n" +
+            "('android.permission.RECEIVE_STK_COMMANDS', 'signature|privileged', '" + NO_PERMISSION_GROUP + "', '" + PERMISSION_FLAG_NONE + "'),\n" +
+            "('android.permission.WRITE_MEDIA_STORAGE', 'signature|privileged', '" + NO_PERMISSION_GROUP + "', '" + PERMISSION_FLAG_NONE + "'),\n" +
+            "('android.permission.MANAGE_DOCUMENTS', 'signature', '" + NO_PERMISSION_GROUP + "', '" + PERMISSION_FLAG_NONE + "'),\n" +
+            "('android.permission.CACHE_CONTENT', 'signature', '" + NO_PERMISSION_GROUP + "', '" + PERMISSION_FLAG_NONE + "'),\n" +
+            "('android.permission.DISABLE_KEYGUARD', 'normal', '" + NO_PERMISSION_GROUP + "', '" + PERMISSION_FLAG_NONE + "'),\n" +
+            "('android.permission.GET_TASKS', 'normal', '" + NO_PERMISSION_GROUP + "', '" + PERMISSION_FLAG_NONE + "'),\n" +
+            "('android.permission.REAL_GET_TASKS', 'signature|privileged', '" + NO_PERMISSION_GROUP + "', '" + PERMISSION_FLAG_NONE + "'),\n" +
+            "('android.permission.START_TASKS_FROM_RECENTS', 'signature|privileged', '" + NO_PERMISSION_GROUP + "', '" + PERMISSION_FLAG_NONE + "'),\n" +
+            "('android.permission.INTERACT_ACROSS_USERS', 'signature|privileged|development', '" + NO_PERMISSION_GROUP + "', '" + PERMISSION_FLAG_NONE + "'),\n" +
+            "('android.permission.INTERACT_ACROSS_USERS_FULL', 'signature|installer', '" + NO_PERMISSION_GROUP + "', '" + PERMISSION_FLAG_NONE + "'),\n" +
+            "('android.permission.MANAGE_USERS', 'signature|privileged', '" + NO_PERMISSION_GROUP + "', '" + PERMISSION_FLAG_NONE + "'),\n" +
+            "('android.permission.CREATE_USERS', 'signature', '" + NO_PERMISSION_GROUP + "', '" + PERMISSION_FLAG_NONE + "'),\n" +
+            "('android.permission.MANAGE_PROFILE_AND_DEVICE_OWNERS', 'signature', '" + NO_PERMISSION_GROUP + "', '" + PERMISSION_FLAG_NONE + "'),\n" +
+            "('android.permission.GET_DETAILED_TASKS', 'signature', '" + NO_PERMISSION_GROUP + "', '" + PERMISSION_FLAG_NONE + "'),\n" +
+            "('android.permission.REORDER_TASKS', 'normal', '" + NO_PERMISSION_GROUP + "', '" + PERMISSION_FLAG_NONE + "'),\n" +
+            "('android.permission.REMOVE_TASKS', 'signature', '" + NO_PERMISSION_GROUP + "', '" + PERMISSION_FLAG_NONE + "'),\n" +
+            "('android.permission.MANAGE_ACTIVITY_STACKS', 'signature|privileged', '" + NO_PERMISSION_GROUP + "', '" + PERMISSION_FLAG_NONE + "'),\n" +
+            "('android.permission.START_ANY_ACTIVITY', 'signature', '" + NO_PERMISSION_GROUP + "', '" + PERMISSION_FLAG_NONE + "'),\n" +
+            "('android.permission.RESTART_PACKAGES', 'normal', '" + NO_PERMISSION_GROUP + "', '" + PERMISSION_FLAG_NONE + "'),\n" +
+            "('android.permission.KILL_BACKGROUND_PROCESSES', 'normal', '" + NO_PERMISSION_GROUP + "', '" + PERMISSION_FLAG_NONE + "'),\n" +
+            "('android.permission.GET_PROCESS_STATE_AND_OOM_SCORE', 'signature|privileged|development', '" + NO_PERMISSION_GROUP + "', '" + PERMISSION_FLAG_NONE + "'),\n" +
+            "('android.permission.GET_PACKAGE_IMPORTANCE', 'signature|privileged', '" + NO_PERMISSION_GROUP + "', '" + PERMISSION_FLAG_NONE + "'),\n" +
+            "('android.permission.GET_INTENT_SENDER_INTENT', 'signature', '" + NO_PERMISSION_GROUP + "', '" + PERMISSION_FLAG_NONE + "'),\n" +
+            "('android.permission.SYSTEM_ALERT_WINDOW', 'signature|preinstalled|appop|pre23|development', '" + NO_PERMISSION_GROUP + "', '" + PERMISSION_FLAG_NONE + "'),\n" +
+            "('android.permission.SET_WALLPAPER', 'normal', '" + NO_PERMISSION_GROUP + "', '" + PERMISSION_FLAG_NONE + "'),\n" +
+            "('android.permission.SET_WALLPAPER_HINTS', 'normal', '" + NO_PERMISSION_GROUP + "', '" + PERMISSION_FLAG_NONE + "'),\n" +
+            "('android.permission.SET_TIME', 'signature|privileged', '" + NO_PERMISSION_GROUP + "', '" + PERMISSION_FLAG_NONE + "'),\n" +
+            "('android.permission.SET_TIME_ZONE', 'normal', '" + NO_PERMISSION_GROUP + "', '" + PERMISSION_FLAG_NONE + "'),\n" +
+            "('android.permission.EXPAND_STATUS_BAR', 'normal', '" + NO_PERMISSION_GROUP + "', '" + PERMISSION_FLAG_NONE + "'),\n" +
+            "('com.android.launcher.permission.INSTALL_SHORTCUT', 'normal', '" + NO_PERMISSION_GROUP + "', '" + PERMISSION_FLAG_NONE + "'),\n" +
+            "('com.android.launcher.permission.UNINSTALL_SHORTCUT', 'normal', '" + NO_PERMISSION_GROUP + "', '" + PERMISSION_FLAG_NONE + "'),\n" +
+            "('android.permission.READ_SYNC_SETTINGS', 'normal', '" + NO_PERMISSION_GROUP + "', '" + PERMISSION_FLAG_NONE + "'),\n" +
+            "('android.permission.WRITE_SYNC_SETTINGS', 'normal', '" + NO_PERMISSION_GROUP + "', '" + PERMISSION_FLAG_NONE + "'),\n" +
+            "('android.permission.READ_SYNC_STATS', 'normal', '" + NO_PERMISSION_GROUP + "', '" + PERMISSION_FLAG_NONE + "'),\n" +
+            "('android.permission.SET_SCREEN_COMPATIBILITY', 'signature', '" + NO_PERMISSION_GROUP + "', '" + PERMISSION_FLAG_NONE + "'),\n" +
+            "('android.permission.CHANGE_CONFIGURATION', 'signature|privileged|development', '" + NO_PERMISSION_GROUP + "', '" + PERMISSION_FLAG_NONE + "'),\n" +
+            "('android.permission.WRITE_SETTINGS', 'signature|preinstalled|appop|pre23', '" + NO_PERMISSION_GROUP + "', '" + PERMISSION_FLAG_NONE + "'),\n" +
+            "('android.permission.WRITE_GSERVICES', 'signature|privileged', '" + NO_PERMISSION_GROUP + "', '" + PERMISSION_FLAG_NONE + "'),\n" +
+            "('android.permission.FORCE_STOP_PACKAGES', 'signature|privileged', '" + NO_PERMISSION_GROUP + "', '" + PERMISSION_FLAG_NONE + "'),\n" +
+            "('android.permission.RETRIEVE_WINDOW_CONTENT', 'signature|privileged', '" + NO_PERMISSION_GROUP + "', '" + PERMISSION_FLAG_NONE + "'),\n" +
+            "('android.permission.SET_ANIMATION_SCALE', 'signature|privileged|development', '" + NO_PERMISSION_GROUP + "', '" + PERMISSION_FLAG_NONE + "'),\n" +
+            "('android.permission.PERSISTENT_ACTIVITY', 'normal', '" + NO_PERMISSION_GROUP + "', '" + PERMISSION_FLAG_NONE + "'),\n" +
+            "('android.permission.GET_PACKAGE_SIZE', 'normal', '" + NO_PERMISSION_GROUP + "', '" + PERMISSION_FLAG_NONE + "'),\n" +
+            "('android.permission.SET_PREFERRED_APPLICATIONS', 'signature', '" + NO_PERMISSION_GROUP + "', '" + PERMISSION_FLAG_NONE + "'),\n" +
+            "('android.permission.RECEIVE_BOOT_COMPLETED', 'normal', '" + NO_PERMISSION_GROUP + "', '" + PERMISSION_FLAG_NONE + "'),\n" +
+            "('android.permission.BROADCAST_STICKY', 'normal', '" + NO_PERMISSION_GROUP + "', '" + PERMISSION_FLAG_NONE + "'),\n" +
+            "('android.permission.MOUNT_UNMOUNT_FILESYSTEMS', 'signature|privileged', '" + NO_PERMISSION_GROUP + "', '" + PERMISSION_FLAG_NONE + "'),\n" +
+            "('android.permission.MOUNT_FORMAT_FILESYSTEMS', 'signature|privileged', '" + NO_PERMISSION_GROUP + "', '" + PERMISSION_FLAG_NONE + "'),\n" +
+            "('android.permission.STORAGE_INTERNAL', 'signature', '" + NO_PERMISSION_GROUP + "', '" + PERMISSION_FLAG_NONE + "'),\n" +
+            "('android.permission.ASEC_ACCESS', 'signature', '" + NO_PERMISSION_GROUP + "', '" + PERMISSION_FLAG_NONE + "'),\n" +
+            "('android.permission.ASEC_CREATE', 'signature', '" + NO_PERMISSION_GROUP + "', '" + PERMISSION_FLAG_NONE + "'),\n" +
+            "('android.permission.ASEC_DESTROY', 'signature', '" + NO_PERMISSION_GROUP + "', '" + PERMISSION_FLAG_NONE + "'),\n" +
+            "('android.permission.ASEC_MOUNT_UNMOUNT', 'signature', '" + NO_PERMISSION_GROUP + "', '" + PERMISSION_FLAG_NONE + "'),\n" +
+            "('android.permission.ASEC_RENAME', 'signature', '" + NO_PERMISSION_GROUP + "', '" + PERMISSION_FLAG_NONE + "'),\n" +
+            "('android.permission.WRITE_APN_SETTINGS', 'signature|privileged', '" + NO_PERMISSION_GROUP + "', '" + PERMISSION_FLAG_NONE + "'),\n" +
+            "('android.permission.CHANGE_NETWORK_STATE', 'normal', '" + NO_PERMISSION_GROUP + "', '" + PERMISSION_FLAG_NONE + "'),\n" +
+            "('android.permission.CLEAR_APP_CACHE', 'signature|privileged', '" + NO_PERMISSION_GROUP + "', '" + PERMISSION_FLAG_NONE + "'),\n" +
+            "('android.permission.ALLOW_ANY_CODEC_FOR_PLAYBACK', 'signature|privileged', '" + NO_PERMISSION_GROUP + "', '" + PERMISSION_FLAG_NONE + "'),\n" +
+            "('android.permission.MANAGE_CA_CERTIFICATES', 'signature|privileged', '" + NO_PERMISSION_GROUP + "', '" + PERMISSION_FLAG_NONE + "'),\n" +
+            "('android.permission.RECOVERY', 'signature|privileged', '" + NO_PERMISSION_GROUP + "', '" + PERMISSION_FLAG_NONE + "'),\n" +
+            "('android.permission.BIND_JOB_SERVICE', 'signature', '" + NO_PERMISSION_GROUP + "', '" + PERMISSION_FLAG_NONE + "'),\n" +
+            "('android.permission.UPDATE_CONFIG', 'signature|privileged', '" + NO_PERMISSION_GROUP + "', '" + PERMISSION_FLAG_NONE + "'),\n" +
+            "('android.permission.RESET_SHORTCUT_MANAGER_THROTTLING', 'signature', '" + NO_PERMISSION_GROUP + "', '" + PERMISSION_FLAG_NONE + "'),\n" +
+            "('android.permission.WRITE_SECURE_SETTINGS', 'signature|privileged|development', '" + NO_PERMISSION_GROUP + "', '" + PERMISSION_FLAG_NONE + "'),\n" +
+            "('android.permission.DUMP', 'signature|privileged|development', '" + NO_PERMISSION_GROUP + "', '" + PERMISSION_FLAG_NONE + "'),\n" +
+            "('android.permission.READ_LOGS', 'signature|privileged|development', '" + NO_PERMISSION_GROUP + "', '" + PERMISSION_FLAG_NONE + "'),\n" +
+            "('android.permission.SET_DEBUG_APP', 'signature|privileged|development', '" + NO_PERMISSION_GROUP + "', '" + PERMISSION_FLAG_NONE + "'),\n" +
+            "('android.permission.SET_PROCESS_LIMIT', 'signature|privileged|development', '" + NO_PERMISSION_GROUP + "', '" + PERMISSION_FLAG_NONE + "'),\n" +
+            "('android.permission.SET_ALWAYS_FINISH', 'signature|privileged|development', '" + NO_PERMISSION_GROUP + "', '" + PERMISSION_FLAG_NONE + "'),\n" +
+            "('android.permission.SIGNAL_PERSISTENT_PROCESSES', 'signature|privileged|development', '" + NO_PERMISSION_GROUP + "', '" + PERMISSION_FLAG_NONE + "'),\n" +
+            "('android.permission.GET_ACCOUNTS_PRIVILEGED', 'signature|privileged', '" + NO_PERMISSION_GROUP + "', '" + PERMISSION_FLAG_NONE + "'),\n" +
+            "('android.permission.GET_PASSWORD', 'signature', '" + NO_PERMISSION_GROUP + "', '" + PERMISSION_FLAG_NONE + "'),\n" +
+            "('android.permission.DIAGNOSTIC', 'signature', '" + NO_PERMISSION_GROUP + "', '" + PERMISSION_FLAG_NONE + "'),\n" +
+            "('android.permission.STATUS_BAR', 'signature|privileged', '" + NO_PERMISSION_GROUP + "', '" + PERMISSION_FLAG_NONE + "'),\n" +
+            "('android.permission.STATUS_BAR_SERVICE', 'signature', '" + NO_PERMISSION_GROUP + "', '" + PERMISSION_FLAG_NONE + "'),\n" +
+            "('android.permission.BIND_QUICK_SETTINGS_TILE', 'signature', '" + NO_PERMISSION_GROUP + "', '" + PERMISSION_FLAG_NONE + "'),\n" +
+            "('android.permission.FORCE_BACK', 'signature', '" + NO_PERMISSION_GROUP + "', '" + PERMISSION_FLAG_NONE + "'),\n" +
+            "('android.permission.UPDATE_DEVICE_STATS', 'signature|privileged', '" + NO_PERMISSION_GROUP + "', '" + PERMISSION_FLAG_NONE + "'),\n" +
+            "('android.permission.GET_APP_OPS_STATS', 'signature|privileged|development', '" + NO_PERMISSION_GROUP + "', '" + PERMISSION_FLAG_NONE + "'),\n" +
+            "('android.permission.UPDATE_APP_OPS_STATS', 'signature|privileged|installer', '" + NO_PERMISSION_GROUP + "', '" + PERMISSION_FLAG_NONE + "'),\n" +
+            "('android.permission.MANAGE_APP_OPS_RESTRICTIONS', 'signature|installer', '" + NO_PERMISSION_GROUP + "', '" + PERMISSION_FLAG_NONE + "'),\n" +
+            "('android.permission.INTERNAL_SYSTEM_WINDOW', 'signature', '" + NO_PERMISSION_GROUP + "', '" + PERMISSION_FLAG_NONE + "'),\n" +
+            "('android.permission.MANAGE_APP_TOKENS', 'signature', '" + NO_PERMISSION_GROUP + "', '" + PERMISSION_FLAG_NONE + "'),\n" +
+            "('android.permission.REGISTER_WINDOW_MANAGER_LISTENERS', 'signature', '" + NO_PERMISSION_GROUP + "', '" + PERMISSION_FLAG_NONE + "'),\n" +
+            "('android.permission.FREEZE_SCREEN', 'signature', '" + NO_PERMISSION_GROUP + "', '" + PERMISSION_FLAG_NONE + "'),\n" +
+            "('android.permission.INJECT_EVENTS', 'signature', '" + NO_PERMISSION_GROUP + "', '" + PERMISSION_FLAG_NONE + "'),\n" +
+            "('android.permission.FILTER_EVENTS', 'signature', '" + NO_PERMISSION_GROUP + "', '" + PERMISSION_FLAG_NONE + "'),\n" +
+            "('android.permission.RETRIEVE_WINDOW_TOKEN', 'signature', '" + NO_PERMISSION_GROUP + "', '" + PERMISSION_FLAG_NONE + "'),\n" +
+            "('android.permission.FRAME_STATS', 'signature', '" + NO_PERMISSION_GROUP + "', '" + PERMISSION_FLAG_NONE + "'),\n" +
+            "('android.permission.TEMPORARY_ENABLE_ACCESSIBILITY', 'signature', '" + NO_PERMISSION_GROUP + "', '" + PERMISSION_FLAG_NONE + "'),\n" +
+            "('android.permission.SET_ACTIVITY_WATCHER', 'signature', '" + NO_PERMISSION_GROUP + "', '" + PERMISSION_FLAG_NONE + "'),\n" +
+            "('android.permission.SHUTDOWN', 'signature|privileged', '" + NO_PERMISSION_GROUP + "', '" + PERMISSION_FLAG_NONE + "'),\n" +
+            "('android.permission.STOP_APP_SWITCHES', 'signature|privileged', '" + NO_PERMISSION_GROUP + "', '" + PERMISSION_FLAG_NONE + "'),\n" +
+            "('android.permission.GET_TOP_ACTIVITY_INFO', 'signature', '" + NO_PERMISSION_GROUP + "', '" + PERMISSION_FLAG_NONE + "'),\n" +
+            "('android.permission.READ_INPUT_STATE', 'signature', '" + NO_PERMISSION_GROUP + "', '" + PERMISSION_FLAG_NONE + "'),\n" +
+            "('android.permission.BIND_INPUT_METHOD', 'signature', '" + NO_PERMISSION_GROUP + "', '" + PERMISSION_FLAG_NONE + "'),\n" +
+            "('android.permission.BIND_MIDI_DEVICE_SERVICE', 'signature', '" + NO_PERMISSION_GROUP + "', '" + PERMISSION_FLAG_NONE + "'),\n" +
+            "('android.permission.BIND_ACCESSIBILITY_SERVICE', 'signature', '" + NO_PERMISSION_GROUP + "', '" + PERMISSION_FLAG_NONE + "'),\n" +
+            "('android.permission.BIND_PRINT_SERVICE', 'signature', '" + NO_PERMISSION_GROUP + "', '" + PERMISSION_FLAG_NONE + "'),\n" +
+            "('android.permission.BIND_PRINT_RECOMMENDATION_SERVICE', 'signature', '" + NO_PERMISSION_GROUP + "', '" + PERMISSION_FLAG_NONE + "'),\n" +
+            "('android.permission.BIND_NFC_SERVICE', 'signature', '" + NO_PERMISSION_GROUP + "', '" + PERMISSION_FLAG_NONE + "'),\n" +
+            "('android.permission.BIND_PRINT_SPOOLER_SERVICE', 'signature', '" + NO_PERMISSION_GROUP + "', '" + PERMISSION_FLAG_NONE + "'),\n" +
+            "('android.permission.BIND_RUNTIME_PERMISSION_PRESENTER_SERVICE', 'signature', '" + NO_PERMISSION_GROUP + "', '" + PERMISSION_FLAG_NONE + "'),\n" +
+            "('android.permission.BIND_TEXT_SERVICE', 'signature', '" + NO_PERMISSION_GROUP + "', '" + PERMISSION_FLAG_NONE + "'),\n" +
+            "('android.permission.BIND_VPN_SERVICE', 'signature', '" + NO_PERMISSION_GROUP + "', '" + PERMISSION_FLAG_NONE + "'),\n" +
+            "('android.permission.BIND_WALLPAPER', 'signature|privileged', '" + NO_PERMISSION_GROUP + "', '" + PERMISSION_FLAG_NONE + "'),\n" +
+            "('android.permission.BIND_VOICE_INTERACTION', 'signature', '" + NO_PERMISSION_GROUP + "', '" + PERMISSION_FLAG_NONE + "'),\n" +
+            "('android.permission.MANAGE_VOICE_KEYPHRASES', 'signature|privileged', '" + NO_PERMISSION_GROUP + "', '" + PERMISSION_FLAG_NONE + "'),\n" +
+            "('android.permission.BIND_REMOTE_DISPLAY', 'signature', '" + NO_PERMISSION_GROUP + "', '" + PERMISSION_FLAG_NONE + "'),\n" +
+            "('android.permission.BIND_TV_INPUT', 'signature|privileged', '" + NO_PERMISSION_GROUP + "', '" + PERMISSION_FLAG_NONE + "'),\n" +
+            "('android.permission.BIND_TV_REMOTE_SERVICE', 'signature|privileged', '" + NO_PERMISSION_GROUP + "', '" + PERMISSION_FLAG_NONE + "'),\n" +
+            "('android.permission.TV_VIRTUAL_REMOTE_CONTROLLER', 'signature|privileged', '" + NO_PERMISSION_GROUP + "', '" + PERMISSION_FLAG_NONE + "'),\n" +
+            "('android.permission.MODIFY_PARENTAL_CONTROLS', 'signature|privileged', '" + NO_PERMISSION_GROUP + "', '" + PERMISSION_FLAG_NONE + "'),\n" +
+            "('android.permission.BIND_ROUTE_PROVIDER', 'signature', '" + NO_PERMISSION_GROUP + "', '" + PERMISSION_FLAG_NONE + "'),\n" +
+            "('android.permission.BIND_DEVICE_ADMIN', 'signature', '" + NO_PERMISSION_GROUP + "', '" + PERMISSION_FLAG_NONE + "'),\n" +
+            "('android.permission.MANAGE_DEVICE_ADMINS', 'signature|privileged', '" + NO_PERMISSION_GROUP + "', '" + PERMISSION_FLAG_NONE + "'),\n" +
+            "('android.permission.SET_ORIENTATION', 'signature', '" + NO_PERMISSION_GROUP + "', '" + PERMISSION_FLAG_NONE + "'),\n" +
+            "('android.permission.SET_POINTER_SPEED', 'signature', '" + NO_PERMISSION_GROUP + "', '" + PERMISSION_FLAG_NONE + "'),\n" +
+            "('android.permission.SET_INPUT_CALIBRATION', 'signature', '" + NO_PERMISSION_GROUP + "', '" + PERMISSION_FLAG_NONE + "'),\n" +
+            "('android.permission.SET_KEYBOARD_LAYOUT', 'signature', '" + NO_PERMISSION_GROUP + "', '" + PERMISSION_FLAG_NONE + "'),\n" +
+            "('android.permission.TABLET_MODE', 'signature', '" + NO_PERMISSION_GROUP + "', '" + PERMISSION_FLAG_NONE + "'),\n" +
+            "('android.permission.REQUEST_INSTALL_PACKAGES', 'normal', '" + NO_PERMISSION_GROUP + "', '" + PERMISSION_FLAG_NONE + "'),\n" +
+            "('android.permission.INSTALL_PACKAGES', 'signature|privileged', '" + NO_PERMISSION_GROUP + "', '" + PERMISSION_FLAG_NONE + "'),\n" +
+            "('android.permission.CLEAR_APP_USER_DATA', 'signature|installer', '" + NO_PERMISSION_GROUP + "', '" + PERMISSION_FLAG_NONE + "'),\n" +
+            "('android.permission.GET_APP_GRANTED_URI_PERMISSIONS', 'signature', '" + NO_PERMISSION_GROUP + "', '" + PERMISSION_FLAG_NONE + "'),\n" +
+            "('android.permission.CLEAR_APP_GRANTED_URI_PERMISSIONS', 'signature', '" + NO_PERMISSION_GROUP + "', '" + PERMISSION_FLAG_NONE + "'),\n" +
+            "('android.permission.DELETE_CACHE_FILES', 'signature|privileged', '" + NO_PERMISSION_GROUP + "', '" + PERMISSION_FLAG_NONE + "'),\n" +
+            "('android.permission.DELETE_PACKAGES', 'signature|privileged', '" + NO_PERMISSION_GROUP + "', '" + PERMISSION_FLAG_NONE + "'),\n" +
+            "('android.permission.MOVE_PACKAGE', 'signature|privileged', '" + NO_PERMISSION_GROUP + "', '" + PERMISSION_FLAG_NONE + "'),\n" +
+            "('android.permission.CHANGE_COMPONENT_ENABLED_STATE', 'signature|privileged', '" + NO_PERMISSION_GROUP + "', '" + PERMISSION_FLAG_NONE + "'),\n" +
+            "('android.permission.GRANT_RUNTIME_PERMISSIONS', 'signature|installer|verifier', '" + NO_PERMISSION_GROUP + "', '" + PERMISSION_FLAG_NONE + "'),\n" +
+            "('android.permission.INSTALL_GRANT_RUNTIME_PERMISSIONS', 'signature|installer|verifier', '" + NO_PERMISSION_GROUP + "', '" + PERMISSION_FLAG_NONE + "'),\n" +
+            "('android.permission.REVOKE_RUNTIME_PERMISSIONS', 'signature|installer|verifier', '" + NO_PERMISSION_GROUP + "', '" + PERMISSION_FLAG_NONE + "'),\n" +
+            "('android.permission.OBSERVE_GRANT_REVOKE_PERMISSIONS', 'signature|privileged', '" + NO_PERMISSION_GROUP + "', '" + PERMISSION_FLAG_NONE + "'),\n" +
+            "('android.permission.ACCESS_SURFACE_FLINGER', 'signature', '" + NO_PERMISSION_GROUP + "', '" + PERMISSION_FLAG_NONE + "'),\n" +
+            "('android.permission.READ_FRAME_BUFFER', 'signature|privileged', '" + NO_PERMISSION_GROUP + "', '" + PERMISSION_FLAG_NONE + "'),\n" +
+            "('android.permission.ACCESS_INPUT_FLINGER', 'signature', '" + NO_PERMISSION_GROUP + "', '" + PERMISSION_FLAG_NONE + "'),\n" +
+            "('android.permission.CONFIGURE_WIFI_DISPLAY', 'signature', '" + NO_PERMISSION_GROUP + "', '" + PERMISSION_FLAG_NONE + "'),\n" +
+            "('android.permission.CONTROL_WIFI_DISPLAY', 'signature', '" + NO_PERMISSION_GROUP + "', '" + PERMISSION_FLAG_NONE + "'),\n" +
+            "('android.permission.CONFIGURE_DISPLAY_COLOR_MODE', 'signature', '" + NO_PERMISSION_GROUP + "', '" + PERMISSION_FLAG_NONE + "'),\n" +
+            "('android.permission.CONTROL_VPN', 'signature|privileged', '" + NO_PERMISSION_GROUP + "', '" + PERMISSION_FLAG_NONE + "'),\n" +
+            "('android.permission.CAPTURE_AUDIO_OUTPUT', 'signature|privileged', '" + NO_PERMISSION_GROUP + "', '" + PERMISSION_FLAG_NONE + "'),\n" +
+            "('android.permission.CAPTURE_AUDIO_HOTWORD', 'signature|privileged', '" + NO_PERMISSION_GROUP + "', '" + PERMISSION_FLAG_NONE + "'),\n" +
+            "('android.permission.MODIFY_AUDIO_ROUTING', 'signature|privileged', '" + NO_PERMISSION_GROUP + "', '" + PERMISSION_FLAG_NONE + "'),\n" +
+            "('android.permission.CAPTURE_VIDEO_OUTPUT', 'signature|privileged', '" + NO_PERMISSION_GROUP + "', '" + PERMISSION_FLAG_NONE + "'),\n" +
+            "('android.permission.CAPTURE_SECURE_VIDEO_OUTPUT', 'signature|privileged', '" + NO_PERMISSION_GROUP + "', '" + PERMISSION_FLAG_NONE + "'),\n" +
+            "('android.permission.MEDIA_CONTENT_CONTROL', 'signature|privileged', '" + NO_PERMISSION_GROUP + "', '" + PERMISSION_FLAG_NONE + "'),\n" +
+            "('android.permission.BRICK', 'signature', '" + NO_PERMISSION_GROUP + "', '" + PERMISSION_FLAG_NONE + "'),\n" +
+            "('android.permission.REBOOT', 'signature|privileged', '" + NO_PERMISSION_GROUP + "', '" + PERMISSION_FLAG_NONE + "'),\n" +
+            "('android.permission.DEVICE_POWER', 'signature', '" + NO_PERMISSION_GROUP + "', '" + PERMISSION_FLAG_NONE + "'),\n" +
+            "('android.permission.USER_ACTIVITY', 'signature|privileged', '" + NO_PERMISSION_GROUP + "', '" + PERMISSION_FLAG_NONE + "'),\n" +
+            "('android.permission.NET_TUNNELING', 'signature', '" + NO_PERMISSION_GROUP + "', '" + PERMISSION_FLAG_NONE + "'),\n" +
+            "('android.permission.FACTORY_TEST', 'signature', '" + NO_PERMISSION_GROUP + "', '" + PERMISSION_FLAG_NONE + "'),\n" +
+            "('android.permission.BROADCAST_PACKAGE_REMOVED', 'signature', '" + NO_PERMISSION_GROUP + "', '" + PERMISSION_FLAG_NONE + "'),\n" +
+            "('android.permission.BROADCAST_SMS', 'signature', '" + NO_PERMISSION_GROUP + "', '" + PERMISSION_FLAG_NONE + "'),\n" +
+            "('android.permission.BROADCAST_WAP_PUSH', 'signature', '" + NO_PERMISSION_GROUP + "', '" + PERMISSION_FLAG_NONE + "'),\n" +
+            "('android.permission.BROADCAST_NETWORK_PRIVILEGED', 'signature|privileged', '" + NO_PERMISSION_GROUP + "', '" + PERMISSION_FLAG_NONE + "'),\n" +
+            "('android.permission.MASTER_CLEAR', 'signature|privileged', '" + NO_PERMISSION_GROUP + "', '" + PERMISSION_FLAG_NONE + "'),\n" +
+            "('android.permission.CALL_PRIVILEGED', 'signature|privileged', '" + NO_PERMISSION_GROUP + "', '" + PERMISSION_FLAG_NONE + "'),\n" +
+            "('android.permission.PERFORM_CDMA_PROVISIONING', 'signature|privileged', '" + NO_PERMISSION_GROUP + "', '" + PERMISSION_FLAG_NONE + "'),\n" +
+            "('android.permission.PERFORM_SIM_ACTIVATION', 'signature|privileged', '" + NO_PERMISSION_GROUP + "', '" + PERMISSION_FLAG_NONE + "'),\n" +
+            "('android.permission.CONTROL_LOCATION_UPDATES', 'signature|privileged', '" + NO_PERMISSION_GROUP + "', '" + PERMISSION_FLAG_NONE + "'),\n" +
+            "('android.permission.ACCESS_CHECKIN_PROPERTIES', 'signature|privileged', '" + NO_PERMISSION_GROUP + "', '" + PERMISSION_FLAG_NONE + "'),\n" +
+            "('android.permission.PACKAGE_USAGE_STATS', 'signature|privileged|development|appop', '" + NO_PERMISSION_GROUP + "', '" + PERMISSION_FLAG_NONE + "'),\n" +
+            "('android.permission.CHANGE_APP_IDLE_STATE', 'signature', '" + NO_PERMISSION_GROUP + "', '" + PERMISSION_FLAG_NONE + "'),\n" +
+            "('android.permission.CHANGE_DEVICE_IDLE_TEMP_WHITELIST', 'signature|privileged', '" + NO_PERMISSION_GROUP + "', '" + PERMISSION_FLAG_NONE + "'),\n" +
+            "('android.permission.REQUEST_IGNORE_BATTERY_OPTIMIZATIONS', 'normal', '" + NO_PERMISSION_GROUP + "', '" + PERMISSION_FLAG_NONE + "'),\n" +
+            "('android.permission.BATTERY_STATS', 'signature|privileged|development', '" + NO_PERMISSION_GROUP + "', '" + PERMISSION_FLAG_NONE + "'),\n" +
+            "('android.permission.BACKUP', 'signature|privileged', '" + NO_PERMISSION_GROUP + "', '" + PERMISSION_FLAG_NONE + "'),\n" +
+            "('android.permission.CONFIRM_FULL_BACKUP', 'signature', '" + NO_PERMISSION_GROUP + "', '" + PERMISSION_FLAG_NONE + "'),\n" +
+            "('android.permission.BIND_REMOTEVIEWS', 'signature|privileged', '" + NO_PERMISSION_GROUP + "', '" + PERMISSION_FLAG_NONE + "'),\n" +
+            "('android.permission.BIND_APPWIDGET', 'signature|privileged', '" + NO_PERMISSION_GROUP + "', '" + PERMISSION_FLAG_NONE + "'),\n" +
+            "('android.permission.BIND_KEYGUARD_APPWIDGET', 'signature|privileged', '" + NO_PERMISSION_GROUP + "', '" + PERMISSION_FLAG_NONE + "'),\n" +
+            "('android.permission.MODIFY_APPWIDGET_BIND_PERMISSIONS', 'signature|privileged', '" + NO_PERMISSION_GROUP + "', '" + PERMISSION_FLAG_NONE + "'),\n" +
+            "('android.permission.CHANGE_BACKGROUND_DATA_SETTING', 'signature', '" + NO_PERMISSION_GROUP + "', '" + PERMISSION_FLAG_NONE + "'),\n" +
+            "('android.permission.GLOBAL_SEARCH', 'signature|privileged', '" + NO_PERMISSION_GROUP + "', '" + PERMISSION_FLAG_NONE + "'),\n" +
+            "('android.permission.GLOBAL_SEARCH_CONTROL', 'signature', '" + NO_PERMISSION_GROUP + "', '" + PERMISSION_FLAG_NONE + "'),\n" +
+            "('android.permission.READ_SEARCH_INDEXABLES', 'signature|privileged', '" + NO_PERMISSION_GROUP + "', '" + PERMISSION_FLAG_NONE + "'),\n" +
+            "('android.permission.SET_WALLPAPER_COMPONENT', 'signature|privileged', '" + NO_PERMISSION_GROUP + "', '" + PERMISSION_FLAG_NONE + "'),\n" +
+            "('android.permission.READ_DREAM_STATE', 'signature|privileged', '" + NO_PERMISSION_GROUP + "', '" + PERMISSION_FLAG_NONE + "'),\n" +
+            "('android.permission.WRITE_DREAM_STATE', 'signature|privileged', '" + NO_PERMISSION_GROUP + "', '" + PERMISSION_FLAG_NONE + "'),\n" +
+            "('android.permission.ACCESS_CACHE_FILESYSTEM', 'signature|privileged', '" + NO_PERMISSION_GROUP + "', '" + PERMISSION_FLAG_NONE + "'),\n" +
+            "('android.permission.COPY_PROTECTED_DATA', 'signature', '" + NO_PERMISSION_GROUP + "', '" + PERMISSION_FLAG_NONE + "'),\n" +
+            "('android.permission.CRYPT_KEEPER', 'signature|privileged', '" + NO_PERMISSION_GROUP + "', '" + PERMISSION_FLAG_NONE + "'),\n" +
+            "('android.permission.READ_NETWORK_USAGE_HISTORY', 'signature|privileged', '" + NO_PERMISSION_GROUP + "', '" + PERMISSION_FLAG_NONE + "'),\n" +
+            "('android.permission.MANAGE_NETWORK_POLICY', 'signature', '" + NO_PERMISSION_GROUP + "', '" + PERMISSION_FLAG_NONE + "'),\n" +
+            "('android.permission.MODIFY_NETWORK_ACCOUNTING', 'signature|privileged', '" + NO_PERMISSION_GROUP + "', '" + PERMISSION_FLAG_NONE + "'),\n" +
+            "('android.intent.category.MASTER_CLEAR.permission.C2D_MESSAGE', 'signature', '" + NO_PERMISSION_GROUP + "', '" + PERMISSION_FLAG_NONE + "'),\n" +
+            "('android.permission.PACKAGE_VERIFICATION_AGENT', 'signature|privileged', '" + NO_PERMISSION_GROUP + "', '" + PERMISSION_FLAG_NONE + "'),\n" +
+            "('android.permission.BIND_PACKAGE_VERIFIER', 'signature', '" + NO_PERMISSION_GROUP + "', '" + PERMISSION_FLAG_NONE + "'),\n" +
+            "('android.permission.INTENT_FILTER_VERIFICATION_AGENT', 'signature|privileged', '" + NO_PERMISSION_GROUP + "', '" + PERMISSION_FLAG_NONE + "'),\n" +
+            "('android.permission.BIND_INTENT_FILTER_VERIFIER', 'signature', '" + NO_PERMISSION_GROUP + "', '" + PERMISSION_FLAG_NONE + "'),\n" +
+            "('android.permission.SERIAL_PORT', 'signature|privileged', '" + NO_PERMISSION_GROUP + "', '" + PERMISSION_FLAG_NONE + "'),\n" +
+            "('android.permission.ACCESS_CONTENT_PROVIDERS_EXTERNALLY', 'signature', '" + NO_PERMISSION_GROUP + "', '" + PERMISSION_FLAG_NONE + "'),\n" +
+            "('android.permission.UPDATE_LOCK', 'signature|privileged', '" + NO_PERMISSION_GROUP + "', '" + PERMISSION_FLAG_NONE + "'),\n" +
+            "('android.permission.ACCESS_NOTIFICATIONS', 'signature|privileged', '" + NO_PERMISSION_GROUP + "', '" + PERMISSION_FLAG_NONE + "'),\n" +
+            "('android.permission.ACCESS_NOTIFICATION_POLICY', 'normal', '" + NO_PERMISSION_GROUP + "', '" + PERMISSION_FLAG_NONE + "'),\n" +
+            "('android.permission.MANAGE_NOTIFICATIONS', 'signature', '" + NO_PERMISSION_GROUP + "', '" + PERMISSION_FLAG_NONE + "'),\n" +
+            "('android.permission.ACCESS_KEYGUARD_SECURE_STORAGE', 'signature', '" + NO_PERMISSION_GROUP + "', '" + PERMISSION_FLAG_NONE + "'),\n" +
+            "('android.permission.MANAGE_FINGERPRINT', 'signature|privileged', '" + NO_PERMISSION_GROUP + "', '" + PERMISSION_FLAG_NONE + "'),\n" +
+            "('android.permission.RESET_FINGERPRINT_LOCKOUT', 'signature', '" + NO_PERMISSION_GROUP + "', '" + PERMISSION_FLAG_NONE + "'),\n" +
+            "('android.permission.CONTROL_KEYGUARD', 'signature', '" + NO_PERMISSION_GROUP + "', '" + PERMISSION_FLAG_NONE + "'),\n" +
+            "('android.permission.TRUST_LISTENER', 'signature', '" + NO_PERMISSION_GROUP + "', '" + PERMISSION_FLAG_NONE + "'),\n" +
+            "('android.permission.PROVIDE_TRUST_AGENT', 'signature|privileged', '" + NO_PERMISSION_GROUP + "', '" + PERMISSION_FLAG_NONE + "'),\n" +
+            "('android.permission.LAUNCH_TRUST_AGENT_SETTINGS', 'signature|privileged', '" + NO_PERMISSION_GROUP + "', '" + PERMISSION_FLAG_NONE + "'),\n" +
+            "('android.permission.BIND_TRUST_AGENT', 'signature', '" + NO_PERMISSION_GROUP + "', '" + PERMISSION_FLAG_NONE + "'),\n" +
+            "('android.permission.BIND_NOTIFICATION_LISTENER_SERVICE', 'signature', '" + NO_PERMISSION_GROUP + "', '" + PERMISSION_FLAG_NONE + "'),\n" +
+            "('android.permission.BIND_NOTIFICATION_RANKER_SERVICE', 'signature', '" + NO_PERMISSION_GROUP + "', '" + PERMISSION_FLAG_NONE + "'),\n" +
+            "('android.permission.BIND_CHOOSER_TARGET_SERVICE', 'signature', '" + NO_PERMISSION_GROUP + "', '" + PERMISSION_FLAG_NONE + "'),\n" +
+            "('android.permission.BIND_CONDITION_PROVIDER_SERVICE', 'signature', '" + NO_PERMISSION_GROUP + "', '" + PERMISSION_FLAG_NONE + "'),\n" +
+            "('android.permission.BIND_DREAM_SERVICE', 'signature', '" + NO_PERMISSION_GROUP + "', '" + PERMISSION_FLAG_NONE + "'),\n" +
+            "('android.permission.INVOKE_CARRIER_SETUP', 'signature|privileged', '" + NO_PERMISSION_GROUP + "', '" + PERMISSION_FLAG_NONE + "'),\n" +
+            "('android.permission.ACCESS_NETWORK_CONDITIONS', 'signature|privileged', '" + NO_PERMISSION_GROUP + "', '" + PERMISSION_FLAG_NONE + "'),\n" +
+            "('android.permission.ACCESS_DRM_CERTIFICATES', 'signature|privileged', '" + NO_PERMISSION_GROUP + "', '" + PERMISSION_FLAG_NONE + "'),\n" +
+            "('android.permission.MANAGE_MEDIA_PROJECTION', 'signature', '" + NO_PERMISSION_GROUP + "', '" + PERMISSION_FLAG_NONE + "'),\n" +
+            "('android.permission.READ_INSTALL_SESSIONS', 'normal', '" + NO_PERMISSION_GROUP + "', '" + PERMISSION_FLAG_NONE + "'),\n" +
+            "('android.permission.REMOVE_DRM_CERTIFICATES', 'signature|privileged', '" + NO_PERMISSION_GROUP + "', '" + PERMISSION_FLAG_NONE + "'),\n" +
+            "('android.permission.BIND_CARRIER_MESSAGING_SERVICE', 'signature|privileged', '" + NO_PERMISSION_GROUP + "', '" + PERMISSION_FLAG_NONE + "'),\n" +
+            "('android.permission.ACCESS_VOICE_INTERACTION_SERVICE', 'signature', '" + NO_PERMISSION_GROUP + "', '" + PERMISSION_FLAG_NONE + "'),\n" +
+            "('android.permission.BIND_CARRIER_SERVICES', 'signature|privileged', '" + NO_PERMISSION_GROUP + "', '" + PERMISSION_FLAG_NONE + "'),\n" +
+            "('android.permission.QUERY_DO_NOT_ASK_CREDENTIALS_ON_BOOT', 'signature', '" + NO_PERMISSION_GROUP + "', '" + PERMISSION_FLAG_NONE + "'),\n" +
+            "('android.permission.KILL_UID', 'signature|installer', '" + NO_PERMISSION_GROUP + "', '" + PERMISSION_FLAG_NONE + "'),\n" +
+            "('android.permission.LOCAL_MAC_ADDRESS', 'signature|privileged', '" + NO_PERMISSION_GROUP + "', '" + PERMISSION_FLAG_NONE + "'),\n" +
+            "('android.permission.PEERS_MAC_ADDRESS', 'signature|setup', '" + NO_PERMISSION_GROUP + "', '" + PERMISSION_FLAG_NONE + "'),\n" +
+            "('android.permission.DISPATCH_NFC_MESSAGE', 'signature|privileged', '" + NO_PERMISSION_GROUP + "', '" + PERMISSION_FLAG_NONE + "'),\n" +
+            "('android.permission.MODIFY_DAY_NIGHT_MODE', 'signature|privileged', '" + NO_PERMISSION_GROUP + "', '" + PERMISSION_FLAG_NONE + "'),\n" +
+            "('android.permission.ACCESS_EPHEMERAL_APPS', 'signature', '" + NO_PERMISSION_GROUP + "', '" + PERMISSION_FLAG_NONE + "'),\n" +
+            "('android.permission.RECEIVE_MEDIA_RESOURCE_USAGE', 'signature|privileged', '" + NO_PERMISSION_GROUP + "', '" + PERMISSION_FLAG_NONE + "'),\n" +
+            "('android.permission.MANAGE_SOUND_TRIGGER', 'signature|privileged', '" + NO_PERMISSION_GROUP + "', '" + PERMISSION_FLAG_NONE + "'),\n" +
+            "('android.permission.DISPATCH_PROVISIONING_MESSAGE', 'signature|privileged', '" + NO_PERMISSION_GROUP + "', '" + PERMISSION_FLAG_NONE + "'),\n" +
+            "('android.permission.READ_BLOCKED_NUMBERS', 'signature', '" + NO_PERMISSION_GROUP + "', '" + PERMISSION_FLAG_NONE + "'),\n" +
+            "('android.permission.WRITE_BLOCKED_NUMBERS', 'signature', '" + NO_PERMISSION_GROUP + "', '" + PERMISSION_FLAG_NONE + "'),\n" +
+            "('android.permission.BIND_VR_LISTENER_SERVICE', 'signature', '" + NO_PERMISSION_GROUP + "', '" + PERMISSION_FLAG_NONE + "'),\n" +
+            "('android.permission.ACCESS_VR_MANAGER', 'signature', '" + NO_PERMISSION_GROUP + "', '" + PERMISSION_FLAG_NONE + "'),\n" +
+            "('android.permission.UPDATE_LOCK_TASK_PACKAGES', 'signature|setup', '" + NO_PERMISSION_GROUP + "', '" + PERMISSION_FLAG_NONE + "'),\n" +
+            "('android.permission.SUBSTITUTE_NOTIFICATION_APP_NAME', 'signature|privileged', '" + NO_PERMISSION_GROUP + "', '" + PERMISSION_FLAG_NONE + "');\n";
 
     /**
      * Private stuff!
@@ -614,10 +627,6 @@ public class MithrilApplication extends Application {
 
     public static String getPermissionFlagNone() {
         return PERMISSION_FLAG_NONE;
-    }
-
-    public static String getPermissionNoGroup() {
-        return PERMISSION_NO_GROUP;
     }
 
     public static int getMillisecondsPerSecond() {
