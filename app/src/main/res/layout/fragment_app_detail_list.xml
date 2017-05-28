@@ -7,5 +7,5 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     app:layoutManager="LinearLayoutManager"
-    tools:context=".ui.fragments.viewappdetailsactivityfragments.AppDetailFragment"
+    tools:context=".ui.fragments.showppdetailsactivityfragments.AppDetailFragment"
     tools:listitem="@layout/fragment_app_detail" />

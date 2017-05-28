@@ -201,7 +201,16 @@
         <activity
             android:name=".ui.activities.AppOpsDetailsActivity"
             android:label="@string/title_activity_app_ops_details"
-            android:theme="@style/AppTheme.NoActionBar"></activity>
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name=".ui.activities.ShowPermissionDetailActivity"
+            android:label="@string/title_activity_show_permission_detail"
+            android:parentActivityName=".ui.activities.CoreActivity"
+            android:theme="@style/AppTheme.NoActionBar">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="edu.umbc.ebiquity.mithril.ui.activities.CoreActivity" />
+        </activity>
     </application>
 
 </manifest>

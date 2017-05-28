@@ -12,7 +12,7 @@ import android.widget.TextView;
 import edu.umbc.ebiquity.mithril.MithrilApplication;
 import edu.umbc.ebiquity.mithril.R;
 import edu.umbc.ebiquity.mithril.data.model.components.PermData;
-import edu.umbc.ebiquity.mithril.ui.fragments.viewappdetailsactivityfragments.AppDetailFragment;
+import edu.umbc.ebiquity.mithril.ui.fragments.showppdetailsactivityfragments.AppDetailFragment;
 
 public class ShowAppDetailsActivity extends AppCompatActivity
         implements AppDetailFragment.OnListFragmentInteractionListener {
@@ -32,7 +32,7 @@ public class ShowAppDetailsActivity extends AppCompatActivity
          * However, if you desire, you can customize the screen layout by setting your own view layout with setContentView() in onCreate().
          * To do this, your own view MUST contain a ListView object with the id "@android:id/list" (or list if it's in code)
          */
-        setContentView(R.layout.activity_view_app_details);
+        setContentView(R.layout.activity_show_app_details);
 
         initView();
     }

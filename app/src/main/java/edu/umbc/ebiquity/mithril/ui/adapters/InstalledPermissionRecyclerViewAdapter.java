@@ -70,7 +70,7 @@ public class InstalledPermissionRecyclerViewAdapter extends RecyclerView.Adapter
         else
             holder.mPermIcon.setImageDrawable(context.getResources().getDrawable(R.drawable.help, context.getTheme()));
 
-        holder.mPermLabel.setText(mValues.get(position).split(".")[mValues.get(position).split(".").length].toLowerCase());
+        holder.mPermLabel.setText(mValues.get(position).split("\\.")[mValues.get(position).split("\\.").length - 1]);
         holder.mAppsUsingPerm.setText(mValues.get(position));
 
         holder.mView.setOnClickListener(new View.OnClickListener() {
