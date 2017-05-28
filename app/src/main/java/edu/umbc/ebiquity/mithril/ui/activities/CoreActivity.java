@@ -712,7 +712,8 @@ public class CoreActivity extends AppCompatActivity
     public void onListFragmentInteraction(String item) {
         //TODO Do something with the Perm group selected
         Intent intent = new Intent(this, ShowPermissionDetailActivity.class);
-        intent.putExtra(MithrilApplication.getPrefKeyPermGroup(), item);
+        intent.putExtra(MithrilApplication.getPrefKeyPermGroupName(), item);
+        intent.putExtra(MithrilApplication.getPrefKeyPermGroupLabel(), item.split("\\.")[item.split("\\.").length - 1]);
         startActivity(intent);
     }
 
