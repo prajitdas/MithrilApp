@@ -105,9 +105,11 @@ public class CoreActivity extends AppCompatActivity
     private boolean isUserAppsListEmpty() {
         return false;
     }
+
     private boolean isSystemAppsListEmpty() {
         return false;
     }
+
     private boolean isAllAppsListEmpty() {
         return false;
     }
@@ -115,9 +117,11 @@ public class CoreActivity extends AppCompatActivity
     private boolean isPermissionsListEmpty() {
         return false;
     }
+
     private boolean isServicesListEmpty() {
         return true;
     }
+
     private boolean isContentProvidersListEmpty() {
         return true;
     }
