@@ -91,6 +91,8 @@ public class ViolationDetector {
      */
 
     public static void detectViolation(Context context, String currentPackageName) throws CWAException {
+        if (currentPackageName == null)
+            return;
         MithrilDBHelper mithrilDBHelper = new MithrilDBHelper(context);
         SQLiteDatabase mithrilDB = mithrilDBHelper.getWritableDatabase();
 

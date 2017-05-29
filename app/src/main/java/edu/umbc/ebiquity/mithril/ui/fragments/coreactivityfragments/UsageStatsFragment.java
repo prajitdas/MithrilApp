@@ -2,6 +2,7 @@ package edu.umbc.ebiquity.mithril.ui.fragments.coreactivityfragments;
 
 import android.app.AppOpsManager;
 import android.app.Fragment;
+import android.app.usage.UsageStats;
 import android.app.usage.UsageStatsManager;
 import android.content.Context;
 import android.content.pm.ApplicationInfo;
@@ -27,8 +28,8 @@ import java.util.Map;
 
 import edu.umbc.ebiquity.mithril.MithrilApplication;
 import edu.umbc.ebiquity.mithril.R;
+import edu.umbc.ebiquity.mithril.data.model.AppUsageStats;
 import edu.umbc.ebiquity.mithril.data.model.Resource;
-import edu.umbc.ebiquity.mithril.data.model.UsageStats;
 import edu.umbc.ebiquity.mithril.ui.adapters.UsageStatsRecyclerViewAdapter;
 import edu.umbc.ebiquity.mithril.util.specialtasks.appops.AppOpsState;
 
@@ -39,7 +40,6 @@ import edu.umbc.ebiquity.mithril.util.specialtasks.appops.AppOpsState;
  * interface.
  */
 public class UsageStatsFragment extends Fragment {
-
     // TODO: Customize parameter argument names
     private static final String ARG_COLUMN_COUNT = "column-count";
     // Constants defining order for display order
@@ -48,7 +48,7 @@ public class UsageStatsFragment extends Fragment {
     private static final int _DISPLAY_ORDER_LAST_TIME_USED = 1;
     private static final int _DISPLAY_ORDER_APP_NAME = 2;
     private final ArrayMap<String, String> mAppLabelMap = new ArrayMap<>();
-    private final ArrayList<android.app.usage.UsageStats> mPackageStats = new ArrayList<>();
+    private final ArrayList<AppUsageStats> appUsageStats = new ArrayList<>();
     /**
      * An array of usage stats items.
      */
@@ -93,8 +93,7 @@ public class UsageStatsFragment extends Fragment {
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         view = inflater.inflate(R.layout.fragment_usagestats_list, container, false);
         context = view.getContext();
         mState = new AppOpsState(context);
@@ -118,7 +117,7 @@ public class UsageStatsFragment extends Fragment {
             } else {
                 recyclerView.setLayoutManager(new GridLayoutManager(context, mColumnCount));
             }
-            recyclerView.setAdapter(new UsageStatsRecyclerViewAdapter(usageStats, mListener));
+            recyclerView.setAdapter(new UsageStatsRecyclerViewAdapter(appUsageStats, mListener));
         }
     }
 
@@ -127,31 +126,32 @@ public class UsageStatsFragment extends Fragment {
         mPm = context.getPackageManager();
         Calendar cal = Calendar.getInstance();
         cal.add(Calendar.DAY_OF_YEAR, -5);
-        final List<android.app.usage.UsageStats> stats =
+        final List<UsageStats> stats =
                 mUsageStatsManager.queryUsageStats(UsageStatsManager.INTERVAL_BEST, cal.getTimeInMillis(), System.currentTimeMillis());
         if (stats == null) {
             return;
         }
-        ArrayMap<String, android.app.usage.UsageStats> map = new ArrayMap<>();
+        ArrayMap<String, UsageStats> map = new ArrayMap<>();
         final int statCount = stats.size();
         for (int i = 0; i < statCount; i++) {
-            final android.app.usage.UsageStats pkgStats = stats.get(i);
+            final UsageStats pkgStats = stats.get(i);
             // load application labels for each application
-            android.app.usage.UsageStats existingStats = map.get(pkgStats.getPackageName());
+            UsageStats existingStats = map.get(pkgStats.getPackageName());
             if (existingStats == null) {
                 map.put(pkgStats.getPackageName(), pkgStats);
             } else {
                 existingStats.add(pkgStats);
             }
         }
-        mPackageStats.addAll(map.values());
-        for(android.app.usage.UsageStats usageStat : mPackageStats) {
+        List<UsageStats> someUsageStats = new ArrayList<>();
+        someUsageStats.addAll(map.values());
+        for (UsageStats usageStat : someUsageStats) {
             try {
                 ApplicationInfo appInfo = mPm.getApplicationInfo(usageStat.getPackageName(), 0);
                 String label = appInfo.loadLabel(mPm).toString();
                 mAppLabelMap.put(usageStat.getPackageName(), label);
 
-                UsageStats tempUsageStat = new UsageStats();
+                AppUsageStats tempUsageStat = new AppUsageStats();
                 tempUsageStat.setLastTimeUsed(usageStat.getLastTimeUsed());
                 tempUsageStat.setTotalTimeInForeground(usageStat.getTotalTimeInForeground());
                 tempUsageStat.setPackageName(usageStat.getPackageName());
@@ -214,7 +214,7 @@ public class UsageStatsFragment extends Fragment {
                     tempListOfResource.add(tempRes);
                 }
                 tempUsageStat.setResourcesUsed(tempListOfResource);
-                usageStats.add(tempUsageStat);
+                appUsageStats.add(tempUsageStat);
             } catch (PackageManager.NameNotFoundException e) {
                 // This package may be gone.
             }
@@ -275,7 +275,7 @@ public class UsageStatsFragment extends Fragment {
      */
     public interface OnListFragmentInteractionListener {
         // TODO: Update argument type and name
-        void onListFragmentInteraction(UsageStats item);
+        void onListFragmentInteraction(AppUsageStats item);
     }
 
     public static class AppNameComparator implements Comparator<UsageStats> {

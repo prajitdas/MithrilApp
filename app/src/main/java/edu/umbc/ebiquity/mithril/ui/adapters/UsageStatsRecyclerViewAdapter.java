@@ -1,6 +1,9 @@
 package edu.umbc.ebiquity.mithril.ui.adapters;
 
+import android.app.usage.UsageStats;
 import android.content.Context;
+import android.content.pm.ApplicationInfo;
+import android.content.pm.PackageManager;
 import android.database.SQLException;
 import android.support.v7.widget.RecyclerView;
 import android.text.format.DateUtils;
@@ -19,23 +22,23 @@ import java.util.Map;
 
 import edu.umbc.ebiquity.mithril.MithrilApplication;
 import edu.umbc.ebiquity.mithril.R;
+import edu.umbc.ebiquity.mithril.data.model.AppUsageStats;
 import edu.umbc.ebiquity.mithril.data.model.Resource;
-import edu.umbc.ebiquity.mithril.data.model.UsageStats;
 import edu.umbc.ebiquity.mithril.ui.fragments.coreactivityfragments.UsageStatsFragment.OnListFragmentInteractionListener;
 
 /**
- * {@link RecyclerView.Adapter} that can display a {@link UsageStats} and makes a call to the
+ * {@link RecyclerView.Adapter} that can display a {@link AppUsageStats} and makes a call to the
  * specified {@link OnListFragmentInteractionListener}.
  * TODO: Replace the implementation with code for your data type.
  */
 public class UsageStatsRecyclerViewAdapter extends RecyclerView.Adapter<UsageStatsRecyclerViewAdapter.ViewHolder> {
 
-    private final List<UsageStats> mValues;
+    private final List<AppUsageStats> mValues;
     private final OnListFragmentInteractionListener mListener;
     private Context context;
     private View view;
 
-    public UsageStatsRecyclerViewAdapter(List<UsageStats> items, OnListFragmentInteractionListener listener) {
+    public UsageStatsRecyclerViewAdapter(List<AppUsageStats> items, OnListFragmentInteractionListener listener) {
         mValues = items;
         mListener = listener;
     }
@@ -52,10 +55,13 @@ public class UsageStatsRecyclerViewAdapter extends RecyclerView.Adapter<UsageSta
     public void onBindViewHolder(final ViewHolder holder, int position) {
         holder.mItem = mValues.get(position);
         try {
-            holder.mAppIcon.setImageDrawable(mValues.get(position).getIcon());
-            holder.mAppLbl.setText(mValues.get(position).getLabel());
-//            holder.mAppUsageDetail.setText(getUsageDetails(mValues.get(position).getResourcesUsed()));
+            holder.mAppIcon.setImageDrawable(context.getPackageManager().getApplicationIcon(mValues.get(position).getPackageName()));
+
+            ApplicationInfo applicationInfo = context.getPackageManager().getApplicationInfo(mValues.get(position).getPackageName(), 0);
+            holder.mAppLbl.setText(applicationInfo != null ? context.getPackageManager().getApplicationLabel(applicationInfo) : "Some app");
+
             holder.mAppUsageDetail.setText(getStringForHowLongWasUsed(mValues.get(position).getTotalTimeInForeground()));
+
             holder.mAppLastUsedTime.setText(getStringForLastTimeUsed(mValues.get(position).getLastTimeUsed()));
 
             holder.mView.setOnClickListener(new View.OnClickListener() {
@@ -70,6 +76,8 @@ public class UsageStatsRecyclerViewAdapter extends RecyclerView.Adapter<UsageSta
             });
         } catch (SQLException e) {
             Log.e(MithrilApplication.getDebugTag(), "Could not find " + e);
+        } catch (PackageManager.NameNotFoundException e) {
+            Log.e(MithrilApplication.getDebugTag(), "Could not find the package" + e);
         }
     }
 
@@ -110,30 +118,30 @@ public class UsageStatsRecyclerViewAdapter extends RecyclerView.Adapter<UsageSta
         return mValues.size();
     }
 
-    public static class AppNameComparator implements Comparator<android.app.usage.UsageStats> {
+    public static class AppNameComparator implements Comparator<UsageStats> {
         private Map<String, String> mAppLabelList;
         AppNameComparator(Map<String, String> appList) {
             mAppLabelList = appList;
         }
         @Override
-        public final int compare(android.app.usage.UsageStats a, android.app.usage.UsageStats b) {
+        public final int compare(UsageStats a, UsageStats b) {
             String alabel = mAppLabelList.get(a.getPackageName());
             String blabel = mAppLabelList.get(b.getPackageName());
             return alabel.compareTo(blabel);
         }
     }
 
-    public static class LastTimeUsedComparator implements Comparator<android.app.usage.UsageStats> {
+    public static class LastTimeUsedComparator implements Comparator<UsageStats> {
         @Override
-        public final int compare(android.app.usage.UsageStats a, android.app.usage.UsageStats b) {
+        public final int compare(UsageStats a, UsageStats b) {
             // return by descending order
             return (int)(b.getLastTimeUsed() - a.getLastTimeUsed());
         }
     }
 
-    public static class UsageTimeComparator implements Comparator<android.app.usage.UsageStats> {
+    public static class UsageTimeComparator implements Comparator<UsageStats> {
         @Override
-        public final int compare(android.app.usage.UsageStats a, android.app.usage.UsageStats b) {
+        public final int compare(UsageStats a, UsageStats b) {
             return (int)(b.getTotalTimeInForeground() - a.getTotalTimeInForeground());
         }
     }
@@ -144,7 +152,7 @@ public class UsageStatsRecyclerViewAdapter extends RecyclerView.Adapter<UsageSta
         public final TextView mAppLbl;
         public final TextView mAppUsageDetail;
         public final TextView mAppLastUsedTime;
-        public UsageStats mItem;
+        public AppUsageStats mItem;
 
         public ViewHolder(View view) {
             super(view);

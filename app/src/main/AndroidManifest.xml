@@ -24,7 +24,6 @@
     <!-- <uses-permission android:name="android.permission.WAKE_LOCK" /> -->
     <!-- <uses-permission android:name="android.permission.READ_LOGS" /> -->
 
-
     <!-- dangerous permission type; request to be made explicitly; protectionLevel: PROTECTION_DANGEROUS; list as follows -->
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
@@ -211,5 +210,4 @@
             android:name=".util.services.ExecuteRulesIntentService"
             android:exported="false" />
     </application>
-
 </manifest>

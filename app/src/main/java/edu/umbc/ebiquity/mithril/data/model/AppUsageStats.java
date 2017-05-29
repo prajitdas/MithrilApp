@@ -5,10 +5,10 @@ import android.graphics.drawable.Drawable;
 import java.util.List;
 
 /**
- * Created by prajit on 5/9/17.
+ * Created by prajit on 5/29/17.
  */
 
-public class UsageStats {
+public class AppUsageStats {
     private String packageName;
     private long beginTimeStamp;
     private long endTimeStamp;
@@ -19,7 +19,27 @@ public class UsageStats {
     private String label;
     private Drawable icon;
 
-    public UsageStats() {
+    public AppUsageStats() {
+    }
+
+    public AppUsageStats(String packageName,
+                         long beginTimeStamp,
+                         long endTimeStamp,
+                         long lastTimeUsed,
+                         long totalTimeInForeground,
+                         int launchCount,
+                         List<Resource> resourcesUsed,
+                         String label,
+                         Drawable icon) {
+        this.packageName = packageName;
+        this.beginTimeStamp = beginTimeStamp;
+        this.endTimeStamp = endTimeStamp;
+        this.lastTimeUsed = lastTimeUsed;
+        this.totalTimeInForeground = totalTimeInForeground;
+        this.launchCount = launchCount;
+        this.resourcesUsed = resourcesUsed;
+        this.label = label;
+        this.icon = icon;
     }
 
     public String getPackageName() {
@@ -95,11 +115,26 @@ public class UsageStats {
     }
 
     @Override
+    public String toString() {
+        return "AppUsageStats{" +
+                "packageName='" + packageName + '\'' +
+                ", beginTimeStamp=" + beginTimeStamp +
+                ", endTimeStamp=" + endTimeStamp +
+                ", lastTimeUsed=" + lastTimeUsed +
+                ", totalTimeInForeground=" + totalTimeInForeground +
+                ", launchCount=" + launchCount +
+                ", resourcesUsed=" + resourcesUsed +
+                ", label='" + label + '\'' +
+                ", icon=" + icon +
+                '}';
+    }
+
+    @Override
     public boolean equals(Object o) {
         if (this == o) return true;
-        if (!(o instanceof UsageStats)) return false;
+        if (!(o instanceof AppUsageStats)) return false;
 
-        UsageStats that = (UsageStats) o;
+        AppUsageStats that = (AppUsageStats) o;
 
         if (getBeginTimeStamp() != that.getBeginTimeStamp()) return false;
         if (getEndTimeStamp() != that.getEndTimeStamp()) return false;
@@ -110,11 +145,6 @@ public class UsageStats {
         if (!getResourcesUsed().equals(that.getResourcesUsed())) return false;
         if (!getLabel().equals(that.getLabel())) return false;
         return getIcon().equals(that.getIcon());
-    }
-
-    @Override
-    public String toString() {
-        return super.toString();
     }
 
     @Override

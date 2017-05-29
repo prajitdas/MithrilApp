@@ -47,7 +47,7 @@ import java.util.List;
 import edu.umbc.ebiquity.mithril.MithrilApplication;
 import edu.umbc.ebiquity.mithril.R;
 import edu.umbc.ebiquity.mithril.data.dbhelpers.MithrilDBHelper;
-import edu.umbc.ebiquity.mithril.data.model.UsageStats;
+import edu.umbc.ebiquity.mithril.data.model.AppUsageStats;
 import edu.umbc.ebiquity.mithril.data.model.Violation;
 import edu.umbc.ebiquity.mithril.data.model.components.AppData;
 import edu.umbc.ebiquity.mithril.data.model.components.BCastRecvData;
@@ -102,32 +102,28 @@ public class CoreActivity extends AppCompatActivity
      * Following is a list of utility methods that ensure that the right fragments are launched
      * We are not launching the BCast receivers, Services and Content provider lists yet
      */
-    private boolean isBroadcastReceiverListEmpty() {
-        return true;
-    }
-
     private boolean isUserAppsListEmpty() {
         return false;
     }
-
     private boolean isSystemAppsListEmpty() {
         return false;
     }
-
     private boolean isAllAppsListEmpty() {
         return false;
     }
 
+    private boolean isPermissionsListEmpty() {
+        return false;
+    }
     private boolean isServicesListEmpty() {
         return true;
     }
-
     private boolean isContentProvidersListEmpty() {
         return true;
     }
 
-    private boolean isPermissionsListEmpty() {
-        return false;
+    private boolean isBroadcastReceiverListEmpty() {
+        return true;
     }
 
     @Override
@@ -733,7 +729,7 @@ public class CoreActivity extends AppCompatActivity
     }
 
     @Override
-    public void onListFragmentInteraction(UsageStats item) {
+    public void onListFragmentInteraction(AppUsageStats item) {
         //TODO do something when the usage stats data is requested
     }
 }
