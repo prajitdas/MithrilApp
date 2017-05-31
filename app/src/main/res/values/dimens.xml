@@ -17,4 +17,5 @@
     <dimen name="pager_tabs_padding">0dp</dimen>
     <dimen name="pager_tabs_title_padding">16dp</dimen>
     <dimen name="pager_tabs_selected_indicator_height">3dp</dimen>
+    <dimen name="appbar_padding_top">8dp</dimen>
 </resources>

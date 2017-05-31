@@ -216,6 +216,7 @@
     <string name="title_activity_load_db">Loading knowledge</string>
     <string name="title_activity_app_ops_details">Application operations details</string>
     <string name="title_activity_show_permission_detail">Permission group details</string>
+    <string name="title_activity_instance_creation">Create instances</string>
 
     <string name="reset_app">Reset app</string>
 
@@ -297,4 +298,5 @@
     <string name="app_ops_running">Running</string>
     <!-- [CHAR LIMIT=NONE] Time label for an operation that has never executed. -->
     <string name="app_ops_never_used">(Never used)</string>
+    <string name="section_format">Hello World from section: %1$d</string>
 </resources>
