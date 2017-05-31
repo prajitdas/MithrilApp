@@ -218,6 +218,10 @@
     <string name="title_activity_show_permission_detail">Permission group details</string>
     <string name="title_activity_instance_creation">Create instances</string>
 
+    <string name="title_location">Location</string>
+    <string name="title_temporal">Temporal</string>
+    <string name="title_presence_related">Presence</string>
+
     <string name="reset_app">Reset app</string>
 
     <!-- Geofence Error strings -->
