@@ -4,16 +4,16 @@
     <item
         android:id="@+id/navigation_location"
         android:icon="@drawable/map_marker"
-        android:title="@string/title_location" />
+        android:title="@string/title_bottom_navigation_location" />
 
     <item
         android:id="@+id/navigation_temporal"
         android:icon="@drawable/timetable"
-        android:title="@string/title_temporal" />
+        android:title="@string/title_bottom_navigation_temporal" />
 
     <item
         android:id="@+id/navigation_presence_related"
         android:icon="@drawable/google_nearby"
-        android:title="@string/title_presence_related" />
+        android:title="@string/title_bottom_navigation_presence_related" />
 
 </menu>
