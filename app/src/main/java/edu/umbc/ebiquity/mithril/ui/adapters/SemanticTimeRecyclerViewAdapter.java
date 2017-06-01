@@ -9,21 +9,21 @@ import android.widget.TextView;
 import java.util.List;
 
 import edu.umbc.ebiquity.mithril.R;
+import edu.umbc.ebiquity.mithril.data.model.rules.context.contextpieces.SemanticTime;
 import edu.umbc.ebiquity.mithril.ui.fragments.instancecreationactivityfragments.SemanticTimeFragment.OnListFragmentInteractionListener;
-import edu.umbc.ebiquity.mithril.ui.fragments.instancecreationactivityfragments.dummy.DummyContent.DummyItem;
 
 /**
- * {@link RecyclerView.Adapter} that can display a {@link DummyItem} and makes a call to the
+ * {@link RecyclerView.Adapter} that can display a {@link edu.umbc.ebiquity.mithril.data.model.rules.context.contextpieces.SemanticTime} and makes a call to the
  * specified {@link OnListFragmentInteractionListener}.
  * TODO: Replace the implementation with code for your data type.
  */
 public class SemanticTimeRecyclerViewAdapter extends RecyclerView.Adapter<SemanticTimeRecyclerViewAdapter.ViewHolder> {
 
-    private final List<DummyItem> mValues;
+    private final List<SemanticTime> semanticTimes;
     private final OnListFragmentInteractionListener mListener;
 
-    public SemanticTimeRecyclerViewAdapter(List<DummyItem> items, OnListFragmentInteractionListener listener) {
-        mValues = items;
+    public SemanticTimeRecyclerViewAdapter(List<SemanticTime> items, OnListFragmentInteractionListener listener) {
+        semanticTimes = items;
         mListener = listener;
     }
 
@@ -36,9 +36,9 @@ public class SemanticTimeRecyclerViewAdapter extends RecyclerView.Adapter<Semant
 
     @Override
     public void onBindViewHolder(final ViewHolder holder, int position) {
-        holder.mItem = mValues.get(position);
-        holder.mIdView.setText(mValues.get(position).id);
-        holder.mContentView.setText(mValues.get(position).content);
+        holder.mItem = semanticTimes.get(position);
+        holder.mIdView.setText(semanticTimes.get(position).getInferredTime());
+        holder.mContentView.setText(Long.toString(semanticTimes.get(position).getGetRawTime()));
 
         holder.mView.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -54,14 +54,14 @@ public class SemanticTimeRecyclerViewAdapter extends RecyclerView.Adapter<Semant
 
     @Override
     public int getItemCount() {
-        return mValues.size();
+        return semanticTimes.size();
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder {
         public final View mView;
         public final TextView mIdView;
         public final TextView mContentView;
-        public DummyItem mItem;
+        public SemanticTime mItem;
 
         public ViewHolder(View view) {
             super(view);

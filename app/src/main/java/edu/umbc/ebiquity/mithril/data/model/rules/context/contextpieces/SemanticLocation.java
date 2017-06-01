@@ -8,6 +8,22 @@ import android.location.Location;
 import edu.umbc.ebiquity.mithril.MithrilApplication;
 
 public class SemanticLocation {
+    public Location getLocation() {
+        return location;
+    }
+
+    public void setLocation(Location location) {
+        this.location = location;
+    }
+
+    public Address getAddress() {
+        return address;
+    }
+
+    public void setAddress(Address address) {
+        this.address = address;
+    }
+
     private Location location;
     private Address address;
     private String inferredLocation;

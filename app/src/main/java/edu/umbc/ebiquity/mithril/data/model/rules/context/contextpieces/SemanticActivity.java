@@ -3,73 +3,63 @@ package edu.umbc.ebiquity.mithril.data.model.rules.context.contextpieces;
 import edu.umbc.ebiquity.mithril.MithrilApplication;
 
 public class SemanticActivity {
+    private String rawActivity;
     private String inferredActivity;
 
-    public SemanticActivity() {
-        this.inferredActivity = MithrilApplication.getContextDefaultActivity();
+    public SemanticActivity(String rawActivity, String inferredActivity) {
+        setRawActivity(rawActivity);
+        setInferredActivity(inferredActivity);
     }
 
-    /**
-     * @param inferredActivity
-     */
     public SemanticActivity(String inferredActivity) {
-        this.inferredActivity = inferredActivity;
+        setInferredActivity(inferredActivity);
+        setRawActivity("N/A");
     }
 
-    /* (non-Javadoc)
-     * @see java.lang.Object#equals(java.lang.Object)
-     */
-    @Override
-    public boolean equals(Object obj) {
-        if (this == obj) {
-            return true;
-        }
-        if (obj == null) {
-            return false;
-        }
-        if (getClass() != obj.getClass()) {
-            return false;
-        }
-        SemanticActivity other = (SemanticActivity) obj;
-        if (inferredActivity == null) {
-            if (other.inferredActivity != null) {
-                return false;
-            }
-        } else if (!inferredActivity.equals(other.inferredActivity)) {
-            return false;
-        }
-        return true;
+    public SemanticActivity() {
+        setInferredActivity(MithrilApplication.getContextDefaultActivity());
+        setRawActivity("N/A");
     }
 
-    /**
-     * @return the inferredActivity
-     */
+    public String getRawActivity() {
+        return rawActivity;
+    }
+
+    public void setRawActivity(String rawActivity) {
+        this.rawActivity = rawActivity;
+    }
+
     public String getInferredActivity() {
         return inferredActivity;
     }
 
-    /**
-     * @param inferredActivity the inferredActivity to set
-     */
     public void setInferredActivity(String inferredActivity) {
         this.inferredActivity = inferredActivity;
     }
 
-    /* (non-Javadoc)
-     * @see java.lang.Object#hashCode()
-     */
     @Override
-    public int hashCode() {
-        final int prime = 31;
-        int result = 1;
-        result = prime
-                * result
-                + ((inferredActivity == null) ? 0 : inferredActivity.hashCode());
-        return result;
+    public String toString() {
+        return "SemanticActivity{" +
+                "rawActivity='" + rawActivity + '\'' +
+                ", inferredActivity='" + inferredActivity + '\'' +
+                '}';
     }
 
     @Override
-    public String toString() {
-        return inferredActivity;
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof SemanticActivity)) return false;
+
+        SemanticActivity that = (SemanticActivity) o;
+
+        if (!getRawActivity().equals(that.getRawActivity())) return false;
+        return getInferredActivity().equals(that.getInferredActivity());
+    }
+
+    @Override
+    public int hashCode() {
+        int result = getRawActivity().hashCode();
+        result = 31 * result + getInferredActivity().hashCode();
+        return result;
     }
 }

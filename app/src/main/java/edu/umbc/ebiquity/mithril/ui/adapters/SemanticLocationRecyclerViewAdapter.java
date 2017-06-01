@@ -9,21 +9,21 @@ import android.widget.TextView;
 import java.util.List;
 
 import edu.umbc.ebiquity.mithril.R;
+import edu.umbc.ebiquity.mithril.data.model.rules.context.contextpieces.SemanticLocation;
 import edu.umbc.ebiquity.mithril.ui.fragments.instancecreationactivityfragments.SemanticLocationFragment.OnListFragmentInteractionListener;
-import edu.umbc.ebiquity.mithril.ui.fragments.instancecreationactivityfragments.dummy.DummyContent.DummyItem;
 
 /**
- * {@link RecyclerView.Adapter} that can display a {@link DummyItem} and makes a call to the
+ * {@link RecyclerView.Adapter} that can display a {@link SemanticLocation} and makes a call to the
  * specified {@link OnListFragmentInteractionListener}.
  * TODO: Replace the implementation with code for your data type.
  */
 public class SemanticLocationRecyclerViewAdapter extends RecyclerView.Adapter<SemanticLocationRecyclerViewAdapter.ViewHolder> {
 
-    private final List<DummyItem> mValues;
+    private final List<SemanticLocation> semanticLocations;
     private final OnListFragmentInteractionListener mListener;
 
-    public SemanticLocationRecyclerViewAdapter(List<DummyItem> items, OnListFragmentInteractionListener listener) {
-        mValues = items;
+    public SemanticLocationRecyclerViewAdapter(List<SemanticLocation> items, OnListFragmentInteractionListener listener) {
+        semanticLocations = items;
         mListener = listener;
     }
 
@@ -36,9 +36,9 @@ public class SemanticLocationRecyclerViewAdapter extends RecyclerView.Adapter<Se
 
     @Override
     public void onBindViewHolder(final ViewHolder holder, int position) {
-        holder.mItem = mValues.get(position);
-        holder.mIdView.setText(mValues.get(position).id);
-        holder.mContentView.setText(mValues.get(position).content);
+        holder.mItem = semanticLocations.get(position);
+        holder.mIdView.setText(semanticLocations.get(position).getInferredLocation());
+        holder.mContentView.setText(semanticLocations.get(position).getAddress().getAddressLine(0));
 
         holder.mView.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -54,14 +54,14 @@ public class SemanticLocationRecyclerViewAdapter extends RecyclerView.Adapter<Se
 
     @Override
     public int getItemCount() {
-        return mValues.size();
+        return semanticLocations.size();
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder {
         public final View mView;
         public final TextView mIdView;
         public final TextView mContentView;
-        public DummyItem mItem;
+        public SemanticLocation mItem;
 
         public ViewHolder(View view) {
             super(view);

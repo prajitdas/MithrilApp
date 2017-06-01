@@ -40,7 +40,6 @@ public class InstanceCreationActivity extends AppCompatActivity {
         navigation = (BottomNavigationView) findViewById(R.id.navigation_menu);
         mTextMessage = (TextView) findViewById(R.id.message);
 
-
         navigation.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
             @Override
             public boolean onNavigationItemSelected(@NonNull MenuItem item) {
@@ -54,6 +53,7 @@ public class InstanceCreationActivity extends AppCompatActivity {
                                 return false;
                             }
                         });
+                        loadSemanticLocationFragment();
                         return true;
                     case R.id.navigation_temporal:
                         mTextMessage.setText(R.string.text_instance_creation_temporal);

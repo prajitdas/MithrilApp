@@ -3,6 +3,15 @@ package edu.umbc.ebiquity.mithril.data.model.rules.context.contextpieces;
 import edu.umbc.ebiquity.mithril.MithrilApplication;
 
 public class SemanticTime {
+    public long getGetRawTime() {
+        return getRawTime;
+    }
+
+    public void setGetRawTime(long getRawTime) {
+        this.getRawTime = getRawTime;
+    }
+
+    private long getRawTime;
     private String inferredTime;
 
     public SemanticTime() {

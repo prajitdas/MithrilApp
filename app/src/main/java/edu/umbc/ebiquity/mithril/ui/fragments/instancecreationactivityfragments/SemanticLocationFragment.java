@@ -10,10 +10,12 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import edu.umbc.ebiquity.mithril.R;
+import edu.umbc.ebiquity.mithril.data.model.rules.context.contextpieces.SemanticLocation;
 import edu.umbc.ebiquity.mithril.ui.adapters.SemanticLocationRecyclerViewAdapter;
-import edu.umbc.ebiquity.mithril.ui.fragments.instancecreationactivityfragments.dummy.DummyContent;
-import edu.umbc.ebiquity.mithril.ui.fragments.instancecreationactivityfragments.dummy.DummyContent.DummyItem;
 
 /**
  * A fragment representing a list of Items.
@@ -28,6 +30,12 @@ public class SemanticLocationFragment extends Fragment {
     // TODO: Customize parameters
     private int mColumnCount = 1;
     private OnListFragmentInteractionListener mListener;
+
+    /**
+     * An array of semantic activity items.
+     */
+    private List<SemanticLocation> semanticLocations = new ArrayList<>();
+    private View view;
 
     /**
      * Mandatory empty constructor for the fragment manager to instantiate the
@@ -58,7 +66,7 @@ public class SemanticLocationFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_semantic_location_list, container, false);
+        view = inflater.inflate(R.layout.fragment_semantic_location_list, container, false);
 
         // Set the adapter
         if (view instanceof RecyclerView) {
@@ -69,7 +77,7 @@ public class SemanticLocationFragment extends Fragment {
             } else {
                 recyclerView.setLayoutManager(new GridLayoutManager(context, mColumnCount));
             }
-            recyclerView.setAdapter(new SemanticLocationRecyclerViewAdapter(DummyContent.ITEMS, mListener));
+            recyclerView.setAdapter(new SemanticLocationRecyclerViewAdapter(semanticLocations, mListener));
         }
         return view;
     }
@@ -104,6 +112,6 @@ public class SemanticLocationFragment extends Fragment {
      */
     public interface OnListFragmentInteractionListener {
         // TODO: Update argument type and name
-        void onListFragmentInteraction(DummyItem item);
+        void onListFragmentInteraction(SemanticLocation item);
     }
 }

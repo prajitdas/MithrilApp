@@ -6,13 +6,23 @@ import java.util.List;
 public class SemanticNearActors {
     private List<SemanticIdentity> listOfUsersInTheVicinity;
 
+    public String getInferredActorRelationship() {
+        return inferredActorRelationship;
+    }
+
+    public void setInferredActorRelationship(String inferredActorRelationship) {
+        this.inferredActorRelationship = inferredActorRelationship;
+    }
+
+    private String inferredActorRelationship;
+
     public SemanticNearActors(List<SemanticIdentity> aListOfUsersInTheVicinity) {
-        listOfUsersInTheVicinity = new ArrayList<SemanticIdentity>();
+        listOfUsersInTheVicinity = new ArrayList<>();
         setListOfUsersInTheVicinity(aListOfUsersInTheVicinity);
     }
 
     public SemanticNearActors(String actorsAsString) {
-        listOfUsersInTheVicinity = new ArrayList<SemanticIdentity>();
+        listOfUsersInTheVicinity = new ArrayList<>();
         for (String actor : actorsAsString.split(","))
             listOfUsersInTheVicinity.add(new SemanticIdentity(actor));
     }

@@ -371,7 +371,7 @@ public class CoreActivity extends AppCompatActivity
         if (!PermissionHelper.needsUsageStatsPermission(this))
             showAgreementDownloadedSnackbar();
 
-        fab = (FloatingActionButton) findViewById(R.id.fab_main);
+        fab = (FloatingActionButton) findViewById(R.id.fab_core);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
