@@ -33,6 +33,6 @@
         app:backgroundTint="@color/colorPrimary"
         app:fabSize="auto"
         app:rippleColor="@color/lightgreen"
-        app:srcCompat="@drawable/pencil" />
+        app:srcCompat="@drawable/plus" />
 
 </android.support.design.widget.CoordinatorLayout>

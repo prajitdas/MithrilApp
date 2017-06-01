@@ -48,7 +48,7 @@ public class LauncherActivity extends AppCompatActivity {
 
     private void testUserAgreementAndLaunchNextActivity() {
         if (PermissionHelper.isAllRequiredPermissionsGranted(this) && !PermissionHelper.needsUsageStatsPermission(this))
-            startNextActivity(this, CoreActivity.class);
+            startNextActivity(this, InstanceCreationActivity.class);
         else {
             sharedPreferences = getSharedPreferences(MithrilApplication.getSharedPreferencesName(), Context.MODE_PRIVATE);
             if (sharedPreferences.contains(MithrilApplication.getPrefKeyUserConsent()) &&
