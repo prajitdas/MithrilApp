@@ -11,7 +11,7 @@ import android.view.View;
 
 import edu.umbc.ebiquity.mithril.MithrilApplication;
 import edu.umbc.ebiquity.mithril.R;
-import edu.umbc.ebiquity.mithril.ui.fragments.prefsactivityfragments.PrefsFragment;
+import edu.umbc.ebiquity.mithril.ui.fragments.instancecreationactivityfragments.PrefsFragment;
 import edu.umbc.ebiquity.mithril.util.specialtasks.permissions.PermissionHelper;
 
 public class PrefsActivity extends AppCompatActivity {

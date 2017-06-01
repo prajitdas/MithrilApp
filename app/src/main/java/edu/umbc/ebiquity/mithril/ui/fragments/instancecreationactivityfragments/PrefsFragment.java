@@ -1,4 +1,4 @@
-package edu.umbc.ebiquity.mithril.ui.fragments.prefsactivityfragments;
+package edu.umbc.ebiquity.mithril.ui.fragments.instancecreationactivityfragments;
 
 import android.app.Activity;
 import android.app.PendingIntent;

@@ -164,6 +164,7 @@ public class MithrilApplication extends Application {
 
     //End of preferences.xml
 
+    private static final String PREF_KEY_INIT_INSTANCES_CREATED = "initialInstancesCreated";
     private static final String PREF_KEY_USER_DENIED_USAGE_STATS_PERMISSIONS = "userDeniedUsageStatsPermissions";
     private static final String PREF_KEY_USER_DENIED_PERMISSIONS = "userDeniedPermissions";
     private static final String PREF_KEY_SHOULD_SHOW_AGREEMENT_SNACKBAR = "shouldShowAgreementSnackbar";
@@ -1001,6 +1002,10 @@ public class MithrilApplication extends Application {
 
     public static String getCmdRevokeManageAppOpsRestrictions() {
         return CMD_REVOKE_MANAGE_APP_OPS_RESTRICTIONS;
+    }
+
+    public static String getPrefKeyInitInstancesCreated() {
+        return PREF_KEY_INIT_INSTANCES_CREATED;
     }
 
     public static String getCmdRootPrivilege() {
