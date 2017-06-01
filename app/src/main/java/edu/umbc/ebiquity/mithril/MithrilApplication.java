@@ -164,6 +164,11 @@ public class MithrilApplication extends Application {
 
     //End of preferences.xml
 
+    private static final String PREF_KEY_LOCATION_INSTANCE = "locationInstance";
+    private static final String PREF_KEY_ACTIVITY_INSTANCE = "activityInstance";
+    private static final String PREF_KEY_PRESENCE_INSTANCE = "presenceInstance";
+    private static final String PREF_KEY_TEMPORAL_INSTANCE = "temporalInstance";
+
     private static final String PREF_KEY_INIT_INSTANCES_CREATED = "initialInstancesCreated";
     private static final String PREF_KEY_USER_DENIED_USAGE_STATS_PERMISSIONS = "userDeniedUsageStatsPermissions";
     private static final String PREF_KEY_USER_DENIED_PERMISSIONS = "userDeniedPermissions";
@@ -1002,6 +1007,22 @@ public class MithrilApplication extends Application {
 
     public static String getCmdRevokeManageAppOpsRestrictions() {
         return CMD_REVOKE_MANAGE_APP_OPS_RESTRICTIONS;
+    }
+
+    public static String getPrefKeyLocationInstance() {
+        return PREF_KEY_LOCATION_INSTANCE;
+    }
+
+    public static String getPrefKeyActivityInstance() {
+        return PREF_KEY_ACTIVITY_INSTANCE;
+    }
+
+    public static String getPrefKeyPresenceInstance() {
+        return PREF_KEY_PRESENCE_INSTANCE;
+    }
+
+    public static String getPrefKeyTemporalInstance() {
+        return PREF_KEY_TEMPORAL_INSTANCE;
     }
 
     public static String getPrefKeyInitInstancesCreated() {

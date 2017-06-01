@@ -110,7 +110,7 @@
         <activity
             android:name=".ui.activities.InstanceCreationActivity"
             android:label="@string/title_activity_instance_creation"
-            android:theme="@style/AppTheme.NoActionBar" />
+            android:theme="@style/AppTheme" />
         <activity
             android:name=".ui.activities.CoreActivity"
             android:label="@string/title_activity_core"
