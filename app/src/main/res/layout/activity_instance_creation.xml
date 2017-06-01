@@ -34,15 +34,9 @@
         android:layout_marginTop="@dimen/activity_vertical_margin"
         android:elevation="@dimen/fab_margin"
         app:backgroundTint="@color/colorPrimary"
-        app:fabSize="mini"
+        app:fabSize="auto"
         app:rippleColor="@color/lightgreen"
         app:srcCompat="@drawable/plus" />
-
-    <View
-        android:layout_width="match_parent"
-        android:layout_height="2dp"
-        android:layout_above="@+id/fab_instances"
-        android:background="@color/colorDivider" />
 
     <android.support.design.widget.BottomNavigationView
         android:id="@+id/navigation_menu"

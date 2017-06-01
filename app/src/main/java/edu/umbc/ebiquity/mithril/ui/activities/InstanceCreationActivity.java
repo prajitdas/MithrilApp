@@ -7,9 +7,11 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -31,11 +33,19 @@ public class InstanceCreationActivity extends AppCompatActivity
         SemanticNearActorsFragment.OnListFragmentInteractionListener,
         SemanticActivityFragment.OnListFragmentInteractionListener {
 
+    private static final String FRAGMENT_LOCATION = "location";
+    private static final String FRAGMENT_PRESENCE = "presence";
+    private static final String FRAGMENT_TEMPORAL = "temporal";
+    private static final String FRAGMENT_ACTIVITY = "activity";
+
     private BottomNavigationView navigation;
     private BottomNavigationView.OnNavigationItemSelectedListener mOnNavigationItemSelectedListener;
     private TextView mTextMessage;
     private SharedPreferences.Editor editor;
     private SharedPreferences sharedPreferences;
+    private FloatingActionButton fab;
+    private String currentFragment;
+    private boolean isFABOpen = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -49,14 +59,41 @@ public class InstanceCreationActivity extends AppCompatActivity
         sharedPreferences = getApplicationContext().getSharedPreferences(MithrilApplication.getSharedPreferencesName(), Context.MODE_PRIVATE);
         testInitInstancesCreateAndLaunchNextActivity();
         editor = getSharedPreferences(MithrilApplication.getSharedPreferencesName(), Context.MODE_PRIVATE).edit();
+        currentFragment = new String();
         initViews();
+        handleLocation();
         setOnNavigationListeners();
+        setOnClickListeners();
+    }
+
+    private void setOnClickListeners() {
+        fab.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (currentFragment.equals(FRAGMENT_LOCATION)) {
+                    if(!isFABOpen){
+                        showLocationFABMenu();
+                    }else{
+                        closeLocationFABMenu();
+                    }
+                }
+            }
+        });
+    }
+
+    private void closeLocationFABMenu() {
+
+    }
+
+    private void showLocationFABMenu() {
+
     }
 
     private void initViews() {
         setContentView(R.layout.activity_instance_creation);
         mTextMessage = (TextView) findViewById(R.id.message);
         navigation = (BottomNavigationView) findViewById(R.id.navigation_menu);
+        fab = (FloatingActionButton) findViewById(R.id.fab_instances);
     }
 
     private void setOnNavigationListeners() {
@@ -83,6 +120,7 @@ public class InstanceCreationActivity extends AppCompatActivity
     }
 
     private void handleLocation() {
+        currentFragment = new String(FRAGMENT_LOCATION);
         mTextMessage.setText(R.string.text_instance_creation_location);
         if (!sharedPreferences.getBoolean(MithrilApplication.getPrefKeyLocationInstance(), false)) {
             PermissionHelper.toast(getApplicationContext(), getApplicationContext().getResources().getString(R.string.tooltip_location), Toast.LENGTH_SHORT);
@@ -93,6 +131,7 @@ public class InstanceCreationActivity extends AppCompatActivity
     }
 
     private void handleTemporal() {
+        currentFragment = new String(FRAGMENT_TEMPORAL);
         mTextMessage.setText(R.string.text_instance_creation_temporal);
         if (!sharedPreferences.getBoolean(MithrilApplication.getPrefKeyTemporalInstance(), false)) {
             PermissionHelper.toast(getApplicationContext(), getApplicationContext().getResources().getString(R.string.tooltip_temporal), Toast.LENGTH_SHORT);
@@ -103,6 +142,7 @@ public class InstanceCreationActivity extends AppCompatActivity
     }
 
     private void handlePresence() {
+        currentFragment = new String(FRAGMENT_PRESENCE);
         mTextMessage.setText(R.string.text_instance_creation_presence_related);
         if (!sharedPreferences.getBoolean(MithrilApplication.getPrefKeyPresenceInstance(), false)) {
             PermissionHelper.toast(getApplicationContext(), getApplicationContext().getResources().getString(R.string.tooltip_presence_related), Toast.LENGTH_SHORT);
@@ -113,6 +153,7 @@ public class InstanceCreationActivity extends AppCompatActivity
     }
 
     private void handleActivity() {
+        currentFragment = new String(FRAGMENT_ACTIVITY);
         mTextMessage.setText(R.string.text_instance_creation_activity);
         if (!sharedPreferences.getBoolean(MithrilApplication.getPrefKeyActivityInstance(), false)) {
             PermissionHelper.toast(getApplicationContext(), getApplicationContext().getResources().getString(R.string.tooltip_activity), Toast.LENGTH_SHORT);
