@@ -180,7 +180,7 @@ public class PermissionAcquisitionActivity extends AppCompatActivity {
 
     private void testPermissionsAndLaunchNextActivity() {
         if (PermissionHelper.isAllRequiredPermissionsGranted(this) && !PermissionHelper.needsUsageStatsPermission(this))
-            startNextActivity(this, LoadKBActivity.class);
+            startNextActivity(this, InitKBActivity.class);
     }
 
     private boolean isPermissionAcquisitionComplete() {

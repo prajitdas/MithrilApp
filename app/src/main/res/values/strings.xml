@@ -37,6 +37,7 @@
 
     <string name="app_website">https://mithril.online</string>
 
+    <string name="done_with_instances_settings">Done w/t instances</string>
     <string name="capture_exec_settings">Mithril mode change</string>
     <string name="info">About the app</string>
     <string name="exit_this_survey">Exit this survey</string>
@@ -219,8 +220,16 @@
     <string name="title_activity_instance_creation">Create instances</string>
 
     <string name="title_bottom_navigation_location">Location</string>
+    <string name="text_instance_creation_location">Add location instances</string>
+    <string name="tooltip_location">Add locations that are vital to your policies, like home and work locations</string>
+
     <string name="title_bottom_navigation_temporal">Temporal</string>
+    <string name="text_instance_creation_temporal">Add temporal instances</string>
+    <string name="tooltip_temporal">Add temporal constraints based on which your policies might change, like do-not-disturb hours or work hours</string>
+
     <string name="title_bottom_navigation_presence_related">Presence</string>
+    <string name="text_instance_creation_presence_related">Add presence instances</string>
+    <string name="tooltip_presence_related">Add people with respect to whom you want to add some policies, like your supervisor or colleague</string>
 
     <string name="reset_app">Reset app</string>
 

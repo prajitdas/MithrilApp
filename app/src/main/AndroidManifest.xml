@@ -104,7 +104,7 @@
             android:label="@string/title_activity_permission_acquisition"
             android:theme="@style/FullscreenTheme" />
         <activity
-            android:name=".ui.activities.LoadKBActivity"
+            android:name=".ui.activities.InitKBActivity"
             android:label="@string/title_activity_load_db"
             android:theme="@style/FullscreenTheme" />
         <activity

@@ -12,7 +12,7 @@ import android.view.View;
 import edu.umbc.ebiquity.mithril.R;
 import edu.umbc.ebiquity.mithril.data.dbhelpers.MithrilDBHelper;
 
-public class LoadKBActivity extends AppCompatActivity {
+public class InitKBActivity extends AppCompatActivity {
     private static final int KBLOADED = 0;
     private Handler handler;
 
@@ -26,7 +26,7 @@ public class LoadKBActivity extends AppCompatActivity {
             @Override
             public void handleMessage(Message message) {
                 if(message.what == KBLOADED) {
-                    startNextActivity(getApplicationContext(), CoreActivity.class);
+                    startNextActivity(getApplicationContext(), InstanceCreationActivity.class);
                 }
             }
         };
