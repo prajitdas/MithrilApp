@@ -7,6 +7,7 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.MotionEvent;
@@ -14,10 +15,22 @@ import android.view.View;
 import android.widget.TextView;
 
 import edu.umbc.ebiquity.mithril.R;
-import edu.umbc.ebiquity.mithril.ui.fragments.coreactivityfragments.ViolationFragment;
+import edu.umbc.ebiquity.mithril.data.model.rules.context.contextpieces.SemanticActivity;
+import edu.umbc.ebiquity.mithril.data.model.rules.context.contextpieces.SemanticLocation;
+import edu.umbc.ebiquity.mithril.data.model.rules.context.contextpieces.SemanticNearActors;
+import edu.umbc.ebiquity.mithril.data.model.rules.context.contextpieces.SemanticTime;
+import edu.umbc.ebiquity.mithril.ui.fragments.instancecreationactivityfragments.SemanticActivityFragment;
+import edu.umbc.ebiquity.mithril.ui.fragments.instancecreationactivityfragments.SemanticLocationFragment;
+import edu.umbc.ebiquity.mithril.ui.fragments.instancecreationactivityfragments.SemanticNearActorsFragment;
+import edu.umbc.ebiquity.mithril.ui.fragments.instancecreationactivityfragments.SemanticTimeFragment;
 import edu.umbc.ebiquity.mithril.util.specialtasks.permissions.PermissionHelper;
 
-public class InstanceCreationActivity extends AppCompatActivity {
+public class InstanceCreationActivity extends AppCompatActivity
+        implements SemanticTimeFragment.OnListFragmentInteractionListener,
+        SemanticLocationFragment.OnListFragmentInteractionListener,
+        SemanticNearActorsFragment.OnListFragmentInteractionListener,
+        SemanticActivityFragment.OnListFragmentInteractionListener {
+
     private BottomNavigationView navigation;
     private BottomNavigationView.OnNavigationItemSelectedListener mOnNavigationItemSelectedListener;
     private TextView mTextMessage;
@@ -36,6 +49,9 @@ public class InstanceCreationActivity extends AppCompatActivity {
 
     private void initViews() {
         setContentView(R.layout.activity_instance_creation);
+
+        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar_instance_creation);
+        setSupportActionBar(toolbar);
 
         navigation = (BottomNavigationView) findViewById(R.id.navigation_menu);
         mTextMessage = (TextView) findViewById(R.id.message);
@@ -64,7 +80,7 @@ public class InstanceCreationActivity extends AppCompatActivity {
                                 return false;
                             }
                         });
-
+                        loadSemanticLocationFragment();
                         return true;
                     case R.id.navigation_presence_related:
                         mTextMessage.setText(R.string.text_instance_creation_presence_related);
@@ -75,6 +91,18 @@ public class InstanceCreationActivity extends AppCompatActivity {
                                 return false;
                             }
                         });
+                        loadSemanticLocationFragment();
+                        return true;
+                    case R.id.navigation_activity:
+                        mTextMessage.setText(R.string.text_instance_creation_activity);
+                        mTextMessage.setOnHoverListener(new View.OnHoverListener() {
+                            @Override
+                            public boolean onHover(View v, MotionEvent event) {
+                                PermissionHelper.toast(v.getContext(), v.getContext().getResources().getString(R.string.tooltip_activity));
+                                return false;
+                            }
+                        });
+                        loadSemanticLocationFragment();
                         return true;
                 }
                 return false;
@@ -84,7 +112,7 @@ public class InstanceCreationActivity extends AppCompatActivity {
 
     private void loadSemanticLocationFragment() {
         FragmentManager fragmentManager = getFragmentManager();
-        fragmentManager.beginTransaction().replace(R.id.container_instance_creation, new ViolationFragment())
+        fragmentManager.beginTransaction().replace(R.id.container_instance_creation, new SemanticLocationFragment())
                 .commit();
     }
 
@@ -123,5 +151,25 @@ public class InstanceCreationActivity extends AppCompatActivity {
         launchNextActivity.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         launchNextActivity.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
         startActivity(launchNextActivity);
+    }
+
+    @Override
+    public void onListFragmentInteraction(SemanticTime item) {
+
+    }
+
+    @Override
+    public void onListFragmentInteraction(SemanticLocation item) {
+
+    }
+
+    @Override
+    public void onListFragmentInteraction(SemanticActivity item) {
+
+    }
+
+    @Override
+    public void onListFragmentInteraction(SemanticNearActors item) {
+
     }
 }

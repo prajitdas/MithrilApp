@@ -231,6 +231,10 @@
     <string name="text_instance_creation_presence_related">Add presence instances</string>
     <string name="tooltip_presence_related">Add people with respect to whom you want to add some policies, like your supervisor or colleague</string>
 
+    <string name="title_bottom_navigation_activity">Activity</string>
+    <string name="text_instance_creation_activity">Add activity instances</string>
+    <string name="tooltip_activity">Add activities for which you want to add some policies, like watching movies or in gym</string>
+
     <string name="reset_app">Reset app</string>
 
     <!-- Geofence Error strings -->

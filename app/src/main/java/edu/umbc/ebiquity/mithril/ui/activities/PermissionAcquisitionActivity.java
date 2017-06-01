@@ -153,7 +153,7 @@ public class PermissionAcquisitionActivity extends AppCompatActivity {
         editor.putBoolean(MithrilApplication.getPrefKeyUserDeniedPermissions(), false);
         editor.apply();
         if (isPermissionAcquisitionComplete())
-            startNextActivity(this, CoreActivity.class);
+            startNextActivity(this, InitKBActivity.class);
     }
 
     private void resultCanceled() {
@@ -169,7 +169,7 @@ public class PermissionAcquisitionActivity extends AppCompatActivity {
                 editor.putBoolean(MithrilApplication.getPrefKeyUserDeniedPermissions(), false);
                 editor.apply();
                 if (isPermissionAcquisitionComplete()) {
-                    startNextActivity(this, CoreActivity.class);
+                    startNextActivity(this, InitKBActivity.class);
                 }
             } else {
                 editor.putBoolean(MithrilApplication.getPrefKeyUserDeniedPermissions(), true);
