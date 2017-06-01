@@ -37,7 +37,7 @@
 
     <string name="app_website">https://mithril.online</string>
 
-    <string name="done_with_instances_settings">Done w/t instances</string>
+    <string name="done_with_instances_settings">Done</string>
     <string name="capture_exec_settings">Mithril mode change</string>
     <string name="info">About the app</string>
     <string name="exit_this_survey">Exit this survey</string>
