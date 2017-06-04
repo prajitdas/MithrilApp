@@ -52,6 +52,15 @@
             android:layout_weight="1"
             android:text="@string/pref_other_location_summary"
             android:theme="@style/AppTheme.Button" />
+
+        <Button
+            android:id="@+id/saveBtn"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="@string/context_save_btn_label"
+            android:textColor="@color/colorPrimary"
+            android:theme="@style/AppTheme.Button" />
     </LinearLayout>
 
     <!--<android.support.design.widget.FloatingActionButton
