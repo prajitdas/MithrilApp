@@ -125,12 +125,16 @@
     <string name="pref_location_context_switch_summary">Click to enable following location prefs</string>
 
     <string name="pref_home_location_key">homeLocation</string>
+    <string name="pref_home_location_summary">Home</string>
     <string name="pref_home_location_title">Save home location</string>
-    <string name="pref_home_location_summary">home location</string>
 
     <string name="pref_work_location_key">workLocation</string>
-    <string name="pref_work_location_summary">work location</string>
+    <string name="pref_work_location_summary">Work</string>
     <string name="pref_work_location_title">Save work location</string>
+
+    <string name="pref_other_location_key">otherLocation</string>
+    <string name="pref_other_location_summary">More</string>
+    <string name="pref_other_location_title">Save more location</string>
 
     <!-- Preference strings for Temporal context -->
     <string name="pref_choose_days">Choose the days</string>
@@ -141,29 +145,41 @@
     <string name="pref_temporal_context_switch_title">Enable time prefs</string>
     <string name="pref_temporal_context_switch_summary">Click to enable following time prefs</string>
 
+    <!-- Work temporal context -->
+    <string name="pref_work_hours_context_summary">Work</string>
     <string name="pref_work_hours_start_title">Change start of work-hours</string>
     <string name="pref_work_hours_start_key">workHoursStart</string>
     <string name="pref_work_hours_start">09:00</string>
-
     <string name="pref_work_hours_end_title">Change end of work-hours</string>
     <string name="pref_work_hours_end_key">workHoursEnd</string>
     <string name="pref_work_hours_end">17:00</string>
-
     <string name="pref_work_days_key">workDays</string>
     <string name="pref_work_days_title">Change working days</string>
     <string name="pref_work_days">Monday, Tuesday, Wednesday, Thursday, Friday</string>
 
+    <!-- DND temporal context -->
+    <string name="pref_DND_hours_context_summary">DND</string>
     <string name="pref_DND_hours_start_title">Change start of DND hours</string>
     <string name="pref_DND_hours_start_key">dndHoursStart</string>
     <string name="pref_DND_hours_start">22:00</string>
-
     <string name="pref_DND_hours_end_title">Change end of DND hours</string>
     <string name="pref_DND_hours_end_key">dndHoursEnd</string>
     <string name="pref_DND_hours_end">07:00</string>
-
     <string name="pref_DND_days_key">dndDays</string>
     <string name="pref_DND_days_title">Change do not disturb days</string>
     <string name="pref_DND_days">Monday, Tuesday, Wednesday, Thursday, Friday, Saturday, Sunday</string>
+
+    <!-- Other temporal context -->
+    <string name="pref_other_hours_context_summary">More</string>
+    <string name="pref_other_hours_start_title">Change start of other-hours</string>
+    <string name="pref_other_hours_start_key">otherHoursStart</string>
+    <string name="pref_other_hours_start">09:00</string>
+    <string name="pref_other_hours_end_title">Change end of other-hours</string>
+    <string name="pref_other_hours_end_key">otherHoursEnd</string>
+    <string name="pref_other_hours_end">17:00</string>
+    <string name="pref_other_days_key">otherDays</string>
+    <string name="pref_other_days_title">Change other days</string>
+    <string name="pref_other_days">Monday, Tuesday, Wednesday, Thursday, Friday, Saturday, Sunday</string>
 
     <string name="pref_monday">Monday</string>
     <string name="pref_tuesday">Tuesday</string>
@@ -184,12 +200,16 @@
     <string name="pref_presence_info_context_switch_summary">Click to enable following people prefs</string>
 
     <string name="pref_presence_info_supervisor_key">presenceInfoSupervisor</string>
-    <string name="pref_presence_info_supervisor_title">Add supervisor identity</string>
-    <string name="pref_presence_info_supervisor_summary">BluetoothIDSupervisor</string>
+    <string name="pref_presence_info_supervisor_summary">Boss</string>
+    <string name="pref_presence_info_supervisor_title">BluetoothIDSupervisor</string>
 
     <string name="pref_presence_info_colleague_key">presenceInfoColleague</string>
-    <string name="pref_presence_info_colleague_summary">BluetoothIDColleague</string>
-    <string name="pref_presence_info_colleague_title">Add colleague identity</string>
+    <string name="pref_presence_info_colleague_title">BluetoothIDColleague</string>
+    <string name="pref_presence_info_colleague_summary">Colleague</string>
+
+    <string name="pref_presence_info_others_key">presenceInfoOther</string>
+    <string name="pref_presence_info_others_title">BluetoothIDOther</string>
+    <string name="pref_presence_info_others_summary">More</string>
 
     <!-- End of Strings related to PrefsFragment -->
 
@@ -217,22 +237,22 @@
     <string name="title_activity_load_db">Loading knowledge</string>
     <string name="title_activity_app_ops_details">Application operations details</string>
     <string name="title_activity_show_permission_detail">Permission group details</string>
-    <string name="title_activity_instance_creation">Create instances</string>
+    <string name="title_activity_instance_creation">Add&#160;</string>
 
     <string name="title_bottom_navigation_location">Location</string>
-    <string name="text_instance_creation_location">Add location instances</string>
+    <string name="text_instance_creation_location">location context</string>
     <string name="tooltip_location">Add locations that are vital to your policies, like home and work locations</string>
 
     <string name="title_bottom_navigation_temporal">Temporal</string>
-    <string name="text_instance_creation_temporal">Add temporal instances</string>
+    <string name="text_instance_creation_temporal">temporal context</string>
     <string name="tooltip_temporal">Add temporal constraints based on which your policies might change, like do-not-disturb hours or work hours</string>
 
     <string name="title_bottom_navigation_presence_related">Presence</string>
-    <string name="text_instance_creation_presence_related">Add presence instances</string>
+    <string name="text_instance_creation_presence_related">presence context</string>
     <string name="tooltip_presence_related">Add people with respect to whom you want to add some policies, like your supervisor or colleague</string>
 
     <string name="title_bottom_navigation_activity">Activity</string>
-    <string name="text_instance_creation_activity">Add activity instances</string>
+    <string name="text_instance_creation_activity">activity context</string>
     <string name="tooltip_activity">Add activities for which you want to add some policies, like watching movies or in gym</string>
 
     <string name="reset_app">Reset app</string>

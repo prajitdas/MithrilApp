@@ -7,21 +7,18 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
-import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.TextView;
+import android.widget.Button;
 import android.widget.Toast;
 
 import edu.umbc.ebiquity.mithril.MithrilApplication;
 import edu.umbc.ebiquity.mithril.R;
-import edu.umbc.ebiquity.mithril.data.model.rules.context.contextpieces.SemanticActivity;
 import edu.umbc.ebiquity.mithril.data.model.rules.context.contextpieces.SemanticLocation;
 import edu.umbc.ebiquity.mithril.data.model.rules.context.contextpieces.SemanticNearActors;
 import edu.umbc.ebiquity.mithril.data.model.rules.context.contextpieces.SemanticTime;
-import edu.umbc.ebiquity.mithril.ui.fragments.instancecreationactivityfragments.SemanticActivityFragment;
 import edu.umbc.ebiquity.mithril.ui.fragments.instancecreationactivityfragments.SemanticLocationFragment;
 import edu.umbc.ebiquity.mithril.ui.fragments.instancecreationactivityfragments.SemanticNearActorsFragment;
 import edu.umbc.ebiquity.mithril.ui.fragments.instancecreationactivityfragments.SemanticTimeFragment;
@@ -30,22 +27,21 @@ import edu.umbc.ebiquity.mithril.util.specialtasks.permissions.PermissionHelper;
 public class InstanceCreationActivity extends AppCompatActivity
         implements SemanticTimeFragment.OnListFragmentInteractionListener,
         SemanticLocationFragment.OnListFragmentInteractionListener,
-        SemanticNearActorsFragment.OnListFragmentInteractionListener,
-        SemanticActivityFragment.OnListFragmentInteractionListener {
+        SemanticNearActorsFragment.OnListFragmentInteractionListener {//,
+//        SemanticActivityFragment.OnListFragmentInteractionListener {
 
     private static final String FRAGMENT_LOCATION = "location";
     private static final String FRAGMENT_PRESENCE = "presence";
     private static final String FRAGMENT_TEMPORAL = "temporal";
-    private static final String FRAGMENT_ACTIVITY = "activity";
+//    private static final String FRAGMENT_ACTIVITY = "activity";
 
     private BottomNavigationView navigation;
-    private BottomNavigationView.OnNavigationItemSelectedListener mOnNavigationItemSelectedListener;
-    private TextView mTextMessage;
     private SharedPreferences.Editor editor;
     private SharedPreferences sharedPreferences;
-    private FloatingActionButton fab;
-    private String currentFragment;
-    private boolean isFABOpen = false;
+    private String activityBaseTitle;
+    private Button mOtherCtxtBtn;
+    private Button mFirstMajorCtxtBtn;
+    private Button mSecondMajorCtxtBtn;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -56,44 +52,24 @@ public class InstanceCreationActivity extends AppCompatActivity
     protected void onResume() {
         super.onResume();
         overridePendingTransition(0, 0);
+        init();
+    }
+
+    private void init() {
         sharedPreferences = getApplicationContext().getSharedPreferences(MithrilApplication.getSharedPreferencesName(), Context.MODE_PRIVATE);
         testInitInstancesCreateAndLaunchNextActivity();
         editor = getSharedPreferences(MithrilApplication.getSharedPreferencesName(), Context.MODE_PRIVATE).edit();
-        currentFragment = new String();
-        initViews();
+        activityBaseTitle = getApplicationContext().getResources().getString(R.string.title_activity_instance_creation);
+
+        setContentView(R.layout.activity_instance_creation);
+        navigation = (BottomNavigationView) findViewById(R.id.navigation_menu);
+
+        mOtherCtxtBtn = (Button) findViewById(R.id.otherCtxtBtn);
+        mFirstMajorCtxtBtn = (Button) findViewById(R.id.firstCtxtBtn);
+        mSecondMajorCtxtBtn = (Button) findViewById(R.id.secondCtxtBtn);
+
         handleLocation();
         setOnNavigationListeners();
-        setOnClickListeners();
-    }
-
-    private void setOnClickListeners() {
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                if (currentFragment.equals(FRAGMENT_LOCATION)) {
-                    if(!isFABOpen){
-                        showLocationFABMenu();
-                    }else{
-                        closeLocationFABMenu();
-                    }
-                }
-            }
-        });
-    }
-
-    private void closeLocationFABMenu() {
-
-    }
-
-    private void showLocationFABMenu() {
-
-    }
-
-    private void initViews() {
-        setContentView(R.layout.activity_instance_creation);
-        mTextMessage = (TextView) findViewById(R.id.message);
-        navigation = (BottomNavigationView) findViewById(R.id.navigation_menu);
-        fab = (FloatingActionButton) findViewById(R.id.fab_instances);
     }
 
     private void setOnNavigationListeners() {
@@ -110,9 +86,9 @@ public class InstanceCreationActivity extends AppCompatActivity
                     case R.id.navigation_presence_related:
                         handlePresence();
                         return true;
-                    case R.id.navigation_activity:
-                        handleActivity();
-                        return true;
+//                    case R.id.navigation_activity:
+//                        handleActivity();
+//                        return true;
                 }
                 return false;
             }
@@ -120,49 +96,157 @@ public class InstanceCreationActivity extends AppCompatActivity
     }
 
     private void handleLocation() {
-        currentFragment = new String(FRAGMENT_LOCATION);
-        mTextMessage.setText(R.string.text_instance_creation_location);
+        setTitle(activityBaseTitle + getApplicationContext().getResources().getString(R.string.text_instance_creation_location));
+
+        mOtherCtxtBtn.setText(R.string.pref_other_location_summary);
+        mFirstMajorCtxtBtn.setText(R.string.pref_home_location_summary);
+        mSecondMajorCtxtBtn.setText(R.string.pref_work_location_summary);
+
         if (!sharedPreferences.getBoolean(MithrilApplication.getPrefKeyLocationInstance(), false)) {
             PermissionHelper.toast(getApplicationContext(), getApplicationContext().getResources().getString(R.string.tooltip_location), Toast.LENGTH_SHORT);
             editor.putBoolean(MithrilApplication.getPrefKeyLocationInstance(), true);
             editor.apply();
         }
         loadSemanticLocationFragment();
+        setOnClickListeners(FRAGMENT_LOCATION);
     }
 
     private void handleTemporal() {
-        currentFragment = new String(FRAGMENT_TEMPORAL);
-        mTextMessage.setText(R.string.text_instance_creation_temporal);
+        setTitle(activityBaseTitle + getApplicationContext().getResources().getString(R.string.text_instance_creation_temporal));
+
+        mOtherCtxtBtn.setText(R.string.pref_other_hours_context_summary);
+        mFirstMajorCtxtBtn.setText(R.string.pref_work_hours_context_summary);
+        mSecondMajorCtxtBtn.setText(R.string.pref_DND_hours_context_summary);
+
         if (!sharedPreferences.getBoolean(MithrilApplication.getPrefKeyTemporalInstance(), false)) {
             PermissionHelper.toast(getApplicationContext(), getApplicationContext().getResources().getString(R.string.tooltip_temporal), Toast.LENGTH_SHORT);
             editor.putBoolean(MithrilApplication.getPrefKeyTemporalInstance(), true);
             editor.apply();
         }
         loadSemanticTemporalFragment();
+        setOnClickListeners(FRAGMENT_TEMPORAL);
     }
 
     private void handlePresence() {
-        currentFragment = new String(FRAGMENT_PRESENCE);
-        mTextMessage.setText(R.string.text_instance_creation_presence_related);
+        setTitle(activityBaseTitle + getApplicationContext().getResources().getString(R.string.text_instance_creation_presence_related));
+
+        mOtherCtxtBtn.setText(R.string.pref_presence_info_others_summary);
+        mFirstMajorCtxtBtn.setText(R.string.pref_presence_info_supervisor_summary);
+        mSecondMajorCtxtBtn.setText(R.string.pref_presence_info_colleague_summary);
+
         if (!sharedPreferences.getBoolean(MithrilApplication.getPrefKeyPresenceInstance(), false)) {
             PermissionHelper.toast(getApplicationContext(), getApplicationContext().getResources().getString(R.string.tooltip_presence_related), Toast.LENGTH_SHORT);
             editor.putBoolean(MithrilApplication.getPrefKeyPresenceInstance(), true);
             editor.apply();
         }
         loadSemanticPresenceFragment();
+        setOnClickListeners(FRAGMENT_PRESENCE);
     }
 
+    /*
     private void handleActivity() {
-        currentFragment = new String(FRAGMENT_ACTIVITY);
-        mTextMessage.setText(R.string.text_instance_creation_activity);
+        setTitle(activityBaseTitle+getApplicationContext().getResources().getString(R.string.text_instance_creation_activity));
+
+        mOtherCtxtBtn.setText(R.string.pref_other_location_summary);
+        mFirstMajorCtxtBtn.setText(R.string.pref_home_location_summary);
+        mSecondMajorCtxtBtn.setText(R.string.pref_work_location_summary);
+
         if (!sharedPreferences.getBoolean(MithrilApplication.getPrefKeyActivityInstance(), false)) {
             PermissionHelper.toast(getApplicationContext(), getApplicationContext().getResources().getString(R.string.tooltip_activity), Toast.LENGTH_SHORT);
             editor.putBoolean(MithrilApplication.getPrefKeyActivityInstance(), true);
             editor.apply();
         }
         loadSemanticActivityFragment();
-    }
+        setOnClickListeners(FRAGMENT_ACTIVITY);
+    }*/
 
+    private void setOnClickListeners(String fragmentInView) {
+        if (fragmentInView.equals(FRAGMENT_LOCATION)) {
+            mOtherCtxtBtn.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+
+                }
+            });
+
+            mFirstMajorCtxtBtn.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+
+                }
+            });
+
+            mSecondMajorCtxtBtn.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+
+                }
+            });
+        } else if (fragmentInView.equals(FRAGMENT_TEMPORAL)) {
+            mOtherCtxtBtn.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+
+                }
+            });
+
+            mFirstMajorCtxtBtn.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+
+                }
+            });
+
+            mSecondMajorCtxtBtn.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+
+                }
+            });
+        } else {//if(fragmentInView.equals(FRAGMENT_PRESENCE)){
+            mOtherCtxtBtn.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+
+                }
+            });
+
+            mFirstMajorCtxtBtn.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+
+                }
+            });
+
+            mSecondMajorCtxtBtn.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+
+                }
+            });
+        } /*else {//if(fragmentInView.equals(FRAGMENT_ACTIVITY)){
+            mOtherCtxtBtn.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+
+                }
+            });
+
+            mFirstMajorCtxtBtn.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+
+                }
+            });
+
+            mSecondMajorCtxtBtn.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+
+                }
+            });
+        }*/
+    }
     private void loadSemanticLocationFragment() {
         FragmentManager fragmentManager = getFragmentManager();
         fragmentManager.beginTransaction().replace(R.id.container_instances, new SemanticLocationFragment())
@@ -181,11 +265,12 @@ public class InstanceCreationActivity extends AppCompatActivity
                 .commit();
     }
 
+    /*
     private void loadSemanticActivityFragment() {
         FragmentManager fragmentManager = getFragmentManager();
         fragmentManager.beginTransaction().replace(R.id.container_instances, new SemanticLocationFragment())
                 .commit();
-    }
+    }*/
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -242,10 +327,10 @@ public class InstanceCreationActivity extends AppCompatActivity
 
     }
 
-    @Override
-    public void onListFragmentInteraction(SemanticActivity item) {
-
-    }
+//    @Override
+//    public void onListFragmentInteraction(SemanticActivity item) {
+//
+//    }
 
     @Override
     public void onListFragmentInteraction(SemanticNearActors item) {

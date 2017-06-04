@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
-
     <item
         android:id="@+id/navigation_location"
         android:icon="@drawable/map_marker"
@@ -16,9 +15,8 @@
         android:icon="@drawable/google_nearby"
         android:title="@string/title_bottom_navigation_presence_related" />
 
-    <item
-        android:id="@+id/navigation_activity"
-        android:icon="@drawable/run"
-        android:title="@string/title_bottom_navigation_activity" />
-
+    <!--<item-->
+    <!--android:id="@+id/navigation_activity"-->
+    <!--android:icon="@drawable/run_fast"-->
+    <!--android:title="@string/title_bottom_navigation_activity" />-->
 </menu>

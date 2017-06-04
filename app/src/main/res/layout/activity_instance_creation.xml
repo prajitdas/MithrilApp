@@ -2,12 +2,11 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/container"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="edu.umbc.ebiquity.mithril.ui.activities.InstanceCreationActivity">
+    tools:context=".ui.activities.InstanceCreationActivity">
 
-    <TextView
+    <!--<TextView
         android:id="@+id/message"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -21,9 +20,41 @@
         android:text="@string/text_instance_creation_location"
         android:textAlignment="textStart"
         android:textColor="@color/colorPrimaryText"
-        android:textSize="20sp" />
+        android:textSize="20sp" />-->
 
-    <android.support.design.widget.FloatingActionButton
+    <LinearLayout
+        android:id="@+id/buttonLayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:measureWithLargestChild="true"
+        android:orientation="horizontal">
+
+        <Button
+            android:id="@+id/firstCtxtBtn"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="@string/pref_home_location_summary"
+            android:theme="@style/AppTheme.Button" />
+
+        <Button
+            android:id="@+id/secondCtxtBtn"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="@string/pref_work_location_summary"
+            android:theme="@style/AppTheme.Button" />
+
+        <Button
+            android:id="@+id/otherCtxtBtn"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="@string/pref_other_location_summary"
+            android:theme="@style/AppTheme.Button" />
+    </LinearLayout>
+
+    <!--<android.support.design.widget.FloatingActionButton
         android:id="@+id/fab_instances"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -36,7 +67,7 @@
         app:backgroundTint="@color/colorPrimary"
         app:fabSize="auto"
         app:rippleColor="@color/lightgreen"
-        app:srcCompat="@drawable/plus" />
+        app:srcCompat="@drawable/plus" />-->
 
     <android.support.design.widget.BottomNavigationView
         android:id="@+id/navigation_menu"
@@ -56,7 +87,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_above="@+id/navigation_menu"
-        android:layout_below="@id/message"
+        android:layout_below="@id/buttonLayout"
         android:fadeScrollbars="false"
         android:fillViewport="true"
         android:scrollbarStyle="outsideInset"
