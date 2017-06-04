@@ -52,31 +52,23 @@
             android:layout_weight="1"
             android:text="@string/pref_other_location_summary"
             android:theme="@style/AppTheme.Button" />
-
-        <Button
-            android:id="@+id/saveBtn"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:text="@string/context_save_btn_label"
-            android:textColor="@color/colorPrimary"
-            android:theme="@style/AppTheme.Button" />
     </LinearLayout>
 
-    <!--<android.support.design.widget.FloatingActionButton
-        android:id="@+id/fab_instances"
+    <android.support.design.widget.FloatingActionButton
+        android:id="@+id/fab_save_instances"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_above="@+id/navigation_menu"
         android:layout_alignParentEnd="true"
         android:layout_marginBottom="@dimen/activity_vertical_margin"
         android:layout_marginEnd="@dimen/activity_vertical_margin"
         android:layout_marginStart="@dimen/activity_vertical_margin"
         android:layout_marginTop="@dimen/activity_vertical_margin"
-        android:elevation="@dimen/fab_margin"
         app:backgroundTint="@color/colorPrimary"
+        app:elevation="@dimen/fab_margin"
         app:fabSize="auto"
-        app:rippleColor="@color/lightgreen"
-        app:srcCompat="@drawable/plus" />-->
+        app:rippleColor="@color/wheat"
+        app:srcCompat="@drawable/content_save_settings" />
 
     <android.support.design.widget.BottomNavigationView
         android:id="@+id/navigation_menu"

@@ -211,6 +211,11 @@
     <string name="pref_presence_info_others_title">BluetoothIDOther</string>
     <string name="pref_presence_info_others_summary">More</string>
 
+    <string name="pref_personal_activity_context_title">Personal</string>
+    <string name="pref_professional_activity_context_title">Work</string>
+    <string name="pref_public_activity_context_title">Public</string>
+    <string name="pref_other_activity_context_title">More</string>
+
     <string name="context_save_btn_label">Save</string>
 
     <!-- End of Strings related to PrefsFragment -->
