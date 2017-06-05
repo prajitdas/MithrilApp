@@ -54,12 +54,12 @@ public class LauncherActivity extends AppCompatActivity {
                 startNextActivity(this, CoreActivity.class);
             else
                 startNextActivity(this, InstanceCreationActivity.class);
-        }
-        else {
-            if (sharedPreferences.contains(MithrilApplication.getPrefKeyUserConsent()) &&
+        } else if (sharedPreferences.contains(MithrilApplication.getPrefKeyUserConsent()) &&
                     sharedPreferences.getBoolean(MithrilApplication.getPrefKeyUserConsent(), false))
-                startNextActivity(this, PermissionAcquisitionActivity.class);
-        }
+            startNextActivity(this, PermissionAcquisitionActivity.class);
+        else if (sharedPreferences.contains(MithrilApplication.getPrefKeyUserContinueClicked()) &&
+                sharedPreferences.getBoolean(MithrilApplication.getPrefKeyUserContinueClicked(), false))
+            startNextActivity(this, ShowUserAgreementActivity.class);
     }
 
     private void initViews() {
@@ -73,6 +73,9 @@ public class LauncherActivity extends AppCompatActivity {
         mContinueToUserAgreementBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                SharedPreferences.Editor editor = getSharedPreferences(MithrilApplication.getSharedPreferencesName(), Context.MODE_PRIVATE).edit();
+                editor.putBoolean(MithrilApplication.getPrefKeyUserContinueClicked(), true);
+                editor.apply();
                 startNextActivity(v.getContext(), ShowUserAgreementActivity.class);
             }
         });

@@ -186,6 +186,7 @@ public class MithrilApplication extends Application {
     private static final String PREF_KEY_USER_CONSENT = "UserConsent";
     private static final String PREF_KEY_USER_AGREEMENT_PAGE_NUMBER = "UserAgreementPageNumber";
     private static final String PREF_KEY_USER_AGREEMENT_COPIED = "UserAgreementCopied";
+    private static final String PREF_KEY_USER_CONTINUE_CLICKED = "ContinueButtonClicked";
     //End of preference keys
 
     private static final String DATABASE_NAME = "mithril.db";
@@ -1047,6 +1048,10 @@ public class MithrilApplication extends Application {
 
     public static String getPrefKeyResetEnabled() {
         return PREF_KEY_RESET_ENABLED;
+    }
+
+    public static String getPrefKeyUserContinueClicked() {
+        return PREF_KEY_USER_CONTINUE_CLICKED;
     }
 
     public static String getLauncherName(Context context) {
