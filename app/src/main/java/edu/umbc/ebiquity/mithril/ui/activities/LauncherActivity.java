@@ -47,12 +47,17 @@ public class LauncherActivity extends AppCompatActivity {
     }
 
     private void testUserAgreementAndLaunchNextActivity() {
-        if (PermissionHelper.isAllRequiredPermissionsGranted(this) && !PermissionHelper.needsUsageStatsPermission(this))
-            startNextActivity(this, InstanceCreationActivity.class);
+        sharedPreferences = getSharedPreferences(MithrilApplication.getSharedPreferencesName(), Context.MODE_PRIVATE);
+        if (PermissionHelper.isAllRequiredPermissionsGranted(this) && !PermissionHelper.needsUsageStatsPermission(this)) {
+            if (sharedPreferences.contains(MithrilApplication.getPrefKeyInitInstancesCreated()) &&
+                    sharedPreferences.getBoolean(MithrilApplication.getPrefKeyInitInstancesCreated(), false))
+                startNextActivity(this, CoreActivity.class);
+            else
+                startNextActivity(this, InstanceCreationActivity.class);
+        }
         else {
-            sharedPreferences = getSharedPreferences(MithrilApplication.getSharedPreferencesName(), Context.MODE_PRIVATE);
             if (sharedPreferences.contains(MithrilApplication.getPrefKeyUserConsent()) &&
-                    sharedPreferences.getBoolean(MithrilApplication.getPrefKeyUserConsent(), false) != false)
+                    sharedPreferences.getBoolean(MithrilApplication.getPrefKeyUserConsent(), false))
                 startNextActivity(this, PermissionAcquisitionActivity.class);
         }
     }

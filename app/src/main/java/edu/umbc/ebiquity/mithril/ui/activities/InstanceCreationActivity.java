@@ -133,12 +133,14 @@ public class InstanceCreationActivity extends AppCompatActivity
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        testInitInstancesCreateAndLaunchNextActivity();
     }
 
     @Override
     protected void onResume() {
         super.onResume();
         overridePendingTransition(0, 0);
+
         init();
         mGoogleApiClient.connect();
     }
@@ -160,8 +162,6 @@ public class InstanceCreationActivity extends AppCompatActivity
     }
 
     private void init() {
-        sharedPreferences = getApplicationContext().getSharedPreferences(MithrilApplication.getSharedPreferencesName(), Context.MODE_PRIVATE);
-        testInitInstancesCreateAndLaunchNextActivity();
         editor = getSharedPreferences(MithrilApplication.getSharedPreferencesName(), Context.MODE_PRIVATE).edit();
         activityBaseTitle = getApplicationContext().getResources().getString(R.string.title_activity_instance_creation);
 
@@ -444,6 +444,7 @@ public class InstanceCreationActivity extends AppCompatActivity
     }
 
     private void testInitInstancesCreateAndLaunchNextActivity() {
+        sharedPreferences = getApplicationContext().getSharedPreferences(MithrilApplication.getSharedPreferencesName(), Context.MODE_PRIVATE);
         if (sharedPreferences.getBoolean(MithrilApplication.getPrefKeyInitInstancesCreated(), false))
             startNextActivity(this, CoreActivity.class);
     }
