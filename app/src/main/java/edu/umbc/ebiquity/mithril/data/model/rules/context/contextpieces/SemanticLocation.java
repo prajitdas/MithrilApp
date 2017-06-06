@@ -37,11 +37,7 @@ public class SemanticLocation implements Parcelable {
 
     public SemanticLocation(String locationkey, Location location) {
         this.location = location;
-
-        if (locationkey == MithrilApplication.getPrefHomeLocationKey())
-            this.inferredLocation = "home";
-        else
-            this.inferredLocation = "work";
+        this.inferredLocation = locationkey;
     }
 
     public SemanticLocation(Address address, Location location, Context context) {

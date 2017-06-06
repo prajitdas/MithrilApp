@@ -368,34 +368,50 @@ public class InstanceCreationActivity extends AppCompatActivity
     }
 
     private void loadSemanticLocationFragment() {
-        Bundle bundle = new Bundle();
-        bundle.putParcelableList(MithrilApplication.getPrefKeyLocationInstances(), semanticLocations);
+        Bundle data = new Bundle();
+        data.putParcelableList(MithrilApplication.getPrefKeyLocationInstances(), semanticLocations);
+
+        SemanticLocationFragment semanticLocationFragment = new SemanticLocationFragment();
+        semanticLocationFragment.setArguments(data);
+
         FragmentManager fragmentManager = getFragmentManager();
-        fragmentManager.beginTransaction().replace(R.id.container_instances, new SemanticLocationFragment())
+        fragmentManager.beginTransaction().replace(R.id.container_instances, semanticLocationFragment)
                 .commit();
     }
 
     private void loadSemanticTemporalFragment() {
-        Bundle bundle = new Bundle();
-        bundle.putParcelableList(MithrilApplication.getPrefKeyTemporalInstances(), semanticTimes);
+        Bundle data = new Bundle();
+        data.putParcelableList(MithrilApplication.getPrefKeyTemporalInstances(), semanticTimes);
+
+        SemanticTimeFragment semanticTimeFragment = new SemanticTimeFragment();
+        semanticTimeFragment.setArguments(data);
+
         FragmentManager fragmentManager = getFragmentManager();
-        fragmentManager.beginTransaction().replace(R.id.container_instances, new SemanticLocationFragment())
+        fragmentManager.beginTransaction().replace(R.id.container_instances, new SemanticTimeFragment())
                 .commit();
     }
 
     private void loadSemanticPresenceFragment() {
-        Bundle bundle = new Bundle();
-        bundle.putParcelableList(MithrilApplication.getPrefKeyTemporalInstances(), semanticNearActors);
+        Bundle data = new Bundle();
+        data.putParcelableList(MithrilApplication.getPrefKeyTemporalInstances(), semanticNearActors);
+
+        SemanticNearActorFragment semanticNearActorFragment = new SemanticNearActorFragment();
+        semanticNearActorFragment.setArguments(data);
+
         FragmentManager fragmentManager = getFragmentManager();
-        fragmentManager.beginTransaction().replace(R.id.container_instances, new SemanticLocationFragment())
+        fragmentManager.beginTransaction().replace(R.id.container_instances, new SemanticNearActorFragment())
                 .commit();
     }
 
     private void loadSemanticActivityFragment() {
-        Bundle bundle = new Bundle();
-        bundle.putParcelableList(MithrilApplication.getPrefKeyTemporalInstances(), semanticActivities);
+        Bundle data = new Bundle();
+        data.putParcelableList(MithrilApplication.getPrefKeyTemporalInstances(), semanticActivities);
+
+        SemanticActivityFragment semanticActivityFragment = new SemanticActivityFragment();
+        semanticActivityFragment.setArguments(data);
+
         FragmentManager fragmentManager = getFragmentManager();
-        fragmentManager.beginTransaction().replace(R.id.container_instances, new SemanticLocationFragment())
+        fragmentManager.beginTransaction().replace(R.id.container_instances, new SemanticActivityFragment())
                 .commit();
     }
 
@@ -549,16 +565,20 @@ public class InstanceCreationActivity extends AppCompatActivity
                 editor.putString(MithrilApplication.getPrefHomeLocationKey(), place.getAddress().toString());
                 editor.apply();
 
-                Location location = new Location("placesAPI");
-                location.setLatitude(place.getLatLng().latitude);
-                location.setLongitude(place.getLatLng().longitude);
-                semanticLocations.add(new SemanticLocation(MithrilApplication.getPrefHomeLocationKey(), location));
+                Location userInputLocation = new Location("placesAPI");
+                userInputLocation.setLatitude(place.getLatLng().latitude);
+                userInputLocation.setLongitude(place.getLatLng().longitude);
+
+                SemanticLocation tempSemanticLocation = new SemanticLocation(MithrilApplication.getPrefHomeLocationKey(), userInputLocation);
+                tempSemanticLocation.setAddress(new Address(getResources().getConfiguration().locale));
+
+                semanticLocations.add(tempSemanticLocation);
 
                 /**
                  * We know the location has changed, let's check the address
                  */
                 mAddressRequested = true;
-                startSearchAddressIntentService(location, MithrilApplication.getPrefHomeLocationKey());
+                startSearchAddressIntentService(userInputLocation, MithrilApplication.getPrefHomeLocationKey());
             } else if (resultCode == PlaceAutocomplete.RESULT_ERROR) {
                 Status status = PlaceAutocomplete.getStatus(this, data);
                 Log.e(MithrilApplication.getDebugTag(), "Error: Status = " + status.toString());
@@ -572,16 +592,20 @@ public class InstanceCreationActivity extends AppCompatActivity
                 editor.putString(MithrilApplication.getPrefWorkLocationKey(), place.getAddress().toString());
                 editor.apply();
 
-                Location location = new Location("placesAPI");
-                location.setLatitude(place.getLatLng().latitude);
-                location.setLongitude(place.getLatLng().longitude);
-                semanticLocations.add(new SemanticLocation(MithrilApplication.getPrefWorkLocationKey(), location));
+                Location userInputLocation = new Location("placesAPI");
+                userInputLocation.setLatitude(place.getLatLng().latitude);
+                userInputLocation.setLongitude(place.getLatLng().longitude);
+
+                SemanticLocation tempSemanticLocation = new SemanticLocation(MithrilApplication.getPrefWorkLocationKey(), userInputLocation);
+                tempSemanticLocation.setAddress(new Address(getResources().getConfiguration().locale));
+
+                semanticLocations.add(tempSemanticLocation);
 
                 /**
                  * We know the location has changed, let's check the address
                  */
                 mAddressRequested = true;
-                startSearchAddressIntentService(location, MithrilApplication.getPrefWorkLocationKey());
+                startSearchAddressIntentService(userInputLocation, MithrilApplication.getPrefWorkLocationKey());
             } else if (resultCode == PlaceAutocomplete.RESULT_ERROR) {
                 Status status = PlaceAutocomplete.getStatus(this, data);
                 Log.e(MithrilApplication.getDebugTag(), "Error: Status = " + status.toString());
@@ -597,16 +621,20 @@ public class InstanceCreationActivity extends AppCompatActivity
                 editor.putString(semanticLocationLabel, place.getAddress().toString());
                 editor.apply();
 
-                Location location = new Location("placesAPI");
-                location.setLatitude(place.getLatLng().latitude);
-                location.setLongitude(place.getLatLng().longitude);
-                semanticLocations.add(new SemanticLocation(semanticLocationLabel, location));
+                Location userInputLocation = new Location("placesAPI");
+                userInputLocation.setLatitude(place.getLatLng().latitude);
+                userInputLocation.setLongitude(place.getLatLng().longitude);
+
+                SemanticLocation tempSemanticLocation = new SemanticLocation(semanticLocationLabel, userInputLocation);
+                tempSemanticLocation.setAddress(new Address(getResources().getConfiguration().locale));
+
+                semanticLocations.add(tempSemanticLocation);
 
                 /**
                  * We know the location has changed, let's check the address
                  */
                 mAddressRequested = true;
-                startSearchAddressIntentService(location, semanticLocationLabel);
+                startSearchAddressIntentService(userInputLocation, semanticLocationLabel);
             } else if (resultCode == PlaceAutocomplete.RESULT_ERROR) {
                 Status status = PlaceAutocomplete.getStatus(this, data);
                 Log.e(MithrilApplication.getDebugTag(), "Error: Status = " + status.toString());
@@ -644,6 +672,9 @@ public class InstanceCreationActivity extends AppCompatActivity
      * fetching an address.
      */
     protected void startSearchAddressIntentService(Location location, String key) {
+        //Locations have been added; update view
+        loadSemanticLocationFragment();
+
         // Create an intent for passing to the intent service responsible for fetching the address.
         Intent intent = new Intent(this, FetchAddressIntentService.class);
 

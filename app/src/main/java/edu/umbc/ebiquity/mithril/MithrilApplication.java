@@ -127,8 +127,8 @@ public class MithrilApplication extends Application {
     private static final String PREF_WHAT_FRAGMENT_KEY = "whatFragment";
 
     private static final String PREF_LOCATION_CONTEXT_ENABLE_KEY = "enableLocationContext";
-    private static final String PREF_HOME_LOCATION_KEY = "homeLocation";
-    private static final String PREF_WORK_LOCATION_KEY = "workLocation";
+    private static final String PREF_HOME_LOCATION_KEY = "Home";
+    private static final String PREF_WORK_LOCATION_KEY = "Work";
 
     private static final String PREF_PRESENCE_INFO_CONTEXT_ENABLE_KEY = "enablePresenceInfoContext";
     private static final String PREF_PRESENCE_INFO_COLLEAGUE_KEY = "presenceInfoSupervisor";
