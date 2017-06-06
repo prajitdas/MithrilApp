@@ -1,4 +1,4 @@
-package edu.umbc.ebiquity.mithril.data.model.rules.context.contextpieces;
+package edu.umbc.ebiquity.mithril.data.model.rules.context;
 
 import android.content.Context;
 import android.content.SharedPreferences;
@@ -11,7 +11,7 @@ import java.util.Locale;
 
 import edu.umbc.ebiquity.mithril.MithrilApplication;
 
-public class SemanticLocation implements Parcelable {
+public class SemanticLocation implements Parcelable, SemanticUserContext {
     public static final Creator<SemanticLocation> CREATOR =
             new Creator<SemanticLocation>() {
                 @Override
@@ -30,6 +30,7 @@ public class SemanticLocation implements Parcelable {
     private Location location;
     private Address address;
     private String inferredLocation;
+    private String type;
 
     public SemanticLocation(String inferredLocation, Location location, Address address) {
         this.inferredLocation = inferredLocation;
@@ -151,5 +152,25 @@ public class SemanticLocation implements Parcelable {
         dest.writeParcelable(location, flags);
         dest.writeParcelable(address, flags);
         dest.writeString(inferredLocation);
+    }
+
+    @Override
+    public String getType() {
+        return type;
+    }
+
+    @Override
+    public void setType() {
+        this.type = MithrilApplication.getPrefKeyLocation();
+    }
+
+    @Override
+    public String getLabel() {
+        return inferredLocation;
+    }
+
+    @Override
+    public void setLabel(String label) {
+        inferredLocation = label;
     }
 }

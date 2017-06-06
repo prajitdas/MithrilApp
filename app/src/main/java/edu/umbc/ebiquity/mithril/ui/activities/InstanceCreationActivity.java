@@ -50,10 +50,10 @@ import java.util.List;
 
 import edu.umbc.ebiquity.mithril.MithrilApplication;
 import edu.umbc.ebiquity.mithril.R;
-import edu.umbc.ebiquity.mithril.data.model.rules.context.contextpieces.SemanticActivity;
-import edu.umbc.ebiquity.mithril.data.model.rules.context.contextpieces.SemanticLocation;
-import edu.umbc.ebiquity.mithril.data.model.rules.context.contextpieces.SemanticNearActor;
-import edu.umbc.ebiquity.mithril.data.model.rules.context.contextpieces.SemanticTime;
+import edu.umbc.ebiquity.mithril.data.model.rules.context.SemanticActivity;
+import edu.umbc.ebiquity.mithril.data.model.rules.context.SemanticLocation;
+import edu.umbc.ebiquity.mithril.data.model.rules.context.SemanticNearActor;
+import edu.umbc.ebiquity.mithril.data.model.rules.context.SemanticTime;
 import edu.umbc.ebiquity.mithril.ui.fragments.instancecreationactivityfragments.SemanticActivityFragment;
 import edu.umbc.ebiquity.mithril.ui.fragments.instancecreationactivityfragments.SemanticLocationFragment;
 import edu.umbc.ebiquity.mithril.ui.fragments.instancecreationactivityfragments.SemanticNearActorFragment;

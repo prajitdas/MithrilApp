@@ -1,11 +1,11 @@
-package edu.umbc.ebiquity.mithril.data.model.rules.context.contextpieces;
+package edu.umbc.ebiquity.mithril.data.model.rules.context;
 
 import android.os.Parcel;
 import android.os.Parcelable;
 
 import edu.umbc.ebiquity.mithril.MithrilApplication;
 
-public class SemanticTime implements Parcelable {
+public class SemanticTime implements Parcelable, SemanticUserContext {
     public static final Parcelable.Creator<SemanticTime> CREATOR =
             new Parcelable.Creator<SemanticTime>() {
                 @Override
@@ -22,6 +22,7 @@ public class SemanticTime implements Parcelable {
             };
     private long rawTime;
     private String inferredTime;
+    private String type;
 
     public SemanticTime() {
         this.inferredTime = MithrilApplication.getContextDefaultTime();
@@ -109,5 +110,25 @@ public class SemanticTime implements Parcelable {
     public void writeToParcel(Parcel dest, int flags) {
         dest.writeLong(rawTime);
         dest.writeString(inferredTime);
+    }
+
+    @Override
+    public String getType() {
+        return type;
+    }
+
+    @Override
+    public void setType() {
+        this.type = MithrilApplication.getPrefKeyTemporal();
+    }
+
+    @Override
+    public String getLabel() {
+        return inferredTime;
+    }
+
+    @Override
+    public void setLabel(String label) {
+        inferredTime = label;
     }
 }

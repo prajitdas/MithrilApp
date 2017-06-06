@@ -41,7 +41,7 @@ import java.util.ArrayList;
 
 import edu.umbc.ebiquity.mithril.MithrilApplication;
 import edu.umbc.ebiquity.mithril.R;
-import edu.umbc.ebiquity.mithril.data.model.rules.context.contextpieces.SemanticLocation;
+import edu.umbc.ebiquity.mithril.data.model.rules.context.SemanticLocation;
 import edu.umbc.ebiquity.mithril.ui.activities.CoreActivity;
 import edu.umbc.ebiquity.mithril.util.services.FetchAddressIntentService;
 import edu.umbc.ebiquity.mithril.util.services.GeofenceTransitionsIntentService;

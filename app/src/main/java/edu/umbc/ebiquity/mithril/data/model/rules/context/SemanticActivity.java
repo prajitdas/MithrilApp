@@ -1,11 +1,11 @@
-package edu.umbc.ebiquity.mithril.data.model.rules.context.contextpieces;
+package edu.umbc.ebiquity.mithril.data.model.rules.context;
 
 import android.os.Parcel;
 import android.os.Parcelable;
 
 import edu.umbc.ebiquity.mithril.MithrilApplication;
 
-public class SemanticActivity implements Parcelable {
+public class SemanticActivity implements Parcelable, SemanticUserContext {
     public static final Parcelable.Creator<SemanticActivity> CREATOR =
             new Parcelable.Creator<SemanticActivity>() {
                 @Override
@@ -19,6 +19,7 @@ public class SemanticActivity implements Parcelable {
                 }
             };
     private String inferredActivity;
+    private String type;
 
     public SemanticActivity(String inferredActivity) {
         setInferredActivity(inferredActivity);
@@ -66,5 +67,25 @@ public class SemanticActivity implements Parcelable {
     @Override
     public int hashCode() {
         return getInferredActivity().hashCode();
+    }
+
+    @Override
+    public String getType() {
+        return type;
+    }
+
+    @Override
+    public void setType() {
+        this.type = MithrilApplication.getPrefKeyActivity();
+    }
+
+    @Override
+    public String getLabel() {
+        return inferredActivity;
+    }
+
+    @Override
+    public void setLabel(String label) {
+        inferredActivity = label;
     }
 }

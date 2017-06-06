@@ -36,10 +36,10 @@ import edu.umbc.ebiquity.mithril.data.model.components.PermData;
 import edu.umbc.ebiquity.mithril.data.model.rules.actions.Action;
 import edu.umbc.ebiquity.mithril.data.model.rules.actions.RuleAction;
 import edu.umbc.ebiquity.mithril.data.model.rules.context.SemanticUserContext;
-import edu.umbc.ebiquity.mithril.data.model.rules.context.contextpieces.SemanticActivity;
-import edu.umbc.ebiquity.mithril.data.model.rules.context.contextpieces.SemanticLocation;
-import edu.umbc.ebiquity.mithril.data.model.rules.context.contextpieces.SemanticNearActor;
-import edu.umbc.ebiquity.mithril.data.model.rules.context.contextpieces.SemanticTime;
+import edu.umbc.ebiquity.mithril.data.model.rules.context.SemanticActivity;
+import edu.umbc.ebiquity.mithril.data.model.rules.context.SemanticLocation;
+import edu.umbc.ebiquity.mithril.data.model.rules.context.SemanticNearActor;
+import edu.umbc.ebiquity.mithril.data.model.rules.context.SemanticTime;
 import edu.umbc.ebiquity.mithril.util.specialtasks.errorsnexceptions.PermissionWasUpdateException;
 
 public class MithrilDBHelper extends SQLiteOpenHelper {
@@ -179,12 +179,11 @@ public class MithrilDBHelper extends SQLiteOpenHelper {
 
     /**
      * -- Table 4: context
+     -- Table: context
      CREATE TABLE context (
      id int NOT NULL AUTO_INCREMENT,
-     location text NULL,
-     activity text NULL,
-     temporal text NULL,
-     presence_info text NULL,
+     type text NOT NULL,
+     value text NOT NULL,
      CONSTRAINT context_pk PRIMARY KEY (id)
      ) COMMENT 'Table showing context instances';
      * --------------------------------------------------------------------------------------------------------------------------
@@ -192,18 +191,12 @@ public class MithrilDBHelper extends SQLiteOpenHelper {
      * This could be where we could do energy efficient stuff as in we can save battery by determining context from historical data or some other way.
      */
     private final static String CONTEXTID = "id"; // ID of the context instance
-    //    private final static String CONTEXTIDENTITY = "identity"; // SemanticIdentity context; this is redundant as because we are working on a single device
-    private final static String CONTEXTLOCATION = "location"; // SemanticLocation context
-    private final static String CONTEXTACTIVITY = "activity"; // SemanticActivity context
-    private final static String CONTEXTPRESENCEINFO = "presenceinfo"; // If we could get presence information of others then we can do relationship based privacy solutions
-    private final static String CONTEXTTEMPORAL = "temporal"; // SemanticTemporal information; the time instance when the current context was captured
+    private final static String CONTEXTTYPE = "type"; // Context type; i.e. location, time, activity, presence
+    private final static String CONTEXTSEMANTICLABEL = "label"; // Semantic context label
     private final static String CREATE_CONTEXT_TABLE = "CREATE TABLE " + getContextTableName() + " (" +
             CONTEXTID + " INTEGER PRIMARY KEY AUTOINCREMENT," +
-//            CONTEXTIDENTITY + " TEXT NOT NULL DEFAULT 'user'," +
-            CONTEXTLOCATION + " TEXT NULL," +
-            CONTEXTACTIVITY + " TEXT NULL," +
-            CONTEXTTEMPORAL + " TEXT NULL," +
-            CONTEXTPRESENCEINFO + " TEXT NULL" +
+            CONTEXTTYPE + " TEXT NOT NULL," +
+            CONTEXTSEMANTICLABEL + " TEXT NOT NULL" +
             ");";
 
     /**
@@ -934,20 +927,11 @@ public class MithrilDBHelper extends SQLiteOpenHelper {
         return insertedRowId;
     }
 
-    /**
-     *
-     * @param db
-     * @param aUserContext
-     * @return
-     */
-    public long addContext(SQLiteDatabase db, SemanticUserContext aUserContext) {
+    public long addContext(SQLiteDatabase db, String label, String type) {
         long insertedRowId;
         ContentValues values = new ContentValues();
-        values.put(CONTEXTLOCATION, aUserContext.getSemanticLocation().toString());
-//        values.put(CONTEXTIDENTITY, aUserContext.getSemanticIdentity().toString());
-        values.put(CONTEXTACTIVITY, aUserContext.getSemanticActivity().toString());
-        values.put(CONTEXTPRESENCEINFO, aUserContext.getSemanticNearActor().toString());
-        values.put(CONTEXTTEMPORAL, aUserContext.getSemanticTime().toString());
+        values.put(CONTEXTTYPE, type);
+        values.put(CONTEXTSEMANTICLABEL, label);
         try {
             insertedRowId = db.insertOrThrow(getContextTableName(), null, values);
         } catch (SQLException e) {
@@ -1494,11 +1478,8 @@ public class MithrilDBHelper extends SQLiteOpenHelper {
                 getPolicyRulesTableName() + "." + POLRULAPPID + ", " +
                 getPolicyRulesTableName() + "." + POLRULCTXID + ", " +
                 getPolicyRulesTableName() + "." + POLRULACTIN + ", " +
-                getContextLogTableName() + "." + CONTEXTPRESENCEINFO + ", " +
-                getContextLogTableName() + "." + CONTEXTACTIVITY + ", " +
-//                getContextLogTableName() + "." + CONTEXTIDENTITY + ", " +
-                getContextLogTableName() + "." + CONTEXTLOCATION + ", " +
-                getContextLogTableName() + "." + CONTEXTTEMPORAL +
+                getContextTableName() + "." + CONTEXTTYPE + ", " +
+                getContextTableName() + "." + CONTEXTSEMANTICLABEL +
                 " FROM " +
                 getPolicyRulesTableName() + ", " + getContextTableName() +
                 " WHERE " +
@@ -1520,12 +1501,8 @@ public class MithrilDBHelper extends SQLiteOpenHelper {
                         policyRule.setAction(new RuleAction(Action.ALLOW));
                     else
                         policyRule.setAction(new RuleAction(Action.DENY));
-                    policyRule.setSemanticUserContext(new SemanticUserContext(
-                            new SemanticNearActor(cursor.getString(5)),
-                            new SemanticActivity(cursor.getString(6)),
-                            new SemanticLocation(cursor.getString(7)),
-                            new SemanticTime(cursor.getString(8))
-                    ));
+                    policyRule.setContextType(cursor.getString(5));
+                    policyRule.setSemanticContextLabel(cursor.getString(6));
 
                     // Adding policies to list
                     policyRules.add(policyRule);
@@ -1554,11 +1531,8 @@ public class MithrilDBHelper extends SQLiteOpenHelper {
                 getPolicyRulesTableName() + "." + POLRULAPPID + ", " +
                 getPolicyRulesTableName() + "." + POLRULCTXID + ", " +
                 getPolicyRulesTableName() + "." + POLRULACTIN + ", " +
-                getContextTableName() + "." + CONTEXTPRESENCEINFO + ", " +
-                getContextTableName() + "." + CONTEXTACTIVITY + ", " +
-//                getContextTableName() + "." + CONTEXTIDENTITY + ", " +
-                getContextTableName() + "." + CONTEXTLOCATION + ", " +
-                getContextTableName() + "." + CONTEXTTEMPORAL +
+                getContextTableName() + "." + CONTEXTTYPE + ", " +
+                getContextTableName() + "." + CONTEXTSEMANTICLABEL +
                 " FROM " +
                 getPolicyRulesTableName() + ", " + getAppsTableName() + ", " + getContextTableName() +
                 " WHERE " +
@@ -1583,12 +1557,8 @@ public class MithrilDBHelper extends SQLiteOpenHelper {
                         policyRule.setAction(new RuleAction(Action.ALLOW));
                     else
                         policyRule.setAction(new RuleAction(Action.DENY));
-                    policyRule.setSemanticUserContext(new SemanticUserContext(
-                            new SemanticNearActor(cursor.getString(5)),
-                            new SemanticActivity(cursor.getString(6)),
-                            new SemanticLocation(cursor.getString(7)),
-                            new SemanticTime(cursor.getString(8))
-                    ));
+                    policyRule.setContextType(cursor.getString(5));
+                    policyRule.setSemanticContextLabel(cursor.getString(6));
 
                     // Adding policies to list
                     policyRules.add(policyRule);
@@ -1617,11 +1587,8 @@ public class MithrilDBHelper extends SQLiteOpenHelper {
                 getPolicyRulesTableName() + "." + POLRULAPPID + ", " +
                 getPolicyRulesTableName() + "." + POLRULCTXID + ", " +
                 getPolicyRulesTableName() + "." + POLRULACTIN + ", " +
-                getContextTableName() + "." + CONTEXTPRESENCEINFO + ", " +
-                getContextTableName() + "." + CONTEXTACTIVITY + ", " +
-//                getContextTableName() + "." + CONTEXTIDENTITY + ", " +
-                getContextTableName() + "." + CONTEXTLOCATION + ", " +
-                getContextTableName() + "." + CONTEXTTEMPORAL +
+                getContextTableName() + "." + CONTEXTTYPE + ", " +
+                getContextTableName() + "." + CONTEXTSEMANTICLABEL +
                 " FROM " +
                 getPolicyRulesTableName() +
                 " WHERE " +
@@ -1639,12 +1606,8 @@ public class MithrilDBHelper extends SQLiteOpenHelper {
                     policyRule.setAction(new RuleAction(Action.ALLOW));
                 else
                     policyRule.setAction(new RuleAction(Action.DENY));
-                policyRule.setSemanticUserContext(new SemanticUserContext(
-                        new SemanticNearActor(cursor.getString(5)),
-                        new SemanticActivity(cursor.getString(6)),
-                        new SemanticLocation(cursor.getString(7)),
-                        new SemanticTime(cursor.getString(8))
-                ));
+                policyRule.setContextType(cursor.getString(5));
+                policyRule.setSemanticContextLabel(cursor.getString(6));
             }
         } catch (SQLException e) {
             throw new SQLException("Could not find " + e);
@@ -1690,35 +1653,21 @@ public class MithrilDBHelper extends SQLiteOpenHelper {
         return action;
     }
 
-    /**
-     * Finds a context instance based on the context id
-     * @param db database instance
-     * @param id context id
-     * @return context info
-     */
-    public SemanticUserContext findContextByID(SQLiteDatabase db, int id) {
+    public Map<String, String> findContextByID(SQLiteDatabase db, int id) {
+        Map<String, String> userContext = new HashMap<>();
         // Select Query
         String selectQuery = "SELECT " +
-                getContextTableName() + "." + CONTEXTID + ", " +
-                getContextTableName() + "." + CONTEXTPRESENCEINFO + ", " +
-                getContextTableName() + "." + CONTEXTACTIVITY + ", " +
-                getContextTableName() + "." + CONTEXTLOCATION + ", " +
-//                getContextTableName() + "." + CONTEXTIDENTITY + ", " +
-                getContextTableName() + "." + CONTEXTTEMPORAL +
+                getContextTableName() + "." + CONTEXTTYPE + ", " +
+                getContextTableName() + "." + CONTEXTSEMANTICLABEL +
                 " FROM " +
                 getContextTableName() +
                 " WHERE " +
                 getContextTableName() + "." + CONTEXTID + " = " + id + ";";
 
-        SemanticUserContext userContext = new SemanticUserContext();
         Cursor cursor = db.rawQuery(selectQuery, null);
         try {
             if (cursor.moveToFirst()) {
-                userContext.setId(Integer.parseInt(cursor.getString(0)));
-                userContext.setSemanticNearActor(new SemanticNearActor(cursor.getString(1)));
-                userContext.setSemanticActivity(new SemanticActivity(cursor.getString(2)));
-                userContext.setSemanticLocation(new SemanticLocation(cursor.getString(3)));
-                userContext.setSemanticTime(new SemanticTime(cursor.getString(4)));
+                userContext.put(cursor.getString(0), cursor.getString(1));
             }
         } catch (SQLException e) {
             throw new SQLException("Could not find " + e);
@@ -1744,20 +1693,14 @@ public class MithrilDBHelper extends SQLiteOpenHelper {
      * Update is being removed because of the foreign key constraint as this causes an SQLException during insertion
      */
     public int updatePolicyRule(SQLiteDatabase db, PolicyRule aPolicyRule) {
-        SemanticUserContext semanticUserContext;
         try {
-            semanticUserContext = findContextByID(db, aPolicyRule.getCtxId());
+            findContextByID(db, aPolicyRule.getCtxId());
         } catch (SQLException e) {
             Log.d(MithrilApplication.getDebugTag(), "Context is unknown, creating");
-            semanticUserContext = new SemanticUserContext(aPolicyRule.getSemanticUserContext().getSemanticNearActor(),
-                    aPolicyRule.getSemanticUserContext().getSemanticActivity(),
-                    aPolicyRule.getSemanticUserContext().getSemanticLocation(),
-                    aPolicyRule.getSemanticUserContext().getSemanticTime());
-            addContext(db, semanticUserContext);
         }
 
         //The context was found, perhaps we need to update the instance
-        updateContext(db, semanticUserContext);
+        updateContext(db, aPolicyRule.getSemanticContextLabel(), aPolicyRule.getContextType());
 
         ContentValues values = new ContentValues();
         values.put(POLRULID, aPolicyRule.getId());
@@ -1769,28 +1712,19 @@ public class MithrilDBHelper extends SQLiteOpenHelper {
             return db.update(getPolicyRulesTableName(), values, POLRULID + " = ?",
                     new String[]{String.valueOf(aPolicyRule.getId())});
         } catch (SQLException e) {
-            throw new SQLException("Exception " + e + " error updating Context: " + aPolicyRule.getSemanticUserContext());
+            throw new SQLException("Exception " + e + " error updating Context: " + aPolicyRule.getSemanticContextLabel());
         }
     }
 
-    /**
-     *
-     * @param db
-     * @param aSemanticUserContext
-     * @return
-     */
-    private int updateContext(SQLiteDatabase db, SemanticUserContext aSemanticUserContext) {
+    private int updateContext(SQLiteDatabase db, String label, String type) {
         ContentValues values = new ContentValues();
-        values.put(CONTEXTID, aSemanticUserContext.getId());
-        values.put(CONTEXTACTIVITY, aSemanticUserContext.getSemanticActivity().getInferredActivity());
-        values.put(CONTEXTLOCATION, aSemanticUserContext.getSemanticLocation().getInferredLocation());
-        values.put(CONTEXTPRESENCEINFO, aSemanticUserContext.getSemanticNearActor().toString());
-        values.put(CONTEXTTEMPORAL, aSemanticUserContext.getSemanticTime().getInferredTime());
+        values.put(CONTEXTTYPE, type);
+        values.put(CONTEXTSEMANTICLABEL, label);
         try {
-            return db.update(getContextTableName(), values, CONTEXTID + " = ?",
-                    new String[]{String.valueOf(aSemanticUserContext.getId())});
+            return db.update(getContextTableName(), values, CONTEXTSEMANTICLABEL + " = ?",
+                    new String[]{String.valueOf(label)});
         } catch (SQLException e) {
-            throw new SQLException("Exception " + e + " error updating Context: " + aSemanticUserContext.toString());
+            throw new SQLException("Exception " + e + " error updating Context: " + label);
         }
     }
 
@@ -1844,15 +1778,10 @@ public class MithrilDBHelper extends SQLiteOpenHelper {
         }
     }
 
-    /**
-     *
-     * @param db
-     * @param aUserContext
-     */
-    public void deleteContext(SQLiteDatabase db, SemanticUserContext aUserContext) {
+    public void deleteContext(SQLiteDatabase db, String label, String type) {
         try {
-            db.delete(getContextLogTableName(), CONTEXTID + " = ?",
-                    new String[]{String.valueOf(aUserContext.getId())});
+            db.delete(getContextLogTableName(), CONTEXTSEMANTICLABEL + " = ?",
+                    new String[]{String.valueOf(label)});
         } catch (SQLException e) {
             throw new SQLException("Could not find " + e);
         }

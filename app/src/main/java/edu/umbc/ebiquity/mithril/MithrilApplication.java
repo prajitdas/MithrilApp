@@ -116,7 +116,10 @@ public class MithrilApplication extends Application {
     //Preference keys
     private static final String PREF_KEY_CURRENT_TIME = "time";
     private static final String PREF_KEY_CURRENT_LOCATION = "currloc";
-    private static final String PREF_KEY_LOCATION = "location";
+    private static final String PREF_KEY_LOCATION = "Location";
+    private static final String PREF_KEY_ACTIVITY = "Activity";
+    private static final String PREF_KEY_TEMPORAL = "Temporal";
+    private static final String PREF_KEY_PRESENCE = "Presence";
     private static final String PREF_KEY_CURRENT_ADDRESS = "curraddr";
     private static final String PREF_KEY_WHAT_LEVEL = "level";
     private static final String PREF_KEY_RESET_ENABLED = "reset";
@@ -940,6 +943,18 @@ public class MithrilApplication extends Application {
 
     public static String getPrefTuesday() {
         return PREF_TUESDAY;
+    }
+
+    public static String getPrefKeyActivity() {
+        return PREF_KEY_ACTIVITY;
+    }
+
+    public static String getPrefKeyTemporal() {
+        return PREF_KEY_TEMPORAL;
+    }
+
+    public static String getPrefKeyPresence() {
+        return PREF_KEY_PRESENCE;
     }
 
     public static String getPrefWednesday() {

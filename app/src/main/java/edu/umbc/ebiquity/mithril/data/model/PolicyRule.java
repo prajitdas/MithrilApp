@@ -9,15 +9,17 @@ public class PolicyRule {
     private int ctxId;
     private int appId;
     private RuleAction action;
-    private SemanticUserContext semanticUserContext;
+    private String contextType;
+    private String semanticContextLabel;
 
-    public PolicyRule(int id, String name, int ctxId, int appId, RuleAction action, SemanticUserContext semanticUserContext) {
+    public PolicyRule(int id, String name, int ctxId, int appId, RuleAction action, String label, String type) {
         this.id = id;
         this.name = name;
         this.ctxId = ctxId;
         this.appId = appId;
         this.action = action;
-        this.semanticUserContext = semanticUserContext;
+        this.contextType = type;
+        this.semanticContextLabel = label;
     }
 
     public PolicyRule() {
@@ -89,11 +91,19 @@ public class PolicyRule {
         this.action = action;
     }
 
-    public SemanticUserContext getSemanticUserContext() {
-        return semanticUserContext;
+    public String getContextType() {
+        return contextType;
     }
 
-    public void setSemanticUserContext(SemanticUserContext semanticUserContext) {
-        this.semanticUserContext = semanticUserContext;
+    public void setContextType(String contextType) {
+        this.contextType = contextType;
+    }
+
+    public String getSemanticContextLabel() {
+        return semanticContextLabel;
+    }
+
+    public void setSemanticContextLabel(String semanticContextLabel) {
+        this.semanticContextLabel = semanticContextLabel;
     }
 }

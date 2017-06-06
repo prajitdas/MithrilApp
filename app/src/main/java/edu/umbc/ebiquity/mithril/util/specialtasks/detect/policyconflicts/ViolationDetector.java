@@ -18,8 +18,8 @@ import edu.umbc.ebiquity.mithril.data.model.PolicyRule;
 import edu.umbc.ebiquity.mithril.data.model.Violation;
 import edu.umbc.ebiquity.mithril.data.model.rules.actions.Action;
 import edu.umbc.ebiquity.mithril.data.model.rules.context.SemanticUserContext;
-import edu.umbc.ebiquity.mithril.data.model.rules.context.contextpieces.SemanticLocation;
-import edu.umbc.ebiquity.mithril.data.model.rules.context.contextpieces.SemanticTime;
+import edu.umbc.ebiquity.mithril.data.model.rules.context.SemanticLocation;
+import edu.umbc.ebiquity.mithril.data.model.rules.context.SemanticTime;
 import edu.umbc.ebiquity.mithril.util.specialtasks.errorsnexceptions.CWAException;
 
 /**
@@ -38,11 +38,11 @@ public class ViolationDetector {
     }
 
     public static void setSemanticUserContext(SemanticUserContext aSemanticUserContext, Context context) {
-        semanticUserContext = new SemanticUserContext();
+        semanticUserContext = aSemanticUserContext;
         if (detectedAddress == null)
-            semanticUserContext.setSemanticLocation(null);
+            semanticUserContext = null;//.setSemanticLocation(null);
         else
-            semanticUserContext.setSemanticLocation(new SemanticLocation(detectedAddress, detectedLocation, context));
+            semanticUserContext = new SemanticLocation(detectedAddress, detectedLocation, context);
         //TODO FIX THIS!!!
         SemanticLocation semanticLocation = new SemanticLocation();
         SemanticTime semanticTime = new SemanticTime("Lunch");
@@ -105,22 +105,22 @@ public class ViolationDetector {
                         Violation violation;
                         //Is this allowed?
                         //Do we need temporal context?
-                        if (rule.getSemanticUserContext().getSemanticTime() != null) {
-                            violation = weNeedTimeViolationCheck(context, rule.getSemanticUserContext().getSemanticTime());
+                        if (rule.getContextType().equals(MithrilApplication.getPrefKeyTemporal())) {
+                            violation = weNeedTimeViolationCheck(context, new SemanticTime(rule.getSemanticContextLabel()));
                             if(violation != null)
                                 mithrilDBHelper.addViolation(mithrilDB, violation);
                         }
                         //Do we need location?
-                        else if (rule.getSemanticUserContext().getSemanticLocation() != null) {
-                            violation = weNeedLocationViolationCheck(context, rule.getSemanticUserContext().getSemanticLocation());
+                        else if (rule.getContextType().equals(MithrilApplication.getPrefKeyLocation())) {
+                            violation = weNeedLocationViolationCheck(context, new SemanticLocation(rule.getSemanticContextLabel()));
                             if(violation != null)
                                 mithrilDBHelper.addViolation(mithrilDB, violation);
                         }
                         //Do we need activity?
-                        else if (rule.getSemanticUserContext().getSemanticActivity() != null)
+                        else if (rule.getContextType().equals(MithrilApplication.getPrefKeyActivity()))
                             weNeedActivityViolationCheck();
                         //Do we need nearby actors?
-                        else if (rule.getSemanticUserContext().getSemanticNearActor() != null)
+                        else if (rule.getContextType().equals(MithrilApplication.getPrefKeyPresence()))
                             weNeedNearActorsViolationCheck();
                     } else {
                         Log.e(MithrilApplication.getDebugTag(), "Serious error! DB contains deny rules. This violates our CWA");

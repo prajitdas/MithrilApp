@@ -1,11 +1,11 @@
-package edu.umbc.ebiquity.mithril.data.model.rules.context.contextpieces;
+package edu.umbc.ebiquity.mithril.data.model.rules.context;
 
 import android.os.Parcel;
 import android.os.Parcelable;
 
 import edu.umbc.ebiquity.mithril.MithrilApplication;
 
-public class SemanticNearActor implements Parcelable {
+public class SemanticNearActor implements Parcelable, SemanticUserContext {
     public static final Parcelable.Creator<SemanticNearActor> CREATOR =
             new Parcelable.Creator<SemanticNearActor>() {
                 @Override
@@ -19,6 +19,7 @@ public class SemanticNearActor implements Parcelable {
                 }
             };
     private String inferredRelationship;
+    private String type;
 
     public SemanticNearActor(String aRelationship) {
         inferredRelationship = aRelationship;
@@ -64,5 +65,25 @@ public class SemanticNearActor implements Parcelable {
     @Override
     public int hashCode() {
         return getInferredRelationship().hashCode();
+    }
+
+    @Override
+    public String getType() {
+        return type;
+    }
+
+    @Override
+    public void setType() {
+        this.type = MithrilApplication.getPrefKeyTemporal();
+    }
+
+    @Override
+    public String getLabel() {
+        return inferredRelationship;
+    }
+
+    @Override
+    public void setLabel(String label) {
+        inferredRelationship = label;
     }
 }
