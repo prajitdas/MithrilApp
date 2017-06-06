@@ -13,6 +13,7 @@ import android.view.ViewGroup;
 import java.util.ArrayList;
 import java.util.List;
 
+import edu.umbc.ebiquity.mithril.MithrilApplication;
 import edu.umbc.ebiquity.mithril.R;
 import edu.umbc.ebiquity.mithril.data.model.rules.context.contextpieces.SemanticActivity;
 import edu.umbc.ebiquity.mithril.ui.adapters.SemanticActivityRecyclerViewAdapter;
@@ -50,6 +51,7 @@ public class SemanticActivityFragment extends Fragment {
         SemanticActivityFragment fragment = new SemanticActivityFragment();
         Bundle args = new Bundle();
         args.putInt(ARG_COLUMN_COUNT, columnCount);
+        args.putParcelableList(MithrilApplication.getPrefKeyActivityInstances(), new ArrayList<SemanticActivity>());
         fragment.setArguments(args);
         return fragment;
     }
@@ -60,6 +62,7 @@ public class SemanticActivityFragment extends Fragment {
 
         if (getArguments() != null) {
             mColumnCount = getArguments().getInt(ARG_COLUMN_COUNT);
+            semanticActivities = getArguments().getParcelableArrayList(MithrilApplication.getPrefKeyActivityInstances());
         }
     }
 
