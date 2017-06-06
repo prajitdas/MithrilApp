@@ -47,7 +47,6 @@ import com.google.gson.JsonSyntaxException;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 import edu.umbc.ebiquity.mithril.MithrilApplication;
@@ -101,10 +100,10 @@ public class InstanceCreationActivity extends AppCompatActivity
     private Button mSecondMajorCtxtBtn;
     private FloatingActionButton mSaveFAB;
     private boolean isThereSomethingToSave = false;
-    private List<SemanticLocation> semanticLocations = new ArrayList<>();
-    private List<SemanticNearActor> semanticNearActors = new ArrayList<>();
-    private List<SemanticTime> semanticTimes = new ArrayList<>();
-    private List<SemanticActivity> semanticActivities = new ArrayList<>();
+    private Map<String, SemanticLocation> semanticLocations = new HashMap<>();
+    private Map<String, SemanticNearActor> semanticNearActors = new HashMap<>();
+    private Map<String, SemanticTime> semanticTimes = new HashMap<>();
+    private Map<String, SemanticActivity> semanticActivities = new HashMap<>();
     /**
      * Tracks whether the user has requested an address. Becomes true when the user requests an
      * address and false when the address (or an error message) is delivered.
@@ -160,16 +159,16 @@ public class InstanceCreationActivity extends AppCompatActivity
             for (Map.Entry<String, ?> aPref : allPrefs.entrySet()) {
                 if (aPref.getKey().startsWith(MithrilApplication.getPrefKeySemanticLocation())) {
                     retrieveDataJson = sharedPreferences.getString(aPref.getKey(), "");
-                    semanticLocations.add(retrieveDataGson.fromJson(retrieveDataJson, SemanticLocation.class));
+                    semanticLocations.put(aPref.getKey(), retrieveDataGson.fromJson(retrieveDataJson, SemanticLocation.class));
                 } else if (aPref.getKey().startsWith(MithrilApplication.getPrefKeySemanticTemporal())) {
                     retrieveDataJson = sharedPreferences.getString(aPref.getKey(), "");
-                    semanticTimes.add(retrieveDataGson.fromJson(retrieveDataJson, SemanticTime.class));
+                    semanticTimes.put(aPref.getKey(), retrieveDataGson.fromJson(retrieveDataJson, SemanticTime.class));
                 } else if (aPref.getKey().startsWith(MithrilApplication.getPrefKeySemanticPresence())) {
                     retrieveDataJson = sharedPreferences.getString(aPref.getKey(), "");
-                    semanticNearActors.add(retrieveDataGson.fromJson(retrieveDataJson, SemanticNearActor.class));
+                    semanticNearActors.put(aPref.getKey(), retrieveDataGson.fromJson(retrieveDataJson, SemanticNearActor.class));
                 } else if (aPref.getKey().startsWith(MithrilApplication.getPrefKeySemanticActivity())) {
                     retrieveDataJson = sharedPreferences.getString(aPref.getKey(), "");
-                    semanticActivities.add(retrieveDataGson.fromJson(retrieveDataJson, SemanticActivity.class));
+                    semanticActivities.put(aPref.getKey(), retrieveDataGson.fromJson(retrieveDataJson, SemanticActivity.class));
                 }
             }
         } catch (NullPointerException e) {
@@ -398,7 +397,7 @@ public class InstanceCreationActivity extends AppCompatActivity
 
     private void loadSemanticLocationFragment() {
         Bundle data = new Bundle();
-        data.putParcelableList(MithrilApplication.getPrefKeyLocationInstances(), semanticLocations);
+        data.putParcelableList(MithrilApplication.getPrefKeyLocationInstances(), new ArrayList<>(semanticLocations.values()));
 
         SemanticLocationFragment semanticLocationFragment = new SemanticLocationFragment();
         semanticLocationFragment.setArguments(data);
@@ -410,7 +409,7 @@ public class InstanceCreationActivity extends AppCompatActivity
 
     private void loadSemanticTemporalFragment() {
         Bundle data = new Bundle();
-        data.putParcelableList(MithrilApplication.getPrefKeyTemporalInstances(), semanticTimes);
+        data.putParcelableList(MithrilApplication.getPrefKeyTemporalInstances(), new ArrayList<>(semanticTimes.values()));
 
         SemanticTimeFragment semanticTimeFragment = new SemanticTimeFragment();
         semanticTimeFragment.setArguments(data);
@@ -422,7 +421,7 @@ public class InstanceCreationActivity extends AppCompatActivity
 
     private void loadSemanticPresenceFragment() {
         Bundle data = new Bundle();
-        data.putParcelableList(MithrilApplication.getPrefKeyTemporalInstances(), semanticNearActors);
+        data.putParcelableList(MithrilApplication.getPrefKeyTemporalInstances(), new ArrayList<>(semanticNearActors.values()));
 
         SemanticNearActorFragment semanticNearActorFragment = new SemanticNearActorFragment();
         semanticNearActorFragment.setArguments(data);
@@ -434,7 +433,7 @@ public class InstanceCreationActivity extends AppCompatActivity
 
     private void loadSemanticActivityFragment() {
         Bundle data = new Bundle();
-        data.putParcelableList(MithrilApplication.getPrefKeyTemporalInstances(), semanticActivities);
+        data.putParcelableList(MithrilApplication.getPrefKeyTemporalInstances(), new ArrayList<>(semanticActivities.values()));
 
         SemanticActivityFragment semanticActivityFragment = new SemanticActivityFragment();
         semanticActivityFragment.setArguments(data);
@@ -598,7 +597,7 @@ public class InstanceCreationActivity extends AppCompatActivity
                 userInputLocation.setLatitude(place.getLatLng().latitude);
                 userInputLocation.setLongitude(place.getLatLng().longitude);
 
-                semanticLocations.add(new SemanticLocation(MithrilApplication.getPrefHomeLocationKey(), userInputLocation));
+                semanticLocations.put(MithrilApplication.getPrefHomeLocationKey(), new SemanticLocation(MithrilApplication.getPrefHomeLocationKey(), userInputLocation));
 
                 /**
                  * We know the location has changed, let's check the address
@@ -622,7 +621,7 @@ public class InstanceCreationActivity extends AppCompatActivity
                 userInputLocation.setLatitude(place.getLatLng().latitude);
                 userInputLocation.setLongitude(place.getLatLng().longitude);
 
-                semanticLocations.add(new SemanticLocation(MithrilApplication.getPrefWorkLocationKey(), userInputLocation));
+                semanticLocations.put(MithrilApplication.getPrefWorkLocationKey(), new SemanticLocation(MithrilApplication.getPrefWorkLocationKey(), userInputLocation));
 
                 /**
                  * We know the location has changed, let's check the address
@@ -672,7 +671,7 @@ public class InstanceCreationActivity extends AppCompatActivity
                 userInputLocation.setLatitude(place.getLatLng().latitude);
                 userInputLocation.setLongitude(place.getLatLng().longitude);
 
-                semanticLocations.add(new SemanticLocation(semanticLocationLabel, userInputLocation));
+                semanticLocations.put(semanticLocationLabel, new SemanticLocation(semanticLocationLabel, userInputLocation));
 
                 /**
                  * We know the location has changed, let's check the address
@@ -962,9 +961,7 @@ public class InstanceCreationActivity extends AppCompatActivity
 //                PermissionHelper.toast(context, getString(R.string.address_found) + ":" + mAddressOutput);
                 MithrilDBHelper mithrilDBHelper = new MithrilDBHelper(getApplicationContext());
                 mithrilDBHelper.addContext(mithrilDBHelper.getWritableDatabase(), MithrilApplication.getPrefKeyLocation(), key);
-                storeInSharedPreferences(resultData.getString(
-                        key),
-                        mAddressOutput);
+                storeInSharedPreferences(key, mAddressOutput);
             }
             // Reset. Enable the Fetch Address button and stop showing the progress bar.
             mAddressRequested = false;
@@ -981,9 +978,9 @@ public class InstanceCreationActivity extends AppCompatActivity
          */
         public void storeInSharedPreferences(String key, Address address) {
             SemanticLocation tempSemanticLocation = null;
-            for (SemanticLocation semanticLocation : semanticLocations)
-                if (semanticLocation.getInferredLocation().equals(key))
-                    tempSemanticLocation = semanticLocation;
+            for (Map.Entry<String, SemanticLocation> semanticLocation : semanticLocations.entrySet())
+                if (semanticLocation.getKey().equals(key))
+                    tempSemanticLocation = semanticLocation.getValue();
             tempSemanticLocation.setAddress(address);
 
             SharedPreferences.Editor editor = context.getSharedPreferences(MithrilApplication.getSharedPreferencesName(), Context.MODE_PRIVATE).edit();
