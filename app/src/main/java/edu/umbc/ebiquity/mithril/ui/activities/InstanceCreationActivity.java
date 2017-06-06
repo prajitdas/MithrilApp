@@ -46,10 +46,13 @@ import com.google.gson.Gson;
 import com.google.gson.JsonSyntaxException;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import edu.umbc.ebiquity.mithril.MithrilApplication;
 import edu.umbc.ebiquity.mithril.R;
+import edu.umbc.ebiquity.mithril.data.dbhelpers.MithrilDBHelper;
 import edu.umbc.ebiquity.mithril.data.model.rules.context.SemanticActivity;
 import edu.umbc.ebiquity.mithril.data.model.rules.context.SemanticLocation;
 import edu.umbc.ebiquity.mithril.data.model.rules.context.SemanticNearActor;
@@ -143,8 +146,35 @@ public class InstanceCreationActivity extends AppCompatActivity
         super.onResume();
         overridePendingTransition(0, 0);
 
-        init();
+        initData();
+        initViews();
         mGoogleApiClient.connect();
+    }
+
+    private void initData() {
+        Gson retrieveDataGson = new Gson();
+        String retrieveDataJson = null;
+        Map<String, ?> allPrefs = new HashMap<>();
+        try {
+            allPrefs = sharedPreferences.getAll();
+            for (Map.Entry<String, ?> aPref : allPrefs.entrySet()) {
+                if (aPref.getKey().startsWith(MithrilApplication.getPrefKeySemanticLocation())) {
+                    retrieveDataJson = sharedPreferences.getString(aPref.getKey(), "");
+                    semanticLocations.add(retrieveDataGson.fromJson(retrieveDataJson, SemanticLocation.class));
+                } else if (aPref.getKey().startsWith(MithrilApplication.getPrefKeySemanticTemporal())) {
+                    retrieveDataJson = sharedPreferences.getString(aPref.getKey(), "");
+                    semanticTimes.add(retrieveDataGson.fromJson(retrieveDataJson, SemanticTime.class));
+                } else if (aPref.getKey().startsWith(MithrilApplication.getPrefKeySemanticPresence())) {
+                    retrieveDataJson = sharedPreferences.getString(aPref.getKey(), "");
+                    semanticNearActors.add(retrieveDataGson.fromJson(retrieveDataJson, SemanticNearActor.class));
+                } else if (aPref.getKey().startsWith(MithrilApplication.getPrefKeySemanticActivity())) {
+                    retrieveDataJson = sharedPreferences.getString(aPref.getKey(), "");
+                    semanticActivities.add(retrieveDataGson.fromJson(retrieveDataJson, SemanticActivity.class));
+                }
+            }
+        } catch (NullPointerException e) {
+            Log.d(MithrilApplication.getDebugTag(), "Prefs empty somehow?!");
+        }
     }
 
     @Override
@@ -163,7 +193,7 @@ public class InstanceCreationActivity extends AppCompatActivity
         editor.apply();
     }
 
-    private void init() {
+    private void initViews() {
         editor = getSharedPreferences(MithrilApplication.getSharedPreferencesName(), Context.MODE_PRIVATE).edit();
         activityBaseTitle = getApplicationContext().getResources().getString(R.string.title_activity_instance_creation);
 
@@ -930,6 +960,8 @@ public class InstanceCreationActivity extends AppCompatActivity
             if (resultCode == MithrilApplication.SUCCESS_RESULT) {
 //                Log.d(MithrilApplication.getDebugMithrilApplication.getDebugTag()(), getString(R.string.address_found) + ":" + mAddressOutput);
 //                PermissionHelper.toast(context, getString(R.string.address_found) + ":" + mAddressOutput);
+                MithrilDBHelper mithrilDBHelper = new MithrilDBHelper(getApplicationContext());
+                mithrilDBHelper.addContext(mithrilDBHelper.getWritableDatabase(), MithrilApplication.getPrefKeyLocation(), key);
                 storeInSharedPreferences(resultData.getString(
                         key),
                         mAddressOutput);
@@ -948,10 +980,17 @@ public class InstanceCreationActivity extends AppCompatActivity
          *                MyObject obj = gson.fromJson(json, MyObject.class);
          */
         public void storeInSharedPreferences(String key, Address address) {
+            SemanticLocation tempSemanticLocation = null;
+            for (SemanticLocation semanticLocation : semanticLocations)
+                if (semanticLocation.getInferredLocation().equals(key))
+                    tempSemanticLocation = semanticLocation;
+            tempSemanticLocation.setAddress(address);
+
             SharedPreferences.Editor editor = context.getSharedPreferences(MithrilApplication.getSharedPreferencesName(), Context.MODE_PRIVATE).edit();
-            Gson gson = new Gson();
-            String json = gson.toJson(address);
-            editor.putString(key, json);
+
+            Gson storeDataGson = new Gson();
+            String storeDataJson = storeDataGson.toJson(tempSemanticLocation);
+            editor.putString(MithrilApplication.getPrefKeySemanticLocation() + key, storeDataJson);
             editor.apply();
         }
     }

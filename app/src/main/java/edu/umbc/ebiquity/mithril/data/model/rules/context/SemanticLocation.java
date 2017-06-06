@@ -1,7 +1,5 @@
 package edu.umbc.ebiquity.mithril.data.model.rules.context;
 
-import android.content.Context;
-import android.content.SharedPreferences;
 import android.location.Address;
 import android.location.Location;
 import android.os.Parcel;
@@ -44,17 +42,17 @@ public class SemanticLocation implements Parcelable, SemanticUserContext {
         this.address = new Address(Locale.getDefault());
     }
 
-    public SemanticLocation(Address address, Location location, Context context) {
+    public SemanticLocation(Address address, Location location, String key) {
         this.address = address;
         this.location = location;
 
-        SharedPreferences sharedPreferences = context.getSharedPreferences(MithrilApplication.getSharedPreferencesName(), Context.MODE_PRIVATE);
-        String homeLocation = sharedPreferences.getString(MithrilApplication.getPrefHomeLocationKey(), null);
-//        String workLocation = sharedPreferences.getString(MithrilApplication.getPrefWorkLocationKey(), null);
-        if (address.getPostalCode().equals(homeLocation))
-            this.inferredLocation = "home";
-        else
-            this.inferredLocation = "work";
+//        SharedPreferences sharedPreferences = context.getSharedPreferences(MithrilApplication.getSharedPreferencesName(), Context.MODE_PRIVATE);
+//        String homeLocation = sharedPreferences.getString(MithrilApplication.getPrefHomeLocationKey(), null);
+////        String workLocation = sharedPreferences.getString(MithrilApplication.getPrefWorkLocationKey(), null);
+//        if (address.getPostalCode().equals(homeLocation))
+//            this.inferredLocation = "home";
+//        else
+        this.inferredLocation = key;
     }
 
     public SemanticLocation(String inferredLocation) {

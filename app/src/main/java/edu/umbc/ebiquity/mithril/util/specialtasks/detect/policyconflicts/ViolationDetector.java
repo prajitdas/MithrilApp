@@ -17,9 +17,9 @@ import edu.umbc.ebiquity.mithril.data.dbhelpers.MithrilDBHelper;
 import edu.umbc.ebiquity.mithril.data.model.PolicyRule;
 import edu.umbc.ebiquity.mithril.data.model.Violation;
 import edu.umbc.ebiquity.mithril.data.model.rules.actions.Action;
-import edu.umbc.ebiquity.mithril.data.model.rules.context.SemanticUserContext;
 import edu.umbc.ebiquity.mithril.data.model.rules.context.SemanticLocation;
 import edu.umbc.ebiquity.mithril.data.model.rules.context.SemanticTime;
+import edu.umbc.ebiquity.mithril.data.model.rules.context.SemanticUserContext;
 import edu.umbc.ebiquity.mithril.util.specialtasks.errorsnexceptions.CWAException;
 
 /**
@@ -42,7 +42,7 @@ public class ViolationDetector {
         if (detectedAddress == null)
             semanticUserContext = null;//.setSemanticLocation(null);
         else
-            semanticUserContext = new SemanticLocation(detectedAddress, detectedLocation, context);
+            semanticUserContext = new SemanticLocation();
         //TODO FIX THIS!!!
         SemanticLocation semanticLocation = new SemanticLocation();
         SemanticTime semanticTime = new SemanticTime("Lunch");

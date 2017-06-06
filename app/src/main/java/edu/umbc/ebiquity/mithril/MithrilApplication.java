@@ -116,10 +116,15 @@ public class MithrilApplication extends Application {
     //Preference keys
     private static final String PREF_KEY_CURRENT_TIME = "time";
     private static final String PREF_KEY_CURRENT_LOCATION = "currloc";
+    private static final String PREF_KEY_SEMANTIC = "Semantic";
     private static final String PREF_KEY_LOCATION = "Location";
     private static final String PREF_KEY_ACTIVITY = "Activity";
     private static final String PREF_KEY_TEMPORAL = "Temporal";
     private static final String PREF_KEY_PRESENCE = "Presence";
+    private static final String PREF_KEY_SEMANTIC_LOCATION = PREF_KEY_SEMANTIC + PREF_KEY_LOCATION;
+    private static final String PREF_KEY_SEMANTIC_ACTIVITY = PREF_KEY_SEMANTIC + PREF_KEY_ACTIVITY;
+    private static final String PREF_KEY_SEMANTIC_TEMPORAL = PREF_KEY_SEMANTIC + PREF_KEY_TEMPORAL;
+    private static final String PREF_KEY_SEMANTIC_PRESENCE = PREF_KEY_SEMANTIC + PREF_KEY_PRESENCE;
     private static final String PREF_KEY_CURRENT_ADDRESS = "curraddr";
     private static final String PREF_KEY_WHAT_LEVEL = "level";
     private static final String PREF_KEY_RESET_ENABLED = "reset";
@@ -697,6 +702,22 @@ public class MithrilApplication extends Application {
         return PREF_WORK_LOCATION_KEY;
     }
 
+    public static String getPrefKeySemanticLocation() {
+        return PREF_KEY_SEMANTIC_LOCATION;
+    }
+
+    public static String getPrefKeySemanticActivity() {
+        return PREF_KEY_SEMANTIC_ACTIVITY;
+    }
+
+    public static String getPrefKeySemanticTemporal() {
+        return PREF_KEY_SEMANTIC_TEMPORAL;
+    }
+
+    public static String getPrefKeySemanticPresence() {
+        return PREF_KEY_SEMANTIC_PRESENCE;
+    }
+
     public static String getPrefPresenceInfoContextEnableKey() {
         return PREF_PRESENCE_INFO_CONTEXT_ENABLE_KEY;
     }
@@ -887,6 +908,10 @@ public class MithrilApplication extends Application {
 
     public static String getInsertStatementGooglePermissions() {
         return INSERT_STATEMENT_GOOGLE_PERMISSIONS;
+    }
+
+    public static String getPrefKeySemantic() {
+        return PREF_KEY_SEMANTIC;
     }
 
     public static String getFlierPdfFileName() {
