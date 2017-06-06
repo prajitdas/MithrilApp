@@ -1,32 +1,31 @@
 package edu.umbc.ebiquity.mithril.data.model.rules.context.contextpieces;
 
+import android.os.Parcel;
+import android.os.Parcelable;
+
 import edu.umbc.ebiquity.mithril.MithrilApplication;
 
-public class SemanticActivity {
-    private String rawActivity;
-    private String inferredActivity;
+public class SemanticActivity implements Parcelable {
+    public static final Parcelable.Creator<SemanticActivity> CREATOR =
+            new Parcelable.Creator<SemanticActivity>() {
+                @Override
+                public SemanticActivity createFromParcel(Parcel in) {
+                    return new SemanticActivity(in.readString());
+                }
 
-    public SemanticActivity(String rawActivity, String inferredActivity) {
-        setRawActivity(rawActivity);
-        setInferredActivity(inferredActivity);
-    }
+                @Override
+                public SemanticActivity[] newArray(int size) {
+                    return new SemanticActivity[size];
+                }
+            };
+    private String inferredActivity;
 
     public SemanticActivity(String inferredActivity) {
         setInferredActivity(inferredActivity);
-        setRawActivity("N/A");
     }
 
     public SemanticActivity() {
         setInferredActivity(MithrilApplication.getContextDefaultActivity());
-        setRawActivity("N/A");
-    }
-
-    public String getRawActivity() {
-        return rawActivity;
-    }
-
-    public void setRawActivity(String rawActivity) {
-        this.rawActivity = rawActivity;
     }
 
     public String getInferredActivity() {
@@ -40,9 +39,18 @@ public class SemanticActivity {
     @Override
     public String toString() {
         return "SemanticActivity{" +
-                "rawActivity='" + rawActivity + '\'' +
                 ", inferredActivity='" + inferredActivity + '\'' +
                 '}';
+    }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeString(inferredActivity);
     }
 
     @Override
@@ -52,14 +60,11 @@ public class SemanticActivity {
 
         SemanticActivity that = (SemanticActivity) o;
 
-        if (!getRawActivity().equals(that.getRawActivity())) return false;
         return getInferredActivity().equals(that.getInferredActivity());
     }
 
     @Override
     public int hashCode() {
-        int result = getRawActivity().hashCode();
-        result = 31 * result + getInferredActivity().hashCode();
-        return result;
+        return getInferredActivity().hashCode();
     }
 }

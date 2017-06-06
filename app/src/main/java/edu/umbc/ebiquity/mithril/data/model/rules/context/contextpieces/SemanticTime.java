@@ -1,28 +1,47 @@
 package edu.umbc.ebiquity.mithril.data.model.rules.context.contextpieces;
 
+import android.os.Parcel;
+import android.os.Parcelable;
+
 import edu.umbc.ebiquity.mithril.MithrilApplication;
 
-public class SemanticTime {
-    public long getGetRawTime() {
-        return getRawTime;
-    }
+public class SemanticTime implements Parcelable {
+    public static final Parcelable.Creator<SemanticTime> CREATOR =
+            new Parcelable.Creator<SemanticTime>() {
+                @Override
+                public SemanticTime createFromParcel(Parcel in) {
+                    String inferredTime = in.readString();
+                    Long rawTime = in.readLong();
+                    return new SemanticTime(inferredTime, rawTime);
+                }
 
-    public void setGetRawTime(long getRawTime) {
-        this.getRawTime = getRawTime;
-    }
-
-    private long getRawTime;
+                @Override
+                public SemanticTime[] newArray(int size) {
+                    return new SemanticTime[size];
+                }
+            };
+    private long rawTime;
     private String inferredTime;
 
     public SemanticTime() {
         this.inferredTime = MithrilApplication.getContextDefaultTime();
     }
 
-    /**
-     * @param deviceTime
-     */
-    public SemanticTime(String deviceTime) {
-        this.inferredTime = deviceTime;
+    public SemanticTime(String inferredTime) {
+        this.inferredTime = inferredTime;
+    }
+
+    public SemanticTime(String inferredTime, Long rawTime) {
+        this.inferredTime = inferredTime;
+        this.rawTime = rawTime;
+    }
+
+    public long getRawTime() {
+        return rawTime;
+    }
+
+    public void setRawTime(long getRawTime) {
+        this.rawTime = getRawTime;
     }
 
     /* (non-Javadoc)
@@ -79,5 +98,16 @@ public class SemanticTime {
     @Override
     public String toString() {
         return inferredTime;
+    }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeLong(rawTime);
+        dest.writeString(inferredTime);
     }
 }

@@ -49,16 +49,6 @@ public class MithrilApplication extends Application {
     public static final String CAR_INFORMATION_PERMISSION_GROUP = "com.google.android.gms.permission.CAR_INFORMATION";
     public static final String NO_PERMISSION_GROUP = "no-groups";
 
-    /**
-     * Used to set an expiration time for a geofence. After this amount of time Location Services
-     * stops tracking the geofence.
-     */
-    public static final long GEOFENCE_EXPIRATION_IN_HOURS = 12;
-    /**
-     * For this sample, geofences expire after twelve hours.
-     */
-    public static final long GEOFENCE_EXPIRATION_IN_MILLISECONDS =
-            GEOFENCE_EXPIRATION_IN_HOURS * 60 * 60 * 1000;
     public static final float GEOFENCE_RADIUS_IN_METERS = 200; // 200 meters
     /**
      * Map for storing information about airports in the San Francisco bay area.
@@ -169,6 +159,11 @@ public class MithrilApplication extends Application {
     private static final String PREF_KEY_PRESENCE_INSTANCE = "presenceInstance";
     private static final String PREF_KEY_TEMPORAL_INSTANCE = "temporalInstance";
 
+    private static final String PREF_KEY_LOCATION_INSTANCES = "locationInstances";
+    private static final String PREF_KEY_ACTIVITY_INSTANCES = "activityInstances";
+    private static final String PREF_KEY_PRESENCE_INSTANCES = "presenceInstances";
+    private static final String PREF_KEY_TEMPORAL_INSTANCES = "temporalInstances";
+
     private static final String PREF_KEY_INIT_INSTANCES_CREATED = "initialInstancesCreated";
     private static final String PREF_KEY_USER_DENIED_USAGE_STATS_PERMISSIONS = "userDeniedUsageStatsPermissions";
     private static final String PREF_KEY_USER_DENIED_PERMISSIONS = "userDeniedPermissions";
@@ -226,6 +221,7 @@ public class MithrilApplication extends Application {
     private static final String CONTEXT_DEFAULT_ACTIVITY = "Default Activity";
     private static final String CONTEXT_DEFAULT_WORK_LOCATION = "Default Work Location";
     private static final String CONTEXT_DEFAULT_IDENTITY = "John Doe";
+    private static final String CONTEXT_DEFAULT_RELATIONSHIP = "Boss";
     private static final String POL_RUL_NAME_SOCIAL_MEDIA_CAMERA_ACCESS_RULE = "Social_Media_Camera_Access_Rule";
     private static final String POL_RUL_DEFAULT_RULE = "Default policy rule name";
     private static final String DEFAULT_DESCRIPTION = "Default description";
@@ -638,6 +634,22 @@ public class MithrilApplication extends Application {
         return PERMISSION_FLAG_NONE;
     }
 
+    public static String getPrefKeyLocationInstances() {
+        return PREF_KEY_LOCATION_INSTANCES;
+    }
+
+    public static String getPrefKeyActivityInstances() {
+        return PREF_KEY_ACTIVITY_INSTANCES;
+    }
+
+    public static String getPrefKeyPresenceInstances() {
+        return PREF_KEY_PRESENCE_INSTANCES;
+    }
+
+    public static String getPrefKeyTemporalInstances() {
+        return PREF_KEY_TEMPORAL_INSTANCES;
+    }
+
     public static int getMillisecondsPerSecond() {
         return MILLISECONDS_PER_SECOND;
     }
@@ -788,6 +800,10 @@ public class MithrilApplication extends Application {
 
     public static String getDefaultDescription() {
         return DEFAULT_DESCRIPTION;
+    }
+
+    public static String getContextDefaultRelationship() {
+        return CONTEXT_DEFAULT_RELATIONSHIP;
     }
 
     public static String getKeyPolicyRuleId() {

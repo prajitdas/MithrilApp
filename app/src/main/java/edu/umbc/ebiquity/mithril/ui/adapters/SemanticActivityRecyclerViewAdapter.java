@@ -9,8 +9,8 @@ import android.widget.TextView;
 import java.util.List;
 
 import edu.umbc.ebiquity.mithril.R;
-import edu.umbc.ebiquity.mithril.ui.fragments.instancecreationactivityfragments.SemanticActivityFragment.OnListFragmentInteractionListener;
 import edu.umbc.ebiquity.mithril.data.model.rules.context.contextpieces.SemanticActivity;
+import edu.umbc.ebiquity.mithril.ui.fragments.instancecreationactivityfragments.SemanticActivityFragment.OnListFragmentInteractionListener;
 
 /**
  * {@link RecyclerView.Adapter} that can display a {@link SemanticActivity} and makes a call to the
@@ -38,7 +38,7 @@ public class SemanticActivityRecyclerViewAdapter extends RecyclerView.Adapter<Se
     public void onBindViewHolder(final ViewHolder holder, int position) {
         holder.mItem = semanticActivities.get(position);
         holder.mIdView.setText(semanticActivities.get(position).getInferredActivity());
-        holder.mContentView.setText(semanticActivities.get(position).getRawActivity());
+        holder.mContentView.setText(semanticActivities.get(position).getInferredActivity());
 
         holder.mView.setOnClickListener(new View.OnClickListener() {
             @Override

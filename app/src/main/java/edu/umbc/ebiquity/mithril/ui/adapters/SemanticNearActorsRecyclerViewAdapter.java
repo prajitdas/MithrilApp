@@ -9,20 +9,20 @@ import android.widget.TextView;
 import java.util.List;
 
 import edu.umbc.ebiquity.mithril.R;
-import edu.umbc.ebiquity.mithril.ui.fragments.instancecreationactivityfragments.SemanticNearActorsFragment.OnListFragmentInteractionListener;
-import edu.umbc.ebiquity.mithril.data.model.rules.context.contextpieces.SemanticNearActors;
+import edu.umbc.ebiquity.mithril.data.model.rules.context.contextpieces.SemanticNearActor;
+import edu.umbc.ebiquity.mithril.ui.fragments.instancecreationactivityfragments.SemanticNearActorFragment.OnListFragmentInteractionListener;
 
 /**
- * {@link RecyclerView.Adapter} that can display a {@link SemanticNearActors} and makes a call to the
+ * {@link RecyclerView.Adapter} that can display a {@link SemanticNearActor} and makes a call to the
  * specified {@link OnListFragmentInteractionListener}.
  * TODO: Replace the implementation with code for your data type.
  */
 public class SemanticNearActorsRecyclerViewAdapter extends RecyclerView.Adapter<SemanticNearActorsRecyclerViewAdapter.ViewHolder> {
 
-    private final List<SemanticNearActors> semanticNearActors;
+    private final List<SemanticNearActor> semanticNearActors;
     private final OnListFragmentInteractionListener mListener;
 
-    public SemanticNearActorsRecyclerViewAdapter(List<SemanticNearActors> items, OnListFragmentInteractionListener listener) {
+    public SemanticNearActorsRecyclerViewAdapter(List<SemanticNearActor> items, OnListFragmentInteractionListener listener) {
         semanticNearActors = items;
         mListener = listener;
     }
@@ -37,7 +37,7 @@ public class SemanticNearActorsRecyclerViewAdapter extends RecyclerView.Adapter<
     @Override
     public void onBindViewHolder(final ViewHolder holder, int position) {
         holder.mItem = semanticNearActors.get(position);
-        holder.mIdView.setText(semanticNearActors.get(position).getInferredActorRelationship());
+        holder.mIdView.setText(semanticNearActors.get(position).getInferredRelationship());
         holder.mContentView.setText(semanticNearActors.get(position).toString());
 
         holder.mView.setOnClickListener(new View.OnClickListener() {
@@ -61,7 +61,7 @@ public class SemanticNearActorsRecyclerViewAdapter extends RecyclerView.Adapter<
         public final View mView;
         public final TextView mIdView;
         public final TextView mContentView;
-        public SemanticNearActors mItem;
+        public SemanticNearActor mItem;
 
         public ViewHolder(View view) {
             super(view);

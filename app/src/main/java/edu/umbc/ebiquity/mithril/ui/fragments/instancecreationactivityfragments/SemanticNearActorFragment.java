@@ -14,7 +14,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import edu.umbc.ebiquity.mithril.R;
-import edu.umbc.ebiquity.mithril.data.model.rules.context.contextpieces.SemanticNearActors;
+import edu.umbc.ebiquity.mithril.data.model.rules.context.contextpieces.SemanticNearActor;
 import edu.umbc.ebiquity.mithril.ui.adapters.SemanticNearActorsRecyclerViewAdapter;
 
 /**
@@ -23,7 +23,7 @@ import edu.umbc.ebiquity.mithril.ui.adapters.SemanticNearActorsRecyclerViewAdapt
  * Activities containing this fragment MUST implement the {@link OnListFragmentInteractionListener}
  * interface.
  */
-public class SemanticNearActorsFragment extends Fragment {
+public class SemanticNearActorFragment extends Fragment {
 
     // TODO: Customize parameter argument names
     private static final String ARG_COLUMN_COUNT = "column-count";
@@ -34,20 +34,20 @@ public class SemanticNearActorsFragment extends Fragment {
     /**
      * An array of semantic activity items.
      */
-    private List<SemanticNearActors> semanticNearActors = new ArrayList<>();
+    private List<SemanticNearActor> semanticNearActors = new ArrayList<>();
     private View view;
 
     /**
      * Mandatory empty constructor for the fragment manager to instantiate the
      * fragment (e.g. upon screen orientation changes).
      */
-    public SemanticNearActorsFragment() {
+    public SemanticNearActorFragment() {
     }
 
     // TODO: Customize parameter initialization
     @SuppressWarnings("unused")
-    public static SemanticNearActorsFragment newInstance(int columnCount) {
-        SemanticNearActorsFragment fragment = new SemanticNearActorsFragment();
+    public static SemanticNearActorFragment newInstance(int columnCount) {
+        SemanticNearActorFragment fragment = new SemanticNearActorFragment();
         Bundle args = new Bundle();
         args.putInt(ARG_COLUMN_COUNT, columnCount);
         fragment.setArguments(args);
@@ -112,6 +112,6 @@ public class SemanticNearActorsFragment extends Fragment {
      */
     public interface OnListFragmentInteractionListener {
         // TODO: Update argument type and name
-        void onListFragmentInteraction(SemanticNearActors item);
+        void onListFragmentInteraction(SemanticNearActor item);
     }
 }

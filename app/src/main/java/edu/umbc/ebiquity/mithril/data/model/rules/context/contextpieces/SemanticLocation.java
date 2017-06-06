@@ -4,26 +4,27 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.location.Address;
 import android.location.Location;
+import android.os.Parcel;
+import android.os.Parcelable;
 
 import edu.umbc.ebiquity.mithril.MithrilApplication;
 
-public class SemanticLocation {
-    public Location getLocation() {
-        return location;
-    }
+public class SemanticLocation implements Parcelable {
+    public static final Creator<SemanticLocation> CREATOR =
+            new Creator<SemanticLocation>() {
+                @Override
+                public SemanticLocation createFromParcel(Parcel in) {
+                    String inferredLocation = in.readString();
+                    Location location = Location.CREATOR.createFromParcel(in);
+                    Address address = Address.CREATOR.createFromParcel(in);
+                    return new SemanticLocation(inferredLocation, location, address);
+                }
 
-    public void setLocation(Location location) {
-        this.location = location;
-    }
-
-    public Address getAddress() {
-        return address;
-    }
-
-    public void setAddress(Address address) {
-        this.address = address;
-    }
-
+                @Override
+                public SemanticLocation[] newArray(int size) {
+                    return new SemanticLocation[size];
+                }
+            };
     private Location location;
     private Address address;
     private String inferredLocation;
@@ -66,6 +67,22 @@ public class SemanticLocation {
         this.inferredLocation = MithrilApplication.getContextDefaultWorkLocation();
         this.location = null;
         this.address = null;
+    }
+
+    public Location getLocation() {
+        return location;
+    }
+
+    public void setLocation(Location location) {
+        this.location = location;
+    }
+
+    public Address getAddress() {
+        return address;
+    }
+
+    public void setAddress(Address address) {
+        this.address = address;
     }
 
     /* (non-Javadoc)
@@ -123,5 +140,17 @@ public class SemanticLocation {
     @Override
     public String toString() {
         return inferredLocation;
+    }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeParcelable(location, flags);
+        dest.writeParcelable(address, flags);
+        dest.writeString(inferredLocation);
     }
 }

@@ -1,9 +1,11 @@
 package edu.umbc.ebiquity.mithril.ui.activities;
 
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.app.FragmentManager;
 import android.app.PendingIntent;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.res.Resources;
@@ -24,6 +26,7 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.Toast;
 
@@ -49,11 +52,11 @@ import edu.umbc.ebiquity.mithril.MithrilApplication;
 import edu.umbc.ebiquity.mithril.R;
 import edu.umbc.ebiquity.mithril.data.model.rules.context.contextpieces.SemanticActivity;
 import edu.umbc.ebiquity.mithril.data.model.rules.context.contextpieces.SemanticLocation;
-import edu.umbc.ebiquity.mithril.data.model.rules.context.contextpieces.SemanticNearActors;
+import edu.umbc.ebiquity.mithril.data.model.rules.context.contextpieces.SemanticNearActor;
 import edu.umbc.ebiquity.mithril.data.model.rules.context.contextpieces.SemanticTime;
 import edu.umbc.ebiquity.mithril.ui.fragments.instancecreationactivityfragments.SemanticActivityFragment;
 import edu.umbc.ebiquity.mithril.ui.fragments.instancecreationactivityfragments.SemanticLocationFragment;
-import edu.umbc.ebiquity.mithril.ui.fragments.instancecreationactivityfragments.SemanticNearActorsFragment;
+import edu.umbc.ebiquity.mithril.ui.fragments.instancecreationactivityfragments.SemanticNearActorFragment;
 import edu.umbc.ebiquity.mithril.ui.fragments.instancecreationactivityfragments.SemanticTimeFragment;
 import edu.umbc.ebiquity.mithril.util.services.FetchAddressIntentService;
 import edu.umbc.ebiquity.mithril.util.services.GeofenceTransitionsIntentService;
@@ -64,7 +67,7 @@ import edu.umbc.ebiquity.mithril.util.specialtasks.permissions.PermissionHelper;
 public class InstanceCreationActivity extends AppCompatActivity
         implements SemanticTimeFragment.OnListFragmentInteractionListener,
         SemanticLocationFragment.OnListFragmentInteractionListener,
-        SemanticNearActorsFragment.OnListFragmentInteractionListener,
+        SemanticNearActorFragment.OnListFragmentInteractionListener,
         SemanticActivityFragment.OnListFragmentInteractionListener,
         GoogleApiClient.ConnectionCallbacks,
         GoogleApiClient.OnConnectionFailedListener,
@@ -75,7 +78,7 @@ public class InstanceCreationActivity extends AppCompatActivity
     private static final String FRAGMENT_TEMPORAL = "temporal";
     private static final String FRAGMENT_ACTIVITY = "activity";
     private static String currentFragment = new String();
-    /******************************** Address AUTOCOMPLETE activity ***********************************************/
+    private static String labelSelected = new String();
     private final int PLACE_AUTOCOMPLETE_REQUEST_CODE_HOME = 1;
     private final int PLACE_AUTOCOMPLETE_REQUEST_CODE_WORK = 2;
     private final int PLACE_AUTOCOMPLETE_REQUEST_CODE_MORE = 3;
@@ -86,7 +89,7 @@ public class InstanceCreationActivity extends AppCompatActivity
     /**
      * The list of geofences used in this sample.
      */
-    protected ArrayList<Geofence> mGeofenceList;
+    protected ArrayList<Geofence> mGeofenceList = new ArrayList<>();
     private BottomNavigationView navigation;
     private SharedPreferences.Editor editor;
     private SharedPreferences sharedPreferences;
@@ -97,7 +100,7 @@ public class InstanceCreationActivity extends AppCompatActivity
     private FloatingActionButton mSaveFAB;
     private boolean isThereSomethingToSave = false;
     private List<SemanticLocation> semanticLocations = new ArrayList<>();
-    private List<SemanticNearActors> semanticNearActors = new ArrayList<>();
+    private List<SemanticNearActor> semanticNearActors = new ArrayList<>();
     private List<SemanticTime> semanticTimes = new ArrayList<>();
     private List<SemanticActivity> semanticActivities = new ArrayList<>();
     /**
@@ -365,24 +368,32 @@ public class InstanceCreationActivity extends AppCompatActivity
     }
 
     private void loadSemanticLocationFragment() {
+        Bundle bundle = new Bundle();
+        bundle.putParcelableList(MithrilApplication.getPrefKeyLocationInstances(), semanticLocations);
         FragmentManager fragmentManager = getFragmentManager();
         fragmentManager.beginTransaction().replace(R.id.container_instances, new SemanticLocationFragment())
                 .commit();
     }
 
     private void loadSemanticTemporalFragment() {
+        Bundle bundle = new Bundle();
+        bundle.putParcelableList(MithrilApplication.getPrefKeyTemporalInstances(), semanticTimes);
         FragmentManager fragmentManager = getFragmentManager();
         fragmentManager.beginTransaction().replace(R.id.container_instances, new SemanticLocationFragment())
                 .commit();
     }
 
     private void loadSemanticPresenceFragment() {
+        Bundle bundle = new Bundle();
+        bundle.putParcelableList(MithrilApplication.getPrefKeyTemporalInstances(), semanticNearActors);
         FragmentManager fragmentManager = getFragmentManager();
         fragmentManager.beginTransaction().replace(R.id.container_instances, new SemanticLocationFragment())
                 .commit();
     }
 
     private void loadSemanticActivityFragment() {
+        Bundle bundle = new Bundle();
+        bundle.putParcelableList(MithrilApplication.getPrefKeyTemporalInstances(), semanticActivities);
         FragmentManager fragmentManager = getFragmentManager();
         fragmentManager.beginTransaction().replace(R.id.container_instances, new SemanticLocationFragment())
                 .commit();
@@ -484,12 +495,9 @@ public class InstanceCreationActivity extends AppCompatActivity
     }
 
     @Override
-    public void onListFragmentInteraction(SemanticNearActors item) {
+    public void onListFragmentInteraction(SemanticNearActor item) {
 
     }
-    /********************************** Address AUTOCOMPLETE activity ***********************************************/
-
-    /*************************************** GeoFence operation *****************************************************/
 
     private void openAutocompleteActivity(int requestCode) {
         try {
@@ -536,10 +544,8 @@ public class InstanceCreationActivity extends AppCompatActivity
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == PLACE_AUTOCOMPLETE_REQUEST_CODE_HOME) {
             if (resultCode == Activity.RESULT_OK) {
-                // Get the user's selected place from the Intent.
                 Place place = PlaceAutocomplete.getPlace(this, data);
 
-//                mPrefHomeLocation.setSummary(place.getAddress());
                 editor.putString(MithrilApplication.getPrefHomeLocationKey(), place.getAddress().toString());
                 editor.apply();
 
@@ -547,9 +553,6 @@ public class InstanceCreationActivity extends AppCompatActivity
                 location.setLatitude(place.getLatLng().latitude);
                 location.setLongitude(place.getLatLng().longitude);
                 semanticLocations.add(new SemanticLocation(MithrilApplication.getPrefHomeLocationKey(), location));
-
-                // We have a geofences to put around the home location now!
-                populateGeofenceList(MithrilApplication.getPrefHomeLocationKey(), location.getLatitude(), location.getLongitude());
 
                 /**
                  * We know the location has changed, let's check the address
@@ -560,14 +563,12 @@ public class InstanceCreationActivity extends AppCompatActivity
                 Status status = PlaceAutocomplete.getStatus(this, data);
                 Log.e(MithrilApplication.getDebugTag(), "Error: Status = " + status.toString());
             } else if (resultCode == Activity.RESULT_CANCELED) {
-                // Indicates that the activity closed before a selection was made. For example if
-                // the user pressed the back button.
+                // Indicates that the activity closed before a selection was made. For example if the user pressed the back button.
             }
         } else if (requestCode == PLACE_AUTOCOMPLETE_REQUEST_CODE_WORK) {
             if (resultCode == Activity.RESULT_OK) {
                 Place place = PlaceAutocomplete.getPlace(this, data);
 
-//                mPrefWorkLocation.setSummary(place.getAddress());
                 editor.putString(MithrilApplication.getPrefWorkLocationKey(), place.getAddress().toString());
                 editor.apply();
 
@@ -575,9 +576,6 @@ public class InstanceCreationActivity extends AppCompatActivity
                 location.setLatitude(place.getLatLng().latitude);
                 location.setLongitude(place.getLatLng().longitude);
                 semanticLocations.add(new SemanticLocation(MithrilApplication.getPrefWorkLocationKey(), location));
-
-                // We have a geofences to put around the work location now!
-                populateGeofenceList(MithrilApplication.getPrefWorkLocationKey(), location.getLatitude(), location.getLongitude());
 
                 /**
                  * We know the location has changed, let's check the address
@@ -588,38 +586,57 @@ public class InstanceCreationActivity extends AppCompatActivity
                 Status status = PlaceAutocomplete.getStatus(this, data);
                 Log.e(MithrilApplication.getDebugTag(), "Error: Status = " + status.toString());
             } else if (resultCode == Activity.RESULT_CANCELED) {
-                // Indicates that the activity closed before a selection was made. For example if
-                // the user pressed the back button.
+                // Indicates that the activity closed before a selection was made. For example if the user pressed the back button.
             }
         } else if (requestCode == PLACE_AUTOCOMPLETE_REQUEST_CODE_MORE) {
             if (resultCode == Activity.RESULT_OK) {
                 Place place = PlaceAutocomplete.getPlace(this, data);
 
-//                mPrefWorkLocation.setSummary(place.getAddress());
-                editor.putString(MithrilApplication.getPrefWorkLocationKey(), place.getAddress().toString());
+                String semanticLocationLabel = getOtherSemanticLocationLabel();
+
+                editor.putString(semanticLocationLabel, place.getAddress().toString());
                 editor.apply();
 
                 Location location = new Location("placesAPI");
                 location.setLatitude(place.getLatLng().latitude);
                 location.setLongitude(place.getLatLng().longitude);
-                semanticLocations.add(new SemanticLocation(MithrilApplication.getPrefWorkLocationKey(), location));
-
-                // We have a geofences to put around the work location now!
-                populateGeofenceList(MithrilApplication.getPrefWorkLocationKey(), location.getLatitude(), location.getLongitude());
+                semanticLocations.add(new SemanticLocation(semanticLocationLabel, location));
 
                 /**
                  * We know the location has changed, let's check the address
                  */
                 mAddressRequested = true;
-                startSearchAddressIntentService(location, MithrilApplication.getPrefWorkLocationKey());
+                startSearchAddressIntentService(location, semanticLocationLabel);
             } else if (resultCode == PlaceAutocomplete.RESULT_ERROR) {
                 Status status = PlaceAutocomplete.getStatus(this, data);
                 Log.e(MithrilApplication.getDebugTag(), "Error: Status = " + status.toString());
             } else if (resultCode == Activity.RESULT_CANCELED) {
-                // Indicates that the activity closed before a selection was made. For example if
-                // the user pressed the back button.
+                // Indicates that the activity closed before a selection was made. For example if the user pressed the back button.
             }
         }
+    }
+
+    private String getOtherSemanticLocationLabel() {
+        final ArrayAdapter<String> arrayAdapter = new ArrayAdapter<>(InstanceCreationActivity.this, android.R.layout.select_dialog_singlechoice);
+        arrayAdapter.add("Grocery Store");
+        arrayAdapter.add("Pub");
+        arrayAdapter.add("Restaurant");
+        arrayAdapter.add("Movie");
+        arrayAdapter.add("Mall");
+        arrayAdapter.add("Gym");
+
+        AlertDialog.Builder dialog = new AlertDialog.Builder(InstanceCreationActivity.this);
+        dialog.setIcon(R.drawable.map_marker);
+        dialog.setTitle("Select a location label:");
+        dialog.setAdapter(arrayAdapter, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                labelSelected = arrayAdapter.getItem(which);
+            }
+        });
+        dialog.show();
+
+        return labelSelected;
     }
 
     /**
@@ -826,7 +843,7 @@ public class InstanceCreationActivity extends AppCompatActivity
 
                 // Set the expiration duration of the geofence. This geofence gets automatically
                 // removed after this period of time.
-                .setExpirationDuration(MithrilApplication.GEOFENCE_EXPIRATION_IN_MILLISECONDS)
+                .setExpirationDuration(Geofence.NEVER_EXPIRE)
 
                 // Set the transition types of interest. Alerts are only generated for these
                 // transition. We track entry and exit transitions in this sample.
@@ -919,5 +936,4 @@ public class InstanceCreationActivity extends AppCompatActivity
             editor.apply();
         }
     }
-    /******************************************* Geofence operation complete ***************************************************/
 }

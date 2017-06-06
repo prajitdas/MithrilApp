@@ -10,9 +10,8 @@ import edu.umbc.ebiquity.mithril.data.model.rules.actions.Action;
 import edu.umbc.ebiquity.mithril.data.model.rules.actions.RuleAction;
 import edu.umbc.ebiquity.mithril.data.model.rules.context.SemanticUserContext;
 import edu.umbc.ebiquity.mithril.data.model.rules.context.contextpieces.SemanticActivity;
-import edu.umbc.ebiquity.mithril.data.model.rules.context.contextpieces.SemanticIdentity;
 import edu.umbc.ebiquity.mithril.data.model.rules.context.contextpieces.SemanticLocation;
-import edu.umbc.ebiquity.mithril.data.model.rules.context.contextpieces.SemanticNearActors;
+import edu.umbc.ebiquity.mithril.data.model.rules.context.contextpieces.SemanticNearActor;
 import edu.umbc.ebiquity.mithril.data.model.rules.context.contextpieces.SemanticTime;
 
 public class DataGenerator {
@@ -53,13 +52,9 @@ public class DataGenerator {
             tempTimeString.add(tempString);
         }
 
-        List<SemanticIdentity> presenceInfo = new ArrayList<SemanticIdentity>();
-        presenceInfo.add(new SemanticIdentity(tempIdentityString.get(2))); // Index 2 is Department Head
-
         SemanticUserContext userContext = new SemanticUserContext(
-                new SemanticNearActors(presenceInfo),
+                new SemanticNearActor(MithrilApplication.getContextDefaultRelationship()), // Boss
                 new SemanticActivity(tempActivityString.get(2)), //Index 2 is university talk
-                new SemanticIdentity(MithrilApplication.getContextDefaultIdentity()),
                 new SemanticLocation(tempLocationString.get(2)), // Index 2 is university state
                 new SemanticTime(tempTimeString.get(2))); // Index 2 is Week Day
         return userContext;

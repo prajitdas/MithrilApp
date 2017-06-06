@@ -120,11 +120,8 @@ public class ViolationDetector {
                         else if (rule.getSemanticUserContext().getSemanticActivity() != null)
                             weNeedActivityViolationCheck();
                         //Do we need nearby actors?
-                        else if (rule.getSemanticUserContext().getSemanticNearActors() != null)
+                        else if (rule.getSemanticUserContext().getSemanticNearActor() != null)
                             weNeedNearActorsViolationCheck();
-                        //Do we need identity context?
-                        else if (rule.getSemanticUserContext().getSemanticIdentity() != null)
-                            weNeedIdentityViolationCheck();
                     } else {
                         Log.e(MithrilApplication.getDebugTag(), "Serious error! DB contains deny rules. This violates our CWA");
                         throw new CWAException(); //Something is wrong!!!! We have a Closed World Assumption we cannot have deny rules...

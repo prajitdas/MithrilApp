@@ -158,7 +158,7 @@ public class PrefsFragment extends PreferenceFragment implements GoogleApiClient
 
         /********************************************* Geofence related stuff **************************************************/
         // Empty list for storing geofences.
-        mGeofenceList = new ArrayList<Geofence>();
+        mGeofenceList = new ArrayList<>();
 
         // Initially set the PendingIntent used in addGeofences() and removeGeofences() to null.
         mGeofencePendingIntent = null;
@@ -799,7 +799,7 @@ public class PrefsFragment extends PreferenceFragment implements GoogleApiClient
 
                 // Set the expiration duration of the geofence. This geofence gets automatically
                 // removed after this period of time.
-                .setExpirationDuration(MithrilApplication.GEOFENCE_EXPIRATION_IN_MILLISECONDS)
+                .setExpirationDuration(Geofence.NEVER_EXPIRE)
 
                 // Set the transition types of interest. Alerts are only generated for these
                 // transition. We track entry and exit transitions in this sample.

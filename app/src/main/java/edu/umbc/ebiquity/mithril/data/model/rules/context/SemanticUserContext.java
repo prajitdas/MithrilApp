@@ -1,47 +1,38 @@
 package edu.umbc.ebiquity.mithril.data.model.rules.context;
 
-import java.util.ArrayList;
-
 import edu.umbc.ebiquity.mithril.data.model.rules.context.contextpieces.SemanticActivity;
-import edu.umbc.ebiquity.mithril.data.model.rules.context.contextpieces.SemanticIdentity;
 import edu.umbc.ebiquity.mithril.data.model.rules.context.contextpieces.SemanticLocation;
-import edu.umbc.ebiquity.mithril.data.model.rules.context.contextpieces.SemanticNearActors;
+import edu.umbc.ebiquity.mithril.data.model.rules.context.contextpieces.SemanticNearActor;
 import edu.umbc.ebiquity.mithril.data.model.rules.context.contextpieces.SemanticTime;
 
 public class SemanticUserContext {
     private int id;
-    private SemanticNearActors semanticNearActors;
+    private SemanticNearActor semanticNearActor;
     private SemanticActivity semanticActivity;
-    private SemanticIdentity semanticIdentity;
     private SemanticLocation semanticLocation;
     private SemanticTime semanticTime;
 
     public SemanticUserContext() {
-        semanticNearActors = new SemanticNearActors(new ArrayList<SemanticIdentity>());
+        semanticNearActor = new SemanticNearActor();
         semanticActivity = new SemanticActivity();
-        semanticIdentity = new SemanticIdentity();
         semanticLocation = new SemanticLocation();
         semanticTime = new SemanticTime();
     }
 
-    public SemanticUserContext(int id, SemanticNearActors semanticNearActors,
-                               SemanticActivity semanticActivity, SemanticIdentity semanticIdentity,
+    public SemanticUserContext(int id, SemanticNearActor semanticNearActor, SemanticActivity semanticActivity,
                                SemanticLocation semanticLocation, SemanticTime semanticTime) {
         this.id = id;
-        this.semanticNearActors = semanticNearActors;
+        this.semanticNearActor = semanticNearActor;
         this.semanticActivity = semanticActivity;
-        this.semanticIdentity = semanticIdentity;
         this.semanticLocation = semanticLocation;
         this.semanticTime = semanticTime;
     }
 
-    public SemanticUserContext(SemanticNearActors semanticNearActors,
-                               SemanticActivity semanticActivity, SemanticIdentity semanticIdentity,
+    public SemanticUserContext(SemanticNearActor semanticNearActor, SemanticActivity semanticActivity,
                                SemanticLocation semanticLocation, SemanticTime semanticTime) {
         this.id = -1;
-        this.semanticNearActors = semanticNearActors;
+        this.semanticNearActor = semanticNearActor;
         this.semanticActivity = semanticActivity;
-        this.semanticIdentity = semanticIdentity;
         this.semanticLocation = semanticLocation;
         this.semanticTime = semanticTime;
     }
@@ -54,12 +45,12 @@ public class SemanticUserContext {
         this.id = id;
     }
 
-    public SemanticNearActors getSemanticNearActors() {
-        return semanticNearActors;
+    public SemanticNearActor getSemanticNearActor() {
+        return semanticNearActor;
     }
 
-    public void setSemanticNearActors(SemanticNearActors semanticNearActors) {
-        this.semanticNearActors = semanticNearActors;
+    public void setSemanticNearActor(SemanticNearActor semanticNearActor) {
+        this.semanticNearActor = semanticNearActor;
     }
 
     public SemanticActivity getSemanticActivity() {
@@ -68,14 +59,6 @@ public class SemanticUserContext {
 
     public void setSemanticActivity(SemanticActivity semanticActivity) {
         this.semanticActivity = semanticActivity;
-    }
-
-    public SemanticIdentity getSemanticIdentity() {
-        return semanticIdentity;
-    }
-
-    public void setSemanticIdentity(SemanticIdentity semanticIdentity) {
-        this.semanticIdentity = semanticIdentity;
     }
 
     public SemanticLocation getSemanticLocation() {
@@ -102,22 +85,22 @@ public class SemanticUserContext {
         SemanticUserContext that = (SemanticUserContext) o;
 
         if (getId() != that.getId()) return false;
-        if (!getSemanticNearActors().equals(that.getSemanticNearActors())) return false;
-        if (!getSemanticActivity().equals(that.getSemanticActivity())) return false;
-        if (!getSemanticIdentity().equals(that.getSemanticIdentity())) return false;
-        if (!getSemanticLocation().equals(that.getSemanticLocation())) return false;
-        return getSemanticTime().equals(that.getSemanticTime());
-
+        if (getSemanticNearActor() != null ? !getSemanticNearActor().equals(that.getSemanticNearActor()) : that.getSemanticNearActor() != null)
+            return false;
+        if (getSemanticActivity() != null ? !getSemanticActivity().equals(that.getSemanticActivity()) : that.getSemanticActivity() != null)
+            return false;
+        if (getSemanticLocation() != null ? !getSemanticLocation().equals(that.getSemanticLocation()) : that.getSemanticLocation() != null)
+            return false;
+        return getSemanticTime() != null ? getSemanticTime().equals(that.getSemanticTime()) : that.getSemanticTime() == null;
     }
 
     @Override
     public int hashCode() {
         int result = getId();
-        result = 31 * result + getSemanticNearActors().hashCode();
-        result = 31 * result + getSemanticActivity().hashCode();
-        result = 31 * result + getSemanticIdentity().hashCode();
-        result = 31 * result + getSemanticLocation().hashCode();
-        result = 31 * result + getSemanticTime().hashCode();
+        result = 31 * result + (getSemanticNearActor() != null ? getSemanticNearActor().hashCode() : 0);
+        result = 31 * result + (getSemanticActivity() != null ? getSemanticActivity().hashCode() : 0);
+        result = 31 * result + (getSemanticLocation() != null ? getSemanticLocation().hashCode() : 0);
+        result = 31 * result + (getSemanticTime() != null ? getSemanticTime().hashCode() : 0);
         return result;
     }
 
@@ -125,9 +108,8 @@ public class SemanticUserContext {
     public String toString() {
         return "SemanticUserContext{" +
                 "id=" + id +
-                ", semanticNearActors=" + semanticNearActors +
+                ", semanticNearActor=" + semanticNearActor +
                 ", semanticActivity=" + semanticActivity +
-                ", semanticIdentity=" + semanticIdentity +
                 ", semanticLocation=" + semanticLocation +
                 ", semanticTime=" + semanticTime +
                 '}';
