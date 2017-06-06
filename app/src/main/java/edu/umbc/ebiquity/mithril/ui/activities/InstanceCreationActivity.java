@@ -78,7 +78,6 @@ public class InstanceCreationActivity extends AppCompatActivity
     private static final String FRAGMENT_TEMPORAL = "temporal";
     private static final String FRAGMENT_ACTIVITY = "activity";
     private static String currentFragment = new String();
-    private static String labelSelected = new String();
     private final int PLACE_AUTOCOMPLETE_REQUEST_CODE_HOME = 1;
     private final int PLACE_AUTOCOMPLETE_REQUEST_CODE_WORK = 2;
     private final int PLACE_AUTOCOMPLETE_REQUEST_CODE_MORE = 3;
@@ -569,10 +568,7 @@ public class InstanceCreationActivity extends AppCompatActivity
                 userInputLocation.setLatitude(place.getLatLng().latitude);
                 userInputLocation.setLongitude(place.getLatLng().longitude);
 
-                SemanticLocation tempSemanticLocation = new SemanticLocation(MithrilApplication.getPrefHomeLocationKey(), userInputLocation);
-                tempSemanticLocation.setAddress(new Address(getResources().getConfiguration().locale));
-
-                semanticLocations.add(tempSemanticLocation);
+                semanticLocations.add(new SemanticLocation(MithrilApplication.getPrefHomeLocationKey(), userInputLocation));
 
                 /**
                  * We know the location has changed, let's check the address
@@ -596,10 +592,7 @@ public class InstanceCreationActivity extends AppCompatActivity
                 userInputLocation.setLatitude(place.getLatLng().latitude);
                 userInputLocation.setLongitude(place.getLatLng().longitude);
 
-                SemanticLocation tempSemanticLocation = new SemanticLocation(MithrilApplication.getPrefWorkLocationKey(), userInputLocation);
-                tempSemanticLocation.setAddress(new Address(getResources().getConfiguration().locale));
-
-                semanticLocations.add(tempSemanticLocation);
+                semanticLocations.add(new SemanticLocation(MithrilApplication.getPrefWorkLocationKey(), userInputLocation));
 
                 /**
                  * We know the location has changed, let's check the address
@@ -615,26 +608,7 @@ public class InstanceCreationActivity extends AppCompatActivity
         } else if (requestCode == PLACE_AUTOCOMPLETE_REQUEST_CODE_MORE) {
             if (resultCode == Activity.RESULT_OK) {
                 Place place = PlaceAutocomplete.getPlace(this, data);
-
-                String semanticLocationLabel = getOtherSemanticLocationLabel();
-
-                editor.putString(semanticLocationLabel, place.getAddress().toString());
-                editor.apply();
-
-                Location userInputLocation = new Location("placesAPI");
-                userInputLocation.setLatitude(place.getLatLng().latitude);
-                userInputLocation.setLongitude(place.getLatLng().longitude);
-
-                SemanticLocation tempSemanticLocation = new SemanticLocation(semanticLocationLabel, userInputLocation);
-                tempSemanticLocation.setAddress(new Address(getResources().getConfiguration().locale));
-
-                semanticLocations.add(tempSemanticLocation);
-
-                /**
-                 * We know the location has changed, let's check the address
-                 */
-                mAddressRequested = true;
-                startSearchAddressIntentService(userInputLocation, semanticLocationLabel);
+                getOtherSemanticLocationLabel(place);
             } else if (resultCode == PlaceAutocomplete.RESULT_ERROR) {
                 Status status = PlaceAutocomplete.getStatus(this, data);
                 Log.e(MithrilApplication.getDebugTag(), "Error: Status = " + status.toString());
@@ -644,7 +618,7 @@ public class InstanceCreationActivity extends AppCompatActivity
         }
     }
 
-    private String getOtherSemanticLocationLabel() {
+    private void getOtherSemanticLocationLabel(final Place place) {
         final ArrayAdapter<String> arrayAdapter = new ArrayAdapter<>(InstanceCreationActivity.this, android.R.layout.select_dialog_singlechoice);
         arrayAdapter.add("Grocery Store");
         arrayAdapter.add("Pub");
@@ -659,12 +633,26 @@ public class InstanceCreationActivity extends AppCompatActivity
         dialog.setAdapter(arrayAdapter, new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
-                labelSelected = arrayAdapter.getItem(which);
+                String semanticLocationLabel = arrayAdapter.getItem(which);
+
+                editor.putString(semanticLocationLabel, place.getAddress().toString());
+                editor.apply();
+
+                Location userInputLocation = new Location("placesAPI");
+                userInputLocation.setLatitude(place.getLatLng().latitude);
+                userInputLocation.setLongitude(place.getLatLng().longitude);
+
+                semanticLocations.add(new SemanticLocation(semanticLocationLabel, userInputLocation));
+
+                /**
+                 * We know the location has changed, let's check the address
+                 */
+                mAddressRequested = true;
+
+                startSearchAddressIntentService(userInputLocation, semanticLocationLabel);
             }
         });
         dialog.show();
-
-        return labelSelected;
     }
 
     /**

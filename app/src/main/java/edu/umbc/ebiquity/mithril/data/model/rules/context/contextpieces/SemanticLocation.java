@@ -7,6 +7,8 @@ import android.location.Location;
 import android.os.Parcel;
 import android.os.Parcelable;
 
+import java.util.Locale;
+
 import edu.umbc.ebiquity.mithril.MithrilApplication;
 
 public class SemanticLocation implements Parcelable {
@@ -38,6 +40,7 @@ public class SemanticLocation implements Parcelable {
     public SemanticLocation(String locationkey, Location location) {
         this.location = location;
         this.inferredLocation = locationkey;
+        this.address = new Address(Locale.getDefault());
     }
 
     public SemanticLocation(Address address, Location location, Context context) {
