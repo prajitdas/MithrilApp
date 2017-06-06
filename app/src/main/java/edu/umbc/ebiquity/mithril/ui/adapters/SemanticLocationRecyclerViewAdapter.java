@@ -38,7 +38,11 @@ public class SemanticLocationRecyclerViewAdapter extends RecyclerView.Adapter<Se
     public void onBindViewHolder(final ViewHolder holder, int position) {
         holder.mItem = semanticLocations.get(position);
         holder.mIdView.setText(semanticLocations.get(position).getInferredLocation());
-        holder.mContentView.setText(semanticLocations.get(position).getAddress().getAddressLine(0));
+        StringBuffer latLng = new StringBuffer("Lat: ");
+        latLng.append(Double.toString(semanticLocations.get(position).getLocation().getLatitude()));
+        latLng.append(", Lng: ");
+        latLng.append(Double.toString(semanticLocations.get(position).getLocation().getLongitude()));
+        holder.mContentView.setText(latLng.toString());
 
         holder.mView.setOnClickListener(new View.OnClickListener() {
             @Override
