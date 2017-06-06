@@ -1,5 +1,5 @@
 -- Created by Vertabelo (http://vertabelo.com)
--- Last modification date: 2017-04-06 22:23:13.036
+-- Last modification date: 2017-06-06 04:44:15.361
 
 -- tables
 -- Table: actionlog
@@ -42,10 +42,8 @@ CREATE TABLE apps (
 -- Table: context
 CREATE TABLE context (
     id int NOT NULL AUTO_INCREMENT,
-    location text NULL,
-    activity text NULL,
-    temporal text NULL,
-    presence_info text NULL DEFAULT user,
+    type text NOT NULL,
+    value text NOT NULL,
     CONSTRAINT context_pk PRIMARY KEY (id)
 ) COMMENT 'Table showing context instances';
 

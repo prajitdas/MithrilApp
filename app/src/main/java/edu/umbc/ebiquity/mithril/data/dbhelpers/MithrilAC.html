@@ -39,7 +39,7 @@ MithrilAC - database model documentation            </h1>
             <p class="infoField">
                 <strong>
 Database engine:                 </strong>
-mysql            </p>
+ MySQL            </p>
             <p class="infoField">
                 <strong>
 Version:                 </strong>
@@ -131,15 +131,15 @@ contextlog_context                            </a>
                         </li>
                         <li>
                             <a href="#referenceViolationlogApps">
-                                violationlog_apps </a>
+violationlog_apps                            </a>
                         </li>
                         <li>
                             <a href="#referenceActionlogContext">
-                                actionlog_context </a>
+actionlog_context                            </a>
                         </li>
                         <li>
                             <a href="#referenceViolationlogContext">
-                                violationlog_context </a>
+violationlog_context                            </a>
                         </li>
                     </ol>
                 </li>
@@ -452,8 +452,7 @@ int                        </td>
                     </tr>
                     <tr>
                         <td>
-                            context_id
-                        </td>
+context_id                        </td>
                         <td>
 int                        </td>
                         <td>
@@ -739,8 +738,7 @@ int                        </td>
                     </tr>
                     <tr>
                         <td>
-                            context_id
-                        </td>
+context_id                        </td>
                         <td>
 int                        </td>
                         <td>
@@ -804,11 +802,9 @@ int                        </td>
                     </tr>
                     <tr>
                         <td>
-                            granted
-                        </td>
+granted                        </td>
                         <td>
-                            int
-                        </td>
+int                        </td>
                         <td>
                         </td>
                         <td>
@@ -850,41 +846,21 @@ int                        </td>
                     </tr>
                     <tr>
                         <td>
-location                        </td>
+type                        </td>
                         <td>
 text                        </td>
                         <td>
-null                        </td>
+                        </td>
                         <td>
                         </td>
                     </tr>
                     <tr>
                         <td>
-activity                        </td>
+value                        </td>
                         <td>
 text                        </td>
-                        <td>
-null                        </td>
                         <td>
                         </td>
-                    </tr>
-                    <tr>
-                        <td>
-temporal                        </td>
-                        <td>
-text                        </td>
-                        <td>
-null                        </td>
-                        <td>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>
-presence_info                        </td>
-                        <td>
-text                        </td>
-                        <td>
-null                        </td>
                         <td>
                         </td>
                     </tr>
@@ -1070,7 +1046,7 @@ apps_id                    </td>
                 </tr>
             </table>
             <h3 id="referencePolicyrulesApps">
-                3.4. Reference policyrules_apps </h3>
+3.4. Reference policyrules_apps            </h3>
             <h4>
 3.4.1. Columns            </h4>
             <table class="referencesTable">
@@ -1083,7 +1059,7 @@ apps                        </a>
 0..*                    </td>
                     <td>
                         <a href="#tablePolicyrules">
-                            policyrules </a>
+policyrules                        </a>
                     </td>
                 </tr>
                 <tr>
@@ -1096,20 +1072,20 @@ apps_id                    </td>
                 </tr>
             </table>
             <h3 id="referencePolicyrulesContext">
-                3.5. Reference policyrules_context </h3>
+3.5. Reference policyrules_context            </h3>
             <h4>
 3.5.1. Columns            </h4>
             <table class="referencesTable">
                 <tr>
                     <td>
                         <a href="#tableContext">
-                            context </a>
+context                        </a>
                     </td>
                     <td>
 0..*                    </td>
                     <td>
                         <a href="#tablePolicyrules">
-                            policyrules </a>
+policyrules                        </a>
                     </td>
                 </tr>
                 <tr>
@@ -1118,25 +1094,24 @@ id                    </td>
                     <td>
 <->                    </td>
                     <td>
-                        context_id
-                    </td>
+context_id                    </td>
                 </tr>
             </table>
             <h3 id="referenceContextlogContext">
-                3.6. Reference contextlog_context </h3>
+3.6. Reference contextlog_context            </h3>
             <h4>
 3.6.1. Columns            </h4>
             <table class="referencesTable">
                 <tr>
                     <td>
                         <a href="#tableContext">
-                            context </a>
+context                        </a>
                     </td>
                     <td>
 0..*                    </td>
                     <td>
                         <a href="#tableContextlog">
-                            contextlog </a>
+contextlog                        </a>
                     </td>
                 </tr>
                 <tr>
@@ -1145,12 +1120,11 @@ id                    </td>
                     <td>
 <->                    </td>
                     <td>
-                        context_id
-                    </td>
+context_id                    </td>
                 </tr>
             </table>
             <h3 id="referenceViolationlogApps">
-                3.7. Reference violationlog_apps </h3>
+3.7. Reference violationlog_apps            </h3>
             <h4>
 3.7.1. Columns            </h4>
             <table class="referencesTable">
@@ -1163,7 +1137,7 @@ apps                        </a>
 0..*                    </td>
                     <td>
                         <a href="#tableViolationlog">
-                            violationlog </a>
+violationlog                        </a>
                     </td>
                 </tr>
                 <tr>
@@ -1176,7 +1150,7 @@ apps_id                    </td>
                 </tr>
             </table>
             <h3 id="referenceActionlogContext">
-                3.8. Reference actionlog_context </h3>
+3.8. Reference actionlog_context            </h3>
             <h4>
 3.8.1. Columns            </h4>
             <table class="referencesTable">
@@ -1189,7 +1163,7 @@ context                        </a>
 0..*                    </td>
                     <td>
                         <a href="#tableActionlog">
-                            actionlog </a>
+actionlog                        </a>
                     </td>
                 </tr>
                 <tr>
@@ -1202,7 +1176,7 @@ context_id                    </td>
                 </tr>
             </table>
             <h3 id="referenceViolationlogContext">
-                3.9. Reference violationlog_context </h3>
+3.9. Reference violationlog_context            </h3>
             <h4>
 3.9.1. Columns            </h4>
             <table class="referencesTable">
@@ -1215,7 +1189,7 @@ context                        </a>
 0..*                    </td>
                     <td>
                         <a href="#tableViolationlog">
-                            violationlog </a>
+violationlog                        </a>
                     </td>
                 </tr>
                 <tr>
@@ -1270,15 +1244,15 @@ contextlog_context                    </a>
                 </li>
                 <li>
                     <a href="#referenceViolationlogApps">
-                        violationlog_apps </a>
+violationlog_apps                    </a>
                 </li>
                 <li>
                     <a href="#referenceActionlogContext">
-                        actionlog_context </a>
+actionlog_context                    </a>
                 </li>
                 <li>
                     <a href="#referenceViolationlogContext">
-                        violationlog_context </a>
+violationlog_context                    </a>
                 </li>
             </ul>
             <h3 id="areaResource">
@@ -1320,15 +1294,15 @@ contextlog_context                    </a>
                 </li>
                 <li>
                     <a href="#referenceViolationlogApps">
-                        violationlog_apps </a>
+violationlog_apps                    </a>
                 </li>
                 <li>
                     <a href="#referenceActionlogContext">
-                        actionlog_context </a>
+actionlog_context                    </a>
                 </li>
                 <li>
                     <a href="#referenceViolationlogContext">
-                        violationlog_context </a>
+violationlog_context                    </a>
                 </li>
             </ul>
             <h3 id="areaLogs">
@@ -1378,15 +1352,15 @@ contextlog_context                    </a>
                 </li>
                 <li>
                     <a href="#referenceViolationlogApps">
-                        violationlog_apps </a>
+violationlog_apps                    </a>
                 </li>
                 <li>
                     <a href="#referenceActionlogContext">
-                        actionlog_context </a>
+actionlog_context                    </a>
                 </li>
                 <li>
                     <a href="#referenceViolationlogContext">
-                        violationlog_context </a>
+violationlog_context                    </a>
                 </li>
             </ul>
         </div>
