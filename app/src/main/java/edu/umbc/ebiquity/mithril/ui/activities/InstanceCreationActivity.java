@@ -2,8 +2,6 @@ package edu.umbc.ebiquity.mithril.ui.activities;
 
 import android.app.Activity;
 import android.app.AlertDialog;
-import android.app.Dialog;
-import android.app.DialogFragment;
 import android.app.FragmentManager;
 import android.app.PendingIntent;
 import android.content.Context;
@@ -523,7 +521,7 @@ public class InstanceCreationActivity extends AppCompatActivity
         // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
         if (id == R.id.done_with_instances_settings) {
-            editor.putBoolean(MithrilApplication.getPrefKeyInitInstancesCreated(), true);
+            editor.putBoolean(MithrilApplication.getPrefKeyInstancesCreated(), true);
             editor.apply();
             startNextActivity(this, CoreActivity.class);
         }
@@ -532,7 +530,7 @@ public class InstanceCreationActivity extends AppCompatActivity
 
     private void testInitInstancesCreateAndLaunchNextActivity() {
         sharedPreferences = getApplicationContext().getSharedPreferences(MithrilApplication.getSharedPreferencesName(), Context.MODE_PRIVATE);
-        if (sharedPreferences.getBoolean(MithrilApplication.getPrefKeyInitInstancesCreated(), false))
+        if (sharedPreferences.getBoolean(MithrilApplication.getPrefKeyInstancesCreated(), false))
             startNextActivity(this, CoreActivity.class);
     }
 

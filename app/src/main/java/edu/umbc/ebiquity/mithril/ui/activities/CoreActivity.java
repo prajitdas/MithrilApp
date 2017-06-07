@@ -86,6 +86,7 @@ public class CoreActivity extends AppCompatActivity
     private MithrilDBHelper mithrilDBHelper;
     private SQLiteDatabase mithrilDB;
     private SharedPreferences sharedPreferences;
+    private SharedPreferences.Editor editor;
 //    private RootAccess rootAccess = null;
 
 //    private Violation violationItemSelected = null;
@@ -357,6 +358,7 @@ public class CoreActivity extends AppCompatActivity
             PermissionHelper.quitMithril(this, MithrilApplication.MITHRIL_BYE_BYE_MESSAGE);
         initDB(this);
         sharedPreferences = getApplicationContext().getSharedPreferences(MithrilApplication.getSharedPreferencesName(), Context.MODE_PRIVATE);
+        editor = getSharedPreferences(MithrilApplication.getSharedPreferencesName(), Context.MODE_PRIVATE).edit();
         //Agreement has not been copied to downloads folder yet, do it now
         if (!isAgreementDownloaded())
             copyAssets(downloadsDirectory, agreementFile);
@@ -602,6 +604,8 @@ public class CoreActivity extends AppCompatActivity
 //    }
 
     private void launchInstanceCreationActivity() {
+        editor.putBoolean(MithrilApplication.getPrefKeyInstancesCreated(), false);
+        editor.apply();
         startActivity(new Intent(this, InstanceCreationActivity.class));
     }
 

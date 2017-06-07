@@ -255,7 +255,7 @@ public class MithrilDBHelper extends SQLiteOpenHelper {
             CTXTID + " INTEGER NOT NULL, " +
             CTXTTRANSITION + " TEXT NOT NULL, " +
             CTXTTIME + " timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP, " +
-            "FOREIGN KEY(" + CTXTID + ") REFERENCES " + getContextTableName() + "(" + CONTEXTID + ")" +
+            "FOREIGN KEY(" + CTXTID + ") REFERENCES " + getContextLogTableName() + "(" + CONTEXTID + ")" +
             ");";
 
     /**

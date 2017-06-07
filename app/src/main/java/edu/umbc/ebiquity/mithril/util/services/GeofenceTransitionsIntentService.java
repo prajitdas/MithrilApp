@@ -90,9 +90,11 @@ public class GeofenceTransitionsIntentService extends IntentService {
 
         // Test that the reported transition was of interest.
         if (geofenceTransition == Geofence.GEOFENCE_TRANSITION_ENTER) {
-            addContextLogToDB(gatherTransitionDetails(geofencingEvent, geofenceTransition), MithrilApplication.getPrefStartKey());
+            addContextLogToDB(gatherTransitionDetails(geofencingEvent, geofenceTransition).split(" ")[1],
+                    MithrilApplication.getPrefStartKey());
         } else if (geofenceTransition == Geofence.GEOFENCE_TRANSITION_EXIT) {
-            addContextLogToDB(gatherTransitionDetails(geofencingEvent, geofenceTransition), MithrilApplication.getPrefEndKey());
+            addContextLogToDB(gatherTransitionDetails(geofencingEvent, geofenceTransition).split(" ")[1],
+                    MithrilApplication.getPrefEndKey());
         } else {
             // Log the error.
             Log.e(MithrilApplication.getDebugTag()+TAG, getString(R.string.geofence_transition_invalid_type, geofenceTransition));
