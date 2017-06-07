@@ -2,6 +2,8 @@ package edu.umbc.ebiquity.mithril.ui.activities;
 
 import android.app.Activity;
 import android.app.AlertDialog;
+import android.app.Dialog;
+import android.app.DialogFragment;
 import android.app.FragmentManager;
 import android.app.PendingIntent;
 import android.content.Context;
@@ -9,6 +11,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.res.Resources;
+import android.database.sqlite.SQLiteDatabase;
 import android.location.Address;
 import android.location.Location;
 import android.net.Uri;
@@ -45,8 +48,10 @@ import com.google.android.gms.location.places.ui.PlaceAutocomplete;
 import com.google.gson.Gson;
 import com.google.gson.JsonSyntaxException;
 
+import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import edu.umbc.ebiquity.mithril.MithrilApplication;
@@ -75,6 +80,8 @@ public class InstanceCreationActivity extends AppCompatActivity
         GoogleApiClient.OnConnectionFailedListener,
         ResultCallback<Status> {
 
+    MithrilDBHelper mithrilDBHelper;
+    SQLiteDatabase mithrilDB;
     private static final String FRAGMENT_LOCATION = "location";
     private static final String FRAGMENT_PRESENCE = "presence";
     private static final String FRAGMENT_TEMPORAL = "temporal";
@@ -99,7 +106,10 @@ public class InstanceCreationActivity extends AppCompatActivity
     private Button mFirstMajorCtxtBtn;
     private Button mSecondMajorCtxtBtn;
     private FloatingActionButton mSaveFAB;
-    private boolean isThereSomethingToSave = false;
+    private boolean isThereLocationContextToSave = false;
+    private boolean isThereTemporalContextToSave = false;
+    private boolean isTherePresenceContextToSave = false;
+    private boolean isThereActivityContextToSave = false;
     private Map<String, SemanticLocation> semanticLocations = new HashMap<>();
     private Map<String, SemanticNearActor> semanticNearActors = new HashMap<>();
     private Map<String, SemanticTime> semanticTimes = new HashMap<>();
@@ -151,6 +161,8 @@ public class InstanceCreationActivity extends AppCompatActivity
     }
 
     private void initData() {
+        mithrilDBHelper = new MithrilDBHelper(getApplicationContext());
+        mithrilDB = mithrilDBHelper.getWritableDatabase();
         Gson retrieveDataGson = new Gson();
         String retrieveDataJson = null;
         Map<String, ?> allPrefs = new HashMap<>();
@@ -211,6 +223,16 @@ public class InstanceCreationActivity extends AppCompatActivity
         handleLocation();
         setOnNavigationListeners();
         setSaveBtnOnClickListener();
+
+        /********************************************* Geofence related stuff **************************************************/
+        // Empty list for storing geofences.
+        mGeofenceList = new ArrayList<>();
+
+        // Initially set the PendingIntent used in addGeofences() and removeGeofences() to null.
+        mGeofencePendingIntent = null;
+
+        // Get the value of mGeofencesAdded from SharedPreferences. Set to false as a default.
+        mGeofencesAdded = sharedPreferences.getBoolean(MithrilApplication.GEOFENCES_ADDED_KEY, false);
 
         // Kick off the request to build GoogleApiClient.
         buildGoogleApiClient();
@@ -447,34 +469,43 @@ public class InstanceCreationActivity extends AppCompatActivity
         mSaveFAB.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (isThereSomethingToSave) {
-                    if (currentFragment.equals(FRAGMENT_LOCATION))
-                        setGeoFences();
-                    else if (currentFragment.equals(FRAGMENT_TEMPORAL))
-                        setTemporalAlarms();
-                    else if (currentFragment.equals(FRAGMENT_TEMPORAL))
-                        setNearby();
-                    else
-                        setActivityDetection();
-                }
+                saveContext();
             }
         });
     }
 
+    private void saveContext() {
+        if (isThereLocationContextToSave)
+            setGeoFences();
+        if (isThereTemporalContextToSave)
+            setTemporalAlarms();
+        if (isTherePresenceContextToSave)
+            setNearby();
+        if (isThereActivityContextToSave)
+            setActivityDetection();
+    }
     private void setGeoFences() {
+        // We have geofences to put around the list of locations now!
+        for (Map.Entry<String, SemanticLocation> semanticLocationEntry : semanticLocations.entrySet())
+            populateGeofenceList(semanticLocationEntry.getKey(), semanticLocationEntry.getValue().getLocation().getLatitude(), semanticLocationEntry.getValue().getLocation().getLongitude());
 
+        addGeofences();
+        isThereLocationContextToSave = false;
     }
 
     private void setTemporalAlarms() {
 
+        isThereTemporalContextToSave = false;
     }
 
     private void setNearby() {
 
+        isTherePresenceContextToSave = false;
     }
 
     private void setActivityDetection() {
 
+        isThereActivityContextToSave = false;
     }
 
     @Override
@@ -491,9 +522,9 @@ public class InstanceCreationActivity extends AppCompatActivity
         // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
         if (id == R.id.done_with_instances_settings) {
-            startNextActivity(this, CoreActivity.class);
             editor.putBoolean(MithrilApplication.getPrefKeyInitInstancesCreated(), true);
             editor.apply();
+            startNextActivity(this, CoreActivity.class);
         }
         return super.onOptionsItemSelected(item);
     }
@@ -516,6 +547,7 @@ public class InstanceCreationActivity extends AppCompatActivity
     }
 
     private void startNextActivity(Context context, Class activityClass) {
+        saveContext();
         Intent launchNextActivity = new Intent(context, activityClass);
         launchNextActivity.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
         launchNextActivity.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
@@ -524,23 +556,134 @@ public class InstanceCreationActivity extends AppCompatActivity
     }
 
     @Override
-    public void onListFragmentInteraction(SemanticTime item) {
-
+    public void onListFragmentInteraction(final SemanticTime item) {
+        AlertDialog.Builder builder;
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            builder = new AlertDialog.Builder(this, android.R.style.Theme_Material_Dialog_Alert);
+        } else {
+            builder = new AlertDialog.Builder(this);
+        }
+        builder.setTitle("Delete context")
+                .setMessage("Are you sure you want to delete this context piece?")
+                .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int which) {
+                        editor.remove(item.getInferredTime());
+                        removeContextFromDB(item.getInferredTime());
+                        semanticTimes.remove(item.getInferredTime());
+                        loadSemanticTemporalFragment();
+                    }
+                })
+                .setNegativeButton(android.R.string.no, new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int which) {
+                        // do nothing
+                    }
+                })
+                .setIcon(android.R.drawable.ic_dialog_alert)
+                .show();
     }
 
     @Override
-    public void onListFragmentInteraction(SemanticLocation item) {
-
+    public void onListFragmentInteraction(final SemanticLocation item) {
+        AlertDialog.Builder builder;
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            builder = new AlertDialog.Builder(this, android.R.style.Theme_Material_Dialog_Alert);
+        } else {
+            builder = new AlertDialog.Builder(this);
+        }
+        builder.setTitle("Delete context")
+                .setMessage("Are you sure you want to delete this context piece?")
+                .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int which) {
+                        editor.remove(item.getInferredLocation());
+                        removeContextFromDB(item.getInferredLocation());
+                        semanticLocations.remove(item.getInferredLocation());
+                        loadSemanticLocationFragment();
+                    }
+                })
+                .setNegativeButton(android.R.string.no, new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int which) {
+                        // do nothing
+                    }
+                })
+                .setIcon(android.R.drawable.ic_dialog_alert)
+                .show();
     }
 
     @Override
-    public void onListFragmentInteraction(SemanticActivity item) {
-
+    public void onListFragmentInteraction(final SemanticActivity item) {
+        AlertDialog.Builder builder;
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            builder = new AlertDialog.Builder(this, android.R.style.Theme_Material_Dialog_Alert);
+        } else {
+            builder = new AlertDialog.Builder(this);
+        }
+        builder.setTitle("Delete context")
+                .setMessage("Are you sure you want to delete this context piece?")
+                .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int which) {
+                        editor.remove(item.getInferredActivity());
+                        removeContextFromDB(item.getInferredActivity());
+                        semanticActivities.remove(item.getInferredActivity());
+                        loadSemanticActivityFragment();
+                    }
+                })
+                .setNegativeButton(android.R.string.no, new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int which) {
+                        // do nothing
+                    }
+                })
+                .setIcon(android.R.drawable.ic_dialog_alert)
+                .show();
     }
 
     @Override
-    public void onListFragmentInteraction(SemanticNearActor item) {
+    public void onListFragmentInteraction(final SemanticNearActor item) {
+        AlertDialog.Builder builder;
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            builder = new AlertDialog.Builder(this, android.R.style.Theme_Material_Dialog_Alert);
+        } else {
+            builder = new AlertDialog.Builder(this);
+        }
+        builder.setTitle("Delete context")
+                .setMessage("Are you sure you want to delete this context piece?")
+                .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int which) {
+                        editor.remove(item.getInferredRelationship());
+                        removeContextFromDB(item.getInferredRelationship());
+                        semanticNearActors.remove(item.getInferredRelationship());
+                        loadSemanticPresenceFragment();
+                    }
+                })
+                .setNegativeButton(android.R.string.no, new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int which) {
+                        // do nothing
+                    }
+                })
+                .setIcon(android.R.drawable.ic_dialog_alert)
+                .show();
+    }
 
+    private String getPlaceType(List<Integer> placeTypes) {
+        StringBuffer placeTypesString = new StringBuffer();
+        Field[] fields = Place.class.getDeclaredFields();
+
+        for (Integer placeType : placeTypes) {
+            for (Field field : fields) {
+                Class<?> type = field.getType();
+
+                if (type == int.class) {
+                    try {
+                        if (placeType == field.getInt(null)) {
+                            placeTypesString.append(field.getName());
+                            placeTypesString.append(", ");
+                        }
+                    } catch (IllegalAccessException e) {
+                        e.printStackTrace();
+                    }
+                }
+            }
+        }
+        return placeTypesString.toString();
     }
 
     private void openAutocompleteActivity(int requestCode) {
@@ -588,6 +731,7 @@ public class InstanceCreationActivity extends AppCompatActivity
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == PLACE_AUTOCOMPLETE_REQUEST_CODE_HOME) {
             if (resultCode == Activity.RESULT_OK) {
+                isThereLocationContextToSave = true;
                 Place place = PlaceAutocomplete.getPlace(this, data);
 
                 editor.putString(MithrilApplication.getPrefHomeLocationKey(), place.getAddress().toString());
@@ -597,8 +741,11 @@ public class InstanceCreationActivity extends AppCompatActivity
                 userInputLocation.setLatitude(place.getLatLng().latitude);
                 userInputLocation.setLongitude(place.getLatLng().longitude);
 
-                semanticLocations.put(MithrilApplication.getPrefHomeLocationKey(), new SemanticLocation(MithrilApplication.getPrefHomeLocationKey(), userInputLocation));
+                SemanticLocation semanticLocation = new SemanticLocation(MithrilApplication.getPrefHomeLocationKey(), userInputLocation);
+//                semanticLocation.setLocationDetails(getPlaceType(place.getPlaceTypes()));
+                semanticLocation.setLocationDetails(place.getName().toString());
 
+                semanticLocations.put(MithrilApplication.getPrefHomeLocationKey(), semanticLocation);
                 /**
                  * We know the location has changed, let's check the address
                  */
@@ -612,6 +759,7 @@ public class InstanceCreationActivity extends AppCompatActivity
             }
         } else if (requestCode == PLACE_AUTOCOMPLETE_REQUEST_CODE_WORK) {
             if (resultCode == Activity.RESULT_OK) {
+                isThereLocationContextToSave = true;
                 Place place = PlaceAutocomplete.getPlace(this, data);
 
                 editor.putString(MithrilApplication.getPrefWorkLocationKey(), place.getAddress().toString());
@@ -621,8 +769,11 @@ public class InstanceCreationActivity extends AppCompatActivity
                 userInputLocation.setLatitude(place.getLatLng().latitude);
                 userInputLocation.setLongitude(place.getLatLng().longitude);
 
-                semanticLocations.put(MithrilApplication.getPrefWorkLocationKey(), new SemanticLocation(MithrilApplication.getPrefWorkLocationKey(), userInputLocation));
+                SemanticLocation semanticLocation = new SemanticLocation(MithrilApplication.getPrefWorkLocationKey(), userInputLocation);
+//                semanticLocation.setLocationDetails(getPlaceType(place.getPlaceTypes()));
+                semanticLocation.setLocationDetails(place.getName().toString());
 
+                semanticLocations.put(MithrilApplication.getPrefWorkLocationKey(), semanticLocation);
                 /**
                  * We know the location has changed, let's check the address
                  */
@@ -636,6 +787,7 @@ public class InstanceCreationActivity extends AppCompatActivity
             }
         } else if (requestCode == PLACE_AUTOCOMPLETE_REQUEST_CODE_MORE) {
             if (resultCode == Activity.RESULT_OK) {
+                isThereLocationContextToSave = true;
                 Place place = PlaceAutocomplete.getPlace(this, data);
                 getOtherSemanticLocationLabel(place);
             } else if (resultCode == PlaceAutocomplete.RESULT_ERROR) {
@@ -671,8 +823,11 @@ public class InstanceCreationActivity extends AppCompatActivity
                 userInputLocation.setLatitude(place.getLatLng().latitude);
                 userInputLocation.setLongitude(place.getLatLng().longitude);
 
-                semanticLocations.put(semanticLocationLabel, new SemanticLocation(semanticLocationLabel, userInputLocation));
+                SemanticLocation semanticLocation = new SemanticLocation(semanticLocationLabel, userInputLocation);
+//                semanticLocation.setLocationDetails(getPlaceType(place.getPlaceTypes()));
+                semanticLocation.setLocationDetails(place.getName().toString());
 
+                semanticLocations.put(semanticLocationLabel, semanticLocation);
                 /**
                  * We know the location has changed, let's check the address
                  */
@@ -689,8 +844,8 @@ public class InstanceCreationActivity extends AppCompatActivity
      * fetching an address.
      */
     protected void startSearchAddressIntentService(Location location, String key) {
-        //Locations have been added; update view
-        loadSemanticLocationFragment();
+//        //Locations have been added; update view
+//        loadSemanticLocationFragment();
 
         // Create an intent for passing to the intent service responsible for fetching the address.
         Intent intent = new Intent(this, FetchAddressIntentService.class);
@@ -959,8 +1114,7 @@ public class InstanceCreationActivity extends AppCompatActivity
             if (resultCode == MithrilApplication.SUCCESS_RESULT) {
 //                Log.d(MithrilApplication.getDebugMithrilApplication.getDebugTag()(), getString(R.string.address_found) + ":" + mAddressOutput);
 //                PermissionHelper.toast(context, getString(R.string.address_found) + ":" + mAddressOutput);
-                MithrilDBHelper mithrilDBHelper = new MithrilDBHelper(getApplicationContext());
-                mithrilDBHelper.addContext(mithrilDBHelper.getWritableDatabase(), MithrilApplication.getPrefKeyLocation(), key);
+                addContextToDB(MithrilApplication.getPrefKeyLocation(), key);
                 storeInSharedPreferences(key, mAddressOutput);
             }
             // Reset. Enable the Fetch Address button and stop showing the progress bar.
@@ -993,5 +1147,13 @@ public class InstanceCreationActivity extends AppCompatActivity
             editor.putString(MithrilApplication.getPrefKeySemanticLocation() + key, storeDataJson);
             editor.apply();
         }
+    }
+
+    private void addContextToDB(String type, String label) {
+        mithrilDBHelper.addContext(mithrilDB, type, label);
+    }
+
+    private void removeContextFromDB(String label) {
+        mithrilDBHelper.deleteContext(mithrilDB, label);
     }
 }

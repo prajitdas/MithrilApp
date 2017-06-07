@@ -1778,9 +1778,9 @@ public class MithrilDBHelper extends SQLiteOpenHelper {
         }
     }
 
-    public void deleteContext(SQLiteDatabase db, String label, String type) {
+    public void deleteContext(SQLiteDatabase db, String label) {
         try {
-            db.delete(getContextLogTableName(), CONTEXTSEMANTICLABEL + " = ?",
+            db.delete(getContextTableName(), CONTEXTSEMANTICLABEL + " = ?",
                     new String[]{String.valueOf(label)});
         } catch (SQLException e) {
             throw new SQLException("Could not find " + e);

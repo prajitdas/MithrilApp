@@ -5,10 +5,15 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.CheckBox;
+import android.widget.CompoundButton;
 import android.widget.TextView;
 
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
+import java.util.Map;
 
 import edu.umbc.ebiquity.mithril.R;
 import edu.umbc.ebiquity.mithril.data.model.rules.context.SemanticLocation;
@@ -22,7 +27,9 @@ import edu.umbc.ebiquity.mithril.ui.fragments.instancecreationactivityfragments.
 public class SemanticLocationRecyclerViewAdapter extends RecyclerView.Adapter<SemanticLocationRecyclerViewAdapter.ViewHolder> {
 
     private final List<SemanticLocation> semanticLocations;
+    private List<SemanticLocation> checkedLocations = new ArrayList<>();
     private final OnListFragmentInteractionListener mListener;
+    private View view;
 
     public SemanticLocationRecyclerViewAdapter(List<SemanticLocation> items, OnListFragmentInteractionListener listener) {
         semanticLocations = items;
@@ -31,7 +38,7 @@ public class SemanticLocationRecyclerViewAdapter extends RecyclerView.Adapter<Se
 
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(parent.getContext())
+        view = LayoutInflater.from(parent.getContext())
                 .inflate(R.layout.fragment_semantic_location, parent, false);
         return new ViewHolder(view);
     }
@@ -42,14 +49,27 @@ public class SemanticLocationRecyclerViewAdapter extends RecyclerView.Adapter<Se
         holder.mItem = semanticLocation;
         holder.mLabel.setText(semanticLocation.getInferredLocation());
 
+        String addressLine = new String(
+                semanticLocation.getAddress().getAddressLine(0) + ", " +
+                semanticLocation.getAddress().getLocality() + ", " +
+                semanticLocation.getAddress().getPostalCode());
+
         if(semanticLocation.getAddress().equals(new Address(Locale.getDefault()))) {
-            StringBuffer latLng = new StringBuffer("Lat: ");
-            latLng.append(Double.toString(semanticLocation.getLocation().getLatitude()));
-            latLng.append(", Lng: ");
-            latLng.append(Double.toString(semanticLocation.getLocation().getLongitude()));
-            holder.mDetail.setText(latLng.toString());
-        } else
-            holder.mDetail.setText(semanticLocation.getAddress().getAddressLine(0));
+            if(semanticLocation.getLocationDetails() != null)
+                holder.mDetail.setText(semanticLocation.getLocationDetails());
+            else {
+                StringBuffer latLng = new StringBuffer("Lat: ");
+                latLng.append(Double.toString(semanticLocation.getLocation().getLatitude()));
+                latLng.append(", Lng: ");
+                latLng.append(Double.toString(semanticLocation.getLocation().getLongitude()));
+                holder.mDetail.setText(latLng.toString());
+            }
+        } else {
+            if(semanticLocation.getLocationDetails() != null)
+                holder.mDetail.setText(semanticLocation.getLocationDetails() + addressLine);
+            else
+                holder.mDetail.setText(addressLine);
+        }
         holder.mView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

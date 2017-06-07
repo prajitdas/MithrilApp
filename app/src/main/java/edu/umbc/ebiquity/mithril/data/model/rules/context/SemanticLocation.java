@@ -30,6 +30,16 @@ public class SemanticLocation implements Parcelable, SemanticUserContext {
     private String inferredLocation;
     private String type;
 
+    public String getLocationDetails() {
+        return locationDetails;
+    }
+
+    public void setLocationDetails(String locationDetails) {
+        this.locationDetails = locationDetails;
+    }
+
+    private String locationDetails;
+
     public SemanticLocation(String inferredLocation, Location location, Address address) {
         this.inferredLocation = inferredLocation;
         this.location = location;
