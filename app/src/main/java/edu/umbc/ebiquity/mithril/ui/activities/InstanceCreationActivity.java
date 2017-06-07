@@ -982,6 +982,9 @@ public class InstanceCreationActivity extends AppCompatActivity
                 if (semanticLocation.getKey().equals(key))
                     tempSemanticLocation = semanticLocation.getValue();
             tempSemanticLocation.setAddress(address);
+            semanticLocations.put(key, tempSemanticLocation);
+            //Locations have been added; update view
+            loadSemanticLocationFragment();
 
             SharedPreferences.Editor editor = context.getSharedPreferences(MithrilApplication.getSharedPreferencesName(), Context.MODE_PRIVATE).edit();
 

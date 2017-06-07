@@ -67,8 +67,8 @@ public class SemanticTimeRecyclerViewAdapter extends RecyclerView.Adapter<Semant
         public ViewHolder(View view) {
             super(view);
             mView = view;
-            mLabel = (TextView) view.findViewById(R.id.semanticActivityLabel);
-            mDetail = (TextView) view.findViewById(R.id.semanticActivityDetail);
+            mLabel = (TextView) view.findViewById(R.id.semanticTimeLabel);
+            mDetail = (TextView) view.findViewById(R.id.semanticTimeDetail);
         }
 
         @Override

@@ -96,23 +96,9 @@
         android:scrollbarStyle="outsideInset"
         android:scrollbars="horizontal|vertical">
 
-        <LinearLayout
+        <FrameLayout
+            android:id="@+id/container_instances"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:orientation="vertical">
-
-            <FrameLayout
-                android:id="@+id/container_instances"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent" />
-
-            <!--<TextView-->
-            <!--android:id="@android:id/empty"-->
-            <!--android:layout_width="match_parent"-->
-            <!--android:layout_height="match_parent"-->
-            <!--android:gravity="center"-->
-            <!--android:text="@string/no_data" />-->
-
-        </LinearLayout>
+            android:layout_height="match_parent" />
     </ScrollView>
 </RelativeLayout>

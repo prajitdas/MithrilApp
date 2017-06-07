@@ -67,8 +67,8 @@ public class SemanticNearActorsRecyclerViewAdapter extends RecyclerView.Adapter<
         public ViewHolder(View view) {
             super(view);
             mView = view;
-            mLabel = (TextView) view.findViewById(R.id.semanticActivityLabel);
-            mDetail = (TextView) view.findViewById(R.id.semanticActivityDetail);
+            mLabel = (TextView) view.findViewById(R.id.semanticNearActorLabel);
+            mDetail = (TextView) view.findViewById(R.id.semanticNearActorDetail);
         }
 
         @Override

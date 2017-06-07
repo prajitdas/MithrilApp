@@ -1,5 +1,6 @@
 package edu.umbc.ebiquity.mithril.ui.adapters;
 
+import android.location.Address;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -7,6 +8,7 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import java.util.List;
+import java.util.Locale;
 
 import edu.umbc.ebiquity.mithril.R;
 import edu.umbc.ebiquity.mithril.data.model.rules.context.SemanticLocation;
@@ -36,14 +38,18 @@ public class SemanticLocationRecyclerViewAdapter extends RecyclerView.Adapter<Se
 
     @Override
     public void onBindViewHolder(final ViewHolder holder, int position) {
-        holder.mItem = semanticLocations.get(position);
-        holder.mLabel.setText(semanticLocations.get(position).getInferredLocation());
-        StringBuffer latLng = new StringBuffer("Lat: ");
-        latLng.append(Double.toString(semanticLocations.get(position).getLocation().getLatitude()));
-        latLng.append(", Lng: ");
-        latLng.append(Double.toString(semanticLocations.get(position).getLocation().getLongitude()));
-        holder.mDetail.setText(latLng.toString());
+        SemanticLocation semanticLocation = semanticLocations.get(position);
+        holder.mItem = semanticLocation;
+        holder.mLabel.setText(semanticLocation.getInferredLocation());
 
+        if(semanticLocation.getAddress().equals(new Address(Locale.getDefault()))) {
+            StringBuffer latLng = new StringBuffer("Lat: ");
+            latLng.append(Double.toString(semanticLocation.getLocation().getLatitude()));
+            latLng.append(", Lng: ");
+            latLng.append(Double.toString(semanticLocation.getLocation().getLongitude()));
+            holder.mDetail.setText(latLng.toString());
+        } else
+            holder.mDetail.setText(semanticLocation.getAddress().getAddressLine(0));
         holder.mView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
