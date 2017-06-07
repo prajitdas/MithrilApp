@@ -248,10 +248,12 @@ public class MithrilDBHelper extends SQLiteOpenHelper {
      */
     private final static String CTXTLOGID = "id"; // ID of the context instance
     private final static String CTXTID = "contextid"; // Semantic context id
+    private final static String CTXTTRANSITION = "transition"; // Is the context starting or ending?
     private final static String CTXTTIME = "time"; // when this context was observed
     private final static String CREATE_CONTEXT_LOG_TABLE = "CREATE TABLE " + getContextLogTableName() + " (" +
             CTXTLOGID + " INTEGER PRIMARY KEY AUTOINCREMENT," +
             CTXTID + " INTEGER NOT NULL, " +
+            CTXTTRANSITION + " TEXT NOT NULL, " +
             CTXTTIME + " timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP, " +
             "FOREIGN KEY(" + CTXTID + ") REFERENCES " + getContextTableName() + "(" + CONTEXTID + ")" +
             ");";
@@ -947,10 +949,11 @@ public class MithrilDBHelper extends SQLiteOpenHelper {
      * @param contextId
      * @return
      */
-    public long addContextLog(SQLiteDatabase db, int contextId) {
+    public long addContextLog(SQLiteDatabase db, int contextId, String startOrEnd) {
         long insertedRowId;
         ContentValues values = new ContentValues();
         values.put(CTXTID, contextId);
+        values.put(CTXTTRANSITION, startOrEnd);
         try {
             insertedRowId = db.insertOrThrow(getContextLogTableName(), null, values);
         } catch (SQLException e) {

@@ -89,34 +89,38 @@ public class GeofenceTransitionsIntentService extends IntentService {
         int geofenceTransition = geofencingEvent.getGeofenceTransition();
 
         // Test that the reported transition was of interest.
-        if (geofenceTransition == Geofence.GEOFENCE_TRANSITION_ENTER ||
-                geofenceTransition == Geofence.GEOFENCE_TRANSITION_EXIT) {
-
-            // Get the geofences that were triggered. A single event can trigger multiple geofences.
-            List<Geofence> triggeringGeofences = geofencingEvent.getTriggeringGeofences();
-
-            // Get the transition details as a String.
-            String geofenceTransitionDetails = getGeofenceTransitionDetails(
-                    this,
-                    geofenceTransition,
-                    triggeringGeofences
-            );
-
-            addContextLogToDB(geofenceTransitionDetails);
-            // Send notification and log the transition details.
-            sendNotification(geofenceTransitionDetails);
-            Log.i(MithrilApplication.getDebugTag()+TAG, geofenceTransitionDetails);
-//            findCurrentActivityIfAny();
-//            findCurrentTemporalInfoIfAny();
-//            findCurrentPresenceInfoIfAny();
+        if (geofenceTransition == Geofence.GEOFENCE_TRANSITION_ENTER) {
+            addContextLogToDB(gatherTransitionDetails(geofencingEvent, geofenceTransition), MithrilApplication.getPrefStartKey());
+        } else if (geofenceTransition == Geofence.GEOFENCE_TRANSITION_EXIT) {
+            addContextLogToDB(gatherTransitionDetails(geofencingEvent, geofenceTransition), MithrilApplication.getPrefEndKey());
         } else {
             // Log the error.
             Log.e(MithrilApplication.getDebugTag()+TAG, getString(R.string.geofence_transition_invalid_type, geofenceTransition));
         }
     }
 
-    private void addContextLogToDB(String label) {
-        mithrilDBHelper.addContextLog(mithrilDB, mithrilDBHelper.findContextIdByLabelAndType(mithrilDB, label, MithrilApplication.getPrefKeyLocation()));
+    private String gatherTransitionDetails(GeofencingEvent geofencingEvent, int geofenceTransition) {
+        // Get the geofences that were triggered. A single event can trigger multiple geofences.
+        List<Geofence> triggeringGeofences = geofencingEvent.getTriggeringGeofences();
+
+        // Get the transition details as a String.
+        String geofenceTransitionDetails = getGeofenceTransitionDetails(
+                this,
+                geofenceTransition,
+                triggeringGeofences
+        );
+
+        // Send notification and log the transition details.
+        sendNotification(geofenceTransitionDetails);
+        Log.i(MithrilApplication.getDebugTag()+TAG, geofenceTransitionDetails);
+//            findCurrentActivityIfAny();
+//            findCurrentTemporalInfoIfAny();
+//            findCurrentPresenceInfoIfAny();
+        return geofenceTransitionDetails;
+    }
+
+    private void addContextLogToDB(String label, String startOrEnd) {
+        mithrilDBHelper.addContextLog(mithrilDB, mithrilDBHelper.findContextIdByLabelAndType(mithrilDB, label, MithrilApplication.getPrefKeyLocation()), startOrEnd);
     }
 
 //    private void findCurrentPresenceInfoIfAny() {}

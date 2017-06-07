@@ -144,6 +144,9 @@ public class MithrilApplication extends Application {
 
     private static final String PREF_TEMPORAL_CONTEXT_ENABLE_KEY = "enableTemporalContext";
 
+    private static final String PREF_START_KEY = "startOfContext";
+    private static final String PREF_END_KEY = "endOfContext";
+
     private static final String PREF_WORK_DAYS_KEY = "workDays";
     private static final String PREF_WORK_HOURS_START_KEY = "workHoursStart";
     private static final String PREF_WORK_HOURS_END_KEY = "workHoursEnd";
@@ -676,6 +679,14 @@ public class MithrilApplication extends Application {
 
     public static long getFastestInterval() {
         return FASTEST_INTERVAL;
+    }
+
+    public static String getPrefStartKey() {
+        return PREF_START_KEY;
+    }
+
+    public static String getPrefEndKey() {
+        return PREF_END_KEY;
     }
 
     public static String getLogIntent() {
