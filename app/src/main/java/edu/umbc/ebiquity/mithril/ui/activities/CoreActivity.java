@@ -185,7 +185,7 @@ public class CoreActivity extends AppCompatActivity
         } else if (id == R.id.nav_exit) {
             PermissionHelper.quitMithril(this, MithrilApplication.MITHRIL_BYE_BYE_MESSAGE);
         } else if (id == R.id.nav_settings) {
-            launchPrefsActivity();
+            launchInstanceCreationActivity();
         } else if (id == R.id.nav_about) {
             loadAboutFragment();
         } else if (id == R.id.nav_reset_app) {
@@ -459,19 +459,19 @@ public class CoreActivity extends AppCompatActivity
     }
 
     private void defaultFragmentLoad() {
-        if (!isContextInfoSet())
-            launchPrefsActivity();
-        else {
+//        if (!isContextInfoSet())
+//            launchPrefsActivity();
+//        else {
         /*
          * If we are loading the app list we don't need the above two lines
          * as we take care of that in the loadAllAppsFragment() method
          */
-            if (isViolationListEmpty())
-                loadEmptyFragment();
-            else
-                loadViolationsFragment();
-        }
+        if (isViolationListEmpty())
+            loadEmptyFragment();
+        else
+            loadViolationsFragment();
     }
+//    }
 
     private void resetApp() {
         // Use the Builder class for convenient dialog construction
@@ -597,8 +597,12 @@ public class CoreActivity extends AppCompatActivity
                 .commit();
     }
 
-    private void launchPrefsActivity() {
-        startActivity(new Intent(this, PrefsActivity.class));
+//    private void launchPrefsActivity() {
+//        startActivity(new Intent(this, PrefsActivity.class));
+//    }
+
+    private void launchInstanceCreationActivity() {
+        startActivity(new Intent(this, InstanceCreationActivity.class));
     }
 
     private void launchUsageStatsActivity() {
