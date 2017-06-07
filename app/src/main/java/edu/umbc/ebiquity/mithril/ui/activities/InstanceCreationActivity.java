@@ -80,8 +80,6 @@ public class InstanceCreationActivity extends AppCompatActivity
         GoogleApiClient.OnConnectionFailedListener,
         ResultCallback<Status> {
 
-    MithrilDBHelper mithrilDBHelper;
-    SQLiteDatabase mithrilDB;
     private static final String FRAGMENT_LOCATION = "location";
     private static final String FRAGMENT_PRESENCE = "presence";
     private static final String FRAGMENT_TEMPORAL = "temporal";
@@ -98,6 +96,8 @@ public class InstanceCreationActivity extends AppCompatActivity
      * The list of geofences used in this sample.
      */
     protected List<Geofence> mGeofenceList = new ArrayList<>();
+    private MithrilDBHelper mithrilDBHelper;
+    private SQLiteDatabase mithrilDB;
     private BottomNavigationView navigation;
     private SharedPreferences.Editor editor;
     private SharedPreferences sharedPreferences;

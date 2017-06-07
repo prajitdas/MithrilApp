@@ -20,6 +20,7 @@ import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
+import android.database.sqlite.SQLiteDatabase;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.support.v4.app.NotificationCompat;
@@ -50,6 +51,9 @@ public class GeofenceTransitionsIntentService extends IntentService {
 
     protected static final String TAG = "GeofenceTransitionsIS";
 
+    private MithrilDBHelper mithrilDBHelper;
+    private SQLiteDatabase mithrilDB;
+
     /**
      * This constructor is required, and calls the super IntentService(String)
      * constructor with the name for a worker thread.
@@ -62,6 +66,8 @@ public class GeofenceTransitionsIntentService extends IntentService {
     @Override
     public void onCreate() {
         super.onCreate();
+        mithrilDBHelper = new MithrilDBHelper(getApplicationContext());
+        mithrilDB = mithrilDBHelper.getWritableDatabase();
     }
 
     /**
@@ -96,29 +102,26 @@ public class GeofenceTransitionsIntentService extends IntentService {
                     triggeringGeofences
             );
 
+            addContextLogToDB(geofenceTransitionDetails);
             // Send notification and log the transition details.
             sendNotification(geofenceTransitionDetails);
             Log.i(MithrilApplication.getDebugTag()+TAG, geofenceTransitionDetails);
-            findCurrentActivityIfAny();
-            findCurrentTemporalInfoIfAny();
-            findCurrentPresenceInfoIfAny();
+//            findCurrentActivityIfAny();
+//            findCurrentTemporalInfoIfAny();
+//            findCurrentPresenceInfoIfAny();
         } else {
             // Log the error.
             Log.e(MithrilApplication.getDebugTag()+TAG, getString(R.string.geofence_transition_invalid_type, geofenceTransition));
         }
     }
 
-    private void findCurrentPresenceInfoIfAny() {
-
+    private void addContextLogToDB(String label) {
+        mithrilDBHelper.addContextLog(mithrilDB, mithrilDBHelper.findContextIdByLabelAndType(mithrilDB, label, MithrilApplication.getPrefKeyLocation()));
     }
 
-    private void findCurrentTemporalInfoIfAny() {
-
-    }
-
-    private void findCurrentActivityIfAny() {
-
-    }
+//    private void findCurrentPresenceInfoIfAny() {}
+//    private void findCurrentTemporalInfoIfAny() {}
+//    private void findCurrentActivityIfAny() {}
 
     /**
      * Gets transition details and returns them as a formatted string.

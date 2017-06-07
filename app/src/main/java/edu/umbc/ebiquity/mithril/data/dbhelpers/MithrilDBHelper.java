@@ -1677,6 +1677,30 @@ public class MithrilDBHelper extends SQLiteOpenHelper {
         return userContext;
     }
 
+    public int findContextIdByLabelAndType(SQLiteDatabase db, String label, String type) {
+        // Select Query
+        String selectQuery = "SELECT " +
+                getContextTableName() + "." + CONTEXTID +
+                " FROM " +
+                getContextTableName() +
+                " WHERE " +
+                getContextTableName() + "." + CONTEXTSEMANTICLABEL + " = '" + label + "'" +
+                " AND " +
+                getContextTableName() + "." + CONTEXTTYPE + " = '" + type + "';";
+
+        Cursor cursor = db.rawQuery(selectQuery, null);
+        try {
+            if (cursor.moveToFirst()) {
+                return cursor.getInt(0);
+            }
+        } catch (SQLException e) {
+            throw new SQLException("Could not find " + e);
+        } finally {
+            cursor.close();
+        }
+        return -1;
+    }
+
     /**
      * method to update single violation
      */
