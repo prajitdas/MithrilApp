@@ -9,6 +9,7 @@ import android.widget.TextView;
 import java.util.List;
 
 import edu.umbc.ebiquity.mithril.R;
+import edu.umbc.ebiquity.mithril.data.model.rules.context.SemanticLocation;
 import edu.umbc.ebiquity.mithril.data.model.rules.context.SemanticTime;
 import edu.umbc.ebiquity.mithril.ui.fragments.instancecreationactivityfragments.SemanticTimeFragment.OnListFragmentInteractionListener;
 
@@ -37,8 +38,8 @@ public class SemanticTimeRecyclerViewAdapter extends RecyclerView.Adapter<Semant
     @Override
     public void onBindViewHolder(final ViewHolder holder, int position) {
         holder.mItem = semanticTimes.get(position);
-        holder.mIdView.setText(semanticTimes.get(position).getInferredTime());
-        holder.mContentView.setText(Long.toString(semanticTimes.get(position).getRawTime()));
+        holder.mLabel.setText(semanticTimes.get(position).getInferredTime());
+        holder.mDetail.setText(Long.toString(semanticTimes.get(position).getRawTime()));
 
         holder.mView.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -59,20 +60,20 @@ public class SemanticTimeRecyclerViewAdapter extends RecyclerView.Adapter<Semant
 
     public class ViewHolder extends RecyclerView.ViewHolder {
         public final View mView;
-        public final TextView mIdView;
-        public final TextView mContentView;
+        public final TextView mLabel;
+        public final TextView mDetail;
         public SemanticTime mItem;
 
         public ViewHolder(View view) {
             super(view);
             mView = view;
-            mIdView = (TextView) view.findViewById(R.id.id);
-            mContentView = (TextView) view.findViewById(R.id.content);
+            mLabel = (TextView) view.findViewById(R.id.semanticActivityLabel);
+            mDetail = (TextView) view.findViewById(R.id.semanticActivityDetail);
         }
 
         @Override
         public String toString() {
-            return super.toString() + " '" + mContentView.getText() + "'";
+            return super.toString() + " '" + mLabel.getText() + "'";
         }
     }
 }

@@ -9,6 +9,7 @@ import android.widget.TextView;
 import java.util.List;
 
 import edu.umbc.ebiquity.mithril.R;
+import edu.umbc.ebiquity.mithril.data.model.rules.context.SemanticLocation;
 import edu.umbc.ebiquity.mithril.data.model.rules.context.SemanticNearActor;
 import edu.umbc.ebiquity.mithril.ui.fragments.instancecreationactivityfragments.SemanticNearActorFragment.OnListFragmentInteractionListener;
 
@@ -37,8 +38,8 @@ public class SemanticNearActorsRecyclerViewAdapter extends RecyclerView.Adapter<
     @Override
     public void onBindViewHolder(final ViewHolder holder, int position) {
         holder.mItem = semanticNearActors.get(position);
-        holder.mIdView.setText(semanticNearActors.get(position).getInferredRelationship());
-        holder.mContentView.setText(semanticNearActors.get(position).toString());
+        holder.mLabel.setText(semanticNearActors.get(position).getInferredRelationship());
+        holder.mDetail.setText(semanticNearActors.get(position).toString());
 
         holder.mView.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -59,20 +60,20 @@ public class SemanticNearActorsRecyclerViewAdapter extends RecyclerView.Adapter<
 
     public class ViewHolder extends RecyclerView.ViewHolder {
         public final View mView;
-        public final TextView mIdView;
-        public final TextView mContentView;
+        public final TextView mLabel;
+        public final TextView mDetail;
         public SemanticNearActor mItem;
 
         public ViewHolder(View view) {
             super(view);
             mView = view;
-            mIdView = (TextView) view.findViewById(R.id.id);
-            mContentView = (TextView) view.findViewById(R.id.content);
+            mLabel = (TextView) view.findViewById(R.id.semanticActivityLabel);
+            mDetail = (TextView) view.findViewById(R.id.semanticActivityDetail);
         }
 
         @Override
         public String toString() {
-            return super.toString() + " '" + mContentView.getText() + "'";
+            return super.toString() + " '" + mLabel.getText() + "'";
         }
     }
 }

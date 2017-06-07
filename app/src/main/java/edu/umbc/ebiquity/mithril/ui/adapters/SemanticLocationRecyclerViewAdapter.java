@@ -37,12 +37,12 @@ public class SemanticLocationRecyclerViewAdapter extends RecyclerView.Adapter<Se
     @Override
     public void onBindViewHolder(final ViewHolder holder, int position) {
         holder.mItem = semanticLocations.get(position);
-        holder.mIdView.setText(semanticLocations.get(position).getInferredLocation());
+        holder.mLabel.setText(semanticLocations.get(position).getInferredLocation());
         StringBuffer latLng = new StringBuffer("Lat: ");
         latLng.append(Double.toString(semanticLocations.get(position).getLocation().getLatitude()));
         latLng.append(", Lng: ");
         latLng.append(Double.toString(semanticLocations.get(position).getLocation().getLongitude()));
-        holder.mContentView.setText(latLng.toString());
+        holder.mDetail.setText(latLng.toString());
 
         holder.mView.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -63,20 +63,20 @@ public class SemanticLocationRecyclerViewAdapter extends RecyclerView.Adapter<Se
 
     public class ViewHolder extends RecyclerView.ViewHolder {
         public final View mView;
-        public final TextView mIdView;
-        public final TextView mContentView;
+        public final TextView mLabel;
+        public final TextView mDetail;
         public SemanticLocation mItem;
 
         public ViewHolder(View view) {
             super(view);
             mView = view;
-            mIdView = (TextView) view.findViewById(R.id.id);
-            mContentView = (TextView) view.findViewById(R.id.content);
+            mLabel = (TextView) view.findViewById(R.id.semanticLocationLabel);
+            mDetail = (TextView) view.findViewById(R.id.semanticLocationDetail);
         }
 
         @Override
         public String toString() {
-            return super.toString() + " '" + mContentView.getText() + "'";
+            return super.toString() + " '" + mLabel.getText() + "'";
         }
     }
 }
