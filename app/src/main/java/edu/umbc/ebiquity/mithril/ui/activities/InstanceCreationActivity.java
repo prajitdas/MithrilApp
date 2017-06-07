@@ -97,7 +97,7 @@ public class InstanceCreationActivity extends AppCompatActivity
     /**
      * The list of geofences used in this sample.
      */
-    protected ArrayList<Geofence> mGeofenceList = new ArrayList<>();
+    protected List<Geofence> mGeofenceList = new ArrayList<>();
     private BottomNavigationView navigation;
     private SharedPreferences.Editor editor;
     private SharedPreferences sharedPreferences;
@@ -484,6 +484,7 @@ public class InstanceCreationActivity extends AppCompatActivity
         if (isThereActivityContextToSave)
             setActivityDetection();
     }
+
     private void setGeoFences() {
         // We have geofences to put around the list of locations now!
         for (Map.Entry<String, SemanticLocation> semanticLocationEntry : semanticLocations.entrySet())
@@ -569,7 +570,9 @@ public class InstanceCreationActivity extends AppCompatActivity
                     public void onClick(DialogInterface dialog, int which) {
                         editor.remove(item.getInferredTime());
                         removeContextFromDB(item.getInferredTime());
-                        semanticTimes.remove(item.getInferredTime());
+                        semanticTimes.remove(MithrilApplication.getPrefKeySemanticTemporal() + item.getInferredTime());
+                        editor.remove(MithrilApplication.getPrefKeySemanticTemporal() + item.getInferredTime());
+                        editor.apply();
                         loadSemanticTemporalFragment();
                     }
                 })
@@ -596,7 +599,10 @@ public class InstanceCreationActivity extends AppCompatActivity
                     public void onClick(DialogInterface dialog, int which) {
                         editor.remove(item.getInferredLocation());
                         removeContextFromDB(item.getInferredLocation());
-                        semanticLocations.remove(item.getInferredLocation());
+                        semanticLocations.remove(MithrilApplication.getPrefKeySemanticLocation() + item.getInferredLocation());
+                        updateGeofences(MithrilApplication.getPrefKeySemanticLocation() + item.getInferredLocation());
+                        editor.remove(MithrilApplication.getPrefKeySemanticLocation() + item.getInferredLocation());
+                        editor.apply();
                         loadSemanticLocationFragment();
                     }
                 })
@@ -623,7 +629,9 @@ public class InstanceCreationActivity extends AppCompatActivity
                     public void onClick(DialogInterface dialog, int which) {
                         editor.remove(item.getInferredActivity());
                         removeContextFromDB(item.getInferredActivity());
-                        semanticActivities.remove(item.getInferredActivity());
+                        semanticActivities.remove(MithrilApplication.getPrefKeySemanticActivity() + item.getInferredActivity());
+                        editor.remove(MithrilApplication.getPrefKeySemanticActivity() + item.getInferredActivity());
+                        editor.apply();
                         loadSemanticActivityFragment();
                     }
                 })
@@ -650,7 +658,9 @@ public class InstanceCreationActivity extends AppCompatActivity
                     public void onClick(DialogInterface dialog, int which) {
                         editor.remove(item.getInferredRelationship());
                         removeContextFromDB(item.getInferredRelationship());
-                        semanticNearActors.remove(item.getInferredRelationship());
+                        semanticNearActors.remove(MithrilApplication.getPrefKeySemanticPresence() + item.getInferredRelationship());
+                        editor.remove(MithrilApplication.getPrefKeySemanticPresence() + item.getInferredRelationship());
+                        editor.apply();
                         loadSemanticPresenceFragment();
                     }
                 })
@@ -966,6 +976,28 @@ public class InstanceCreationActivity extends AppCompatActivity
         }
     }
 
+    /**
+     * Removes geofences, which stops further notifications when the device enters or exits this geofence.
+     */
+    public void updateGeofences(String semanticIdentifier) {
+        List<String> geofencesToRemove = new ArrayList<>();
+        geofencesToRemove.add(semanticIdentifier);
+        if (!mGoogleApiClient.isConnected()) {
+            Toast.makeText(this, getString(R.string.not_connected), Toast.LENGTH_SHORT).show();
+            return;
+        }
+        try {
+            // Remove geofences.
+            LocationServices.GeofencingApi.removeGeofences(
+                    mGoogleApiClient,
+                    geofencesToRemove
+            ).setResultCallback(this); // Result processed in onResult().
+        } catch (SecurityException securityException) {
+            // Catch exception generated if the app does not use ACCESS_FINE_LOCATION permission.
+            logSecurityException(securityException);
+        }
+    }
+
     private void logSecurityException(SecurityException securityException) {
         Log.e(MithrilApplication.getDebugTag(), "Invalid location permission. " +
                 "You need to use ACCESS_FINE_LOCATION with geofences", securityException);
@@ -985,9 +1017,9 @@ public class InstanceCreationActivity extends AppCompatActivity
         if (status.isSuccess()) {
             // Update state and save in shared preferences.
             mGeofencesAdded = !mGeofencesAdded;
-//            SharedPreferences.Editor editor = sharedPrefs.edit();
-//            editor.putBoolean(MithrilApplication.GEOFENCES_ADDED_KEY, mGeofencesAdded);
-//            editor.apply();
+            SharedPreferences.Editor editor = sharedPreferences.edit();
+            editor.putBoolean(MithrilApplication.GEOFENCES_ADDED_KEY, mGeofencesAdded);
+            editor.apply();
 
             // Update the UI. Adding geofences enables the Remove Geofences button, and removing
             // geofences enables the Add Geofences button.
