@@ -66,7 +66,7 @@ public class SemanticLocationRecyclerViewAdapter extends RecyclerView.Adapter<Se
             }
         } else {
             if(semanticLocation.getLocationDetails() != null)
-                holder.mDetail.setText(semanticLocation.getLocationDetails() + addressLine);
+                holder.mDetail.setText(semanticLocation.getLocationDetails());
             else
                 holder.mDetail.setText(addressLine);
         }
