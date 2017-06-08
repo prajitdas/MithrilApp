@@ -20,7 +20,7 @@ import java.util.Map;
 import edu.umbc.ebiquity.mithril.MithrilApplication;
 import edu.umbc.ebiquity.mithril.R;
 import edu.umbc.ebiquity.mithril.data.dbhelpers.MithrilDBHelper;
-import edu.umbc.ebiquity.mithril.data.model.Violation;
+import edu.umbc.ebiquity.mithril.data.model.rules.Violation;
 import edu.umbc.ebiquity.mithril.ui.adapters.ViolationRecyclerViewAdapter;
 
 /**

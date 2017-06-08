@@ -7,7 +7,7 @@ import android.database.sqlite.SQLiteDatabase;
 
 import edu.umbc.ebiquity.mithril.MithrilApplication;
 import edu.umbc.ebiquity.mithril.data.dbhelpers.MithrilDBHelper;
-import edu.umbc.ebiquity.mithril.data.model.Action;
+import edu.umbc.ebiquity.mithril.data.model.rules.Action;
 import edu.umbc.ebiquity.mithril.data.model.PolicyRule;
 
 public class DataGenerator {

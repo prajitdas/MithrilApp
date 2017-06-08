@@ -13,7 +13,7 @@ import android.widget.TextView;
 import java.util.List;
 
 import edu.umbc.ebiquity.mithril.R;
-import edu.umbc.ebiquity.mithril.data.model.Violation;
+import edu.umbc.ebiquity.mithril.data.model.rules.Violation;
 import edu.umbc.ebiquity.mithril.ui.fragments.coreactivityfragments.ViolationFragment.OnListFragmentInteractionListener;
 import edu.umbc.ebiquity.mithril.util.specialtasks.permissions.PermissionHelper;
 

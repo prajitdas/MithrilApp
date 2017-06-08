@@ -1,4 +1,4 @@
-package edu.umbc.ebiquity.mithril.data.model;
+package edu.umbc.ebiquity.mithril.data.model.rules;
 
 public enum Action {
     ALLOW(1), ALLOW_WITH_CAVEAT(2), DENY(0);

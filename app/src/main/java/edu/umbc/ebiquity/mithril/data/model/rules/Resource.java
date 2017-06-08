@@ -1,4 +1,4 @@
-package edu.umbc.ebiquity.mithril.data.model;
+package edu.umbc.ebiquity.mithril.data.model.rules;
 
 import android.graphics.drawable.Drawable;
 

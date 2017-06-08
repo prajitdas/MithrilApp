@@ -29,9 +29,9 @@ import java.util.Map;
 
 import edu.umbc.ebiquity.mithril.MithrilApplication;
 import edu.umbc.ebiquity.mithril.R;
-import edu.umbc.ebiquity.mithril.data.model.Action;
+import edu.umbc.ebiquity.mithril.data.model.rules.Action;
 import edu.umbc.ebiquity.mithril.data.model.PolicyRule;
-import edu.umbc.ebiquity.mithril.data.model.Violation;
+import edu.umbc.ebiquity.mithril.data.model.rules.Violation;
 import edu.umbc.ebiquity.mithril.data.model.components.AppData;
 import edu.umbc.ebiquity.mithril.data.model.components.PermData;
 import edu.umbc.ebiquity.mithril.simulations.DataGenerator;

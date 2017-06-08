@@ -1,4 +1,4 @@
-package edu.umbc.ebiquity.mithril.data.model;
+package edu.umbc.ebiquity.mithril.data.model.rules;
 
 public class PolicyRule {
     private int id;
