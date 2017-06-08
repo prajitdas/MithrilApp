@@ -29,11 +29,11 @@ import java.util.Map;
 
 import edu.umbc.ebiquity.mithril.MithrilApplication;
 import edu.umbc.ebiquity.mithril.R;
-import edu.umbc.ebiquity.mithril.data.model.rules.Action;
-import edu.umbc.ebiquity.mithril.data.model.PolicyRule;
-import edu.umbc.ebiquity.mithril.data.model.rules.Violation;
 import edu.umbc.ebiquity.mithril.data.model.components.AppData;
 import edu.umbc.ebiquity.mithril.data.model.components.PermData;
+import edu.umbc.ebiquity.mithril.data.model.rules.Action;
+import edu.umbc.ebiquity.mithril.data.model.rules.PolicyRule;
+import edu.umbc.ebiquity.mithril.data.model.rules.Violation;
 import edu.umbc.ebiquity.mithril.simulations.DataGenerator;
 import edu.umbc.ebiquity.mithril.util.specialtasks.errorsnexceptions.PermissionWasUpdateException;
 
@@ -45,9 +45,6 @@ public class MithrilDBHelper extends SQLiteOpenHelper {
     // THIS IS CREATING A NEW VERSION OF DATABASE ON EACH APP LAUNCH THUS TAKING UP HUGE AMOUNTS OF STORAGE SPACE AND SLOWING DOWN THE COMPLETE APP!
 
     private final static String DATABASE_NAME = MithrilApplication.getDatabaseName();
-    private AppOpsManager appOpsManager;
-    private Context context;
-
     /**
      * Following are table names in our database
      */
@@ -60,7 +57,6 @@ public class MithrilDBHelper extends SQLiteOpenHelper {
     private final static String ACTION_LOG_TABLE_NAME = "actionlog";
     private final static String VIOLATIONS_LOG_TABLE_NAME = "violationlog";
     private final static String APP_PERM_VIEW_NAME = "apppermview";
-
     /**
      * Following are table creation statements
      * -- Table 1: apps
@@ -108,7 +104,6 @@ public class MithrilDBHelper extends SQLiteOpenHelper {
             APPINSTALLTIME + " timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP," +
             "CONSTRAINT apps_unique_key UNIQUE(" + APPPACKAGENAME + ") " +
             ");";
-
     /**
      * -- Table 2: permissions
      CREATE TABLE permissions (
@@ -145,7 +140,6 @@ public class MithrilDBHelper extends SQLiteOpenHelper {
             PERMOP + " INTEGER NOT NULL DEFAULT -1, " +
             "CONSTRAINT permissions_unique_name UNIQUE(" + PERMNAME + ") " +
             ");";
-
     /**
      * -- Table 3: appperm
      CREATE TABLE appperm (
@@ -175,7 +169,6 @@ public class MithrilDBHelper extends SQLiteOpenHelper {
             "FOREIGN KEY(" + APPPERMRESPERID + ") REFERENCES " + getPermissionsTableName() + "(" + PERMID + "), " +
             "CONSTRAINT appperm_pk PRIMARY KEY (" + APPPERMRESAPPID + "," + APPPERMRESPERID + ")" +
             ");";
-
     /**
      * -- Table 4: context
      -- Table: context
@@ -197,7 +190,6 @@ public class MithrilDBHelper extends SQLiteOpenHelper {
             CONTEXTTYPE + " TEXT NOT NULL," +
             CONTEXTSEMANTICLABEL + " TEXT NOT NULL" +
             ");";
-
     /**
      * -- Table 5: policyrules
      CREATE TABLE policyrules (
@@ -231,7 +223,6 @@ public class MithrilDBHelper extends SQLiteOpenHelper {
             "FOREIGN KEY(" + POLRULAPPID + ") REFERENCES " + getAppsTableName() + "(" + APPID + ") ON DELETE CASCADE, " +
             "FOREIGN KEY(" + POLRULCTXID + ") REFERENCES " + getContextTableName() + "(" + CONTEXTID + ")" +
             ");";
-
     /**
      * -- Table 6: contextlog
      CREATE TABLE contextlog (
@@ -258,7 +249,6 @@ public class MithrilDBHelper extends SQLiteOpenHelper {
             CTXTTIME + " timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP, " +
             "FOREIGN KEY(" + CTXTID + ") REFERENCES " + getContextLogTableName() + "(" + CONTEXTID + ")" +
             ");";
-
     /**
      * -- Table 7: violationlog
      CREATE TABLE violationlog (
@@ -295,7 +285,6 @@ public class MithrilDBHelper extends SQLiteOpenHelper {
             "FOREIGN KEY(" + VIOLATIONAPPID + ") REFERENCES " + getAppsTableName() + "(" + APPID + ") ON DELETE CASCADE, " +
             "FOREIGN KEY(" + VIOLATIONCTXID + ") REFERENCES " + getContextTableName() + "(" + CONTEXTID + ")" +
             ");";
-
     /**
      * -- Table 8: actionlog
      CREATE TABLE actionlog (
@@ -331,7 +320,6 @@ public class MithrilDBHelper extends SQLiteOpenHelper {
             "FOREIGN KEY(" + ACTIONAPPID + ") REFERENCES " + getAppsTableName() + "(" + APPID + ") ON DELETE CASCADE, " +
             "FOREIGN KEY(" + ACTIONCTXID + ") REFERENCES " + getContextTableName() + "(" + CONTEXTID + ")" +
             ");";
-
     /**
      * -- views
      * -- View: apppermview
@@ -378,6 +366,8 @@ public class MithrilDBHelper extends SQLiteOpenHelper {
             getAppPermTableName() + "." + APPPERMRESPERID + " = " + getPermissionsTableName() + "." + PERMID + //";";
             " AND " +
             getAppPermTableName() + "." + APPPERMGRANTED + " = 1);";
+    private AppOpsManager appOpsManager;
+    private Context context;
 
     /**
      * -------------------------------------------------------------------------------------------------------------------------------------------------------------------
@@ -527,7 +517,10 @@ public class MithrilDBHelper extends SQLiteOpenHelper {
     }
 
     public void loadDefaultDataIntoDB(SQLiteDatabase db) {
-        DataGenerator.generateSocialMediaCameraAccessRule(context);
+        DataGenerator.generateSocialMediaCameraAccessRuleForHome(context);
+        DataGenerator.generateSocialMediaLocationAccessRuleForHome(context);
+        DataGenerator.generateSocialMediaCameraAccessRuleForWork(context);
+        DataGenerator.generateSocialMediaLocationAccessRuleForWork(context);
     }
 
     private void insertHardcodedGooglePermissions(SQLiteDatabase db) {
@@ -724,7 +717,7 @@ public class MithrilDBHelper extends SQLiteOpenHelper {
         tempPermData.setPermissionLabel(permissionInfo.loadLabel(packageManager).toString());
 //        Log.d(MithrilApplication.getDebugTag(), "Label: "+permissionInfo.loadLabel(packageManager).toString()+", end label");
 
-        tempPermData.setOp(appOpsManager.permissionToOpCode(permissionInfo.name));
+        tempPermData.setOp(AppOpsManager.permissionToOpCode(permissionInfo.name));
 
         return tempPermData;
     }
