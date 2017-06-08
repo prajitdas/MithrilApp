@@ -28,6 +28,7 @@
     <string name="mithril_service_name">Mithril App Launch Detector Service</string>
 
     <string name="loading">Loading Mithril\'s\nKnowledge-Base&#8230;</string>
+    <string name="downloading_policies">Downloading policies&#8230;</string>
     <string name="explanation">Tap device with NFC tag</string>
     <string name="no_description_available_txt">No description available!</string>
     <string name="no_data">No permission information is available for this app or this app doesn\'t use any permissions!</string>
@@ -245,6 +246,7 @@
     <string name="title_activity_app_ops_details">Application operations details</string>
     <string name="title_activity_show_permission_detail">Permission group details</string>
     <string name="title_activity_instance_creation">Add&#160;</string>
+    <string name="title_activity_download_policies">Downloading policies&#8230;</string>
 
     <string name="title_bottom_navigation_location">Location</string>
     <string name="text_instance_creation_location">location context</string>
@@ -343,4 +345,5 @@
     <!-- [CHAR LIMIT=NONE] Time label for an operation that has never executed. -->
     <string name="app_ops_never_used">(Never used)</string>
     <string name="section_format">Hello World from section: %1$d</string>
+
 </resources>

@@ -35,11 +35,6 @@ import edu.umbc.ebiquity.mithril.data.model.components.AppData;
 import edu.umbc.ebiquity.mithril.data.model.components.PermData;
 import edu.umbc.ebiquity.mithril.data.model.rules.actions.Action;
 import edu.umbc.ebiquity.mithril.data.model.rules.actions.RuleAction;
-import edu.umbc.ebiquity.mithril.data.model.rules.context.SemanticUserContext;
-import edu.umbc.ebiquity.mithril.data.model.rules.context.SemanticActivity;
-import edu.umbc.ebiquity.mithril.data.model.rules.context.SemanticLocation;
-import edu.umbc.ebiquity.mithril.data.model.rules.context.SemanticNearActor;
-import edu.umbc.ebiquity.mithril.data.model.rules.context.SemanticTime;
 import edu.umbc.ebiquity.mithril.util.specialtasks.errorsnexceptions.PermissionWasUpdateException;
 
 public class MithrilDBHelper extends SQLiteOpenHelper {
@@ -521,8 +516,12 @@ public class MithrilDBHelper extends SQLiteOpenHelper {
         //We have to get the policies from somewhere. The best case scenario would be a server that gives us the policies.
         loadPoliciesForApps(db);
         //The following method loads the database with the default dummy data on creation of the database
-        //THIS WILL NOT BE USED ANYMORE
-        //loadDefaultDataIntoDB(db);
+        //THIS SHOULD NOT BE USED ANYMORE
+        loadDefaultDataIntoDB(db);
+    }
+
+    public void loadDefaultDataIntoDB(SQLiteDatabase db) {
+
     }
 
     private void insertHardcodedGooglePermissions(SQLiteDatabase db) {

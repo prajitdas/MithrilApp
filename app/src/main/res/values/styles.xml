@@ -45,4 +45,8 @@
     <!-- Scrollbar style OUTSIDE_OVERLAY -->
     <integer name="preference_scrollbar_style">33554432</integer>
 
+    <style name="FullscreenActionBarStyle" parent="Widget.AppCompat.ActionBar">
+        <item name="android:background">@color/black_overlay</item>
+    </style>
+
 </resources>

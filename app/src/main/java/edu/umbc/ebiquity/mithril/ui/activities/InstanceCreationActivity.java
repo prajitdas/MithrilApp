@@ -523,14 +523,16 @@ public class InstanceCreationActivity extends AppCompatActivity
         if (id == R.id.done_with_instances_settings) {
             editor.putBoolean(MithrilApplication.getPrefKeyInstancesCreated(), true);
             editor.apply();
-            startNextActivity(this, CoreActivity.class);
+            testInitInstancesCreateAndLaunchNextActivity();
         }
         return super.onOptionsItemSelected(item);
     }
 
     private void testInitInstancesCreateAndLaunchNextActivity() {
         sharedPreferences = getApplicationContext().getSharedPreferences(MithrilApplication.getSharedPreferencesName(), Context.MODE_PRIVATE);
-        if (sharedPreferences.getBoolean(MithrilApplication.getPrefKeyInstancesCreated(), false))
+        if (!sharedPreferences.getBoolean(MithrilApplication.getPrefKeyPoliciesDownloaded(), false))
+            startNextActivity(this, DownloadPoliciesActivity.class);
+        else //if (sharedPreferences.getBoolean(MithrilApplication.getPrefKeyInstancesCreated(), false))
             startNextActivity(this, CoreActivity.class);
     }
 
@@ -1088,6 +1090,14 @@ public class InstanceCreationActivity extends AppCompatActivity
 //        }
     }
 
+    private void addContextToDB(String type, String label) {
+        mithrilDBHelper.addContext(mithrilDB, type, label);
+    }
+
+    private void removeContextFromDB(String label) {
+        mithrilDBHelper.deleteContext(mithrilDB, label);
+    }
+
     class AddressResultReceiver extends ResultReceiver {
         private Context context;
         private SharedPreferences sharedPref;
@@ -1177,13 +1187,5 @@ public class InstanceCreationActivity extends AppCompatActivity
             editor.putString(MithrilApplication.getPrefKeySemanticLocation() + key, storeDataJson);
             editor.apply();
         }
-    }
-
-    private void addContextToDB(String type, String label) {
-        mithrilDBHelper.addContext(mithrilDB, type, label);
-    }
-
-    private void removeContextFromDB(String label) {
-        mithrilDBHelper.deleteContext(mithrilDB, label);
     }
 }

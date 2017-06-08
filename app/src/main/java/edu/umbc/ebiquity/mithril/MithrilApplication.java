@@ -128,33 +128,25 @@ public class MithrilApplication extends Application {
     private static final String PREF_KEY_CURRENT_ADDRESS = "curraddr";
     private static final String PREF_KEY_WHAT_LEVEL = "level";
     private static final String PREF_KEY_RESET_ENABLED = "reset";
-
+    private static final String PREF_KEY_POLICIES_DOWNLOADED = "policiesDownloaded";
     //Make sure they match the values from preferences.xml
     private static final String PREF_ALL_DONE_KEY = "prefsDone";
-
     private static final String PREF_WHAT_FRAGMENT_KEY = "whatFragment";
-
     private static final String PREF_LOCATION_CONTEXT_ENABLE_KEY = "enableLocationContext";
     private static final String PREF_HOME_LOCATION_KEY = "Home";
     private static final String PREF_WORK_LOCATION_KEY = "Work";
-
     private static final String PREF_PRESENCE_INFO_CONTEXT_ENABLE_KEY = "enablePresenceInfoContext";
     private static final String PREF_PRESENCE_INFO_COLLEAGUE_KEY = "presenceInfoSupervisor";
     private static final String PREF_PRESENCE_INFO_SUPERVISOR_KEY = "presenceInfoColleague";
-
     private static final String PREF_TEMPORAL_CONTEXT_ENABLE_KEY = "enableTemporalContext";
-
     private static final String PREF_START_KEY = "startOfContext";
     private static final String PREF_END_KEY = "endOfContext";
-
     private static final String PREF_WORK_DAYS_KEY = "workDays";
     private static final String PREF_WORK_HOURS_START_KEY = "workHoursStart";
     private static final String PREF_WORK_HOURS_END_KEY = "workHoursEnd";
-
     private static final String PREF_DND_DAYS_KEY = "dndDays";
     private static final String PREF_DND_HOURS_START_KEY = "dndHoursStart";
     private static final String PREF_DND_HOURS_END_KEY = "dndHoursEnd";
-
     private static final String PREF_MONDAY = "Monday";
     private static final String PREF_TUESDAY = "Tuesday";
     private static final String PREF_WEDNESDAY = "Wednesday";
@@ -162,19 +154,16 @@ public class MithrilApplication extends Application {
     private static final String PREF_FRIDAY = "Friday";
     private static final String PREF_SATURDAY = "Saturday";
     private static final String PREF_SUNDAY = "Sunday";
-
     //End of preferences.xml
 
     private static final String PREF_KEY_LOCATION_INSTANCE = "locationInstance";
     private static final String PREF_KEY_ACTIVITY_INSTANCE = "activityInstance";
     private static final String PREF_KEY_PRESENCE_INSTANCE = "presenceInstance";
     private static final String PREF_KEY_TEMPORAL_INSTANCE = "temporalInstance";
-
     private static final String PREF_KEY_LOCATION_INSTANCES = "locationInstances";
     private static final String PREF_KEY_ACTIVITY_INSTANCES = "activityInstances";
     private static final String PREF_KEY_PRESENCE_INSTANCES = "presenceInstances";
     private static final String PREF_KEY_TEMPORAL_INSTANCES = "temporalInstances";
-
     private static final String PREF_KEY_INSTANCES_CREATED = "instancesCreated";
     private static final String PREF_KEY_USER_DENIED_USAGE_STATS_PERMISSIONS = "userDeniedUsageStatsPermissions";
     private static final String PREF_KEY_USER_DENIED_PERMISSIONS = "userDeniedPermissions";
@@ -679,6 +668,10 @@ public class MithrilApplication extends Application {
 
     public static long getFastestInterval() {
         return FASTEST_INTERVAL;
+    }
+
+    public static String getPrefKeyPoliciesDownloaded() {
+        return PREF_KEY_POLICIES_DOWNLOADED;
     }
 
     public static String getPrefStartKey() {
