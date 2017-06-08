@@ -1,5 +1,5 @@
 -- Created by Vertabelo (http://vertabelo.com)
--- Last modification date: 2017-06-06 04:44:15.361
+-- Last modification date: 2017-06-08 11:02:44.552
 
 -- tables
 -- Table: actionlog
@@ -65,6 +65,7 @@ CREATE TABLE permissions (
     flag text NULL,
     description text NULL,
     icon blob NOT NULL,
+    op int NOT NULL DEFAULT -1,
     UNIQUE INDEX permissions_unique_name (name),
     CONSTRAINT permissions_pk PRIMARY KEY (id)
 ) COMMENT 'Table showing metadata for permissions';
@@ -76,6 +77,7 @@ CREATE TABLE policyrules (
     action int NOT NULL,
     apps_id int NOT NULL,
     context_id int NOT NULL,
+    op int NOT NULL,
     CONSTRAINT policyrules_pk PRIMARY KEY (id)
 ) COMMENT 'Table showing policy rules defined for apps and requested resources in given context';
 

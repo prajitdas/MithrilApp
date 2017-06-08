@@ -14,9 +14,9 @@ import java.util.List;
 
 import edu.umbc.ebiquity.mithril.MithrilApplication;
 import edu.umbc.ebiquity.mithril.data.dbhelpers.MithrilDBHelper;
+import edu.umbc.ebiquity.mithril.data.model.Action;
 import edu.umbc.ebiquity.mithril.data.model.PolicyRule;
 import edu.umbc.ebiquity.mithril.data.model.Violation;
-import edu.umbc.ebiquity.mithril.data.model.rules.actions.Action;
 import edu.umbc.ebiquity.mithril.data.model.rules.context.SemanticLocation;
 import edu.umbc.ebiquity.mithril.data.model.rules.context.SemanticTime;
 import edu.umbc.ebiquity.mithril.data.model.rules.context.SemanticUserContext;
@@ -102,26 +102,26 @@ public class ViolationDetector {
             if (rulesForApp.size() > 0) {
                 for (PolicyRule rule : rulesForApp) {
                     if (rule.getAction().equals(Action.ALLOW)) {
-                        Violation violation;
-                        //Is this allowed?
-                        //Do we need temporal context?
-                        if (rule.getContextType().equals(MithrilApplication.getPrefKeyTemporal())) {
-                            violation = weNeedTimeViolationCheck(context, new SemanticTime(rule.getSemanticContextLabel()));
-                            if(violation != null)
-                                mithrilDBHelper.addViolation(mithrilDB, violation);
-                        }
-                        //Do we need location?
-                        else if (rule.getContextType().equals(MithrilApplication.getPrefKeyLocation())) {
-                            violation = weNeedLocationViolationCheck(context, new SemanticLocation(rule.getSemanticContextLabel()));
-                            if(violation != null)
-                                mithrilDBHelper.addViolation(mithrilDB, violation);
-                        }
-                        //Do we need activity?
-                        else if (rule.getContextType().equals(MithrilApplication.getPrefKeyActivity()))
-                            weNeedActivityViolationCheck();
-                        //Do we need nearby actors?
-                        else if (rule.getContextType().equals(MithrilApplication.getPrefKeyPresence()))
-                            weNeedNearActorsViolationCheck();
+//                        Violation violation;
+//                        //Is this allowed?
+//                        //Do we need temporal context?
+//                        if (rule.getContextType().equals(MithrilApplication.getPrefKeyTemporal())) {
+//                            violation = weNeedTimeViolationCheck(context, new SemanticTime(rule.getSemanticContextLabel()));
+//                            if(violation != null)
+//                                mithrilDBHelper.addViolation(mithrilDB, violation);
+//                        }
+//                        //Do we need location?
+//                        else if (rule.getContextType().equals(MithrilApplication.getPrefKeyLocation())) {
+//                            violation = weNeedLocationViolationCheck(context, new SemanticLocation(rule.getSemanticContextLabel()));
+//                            if(violation != null)
+//                                mithrilDBHelper.addViolation(mithrilDB, violation);
+//                        }
+//                        //Do we need activity?
+//                        else if (rule.getContextType().equals(MithrilApplication.getPrefKeyActivity()))
+//                            weNeedActivityViolationCheck();
+//                        //Do we need nearby actors?
+//                        else if (rule.getContextType().equals(MithrilApplication.getPrefKeyPresence()))
+//                            weNeedNearActorsViolationCheck();
                     } else {
                         Log.e(MithrilApplication.getDebugTag(), "Serious error! DB contains deny rules. This violates our CWA");
                         throw new CWAException(); //Something is wrong!!!! We have a Closed World Assumption we cannot have deny rules...

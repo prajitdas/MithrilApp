@@ -15,6 +15,7 @@ public class PermData implements Comparable<PermData> {
     private String permissionDescription;
     private Bitmap permissionIcon;
     private String permissionLabel;
+    private int op;
 
     public PermData() {
     }
@@ -25,7 +26,8 @@ public class PermData implements Comparable<PermData> {
                     String permissionFlag,
                     String permissionDescription,
                     Bitmap permissionIcon,
-                    String permissionLabel) {
+                    String permissionLabel,
+                    int op) {
         this.permissionName = permissionName;
         this.permissionProtectionLevel = permissionProtectionLevel;
         this.permissionGroup = permissionGroup;
@@ -36,6 +38,15 @@ public class PermData implements Comparable<PermData> {
             this.permissionLabel = permissionName;
         else
             this.permissionLabel = permissionLabel;
+        this.op = op;
+    }
+
+    public int getOp() {
+        return op;
+    }
+
+    public void setOp(int op) {
+        this.op = op;
     }
 
     public String getPermissionName() {
