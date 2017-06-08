@@ -1,25 +1,17 @@
 package edu.umbc.ebiquity.mithril.data.model;
 
-import edu.umbc.ebiquity.mithril.data.model.rules.actions.RuleAction;
-import edu.umbc.ebiquity.mithril.data.model.rules.context.SemanticUserContext;
-
 public class PolicyRule {
     private int id;
     private String name;
     private int ctxId;
     private int appId;
-    private RuleAction action;
-    private String contextType;
-    private String semanticContextLabel;
+    private Action action;
 
-    public PolicyRule(int id, String name, int ctxId, int appId, RuleAction action, String label, String type) {
-        this.id = id;
+    public PolicyRule(String name, int ctxId, int appId, Action action) {
         this.name = name;
         this.ctxId = ctxId;
         this.appId = appId;
         this.action = action;
-        this.contextType = type;
-        this.semanticContextLabel = label;
     }
 
     public PolicyRule() {
@@ -83,27 +75,11 @@ public class PolicyRule {
         this.appId = appId;
     }
 
-    public RuleAction getAction() {
+    public Action getAction() {
         return action;
     }
 
-    public void setAction(RuleAction action) {
+    public void setAction(Action action) {
         this.action = action;
-    }
-
-    public String getContextType() {
-        return contextType;
-    }
-
-    public void setContextType(String contextType) {
-        this.contextType = contextType;
-    }
-
-    public String getSemanticContextLabel() {
-        return semanticContextLabel;
-    }
-
-    public void setSemanticContextLabel(String semanticContextLabel) {
-        this.semanticContextLabel = semanticContextLabel;
     }
 }

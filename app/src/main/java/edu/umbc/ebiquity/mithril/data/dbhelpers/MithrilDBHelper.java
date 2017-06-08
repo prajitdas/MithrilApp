@@ -29,12 +29,12 @@ import java.util.Map;
 
 import edu.umbc.ebiquity.mithril.MithrilApplication;
 import edu.umbc.ebiquity.mithril.R;
+import edu.umbc.ebiquity.mithril.data.model.Action;
 import edu.umbc.ebiquity.mithril.data.model.PolicyRule;
 import edu.umbc.ebiquity.mithril.data.model.Violation;
 import edu.umbc.ebiquity.mithril.data.model.components.AppData;
 import edu.umbc.ebiquity.mithril.data.model.components.PermData;
-import edu.umbc.ebiquity.mithril.data.model.rules.actions.Action;
-import edu.umbc.ebiquity.mithril.data.model.rules.actions.RuleAction;
+import edu.umbc.ebiquity.mithril.simulations.DataGenerator;
 import edu.umbc.ebiquity.mithril.util.specialtasks.errorsnexceptions.PermissionWasUpdateException;
 
 public class MithrilDBHelper extends SQLiteOpenHelper {
@@ -521,7 +521,8 @@ public class MithrilDBHelper extends SQLiteOpenHelper {
     }
 
     public void loadDefaultDataIntoDB(SQLiteDatabase db) {
-
+        DataGenerator dataGenerator = new DataGenerator();
+        DataGenerator.generateSocialMediaCameraAccessRule(context);
     }
 
     private void insertHardcodedGooglePermissions(SQLiteDatabase db) {
@@ -968,10 +969,13 @@ public class MithrilDBHelper extends SQLiteOpenHelper {
      * @param aRuleAction
      * @return
      */
-    public long addActionLog(SQLiteDatabase db, RuleAction aRuleAction) {
+    public long addActionLog(SQLiteDatabase db, Action aRuleAction) {
         long insertedRowId;
         ContentValues values = new ContentValues();
-        values.put(ACTION, aRuleAction.getAction().getStatusCode());
+        if (aRuleAction == Action.ALLOW)
+            values.put(ACTION, 1);
+        else if (aRuleAction == Action.DENY)
+            values.put(ACTION, 0);
         try {
             insertedRowId = db.insertOrThrow(getActionLogTableName(), null, values);
         } catch (SQLException e) {
@@ -982,7 +986,6 @@ public class MithrilDBHelper extends SQLiteOpenHelper {
     }
 
     /**
-     *
      * @param db
      * @param aPolicyRule
      * @return
@@ -991,7 +994,10 @@ public class MithrilDBHelper extends SQLiteOpenHelper {
         long insertedRowId;
         ContentValues values = new ContentValues();
         values.put(POLRULNAME, aPolicyRule.getName());
-        values.put(POLRULACTIN, aPolicyRule.getAction().getId());
+        if (aPolicyRule.getAction() == Action.ALLOW)
+            values.put(POLRULACTIN, 1);
+        else if (aPolicyRule.getAction() == Action.DENY)
+            values.put(POLRULACTIN, 0);
         values.put(POLRULAPPID, aPolicyRule.getAppId());
         values.put(POLRULCTXID, aPolicyRule.getCtxId());
         try {
@@ -1073,6 +1079,31 @@ public class MithrilDBHelper extends SQLiteOpenHelper {
             cursor.close();
         }
         return apps;
+    }
+
+    /**
+     * Finds app by name
+     *
+     * @param db database instance
+     * @return id
+     */
+    public int findAppIdByName(SQLiteDatabase db, String appName) {
+        // Select AppData Query
+        String selectQuery = "SELECT " +
+                getAppsTableName() + "." + APPID +
+                " FROM " + getAppsTableName() +
+                " WHERE " + getAppsTableName() + "." + APPPACKAGENAME + " = '" + appName + "';";
+
+        Cursor cursor = db.rawQuery(selectQuery, null);
+        try {
+            if (cursor.moveToFirst())
+                return cursor.getInt(0);
+        } catch (SQLException e) {
+            throw new SQLException("Could not find " + e);
+        } finally {
+            cursor.close();
+        }
+        return -1;
     }
 
     /**
@@ -1480,9 +1511,7 @@ public class MithrilDBHelper extends SQLiteOpenHelper {
                 getPolicyRulesTableName() + "." + POLRULNAME + ", " +
                 getPolicyRulesTableName() + "." + POLRULAPPID + ", " +
                 getPolicyRulesTableName() + "." + POLRULCTXID + ", " +
-                getPolicyRulesTableName() + "." + POLRULACTIN + ", " +
-                getContextTableName() + "." + CONTEXTTYPE + ", " +
-                getContextTableName() + "." + CONTEXTSEMANTICLABEL +
+                getPolicyRulesTableName() + "." + POLRULACTIN +
                 " FROM " +
                 getPolicyRulesTableName() + ", " + getContextTableName() +
                 " WHERE " +
@@ -1501,11 +1530,9 @@ public class MithrilDBHelper extends SQLiteOpenHelper {
                     policyRule.setAppId(Integer.parseInt(cursor.getString(2)));
                     policyRule.setCtxId(Integer.parseInt(cursor.getString(3)));
                     if (Integer.parseInt(cursor.getString(4)) == 1)
-                        policyRule.setAction(new RuleAction(Action.ALLOW));
+                        policyRule.setAction(Action.ALLOW);
                     else
-                        policyRule.setAction(new RuleAction(Action.DENY));
-                    policyRule.setContextType(cursor.getString(5));
-                    policyRule.setSemanticContextLabel(cursor.getString(6));
+                        policyRule.setAction(Action.DENY);
 
                     // Adding policies to list
                     policyRules.add(policyRule);
@@ -1533,9 +1560,7 @@ public class MithrilDBHelper extends SQLiteOpenHelper {
                 getPolicyRulesTableName() + "." + POLRULNAME + ", " +
                 getPolicyRulesTableName() + "." + POLRULAPPID + ", " +
                 getPolicyRulesTableName() + "." + POLRULCTXID + ", " +
-                getPolicyRulesTableName() + "." + POLRULACTIN + ", " +
-                getContextTableName() + "." + CONTEXTTYPE + ", " +
-                getContextTableName() + "." + CONTEXTSEMANTICLABEL +
+                getPolicyRulesTableName() + "." + POLRULACTIN +
                 " FROM " +
                 getPolicyRulesTableName() + ", " + getAppsTableName() + ", " + getContextTableName() +
                 " WHERE " +
@@ -1557,11 +1582,9 @@ public class MithrilDBHelper extends SQLiteOpenHelper {
                     policyRule.setAppId(Integer.parseInt(cursor.getString(2)));
                     policyRule.setCtxId(Integer.parseInt(cursor.getString(3)));
                     if (Integer.parseInt(cursor.getString(4)) == 1)
-                        policyRule.setAction(new RuleAction(Action.ALLOW));
+                        policyRule.setAction(Action.ALLOW);
                     else
-                        policyRule.setAction(new RuleAction(Action.DENY));
-                    policyRule.setContextType(cursor.getString(5));
-                    policyRule.setSemanticContextLabel(cursor.getString(6));
+                        policyRule.setAction(Action.DENY);
 
                     // Adding policies to list
                     policyRules.add(policyRule);
@@ -1589,9 +1612,7 @@ public class MithrilDBHelper extends SQLiteOpenHelper {
                 getPolicyRulesTableName() + "." + POLRULNAME + ", " +
                 getPolicyRulesTableName() + "." + POLRULAPPID + ", " +
                 getPolicyRulesTableName() + "." + POLRULCTXID + ", " +
-                getPolicyRulesTableName() + "." + POLRULACTIN + ", " +
-                getContextTableName() + "." + CONTEXTTYPE + ", " +
-                getContextTableName() + "." + CONTEXTSEMANTICLABEL +
+                getPolicyRulesTableName() + "." + POLRULACTIN +
                 " FROM " +
                 getPolicyRulesTableName() +
                 " WHERE " +
@@ -1606,11 +1627,9 @@ public class MithrilDBHelper extends SQLiteOpenHelper {
                 policyRule.setAppId(Integer.parseInt(cursor.getString(2)));
                 policyRule.setCtxId(Integer.parseInt(cursor.getString(3)));
                 if (Integer.parseInt(cursor.getString(4)) == 1)
-                    policyRule.setAction(new RuleAction(Action.ALLOW));
+                    policyRule.setAction(Action.ALLOW);
                 else
-                    policyRule.setAction(new RuleAction(Action.DENY));
-                policyRule.setContextType(cursor.getString(5));
-                policyRule.setSemanticContextLabel(cursor.getString(6));
+                    policyRule.setAction(Action.DENY);
             }
         } catch (SQLException e) {
             throw new SQLException("Could not find " + e);
@@ -1626,7 +1645,7 @@ public class MithrilDBHelper extends SQLiteOpenHelper {
      * @param id action id
      * @return action info
      */
-    public RuleAction findActionByID(SQLiteDatabase db, int id) {
+    public Action findActionByID(SQLiteDatabase db, int id) {
         // Select Query
         String selectQuery = "SELECT " +
                 getActionLogTableName() + "." + ACTIONID + ", " +
@@ -1636,24 +1655,22 @@ public class MithrilDBHelper extends SQLiteOpenHelper {
                 " WHERE " +
                 getActionLogTableName() + "." + ACTIONID + " = " + id + ";";
 
-        RuleAction action = new RuleAction();
         Cursor cursor = db.rawQuery(selectQuery, null);
         try {
             if (cursor.moveToFirst()) {
-                action.setId(Integer.parseInt(cursor.getString(0)));
-                if (Integer.parseInt(cursor.getString(1)) == 2)
-                    action.setAction(Action.ALLOW);
-                else if (Integer.parseInt(cursor.getString(1)) == 1)
-                    action.setAction(Action.ALLOW_WITH_CAVEAT);
+                if (cursor.getInt(1) == 1)
+                    return Action.ALLOW;
+                else if (cursor.getInt(1) == 2)
+                    return Action.ALLOW_WITH_CAVEAT;
                 else
-                    action.setAction(Action.DENY);
+                    return Action.DENY;
             }
         } catch (SQLException e) {
             throw new SQLException("Could not find " + e);
         } finally {
             cursor.close();
         }
-        return action;
+        return Action.DENY;
     }
 
     public Map<String, String> findContextByID(SQLiteDatabase db, int id) {
@@ -1719,27 +1736,20 @@ public class MithrilDBHelper extends SQLiteOpenHelper {
      * method to update single violation
      * Update is being removed because of the foreign key constraint as this causes an SQLException during insertion
      */
-    public int updatePolicyRule(SQLiteDatabase db, PolicyRule aPolicyRule) {
-        try {
-            findContextByID(db, aPolicyRule.getCtxId());
-        } catch (SQLException e) {
-            Log.d(MithrilApplication.getDebugTag(), "Context is unknown, creating");
-        }
-
-        //The context was found, perhaps we need to update the instance
-        updateContext(db, aPolicyRule.getSemanticContextLabel(), aPolicyRule.getContextType());
-
+    public int updatePolicyRule(SQLiteDatabase db, int policyId, int ctxtId, int appId, Action anAction) {
         ContentValues values = new ContentValues();
-        values.put(POLRULID, aPolicyRule.getId());
-        values.put(POLRULNAME, aPolicyRule.getName());
-        values.put(POLRULAPPID, aPolicyRule.getAppId());
-        values.put(POLRULCTXID, aPolicyRule.getCtxId());
-        values.put(POLRULACTIN, aPolicyRule.getAction().getId());
+        values.put(POLRULID, policyId);
+        values.put(POLRULAPPID, appId);
+        values.put(POLRULCTXID, ctxtId);
+        if (anAction == Action.ALLOW)
+            values.put(POLRULACTIN, 1);
+        else if (anAction == Action.DENY)
+            values.put(POLRULACTIN, 0);
         try {
             return db.update(getPolicyRulesTableName(), values, POLRULID + " = ?",
-                    new String[]{String.valueOf(aPolicyRule.getId())});
+                    new String[]{String.valueOf(policyId)});
         } catch (SQLException e) {
-            throw new SQLException("Exception " + e + " error updating Context: " + aPolicyRule.getSemanticContextLabel());
+            throw new SQLException("Exception " + e + " error updating Context: " + policyId);
         }
     }
 
@@ -1817,12 +1827,12 @@ public class MithrilDBHelper extends SQLiteOpenHelper {
     /**
      *
      * @param db
-     * @param aRuleAction
+     * @param anAction
      */
-    public void deleteRuleAction(SQLiteDatabase db, RuleAction aRuleAction) {
+    public void deleteRuleAction(SQLiteDatabase db, Action anAction) {
         try {
             db.delete(getActionLogTableName(), ACTIONID + " = ?",
-                    new String[]{String.valueOf(aRuleAction.getId())});
+                    new String[]{String.valueOf(anAction.getStatusCode())});
         } catch (SQLException e) {
             throw new SQLException("Could not find " + e);
         }

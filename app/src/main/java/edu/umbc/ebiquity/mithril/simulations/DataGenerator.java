@@ -1,34 +1,29 @@
 package edu.umbc.ebiquity.mithril.simulations;
 
-import java.util.ArrayList;
-import java.util.List;
+import android.content.Context;
+import android.database.sqlite.SQLiteDatabase;
 
 import edu.umbc.ebiquity.mithril.MithrilApplication;
 import edu.umbc.ebiquity.mithril.data.dbhelpers.MithrilDBHelper;
+import edu.umbc.ebiquity.mithril.data.model.Action;
 import edu.umbc.ebiquity.mithril.data.model.PolicyRule;
-import edu.umbc.ebiquity.mithril.data.model.rules.actions.Action;
-import edu.umbc.ebiquity.mithril.data.model.rules.actions.RuleAction;
-import edu.umbc.ebiquity.mithril.data.model.rules.context.SemanticUserContext;
-import edu.umbc.ebiquity.mithril.data.model.rules.context.SemanticActivity;
-import edu.umbc.ebiquity.mithril.data.model.rules.context.SemanticLocation;
-import edu.umbc.ebiquity.mithril.data.model.rules.context.SemanticNearActor;
-import edu.umbc.ebiquity.mithril.data.model.rules.context.SemanticTime;
 
 public class DataGenerator {
     /**
      * This data generator is used in the loadDefaultDataIntoDB method in {@link MithrilDBHelper} to generate default policies
-     *
-     * @param id
-     * @param name
-     * @param ctxId
-     * @param appId
-     * @param action
-     * @param label
-     * @param type
      * @return
      */
-    public static PolicyRule generateSocialMediaCameraAccessRule(int id, String name, int ctxId, int appId, RuleAction action, String label, String type) {
-        PolicyRule policyRule = new PolicyRule(id, name, ctxId, appId, action, label, type);
+    public static PolicyRule generateSocialMediaCameraAccessRule(Context context) {
+        MithrilDBHelper mithrilDBHelper = new MithrilDBHelper(context);
+        SQLiteDatabase mithrilDB = mithrilDBHelper.getWritableDatabase();
+
+        String name = "SocialMediaCameraAccessRule";
+        int ctxId = mithrilDBHelper.findContextIdByLabelAndType(mithrilDB,
+                MithrilApplication.getPrefHomeLocationKey(),
+                MithrilApplication.getPrefHomeLocationKey());
+        int appId = mithrilDBHelper.findAppIdByName(mithrilDB, "com.twitter.android");
+        Action action = Action.DENY;
+        PolicyRule policyRule = new PolicyRule(name, ctxId, appId, action);
         return policyRule;
     }
 
@@ -60,19 +55,4 @@ public class DataGenerator {
 //                new SemanticTime(tempTimeString.get(2))); // Index 2 is Week Day
 //        return userContext;
 //    }
-
-    /**
-     * Actions generated
-     */
-    public static RuleAction generateAllowAction() {
-        return new RuleAction(Action.ALLOW);
-    }
-
-    public static RuleAction generateAllowWithCaveatAction() {
-        return new RuleAction(Action.ALLOW_WITH_CAVEAT);
-    }
-
-    public static RuleAction generateDenyAction() {
-        return new RuleAction(Action.DENY);
-    }
 }
