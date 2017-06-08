@@ -523,16 +523,17 @@ public class InstanceCreationActivity extends AppCompatActivity
         if (id == R.id.done_with_instances_settings) {
             editor.putBoolean(MithrilApplication.getPrefKeyInstancesCreated(), true);
             editor.apply();
-            testInitInstancesCreateAndLaunchNextActivity();
+            if (!sharedPreferences.getBoolean(MithrilApplication.getPrefKeyPoliciesDownloaded(), false))
+                startNextActivity(this, DownloadPoliciesActivity.class);
+            else
+                startNextActivity(this, CoreActivity.class);
         }
         return super.onOptionsItemSelected(item);
     }
 
     private void testInitInstancesCreateAndLaunchNextActivity() {
         sharedPreferences = getApplicationContext().getSharedPreferences(MithrilApplication.getSharedPreferencesName(), Context.MODE_PRIVATE);
-        if (!sharedPreferences.getBoolean(MithrilApplication.getPrefKeyPoliciesDownloaded(), false))
-            startNextActivity(this, DownloadPoliciesActivity.class);
-        else //if (sharedPreferences.getBoolean(MithrilApplication.getPrefKeyInstancesCreated(), false))
+        if (sharedPreferences.getBoolean(MithrilApplication.getPrefKeyInstancesCreated(), false))
             startNextActivity(this, CoreActivity.class);
     }
 
