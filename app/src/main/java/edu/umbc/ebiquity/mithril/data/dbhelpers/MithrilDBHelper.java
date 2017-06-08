@@ -569,8 +569,6 @@ public class MithrilDBHelper extends SQLiteOpenHelper {
                 PackageManager.GET_SHARED_LIBRARY_FILES |
                 PackageManager.GET_PERMISSIONS;
 
-        AppOpsManager appOpsManager = (AppOpsManager) context.getSystemService(Context.APP_OPS_SERVICE);
-
         for (PackageInfo pack : packageManager.getInstalledPackages(flags)) {
             if ((pack.applicationInfo.flags) != 1) {
                 try {
@@ -862,6 +860,7 @@ public class MithrilDBHelper extends SQLiteOpenHelper {
         values.put(PERMFLAG, aPermData.getPermissionFlag());
         values.put(PERMDESC, aPermData.getPermissionDescription());
         values.put(PERMICON, getBitmapAsByteArray(aPermData.getPermissionIcon()));
+        values.put(PERMOP, aPermData.getOp());
         try {
             insertedRowId = db.insertOrThrow(getPermissionsTableName(), null, values);
         } catch (SQLiteConstraintException e) {
