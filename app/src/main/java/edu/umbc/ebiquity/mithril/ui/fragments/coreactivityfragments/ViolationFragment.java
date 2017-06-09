@@ -144,7 +144,7 @@ public class ViolationFragment extends Fragment {
 
     private void initDB(Context context) {
         // Let's get the DB instances loaded too
-        mithrilDBHelper = new MithrilDBHelper(context);
+        mithrilDBHelper = MithrilDBHelper.getHelper(context);
         mithrilDB = mithrilDBHelper.getWritableDatabase();
     }
 

@@ -66,7 +66,7 @@ public class GeofenceTransitionsIntentService extends IntentService {
     @Override
     public void onCreate() {
         super.onCreate();
-        mithrilDBHelper = new MithrilDBHelper(getApplicationContext());
+        mithrilDBHelper = MithrilDBHelper.getHelper(getApplicationContext());
         mithrilDB = mithrilDBHelper.getWritableDatabase();
     }
 

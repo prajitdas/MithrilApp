@@ -58,7 +58,7 @@ public class InitKBActivity extends AppCompatActivity {
                 MithrilDBHelper mithrilDBHelper;
                 SQLiteDatabase mithrilDB;
                 // We have it here so that we can just load the animation running first time the db instances are loaded
-                mithrilDBHelper = new MithrilDBHelper(getApplicationContext());
+                mithrilDBHelper = MithrilDBHelper.getHelper(getApplicationContext());
                 mithrilDB = mithrilDBHelper.getWritableDatabase();
                 if (mithrilDB != null)
                     mithrilDB.close();

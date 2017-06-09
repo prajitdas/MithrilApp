@@ -12,7 +12,7 @@ import edu.umbc.ebiquity.mithril.data.model.rules.PolicyRule;
 
 public class DataGenerator {
     public static PolicyRule generateSocialMediaCameraAccessRuleForHome(Context context) {
-        MithrilDBHelper mithrilDBHelper = new MithrilDBHelper(context);
+        MithrilDBHelper mithrilDBHelper = MithrilDBHelper.getHelper(context);
         SQLiteDatabase mithrilDB = mithrilDBHelper.getWritableDatabase();
 
         String name = "SocialMediaCameraAccessRuleForHome";
@@ -26,7 +26,7 @@ public class DataGenerator {
     }
 
     public static PolicyRule generateSocialMediaLocationAccessRuleForHome(Context context) {
-        MithrilDBHelper mithrilDBHelper = new MithrilDBHelper(context);
+        MithrilDBHelper mithrilDBHelper = MithrilDBHelper.getHelper(context);
         SQLiteDatabase mithrilDB = mithrilDBHelper.getWritableDatabase();
 
         String name = "SocialMediaLocationAccessRuleForHome";
@@ -40,7 +40,7 @@ public class DataGenerator {
     }
 
     public static PolicyRule generateSocialMediaCameraAccessRuleForWork(Context context) {
-        MithrilDBHelper mithrilDBHelper = new MithrilDBHelper(context);
+        MithrilDBHelper mithrilDBHelper = MithrilDBHelper.getHelper(context);
         SQLiteDatabase mithrilDB = mithrilDBHelper.getWritableDatabase();
 
         String name = "SocialMediaCameraAccessRuleForWork";
@@ -54,7 +54,7 @@ public class DataGenerator {
     }
 
     public static PolicyRule generateSocialMediaLocationAccessRuleForWork(Context context) {
-        MithrilDBHelper mithrilDBHelper = new MithrilDBHelper(context);
+        MithrilDBHelper mithrilDBHelper = MithrilDBHelper.getHelper(context);
         SQLiteDatabase mithrilDB = mithrilDBHelper.getWritableDatabase();
 
         String name = "SocialMediaLocationAccessRuleForWork";

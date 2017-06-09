@@ -377,10 +377,18 @@ public class MithrilDBHelper extends SQLiteOpenHelper {
      *
      * @param aContext needs context to create DB
      */
-    public MithrilDBHelper(Context aContext) {
+    private MithrilDBHelper(Context aContext) {
         super(aContext, DATABASE_NAME, null, DATABASE_VERSION);
         setContext(aContext);
         appOpsManager = (AppOpsManager) context.getSystemService(Context.APP_OPS_SERVICE);
+    }
+
+    private static MithrilDBHelper instance;
+
+    public static synchronized MithrilDBHelper getHelper(Context context) {
+        if (instance == null)
+            instance = new MithrilDBHelper(context);
+        return instance;
     }
 
     /**

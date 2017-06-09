@@ -159,7 +159,7 @@ public class InstanceCreationActivity extends AppCompatActivity
     }
 
     private void initData() {
-        mithrilDBHelper = new MithrilDBHelper(getApplicationContext());
+        mithrilDBHelper = MithrilDBHelper.getHelper(this);
         mithrilDB = mithrilDBHelper.getWritableDatabase();
         Gson retrieveDataGson = new Gson();
         String retrieveDataJson = null;

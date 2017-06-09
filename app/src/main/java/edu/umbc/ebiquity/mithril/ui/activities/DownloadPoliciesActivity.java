@@ -63,7 +63,7 @@ public class DownloadPoliciesActivity extends AppCompatActivity {
                 MithrilDBHelper mithrilDBHelper;
                 SQLiteDatabase mithrilDB;
                 // We have it here so that we can just load the animation running first time the db instances are loaded
-                mithrilDBHelper = new MithrilDBHelper(getApplicationContext());
+                mithrilDBHelper = MithrilDBHelper.getHelper(getApplicationContext());
                 mithrilDB = mithrilDBHelper.getWritableDatabase();
                 /**
                  * This is where we will download policy data from the server but for now we will simply load the database with the policies manually
