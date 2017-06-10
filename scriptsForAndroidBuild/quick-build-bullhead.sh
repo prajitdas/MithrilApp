@@ -15,6 +15,7 @@ if [[ $model == $expected ]]; then
         cd ~/android/$build-lineage-14.1-experimental-prajit/device/lge/$build
         ./extract-files.sh
 	cp "/home/prajit/android/proprietary_vendor_stuff/proprietary_vendor_lge/bullhead/proprietary/app/Tycho/Tycho.apk" "/home/prajit/android/bullhead-lineage-14.1-experimental-prajit/vendor/lge/bullhead/proprietary/app/Tycho/"
+	cp "/home/prajit/android/proprietary_vendor_stuff/proprietary_vendor_lge/bullhead/proprietary/priv-app/GCS/GCS.apk" "/home/prajit/android/bullhead-lineage-14.1-experimental-prajit/vendor/lge/bullhead/proprietary/priv-app/GCS/"
         export USE_CCACHE=1
         croot
         prebuilts/misc/linux-x86/ccache/ccache -M 50G
