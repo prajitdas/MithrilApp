@@ -1,0 +1,7 @@
+#!/bin/bash
+export WITH_SU=true
+#repo sync
+date=`date +%Y%m%d | tr -d '\n'`
+filename="build"$date".log"
+mv build.log $filename
+bash quick-build.sh | tee build.log

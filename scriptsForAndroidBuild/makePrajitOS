@@ -1,0 +1,20 @@
+#!/bin/bash
+echo "Make sure you have enabled or disabled repo sync as per out build needs.\nAdditionally, ensure that the core.mk file @ \"build/target/product/\" has been edited to enlist MithrilAC as a project to be built!"
+buildPath="/home/prajit/android/"
+if [[ $1 == "victara" ]]; then
+	buildPath=$buildPath+"victara"
+elif [[ $1 == "bullhead" ]]; then
+	buildPath=$buildPath+"bullhead"
+elif [[ $1 == "hammerhead" ]]; then
+	buildPath=$buildPath+"hammerhead"
+elif [[ $1 == "shamu" ]]; then
+	buildPath=$buildPath+"shamu"
+else
+	echo "I don't think we can build all devices at the same time. Specify one!"
+	exit 0
+fi
+buildPath=$buildPath+"-lineage-14.1-experimental-prajit/"
+cd $buildPath
+cp "/home/prajit/android/projects/MithrilApp/app/release/MithrilAC.apk" "packages/apps/MithrilAC/"
+bash runBuild
+echo "I think we might be done!" | mail -s "This is Yoda emailing you!" prajitdas@gmail.com
