@@ -35,7 +35,6 @@ public class AppsFragment extends Fragment {
 
     // TODO: Customize parameter argument names
     private static final String ARG_COLUMN_COUNT = "column-count";
-    private MithrilDBHelper mithrilDBHelper;
     private SQLiteDatabase mithrilDB;
     private SharedPreferences sharedPreferences;
     // TODO: Customize parameters
@@ -165,8 +164,7 @@ public class AppsFragment extends Fragment {
 
     private void initDB(Context context) {
         // Let's get the DB instances loaded too
-        mithrilDBHelper = MithrilDBHelper.getHelper(context);
-        mithrilDB = mithrilDBHelper.getWritableDatabase();
+        mithrilDB = MithrilDBHelper.getHelper(context).getWritableDatabase();
     }
 
     private void closeDB() {
@@ -178,7 +176,7 @@ public class AppsFragment extends Fragment {
      * Get all apps that are installed on the device by reading the MithrilDB
      */
     private void getAllApps() {
-        List<AppData> tempList = mithrilDBHelper.findAllApps(mithrilDB);
+        List<AppData> tempList = MithrilDBHelper.getHelper(view.getContext()).findAllApps(mithrilDB);
         SharedPreferences.Editor editor = view.getContext().getSharedPreferences(MithrilApplication.getSharedPreferencesName(), Context.MODE_PRIVATE).edit();
         editor.putInt(MithrilApplication.getPrefKeyAppCount(), tempList.size());
         editor.apply();
@@ -190,7 +188,7 @@ public class AppsFragment extends Fragment {
      * Get system apps that are installed on the device by reading the MithrilDB
      */
     private void getSystemApps() {
-        for (AppData app : mithrilDBHelper.findAllApps(mithrilDB))
+        for (AppData app : MithrilDBHelper.getHelper(view.getContext()).findAllApps(mithrilDB))
             if (app.getAppType().equals(MithrilApplication.getPrefKeySystemAppsDisplay()))
                 appMetadataMap.put(app.getPackageName(), app);
     }
@@ -199,7 +197,7 @@ public class AppsFragment extends Fragment {
      * Get user apps that are installed on the device by reading the MithrilDB
      */
     private void getUserApps() {
-        for (AppData app : mithrilDBHelper.findAllApps(mithrilDB))
+        for (AppData app : MithrilDBHelper.getHelper(view.getContext()).findAllApps(mithrilDB))
             if (app.getAppType().equals(MithrilApplication.getPrefKeyUserAppsDisplay()))
                 appMetadataMap.put(app.getPackageName(), app);
     }

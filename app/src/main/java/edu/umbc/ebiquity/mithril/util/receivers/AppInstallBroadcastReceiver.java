@@ -20,7 +20,6 @@ import edu.umbc.ebiquity.mithril.data.model.components.AppData;
 
 public class AppInstallBroadcastReceiver extends BroadcastReceiver {
     private PackageManager packageManager;
-    private MithrilDBHelper mithrilDBHelper;
     private SQLiteDatabase mithrilDB;
     private int flags = PackageManager.GET_META_DATA |
             PackageManager.GET_SHARED_LIBRARY_FILES |
@@ -120,10 +119,10 @@ public class AppInstallBroadcastReceiver extends BroadcastReceiver {
                         }
                     }
                     //Insert app into database
-                    long appId = mithrilDBHelper.addApp(mithrilDB, tempAppData);
+                    long appId = MithrilDBHelper.getHelper(context).addApp(mithrilDB, tempAppData);
 
                     //Insert permissions for app into AppPerm
-                    mithrilDBHelper.addAppPerm(mithrilDB, tempAppData, appId);
+                    MithrilDBHelper.getHelper(context).addAppPerm(mithrilDB, tempAppData, appId);
                 } catch (PackageManager.NameNotFoundException e) {
                     e.printStackTrace();
                 }
@@ -153,7 +152,7 @@ public class AppInstallBroadcastReceiver extends BroadcastReceiver {
             /**
              * When app is FULLY uninstalled delete it from table
              */
-            mithrilDBHelper.deleteAppByUID(mithrilDB, intent.getIntExtra(Intent.EXTRA_UID, 0));
+            MithrilDBHelper.getHelper(context).deleteAppByUID(mithrilDB, intent.getIntExtra(Intent.EXTRA_UID, 0));
         }
         /**
          * Broadcast Action: A new version of an application package has been installed, replacing an existing version that was previously installed. The data contains the name of the package.
@@ -172,8 +171,7 @@ public class AppInstallBroadcastReceiver extends BroadcastReceiver {
 
     private void initDB(Context context) {
         // Let's get the DB instances loaded too
-        mithrilDBHelper = MithrilDBHelper.getHelper(context);
-        mithrilDB = mithrilDBHelper.getWritableDatabase();
+        mithrilDB = MithrilDBHelper.getHelper(context).getWritableDatabase();
     }
 
     private void closeDB() {

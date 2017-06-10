@@ -41,7 +41,6 @@ public class ViolationFragment extends Fragment {
      * A map of violation items, by ID.
      */
     public Map<Integer, Violation> violationItemsMap = new HashMap<Integer, Violation>();
-    private MithrilDBHelper mithrilDBHelper;
     private SQLiteDatabase mithrilDB;
     private View view;
     // TODO: Customize parameters
@@ -97,7 +96,7 @@ public class ViolationFragment extends Fragment {
 
     private void initData() {
         initDB(view.getContext());
-        violationItems = mithrilDBHelper.findAllViolations(mithrilDB);
+        violationItems = MithrilDBHelper.getHelper(view.getContext()).findAllViolations(mithrilDB);
 
         //TODO remove this later. This is for demo purposes.
         SharedPreferences sharedPref = getActivity().getSharedPreferences(MithrilApplication.getSharedPreferencesName(), Context.MODE_PRIVATE);
@@ -144,8 +143,7 @@ public class ViolationFragment extends Fragment {
 
     private void initDB(Context context) {
         // Let's get the DB instances loaded too
-        mithrilDBHelper = MithrilDBHelper.getHelper(context);
-        mithrilDB = mithrilDBHelper.getWritableDatabase();
+        mithrilDB = MithrilDBHelper.getHelper(context).getWritableDatabase();
     }
 
     private void closeDB() {

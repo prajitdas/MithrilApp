@@ -47,12 +47,12 @@ import java.util.List;
 import edu.umbc.ebiquity.mithril.MithrilApplication;
 import edu.umbc.ebiquity.mithril.R;
 import edu.umbc.ebiquity.mithril.data.dbhelpers.MithrilDBHelper;
-import edu.umbc.ebiquity.mithril.data.model.rules.AppUsageStats;
-import edu.umbc.ebiquity.mithril.data.model.rules.Violation;
 import edu.umbc.ebiquity.mithril.data.model.components.AppData;
 import edu.umbc.ebiquity.mithril.data.model.components.BCastRecvData;
 import edu.umbc.ebiquity.mithril.data.model.components.ContentProvData;
 import edu.umbc.ebiquity.mithril.data.model.components.ServData;
+import edu.umbc.ebiquity.mithril.data.model.rules.AppUsageStats;
+import edu.umbc.ebiquity.mithril.data.model.rules.Violation;
 import edu.umbc.ebiquity.mithril.ui.fragments.EmptyFragment;
 import edu.umbc.ebiquity.mithril.ui.fragments.NothingHereFragment;
 import edu.umbc.ebiquity.mithril.ui.fragments.coreactivityfragments.AboutFragment;
@@ -83,7 +83,6 @@ public class CoreActivity extends AppCompatActivity
     private final String agreementFile = MithrilApplication.getFlierPdfFileName();
 
     private Boolean exit = false;
-    private MithrilDBHelper mithrilDBHelper;
     private SQLiteDatabase mithrilDB;
     private SharedPreferences sharedPreferences;
     private SharedPreferences.Editor editor;
@@ -398,8 +397,7 @@ public class CoreActivity extends AppCompatActivity
 
     private void initDB(Context context) {
         // Let's get the DB instances loaded too
-        mithrilDBHelper = MithrilDBHelper.getHelper(context);
-        mithrilDB = mithrilDBHelper.getWritableDatabase();
+        mithrilDB = MithrilDBHelper.getHelper(context).getWritableDatabase();
     }
 
     private void closeDB() {
@@ -623,7 +621,7 @@ public class CoreActivity extends AppCompatActivity
          * We find out how many violations are there in the database.
          * If there are none, we will load the EmptyFragment
          */
-        violationItems = mithrilDBHelper.findAllViolations(mithrilDB);
+        violationItems = MithrilDBHelper.getHelper(this).findAllViolations(mithrilDB);
         if (violationItems != null)
             Log.d(MithrilApplication.getDebugTag(), "Number of violations" + Integer.toString(violationItems.size()));
         else

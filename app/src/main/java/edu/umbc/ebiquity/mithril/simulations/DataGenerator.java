@@ -12,56 +12,52 @@ import edu.umbc.ebiquity.mithril.data.model.rules.PolicyRule;
 
 public class DataGenerator {
     public static PolicyRule generateSocialMediaCameraAccessRuleForHome(Context context) {
-        MithrilDBHelper mithrilDBHelper = MithrilDBHelper.getHelper(context);
-        SQLiteDatabase mithrilDB = mithrilDBHelper.getWritableDatabase();
+        SQLiteDatabase mithrilDB = MithrilDBHelper.getHelper(context).getWritableDatabase();
 
         String name = "SocialMediaCameraAccessRuleForHome";
-        int ctxId = mithrilDBHelper.findContextIdByLabelAndType(mithrilDB,
+        int ctxId = MithrilDBHelper.getHelper(context).findContextIdByLabelAndType(mithrilDB,
                 MithrilApplication.getPrefHomeLocationKey(),
                 MithrilApplication.getPrefKeyLocation());
-        int appId = mithrilDBHelper.findAppIdByName(mithrilDB, "com.twitter.android");
+        int appId = MithrilDBHelper.getHelper(context).findAppIdByName(mithrilDB, "com.twitter.android");
         Action action = Action.ALLOW;
         PolicyRule policyRule = new PolicyRule(name, ctxId, appId, action, AppOpsManager.permissionToOpCode(android.Manifest.permission.CAMERA));
         return policyRule;
     }
 
     public static PolicyRule generateSocialMediaLocationAccessRuleForHome(Context context) {
-        MithrilDBHelper mithrilDBHelper = MithrilDBHelper.getHelper(context);
-        SQLiteDatabase mithrilDB = mithrilDBHelper.getWritableDatabase();
+        SQLiteDatabase mithrilDB = MithrilDBHelper.getHelper(context).getWritableDatabase();
 
         String name = "SocialMediaLocationAccessRuleForHome";
-        int ctxId = mithrilDBHelper.findContextIdByLabelAndType(mithrilDB,
+        int ctxId = MithrilDBHelper.getHelper(context).findContextIdByLabelAndType(mithrilDB,
                 MithrilApplication.getPrefHomeLocationKey(),
                 MithrilApplication.getPrefKeyLocation());
-        int appId = mithrilDBHelper.findAppIdByName(mithrilDB, "com.twitter.android");
+        int appId = MithrilDBHelper.getHelper(context).findAppIdByName(mithrilDB, "com.twitter.android");
         Action action = Action.ALLOW;
         PolicyRule policyRule = new PolicyRule(name, ctxId, appId, action, AppOpsManager.permissionToOpCode(Manifest.permission.ACCESS_FINE_LOCATION));
         return policyRule;
     }
 
     public static PolicyRule generateSocialMediaCameraAccessRuleForWork(Context context) {
-        MithrilDBHelper mithrilDBHelper = MithrilDBHelper.getHelper(context);
-        SQLiteDatabase mithrilDB = mithrilDBHelper.getWritableDatabase();
+        SQLiteDatabase mithrilDB = MithrilDBHelper.getHelper(context).getWritableDatabase();
 
         String name = "SocialMediaCameraAccessRuleForWork";
-        int ctxId = mithrilDBHelper.findContextIdByLabelAndType(mithrilDB,
+        int ctxId = MithrilDBHelper.getHelper(context).findContextIdByLabelAndType(mithrilDB,
                 MithrilApplication.getPrefWorkLocationKey(),
                 MithrilApplication.getPrefKeyLocation());
-        int appId = mithrilDBHelper.findAppIdByName(mithrilDB, "com.twitter.android");
+        int appId = MithrilDBHelper.getHelper(context).findAppIdByName(mithrilDB, "com.twitter.android");
         Action action = Action.DENY;
         PolicyRule policyRule = new PolicyRule(name, ctxId, appId, action, AppOpsManager.permissionToOpCode(android.Manifest.permission.CAMERA));
         return policyRule;
     }
 
     public static PolicyRule generateSocialMediaLocationAccessRuleForWork(Context context) {
-        MithrilDBHelper mithrilDBHelper = MithrilDBHelper.getHelper(context);
-        SQLiteDatabase mithrilDB = mithrilDBHelper.getWritableDatabase();
+        SQLiteDatabase mithrilDB = MithrilDBHelper.getHelper(context).getWritableDatabase();
 
         String name = "SocialMediaLocationAccessRuleForWork";
-        int ctxId = mithrilDBHelper.findContextIdByLabelAndType(mithrilDB,
+        int ctxId = MithrilDBHelper.getHelper(context).findContextIdByLabelAndType(mithrilDB,
                 MithrilApplication.getPrefWorkLocationKey(),
                 MithrilApplication.getPrefKeyLocation());
-        int appId = mithrilDBHelper.findAppIdByName(mithrilDB, "com.twitter.android");
+        int appId = MithrilDBHelper.getHelper(context).findAppIdByName(mithrilDB, "com.twitter.android");
         Action action = Action.DENY;
         PolicyRule policyRule = new PolicyRule(name, ctxId, appId, action, AppOpsManager.permissionToOpCode(Manifest.permission.ACCESS_FINE_LOCATION));
         return policyRule;

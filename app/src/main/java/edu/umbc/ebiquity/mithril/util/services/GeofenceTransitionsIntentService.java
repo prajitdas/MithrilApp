@@ -51,7 +51,6 @@ public class GeofenceTransitionsIntentService extends IntentService {
 
     protected static final String TAG = "GeofenceTransitionsIS";
 
-    private MithrilDBHelper mithrilDBHelper;
     private SQLiteDatabase mithrilDB;
 
     /**
@@ -66,8 +65,7 @@ public class GeofenceTransitionsIntentService extends IntentService {
     @Override
     public void onCreate() {
         super.onCreate();
-        mithrilDBHelper = MithrilDBHelper.getHelper(getApplicationContext());
-        mithrilDB = mithrilDBHelper.getWritableDatabase();
+        mithrilDB = MithrilDBHelper.getHelper(this).getWritableDatabase();
     }
 
     /**
@@ -122,7 +120,7 @@ public class GeofenceTransitionsIntentService extends IntentService {
     }
 
     private void addContextLogToDB(String label, String startOrEnd) {
-        mithrilDBHelper.addContextLog(mithrilDB, mithrilDBHelper.findContextIdByLabelAndType(mithrilDB, label, MithrilApplication.getPrefKeyLocation()), startOrEnd);
+        MithrilDBHelper.getHelper(this).addContextLog(mithrilDB, MithrilDBHelper.getHelper(this).findContextIdByLabelAndType(mithrilDB, label, MithrilApplication.getPrefKeyLocation()), startOrEnd);
     }
 
 //    private void findCurrentPresenceInfoIfAny() {}

@@ -93,11 +93,10 @@ public class ViolationDetector {
     public static void detectViolation(Context context, String currentPackageName) throws CWAException {
         if (currentPackageName == null)
             return;
-        MithrilDBHelper mithrilDBHelper = MithrilDBHelper.getHelper(context);
-        SQLiteDatabase mithrilDB = mithrilDBHelper.getWritableDatabase();
+        SQLiteDatabase mithrilDB = MithrilDBHelper.getHelper(context).getWritableDatabase();
 
         try {
-            List<PolicyRule> rulesForApp = mithrilDBHelper.findAllPoliciesByAppPkgName(mithrilDB, currentPackageName);
+            List<PolicyRule> rulesForApp = MithrilDBHelper.getHelper(context).findAllPoliciesByAppPkgName(mithrilDB, currentPackageName);
             //No rules found! We have a violation...
             if (rulesForApp.size() > 0) {
                 for (PolicyRule rule : rulesForApp) {
@@ -128,7 +127,7 @@ public class ViolationDetector {
                     }
                 }
             }
-            if (mithrilDBHelper.findAppTypeByAppPkgName(mithrilDB, currentPackageName).equals(MithrilApplication.getPrefKeyUserAppsDisplay())) {
+            if (MithrilDBHelper.getHelper(context).findAppTypeByAppPkgName(mithrilDB, currentPackageName).equals(MithrilApplication.getPrefKeyUserAppsDisplay())) {
 
                 //            PermissionHelper.toast(context, "Mithril detects user app launch: " + currentPackageName, Toast.LENGTH_SHORT).show();
                 //            Log.d(MithrilApplication.getDebugTag(), "Mithril detects user app launch: " + currentPackageName);

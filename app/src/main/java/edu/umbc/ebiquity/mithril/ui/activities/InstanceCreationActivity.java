@@ -94,7 +94,6 @@ public class InstanceCreationActivity extends AppCompatActivity
      * The list of geofences used in this sample.
      */
     protected List<Geofence> mGeofenceList = new ArrayList<>();
-    private MithrilDBHelper mithrilDBHelper;
     private SQLiteDatabase mithrilDB;
     private BottomNavigationView navigation;
     private SharedPreferences.Editor editor;
@@ -159,8 +158,7 @@ public class InstanceCreationActivity extends AppCompatActivity
     }
 
     private void initData() {
-        mithrilDBHelper = MithrilDBHelper.getHelper(this);
-        mithrilDB = mithrilDBHelper.getWritableDatabase();
+        mithrilDB = MithrilDBHelper.getHelper(this).getWritableDatabase();
         Gson retrieveDataGson = new Gson();
         String retrieveDataJson = null;
         Map<String, ?> allPrefs = new HashMap<>();
@@ -1092,11 +1090,11 @@ public class InstanceCreationActivity extends AppCompatActivity
     }
 
     private void addContextToDB(String type, String label) {
-        mithrilDBHelper.addContext(mithrilDB, type, label);
+        MithrilDBHelper.getHelper(this).addContext(mithrilDB, type, label);
     }
 
     private void removeContextFromDB(String label) {
-        mithrilDBHelper.deleteContext(mithrilDB, label);
+        MithrilDBHelper.getHelper(this).deleteContext(mithrilDB, label);
     }
 
     class AddressResultReceiver extends ResultReceiver {

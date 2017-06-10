@@ -348,7 +348,7 @@ public class MithrilDBHelper extends SQLiteOpenHelper {
     private final static String APPPERMVIEWPERMLABEL = "permlabel"; // app permission label
     private final static String APPPERMVIEWPERMGROUP = "permgroup"; // app permission group
     private final static String APPPERMVIEWGRANTED = "granted"; // app permission granted or not
-    private final static String CREATE_APP_PERM_VIEW = "CREATE VIEW " + getAppPermViewName() + " AS (" +
+    private final static String CREATE_APP_PERM_VIEW = "CREATE VIEW " + getAppPermViewName() + " AS " +
             "SELECT " +
             getAppsTableName() + "." + APPPACKAGENAME + " AS " + APPPERMVIEWAPPPKGNAME + ", " +
             getPermissionsTableName() + "." + PERMNAME + " AS " + APPPERMVIEWPERMNAME + ", " +
@@ -365,7 +365,8 @@ public class MithrilDBHelper extends SQLiteOpenHelper {
             " AND " +
             getAppPermTableName() + "." + APPPERMRESPERID + " = " + getPermissionsTableName() + "." + PERMID + //";";
             " AND " +
-            getAppPermTableName() + "." + APPPERMGRANTED + " = 1);";
+            getAppPermTableName() + "." + APPPERMGRANTED + " = 1;";
+    private static MithrilDBHelper instance;
     private AppOpsManager appOpsManager;
     private Context context;
 
@@ -382,8 +383,6 @@ public class MithrilDBHelper extends SQLiteOpenHelper {
         setContext(aContext);
         appOpsManager = (AppOpsManager) context.getSystemService(Context.APP_OPS_SERVICE);
     }
-
-    private static MithrilDBHelper instance;
 
     public static synchronized MithrilDBHelper getHelper(Context context) {
         if (instance == null)

@@ -31,7 +31,6 @@ import edu.umbc.ebiquity.mithril.ui.adapters.PermissionDetailRecyclerViewAdapter
 public class PermissionDetailFragment extends Fragment {
     // TODO: Customize parameter argument names
     private static final String ARG_COLUMN_COUNT = "column-count";
-    private MithrilDBHelper mithrilDBHelper;
     private SQLiteDatabase mithrilDB;
     // TODO: Customize parameters
     private int mColumnCount = 1;
@@ -99,7 +98,7 @@ public class PermissionDetailFragment extends Fragment {
 
     private void initData() {
         initDB(view.getContext());
-        apps = mithrilDBHelper.findAppsByPermGroups(mithrilDB, mPermGroup);
+        apps = MithrilDBHelper.getHelper(view.getContext()).findAppsByPermGroups(mithrilDB, mPermGroup);
         closeDB();
 
         Collections.sort(apps);
@@ -124,8 +123,7 @@ public class PermissionDetailFragment extends Fragment {
 
     private void initDB(Context context) {
         // Let's get the DB instances loaded too
-        mithrilDBHelper = MithrilDBHelper.getHelper(context);
-        mithrilDB = mithrilDBHelper.getWritableDatabase();
+        mithrilDB = MithrilDBHelper.getHelper(context).getWritableDatabase();
     }
 
     private void closeDB() {
