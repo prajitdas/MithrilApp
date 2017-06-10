@@ -4,6 +4,8 @@ echo "Additionally, ensure that the core.mk file @ \"build/target/product/\" has
 buildPath="/home/prajit/android/"
 if [[ $1 == "victara" ]]; then
 	buildPath=$buildPath"victara"
+elif [[ $1 == "mako" ]]; then
+	buildPath=$buildPath"mako"
 elif [[ $1 == "bullhead" ]]; then
 	buildPath=$buildPath"bullhead"
 elif [[ $1 == "hammerhead" ]]; then
