@@ -1,0 +1,9 @@
+#!/bin/bash
+cd bullhead-lineage-14.1-experimental-prajit/
+repo sync
+cd hammerhead-lineage-14.1-experimental-prajit/
+repo sync
+cd victara-lineage-14.1-experimental-prajit/
+repo sync
+cd shamu-lineage-14.1-experimental-prajit/
+repo sync
