@@ -1,6 +1,7 @@
 #!/bin/bash
-echo "Make sure you have enabled or disabled repo sync as per out build needs.\nAdditionally, ensure that the core.mk file @ \"build/target/product/\" has been edited to enlist MithrilAC as a project to be built!"
-buildPath="/home/prajit/android/"
+echo "Make sure you have enabled or disabled repo sync as per out build needs."
+echo "Additionally, ensure that the core.mk file @ \"build/target/product/\" has been edited to enlist MithrilAC as a project to be built!"
+buildPath="/home/prajit/code/android/"
 if [[ $1 == "victara" ]]; then
 	buildPath=$buildPath+"victara"
 elif [[ $1 == "bullhead" ]]; then
