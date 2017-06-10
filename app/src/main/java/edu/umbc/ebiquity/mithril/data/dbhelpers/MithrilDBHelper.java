@@ -524,10 +524,10 @@ public class MithrilDBHelper extends SQLiteOpenHelper {
     }
 
     public void loadDefaultDataIntoDB(SQLiteDatabase db) {
-        DataGenerator.generateSocialMediaCameraAccessRuleForHome(context);
-        DataGenerator.generateSocialMediaLocationAccessRuleForHome(context);
-        DataGenerator.generateSocialMediaCameraAccessRuleForWork(context);
-        DataGenerator.generateSocialMediaLocationAccessRuleForWork(context);
+        DataGenerator.generateSocialMediaCameraAccessRuleForHome(db, context);
+        DataGenerator.generateSocialMediaLocationAccessRuleForHome(db, context);
+        DataGenerator.generateSocialMediaCameraAccessRuleForWork(db, context);
+        DataGenerator.generateSocialMediaLocationAccessRuleForWork(db, context);
     }
 
     private void insertHardcodedGooglePermissions(SQLiteDatabase db) {
