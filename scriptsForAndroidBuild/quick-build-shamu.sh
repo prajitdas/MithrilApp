@@ -15,7 +15,7 @@ if [[ $model == $expected ]]; then
         cd ~/android/$build-lineage-14.1-experimental-prajit/device/moto/$build
         ./extract-files.sh
 	cp "/home/prajit/android/proprietary_vendor_stuff/proprietary_vendor_motorola/shamu/proprietary/app/Tycho/Tycho.apk" "/home/prajit/android/shamu-lineage-14.1-experimental-prajit/vendor/motorola/shamu/proprietary/app/Tycho/Tycho.apk"
-	cp "/home/prajit/android/proprietary_vendor_stuff/proprietary_vendor_motorola/shamu/proprietary/priv-app/GCS/GCS.apk" "/home/prajit/android/shamu-lineage-14.1-experimental-prajit/vendor/motorola/shamu/proprietary/priv-app/FCS/GCS.apk"
+	cp "/home/prajit/android/proprietary_vendor_stuff/proprietary_vendor_motorola/shamu/proprietary/priv-app/GCS/GCS.apk" "/home/prajit/android/shamu-lineage-14.1-experimental-prajit/vendor/motorola/shamu/proprietary/priv-app/GCS/GCS.apk"
         export USE_CCACHE=1
         croot
         prebuilts/misc/linux-x86/ccache/ccache -M 50G
