@@ -21,6 +21,8 @@ public class DataGenerator {
         int appId = MithrilDBHelper.getHelper(context).findAppIdByName(mithrilDB, "com.twitter.android");
         Action action = Action.ALLOW;
         PolicyRule policyRule = new PolicyRule(name, ctxId, appId, action, AppOpsManager.permissionToOpCode(android.Manifest.permission.CAMERA));
+
+        closeDB(mithrilDB);
         return policyRule;
     }
 
@@ -34,6 +36,8 @@ public class DataGenerator {
         int appId = MithrilDBHelper.getHelper(context).findAppIdByName(mithrilDB, "com.twitter.android");
         Action action = Action.ALLOW;
         PolicyRule policyRule = new PolicyRule(name, ctxId, appId, action, AppOpsManager.permissionToOpCode(Manifest.permission.ACCESS_FINE_LOCATION));
+
+        closeDB(mithrilDB);
         return policyRule;
     }
 
@@ -47,6 +51,8 @@ public class DataGenerator {
         int appId = MithrilDBHelper.getHelper(context).findAppIdByName(mithrilDB, "com.twitter.android");
         Action action = Action.DENY;
         PolicyRule policyRule = new PolicyRule(name, ctxId, appId, action, AppOpsManager.permissionToOpCode(android.Manifest.permission.CAMERA));
+
+        closeDB(mithrilDB);
         return policyRule;
     }
 
@@ -60,6 +66,13 @@ public class DataGenerator {
         int appId = MithrilDBHelper.getHelper(context).findAppIdByName(mithrilDB, "com.twitter.android");
         Action action = Action.DENY;
         PolicyRule policyRule = new PolicyRule(name, ctxId, appId, action, AppOpsManager.permissionToOpCode(Manifest.permission.ACCESS_FINE_LOCATION));
+
+        closeDB(mithrilDB);
         return policyRule;
+    }
+
+    private static void closeDB(SQLiteDatabase mithrilDB) {
+        if (mithrilDB != null)
+            mithrilDB.close();
     }
 }
