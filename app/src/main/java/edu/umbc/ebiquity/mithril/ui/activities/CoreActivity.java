@@ -146,7 +146,6 @@ public class CoreActivity extends AppCompatActivity
             else
                 loadViolationsFragment();
         } else if (id == R.id.nav_usage) {
-//            launchUsageStatsActivity();
             loadUsageStatsFragment();
         } else if (id == R.id.nav_perm) {
             if (isPermissionsListEmpty())
@@ -460,9 +459,6 @@ public class CoreActivity extends AppCompatActivity
     }
 
     private void defaultFragmentLoad() {
-//        if (!isContextInfoSet())
-//            launchPrefsActivity();
-//        else {
         /*
          * If we are loading the app list we don't need the above two lines
          * as we take care of that in the loadAllAppsFragment() method
@@ -472,7 +468,6 @@ public class CoreActivity extends AppCompatActivity
         else
             loadViolationsFragment();
     }
-//    }
 
     private void resetApp() {
         // Use the Builder class for convenient dialog construction
