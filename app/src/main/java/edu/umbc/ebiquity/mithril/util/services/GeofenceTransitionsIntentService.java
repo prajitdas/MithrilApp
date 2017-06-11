@@ -120,7 +120,13 @@ public class GeofenceTransitionsIntentService extends IntentService {
     }
 
     private void addContextLogToDB(String label, String startOrEnd) {
-        MithrilDBHelper.getHelper(this).addContextLog(mithrilDB, MithrilDBHelper.getHelper(this).findContextIdByLabelAndType(mithrilDB, label, MithrilApplication.getPrefKeyLocation()), startOrEnd);
+        MithrilDBHelper.getHelper(this).addContextLog(
+                mithrilDB,
+                MithrilDBHelper.getHelper(this).findContextIdByLabelAndType(
+                        mithrilDB,
+                        label,
+                        MithrilApplication.getPrefKeyContextTypeLocation()),
+                startOrEnd);
     }
 
 //    private void findCurrentPresenceInfoIfAny() {}

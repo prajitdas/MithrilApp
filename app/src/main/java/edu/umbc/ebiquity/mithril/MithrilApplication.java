@@ -114,39 +114,44 @@ public class MithrilApplication extends Application {
     private static final String BACK_PRESSED_USER_AGREEMENT_SCREEN = "backPressed";
 
     //Preference keys
-    private static final String PREF_KEY_CURRENT_TIME = "time";
-    private static final String PREF_KEY_CURRENT_LOCATION = "currloc";
-    private static final String PREF_KEY_SEMANTIC = "Semantic";
-    private static final String PREF_KEY_LOCATION = "Location";
-    private static final String PREF_KEY_ACTIVITY = "Activity";
-    private static final String PREF_KEY_TEMPORAL = "Temporal";
-    private static final String PREF_KEY_PRESENCE = "Presence";
-    private static final String PREF_KEY_SEMANTIC_LOCATION = PREF_KEY_SEMANTIC + PREF_KEY_LOCATION;
-    private static final String PREF_KEY_SEMANTIC_ACTIVITY = PREF_KEY_SEMANTIC + PREF_KEY_ACTIVITY;
-    private static final String PREF_KEY_SEMANTIC_TEMPORAL = PREF_KEY_SEMANTIC + PREF_KEY_TEMPORAL;
-    private static final String PREF_KEY_SEMANTIC_PRESENCE = PREF_KEY_SEMANTIC + PREF_KEY_PRESENCE;
-    private static final String PREF_KEY_CURRENT_ADDRESS = "curraddr";
-    private static final String PREF_KEY_WHAT_LEVEL = "level";
+//    private static final String PREF_KEY_CURRENT_TIME = "time";
+//    private static final String PREF_KEY_CURRENT_LOCATION = "currloc";
+//    private static final String PREF_KEY_SEMANTIC = "Semantic";
+//    private static final String PREF_KEY_SEMANTIC_LOCATION = PREF_KEY_SEMANTIC + PREF_KEY_LOCATION;
+//    private static final String PREF_KEY_SEMANTIC_ACTIVITY = PREF_KEY_SEMANTIC + PREF_KEY_ACTIVITY;
+//    private static final String PREF_KEY_SEMANTIC_TEMPORAL = PREF_KEY_SEMANTIC + PREF_KEY_TEMPORAL;
+//    private static final String PREF_KEY_SEMANTIC_PRESENCE = PREF_KEY_SEMANTIC + PREF_KEY_PRESENCE;
+//    private static final String PREF_KEY_CURRENT_ADDRESS = "curraddr";
+//    private static final String PREF_KEY_WHAT_LEVEL = "level";
+    //Make sure they match the values from preferences.xml
+//    private static final String PREF_ALL_DONE_KEY = "prefsDone";
+//    private static final String PREF_LOCATION_CONTEXT_ENABLE_KEY = "enableLocationContext";
+//    private static final String PREF_PRESENCE_INFO_CONTEXT_ENABLE_KEY = "enablePresenceInfoContext";
+//    private static final String PREF_PRESENCE_INFO_COLLEAGUE_KEY = "presenceInfoSupervisor";
+//    private static final String PREF_PRESENCE_INFO_SUPERVISOR_KEY = "presenceInfoColleague";
+//    private static final String PREF_TEMPORAL_CONTEXT_ENABLE_KEY = "enableTemporalContext";
+
     private static final String PREF_KEY_RESET_ENABLED = "reset";
     private static final String PREF_KEY_POLICIES_DOWNLOADED = "policiesDownloaded";
-    //Make sure they match the values from preferences.xml
-    private static final String PREF_ALL_DONE_KEY = "prefsDone";
     private static final String PREF_WHAT_FRAGMENT_KEY = "whatFragment";
-    private static final String PREF_LOCATION_CONTEXT_ENABLE_KEY = "enableLocationContext";
-    private static final String PREF_HOME_LOCATION_KEY = "Home";
-    private static final String PREF_WORK_LOCATION_KEY = "Work";
-    private static final String PREF_PRESENCE_INFO_CONTEXT_ENABLE_KEY = "enablePresenceInfoContext";
-    private static final String PREF_PRESENCE_INFO_COLLEAGUE_KEY = "presenceInfoSupervisor";
-    private static final String PREF_PRESENCE_INFO_SUPERVISOR_KEY = "presenceInfoColleague";
-    private static final String PREF_TEMPORAL_CONTEXT_ENABLE_KEY = "enableTemporalContext";
+
+    private static final String PREF_KEY_CONTEXT_TYPE_LOCATION = "Location";
+    private static final String PREF_KEY_CONTEXT_TYPE_ACTIVITY = "Activity";
+    private static final String PREF_KEY_CONTEXT_TYPE_TEMPORAL = "Temporal";
+    private static final String PREF_KEY_CONTEXT_TYPE_PRESENCE = "Presence";
+
     private static final String PREF_START_KEY = "startOfContext";
     private static final String PREF_END_KEY = "endOfContext";
-    private static final String PREF_WORK_DAYS_KEY = "workDays";
-    private static final String PREF_WORK_HOURS_START_KEY = "workHoursStart";
-    private static final String PREF_WORK_HOURS_END_KEY = "workHoursEnd";
-    private static final String PREF_DND_DAYS_KEY = "dndDays";
-    private static final String PREF_DND_HOURS_START_KEY = "dndHoursStart";
-    private static final String PREF_DND_HOURS_END_KEY = "dndHoursEnd";
+
+    private static final String PREF_HOME_LOCATION_KEY = "Home";
+    private static final String PREF_WORK_LOCATION_KEY = "Work";
+    private static final String PREF_WORK_TEMPORAL_KEY = "Work";
+    private static final String PREF_DND_TEMPORAL_KEY = "DND";
+
+    //    private static final String PREF_WORK_HOURS_START_KEY = "workHoursStart";
+//    private static final String PREF_WORK_HOURS_END_KEY = "workHoursEnd";
+//    private static final String PREF_DND_HOURS_START_KEY = "dndHoursStart";
+//    private static final String PREF_DND_HOURS_END_KEY = "dndHoursEnd";
     private static final String PREF_MONDAY = "Monday";
     private static final String PREF_TUESDAY = "Tuesday";
     private static final String PREF_WEDNESDAY = "Wednesday";
@@ -156,15 +161,16 @@ public class MithrilApplication extends Application {
     private static final String PREF_SUNDAY = "Sunday";
     //End of preferences.xml
 
-    private static final String PREF_KEY_LOCATION_INSTANCE = "locationInstance";
-    private static final String PREF_KEY_ACTIVITY_INSTANCE = "activityInstance";
-    private static final String PREF_KEY_PRESENCE_INSTANCE = "presenceInstance";
-    private static final String PREF_KEY_TEMPORAL_INSTANCE = "temporalInstance";
-    private static final String PREF_KEY_LOCATION_INSTANCES = "locationInstances";
-    private static final String PREF_KEY_ACTIVITY_INSTANCES = "activityInstances";
-    private static final String PREF_KEY_PRESENCE_INSTANCES = "presenceInstances";
-    private static final String PREF_KEY_TEMPORAL_INSTANCES = "temporalInstances";
-    private static final String PREF_KEY_INSTANCES_CREATED = "instancesCreated";
+    private static final String PREF_KEY_LOCATION_INSTANCES_HAVE_BEEN_SET = "locationInstancesHaveBeenSet";
+    private static final String PREF_KEY_ACTIVITY_INSTANCES_HAVE_BEEN_SET = "activityInstancesHaveBeenSet";
+    private static final String PREF_KEY_PRESENCE_INSTANCES_HAVE_BEEN_SET = "presenceInstancesHaveBeenSet";
+    private static final String PREF_KEY_TEMPORAL_INSTANCES_HAVE_BEEN_SET = "temporalInstancesHaveBeenSet";
+    private static final String PREF_KEY_LIST_OF_LOCATION_INSTANCES = "listOfLocationInstances";
+    private static final String PREF_KEY_LIST_OF_ACTIVITY_INSTANCES = "listOfActivityInstances";
+    private static final String PREF_KEY_LIST_OF_PRESENCE_INSTANCES = "listOfPresenceInstances";
+    private static final String PREF_KEY_LIST_OF_TEMPORAL_INSTANCES = "listOfTemporalInstances";
+    private static final String PREF_KEY_INIT_INSTANCES_CREATED = "initInstancesCreated";
+
     private static final String PREF_KEY_USER_DENIED_USAGE_STATS_PERMISSIONS = "userDeniedUsageStatsPermissions";
     private static final String PREF_KEY_USER_DENIED_PERMISSIONS = "userDeniedPermissions";
     private static final String PREF_KEY_SHOULD_SHOW_AGREEMENT_SNACKBAR = "shouldShowAgreementSnackbar";
@@ -634,22 +640,6 @@ public class MithrilApplication extends Application {
         return PERMISSION_FLAG_NONE;
     }
 
-    public static String getPrefKeyLocationInstances() {
-        return PREF_KEY_LOCATION_INSTANCES;
-    }
-
-    public static String getPrefKeyActivityInstances() {
-        return PREF_KEY_ACTIVITY_INSTANCES;
-    }
-
-    public static String getPrefKeyPresenceInstances() {
-        return PREF_KEY_PRESENCE_INSTANCES;
-    }
-
-    public static String getPrefKeyTemporalInstances() {
-        return PREF_KEY_TEMPORAL_INSTANCES;
-    }
-
     public static int getMillisecondsPerSecond() {
         return MILLISECONDS_PER_SECOND;
     }
@@ -694,8 +684,65 @@ public class MithrilApplication extends Application {
         return SHARED_PREFERENCES_NAME;
     }
 
-    public static String getPrefLocationContextEnableKey() {
-        return PREF_LOCATION_CONTEXT_ENABLE_KEY;
+
+    public static String getPrefKeyContextTypeLocation() {
+        return PREF_KEY_CONTEXT_TYPE_LOCATION;
+    }
+
+    public static String getPrefKeyContextTypeActivity() {
+        return PREF_KEY_CONTEXT_TYPE_ACTIVITY;
+    }
+
+    public static String getPrefKeyContextTypeTemporal() {
+        return PREF_KEY_CONTEXT_TYPE_TEMPORAL;
+    }
+
+    public static String getPrefKeyContextTypePresence() {
+        return PREF_KEY_CONTEXT_TYPE_PRESENCE;
+    }
+
+    public static String getPrefWorkTemporalKey() {
+        return PREF_WORK_TEMPORAL_KEY;
+    }
+
+    public static String getPrefDndTemporalKey() {
+        return PREF_DND_TEMPORAL_KEY;
+    }
+
+    public static String getPrefKeyLocationInstancesHaveBeenSet() {
+        return PREF_KEY_LOCATION_INSTANCES_HAVE_BEEN_SET;
+    }
+
+    public static String getPrefKeyActivityInstancesHaveBeenSet() {
+        return PREF_KEY_ACTIVITY_INSTANCES_HAVE_BEEN_SET;
+    }
+
+    public static String getPrefKeyPresenceInstancesHaveBeenSet() {
+        return PREF_KEY_PRESENCE_INSTANCES_HAVE_BEEN_SET;
+    }
+
+    public static String getPrefKeyTemporalInstancesHaveBeenSet() {
+        return PREF_KEY_TEMPORAL_INSTANCES_HAVE_BEEN_SET;
+    }
+
+    public static String getPrefKeyListOfLocationInstances() {
+        return PREF_KEY_LIST_OF_LOCATION_INSTANCES;
+    }
+
+    public static String getPrefKeyListOfActivityInstances() {
+        return PREF_KEY_LIST_OF_ACTIVITY_INSTANCES;
+    }
+
+    public static String getPrefKeyListOfPresenceInstances() {
+        return PREF_KEY_LIST_OF_PRESENCE_INSTANCES;
+    }
+
+    public static String getPrefKeyListOfTemporalInstances() {
+        return PREF_KEY_LIST_OF_TEMPORAL_INSTANCES;
+    }
+
+    public static String getPrefKeyInitInstancesCreated() {
+        return PREF_KEY_INIT_INSTANCES_CREATED;
     }
 
     public static String getPrefHomeLocationKey() {
@@ -704,38 +751,6 @@ public class MithrilApplication extends Application {
 
     public static String getPrefWorkLocationKey() {
         return PREF_WORK_LOCATION_KEY;
-    }
-
-    public static String getPrefKeySemanticLocation() {
-        return PREF_KEY_SEMANTIC_LOCATION;
-    }
-
-    public static String getPrefKeySemanticActivity() {
-        return PREF_KEY_SEMANTIC_ACTIVITY;
-    }
-
-    public static String getPrefKeySemanticTemporal() {
-        return PREF_KEY_SEMANTIC_TEMPORAL;
-    }
-
-    public static String getPrefKeySemanticPresence() {
-        return PREF_KEY_SEMANTIC_PRESENCE;
-    }
-
-    public static String getPrefPresenceInfoContextEnableKey() {
-        return PREF_PRESENCE_INFO_CONTEXT_ENABLE_KEY;
-    }
-
-    public static String getPrefPresenceInfoColleagueKey() {
-        return PREF_PRESENCE_INFO_COLLEAGUE_KEY;
-    }
-
-    public static String getPrefPresenceInfoSupervisorKey() {
-        return PREF_PRESENCE_INFO_SUPERVISOR_KEY;
-    }
-
-    public static String getPrefTemporalContextEnableKey() {
-        return PREF_TEMPORAL_CONTEXT_ENABLE_KEY;
     }
 
     public static String getPrefKeyAppLaunchMonitoringServiceState() {
@@ -886,36 +901,12 @@ public class MithrilApplication extends Application {
         return PREF_KEY_PERM_GROUP_NAME;
     }
 
-    public static String getPrefKeyCurrentLocation() {
-        return PREF_KEY_CURRENT_LOCATION;
-    }
-
-    public static String getPrefKeyCurrentAddress() {
-        return PREF_KEY_CURRENT_ADDRESS;
-    }
-
-    public static String getPrefKeyWhatLevel() {
-        return PREF_KEY_WHAT_LEVEL;
-    }
-
-    public static String getPrefKeyCurrentTime() {
-        return PREF_KEY_CURRENT_TIME;
-    }
-
-    public static String getPrefKeyLocation() {
-        return PREF_KEY_LOCATION;
-    }
-
     public static float getSmallestDisplacement() {
         return SMALLEST_DISPLACEMENT;
     }
 
     public static String getInsertStatementGooglePermissions() {
         return INSERT_STATEMENT_GOOGLE_PERMISSIONS;
-    }
-
-    public static String getPrefKeySemantic() {
-        return PREF_KEY_SEMANTIC;
     }
 
     public static String getFlierPdfFileName() {
@@ -942,48 +933,12 @@ public class MithrilApplication extends Application {
         return LAUNCH_DETECTION_INTERVAL_IN_SECONDS;
     }
 
-    public static String getPrefWorkDaysKey() {
-        return PREF_WORK_DAYS_KEY;
-    }
-
-    public static String getPrefWorkHoursStartKey() {
-        return PREF_WORK_HOURS_START_KEY;
-    }
-
-    public static String getPrefWorkHoursEndKey() {
-        return PREF_WORK_HOURS_END_KEY;
-    }
-
-    public static String getPrefDndDaysKey() {
-        return PREF_DND_DAYS_KEY;
-    }
-
-    public static String getPrefDndHoursStartKey() {
-        return PREF_DND_HOURS_START_KEY;
-    }
-
-    public static String getPrefDndHoursEndKey() {
-        return PREF_DND_HOURS_END_KEY;
-    }
-
     public static String getPrefMonday() {
         return PREF_MONDAY;
     }
 
     public static String getPrefTuesday() {
         return PREF_TUESDAY;
-    }
-
-    public static String getPrefKeyActivity() {
-        return PREF_KEY_ACTIVITY;
-    }
-
-    public static String getPrefKeyTemporal() {
-        return PREF_KEY_TEMPORAL;
-    }
-
-    public static String getPrefKeyPresence() {
-        return PREF_KEY_PRESENCE;
     }
 
     public static String getPrefWednesday() {
@@ -1004,10 +959,6 @@ public class MithrilApplication extends Application {
 
     public static String getPrefSunday() {
         return PREF_SUNDAY;
-    }
-
-    public static String getPrefAllDoneKey() {
-        return PREF_ALL_DONE_KEY;
     }
 
     public static String getPrefWhatFragmentKey() {
@@ -1068,26 +1019,6 @@ public class MithrilApplication extends Application {
 
     public static String getCmdRevokeManageAppOpsRestrictions() {
         return CMD_REVOKE_MANAGE_APP_OPS_RESTRICTIONS;
-    }
-
-    public static String getPrefKeyLocationInstance() {
-        return PREF_KEY_LOCATION_INSTANCE;
-    }
-
-    public static String getPrefKeyActivityInstance() {
-        return PREF_KEY_ACTIVITY_INSTANCE;
-    }
-
-    public static String getPrefKeyPresenceInstance() {
-        return PREF_KEY_PRESENCE_INSTANCE;
-    }
-
-    public static String getPrefKeyTemporalInstance() {
-        return PREF_KEY_TEMPORAL_INSTANCE;
-    }
-
-    public static String getPrefKeyInstancesCreated() {
-        return PREF_KEY_INSTANCES_CREATED;
     }
 
     public static String getCmdRootPrivilege() {

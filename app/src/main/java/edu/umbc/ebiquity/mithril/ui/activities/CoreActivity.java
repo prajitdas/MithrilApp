@@ -602,7 +602,7 @@ public class CoreActivity extends AppCompatActivity
 //    }
 
     private void launchInstanceCreationActivity() {
-        editor.putBoolean(MithrilApplication.getPrefKeyInstancesCreated(), false);
+        editor.putBoolean(MithrilApplication.getPrefKeyInitInstancesCreated(), false);
         editor.apply();
         startActivity(new Intent(this, InstanceCreationActivity.class));
     }
@@ -683,10 +683,6 @@ public class CoreActivity extends AppCompatActivity
 
     private boolean isAgreementDownloaded() {
         return sharedPreferences.getBoolean(MithrilApplication.getPrefKeyUserAgreementCopied(), false) && new File(downloadsDirectory, agreementFile).exists();
-    }
-
-    private boolean isContextInfoSet() {
-        return sharedPreferences.getBoolean(MithrilApplication.getPrefAllDoneKey(), false);
     }
 
     @Override

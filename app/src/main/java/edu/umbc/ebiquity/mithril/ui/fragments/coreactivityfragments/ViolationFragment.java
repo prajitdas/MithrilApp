@@ -101,6 +101,7 @@ public class ViolationFragment extends Fragment {
         //TODO remove this later. This is for demo purposes.
         SharedPreferences sharedPref = getActivity().getSharedPreferences(MithrilApplication.getSharedPreferencesName(), Context.MODE_PRIVATE);
         String appPkgName = sharedPref.getString(MithrilApplication.getPrefKeyAppPkgName(), "Youtube");
+        /*
         if (appPkgName.equals("com.google.android.youtube") &&
                 sharedPref.contains(MithrilApplication.getPrefKeyCurrentTime()))
             violationItems.add(new Violation("App package name: " +
@@ -116,7 +117,8 @@ public class ViolationFragment extends Fragment {
                     "Location context: " +
                     sharedPref.getString(MithrilApplication.getPrefKeyCurrentLocation(), "location"), 1, 1, true));
         else
-            violationItems.clear();
+        */
+        violationItems.clear();
 
         // Add some violation items.
         for (Violation item : violationItems)

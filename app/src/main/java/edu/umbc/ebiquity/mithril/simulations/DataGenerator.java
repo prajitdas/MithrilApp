@@ -15,7 +15,7 @@ public class DataGenerator {
         return new PolicyRule("SocialMediaCameraAccessRuleForHome",
                 MithrilDBHelper.getHelper(context).findContextIdByLabelAndType(mithrilDB,
                         MithrilApplication.getPrefHomeLocationKey(),
-                        MithrilApplication.getPrefKeyLocation()),
+                        MithrilApplication.getPrefKeyContextTypeLocation()),
                 MithrilDBHelper.getHelper(context).findAppIdByName(mithrilDB, "com.twitter.android"),
                 Action.ALLOW,
                 AppOpsManager.permissionToOpCode(android.Manifest.permission.CAMERA));
@@ -25,7 +25,7 @@ public class DataGenerator {
         return new PolicyRule("SocialMediaLocationAccessRuleForHome",
                 MithrilDBHelper.getHelper(context).findContextIdByLabelAndType(mithrilDB,
                         MithrilApplication.getPrefHomeLocationKey(),
-                        MithrilApplication.getPrefKeyLocation()),
+                        MithrilApplication.getPrefKeyContextTypeLocation()),
                 MithrilDBHelper.getHelper(context).findAppIdByName(mithrilDB, "com.twitter.android"),
                 Action.ALLOW,
                 AppOpsManager.permissionToOpCode(Manifest.permission.ACCESS_FINE_LOCATION));
@@ -35,7 +35,7 @@ public class DataGenerator {
         return new PolicyRule("SocialMediaCameraAccessRuleForWork",
                 MithrilDBHelper.getHelper(context).findContextIdByLabelAndType(mithrilDB,
                         MithrilApplication.getPrefWorkLocationKey(),
-                        MithrilApplication.getPrefKeyLocation()),
+                        MithrilApplication.getPrefKeyContextTypeLocation()),
                 MithrilDBHelper.getHelper(context).findAppIdByName(mithrilDB, "com.twitter.android"),
                 Action.DENY,
                 AppOpsManager.permissionToOpCode(android.Manifest.permission.CAMERA));
@@ -45,7 +45,7 @@ public class DataGenerator {
         return new PolicyRule("SocialMediaLocationAccessRuleForWork",
                 MithrilDBHelper.getHelper(context).findContextIdByLabelAndType(mithrilDB,
                         MithrilApplication.getPrefWorkLocationKey(),
-                        MithrilApplication.getPrefKeyLocation()),
+                        MithrilApplication.getPrefKeyContextTypeLocation()),
                 MithrilDBHelper.getHelper(context).findAppIdByName(mithrilDB, "com.twitter.android"),
                 Action.DENY,
                 AppOpsManager.permissionToOpCode(Manifest.permission.ACCESS_FINE_LOCATION));

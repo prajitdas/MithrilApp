@@ -51,7 +51,7 @@ public class SemanticTimeFragment extends Fragment {
         SemanticTimeFragment fragment = new SemanticTimeFragment();
         Bundle args = new Bundle();
         args.putInt(ARG_COLUMN_COUNT, columnCount);
-        args.putParcelableList(MithrilApplication.getPrefKeyTemporalInstances(), new ArrayList<SemanticTime>());
+        args.putParcelableList(MithrilApplication.getPrefKeyListOfTemporalInstances(), new ArrayList<SemanticTime>());
         fragment.setArguments(args);
         return fragment;
     }
@@ -62,7 +62,7 @@ public class SemanticTimeFragment extends Fragment {
 
         if (getArguments() != null) {
             mColumnCount = getArguments().getInt(ARG_COLUMN_COUNT);
-            semanticTimes = getArguments().getParcelableArrayList(MithrilApplication.getPrefKeyTemporalInstances());
+            semanticTimes = getArguments().getParcelableArrayList(MithrilApplication.getPrefKeyListOfTemporalInstances());
         }
     }
 

@@ -74,7 +74,7 @@ public class SemanticNearActor implements Parcelable, SemanticUserContext {
 
     @Override
     public void setType() {
-        this.type = MithrilApplication.getPrefKeyTemporal();
+        this.type = MithrilApplication.getPrefKeyContextTypeTemporal();
     }
 
     @Override

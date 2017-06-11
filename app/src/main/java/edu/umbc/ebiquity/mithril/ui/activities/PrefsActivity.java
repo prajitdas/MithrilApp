@@ -1,7 +1,9 @@
 package edu.umbc.ebiquity.mithril.ui.activities;
 
+import android.annotation.TargetApi;
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
@@ -39,6 +41,7 @@ public class PrefsActivity extends AppCompatActivity {
         getSupportActionBar().setDisplayHomeAsUpEnabled(false);
     }
 
+    @TargetApi(Build.VERSION_CODES.M)
     private void showSnackbar(View view, String message) {
         Snackbar snackbar = Snackbar.make(view,
                 message,
@@ -58,6 +61,7 @@ public class PrefsActivity extends AppCompatActivity {
                 }).show();
     }
 
+    /*
     @Override
     public void onBackPressed() {
         SharedPreferences sharedPreferences = getSharedPreferences(MithrilApplication.getSharedPreferencesName(), Context.MODE_PRIVATE);
@@ -66,4 +70,5 @@ public class PrefsActivity extends AppCompatActivity {
         else
             super.onBackPressed();
     }
+    */
 }

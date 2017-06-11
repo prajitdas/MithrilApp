@@ -51,7 +51,7 @@ public class SemanticLocationFragment extends Fragment {
         SemanticLocationFragment fragment = new SemanticLocationFragment();
         Bundle args = new Bundle();
         args.putInt(ARG_COLUMN_COUNT, columnCount);
-        args.putParcelableList(MithrilApplication.getPrefKeyLocationInstances(), new ArrayList<SemanticLocation>());
+        args.putParcelableList(MithrilApplication.getPrefKeyListOfLocationInstances(), new ArrayList<SemanticLocation>());
         fragment.setArguments(args);
         return fragment;
     }
@@ -62,7 +62,7 @@ public class SemanticLocationFragment extends Fragment {
 
         if (getArguments() != null) {
             mColumnCount = getArguments().getInt(ARG_COLUMN_COUNT);
-            semanticLocations = getArguments().getParcelableArrayList(MithrilApplication.getPrefKeyLocationInstances());
+            semanticLocations = getArguments().getParcelableArrayList(MithrilApplication.getPrefKeyListOfLocationInstances());
         }
     }
 

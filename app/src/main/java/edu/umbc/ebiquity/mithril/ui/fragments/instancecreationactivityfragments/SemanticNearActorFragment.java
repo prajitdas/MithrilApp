@@ -51,7 +51,7 @@ public class SemanticNearActorFragment extends Fragment {
         SemanticNearActorFragment fragment = new SemanticNearActorFragment();
         Bundle args = new Bundle();
         args.putInt(ARG_COLUMN_COUNT, columnCount);
-        args.putParcelableList(MithrilApplication.getPrefKeyPresenceInstances(), new ArrayList<SemanticNearActor>());
+        args.putParcelableList(MithrilApplication.getPrefKeyListOfPresenceInstances(), new ArrayList<SemanticNearActor>());
         fragment.setArguments(args);
         return fragment;
     }
@@ -62,7 +62,7 @@ public class SemanticNearActorFragment extends Fragment {
 
         if (getArguments() != null) {
             mColumnCount = getArguments().getInt(ARG_COLUMN_COUNT);
-            semanticNearActors = getArguments().getParcelableArrayList(MithrilApplication.getPrefKeyPresenceInstances());
+            semanticNearActors = getArguments().getParcelableArrayList(MithrilApplication.getPrefKeyListOfPresenceInstances());
         }
     }
 

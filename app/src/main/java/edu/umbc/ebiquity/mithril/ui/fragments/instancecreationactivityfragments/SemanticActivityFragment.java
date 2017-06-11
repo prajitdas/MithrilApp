@@ -51,7 +51,7 @@ public class SemanticActivityFragment extends Fragment {
         SemanticActivityFragment fragment = new SemanticActivityFragment();
         Bundle args = new Bundle();
         args.putInt(ARG_COLUMN_COUNT, columnCount);
-        args.putParcelableList(MithrilApplication.getPrefKeyActivityInstances(), new ArrayList<SemanticActivity>());
+        args.putParcelableList(MithrilApplication.getPrefKeyListOfActivityInstances(), new ArrayList<SemanticActivity>());
         fragment.setArguments(args);
         return fragment;
     }
@@ -62,7 +62,7 @@ public class SemanticActivityFragment extends Fragment {
 
         if (getArguments() != null) {
             mColumnCount = getArguments().getInt(ARG_COLUMN_COUNT);
-            semanticActivities = getArguments().getParcelableArrayList(MithrilApplication.getPrefKeyActivityInstances());
+            semanticActivities = getArguments().getParcelableArrayList(MithrilApplication.getPrefKeyListOfActivityInstances());
         }
     }
 

@@ -76,7 +76,7 @@ public class SemanticActivity implements Parcelable, SemanticUserContext {
 
     @Override
     public void setType() {
-        this.type = MithrilApplication.getPrefKeyActivity();
+        this.type = MithrilApplication.getPrefKeyContextTypeActivity();
     }
 
     @Override

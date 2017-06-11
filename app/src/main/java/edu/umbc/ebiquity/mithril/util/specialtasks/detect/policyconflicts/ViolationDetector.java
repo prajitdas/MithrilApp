@@ -220,11 +220,11 @@ public class ViolationDetector {
         Gson gson = new Gson();
         String json = null;
 
-        json = sharedPref.getString(MithrilApplication.getPrefKeyCurrentAddress(), null);
-        detectedAddress = gson.fromJson(json, Address.class);
-
-        json = sharedPref.getString(MithrilApplication.getPrefKeyCurrentLocation(), null);
-        detectedLocation = gson.fromJson(json, Location.class);
+//        json = sharedPref.getString(MithrilApplication.getPrefKeyCurrentAddress(), null);
+//        detectedAddress = gson.fromJson(json, Address.class);
+//
+//        json = sharedPref.getString(MithrilApplication.getPrefKeyCurrentLocation(), null);
+//        detectedLocation = gson.fromJson(json, Location.class);
 //        if(semanticLocation.getInferredLocation() != currentLocation)
 //            return new Violation();
         return null;
