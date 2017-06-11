@@ -11,7 +11,7 @@ if [ "$key" = '' ]; then
 fi
 read -n1 -rsp "Press space to continue..." key
 if [ "$key" = '' ]; then
-	./makePrajitOS bullhead
+	./makePrajitOS victara
 fi
 read -n1 -rsp "Press space to continue..." key
 if [ "$key" = '' ]; then
@@ -19,5 +19,5 @@ if [ "$key" = '' ]; then
 fi
 read -n1 -rsp "Press space to continue..." key
 if [ "$key" = '' ]; then
-	./makePrajitOS victara
+	./makePrajitOS mako
 fi
