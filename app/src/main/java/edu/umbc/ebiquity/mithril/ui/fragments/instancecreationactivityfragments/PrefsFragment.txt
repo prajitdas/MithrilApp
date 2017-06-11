@@ -136,7 +136,7 @@ public class PrefsFragment extends PreferenceFragment implements GoogleApiClient
         // Load the preferences from an XML resource
         addPreferencesFromResource(R.xml.preferences);
 
-        mSwitchPrefAllDone = (SwitchPreference) getPreferenceManager().findPreference(MithrilApplication.getPrefAllDoneKey());
+        mSwitchPrefAllDone = (SwitchPreference) getPreferenceManager().findPreference(MithrilApplication.getPrefKeyInitInstancesCreated());
 
         mSwitchPrefEnableLocation = (SwitchPreference) getPreferenceManager().findPreference(MithrilApplication.getPrefLocationContextEnableKey());
         mPrefHomeLocation = getPreferenceManager().findPreference(MithrilApplication.getPrefHomeLocationKey());
@@ -177,9 +177,9 @@ public class PrefsFragment extends PreferenceFragment implements GoogleApiClient
         // Set defaults, then update using values stored in the Bundle.
         mAddressRequested = false;
 
-        boolean isChecked = sharedPrefs.getBoolean(MithrilApplication.getPrefAllDoneKey(), false);
+        boolean isChecked = sharedPrefs.getBoolean(MithrilApplication.getPrefKeyInitInstancesCreated(), false);
         mSwitchPrefAllDone.setChecked(isChecked);
-        editor.putBoolean(MithrilApplication.getPrefAllDoneKey(), isChecked);
+        editor.putBoolean(MithrilApplication.getPrefKeyInitInstancesCreated(), isChecked);
 
         isChecked = sharedPrefs.getBoolean(MithrilApplication.getPrefLocationContextEnableKey(), false);
         mSwitchPrefEnableLocation.setChecked(isChecked);
@@ -403,7 +403,7 @@ public class PrefsFragment extends PreferenceFragment implements GoogleApiClient
             public boolean onPreferenceChange(Preference preference, Object o) {
                 mSwitchPrefAllDone.setChecked((Boolean) o);
 
-                editor.putBoolean(MithrilApplication.getPrefAllDoneKey(), mSwitchPrefAllDone.isChecked());
+                editor.putBoolean(MithrilApplication.getPrefKeyInitInstancesCreated(), mSwitchPrefAllDone.isChecked());
                 editor.apply();
 
                 addGeofences();

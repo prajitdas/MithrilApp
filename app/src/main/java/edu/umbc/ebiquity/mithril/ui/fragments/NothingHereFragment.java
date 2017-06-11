@@ -16,6 +16,7 @@ public class NothingHereFragment extends Fragment {
 
     private OnFragmentInteractionListener mListener;
     private String fragmentType;
+    private static final String WHAT_CORE_ACTIVITY_FRAGMENT_ARE_WE_IN = "coreActivityFragment";
 
     public NothingHereFragment() {
         // Required empty public constructor
@@ -33,7 +34,7 @@ public class NothingHereFragment extends Fragment {
         super.onCreate(savedInstanceState);
 
         if (getArguments() != null) {
-            fragmentType = getArguments().getString(MithrilApplication.getPrefWhatFragmentKey());
+            fragmentType = getArguments().getString(WHAT_CORE_ACTIVITY_FRAGMENT_ARE_WE_IN);
         }
     }
 

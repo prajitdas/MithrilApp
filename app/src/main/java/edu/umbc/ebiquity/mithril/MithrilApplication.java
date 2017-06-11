@@ -133,7 +133,7 @@ public class MithrilApplication extends Application {
 
     private static final String PREF_KEY_RESET_ENABLED = "reset";
     private static final String PREF_KEY_POLICIES_DOWNLOADED = "policiesDownloaded";
-    private static final String PREF_WHAT_FRAGMENT_KEY = "whatFragment";
+//    private static final String PREF_WHAT_FRAGMENT_KEY = "whatFragment";
 
     private static final String PREF_KEY_CONTEXT_TYPE_LOCATION = "Location";
     private static final String PREF_KEY_CONTEXT_TYPE_ACTIVITY = "Activity";
@@ -148,7 +148,7 @@ public class MithrilApplication extends Application {
     private static final String PREF_WORK_TEMPORAL_KEY = "Work";
     private static final String PREF_DND_TEMPORAL_KEY = "DND";
 
-    //    private static final String PREF_WORK_HOURS_START_KEY = "workHoursStart";
+//    private static final String PREF_WORK_HOURS_START_KEY = "workHoursStart";
 //    private static final String PREF_WORK_HOURS_END_KEY = "workHoursEnd";
 //    private static final String PREF_DND_HOURS_START_KEY = "dndHoursStart";
 //    private static final String PREF_DND_HOURS_END_KEY = "dndHoursEnd";
@@ -959,10 +959,6 @@ public class MithrilApplication extends Application {
 
     public static String getPrefSunday() {
         return PREF_SUNDAY;
-    }
-
-    public static String getPrefWhatFragmentKey() {
-        return PREF_WHAT_FRAGMENT_KEY;
     }
 
     public static String getPrefKeyShouldShowAgreementSnackbar() {

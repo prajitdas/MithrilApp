@@ -165,16 +165,16 @@ public class InstanceCreationActivity extends AppCompatActivity
         try {
             allPrefs = sharedPreferences.getAll();
             for (Map.Entry<String, ?> aPref : allPrefs.entrySet()) {
-                if (aPref.getKey().startsWith(MithrilApplication.getPrefKeySemanticLocation())) {
+                if (aPref.getKey().startsWith(MithrilApplication.getPrefKeyContextTypeLocation())) {
                     retrieveDataJson = sharedPreferences.getString(aPref.getKey(), "");
                     semanticLocations.put(aPref.getKey(), retrieveDataGson.fromJson(retrieveDataJson, SemanticLocation.class));
-                } else if (aPref.getKey().startsWith(MithrilApplication.getPrefKeySemanticTemporal())) {
+                } else if (aPref.getKey().startsWith(MithrilApplication.getPrefKeyContextTypeTemporal())) {
                     retrieveDataJson = sharedPreferences.getString(aPref.getKey(), "");
                     semanticTimes.put(aPref.getKey(), retrieveDataGson.fromJson(retrieveDataJson, SemanticTime.class));
-                } else if (aPref.getKey().startsWith(MithrilApplication.getPrefKeySemanticPresence())) {
+                } else if (aPref.getKey().startsWith(MithrilApplication.getPrefKeyContextTypePresence())) {
                     retrieveDataJson = sharedPreferences.getString(aPref.getKey(), "");
                     semanticNearActors.put(aPref.getKey(), retrieveDataGson.fromJson(retrieveDataJson, SemanticNearActor.class));
-                } else if (aPref.getKey().startsWith(MithrilApplication.getPrefKeySemanticActivity())) {
+                } else if (aPref.getKey().startsWith(MithrilApplication.getPrefKeyContextTypeActivity())) {
                     retrieveDataJson = sharedPreferences.getString(aPref.getKey(), "");
                     semanticActivities.put(aPref.getKey(), retrieveDataGson.fromJson(retrieveDataJson, SemanticActivity.class));
                 }
@@ -188,16 +188,6 @@ public class InstanceCreationActivity extends AppCompatActivity
     public void onStop() {
         super.onStop();
         mGoogleApiClient.disconnect();
-    }
-
-    @Override
-    public void onDestroy() {
-        super.onDestroy();
-        editor.putBoolean(MithrilApplication.getPrefKeyLocationInstance(), false);
-        editor.putBoolean(MithrilApplication.getPrefKeyTemporalInstance(), false);
-        editor.putBoolean(MithrilApplication.getPrefKeyPresenceInstance(), false);
-        editor.putBoolean(MithrilApplication.getPrefKeyActivityInstance(), false);
-        editor.apply();
     }
 
     private void initViews() {
@@ -264,11 +254,9 @@ public class InstanceCreationActivity extends AppCompatActivity
         mFirstMajorCtxtBtn.setText(R.string.pref_home_location_summary);
         mSecondMajorCtxtBtn.setText(R.string.pref_work_location_summary);
 
-        if (!sharedPreferences.getBoolean(MithrilApplication.getPrefKeyLocationInstance(), false)) {
+        if (!sharedPreferences.getBoolean(MithrilApplication.getPrefKeyInitInstancesCreated(), false))
             PermissionHelper.toast(getApplicationContext(), getApplicationContext().getResources().getString(R.string.tooltip_location), Toast.LENGTH_SHORT);
-            editor.putBoolean(MithrilApplication.getPrefKeyLocationInstance(), true);
-            editor.apply();
-        }
+
         currentFragment = FRAGMENT_LOCATION;
         loadSemanticLocationFragment();
         setOnClickListeners();
@@ -281,11 +269,9 @@ public class InstanceCreationActivity extends AppCompatActivity
         mFirstMajorCtxtBtn.setText(R.string.pref_work_hours_context_summary);
         mSecondMajorCtxtBtn.setText(R.string.pref_DND_hours_context_summary);
 
-        if (!sharedPreferences.getBoolean(MithrilApplication.getPrefKeyTemporalInstance(), false)) {
+        if (!sharedPreferences.getBoolean(MithrilApplication.getPrefKeyInitInstancesCreated(), false))
             PermissionHelper.toast(getApplicationContext(), getApplicationContext().getResources().getString(R.string.tooltip_temporal), Toast.LENGTH_SHORT);
-            editor.putBoolean(MithrilApplication.getPrefKeyTemporalInstance(), true);
-            editor.apply();
-        }
+
         currentFragment = FRAGMENT_TEMPORAL;
         loadSemanticTemporalFragment();
         setOnClickListeners();
@@ -298,11 +284,9 @@ public class InstanceCreationActivity extends AppCompatActivity
         mFirstMajorCtxtBtn.setText(R.string.pref_presence_info_supervisor_summary);
         mSecondMajorCtxtBtn.setText(R.string.pref_presence_info_colleague_summary);
 
-        if (!sharedPreferences.getBoolean(MithrilApplication.getPrefKeyPresenceInstance(), false)) {
+        if (!sharedPreferences.getBoolean(MithrilApplication.getPrefKeyInitInstancesCreated(), false))
             PermissionHelper.toast(getApplicationContext(), getApplicationContext().getResources().getString(R.string.tooltip_presence_related), Toast.LENGTH_SHORT);
-            editor.putBoolean(MithrilApplication.getPrefKeyPresenceInstance(), true);
-            editor.apply();
-        }
+
         currentFragment = FRAGMENT_PRESENCE;
         loadSemanticPresenceFragment();
         setOnClickListeners();
@@ -315,11 +299,9 @@ public class InstanceCreationActivity extends AppCompatActivity
         mFirstMajorCtxtBtn.setText(R.string.pref_personal_activity_context_title);
         mSecondMajorCtxtBtn.setText(R.string.pref_professional_activity_context_title);
 
-        if (!sharedPreferences.getBoolean(MithrilApplication.getPrefKeyActivityInstance(), false)) {
+        if (!sharedPreferences.getBoolean(MithrilApplication.getPrefKeyInitInstancesCreated(), false))
             PermissionHelper.toast(getApplicationContext(), getApplicationContext().getResources().getString(R.string.tooltip_activity), Toast.LENGTH_SHORT);
-            editor.putBoolean(MithrilApplication.getPrefKeyActivityInstance(), true);
-            editor.apply();
-        }
+
         currentFragment = FRAGMENT_ACTIVITY;
         loadSemanticActivityFragment();
         setOnClickListeners();
@@ -415,7 +397,7 @@ public class InstanceCreationActivity extends AppCompatActivity
 
     private void loadSemanticLocationFragment() {
         Bundle data = new Bundle();
-        data.putParcelableList(MithrilApplication.getPrefKeyLocationInstances(), new ArrayList<>(semanticLocations.values()));
+        data.putParcelableList(MithrilApplication.getPrefKeyListOfLocationInstances(), new ArrayList<>(semanticLocations.values()));
 
         SemanticLocationFragment semanticLocationFragment = new SemanticLocationFragment();
         semanticLocationFragment.setArguments(data);
@@ -427,7 +409,7 @@ public class InstanceCreationActivity extends AppCompatActivity
 
     private void loadSemanticTemporalFragment() {
         Bundle data = new Bundle();
-        data.putParcelableList(MithrilApplication.getPrefKeyTemporalInstances(), new ArrayList<>(semanticTimes.values()));
+        data.putParcelableList(MithrilApplication.getPrefKeyListOfTemporalInstances(), new ArrayList<>(semanticTimes.values()));
 
         SemanticTimeFragment semanticTimeFragment = new SemanticTimeFragment();
         semanticTimeFragment.setArguments(data);
@@ -439,7 +421,7 @@ public class InstanceCreationActivity extends AppCompatActivity
 
     private void loadSemanticPresenceFragment() {
         Bundle data = new Bundle();
-        data.putParcelableList(MithrilApplication.getPrefKeyTemporalInstances(), new ArrayList<>(semanticNearActors.values()));
+        data.putParcelableList(MithrilApplication.getPrefKeyListOfPresenceInstances(), new ArrayList<>(semanticNearActors.values()));
 
         SemanticNearActorFragment semanticNearActorFragment = new SemanticNearActorFragment();
         semanticNearActorFragment.setArguments(data);
@@ -451,7 +433,7 @@ public class InstanceCreationActivity extends AppCompatActivity
 
     private void loadSemanticActivityFragment() {
         Bundle data = new Bundle();
-        data.putParcelableList(MithrilApplication.getPrefKeyTemporalInstances(), new ArrayList<>(semanticActivities.values()));
+        data.putParcelableList(MithrilApplication.getPrefKeyListOfActivityInstances(), new ArrayList<>(semanticActivities.values()));
 
         SemanticActivityFragment semanticActivityFragment = new SemanticActivityFragment();
         semanticActivityFragment.setArguments(data);
@@ -519,7 +501,7 @@ public class InstanceCreationActivity extends AppCompatActivity
         // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
         if (id == R.id.done_with_instances_settings) {
-            editor.putBoolean(MithrilApplication.getPrefKeyInstancesCreated(), true);
+            editor.putBoolean(MithrilApplication.getPrefKeyInitInstancesCreated(), true);
             editor.apply();
             if (!sharedPreferences.getBoolean(MithrilApplication.getPrefKeyPoliciesDownloaded(), false))
                 startNextActivity(this, DownloadPoliciesActivity.class);
@@ -531,7 +513,7 @@ public class InstanceCreationActivity extends AppCompatActivity
 
     private void testInitInstancesCreateAndLaunchNextActivity() {
         sharedPreferences = getApplicationContext().getSharedPreferences(MithrilApplication.getSharedPreferencesName(), Context.MODE_PRIVATE);
-        if (sharedPreferences.getBoolean(MithrilApplication.getPrefKeyInstancesCreated(), false))
+        if (sharedPreferences.getBoolean(MithrilApplication.getPrefKeyInitInstancesCreated(), false))
             startNextActivity(this, CoreActivity.class);
     }
 
@@ -569,8 +551,8 @@ public class InstanceCreationActivity extends AppCompatActivity
                     public void onClick(DialogInterface dialog, int which) {
                         editor.remove(item.getInferredTime());
                         removeContextFromDB(item.getInferredTime());
-                        semanticTimes.remove(MithrilApplication.getPrefKeySemanticTemporal() + item.getInferredTime());
-                        editor.remove(MithrilApplication.getPrefKeySemanticTemporal() + item.getInferredTime());
+                        semanticTimes.remove(item.getInferredTime());
+                        editor.remove(item.getInferredTime());
                         editor.apply();
                         loadSemanticTemporalFragment();
                     }
@@ -598,9 +580,9 @@ public class InstanceCreationActivity extends AppCompatActivity
                     public void onClick(DialogInterface dialog, int which) {
                         editor.remove(item.getInferredLocation());
                         removeContextFromDB(item.getInferredLocation());
-                        semanticLocations.remove(MithrilApplication.getPrefKeySemanticLocation() + item.getInferredLocation());
-                        updateGeofences(MithrilApplication.getPrefKeySemanticLocation() + item.getInferredLocation());
-                        editor.remove(MithrilApplication.getPrefKeySemanticLocation() + item.getInferredLocation());
+                        semanticLocations.remove(item.getInferredLocation());
+                        updateGeofences(item.getInferredLocation());
+                        editor.remove(item.getInferredLocation());
                         editor.apply();
                         loadSemanticLocationFragment();
                     }
@@ -628,8 +610,8 @@ public class InstanceCreationActivity extends AppCompatActivity
                     public void onClick(DialogInterface dialog, int which) {
                         editor.remove(item.getInferredActivity());
                         removeContextFromDB(item.getInferredActivity());
-                        semanticActivities.remove(MithrilApplication.getPrefKeySemanticActivity() + item.getInferredActivity());
-                        editor.remove(MithrilApplication.getPrefKeySemanticActivity() + item.getInferredActivity());
+                        semanticActivities.remove(item.getInferredActivity());
+                        editor.remove(item.getInferredActivity());
                         editor.apply();
                         loadSemanticActivityFragment();
                     }
@@ -657,8 +639,8 @@ public class InstanceCreationActivity extends AppCompatActivity
                     public void onClick(DialogInterface dialog, int which) {
                         editor.remove(item.getInferredRelationship());
                         removeContextFromDB(item.getInferredRelationship());
-                        semanticNearActors.remove(MithrilApplication.getPrefKeySemanticPresence() + item.getInferredRelationship());
-                        editor.remove(MithrilApplication.getPrefKeySemanticPresence() + item.getInferredRelationship());
+                        semanticNearActors.remove(item.getInferredRelationship());
+                        editor.remove(item.getInferredRelationship());
                         editor.apply();
                         loadSemanticPresenceFragment();
                     }
@@ -1153,7 +1135,7 @@ public class InstanceCreationActivity extends AppCompatActivity
             if (resultCode == MithrilApplication.SUCCESS_RESULT) {
 //                Log.d(MithrilApplication.getDebugMithrilApplication.getDebugTag()(), getString(R.string.address_found) + ":" + mAddressOutput);
 //                PermissionHelper.toast(context, getString(R.string.address_found) + ":" + mAddressOutput);
-                addContextToDB(MithrilApplication.getPrefKeyLocation(), key);
+                addContextToDB(MithrilApplication.getPrefKeyContextTypeLocation(), key);
                 storeInSharedPreferences(key, mAddressOutput);
             }
             // Reset. Enable the Fetch Address button and stop showing the progress bar.
@@ -1183,7 +1165,7 @@ public class InstanceCreationActivity extends AppCompatActivity
 
             Gson storeDataGson = new Gson();
             String storeDataJson = storeDataGson.toJson(tempSemanticLocation);
-            editor.putString(MithrilApplication.getPrefKeySemanticLocation() + key, storeDataJson);
+            editor.putString(key, storeDataJson);
             editor.apply();
         }
     }

@@ -81,6 +81,7 @@ public class CoreActivity extends AppCompatActivity
         UsageStatsFragment.OnListFragmentInteractionListener {
     private final File downloadsDirectory = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS);
     private final String agreementFile = MithrilApplication.getFlierPdfFileName();
+    private static final String WHAT_CORE_ACTIVITY_FRAGMENT_ARE_WE_IN = "coreActivityFragment";
 
     private Boolean exit = false;
     private SQLiteDatabase mithrilDB;
@@ -504,7 +505,7 @@ public class CoreActivity extends AppCompatActivity
 
     private void loadNothingHereFragment(String what) {
         Bundle data = new Bundle();
-        data.putString(MithrilApplication.getPrefWhatFragmentKey(), what);
+        data.putString(WHAT_CORE_ACTIVITY_FRAGMENT_ARE_WE_IN, what);
 
         NothingHereFragment aNothingHereFragment = new NothingHereFragment();
         aNothingHereFragment.setArguments(data);
