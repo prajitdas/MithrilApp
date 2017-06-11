@@ -63,8 +63,8 @@
     <string name="dialog_resp_delete">Yes</string>
     <string name="dialog_resp_NO">No</string>
 
-    <string name="allow_generic_permissions">Permit access to device\'s\n* location,\n* storage and\n* calendar,\nfor complete functionality</string>
-    <string name="allow_special_usage_stats_permission">Permit access to\napp usage statistics,\nfor complete functionality</string>
+    <string name="allow_generic_permissions">For complete app functionality, permit access to device\'s\n* Location,\n* Storage and\n* Calendar</string>
+    <string name="allow_special_usage_stats_permission">For complete app functionality, permit access to device\'s\nApp usage stats</string>
     <string name="allow_access_fine_location_permission">ACCESS_FINE_LOCATION permission is mandatory for app functionality</string>
     <string name="allow_write_external_storage_permission">WRITE_EXTERNAL_STORAGE permission is mandatory for app functionality</string>
     <string name="allow_read_external_storage_permission">READ_EXTERNAL_STORAGE permission is mandatory for app functionality</string>
