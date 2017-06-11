@@ -27,7 +27,9 @@ public class PermissionHelper {
     private static final List<String> permissionsRequired = Arrays.asList(
             Manifest.permission.ACCESS_FINE_LOCATION,
             Manifest.permission.WRITE_EXTERNAL_STORAGE,
-            Manifest.permission.READ_EXTERNAL_STORAGE
+            Manifest.permission.READ_EXTERNAL_STORAGE,
+            Manifest.permission.READ_CALENDAR,
+            Manifest.permission.WRITE_CALENDAR
     );
 
     public static void quitMithril(Context context) {
