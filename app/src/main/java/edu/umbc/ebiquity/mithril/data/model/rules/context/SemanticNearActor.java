@@ -19,7 +19,7 @@ public class SemanticNearActor implements Parcelable, SemanticUserContext {
                 }
             };
     private String inferredRelationship;
-    private String type;
+    private final String type = MithrilApplication.getPrefKeyContextTypePresence();
 
     public SemanticNearActor(String aRelationship) {
         inferredRelationship = aRelationship;
@@ -70,11 +70,6 @@ public class SemanticNearActor implements Parcelable, SemanticUserContext {
     @Override
     public String getType() {
         return type;
-    }
-
-    @Override
-    public void setType() {
-        this.type = MithrilApplication.getPrefKeyContextTypeTemporal();
     }
 
     @Override

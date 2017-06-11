@@ -19,7 +19,7 @@ public class SemanticActivity implements Parcelable, SemanticUserContext {
                 }
             };
     private String inferredActivity;
-    private String type;
+    private final String type = MithrilApplication.getPrefKeyContextTypeActivity();
 
     public SemanticActivity(String inferredActivity) {
         setInferredActivity(inferredActivity);
@@ -72,11 +72,6 @@ public class SemanticActivity implements Parcelable, SemanticUserContext {
     @Override
     public String getType() {
         return type;
-    }
-
-    @Override
-    public void setType() {
-        this.type = MithrilApplication.getPrefKeyContextTypeActivity();
     }
 
     @Override

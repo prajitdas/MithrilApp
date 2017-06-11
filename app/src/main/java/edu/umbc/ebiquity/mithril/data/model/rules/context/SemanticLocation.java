@@ -28,7 +28,7 @@ public class SemanticLocation implements Parcelable, SemanticUserContext {
     private Location location;
     private Address address;
     private String inferredLocation;
-    private String type;
+    private final String type = MithrilApplication.getPrefKeyContextTypeLocation();
 
     public String getLocationDetails() {
         return locationDetails;
@@ -165,11 +165,6 @@ public class SemanticLocation implements Parcelable, SemanticUserContext {
     @Override
     public String getType() {
         return type;
-    }
-
-    @Override
-    public void setType() {
-        this.type = MithrilApplication.getPrefKeyContextTypeLocation();
     }
 
     @Override

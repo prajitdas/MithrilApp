@@ -14,13 +14,12 @@ public class SemanticTime implements Parcelable, SemanticUserContext {
     private Timestamp first;
     private long period;
     private String inferredTime;
-    private String type;
+    private final String type = MithrilApplication.getPrefKeyContextTypeTemporal();
 
     protected SemanticTime(Parcel in) {
         repeats = in.readByte() != 0;
         period = in.readLong();
         inferredTime = in.readString();
-        type = in.readString();
     }
 
     public static final Creator<SemanticTime> CREATOR = new Creator<SemanticTime>() {
@@ -41,7 +40,6 @@ public class SemanticTime implements Parcelable, SemanticUserContext {
         this.first = first;
         this.period = period;
         this.inferredTime = inferredTime;
-        this.type = MithrilApplication.getPrefKeyContextTypeTemporal();
     }
 
     public SemanticTime(boolean repeats, RepeatFrequency repeatFrequency, Timestamp first, String inferredTime) {
@@ -50,7 +48,6 @@ public class SemanticTime implements Parcelable, SemanticUserContext {
         this.first = first;
         this.period = MithrilApplication.getDefaultTimeSlot();
         this.inferredTime = inferredTime;
-        this.type = MithrilApplication.getPrefKeyContextTypeTemporal();
     }
 
     @Override
@@ -69,11 +66,6 @@ public class SemanticTime implements Parcelable, SemanticUserContext {
     @Override
     public String getType() {
         return null;
-    }
-
-    @Override
-    public void setType() {
-
     }
 
     @Override
@@ -124,10 +116,6 @@ public class SemanticTime implements Parcelable, SemanticUserContext {
 
     public void setInferredTime(String inferredTime) {
         this.inferredTime = inferredTime;
-    }
-
-    public void setType(String type) {
-        this.type = type;
     }
 
     @Override
