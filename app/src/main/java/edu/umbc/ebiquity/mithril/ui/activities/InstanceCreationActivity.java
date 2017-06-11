@@ -167,16 +167,20 @@ public class InstanceCreationActivity extends AppCompatActivity
             for (Map.Entry<String, ?> aPref : allPrefs.entrySet()) {
                 if (aPref.getKey().startsWith(MithrilApplication.getPrefKeyContextTypeLocation())) {
                     retrieveDataJson = sharedPreferences.getString(aPref.getKey(), "");
-                    semanticLocations.put(aPref.getKey(), retrieveDataGson.fromJson(retrieveDataJson, SemanticLocation.class));
+                    //Filtering out by location keys the main key starts from after the word "Location"
+                    semanticLocations.put(aPref.getKey().substring(8), retrieveDataGson.fromJson(retrieveDataJson, SemanticLocation.class));
                 } else if (aPref.getKey().startsWith(MithrilApplication.getPrefKeyContextTypeTemporal())) {
                     retrieveDataJson = sharedPreferences.getString(aPref.getKey(), "");
-                    semanticTimes.put(aPref.getKey(), retrieveDataGson.fromJson(retrieveDataJson, SemanticTime.class));
+                    //Filtering out by location keys the main key starts from after the word "Temporal"
+                    semanticTimes.put(aPref.getKey().substring(8), retrieveDataGson.fromJson(retrieveDataJson, SemanticTime.class));
                 } else if (aPref.getKey().startsWith(MithrilApplication.getPrefKeyContextTypePresence())) {
                     retrieveDataJson = sharedPreferences.getString(aPref.getKey(), "");
-                    semanticNearActors.put(aPref.getKey(), retrieveDataGson.fromJson(retrieveDataJson, SemanticNearActor.class));
+                    //Filtering out by location keys the main key starts from after the word "Presence"
+                    semanticNearActors.put(aPref.getKey().substring(8), retrieveDataGson.fromJson(retrieveDataJson, SemanticNearActor.class));
                 } else if (aPref.getKey().startsWith(MithrilApplication.getPrefKeyContextTypeActivity())) {
                     retrieveDataJson = sharedPreferences.getString(aPref.getKey(), "");
-                    semanticActivities.put(aPref.getKey(), retrieveDataGson.fromJson(retrieveDataJson, SemanticActivity.class));
+                    //Filtering out by location keys the main key starts from after the word "Activity"
+                    semanticActivities.put(aPref.getKey().substring(8), retrieveDataGson.fromJson(retrieveDataJson, SemanticActivity.class));
                 }
             }
         } catch (NullPointerException e) {
@@ -254,8 +258,8 @@ public class InstanceCreationActivity extends AppCompatActivity
         mFirstMajorCtxtBtn.setText(R.string.pref_home_location_summary);
         mSecondMajorCtxtBtn.setText(R.string.pref_work_location_summary);
 
-        if (!sharedPreferences.getBoolean(MithrilApplication.getPrefKeyInitInstancesCreated(), false))
-            PermissionHelper.toast(getApplicationContext(), getApplicationContext().getResources().getString(R.string.tooltip_location), Toast.LENGTH_SHORT);
+//        if (!sharedPreferences.getBoolean(MithrilApplication.getPrefKeyInitInstancesCreated(), false))
+        PermissionHelper.toast(getApplicationContext(), getApplicationContext().getResources().getString(R.string.tooltip_location), Toast.LENGTH_SHORT);
 
         currentFragment = FRAGMENT_LOCATION;
         loadSemanticLocationFragment();
@@ -269,8 +273,8 @@ public class InstanceCreationActivity extends AppCompatActivity
         mFirstMajorCtxtBtn.setText(R.string.pref_work_hours_context_summary);
         mSecondMajorCtxtBtn.setText(R.string.pref_DND_hours_context_summary);
 
-        if (!sharedPreferences.getBoolean(MithrilApplication.getPrefKeyInitInstancesCreated(), false))
-            PermissionHelper.toast(getApplicationContext(), getApplicationContext().getResources().getString(R.string.tooltip_temporal), Toast.LENGTH_SHORT);
+//        if (!sharedPreferences.getBoolean(MithrilApplication.getPrefKeyInitInstancesCreated(), false))
+        PermissionHelper.toast(getApplicationContext(), getApplicationContext().getResources().getString(R.string.tooltip_temporal), Toast.LENGTH_SHORT);
 
         currentFragment = FRAGMENT_TEMPORAL;
         loadSemanticTemporalFragment();
@@ -284,8 +288,8 @@ public class InstanceCreationActivity extends AppCompatActivity
         mFirstMajorCtxtBtn.setText(R.string.pref_presence_info_supervisor_summary);
         mSecondMajorCtxtBtn.setText(R.string.pref_presence_info_colleague_summary);
 
-        if (!sharedPreferences.getBoolean(MithrilApplication.getPrefKeyInitInstancesCreated(), false))
-            PermissionHelper.toast(getApplicationContext(), getApplicationContext().getResources().getString(R.string.tooltip_presence_related), Toast.LENGTH_SHORT);
+//        if (!sharedPreferences.getBoolean(MithrilApplication.getPrefKeyInitInstancesCreated(), false))
+        PermissionHelper.toast(getApplicationContext(), getApplicationContext().getResources().getString(R.string.tooltip_presence_related), Toast.LENGTH_SHORT);
 
         currentFragment = FRAGMENT_PRESENCE;
         loadSemanticPresenceFragment();
@@ -299,8 +303,8 @@ public class InstanceCreationActivity extends AppCompatActivity
         mFirstMajorCtxtBtn.setText(R.string.pref_personal_activity_context_title);
         mSecondMajorCtxtBtn.setText(R.string.pref_professional_activity_context_title);
 
-        if (!sharedPreferences.getBoolean(MithrilApplication.getPrefKeyInitInstancesCreated(), false))
-            PermissionHelper.toast(getApplicationContext(), getApplicationContext().getResources().getString(R.string.tooltip_activity), Toast.LENGTH_SHORT);
+//        if (!sharedPreferences.getBoolean(MithrilApplication.getPrefKeyInitInstancesCreated(), false))
+        PermissionHelper.toast(getApplicationContext(), getApplicationContext().getResources().getString(R.string.tooltip_activity), Toast.LENGTH_SHORT);
 
         currentFragment = FRAGMENT_ACTIVITY;
         loadSemanticActivityFragment();
@@ -792,12 +796,15 @@ public class InstanceCreationActivity extends AppCompatActivity
 
     private void getOtherSemanticLocationLabel(final Place place) {
         final ArrayAdapter<String> arrayAdapter = new ArrayAdapter<>(InstanceCreationActivity.this, android.R.layout.select_dialog_singlechoice);
-        arrayAdapter.add("Grocery Store");
-        arrayAdapter.add("Pub");
-        arrayAdapter.add("Restaurant");
-        arrayAdapter.add("Movie");
-        arrayAdapter.add("Mall");
-        arrayAdapter.add("Gym");
+        final String[] listOfLocationContextPiecesFromTheOntology = MithrilApplication.getContextArrayLocation();
+        for (int index = 0; index < listOfLocationContextPiecesFromTheOntology.length; index++)
+            arrayAdapter.add(listOfLocationContextPiecesFromTheOntology[index]);
+//        arrayAdapter.add("Grocery Store");
+//        arrayAdapter.add("Pub");
+//        arrayAdapter.add("Restaurant");
+//        arrayAdapter.add("Movie");
+//        arrayAdapter.add("Mall");
+//        arrayAdapter.add("Gym");
 
         AlertDialog.Builder dialog = new AlertDialog.Builder(InstanceCreationActivity.this);
         dialog.setIcon(R.drawable.map_marker);
@@ -1158,15 +1165,15 @@ public class InstanceCreationActivity extends AppCompatActivity
                     tempSemanticLocation = semanticLocation.getValue();
             tempSemanticLocation.setAddress(address);
             semanticLocations.put(key, tempSemanticLocation);
-            //Locations have been added; update view
-            loadSemanticLocationFragment();
 
             SharedPreferences.Editor editor = context.getSharedPreferences(MithrilApplication.getSharedPreferencesName(), Context.MODE_PRIVATE).edit();
-
             Gson storeDataGson = new Gson();
             String storeDataJson = storeDataGson.toJson(tempSemanticLocation);
-            editor.putString(key, storeDataJson);
+            editor.putString(MithrilApplication.getPrefKeyContextTypeLocation() + key, storeDataJson);
             editor.apply();
+
+            //Locations have been added; update view
+            loadSemanticLocationFragment();
         }
     }
 }

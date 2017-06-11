@@ -935,7 +935,7 @@ public class MithrilDBHelper extends SQLiteOpenHelper {
         return insertedRowId;
     }
 
-    public long addContext(SQLiteDatabase db, String label, String type) {
+    public long addContext(SQLiteDatabase db, String type, String label) {
         long insertedRowId;
         ContentValues values = new ContentValues();
         values.put(CONTEXTTYPE, type);
