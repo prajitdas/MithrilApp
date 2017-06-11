@@ -17,6 +17,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import java.io.UnsupportedEncodingException;
 import java.util.Arrays;
@@ -153,6 +154,7 @@ public class TestActivity extends AppCompatActivity {
 
             String type = intent.getType();
             if (MIME_TEXT_PLAIN.equals(type)) {
+                Toast.makeText(this, type, Toast.LENGTH_LONG).show();
 
                 Tag tag = intent.getParcelableExtra(NfcAdapter.EXTRA_TAG);
                 new NdefReaderTask().execute(tag);

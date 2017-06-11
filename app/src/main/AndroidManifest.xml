@@ -20,10 +20,20 @@
     <uses-permission
         android:name="android.permission.MANAGE_APP_OPS_RESTRICTIONS"
         tools:ignore="ProtectedPermissions" />
-    <!-- <uses-permission android:name="android.permission.GET_TASKS" /> -->
-    <!-- <uses-permission android:name="android.permission.WAKE_LOCK" /> -->
-    <!-- <uses-permission android:name="android.permission.READ_LOGS" /> -->
-
+    <!-- New version of GET_TASKS that apps can request, since GET_TASKS doesn't really
+     give access to task information.  We need this new one because there are
+     many existing apps that use add libraries and such that have validation
+     code to ensure the app has requested the GET_TASKS permission by seeing
+     if it has been granted the permission...  if it hasn't, it kills the app
+     with a message about being upset.  So we need to have it continue to look
+     like the app is getting that permission, even though it will never be
+     checked, and new privileged apps can now request this one for real access.
+     @SystemApi -->
+    <permission android:name="android.permission.REAL_GET_TASKS"
+        tools:ignore="ProtectedPermissions" />
+    <!-- @SystemApi Allows an application to read the low-level system log files. -->
+    <uses-permission android:name="android.permission.READ_LOGS"
+        tools:ignore="ProtectedPermissions" />
 
     <!-- dangerous permission type; request to be made explicitly; protectionLevel: PROTECTION_DANGEROUS; list as follows -->
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
@@ -32,6 +42,10 @@
     <uses-permission android:name="android.permission.READ_CALENDAR" />
     <uses-permission android:name="android.permission.WRITE_CALENDAR" />
 
+    <!-- PROTECTION_NORMAL -->
+    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.NFC" />
     <!--
         permissions automatically available to app; protectionLevel: PROTECTION_NORMAL; not a dangerous permission; list as follows:-
         ACCESS_LOCATION_EXTRA_COMMANDS
@@ -69,13 +83,11 @@
         WAKE_LOCK
         WRITE_SYNC_SETTINGS
     -->
-    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
-    <uses-permission android:name="android.permission.INTERNET" />
-    <uses-permission android:name="android.permission.NFC" />
 
-    <!-- <uses-feature -->
-    <!-- android:name="android.hardware.nfc" -->
-    <!-- android:required="true" /> -->
+    <uses-feature
+        android:name="android.hardware.nfc"
+        android:required="true" />
+
     <application
         android:icon="@mipmap/ic_launcher"
         android:label="@string/short_app_name"
