@@ -70,6 +70,8 @@ public class MithrilApplication extends Application {
 
     // Milliseconds per second
     private static final int MILLISECONDS_PER_SECOND = 1000;
+    // Default time slot of 1 hour in milliseconds
+    private static final long DEFAULT_TIME_SLOT = MILLISECONDS_PER_SECOND * 60 * 60;
     // Update frequency for app launch detection in seconds
     private static final int LAUNCH_DETECTION_INTERVAL_IN_SECONDS = 1;
     // Update frequency in milliseconds
@@ -707,6 +709,10 @@ public class MithrilApplication extends Application {
 
     public static String getPrefDndTemporalKey() {
         return PREF_DND_TEMPORAL_KEY;
+    }
+
+    public static long getDefaultTimeSlot() {
+        return DEFAULT_TIME_SLOT;
     }
 
     public static String getPrefKeyLocationInstancesHaveBeenSet() {

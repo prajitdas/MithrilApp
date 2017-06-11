@@ -1848,7 +1848,7 @@ public class MithrilDBHelper extends SQLiteOpenHelper {
     public void deleteRuleAction(SQLiteDatabase db, Action anAction) {
         try {
             db.delete(getActionLogTableName(), ACTIONID + " = ?",
-                    new String[]{String.valueOf(anAction.getStatusCode())});
+                    new String[]{String.valueOf(anAction.getActionString())});
         } catch (SQLException e) {
             throw new SQLException("Could not find " + e);
         }

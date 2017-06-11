@@ -10,12 +10,14 @@ import android.util.Log;
 
 import com.google.gson.Gson;
 
+import java.sql.Timestamp;
 import java.util.List;
 
 import edu.umbc.ebiquity.mithril.MithrilApplication;
 import edu.umbc.ebiquity.mithril.data.dbhelpers.MithrilDBHelper;
 import edu.umbc.ebiquity.mithril.data.model.rules.Action;
 import edu.umbc.ebiquity.mithril.data.model.rules.PolicyRule;
+import edu.umbc.ebiquity.mithril.data.model.rules.RepeatFrequency;
 import edu.umbc.ebiquity.mithril.data.model.rules.Violation;
 import edu.umbc.ebiquity.mithril.data.model.rules.context.SemanticLocation;
 import edu.umbc.ebiquity.mithril.data.model.rules.context.SemanticTime;
@@ -45,7 +47,8 @@ public class ViolationDetector {
             semanticUserContext = new SemanticLocation();
         //TODO FIX THIS!!!
         SemanticLocation semanticLocation = new SemanticLocation();
-        SemanticTime semanticTime = new SemanticTime("Lunch");
+        // TODO 1451649600 Is equivalent to: 01/01/2016 @ 12:00pm (UTC)
+        SemanticTime semanticTime = new SemanticTime(false, RepeatFrequency.WEEKDAYS, new Timestamp(1451649600), "Lunch");
         // getLocality() ("Mountain View", for example)
         // getAdminArea() ("CA", for example)
         // getPostalCode() ("94043", for example)
