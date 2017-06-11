@@ -63,10 +63,13 @@
     <string name="dialog_resp_delete">Yes</string>
     <string name="dialog_resp_NO">No</string>
 
-    <string name="allow_generic_permissions">Permit access to user calendar, device storage and location, required for app functionality</string>
-    <string name="allow_special_usage_stats_permission">Permit access to app usage statistics, required for app functionality</string>
+    <string name="allow_generic_permissions">Permit access to device\'s\n* location,\n* storage and\n* calendar,\nfor complete functionality</string>
+    <string name="allow_special_usage_stats_permission">Permit access to\napp usage statistics,\nfor complete functionality</string>
     <string name="allow_access_fine_location_permission">ACCESS_FINE_LOCATION permission is mandatory for app functionality</string>
     <string name="allow_write_external_storage_permission">WRITE_EXTERNAL_STORAGE permission is mandatory for app functionality</string>
+    <string name="allow_read_external_storage_permission">READ_EXTERNAL_STORAGE permission is mandatory for app functionality</string>
+    <string name="allow_read_calendar_permission">READ_CALENDAR permission is mandatory for app functionality</string>
+    <string name="allow_write_calendar_permission">WRITE_CALENDAR permission is mandatory for app functionality</string>
     <string name="allow_usage_stats_permission">PACKAGE_USAGE_STATS permission required, please enable in settings</string>
     <string name="dialog_resp_allow">@android:string/ok</string>
     <string name="dialog_resp_deny">@android:string/cancel</string>

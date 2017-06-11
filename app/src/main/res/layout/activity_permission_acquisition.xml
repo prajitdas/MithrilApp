@@ -20,7 +20,7 @@
         <TextView
             android:id="@+id/genericPermTextView"
             android:layout_width="0dp"
-            android:layout_height="120dp"
+            android:layout_height="200dp"
             android:layout_weight="1"
             android:text="@string/allow_generic_permissions"
             android:textAppearance="@android:style/TextAppearance.Holo.Medium"
@@ -38,7 +38,7 @@
     <LinearLayout
         android:id="@+id/specialPerm"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="200dp"
         android:layout_below="@+id/genericPerm"
         android:orientation="horizontal"
         android:paddingBottom="@dimen/fab_margin"
@@ -49,7 +49,7 @@
         <TextView
             android:id="@+id/specialPermTextView"
             android:layout_width="0dp"
-            android:layout_height="120dp"
+            android:layout_height="wrap_content"
             android:layout_weight="1"
             android:text="@string/allow_special_usage_stats_permission"
             android:textAppearance="@android:style/TextAppearance.Holo.Medium"
