@@ -48,7 +48,7 @@ public class ViolationRecyclerViewAdapter extends RecyclerView.Adapter<Violation
 
         holder.mItem = mValues.get(position);
         holder.mViolatingAppIcon.setImageDrawable(drawable);
-        holder.mViolationText.setText(mValues.get(position).getViolationDescription());
+        holder.mViolationText.setText(mValues.get(position).getDesc());
         holder.mContextImage.setImageDrawable(drawable);
         holder.mResponseYesButton.setOnClickListener(new View.OnClickListener() {
             @Override

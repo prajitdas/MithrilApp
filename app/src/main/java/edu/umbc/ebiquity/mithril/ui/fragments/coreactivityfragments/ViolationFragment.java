@@ -37,10 +37,10 @@ public class ViolationFragment extends Fragment {
      * An array of violation items.
      */
     public List<Violation> violationItems = new ArrayList<Violation>();
-    /**
-     * A map of violation items, by ID.
-     */
-    public Map<Integer, Violation> violationItemsMap = new HashMap<Integer, Violation>();
+//    /**
+//     * A map of violation items, by ID.
+//     */
+//    public Map<String, Violation> violationItemsMap = new HashMap<>();
     private SQLiteDatabase mithrilDB;
     private View view;
     // TODO: Customize parameters
@@ -120,9 +120,9 @@ public class ViolationFragment extends Fragment {
         */
         violationItems.clear();
 
-        // Add some violation items.
-        for (Violation item : violationItems)
-            violationItemsMap.put(item.getId(), item);
+//        // Add some violation items.
+//        for (Violation item : violationItems)
+//            violationItemsMap.put(item.getDesc(), item);
         closeDB();
     }
 
