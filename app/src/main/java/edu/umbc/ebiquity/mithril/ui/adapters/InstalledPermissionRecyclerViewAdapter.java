@@ -49,8 +49,6 @@ public class InstalledPermissionRecyclerViewAdapter extends RecyclerView.Adapter
             holder.mPermIcon.setImageDrawable(context.getResources().getDrawable(R.drawable.calendar, context.getTheme()));
         else if (mValues.get(position).equals(MithrilApplication.CAMERA_PERMISSION_GROUP))
             holder.mPermIcon.setImageDrawable(context.getResources().getDrawable(R.drawable.camera, context.getTheme()));
-        else if (mValues.get(position).equals(MithrilApplication.CONTACTS_PERMISSION_GROUP))
-            holder.mPermIcon.setImageDrawable(context.getResources().getDrawable(R.drawable.contacts, context.getTheme()));
         else if (mValues.get(position).equals(MithrilApplication.LOCATION_PERMISSION_GROUP))
             holder.mPermIcon.setImageDrawable(context.getResources().getDrawable(R.drawable.map_marker, context.getTheme()));
         else if (mValues.get(position).equals(MithrilApplication.MICROPHONE_PERMISSION_GROUP))
