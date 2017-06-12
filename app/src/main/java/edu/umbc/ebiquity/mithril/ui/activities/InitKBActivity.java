@@ -55,9 +55,8 @@ public class InitKBActivity extends AppCompatActivity {
         // Start lengthy operation in a background thread
         new Thread(new Runnable() {
             public void run() {
-                SQLiteDatabase mithrilDB;
                 // We have it here so that we can just load the animation running first time the db instances are loaded
-                mithrilDB = MithrilDBHelper.getHelper(getApplicationContext()).getWritableDatabase();
+                SQLiteDatabase mithrilDB = MithrilDBHelper.getHelper(getApplicationContext()).getWritableDatabase();
                 if (mithrilDB != null)
                     mithrilDB.close();
                 handler.sendEmptyMessage(KBLOADED);

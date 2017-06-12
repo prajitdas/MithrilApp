@@ -164,7 +164,7 @@ public class UsageStatsFragment extends Fragment {
                  */
                 List<Resource> tempListOfResource = new ArrayList<>();
                 String lastPermGroup = "";
-                List<AppOpsState.AppOpEntry> entries = mState.buildState(AppOpsState.LOCATION_TEMPLATE,
+                List<AppOpsState.AppOpEntry> entries = mState.buildState(AppOpsState.ALL_OPS_TEMPLATE,
                         appInfo.uid, usageStat.getPackageName());
                 Log.d(MithrilApplication.getDebugTag(), "Whoa!"+Integer.toString(entries.size()));
                 for (final AppOpsState.AppOpEntry entry : entries) {
@@ -174,7 +174,9 @@ public class UsageStatsFragment extends Fragment {
                     if (perm != null) {
                         try {
                             PermissionInfo pi = mPm.getPermissionInfo(perm, 0);
-                            tempRes.setResourceName(pi.packageName);
+//                            tempRes.setResourceName(pi.packageName);
+                            // We care about the resource group because that tells us what was used!
+                            tempRes.setResourceName(pi.group);
                             if (pi.group != null && !lastPermGroup.equals(pi.group)) {
                                 lastPermGroup = pi.group;
                                 PermissionGroupInfo pgi = mPm.getPermissionGroupInfo(pi.group, 0);

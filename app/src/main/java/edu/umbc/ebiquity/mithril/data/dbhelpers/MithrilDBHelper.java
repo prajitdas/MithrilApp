@@ -518,16 +518,13 @@ public class MithrilDBHelper extends SQLiteOpenHelper {
         loadRealAppDataIntoDB(db);
         //We have to get the policies from somewhere. The best case scenario would be a server that gives us the policies.
         loadPoliciesForApps(db);
-        //The following method loads the database with the default dummy data on creation of the database
-        //THIS SHOULD NOT BE USED ANYMORE
-        loadDefaultDataIntoDB(db);
     }
 
     public void loadDefaultDataIntoDB(SQLiteDatabase db) {
-        DataGenerator.generateSocialMediaCameraAccessRuleForHome(db, context);
-        DataGenerator.generateSocialMediaLocationAccessRuleForHome(db, context);
-        DataGenerator.generateSocialMediaCameraAccessRuleForWork(db, context);
-        DataGenerator.generateSocialMediaLocationAccessRuleForWork(db, context);
+        addPolicyRule(db, DataGenerator.generateSocialMediaCameraAccessRuleForHome(db, context));
+        addPolicyRule(db, DataGenerator.generateSocialMediaLocationAccessRuleForHome(db, context));
+        addPolicyRule(db, DataGenerator.generateSocialMediaCameraAccessRuleForWork(db, context));
+        addPolicyRule(db, DataGenerator.generateSocialMediaLocationAccessRuleForWork(db, context));
     }
 
     private void insertHardcodedGooglePermissions(SQLiteDatabase db) {
@@ -561,6 +558,7 @@ public class MithrilDBHelper extends SQLiteOpenHelper {
                         addPermission(db, getPermData(packageManager, permissionInfo));
                     else
                         addPermission(db, getPermData(packageManager, groupName, permissionInfo));
+                    Log.d(MithrilApplication.getDebugTag(), "Found permission: "+permissionInfo.packageName);
                 }
             } catch (NameNotFoundException exception) {
                 Log.e(MithrilApplication.getDebugTag(), "Some error due to " + exception.getMessage());
@@ -605,6 +603,7 @@ public class MithrilDBHelper extends SQLiteOpenHelper {
 
                         //App package name
                         tempAppData.setPackageName(pack.packageName);
+//                        Log.d(MithrilApplication.getDebugTag(), "Inserting app: "+pack.packageName+" into the DB!");
 
                         //App version info
                         tempAppData.setVersionInfo(pack.versionName);
@@ -625,11 +624,11 @@ public class MithrilDBHelper extends SQLiteOpenHelper {
                         if (pack.requestedPermissions != null) {
                             Map<String, Boolean> requestedPermissionsMap = new HashMap<>();
                             for (String packagePermission : pack.requestedPermissions) {
-                                requestedPermissionsMap.put(packagePermission,
-                                        appOpsManager.checkOpNoThrow(
-                                                packagePermission,
-                                                packageManager.getApplicationInfo(pack.packageName, PackageManager.GET_META_DATA).uid,
-                                                pack.packageName) != 0
+                                requestedPermissionsMap.put(packagePermission, true
+//                                        appOpsManager.checkOpNoThrow(
+//                                                packagePermission,
+//                                                packageManager.getApplicationInfo(pack.packageName, PackageManager.GET_META_DATA).uid,
+//                                                pack.packageName) != 0
                                 );
                                 /*
                                  * The following fix is no longer required. There was a flaw in insert permission we should have used insertOrThrow
@@ -904,7 +903,7 @@ public class MithrilDBHelper extends SQLiteOpenHelper {
                     try {
                         permissionInfo = packageManager.getPermissionInfo(appPermission.getKey(), flags);
                     } catch (NameNotFoundException e) {
-                        Log.e(MithrilApplication.getDebugTag(), "Something wrong " + e.getMessage());
+                        Log.e(MithrilApplication.getDebugTag(), "Permission NameNotFoundException for: " + e.getMessage());
                         continue;
                         //TODO This is a big problem. Why are we not getting the permission info for certain installed permissions???
                     }

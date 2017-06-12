@@ -4,6 +4,7 @@ import android.Manifest;
 import android.app.AppOpsManager;
 import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
+import android.util.Log;
 
 import edu.umbc.ebiquity.mithril.MithrilApplication;
 import edu.umbc.ebiquity.mithril.data.dbhelpers.MithrilDBHelper;
@@ -22,6 +23,7 @@ public class DataGenerator {
     }
 
     public static PolicyRule generateSocialMediaLocationAccessRuleForHome(SQLiteDatabase mithrilDB, Context context) {
+        Log.d(MithrilApplication.getDebugTag(), MithrilApplication.getPrefHomeLocationKey()+MithrilApplication.getPrefKeyContextTypeLocation());
         return new PolicyRule("SocialMediaLocationAccessRuleForHome",
                 MithrilDBHelper.getHelper(context).findContextIdByLabelAndType(mithrilDB,
                         MithrilApplication.getPrefHomeLocationKey(),

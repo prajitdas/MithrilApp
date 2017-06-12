@@ -31,6 +31,13 @@ public class DownloadPoliciesActivity extends AppCompatActivity {
                     SharedPreferences.Editor editor = getSharedPreferences(MithrilApplication.getSharedPreferencesName(), Context.MODE_PRIVATE).edit();
                     editor.putBoolean(MithrilApplication.getPrefKeyPoliciesDownloaded(), true);
                     editor.apply();
+
+                    SQLiteDatabase mithrilDB = MithrilDBHelper.getHelper(getApplicationContext()).getWritableDatabase();
+                    //The following method loads the database with the default dummy data on creation of the database
+                    //THIS SHOULD NOT BE USED ANYMORE
+                    MithrilDBHelper.getHelper(getApplicationContext()).loadDefaultDataIntoDB(mithrilDB);
+                    if (mithrilDB != null)
+                        mithrilDB.close();
                     startNextActivity(getApplicationContext(), CoreActivity.class);
                 }
             }

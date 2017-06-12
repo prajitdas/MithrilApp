@@ -61,8 +61,8 @@ public class UsageStatsRecyclerViewAdapter extends RecyclerView.Adapter<UsageSta
             holder.mAppLbl.setText(applicationInfo != null ? context.getPackageManager().getApplicationLabel(applicationInfo) : "Some app");
 
             holder.mAppUsageDetail.setText(getStringForHowLongWasUsed(mValues.get(position).getTotalTimeInForeground()));
-
             holder.mAppLastUsedTime.setText(getStringForLastTimeUsed(mValues.get(position).getLastTimeUsed()));
+            holder.mResourceUsed.setText(mValues.get(position).getResourcesUsedString());
 
             holder.mView.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -152,6 +152,7 @@ public class UsageStatsRecyclerViewAdapter extends RecyclerView.Adapter<UsageSta
         public final TextView mAppLbl;
         public final TextView mAppUsageDetail;
         public final TextView mAppLastUsedTime;
+        public final TextView mResourceUsed;
         public AppUsageStats mItem;
 
         public ViewHolder(View view) {
@@ -161,6 +162,7 @@ public class UsageStatsRecyclerViewAdapter extends RecyclerView.Adapter<UsageSta
             mAppLbl = (TextView) view.findViewById(R.id.usagestats_app_name);
             mAppUsageDetail = (TextView) view.findViewById(R.id.usagestats_app_usage);
             mAppLastUsedTime = (TextView) view.findViewById(R.id.usagestats_app_last_launch);
+            mResourceUsed = (TextView) view.findViewById(R.id.resourceUsed);
         }
 
         @Override
