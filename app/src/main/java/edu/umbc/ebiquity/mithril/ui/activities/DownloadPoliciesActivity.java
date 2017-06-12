@@ -3,11 +3,13 @@ package edu.umbc.ebiquity.mithril.ui.activities;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.View;
 
 import edu.umbc.ebiquity.mithril.MithrilApplication;
@@ -32,12 +34,16 @@ public class DownloadPoliciesActivity extends AppCompatActivity {
                     editor.putBoolean(MithrilApplication.getPrefKeyPoliciesDownloaded(), true);
                     editor.apply();
 
-                    SQLiteDatabase mithrilDB = MithrilDBHelper.getHelper(getApplicationContext()).getWritableDatabase();
-                    //The following method loads the database with the default dummy data on creation of the database
-                    //THIS SHOULD NOT BE USED ANYMORE
-                    MithrilDBHelper.getHelper(getApplicationContext()).loadDefaultDataIntoDB(mithrilDB);
-                    if (mithrilDB != null)
-                        mithrilDB.close();
+                    try {
+                        SQLiteDatabase mithrilDB = MithrilDBHelper.getHelper(getApplicationContext()).getWritableDatabase();
+                        //The following method loads the database with the default dummy data on creation of the database
+                        //THIS SHOULD NOT BE USED ANYMORE
+                        MithrilDBHelper.getHelper(getApplicationContext()).loadDefaultDataIntoDB(mithrilDB);
+                        if (mithrilDB != null)
+                            mithrilDB.close();
+                    } catch (SQLException e) {
+                        Log.e(MithrilApplication.getDebugTag(), "Must have already inserted the policy!"+e.getMessage());
+                    }
                     startNextActivity(getApplicationContext(), CoreActivity.class);
                 }
             }

@@ -521,7 +521,7 @@ public class MithrilDBHelper extends SQLiteOpenHelper {
         loadPoliciesForApps(db);
     }
 
-    public void loadDefaultDataIntoDB(SQLiteDatabase db) {
+    public void loadDefaultDataIntoDB(SQLiteDatabase db) throws SQLException {
         addPolicyRule(db, DataGenerator.generateSocialMediaCameraAccessRuleForHome(db, context));
         addPolicyRule(db, DataGenerator.generateSocialMediaLocationAccessRuleForHome(db, context));
         addPolicyRule(db, DataGenerator.generateSocialMediaCameraAccessRuleForWork(db, context));
@@ -996,7 +996,7 @@ public class MithrilDBHelper extends SQLiteOpenHelper {
      * @param aPolicyRule
      * @return
      */
-    public long addPolicyRule(SQLiteDatabase db, PolicyRule aPolicyRule) {
+    public long addPolicyRule(SQLiteDatabase db, PolicyRule aPolicyRule) throws SQLException {
         long insertedRowId;
         ContentValues values = new ContentValues();
         values.put(POLRULNAME, aPolicyRule.getName());
@@ -1007,12 +1007,7 @@ public class MithrilDBHelper extends SQLiteOpenHelper {
         values.put(POLRULAPPID, aPolicyRule.getAppId());
         values.put(POLRULCTXID, aPolicyRule.getCtxId());
         values.put(POLRULOP, aPolicyRule.getOp());
-        try {
-            insertedRowId = db.insertOrThrow(getPolicyRulesTableName(), null, values);
-        } catch (SQLException e) {
-            Log.e(MithrilApplication.getDebugTag(), "Error inserting " + values, e);
-            return -1;
-        }
+        insertedRowId = db.insertOrThrow(getPolicyRulesTableName(), null, values);
         return insertedRowId;
     }
 
