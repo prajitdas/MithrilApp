@@ -103,6 +103,7 @@ public class ViolationDetector {
             //No rules found! We have a violation...
             if (rulesForApp.size() > 0) {
                 for (PolicyRule rule : rulesForApp) {
+                    Log.d(MithrilApplication.getDebugTag(), "Found rule: "+rule.getName());
                     if (rule.getAction().equals(Action.ALLOW)) {
 //                        Violation violation;
 //                        //Is this allowed?

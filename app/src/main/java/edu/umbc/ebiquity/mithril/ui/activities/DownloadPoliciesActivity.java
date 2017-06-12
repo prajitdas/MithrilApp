@@ -33,17 +33,6 @@ public class DownloadPoliciesActivity extends AppCompatActivity {
                     SharedPreferences.Editor editor = getSharedPreferences(MithrilApplication.getSharedPreferencesName(), Context.MODE_PRIVATE).edit();
                     editor.putBoolean(MithrilApplication.getPrefKeyPoliciesDownloaded(), true);
                     editor.apply();
-
-                    try {
-                        SQLiteDatabase mithrilDB = MithrilDBHelper.getHelper(getApplicationContext()).getWritableDatabase();
-                        //The following method loads the database with the default dummy data on creation of the database
-                        //THIS SHOULD NOT BE USED ANYMORE
-                        MithrilDBHelper.getHelper(getApplicationContext()).loadDefaultDataIntoDB(mithrilDB);
-                        if (mithrilDB != null)
-                            mithrilDB.close();
-                    } catch (SQLException e) {
-                        Log.e(MithrilApplication.getDebugTag(), "Must have already inserted the policy!"+e.getMessage());
-                    }
                     startNextActivity(getApplicationContext(), CoreActivity.class);
                 }
             }
@@ -73,16 +62,20 @@ public class DownloadPoliciesActivity extends AppCompatActivity {
         // Start lengthy operation in a background thread
         new Thread(new Runnable() {
             public void run() {
-                SQLiteDatabase mithrilDB;
-                // We have it here so that we can just load the animation running first time the db instances are loaded
-                mithrilDB = MithrilDBHelper.getHelper(getApplicationContext()).getWritableDatabase();
-                /**
-                 * This is where we will download policy data from the server but for now we will simply load the database with the policies manually
-                 */
-                MithrilDBHelper.getHelper(getApplicationContext()).loadDefaultDataIntoDB(mithrilDB);
-                if (mithrilDB != null)
-                    mithrilDB.close();
-                handler.sendEmptyMessage(POLICIESLOADED);
+                try {
+                    SQLiteDatabase mithrilDB;
+                    // We have it here so that we can just load the animation running first time the db instances are loaded
+                    mithrilDB = MithrilDBHelper.getHelper(getApplicationContext()).getWritableDatabase();
+                    /**
+                     * This is where we will download policy data from the server but for now we will simply load the database with the policies manually
+                     */
+                    MithrilDBHelper.getHelper(getApplicationContext()).loadDefaultDataIntoDB(mithrilDB);
+                    if (mithrilDB != null)
+                        mithrilDB.close();
+                } catch (SQLException e) {
+                    Log.e(MithrilApplication.getDebugTag(), "Must have already inserted the policy!"+e.getMessage());
+                }
+                handler.sendEmptyMessageDelayed(POLICIESLOADED, MithrilApplication.getMillisecondsPerSecond() * 5);
             }
         }).start();
     }
