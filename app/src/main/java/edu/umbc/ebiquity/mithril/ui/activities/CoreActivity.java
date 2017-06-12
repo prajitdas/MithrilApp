@@ -617,12 +617,7 @@ public class CoreActivity extends AppCompatActivity
          * We find out how many violations are there in the database.
          * If there are none, we will load the EmptyFragment
          */
-        violationItems = MithrilDBHelper.getHelper(this).findAllViolations(mithrilDB);
-        if (violationItems != null)
-            Log.d(MithrilApplication.getDebugTag(), "Number of violations" + Integer.toString(violationItems.size()));
-        else
-            Log.d(MithrilApplication.getDebugTag(), "Null");
-        return !(violationItems == null || violationItems.size() > 0);
+        return MithrilDBHelper.getHelper(this).findAllViolations(mithrilDB).size() <= 0;
     }
 
     private void copyAssets(File parent, String child) {

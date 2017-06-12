@@ -98,9 +98,8 @@ public class ViolationFragment extends Fragment {
         initDB(view.getContext());
         violationItems = MithrilDBHelper.getHelper(view.getContext()).findAllViolations(mithrilDB);
 
-        //TODO remove this later. This is for demo purposes.
-        SharedPreferences sharedPref = getActivity().getSharedPreferences(MithrilApplication.getSharedPreferencesName(), Context.MODE_PRIVATE);
-        String appPkgName = sharedPref.getString(MithrilApplication.getPrefKeyAppPkgName(), "Youtube");
+//        SharedPreferences sharedPref = getActivity().getSharedPreferences(MithrilApplication.getSharedPreferencesName(), Context.MODE_PRIVATE);
+//        String appPkgName = sharedPref.getString(MithrilApplication.getPrefKeyAppPkgName(), "Youtube");
         /*
         if (appPkgName.equals("com.google.android.youtube") &&
                 sharedPref.contains(MithrilApplication.getPrefKeyCurrentTime()))
@@ -118,12 +117,11 @@ public class ViolationFragment extends Fragment {
                     sharedPref.getString(MithrilApplication.getPrefKeyCurrentLocation(), "location"), 1, 1, true));
         else
         */
-        violationItems.clear();
+//        violationItems.clear();
 
 //        // Add some violation items.
 //        for (Violation item : violationItems)
 //            violationItemsMap.put(item.getDesc(), item);
-        closeDB();
     }
 
     @Override
@@ -141,6 +139,7 @@ public class ViolationFragment extends Fragment {
     public void onDetach() {
         super.onDetach();
         mListener = null;
+        closeDB();
     }
 
     private void initDB(Context context) {

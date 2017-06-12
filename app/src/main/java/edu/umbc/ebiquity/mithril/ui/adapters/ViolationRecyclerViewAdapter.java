@@ -1,18 +1,23 @@
 package edu.umbc.ebiquity.mithril.ui.adapters;
 
 import android.content.res.Resources;
+import android.database.sqlite.SQLiteDatabase;
 import android.graphics.drawable.Drawable;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 
 import java.util.List;
 
+import edu.umbc.ebiquity.mithril.MithrilApplication;
 import edu.umbc.ebiquity.mithril.R;
+import edu.umbc.ebiquity.mithril.data.dbhelpers.MithrilDBHelper;
+import edu.umbc.ebiquity.mithril.data.model.components.AppData;
 import edu.umbc.ebiquity.mithril.data.model.rules.Violation;
 import edu.umbc.ebiquity.mithril.ui.fragments.coreactivityfragments.ViolationFragment.OnListFragmentInteractionListener;
 import edu.umbc.ebiquity.mithril.util.specialtasks.permissions.PermissionHelper;
@@ -42,14 +47,16 @@ public class ViolationRecyclerViewAdapter extends RecyclerView.Adapter<Violation
 
     @Override
     public void onBindViewHolder(final ViewHolder holder, int position) {
-        Resources res = view.getContext().getResources();
-        Drawable drawable;
-        drawable = res.getDrawable(R.drawable.ic_launcher, view.getContext().getTheme());
+//        Resources res = view.getContext().getResources();
+//        Drawable drawable;
+//        drawable = res.getDrawable(R.drawable.ic_launcher, view.getContext().getTheme());
+
+        SQLiteDatabase mithrilDB = MithrilDBHelper.getHelper(view.getContext()).getWritableDatabase();
+        AppData violatingApp = MithrilDBHelper.getHelper(view.getContext()).findAppById(mithrilDB, mValues.get(position).getAppId());
 
         holder.mItem = mValues.get(position);
-        holder.mViolatingAppIcon.setImageDrawable(drawable);
-        holder.mViolationText.setText(mValues.get(position).getDesc());
-        holder.mContextImage.setImageDrawable(drawable);
+        holder.mViolatingAppIcon.setImageBitmap(violatingApp.getIcon());
+        holder.mViolationText.setText(violatingApp.getAppName() + " " + mValues.get(position).getDesc());
         holder.mResponseYesButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -84,9 +91,8 @@ public class ViolationRecyclerViewAdapter extends RecyclerView.Adapter<Violation
         private final View mView;
         private final ImageView mViolatingAppIcon;
         private final TextView mViolationText;
-        private final ImageView mContextImage;
-        private final Button mResponseYesButton;
-        private final Button mResponseNoButton;
+        private final ImageButton mResponseYesButton;
+        private final ImageButton mResponseNoButton;
 
         private Violation mItem;
 
@@ -95,9 +101,8 @@ public class ViolationRecyclerViewAdapter extends RecyclerView.Adapter<Violation
             mView = view;
             mViolatingAppIcon = (ImageView) view.findViewById(R.id.violatingAppIcon);
             mViolationText = (TextView) view.findViewById(R.id.violationText);
-            mContextImage = (ImageView) view.findViewById(R.id.contextImage);
-            mResponseYesButton = (Button) view.findViewById(R.id.mResponseYesButton);
-            mResponseNoButton = (Button) view.findViewById(R.id.responseNoButton);
+            mResponseYesButton = (ImageButton) view.findViewById(R.id.mResponseYesButton);
+            mResponseNoButton = (ImageButton) view.findViewById(R.id.responseNoButton);
         }
 
         @Override

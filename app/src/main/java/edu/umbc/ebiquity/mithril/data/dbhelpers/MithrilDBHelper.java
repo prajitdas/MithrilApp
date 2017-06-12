@@ -1182,7 +1182,6 @@ public class MithrilDBHelper extends SQLiteOpenHelper {
                 getAppsTableName() + "." + APPNAME + ", " +
                 getAppsTableName() + "." + APPPACKAGENAME + ", " +
                 getAppsTableName() + "." + APPVERSIONINFO + ", " +
-                getAppsTableName() + "." + APPINSTALLED + ", " +
                 getAppsTableName() + "." + APPTYPE + ", " +
                 getAppsTableName() + "." + APPUID +
                 " FROM " + getAppsTableName() +
@@ -1203,7 +1202,7 @@ public class MithrilDBHelper extends SQLiteOpenHelper {
                         cursor.getString(5),
                         cursor.getString(6),
                         cursor.getString(7),
-                        Integer.parseInt(cursor.getString(8))
+                        cursor.getInt(8)
                 );
             }
         } catch (SQLException e) {
