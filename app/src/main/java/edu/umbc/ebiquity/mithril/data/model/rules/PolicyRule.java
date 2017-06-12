@@ -1,7 +1,6 @@
 package edu.umbc.ebiquity.mithril.data.model.rules;
 
 public class PolicyRule {
-    private int id;
     private String name;
     private int ctxId;
     private int appId;
@@ -18,14 +17,6 @@ public class PolicyRule {
 
     public PolicyRule() {
 
-    }
-
-    public int getId() {
-        return id;
-    }
-
-    public void setId(int id) {
-        this.id = id;
     }
 
     public String getName() {
@@ -75,7 +66,6 @@ public class PolicyRule {
 
         PolicyRule that = (PolicyRule) o;
 
-        if (getId() != that.getId()) return false;
         if (getCtxId() != that.getCtxId()) return false;
         if (getAppId() != that.getAppId()) return false;
         if (getOp() != that.getOp()) return false;
@@ -85,8 +75,7 @@ public class PolicyRule {
 
     @Override
     public int hashCode() {
-        int result = getId();
-        result = 31 * result + getName().hashCode();
+        int result = getName().hashCode();
         result = 31 * result + getCtxId();
         result = 31 * result + getAppId();
         result = 31 * result + getOp();
@@ -97,8 +86,7 @@ public class PolicyRule {
     @Override
     public String toString() {
         return "PolicyRule{" +
-                "id=" + id +
-                ", name='" + name + '\'' +
+                "name='" + name + '\'' +
                 ", ctxId=" + ctxId +
                 ", appId=" + appId +
                 ", op=" + op +
