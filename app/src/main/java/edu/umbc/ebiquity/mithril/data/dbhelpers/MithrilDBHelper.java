@@ -268,21 +268,24 @@ public class MithrilDBHelper extends SQLiteOpenHelper {
      ALTER TABLE violationlog ADD CONSTRAINT violationlog_context FOREIGN KEY violationlog_context (context_id)
      REFERENCES context (id);
      */
-    private final static String VIOLATIONID = "id"; // ID of violation captured
+//    private final static String VIOLATIONID = "id"; // ID of violation captured
     private final static String VIOLATIONAPPID = "appid";
     private final static String VIOLATIONCTXID = "contextid";
+    private final static String VIOLATIONOPERATION = "operation";
     private final static String VIOLATIONDESC = "description"; // An appropriate description of the violation. No idea how this will be generated but
     // This will be a general text that will have to be "reasoned" about!
     // If this says policy is applicable @home then we have to be able to determine that context available represents "home"
     private final static String VIOLATIONMARKER = "marker";
     private final static String VIOLATIONTIME = "time";
     private final static String CREATE_VIOLATIONS_LOG_TABLE = "CREATE TABLE " + getViolationsLogTableName() + " (" +
-            VIOLATIONID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
+//            VIOLATIONID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
             VIOLATIONAPPID + " INTEGER NOT NULL, " +
             VIOLATIONCTXID + " INTEGER NOT NULL, " +
+            VIOLATIONOPERATION + " INTEGER NOT NULL, " +
             VIOLATIONDESC + " TEXT, " +
             VIOLATIONMARKER + " INTEGER NOT NULL DEFAULT 0, " +
             VIOLATIONTIME + " timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP, " +
+            "PRIMARY KEY("+VIOLATIONAPPID+", "+VIOLATIONCTXID+", "+VIOLATIONOPERATION+"), " +
             "FOREIGN KEY(" + VIOLATIONAPPID + ") REFERENCES " + getAppsTableName() + "(" + APPID + ") ON DELETE CASCADE, " +
             "FOREIGN KEY(" + VIOLATIONCTXID + ") REFERENCES " + getContextTableName() + "(" + CONTEXTID + ")" +
             ");";
@@ -1556,7 +1559,7 @@ public class MithrilDBHelper extends SQLiteOpenHelper {
      * @param db database instance
      * @return all policies
      */
-    public ArrayList<PolicyRule> findAllPoliciesByAppPkgName(SQLiteDatabase db, String appPkgName) {
+    public ArrayList<PolicyRule> findAllPoliciesForApp(SQLiteDatabase db, String appPkgName) {
         ArrayList<PolicyRule> policyRules = new ArrayList<>();
         // Select Policy Query
         String selectQuery = "SELECT " +
@@ -1581,14 +1584,14 @@ public class MithrilDBHelper extends SQLiteOpenHelper {
             if (cursor.moveToFirst()) {
                 do {
                     PolicyRule policyRule = new PolicyRule();
-                    policyRule.setName(cursor.getString(1));
-                    policyRule.setAppId(Integer.parseInt(cursor.getString(2)));
-                    policyRule.setCtxId(Integer.parseInt(cursor.getString(3)));
-                    if (Integer.parseInt(cursor.getString(4)) == 1)
+                    policyRule.setName(cursor.getString(0));
+                    policyRule.setAppId(Integer.parseInt(cursor.getString(1)));
+                    policyRule.setCtxId(Integer.parseInt(cursor.getString(2)));
+                    if (Integer.parseInt(cursor.getString(3)) == 1)
                         policyRule.setAction(Action.ALLOW);
                     else
                         policyRule.setAction(Action.DENY);
-                    policyRule.setOp(cursor.getInt(5));
+                    policyRule.setOp(cursor.getInt(4));
 
                     // Adding policies to list
                     policyRules.add(policyRule);
@@ -1604,12 +1607,12 @@ public class MithrilDBHelper extends SQLiteOpenHelper {
     }
 
     /**
-     * Finds a policy based on the policy id
+     * Finds a policy based on the application being accessed
      * @param db database instance
-     * @param id policy id
-     * @return policy info
+     * @return all policies
      */
-    public PolicyRule findPolicyByName(SQLiteDatabase db, String name) {
+    public ArrayList<PolicyRule> findAllPoliciesForAppWhenPerformingOp(SQLiteDatabase db, String appPkgName, int operation) {
+        ArrayList<PolicyRule> policyRules = new ArrayList<>();
         // Select Policy Query
         String selectQuery = "SELECT " +
                 getPolicyRulesTableName() + "." + POLRULNAME + ", " +
@@ -1618,29 +1621,43 @@ public class MithrilDBHelper extends SQLiteOpenHelper {
                 getPolicyRulesTableName() + "." + POLRULACTIN + ", " +
                 getPolicyRulesTableName() + "." + POLRULOP +
                 " FROM " +
-                getPolicyRulesTableName() +
+                getPolicyRulesTableName() + ", " + getAppsTableName() + ", " + getContextTableName() +
                 " WHERE " +
-                getPolicyRulesTableName() + "." + POLRULNAME + " = " + name + ";";
+                getPolicyRulesTableName() + "." + POLRULOP + " = " + operation +
+                " AND " +
+                getPolicyRulesTableName() + "." + POLRULAPPID + " = " + getAppsTableName() + "." + APPID +
+                " AND " +
+                getPolicyRulesTableName() + "." + POLRULCTXID + " = " + getContextTableName() + "." + CONTEXTID +
+                " AND " +
+                getAppsTableName() + "." + APPPACKAGENAME + " = '" + appPkgName + "';";
 
-        PolicyRule policyRule = new PolicyRule();
         Cursor cursor = db.rawQuery(selectQuery, null);
         try {
+
+            // looping through all rows and adding to list
             if (cursor.moveToFirst()) {
-                policyRule.setName(cursor.getString(1));
-                policyRule.setAppId(Integer.parseInt(cursor.getString(2)));
-                policyRule.setCtxId(Integer.parseInt(cursor.getString(3)));
-                if (Integer.parseInt(cursor.getString(4)) == 1)
-                    policyRule.setAction(Action.ALLOW);
-                else
-                    policyRule.setAction(Action.DENY);
-                policyRule.setOp(cursor.getInt(5));
+                do {
+                    PolicyRule policyRule = new PolicyRule();
+                    policyRule.setName(cursor.getString(0));
+                    policyRule.setAppId(Integer.parseInt(cursor.getString(1)));
+                    policyRule.setCtxId(Integer.parseInt(cursor.getString(2)));
+                    if (Integer.parseInt(cursor.getString(3)) == 1)
+                        policyRule.setAction(Action.ALLOW);
+                    else
+                        policyRule.setAction(Action.DENY);
+                    policyRule.setOp(cursor.getInt(4));
+
+                    // Adding policies to list
+                    policyRules.add(policyRule);
+                } while (cursor.moveToNext());
             }
         } catch (SQLException e) {
             throw new SQLException("Could not find " + e);
         } finally {
             cursor.close();
         }
-        return policyRule;
+        // return policy rules list
+        return policyRules;
     }
 
     /**
@@ -1723,6 +1740,65 @@ public class MithrilDBHelper extends SQLiteOpenHelper {
             cursor.close();
         }
         return -1;
+    }
+
+    public Map<String, Long> findContextIdInLogs(SQLiteDatabase db, int id) {
+        Map<String, Long> userContext = new HashMap<>();
+        // Select Query
+        String selectQuery = "SELECT " +
+                getContextLogTableName() + "." + CTXTTRANSITION + ", " +
+                getContextLogTableName() + "." + CTXTTIME +
+                " FROM " +
+                getContextLogTableName() +
+                " WHERE " +
+                getContextLogTableName() + "." + CTXTID + " = " + id + ";";
+
+        Cursor cursor = db.rawQuery(selectQuery, null);
+        try {
+            if (cursor.moveToFirst()) {
+                do {
+                    Log.e(MithrilApplication.getDebugTag(), Long.toString(cursor.getLong(1)));
+                    userContext.put(cursor.getString(0), cursor.getLong(1));
+                } while (cursor.moveToNext());
+            }
+        } catch (SQLException e) {
+            throw new SQLException("Could not find " + e);
+        } finally {
+            cursor.close();
+        }
+        return userContext;
+    }
+
+    public List<Integer> findCurrentContextFromLogs(SQLiteDatabase db) {
+        List<Integer> currentContext = new ArrayList<>();
+        // Select Query
+        String selectQuery = "SELECT " +
+                getContextLogTableName() + "." + CTXTID +
+                " FROM " +
+                getContextLogTableName() +
+                " WHERE " +
+                getContextLogTableName() + "." + CTXTTIME + " < current_timestamp " +
+                " AND " +
+                getContextLogTableName() + "." + CTXTTRANSITION + " = '" + MithrilApplication.getPrefStartKey() + "' " +
+                " OR " +
+                getContextLogTableName() + "." + CTXTTIME + " > current_timestamp " +
+                " AND " +
+                getContextLogTableName() + "." + CTXTTRANSITION + " = '" + MithrilApplication.getPrefEndKey() + "';";
+
+        Cursor cursor = db.rawQuery(selectQuery, null);
+        try {
+            if (cursor.moveToFirst()) {
+                do {
+                    Log.e(MithrilApplication.getDebugTag(), Long.toString(cursor.getLong(0)));
+                    currentContext.add(cursor.getInt(0));
+                } while (cursor.moveToNext());
+            }
+        } catch (SQLException e) {
+            throw new SQLException("Could not find " + e);
+        } finally {
+            cursor.close();
+        }
+        return currentContext;
     }
 
     /**

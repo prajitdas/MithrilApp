@@ -7,11 +7,13 @@ import android.database.sqlite.SQLiteDatabase;
 import android.location.Address;
 import android.location.Location;
 import android.util.Log;
+import android.widget.Toast;
 
 import com.google.gson.Gson;
 
 import java.sql.Timestamp;
 import java.util.List;
+import java.util.Map;
 
 import edu.umbc.ebiquity.mithril.MithrilApplication;
 import edu.umbc.ebiquity.mithril.data.dbhelpers.MithrilDBHelper;
@@ -29,33 +31,23 @@ import edu.umbc.ebiquity.mithril.util.specialtasks.errorsnexceptions.CWAExceptio
  */
 
 public class ViolationDetector {
-    private static SemanticUserContext semanticUserContext;
-    private static Action action;
-
-    private static Address detectedAddress;
-    private static Location detectedLocation;
-
-    private static SemanticUserContext getCurrentSemanticUserContext() {
-        return semanticUserContext;
-    }
-
-    public static void setSemanticUserContext(SemanticUserContext aSemanticUserContext, Context context) {
-        semanticUserContext = aSemanticUserContext;
-        if (detectedAddress == null)
-            semanticUserContext = null;//.setSemanticLocation(null);
-        else
-            semanticUserContext = new SemanticLocation();
+//    public static void setSemanticUserContext(SemanticUserContext aSemanticUserContext, Context context) {
+//        semanticUserContext = aSemanticUserContext;
+//        if (detectedAddress == null)
+//            semanticUserContext = null;//.setSemanticLocation(null);
+//        else
+//            semanticUserContext = new SemanticLocation();
         //TODO FIX THIS!!!
-        SemanticLocation semanticLocation = new SemanticLocation();
+//        SemanticLocation semanticLocation = new SemanticLocation();
         // TODO 1451649600 Is equivalent to: 01/01/2016 @ 12:00pm (UTC)
-        SemanticTime semanticTime = new SemanticTime(false, RepeatFrequency.WEEKDAYS, new Timestamp(1451649600), "Lunch");
+//        SemanticTime semanticTime = new SemanticTime(false, RepeatFrequency.WEEKDAYS, new Timestamp(1451649600), "Lunch");
         // getLocality() ("Mountain View", for example)
         // getAdminArea() ("CA", for example)
         // getPostalCode() ("94043", for example)
         // getCountryCode() ("US", for example)
         // getCountryName() ("United States", for example)
 //        if (level.equals("home"))
-        semanticLocation.setInferredLocation(detectedAddress.getPostalCode());
+//        semanticLocation.setInferredLocation(detectedAddress.getPostalCode());
 //        else if (level.equals("work"))
 //            semanticLocation.setInferredLocation(detectedAddress.getPostalCode());
 //        else if (level.equals("city"))
@@ -68,15 +60,7 @@ public class ViolationDetector {
 //            semanticUserContext.setSemanticLocation(semanticLocation);
 //            semanticUserContext.setSemanticTime(semanticTime);
 //        }
-    }
-
-    public static Action getAction() {
-        return action;
-    }
-
-    public static void setAction(Action anAction) {
-        action = anAction;
-    }
+//    }
 
     /**
      * Algorithm for violation detection:
@@ -92,19 +76,60 @@ public class ViolationDetector {
      * 3) Search policy list for a rule that matches the current combo of requester-resource-context combo
      * 4) If no such rule is found then detect this as a violation and request a user action on it or if in execution mode, block this access
      */
-
-    public static void detectViolation(Context context, String currentPackageName) throws CWAException {
-        if (currentPackageName == null)
-            return;
+    public static void detectViolation(Context context, String currentPackageName, int operationPerformed) { //throws CWAException {
         SQLiteDatabase mithrilDB = MithrilDBHelper.getHelper(context).getWritableDatabase();
+        List<Integer> currentContext = MithrilDBHelper.getHelper(context).findCurrentContextFromLogs(mithrilDB);
 
-        try {
-            List<PolicyRule> rulesForApp = MithrilDBHelper.getHelper(context).findAllPoliciesByAppPkgName(mithrilDB, currentPackageName);
-            //No rules found! We have a violation...
-            if (rulesForApp.size() > 0) {
-                for (PolicyRule rule : rulesForApp) {
-                    Log.d(MithrilApplication.getDebugTag(), "Found rule: "+rule.getName());
-                    if (rule.getAction().equals(Action.ALLOW)) {
+//        try {
+        List<PolicyRule> rulesForApp = MithrilDBHelper.getHelper(context).findAllPoliciesForAppWhenPerformingOp(mithrilDB, currentPackageName, operationPerformed);
+        // Let's test the rules we found
+        if (rulesForApp.size() > 0) {
+            for (PolicyRule rule : rulesForApp) {
+                Log.d(MithrilApplication.getDebugTag(), "Found rule: " + rule.getName());
+                //There is a rule for this app with current context as it's context
+                if (currentContext.contains(rule.getCtxId())) {
+                    //Rule has a deny action, we may have a violation
+                    if (rule.getAction().equals(Action.DENY)) {
+                        Log.d(MithrilApplication.getDebugTag(), "Eureka!");
+                        MithrilDBHelper.getHelper(context).addViolation(mithrilDB,
+                                new Violation(rule.getAppId(),
+                                        rule.getCtxId(),
+                                        rule.getOp(),
+                                        rule.getName(),
+                                        false,
+                                        new Timestamp(System.currentTimeMillis())
+                                )
+                        );
+                    } //Rule has an allow action, nothing to do
+                    else if (rule.getAction().equals(Action.ALLOW)) {
+                        Log.d(MithrilApplication.getDebugTag(), "No violation for: " + currentPackageName);
+                    }
+                } // Rule context does not match current context, we might have an error here, check carefully
+                else {
+                    Log.d(MithrilApplication.getDebugTag(),
+                            "Rule context does not match current context for: " +
+                                    currentPackageName +
+                                    " " +
+                                    Integer.toString(rule.getCtxId()));
+                }
+            }
+        } //No rules found! We have a default violation... Opportunity for ML?
+        else {
+            Log.d(MithrilApplication.getDebugTag(), "Default violation scenario. Do something!");
+            for(Integer currCtxtId : currentContext) {
+                MithrilDBHelper.getHelper(context).addViolation(mithrilDB,
+                        new Violation(
+                                MithrilDBHelper.getHelper(context).findAppIdByName(mithrilDB, currentPackageName),
+                                currCtxtId,
+                                operationPerformed,
+                                MithrilApplication.getPolRulDefaultRule(),
+                                false,
+                                new Timestamp(System.currentTimeMillis())
+                        )
+                );
+            }
+        }
+                //Rule was a deny, we may have a violation
 //                        Violation violation;
 //                        //Is this allowed?
 //                        //Do we need temporal context?
@@ -125,13 +150,15 @@ public class ViolationDetector {
 //                        //Do we need nearby actors?
 //                        else if (rule.getContextType().equals(MithrilApplication.getPrefKeyPresence()))
 //                            weNeedNearActorsViolationCheck();
-                    } else {
-                        Log.e(MithrilApplication.getDebugTag(), "Serious error! DB contains deny rules. This violates our CWA");
-                        throw new CWAException(); //Something is wrong!!!! We have a Closed World Assumption we cannot have deny rules...
-                    }
-                }
-            }
-            if (MithrilDBHelper.getHelper(context).findAppTypeByAppPkgName(mithrilDB, currentPackageName).equals(MithrilApplication.getPrefKeyUserAppsDisplay())) {
+//                } else {
+//                    Log.e(MithrilApplication.getDebugTag(), "Serious error! DB contains deny rules. This violates our CWA");
+////                    throw new CWAException(); //Something is wrong!!!! We have a Closed World Assumption we cannot have deny rules...
+//                }
+//            }
+//        } //No rules found! We have a violation...
+//        else {
+//        }
+//            if (MithrilDBHelper.getHelper(context).findAppTypeByAppPkgName(mithrilDB, currentPackageName).equals(MithrilApplication.getPrefKeyUserAppsDisplay())) {
 
                 //            PermissionHelper.toast(context, "Mithril detects user app launch: " + currentPackageName, Toast.LENGTH_SHORT).show();
                 //            Log.d(MithrilApplication.getDebugTag(), "Mithril detects user app launch: " + currentPackageName);
@@ -193,44 +220,44 @@ public class ViolationDetector {
                 //
                 //                editor.apply();
                 //            }
-            }
-        } catch (SQLException e) {
-            Log.e(MithrilApplication.getDebugTag(), e.getMessage() + " it seems there is no policy for this app!");
-        }
+//            }
+//        } catch (SQLException e) {
+//            Log.e(MithrilApplication.getDebugTag(), e.getMessage() + " it seems there is no policy for this app!");
+//        }
         mithrilDB.close();
     }
 
-    private static void weNeedIdentityViolationCheck() {
-
-    }
-
-    private static void weNeedNearActorsViolationCheck() {
-
-    }
-
-    private static Violation weNeedTimeViolationCheck(Context context, SemanticTime semanticTime) {
-//        if(semanticTime.getInferredTime() != currentTime)
-//            return new Violation();
-        return null;
-    }
-
-    private static void weNeedActivityViolationCheck() {
-
-    }
-
-    private static Violation weNeedLocationViolationCheck(Context context, SemanticLocation semanticLocation) {
-        SharedPreferences sharedPref = context.getSharedPreferences(MithrilApplication.getSharedPreferencesName(), Context.MODE_PRIVATE);
-
-        Gson gson = new Gson();
-        String json = null;
-
-//        json = sharedPref.getString(MithrilApplication.getPrefKeyCurrentAddress(), null);
-//        detectedAddress = gson.fromJson(json, Address.class);
+//    private static void weNeedIdentityViolationCheck() {
 //
-//        json = sharedPref.getString(MithrilApplication.getPrefKeyCurrentLocation(), null);
-//        detectedLocation = gson.fromJson(json, Location.class);
-//        if(semanticLocation.getInferredLocation() != currentLocation)
-//            return new Violation();
-        return null;
-    }
+//    }
+//
+//    private static void weNeedNearActorsViolationCheck() {
+//
+//    }
+//
+//    private static Violation weNeedTimeViolationCheck(Context context, SemanticTime semanticTime) {
+////        if(semanticTime.getInferredTime() != currentTime)
+////            return new Violation();
+//        return null;
+//    }
+//
+//    private static void weNeedActivityViolationCheck() {
+//
+//    }
+//
+//    private static Violation weNeedLocationViolationCheck(Context context, SemanticLocation semanticLocation) {
+//        SharedPreferences sharedPref = context.getSharedPreferences(MithrilApplication.getSharedPreferencesName(), Context.MODE_PRIVATE);
+//
+//        Gson gson = new Gson();
+//        String json = null;
+//
+////        json = sharedPref.getString(MithrilApplication.getPrefKeyCurrentAddress(), null);
+////        detectedAddress = gson.fromJson(json, Address.class);
+////
+////        json = sharedPref.getString(MithrilApplication.getPrefKeyCurrentLocation(), null);
+////        detectedLocation = gson.fromJson(json, Location.class);
+////        if(semanticLocation.getInferredLocation() != currentLocation)
+////            return new Violation();
+//        return null;
+//    }
 }

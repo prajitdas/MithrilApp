@@ -1,131 +1,107 @@
 package edu.umbc.ebiquity.mithril.data.model.rules;
 
-import edu.umbc.ebiquity.mithril.MithrilApplication;
+import java.sql.Timestamp;
 
 public class Violation {
-    private int Id;
-    private String violationDescription;
-    private int policyId;
-    private int ruleId;
-    private boolean violationMarker;
+    private int appId;
+    private int ctxId;
+    private int oprId;
+    private String desc;
+    private boolean marker;
+    private Timestamp time;
 
-    public Violation() {
-        this.Id = -1;
-        this.violationDescription = MithrilApplication.getDefaultDescription();
-        this.policyId = -1;
-        this.ruleId = -1;
-        this.violationMarker = false;
+    public Violation(int appId, int ctxId, int oprId, String desc, boolean marker, Timestamp time) {
+        this.appId = appId;
+        this.ctxId = ctxId;
+        this.oprId = oprId;
+        this.desc = desc;
+        this.marker = marker;
+        this.time = time;
     }
 
-    /**
-     * @param violationDescription
-     * @param policyId
-     * @param ruleId
-     */
-    public Violation(String violationDescription,
-                     int policyId, int ruleId, boolean violationMarker) {
-        this.Id = -1;
-        this.violationDescription = violationDescription;
-        this.policyId = policyId;
-        this.ruleId = ruleId;
-        this.violationMarker = violationMarker;
+    public int getAppId() {
+        return appId;
     }
 
-    /**
-     * @param violationId
-     * @param violationDescription
-     * @param policyId
-     * @param ruleId
-     */
-    public Violation(int violationId, String violationDescription,
-                     int policyId, int ruleId, boolean violationMarker) {
-        this.Id = violationId;
-        this.violationDescription = violationDescription;
-        this.policyId = policyId;
-        this.ruleId = ruleId;
-        this.violationMarker = violationMarker;
+    public void setAppId(int appId) {
+        this.appId = appId;
+    }
+
+    public int getCtxId() {
+        return ctxId;
+    }
+
+    public void setCtxId(int ctxId) {
+        this.ctxId = ctxId;
+    }
+
+    public int getOprId() {
+        return oprId;
+    }
+
+    public void setOprId(int oprId) {
+        this.oprId = oprId;
+    }
+
+    public String getDesc() {
+        return desc;
+    }
+
+    public void setDesc(String desc) {
+        this.desc = desc;
+    }
+
+    public boolean isMarker() {
+        return marker;
+    }
+
+    public void setMarker(boolean marker) {
+        this.marker = marker;
+    }
+
+    public Timestamp getTime() {
+        return time;
+    }
+
+    public void setTime(Timestamp time) {
+        this.time = time;
     }
 
     @Override
-    public boolean equals(Object obj) {
-        if (this == obj)
-            return true;
-        if (obj == null)
-            return false;
-        if (getClass() != obj.getClass())
-            return false;
-        Violation other = (Violation) obj;
-        if (policyId != other.policyId)
-            return false;
-        if (ruleId != other.ruleId)
-            return false;
-        if (violationDescription == null) {
-            if (other.violationDescription != null)
-                return false;
-        } else if (!violationDescription.equals(other.violationDescription))
-            return false;
-        if (Id != other.Id)
-            return false;
-        return violationMarker == other.violationMarker;
-    }
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof Violation)) return false;
 
-    public int getPolicyId() {
-        return policyId;
-    }
+        Violation violation = (Violation) o;
 
-    public void setPolicyId(int policyId) {
-        this.policyId = policyId;
-    }
-
-    public int getRuleId() {
-        return ruleId;
-    }
-
-    public void setRuleId(int ruleId) {
-        this.ruleId = ruleId;
-    }
-
-    public String getViolationDescription() {
-        return violationDescription;
-    }
-
-    public void setViolationDescription(String violationDescription) {
-        this.violationDescription = violationDescription;
-    }
-
-    public int getId() {
-        return Id;
-    }
-
-    public void setId(int violationId) {
-        this.Id = violationId;
+        if (getAppId() != violation.getAppId()) return false;
+        if (getCtxId() != violation.getCtxId()) return false;
+        if (getOprId() != violation.getOprId()) return false;
+        if (isMarker() != violation.isMarker()) return false;
+        if (!getDesc().equals(violation.getDesc())) return false;
+        return getTime().equals(violation.getTime());
     }
 
     @Override
     public int hashCode() {
-        final int prime = 31;
-        int result = 1;
-        result = prime * result + policyId;
-        result = prime * result + ruleId;
-        result = prime
-                * result
-                + ((violationDescription == null) ? 0 : violationDescription
-                .hashCode());
-        result = prime * result + Id;
-        result = prime * result + (violationMarker ? 1231 : 1237);
+        int result = getAppId();
+        result = 31 * result + getCtxId();
+        result = 31 * result + getOprId();
+        result = 31 * result + getDesc().hashCode();
+        result = 31 * result + (isMarker() ? 1 : 0);
+        result = 31 * result + getTime().hashCode();
         return result;
-    }
-
-    public boolean isViolationMarker() {
-        return violationMarker;
-    }
-
-    public void setViolationMarker(boolean violationMarker) {
-        this.violationMarker = violationMarker;
     }
 
     @Override
     public String toString() {
-        return violationDescription;
+        return "Violation{" +
+                "appId=" + appId +
+                ", ctxId=" + ctxId +
+                ", oprId=" + oprId +
+                ", desc='" + desc + '\'' +
+                ", marker=" + marker +
+                ", time=" + time +
+                '}';
     }
 }

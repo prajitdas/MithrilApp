@@ -85,17 +85,21 @@ public class AppLaunchDetector {
                 if (currentPackageName.equals(MithrilApplication.getLauncherName(context)) || currentPackageName.equals(context.getPackageName()))
                     currentPackageName = null;
                 else {
-                    try {
-                        ViolationDetector.detectViolation(context, currentPackageName);
-                    } catch (CWAException cwaException) {
+//                    try {
+                        ViolationDetector.detectViolation(context, currentPackageName, getOp(currentPackageName));
+//                    } catch (CWAException cwaException) {
                         //Something is wrong!!!! We have a Closed World Assumption we cannot have deny rules...
                         //                Log.e(MithrilApplication.getDebugTag(), "Serious error! DB contains deny rules. This violates our CWA");
-                    }
+//                    }
                 }
             }
         } catch (SecurityException e) {
             Log.d(MithrilApplication.getDebugTag(), "Probably a security exception because we don't have the right permissions " + e.getMessage());
         }
         return currentPackageName;
+    }
+
+    private int getOp(String currentPackageName) {
+        return 1;
     }
 }

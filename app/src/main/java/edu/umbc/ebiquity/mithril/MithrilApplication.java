@@ -231,7 +231,7 @@ public class MithrilApplication extends Application {
     private static final String CONTEXT_DEFAULT_IDENTITY = "John Doe";
     private static final String CONTEXT_DEFAULT_RELATIONSHIP = "Boss";
     private static final String POL_RUL_NAME_SOCIAL_MEDIA_CAMERA_ACCESS_RULE = "Social_Media_Camera_Access_Rule";
-    private static final String POL_RUL_DEFAULT_RULE = "Default policy rule name";
+    private static final String POL_RUL_DEFAULT_RULE = "Default deny policy";
     private static final String DEFAULT_DESCRIPTION = "Default description";
     private static final String KEY_POLICY_RULE_ID = "PolicyRuleId";
     private static final String KEY_POLICY_RULE_NAME = "PolicyRuleName";
