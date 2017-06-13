@@ -6,12 +6,16 @@ import android.os.Bundle;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Pair;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import edu.umbc.ebiquity.mithril.MithrilApplication;
 import edu.umbc.ebiquity.mithril.R;
@@ -30,7 +34,7 @@ public class PermissionsFragment extends Fragment {
     // TODO: Customize parameters
     private int mColumnCount = 1;
     private OnListFragmentInteractionListener mListener;
-    private List<String> permissionGroups = Arrays.asList(
+    private List<Pair<String, String>> permGrpDesc = Arrays.asList(
             MithrilApplication.CALENDAR_PERMISSION_GROUP,
             MithrilApplication.CAMERA_PERMISSION_GROUP,
             MithrilApplication.CONTACTS_PERMISSION_GROUP,
@@ -85,7 +89,7 @@ public class PermissionsFragment extends Fragment {
             } else {
                 recyclerView.setLayoutManager(new GridLayoutManager(context, mColumnCount));
             }
-            recyclerView.setAdapter(new InstalledPermissionRecyclerViewAdapter(permissionGroups, mListener));
+            recyclerView.setAdapter(new InstalledPermissionRecyclerViewAdapter(permGrpDesc, mListener));
         }
         return view;
     }

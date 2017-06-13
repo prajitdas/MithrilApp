@@ -14,10 +14,17 @@
     </style>
 
     <style name="AppTheme.Button" parent="Widget.AppCompat.Button.Colored">
-        <item name="android:colorButtonNormal">@color/white</item>
-        <item name="android:textColor">@color/colorPrimaryText</item>
+        <item name="android:colorButtonNormal">@color/colorButton</item>
+        <item name="android:textColor">@color/colorPrimaryIcon</item>
         <item name="android:textSize">18sp</item>
         <item name="android:elevation">@dimen/fab_margin</item>
+    </style>
+
+    <style name="AppTheme.FAB" parent="Widget.Design.FloatingActionButton">
+        <item name="backgroundTint">@color/colorButton</item>
+        <item name="rippleColor">@color/colorPrimaryLight</item>
+        <item name="fabSize">auto</item>
+        <item name="elevation">@dimen/fab_margin</item>
     </style>
 
     <style name="AppTheme.NoActionBar">

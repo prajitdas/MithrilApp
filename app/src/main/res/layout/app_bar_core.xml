@@ -29,7 +29,7 @@
         android:layout_height="wrap_content"
         android:layout_gravity="bottom|end"
         android:layout_margin="@dimen/fab_margin"
-        app:backgroundTint="@color/colorPrimary"
+        app:backgroundTint="@color/colorButton"
         app:elevation="@dimen/fab_margin"
         app:fabSize="auto"
         app:rippleColor="@color/wheat"

@@ -7,6 +7,7 @@ import android.content.pm.PackageManager;
 import android.content.pm.ResolveInfo;
 import android.os.Build;
 import android.text.TextUtils;
+import android.util.Pair;
 
 import com.google.android.gms.maps.model.LatLng;
 
@@ -36,18 +37,31 @@ public class MithrilApplication extends Application {
     public static final String GEOFENCES_ADDED_KEY = MITHRIL_APP_PACKAGE_NAME + ".GEOFENCES_ADDED_KEY";
     public static final String ADDRESS_KEY = "ADDRESS_KEY";
 
-    public static final String CALENDAR_PERMISSION_GROUP = "android.permission-group.CALENDAR";
-    public static final String CAMERA_PERMISSION_GROUP = "android.permission-group.CAMERA";
-    public static final String CONTACTS_PERMISSION_GROUP = "android.permission-group.CONTACTS";
-    public static final String LOCATION_PERMISSION_GROUP = "android.permission-group.LOCATION";
-    public static final String MICROPHONE_PERMISSION_GROUP = "android.permission-group.MICROPHONE";
-    public static final String PHONE_PERMISSION_GROUP = "android.permission-group.PHONE";
-    public static final String SENSORS_PERMISSION_GROUP = "android.permission-group.SENSORS";
-    public static final String SMS_PERMISSION_GROUP = "android.permission-group.SMS";
-    public static final String STORAGE_PERMISSION_GROUP = "android.permission-group.STORAGE";
-    public static final String SYSTEM_TOOLS_PERMISSION_GROUP = "android.permission-group.SYSTEM_TOOLS";
-    public static final String CAR_INFORMATION_PERMISSION_GROUP = "com.google.android.gms.permission.CAR_INFORMATION";
-    public static final String NO_PERMISSION_GROUP = "no-groups";
+    private static final String CALENDAR_PERMISSION_GROUP_DESC = "Calendar permission group";
+    private static final String CAMERA_PERMISSION_GROUP_DESC = "Camera permission group";
+    private static final String CONTACTS_PERMISSION_GROUP_DESC = "Contacts permission group";
+    private static final String LOCATION_PERMISSION_GROUP_DESC = "Location permission group";
+    private static final String MICROPHONE_PERMISSION_GROUP_DESC = "Microphone permission group";
+    private static final String PHONE_PERMISSION_GROUP_DESC = "Phone permission group";
+    private static final String SENSORS_PERMISSION_GROUP_DESC = "Sensors permission group";
+    private static final String SMS_PERMISSION_GROUP_DESC = "SMS permission group";
+    private static final String STORAGE_PERMISSION_GROUP_DESC = "Storage permission group";
+    private static final String SYSTEM_TOOLS_PERMISSION_GROUP_DESC = "System tools permission group";
+    private static final String CAR_INFORMATION_PERMISSION_GROUP_DESC = "Car information permission group";
+    private static final String NO_PERMISSION_GROUP_DESC = "No permission group";
+
+    public static final Pair<String, String> CALENDAR_PERMISSION_GROUP = new Pair<>("android.permission-group.CALENDAR", CALENDAR_PERMISSION_GROUP_DESC);
+    public static final Pair<String, String> CAMERA_PERMISSION_GROUP = new Pair<>("android.permission-group.CAMERA", CAMERA_PERMISSION_GROUP_DESC);
+    public static final Pair<String, String> CONTACTS_PERMISSION_GROUP = new Pair<>("android.permission-group.CONTACTS", CONTACTS_PERMISSION_GROUP_DESC);
+    public static final Pair<String, String> LOCATION_PERMISSION_GROUP = new Pair<>("android.permission-group.LOCATION", LOCATION_PERMISSION_GROUP_DESC);
+    public static final Pair<String, String> MICROPHONE_PERMISSION_GROUP = new Pair<>("android.permission-group.MICROPHONE", MICROPHONE_PERMISSION_GROUP_DESC);
+    public static final Pair<String, String> PHONE_PERMISSION_GROUP = new Pair<>("android.permission-group.PHONE", PHONE_PERMISSION_GROUP_DESC);
+    public static final Pair<String, String> SENSORS_PERMISSION_GROUP = new Pair<>("android.permission-group.SENSORS", SENSORS_PERMISSION_GROUP_DESC);
+    public static final Pair<String, String> SMS_PERMISSION_GROUP = new Pair<>("android.permission-group.SMS", SMS_PERMISSION_GROUP_DESC);
+    public static final Pair<String, String> STORAGE_PERMISSION_GROUP = new Pair<>("android.permission-group.STORAGE", STORAGE_PERMISSION_GROUP_DESC);
+    public static final Pair<String, String> SYSTEM_TOOLS_PERMISSION_GROUP = new Pair<>("android.permission-group.SYSTEM_TOOLS", SYSTEM_TOOLS_PERMISSION_GROUP_DESC);
+    public static final Pair<String, String> CAR_INFORMATION_PERMISSION_GROUP = new Pair<>("com.google.android.gms.permission.CAR_INFORMATION", CAR_INFORMATION_PERMISSION_GROUP_DESC);
+    public static final Pair<String, String> NO_PERMISSION_GROUP = new Pair<>("no-groups", NO_PERMISSION_GROUP_DESC);
 
     public static final float GEOFENCE_RADIUS_IN_METERS = 200; // 200 meters
     /**

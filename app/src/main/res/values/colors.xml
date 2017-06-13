@@ -1,13 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <!--From: https://www.materialpalette.com/blue/blue -->
+    <color name="colorPrimaryIcon">#212121</color>
     <color name="colorPrimary">#2196F3</color>
     <color name="colorPrimaryDark">#1976D2</color>
     <color name="colorPrimaryLight">#BBDEFB</color>
     <color name="colorAccent">#448AFF</color>
     <color name="colorPrimaryText">#212121</color>
     <color name="colorSecondaryText">#757575</color>
-    <color name="colorButton">#FFFFFF</color>
+    <color name="colorButton">#ffffff</color>
     <color name="colorDivider">#BDBDBD</color>
 
     <color name="white">#ffffff</color>

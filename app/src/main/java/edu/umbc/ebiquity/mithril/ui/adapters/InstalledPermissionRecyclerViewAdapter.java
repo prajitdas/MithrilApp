@@ -2,6 +2,7 @@ package edu.umbc.ebiquity.mithril.ui.adapters;
 
 import android.content.Context;
 import android.support.v7.widget.RecyclerView;
+import android.util.Pair;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -9,6 +10,8 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 import edu.umbc.ebiquity.mithril.MithrilApplication;
 import edu.umbc.ebiquity.mithril.R;
@@ -21,12 +24,12 @@ import edu.umbc.ebiquity.mithril.ui.fragments.coreactivityfragments.PermissionsF
  */
 public class InstalledPermissionRecyclerViewAdapter extends RecyclerView.Adapter<InstalledPermissionRecyclerViewAdapter.ViewHolder> {
 
-    private final List<String> mValues;
+    private final List<?> mValues;
     private final OnListFragmentInteractionListener mListener;
     private Context context;
     private View view;
 
-    public InstalledPermissionRecyclerViewAdapter(List<String> items, OnListFragmentInteractionListener listener) {
+    public InstalledPermissionRecyclerViewAdapter(List<Pair<String, String>> items, OnListFragmentInteractionListener listener) {
         mValues = items;
         mListener = listener;
     }
@@ -41,35 +44,37 @@ public class InstalledPermissionRecyclerViewAdapter extends RecyclerView.Adapter
 
     @Override
     public void onBindViewHolder(final ViewHolder holder, int position) {
-        holder.mItem = mValues.get(position);
+        Pair<String, String> permPair = (Pair<String, String>) mValues.get(position);
+        holder.mItem = permPair.first;
 
-        if (mValues.get(position).equals(MithrilApplication.CONTACTS_PERMISSION_GROUP))
+        if (permPair.first.equals(MithrilApplication.CONTACTS_PERMISSION_GROUP.first))
             holder.mPermIcon.setImageDrawable(context.getResources().getDrawable(R.drawable.contacts, context.getTheme()));
-        else if (mValues.get(position).equals(MithrilApplication.CALENDAR_PERMISSION_GROUP))
+        else if (permPair.first.equals(MithrilApplication.CALENDAR_PERMISSION_GROUP.first))
             holder.mPermIcon.setImageDrawable(context.getResources().getDrawable(R.drawable.calendar, context.getTheme()));
-        else if (mValues.get(position).equals(MithrilApplication.CAMERA_PERMISSION_GROUP))
+        else if (permPair.first.equals(MithrilApplication.CAMERA_PERMISSION_GROUP.first))
             holder.mPermIcon.setImageDrawable(context.getResources().getDrawable(R.drawable.camera, context.getTheme()));
-        else if (mValues.get(position).equals(MithrilApplication.LOCATION_PERMISSION_GROUP))
+        else if (permPair.first.equals(MithrilApplication.LOCATION_PERMISSION_GROUP.first))
             holder.mPermIcon.setImageDrawable(context.getResources().getDrawable(R.drawable.map_marker, context.getTheme()));
-        else if (mValues.get(position).equals(MithrilApplication.MICROPHONE_PERMISSION_GROUP))
+        else if (permPair.first.equals(MithrilApplication.MICROPHONE_PERMISSION_GROUP.first))
             holder.mPermIcon.setImageDrawable(context.getResources().getDrawable(R.drawable.microphone, context.getTheme()));
-        else if (mValues.get(position).equals(MithrilApplication.PHONE_PERMISSION_GROUP))
+        else if (permPair.first.equals(MithrilApplication.PHONE_PERMISSION_GROUP.first))
             holder.mPermIcon.setImageDrawable(context.getResources().getDrawable(R.drawable.phone, context.getTheme()));
-        else if (mValues.get(position).equals(MithrilApplication.SENSORS_PERMISSION_GROUP))
+        else if (permPair.first.equals(MithrilApplication.SENSORS_PERMISSION_GROUP.first))
             holder.mPermIcon.setImageDrawable(context.getResources().getDrawable(R.drawable.thermometer_lines, context.getTheme()));
-        else if (mValues.get(position).equals(MithrilApplication.SMS_PERMISSION_GROUP))
+        else if (permPair.first.equals(MithrilApplication.SMS_PERMISSION_GROUP.first))
             holder.mPermIcon.setImageDrawable(context.getResources().getDrawable(R.drawable.message_text_outline, context.getTheme()));
-        else if (mValues.get(position).equals(MithrilApplication.STORAGE_PERMISSION_GROUP))
+        else if (permPair.first.equals(MithrilApplication.STORAGE_PERMISSION_GROUP.first))
             holder.mPermIcon.setImageDrawable(context.getResources().getDrawable(R.drawable.harddisk, context.getTheme()));
-        else if (mValues.get(position).equals(MithrilApplication.SYSTEM_TOOLS_PERMISSION_GROUP))
+        else if (permPair.first.equals(MithrilApplication.SYSTEM_TOOLS_PERMISSION_GROUP.first))
             holder.mPermIcon.setImageDrawable(context.getResources().getDrawable(R.drawable.security, context.getTheme()));
-        else if (mValues.get(position).equals(MithrilApplication.CAR_INFORMATION_PERMISSION_GROUP))
+        else if (permPair.first.equals(MithrilApplication.CAR_INFORMATION_PERMISSION_GROUP.first))
             holder.mPermIcon.setImageDrawable(context.getResources().getDrawable(R.drawable.car, context.getTheme()));
         else
             holder.mPermIcon.setImageDrawable(context.getResources().getDrawable(R.drawable.help, context.getTheme()));
 
-        holder.mPermLabel.setText(mValues.get(position).split("\\.")[mValues.get(position).split("\\.").length - 1]);
-        holder.mAppsUsingPerm.setText(mValues.get(position));
+        //mValues.get(position).split("\\.")[mValues.get(position).split("\\.").length - 1];
+        holder.mPermLabel.setText(permPair.second);
+        holder.mPermString.setText(permPair.first);
 
         holder.mView.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -92,7 +97,7 @@ public class InstalledPermissionRecyclerViewAdapter extends RecyclerView.Adapter
         private final View mView;
         private final ImageView mPermIcon;
         private final TextView mPermLabel;
-        private final TextView mAppsUsingPerm;
+        private final TextView mPermString;
         private String mItem;
 
         private ViewHolder(View view) {
@@ -100,12 +105,12 @@ public class InstalledPermissionRecyclerViewAdapter extends RecyclerView.Adapter
             mView = view;
             mPermIcon = (ImageView) view.findViewById(R.id.protectionLvlImageView);
             mPermLabel = (TextView) view.findViewById(R.id.permissionLabelTextView);
-            mAppsUsingPerm = (TextView) view.findViewById(R.id.appsUsingPermTextView);
+            mPermString = (TextView) view.findViewById(R.id.permString);
         }
 
         @Override
         public String toString() {
-            return super.toString() + " '" + mAppsUsingPerm.getText() + "'";
+            return super.toString() + " '" + mItem + "'";
         }
     }
 }

@@ -754,7 +754,7 @@ public class MithrilDBHelper extends SQLiteOpenHelper {
                 break;
         }
 
-        tempPermData.setPermissionGroup(MithrilApplication.NO_PERMISSION_GROUP);
+        tempPermData.setPermissionGroup(MithrilApplication.NO_PERMISSION_GROUP.first);
 
         //Setting the protection level
         switch (permissionInfo.flags) {

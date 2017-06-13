@@ -29,10 +29,7 @@
         android:layout_height="wrap_content"
         android:layout_gravity="bottom|end"
         android:layout_margin="@dimen/fab_margin"
-        app:backgroundTint="@color/colorPrimary"
-        app:elevation="@dimen/fab_margin"
-        app:fabSize="auto"
-        app:rippleColor="@color/wheat"
+        android:theme="@style/AppTheme.FAB"
         app:srcCompat="@drawable/plus" />
 
 </android.support.design.widget.CoordinatorLayout>
