@@ -81,7 +81,7 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
-        app:menu="@menu/navigation_instances" />
+        app:menu="@menu/bottom_navigation_instance_creation" />
 
     <!-- We do not show the above buttons for apps anymore :( -->
     <!--android:layout_above="@id/app_is_bad_btn"-->
