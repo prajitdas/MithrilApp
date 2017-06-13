@@ -61,7 +61,7 @@
                 android:text="@string/app_version_placeholder_text"
                 android:textAppearance="@android:style/TextAppearance.Holo.Small"
                 android:textColor="@color/colorSecondaryText"
-                android:textSize="20sp" />
+                android:textSize="15sp" />
 
             <!--<CheckBox-->
             <!--android:id="@+id/app_selected"-->
