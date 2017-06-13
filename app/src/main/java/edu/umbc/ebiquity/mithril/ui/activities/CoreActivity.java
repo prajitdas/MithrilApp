@@ -30,6 +30,7 @@ import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.util.Pair;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -702,11 +703,11 @@ public class CoreActivity extends AppCompatActivity
     }
 
     @Override
-    public void onListFragmentInteraction(String item) {
+    public void onListFragmentInteraction(Pair<String, String> item) {
         //TODO Do something with the Perm group selected
         Intent intent = new Intent(this, ShowPermissionDetailActivity.class);
-        intent.putExtra(MithrilApplication.getPrefKeyPermGroupName(), item);
-        intent.putExtra(MithrilApplication.getPrefKeyPermGroupLabel(), item.split("\\.")[item.split("\\.").length - 1]);
+        intent.putExtra(MithrilApplication.getPrefKeyPermGroupName(), item.first);
+        intent.putExtra(MithrilApplication.getPrefKeyPermGroupLabel(), item.second);
         startActivity(intent);
     }
 

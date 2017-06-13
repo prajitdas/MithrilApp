@@ -45,7 +45,7 @@ public class InstalledPermissionRecyclerViewAdapter extends RecyclerView.Adapter
     @Override
     public void onBindViewHolder(final ViewHolder holder, int position) {
         Pair<String, String> permPair = (Pair<String, String>) mValues.get(position);
-        holder.mItem = permPair.first;
+        holder.mItem = permPair;
 
         if (permPair.first.equals(MithrilApplication.CONTACTS_PERMISSION_GROUP.first))
             holder.mPermIcon.setImageDrawable(context.getResources().getDrawable(R.drawable.contacts, context.getTheme()));
@@ -98,7 +98,7 @@ public class InstalledPermissionRecyclerViewAdapter extends RecyclerView.Adapter
         private final ImageView mPermIcon;
         private final TextView mPermLabel;
         private final TextView mPermString;
-        private String mItem;
+        private Pair<String, String> mItem;
 
         private ViewHolder(View view) {
             super(view);

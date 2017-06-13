@@ -123,6 +123,6 @@ public class PermissionsFragment extends Fragment {
      */
     public interface OnListFragmentInteractionListener {
         // TODO: Update argument type and name
-        void onListFragmentInteraction(String item);
+        void onListFragmentInteraction(Pair<String, String> item);
     }
 }
