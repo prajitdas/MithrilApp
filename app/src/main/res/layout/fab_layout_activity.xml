@@ -12,7 +12,10 @@
         android:layout_margin="@dimen/fab_margin"
         android:src="@drawable/run_fast"
         android:visibility="invisible"
-        android:theme="@style/AppTheme.FAB" />
+        app:backgroundTint="@color/colorButton"
+        app:rippleColor="@color/colorPrimaryLight"
+        app:fabSize="auto"
+        android:elevation="@dimen/fab_margin" />
 
     <android.support.design.widget.FloatingActionButton
         android:id="@+id/fab_2_cat"
@@ -22,7 +25,10 @@
         android:layout_margin="@dimen/fab_margin"
         android:src="@drawable/food"
         android:visibility="invisible"
-        android:theme="@style/AppTheme.FAB" />
+        app:backgroundTint="@color/colorButton"
+        app:rippleColor="@color/colorPrimaryLight"
+        app:fabSize="auto"
+        android:elevation="@dimen/fab_margin" />
 
     <android.support.design.widget.FloatingActionButton
         android:id="@+id/fab_3_act"
@@ -32,5 +38,8 @@
         android:layout_margin="@dimen/fab_margin"
         android:src="@drawable/help"
         android:visibility="invisible"
-        android:theme="@style/AppTheme.FAB" />
+        app:backgroundTint="@color/colorButton"
+        app:rippleColor="@color/colorPrimaryLight"
+        app:fabSize="auto"
+        android:elevation="@dimen/fab_margin" />
 </FrameLayout>

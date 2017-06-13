@@ -12,10 +12,10 @@
         android:layout_margin="@dimen/fab_margin"
         android:src="@drawable/home_variant"
         android:visibility="invisible"
-        android:elevation="@dimen/fab_margin"
-        app:backgroundTint="@color/colorAccent"
-        app:fabSize="mini"
-        app:rippleColor="@color/lightgreen" />
+        app:backgroundTint="@color/colorButton"
+        app:rippleColor="@color/colorPrimaryLight"
+        app:fabSize="auto"
+        android:elevation="@dimen/fab_margin" />
 
     <android.support.design.widget.FloatingActionButton
         android:id="@+id/fab_2_loc"
@@ -25,10 +25,10 @@
         android:layout_margin="@dimen/fab_margin"
         android:src="@drawable/factory"
         android:visibility="invisible"
-        android:elevation="@dimen/fab_margin"
-        app:backgroundTint="@color/colorAccent"
-        app:fabSize="mini"
-        app:rippleColor="@color/lightgreen" />
+        app:backgroundTint="@color/colorButton"
+        app:rippleColor="@color/colorPrimaryLight"
+        app:fabSize="auto"
+        android:elevation="@dimen/fab_margin" />
 
     <android.support.design.widget.FloatingActionButton
         android:id="@+id/fab_3_loc"
@@ -38,8 +38,8 @@
         android:layout_margin="@dimen/fab_margin"
         android:src="@drawable/help"
         android:visibility="invisible"
-        android:elevation="@dimen/fab_margin"
-        app:backgroundTint="@color/colorAccent"
-        app:fabSize="mini"
-        app:rippleColor="@color/lightgreen" />
+        app:backgroundTint="@color/colorButton"
+        app:rippleColor="@color/colorPrimaryLight"
+        app:fabSize="auto"
+        android:elevation="@dimen/fab_margin" />
 </FrameLayout>

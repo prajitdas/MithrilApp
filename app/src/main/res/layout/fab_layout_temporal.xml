@@ -13,9 +13,9 @@
         android:src="@drawable/briefcase"
         android:visibility="invisible"
         android:elevation="@dimen/fab_margin"
-        app:backgroundTint="@color/colorPrimary"
-        app:fabSize="mini"
-        app:rippleColor="@color/lightgreen" />
+        app:backgroundTint="@color/colorButton"
+        app:rippleColor="@color/colorPrimaryLight"
+        app:fabSize="auto" />
 
     <android.support.design.widget.FloatingActionButton
         android:id="@+id/fab_2_time"
@@ -26,9 +26,9 @@
         android:src="@drawable/sleep"
         android:visibility="invisible"
         android:elevation="@dimen/fab_margin"
-        app:backgroundTint="@color/colorPrimary"
-        app:fabSize="mini"
-        app:rippleColor="@color/lightgreen" />
+        app:backgroundTint="@color/colorButton"
+        app:rippleColor="@color/colorPrimaryLight"
+        app:fabSize="auto" />
 
     <android.support.design.widget.FloatingActionButton
         android:id="@+id/fab_3_time"
@@ -38,8 +38,7 @@
         android:layout_margin="@dimen/fab_margin"
         android:src="@drawable/help"
         android:visibility="invisible"
-        android:elevation="@dimen/fab_margin"
-        app:backgroundTint="@color/colorPrimary"
-        app:fabSize="mini"
-        app:rippleColor="@color/lightgreen" />
+        app:backgroundTint="@color/colorButton"
+        app:rippleColor="@color/colorPrimaryLight"
+        app:fabSize="auto" />
 </FrameLayout>
