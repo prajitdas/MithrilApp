@@ -32,7 +32,7 @@
         app:backgroundTint="@color/colorButton"
         app:rippleColor="@color/colorPrimaryLight"
         app:fabSize="auto"
-        app:elevation="@dimen/fab_margin"
+        android:elevation="@dimen/fab_margin"
         app:srcCompat="@drawable/email" />
 
 </android.support.design.widget.CoordinatorLayout>
