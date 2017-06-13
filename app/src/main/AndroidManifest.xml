@@ -150,28 +150,28 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".ui.activities.CoreActivity" />
         </activity>
-        <activity
-            android:name=".ui.activities.PrefsActivity"
-            android:label="@string/title_activity_prefs"
-            android:parentActivityName=".ui.activities.CoreActivity"
-            android:theme="@style/AppTheme.NoActionBar">
-            <meta-data
-                android:name="android.support.PARENT_ACTIVITY"
-                android:value=".ui.activities.CoreActivity" />
-        </activity>
+        <!--<activity-->
+            <!--android:name=".ui.activities.PrefsActivity"-->
+            <!--android:label="@string/title_activity_prefs"-->
+            <!--android:parentActivityName=".ui.activities.CoreActivity"-->
+            <!--android:theme="@style/AppTheme.NoActionBar">-->
+            <!--<meta-data-->
+                <!--android:name="android.support.PARENT_ACTIVITY"-->
+                <!--android:value=".ui.activities.CoreActivity" />-->
+        <!--</activity>-->
         <!-- TestActivity was used for the IEEE CIC paper. This will possibly be removed or modified in the future. -->
-        <activity
-            android:name=".ui.activities.TestActivity"
-            android:label="@string/title_activity_test_main"
-            android:theme="@style/AppTheme.NoActionBar">
-            <intent-filter>
-                <action android:name="android.nfc.action.NDEF_DISCOVERED" />
+        <!--<activity-->
+            <!--android:name=".ui.activities.TestActivity"-->
+            <!--android:label="@string/title_activity_test_main"-->
+            <!--android:theme="@style/AppTheme.NoActionBar">-->
+            <!--<intent-filter>-->
+                <!--<action android:name="android.nfc.action.NDEF_DISCOVERED" />-->
 
-                <category android:name="android.intent.category.DEFAULT" />
+                <!--<category android:name="android.intent.category.DEFAULT" />-->
 
-                <data android:mimeType="text/plain" />
-            </intent-filter>
-        </activity>
+                <!--<data android:mimeType="text/plain" />-->
+            <!--</intent-filter>-->
+        <!--</activity>-->
         <activity
             android:name=".ui.activities.UsageStatsActivity"
             android:label="@string/title_activity_usage_stats"
