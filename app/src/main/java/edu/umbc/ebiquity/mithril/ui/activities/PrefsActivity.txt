@@ -72,3 +72,207 @@ public class PrefsActivity extends AppCompatActivity {
     }
     */
 }
+
+
+//    /**
+//     * Builds and returns a GeofencingRequest. Specifies the list of geofences to be monitored.
+//     * Also specifies how the geofence notifications are initially triggered.
+//     */
+//    private GeofencingRequest getGeofencingRequest() {
+//        GeofencingRequest.Builder builder = new GeofencingRequest.Builder();
+//
+//        // The INITIAL_TRIGGER_ENTER flag indicates that geofencing service should trigger a
+//        // GEOFENCE_TRANSITION_ENTER notification when the geofence is added and if the device
+//        // is already inside that geofence.
+//        builder.setInitialTrigger(GeofencingRequest.INITIAL_TRIGGER_ENTER);
+//
+//        // Add the geofences to be monitored by geofencing service.
+//        builder.addGeofences(mGeofenceList);
+//
+//        // Return a GeofencingRequest.
+//        return builder.build();
+//    }
+//
+//    /**
+//     * Adds geofences, which sets alerts to be notified when the device enters or exits one of the
+//     * specified geofences. Handles the success or failure results returned by addGeofences().
+//     */
+//    public void addGeofences() {
+//        if (!mGoogleApiClient.isConnected()) {
+//            Toast.makeText(this, getString(R.string.not_connected), Toast.LENGTH_SHORT).show();
+//            return;
+//        }
+//
+//        try {
+//            LocationServices.GeofencingApi.addGeofences(
+//                    mGoogleApiClient,
+//                    // The GeofenceRequest object.
+//                    getGeofencingRequest(),
+//                    // A pending intent that is reused when calling removeGeofences(). This
+//                    // pending intent is used to generate an intent when a matched geofence
+//                    // transition is observed.
+//                    getGeofencePendingIntent()
+//            ).setResultCallback(this); // Result processed in onResult().
+//        } catch (SecurityException securityException) {
+//            // Catch exception generated if the app does not use ACCESS_FINE_LOCATION permission.
+//            logSecurityException(securityException);
+//        }
+//    }
+//
+//    /**
+//     * Removes geofences, which stops further notifications when the device enters or exits
+//     * previously registered geofences.
+//     */
+//    public void removeGeofences() {
+//        if (!mGoogleApiClient.isConnected()) {
+//            Toast.makeText(this, getString(R.string.not_connected), Toast.LENGTH_SHORT).show();
+//            return;
+//        }
+//        try {
+//            // Remove geofences.
+//            LocationServices.GeofencingApi.removeGeofences(
+//                    mGoogleApiClient,
+//                    // This is the same pending intent that was used in addGeofences().
+//                    getGeofencePendingIntent()
+//            ).setResultCallback(this); // Result processed in onResult().
+//        } catch (SecurityException securityException) {
+//            // Catch exception generated if the app does not use ACCESS_FINE_LOCATION permission.
+//            logSecurityException(securityException);
+//        }
+//    }
+//
+//    /**
+//     * Removes geofences, which stops further notifications when the device enters or exits this geofence.
+//     */
+//    public void updateGeofences(String semanticIdentifier) {
+//        List<String> geofencesToRemove = new ArrayList<>();
+//        geofencesToRemove.add(semanticIdentifier);
+//        if (!mGoogleApiClient.isConnected()) {
+//            Toast.makeText(this, getString(R.string.not_connected), Toast.LENGTH_SHORT).show();
+//            return;
+//        }
+//        try {
+//            // Remove geofences.
+//            LocationServices.GeofencingApi.removeGeofences(
+//                    mGoogleApiClient,
+//                    geofencesToRemove
+//            ).setResultCallback(this); // Result processed in onResult().
+//        } catch (SecurityException securityException) {
+//            // Catch exception generated if the app does not use ACCESS_FINE_LOCATION permission.
+//            logSecurityException(securityException);
+//        }
+//    }
+//
+//    private void logSecurityException(SecurityException securityException) {
+//        Log.e(MithrilApplication.getDebugTag(), "Invalid location permission. " +
+//                "You need to use ACCESS_FINE_LOCATION with geofences", securityException);
+//    }
+//
+//    /**
+//     * Runs when the result of calling addGeofences() and removeGeofences() becomes available.
+//     * Either method can complete successfully or with an error.
+//     * <p>
+//     * Since this activity implements the {@link ResultCallback} interface, we are required to
+//     * define this method.
+//     *
+//     * @param status The Status returned through a PendingIntent when addGeofences() or
+//     *               removeGeofences() get called.
+//     */
+//    public void onResult(Status status) {
+//        if (status.isSuccess()) {
+//            // Update state and save in shared preferences.
+//            mGeofencesAdded = !mGeofencesAdded;
+//            SharedPreferences.Editor editor = sharedPreferences.edit();
+//            editor.putBoolean(MithrilApplication.GEOFENCES_ADDED_KEY, mGeofencesAdded);
+//            editor.apply();
+//
+//            // Update the UI. Adding geofences enables the Remove Geofences button, and removing
+//            // geofences enables the Add Geofences button.
+////            setButtonsEnabledState();
+//
+//            Toast.makeText(
+//                    this,
+//                    getString(mGeofencesAdded ? R.string.geofences_added :
+//                            R.string.geofences_removed),
+//                    Toast.LENGTH_SHORT
+//            ).show();
+//        } else {
+//            // Get the status code for the error and log it using a user-friendly message.
+//            String errorMessage = GeofenceErrorMessages.getErrorString(this,
+//                    status.getStatusCode());
+//            Log.e(MithrilApplication.getDebugTag(), errorMessage);
+//        }
+//    }
+//
+//    /**
+//     * Gets a PendingIntent to send with the request to add or remove Geofences. Location Services
+//     * issues the Intent inside this PendingIntent whenever a geofence transition occurs for the
+//     * current list of geofences.
+//     *
+//     * @return A PendingIntent for the IntentService that handles geofence transitions.
+//     */
+//    private PendingIntent getGeofencePendingIntent() {
+//        // Reuse the PendingIntent if we already have it.
+//        if (mGeofencePendingIntent != null) {
+//            return mGeofencePendingIntent;
+//        }
+//        Intent intent = new Intent(this, GeofenceTransitionsIntentService.class);
+//        // We use FLAG_UPDATE_CURRENT so that we get the same pending intent back when calling
+//        // addGeofences() and removeGeofences().
+//        return PendingIntent.getService(this, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
+//    }
+//
+//    /**
+//     * This sample hard codes geofence data. A real app might dynamically create geofences based on
+//     * the user's location.
+//     */
+//    public void populateGeofenceList(String semanticIdentifier, double latitude, double longitude) {
+////        for (Map.Entry<String, LatLng> entry : MithrilApplication.BALTIMORE_COUNTY_LANDMARKS.entrySet()) {
+//
+//        mGeofenceList.add(new Geofence.Builder()
+//                // Set the request ID of the geofence. This is a string to identify this
+//                // geofence.
+//                .setRequestId(semanticIdentifier)
+//
+//                // Set the circular region of this geofence.
+//                .setCircularRegion(
+//                        latitude,
+//                        longitude,
+//                        MithrilApplication.GEOFENCE_RADIUS_IN_METERS
+//                )
+//
+//                // Set the expiration duration of the geofence. This geofence gets automatically
+//                // removed after this period of time.
+//                .setExpirationDuration(Geofence.NEVER_EXPIRE)
+//
+//                // Set the transition types of interest. Alerts are only generated for these
+//                // transition. We track entry and exit transitions in this sample.
+//                .setTransitionTypes(Geofence.GEOFENCE_TRANSITION_ENTER |
+//                        Geofence.GEOFENCE_TRANSITION_EXIT)
+//
+//                // Create the geofence.
+//                .build());
+////        }
+//    }
+//    private String getPlaceType(List<Integer> placeTypes) {
+//        StringBuffer placeTypesString = new StringBuffer();
+//        Field[] fields = Place.class.getDeclaredFields();
+//
+//        for (Integer placeType : placeTypes) {
+//            for (Field field : fields) {
+//                Class<?> type = field.getType();
+//
+//                if (type == int.class) {
+//                    try {
+//                        if (placeType == field.getInt(null)) {
+//                            placeTypesString.append(field.getName());
+//                            placeTypesString.append(", ");
+//                        }
+//                    } catch (IllegalAccessException e) {
+//                        e.printStackTrace();
+//                    }
+//                }
+//            }
+//        }
+//        return placeTypesString.toString();
+//    }

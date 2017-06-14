@@ -49,8 +49,14 @@ public class LauncherActivity extends AppCompatActivity {
     private void testUserAgreementAndLaunchNextActivity() {
         sharedPreferences = getSharedPreferences(MithrilApplication.getSharedPreferencesName(), Context.MODE_PRIVATE);
         if (PermissionHelper.isAllRequiredPermissionsGranted(this) && !PermissionHelper.needsUsageStatsPermission(this)) {
-            if (sharedPreferences.contains(MithrilApplication.getPrefKeyInitInstancesCreated()) &&
-                    sharedPreferences.getBoolean(MithrilApplication.getPrefKeyInitInstancesCreated(), false))
+            if (sharedPreferences.contains(MithrilApplication.getPrefKeyLocaInstancesCreated()) &&
+                    sharedPreferences.contains(MithrilApplication.getPrefKeyPresInstancesCreated()) &&
+                    sharedPreferences.contains(MithrilApplication.getPrefKeyActiInstancesCreated()) &&
+                    sharedPreferences.contains(MithrilApplication.getPrefKeyTimeInstancesCreated()) &&
+                    sharedPreferences.getBoolean(MithrilApplication.getPrefKeyLocaInstancesCreated(), false) &&
+                    sharedPreferences.getBoolean(MithrilApplication.getPrefKeyPresInstancesCreated(), false) &&
+                    sharedPreferences.getBoolean(MithrilApplication.getPrefKeyActiInstancesCreated(), false) &&
+                    sharedPreferences.getBoolean(MithrilApplication.getPrefKeyTimeInstancesCreated(), false))
                 startNextActivity(this, CoreActivity.class);
             else
                 startNextActivity(this, InstanceCreationActivity.class);

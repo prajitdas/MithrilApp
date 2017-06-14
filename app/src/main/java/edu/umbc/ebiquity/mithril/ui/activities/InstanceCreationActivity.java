@@ -38,10 +38,8 @@ import com.google.android.gms.location.places.ui.PlaceAutocomplete;
 import com.google.gson.Gson;
 import com.google.gson.JsonSyntaxException;
 
-import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 import edu.umbc.ebiquity.mithril.MithrilApplication;
@@ -111,26 +109,7 @@ public class InstanceCreationActivity extends AppCompatActivity
      * GoogleApiClient connects.
      */
     private boolean mAddressRequested;
-    /**
-     * Used to keep track of whether geofences were added.
-     */
-//    private boolean mGeofencesAdded;
-    /**
-     * Used when requesting to add or remove geofences.
-     */
-//    private PendingIntent mGeofencePendingIntent;
     private AddressResultReceiver mAddressResultReceiver;
-
-    /**
-     * Helper method to format information about a place nicely.
-     */
-//    private static Spanned formatPlaceDetails(Resources res, CharSequence name, String id,
-//                                              CharSequence address, CharSequence phoneNumber, Uri websiteUri) {
-//        Log.e(MithrilApplication.getDebugTag(), res.getString(R.string.place_details, name, id, address, phoneNumber,
-//                websiteUri));
-//        return Html.fromHtml(res.getString(R.string.place_details, name, id, address, phoneNumber,
-//                websiteUri));
-//    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -205,16 +184,6 @@ public class InstanceCreationActivity extends AppCompatActivity
         setOnNavigationListeners();
         setSaveBtnOnClickListener();
 
-        /********************************************* Geofence related stuff **************************************************/
-        // Empty list for storing geofences.
-//        mGeofenceList = new ArrayList<>();
-
-        // Initially set the PendingIntent used in addGeofences() and removeGeofences() to null.
-//        mGeofencePendingIntent = null;
-
-        // Get the value of mGeofencesAdded from SharedPreferences. Set to false as a default.
-//        mGeofencesAdded = sharedPreferences.getBoolean(MithrilApplication.GEOFENCES_ADDED_KEY, false);
-
         // Kick off the request to build GoogleApiClient.
         buildGoogleApiClient();
     }
@@ -249,11 +218,14 @@ public class InstanceCreationActivity extends AppCompatActivity
         mFirstMajorCtxtBtn.setText(R.string.pref_home_location_summary);
         mSecondMajorCtxtBtn.setText(R.string.pref_work_location_summary);
 
-//        if (!sharedPreferences.getBoolean(MithrilApplication.getPrefKeyInitInstancesCreated(), false))
-        PermissionHelper.toast(getApplicationContext(), getApplicationContext().getResources().getString(R.string.tooltip_location), Toast.LENGTH_SHORT);
+        if (!sharedPreferences.getBoolean(MithrilApplication.getPrefKeyLocaInstancesCreated(), false)) {
+            PermissionHelper.toast(getApplicationContext(), getApplicationContext().getResources().getString(R.string.tooltip_location), Toast.LENGTH_SHORT);
+            editor.putBoolean(MithrilApplication.getPrefKeyLocaInstancesCreated(), true);
+            editor.apply();
+        }
 
         currentFragment = FRAGMENT_LOCATION;
-        loadSemanticLocationFragment();
+        refreshVisibleFragment();
         setOnClickListeners();
     }
 
@@ -264,11 +236,14 @@ public class InstanceCreationActivity extends AppCompatActivity
         mFirstMajorCtxtBtn.setText(R.string.pref_work_hours_context_summary);
         mSecondMajorCtxtBtn.setText(R.string.pref_DND_hours_context_summary);
 
-//        if (!sharedPreferences.getBoolean(MithrilApplication.getPrefKeyInitInstancesCreated(), false))
-        PermissionHelper.toast(getApplicationContext(), getApplicationContext().getResources().getString(R.string.tooltip_temporal), Toast.LENGTH_SHORT);
+        if (!sharedPreferences.getBoolean(MithrilApplication.getPrefKeyTimeInstancesCreated(), false)) {
+            PermissionHelper.toast(getApplicationContext(), getApplicationContext().getResources().getString(R.string.tooltip_temporal), Toast.LENGTH_SHORT);
+            editor.putBoolean(MithrilApplication.getPrefKeyTimeInstancesCreated(), true);
+            editor.apply();
+        }
 
         currentFragment = FRAGMENT_TEMPORAL;
-        loadSemanticTemporalFragment();
+        refreshVisibleFragment();
         setOnClickListeners();
     }
 
@@ -279,11 +254,14 @@ public class InstanceCreationActivity extends AppCompatActivity
         mFirstMajorCtxtBtn.setText(R.string.pref_presence_info_supervisor_summary);
         mSecondMajorCtxtBtn.setText(R.string.pref_presence_info_colleague_summary);
 
-//        if (!sharedPreferences.getBoolean(MithrilApplication.getPrefKeyInitInstancesCreated(), false))
-        PermissionHelper.toast(getApplicationContext(), getApplicationContext().getResources().getString(R.string.tooltip_presence_related), Toast.LENGTH_SHORT);
+        if (!sharedPreferences.getBoolean(MithrilApplication.getPrefKeyPresInstancesCreated(), false)) {
+            PermissionHelper.toast(getApplicationContext(), getApplicationContext().getResources().getString(R.string.tooltip_presence_related), Toast.LENGTH_SHORT);
+            editor.putBoolean(MithrilApplication.getPrefKeyTimeInstancesCreated(), true);
+            editor.apply();
+        }
 
         currentFragment = FRAGMENT_PRESENCE;
-        loadSemanticPresenceFragment();
+        refreshVisibleFragment();
         setOnClickListeners();
     }
 
@@ -294,11 +272,14 @@ public class InstanceCreationActivity extends AppCompatActivity
         mFirstMajorCtxtBtn.setText(R.string.pref_personal_activity_context_title);
         mSecondMajorCtxtBtn.setText(R.string.pref_professional_activity_context_title);
 
-//        if (!sharedPreferences.getBoolean(MithrilApplication.getPrefKeyInitInstancesCreated(), false))
-        PermissionHelper.toast(getApplicationContext(), getApplicationContext().getResources().getString(R.string.tooltip_activity), Toast.LENGTH_SHORT);
+        if (!sharedPreferences.getBoolean(MithrilApplication.getPrefKeyActiInstancesCreated(), false)) {
+            PermissionHelper.toast(getApplicationContext(), getApplicationContext().getResources().getString(R.string.tooltip_activity), Toast.LENGTH_SHORT);
+            editor.putBoolean(MithrilApplication.getPrefKeyTimeInstancesCreated(), true);
+            editor.apply();
+        }
 
         currentFragment = FRAGMENT_ACTIVITY;
-        loadSemanticActivityFragment();
+        refreshVisibleFragment();
         setOnClickListeners();
     }
 
@@ -449,37 +430,73 @@ public class InstanceCreationActivity extends AppCompatActivity
 
     private void saveContext() {
         if (isThereLocationContextToSave)
-            setGeoFences();
+            setupLocationAwareness();
         if (isThereTemporalContextToSave)
-            setTemporalAlarms();
+            setupTemporalAwareness();
         if (isTherePresenceContextToSave)
-            setNearby();
+            setupPresenceAwareness();
         if (isThereActivityContextToSave)
-            setActivityDetection();
+            setupActivityAwareness();
     }
 
-    private void setGeoFences() {
-//        We have geofences to put around the list of locations now!
-//        for (Map.Entry<String, SemanticLocation> semanticLocationEntry : semanticLocations.entrySet())
-//            populateGeofenceList(semanticLocationEntry.getKey(), semanticLocationEntry.getValue().getLocation().getLatitude(), semanticLocationEntry.getValue().getLocation().getLongitude());
-//
-//        addGeofences();
+    private void setupLocationAwareness() {
+        for (Map.Entry<String, SemanticLocation> semanticLocationEntry : semanticLocations.entrySet()) {
+            semanticLocationEntry.getValue().setEnabled(true);
+            enableContext(MithrilApplication.getPrefKeyContextTypeLocation(),
+                    semanticLocationEntry.getKey(),
+                    InstanceCreationActivity.contextDataStoreGson.toJson(semanticLocationEntry.getValue()));
+            semanticLocations.put(semanticLocationEntry.getKey(), semanticLocationEntry.getValue());
+        }
         isThereLocationContextToSave = false;
+        refreshVisibleFragment();
     }
 
-    private void setTemporalAlarms() {
-
+    private void setupTemporalAwareness() {
+        for (Map.Entry<String, SemanticTime> semanticTimeEntry : semanticTimes.entrySet()) {
+            semanticTimeEntry.getValue().setEnabled(true);
+            enableContext(MithrilApplication.getPrefKeyContextTypeTemporal(),
+                    semanticTimeEntry.getKey(),
+                    InstanceCreationActivity.contextDataStoreGson.toJson(semanticTimeEntry.getValue()));
+            semanticTimes.put(semanticTimeEntry.getKey(), semanticTimeEntry.getValue());
+        }
         isThereTemporalContextToSave = false;
+        refreshVisibleFragment();
     }
 
-    private void setNearby() {
-
+    private void setupPresenceAwareness() {
+        for (Map.Entry<String, SemanticNearActor> semanticNearActorEntry : semanticNearActors.entrySet()) {
+            semanticNearActorEntry.getValue().setEnabled(true);
+            enableContext(MithrilApplication.getPrefKeyContextTypePresence(),
+                    semanticNearActorEntry.getKey(),
+                    InstanceCreationActivity.contextDataStoreGson.toJson(semanticNearActorEntry.getValue()));
+            semanticNearActors.put(semanticNearActorEntry.getKey(), semanticNearActorEntry.getValue());
+        }
         isTherePresenceContextToSave = false;
+        refreshVisibleFragment();
     }
 
-    private void setActivityDetection() {
-
+    private void setupActivityAwareness() {
+        for (Map.Entry<String, SemanticActivity> semanticActivityEntry : semanticActivities.entrySet()) {
+            semanticActivityEntry.getValue().setEnabled(true);
+            enableContext(MithrilApplication.getPrefKeyContextTypeActivity(),
+                    semanticActivityEntry.getKey(),
+                    InstanceCreationActivity.contextDataStoreGson.toJson(semanticActivityEntry.getValue()));
+            semanticActivities.put(semanticActivityEntry.getKey(), semanticActivityEntry.getValue());
+        }
         isThereActivityContextToSave = false;
+        refreshVisibleFragment();
+    }
+
+    private void refreshVisibleFragment() {
+        //Context pieces have been added; update view
+        if(currentFragment.equals(FRAGMENT_LOCATION))
+            loadSemanticLocationFragment();
+        else if(currentFragment.equals(FRAGMENT_TEMPORAL))
+            loadSemanticTemporalFragment();
+        else if(currentFragment.equals(FRAGMENT_PRESENCE))
+            loadSemanticPresenceFragment();
+        else if(currentFragment.equals(FRAGMENT_TEMPORAL))
+            loadSemanticActivityFragment();
     }
 
     @Override
@@ -496,7 +513,10 @@ public class InstanceCreationActivity extends AppCompatActivity
         // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
         if (id == R.id.done_with_instances_settings) {
-            editor.putBoolean(MithrilApplication.getPrefKeyInitInstancesCreated(), true);
+            editor.putBoolean(MithrilApplication.getPrefKeyLocaInstancesCreated(), true);
+            editor.putBoolean(MithrilApplication.getPrefKeyPresInstancesCreated(), true);
+            editor.putBoolean(MithrilApplication.getPrefKeyActiInstancesCreated(), true);
+            editor.putBoolean(MithrilApplication.getPrefKeyTimeInstancesCreated(), true);
             editor.apply();
             if (!sharedPreferences.getBoolean(MithrilApplication.getPrefKeyPoliciesDownloaded(), false))
                 startNextActivity(this, DownloadPoliciesActivity.class);
@@ -508,7 +528,10 @@ public class InstanceCreationActivity extends AppCompatActivity
 
     private void testInitInstancesCreateAndLaunchNextActivity() {
         sharedPreferences = getApplicationContext().getSharedPreferences(MithrilApplication.getSharedPreferencesName(), Context.MODE_PRIVATE);
-        if (sharedPreferences.getBoolean(MithrilApplication.getPrefKeyInitInstancesCreated(), false))
+        if (sharedPreferences.getBoolean(MithrilApplication.getPrefKeyLocaInstancesCreated(), false) &&
+                sharedPreferences.getBoolean(MithrilApplication.getPrefKeyPresInstancesCreated(), false) &&
+                sharedPreferences.getBoolean(MithrilApplication.getPrefKeyActiInstancesCreated(), false) &&
+                sharedPreferences.getBoolean(MithrilApplication.getPrefKeyTimeInstancesCreated(), false))
             startNextActivity(this, CoreActivity.class);
     }
 
@@ -540,14 +563,16 @@ public class InstanceCreationActivity extends AppCompatActivity
         } else {
             builder = new AlertDialog.Builder(this);
         }
-        builder.setTitle("Disable context")
-                .setMessage("Are you sure you want to disable this context piece?")
+        builder.setTitle(item.isEnabled() ? "Disabling context" : "Enabling context")
+                .setMessage("Please confirm changes for: " + item.getLabel())
                 .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int which) {
-                        removeContextFromDB(item.getInferredTime());
                         semanticTimes.remove(item.getInferredTime());
-                        disableContext(MithrilApplication.getPrefKeyContextTypeTemporal(), item.getInferredTime());
-                        loadSemanticTemporalFragment();
+                        if(item.isEnabled())
+                            disableContext(MithrilApplication.getPrefKeyContextTypeTemporal(), item.getInferredTime());
+                        else
+                            enableAndAddContextToDB(MithrilApplication.getPrefKeyContextTypeTemporal(), item.getInferredTime());
+                        refreshVisibleFragment();
                     }
                 })
                 .setNegativeButton(android.R.string.no, new DialogInterface.OnClickListener() {
@@ -567,15 +592,16 @@ public class InstanceCreationActivity extends AppCompatActivity
         } else {
             builder = new AlertDialog.Builder(this);
         }
-        builder.setTitle("Delete context")
-                .setMessage("Are you sure you want to delete this context piece?")
+        builder.setTitle(item.isEnabled() ? "Disabling context" : "Enabling context")
+                .setMessage("Please confirm changes for: " + item.getLabel())
                 .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int which) {
-//                        updateGeofences(item.getInferredLocation());
-                        removeContextFromDB(item.getInferredLocation());
                         semanticLocations.remove(item.getInferredLocation());
-                        disableContext(MithrilApplication.getPrefKeyContextTypeLocation(), item.getInferredLocation());
-                        loadSemanticLocationFragment();
+                        if(item.isEnabled())
+                            disableContext(MithrilApplication.getPrefKeyContextTypeLocation(), item.getInferredLocation());
+                        else
+                            enableAndAddContextToDB(MithrilApplication.getPrefKeyContextTypeLocation(), item.getInferredLocation());
+                        refreshVisibleFragment();
                     }
                 })
                 .setNegativeButton(android.R.string.no, new DialogInterface.OnClickListener() {
@@ -595,14 +621,16 @@ public class InstanceCreationActivity extends AppCompatActivity
         } else {
             builder = new AlertDialog.Builder(this);
         }
-        builder.setTitle("Delete context")
-                .setMessage("Are you sure you want to delete this context piece?")
+        builder.setTitle(item.isEnabled() ? "Disabling context" : "Enabling context")
+                .setMessage("Please confirm changes for: " + item.getLabel())
                 .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int which) {
-                        removeContextFromDB(item.getInferredActivity());
                         semanticActivities.remove(item.getInferredActivity());
-                        disableContext(MithrilApplication.getPrefKeyContextTypeActivity(), item.getInferredActivity());
-                        loadSemanticActivityFragment();
+                        if(item.isEnabled())
+                            disableContext(MithrilApplication.getPrefKeyContextTypeActivity(), item.getInferredActivity());
+                        else
+                            enableAndAddContextToDB(MithrilApplication.getPrefKeyContextTypeActivity(), item.getInferredActivity());
+                        refreshVisibleFragment();
                     }
                 })
                 .setNegativeButton(android.R.string.no, new DialogInterface.OnClickListener() {
@@ -622,14 +650,16 @@ public class InstanceCreationActivity extends AppCompatActivity
         } else {
             builder = new AlertDialog.Builder(this);
         }
-        builder.setTitle("Delete context")
-                .setMessage("Are you sure you want to delete this context piece?")
+        builder.setTitle(item.isEnabled() ? "Disabling context" : "Enabling context")
+                .setMessage("Please confirm changes for: " + item.getLabel())
                 .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int which) {
-                        removeContextFromDB(item.getInferredRelationship());
                         semanticNearActors.remove(item.getInferredRelationship());
-                        disableContext(MithrilApplication.getPrefKeyContextTypePresence(), item.getInferredRelationship());
-                        loadSemanticPresenceFragment();
+                        if(item.isEnabled())
+                            disableContext(MithrilApplication.getPrefKeyContextTypePresence(), item.getInferredRelationship());
+                        else
+                            enableAndAddContextToDB(MithrilApplication.getPrefKeyContextTypePresence(), item.getInferredRelationship());
+                        refreshVisibleFragment();
                     }
                 })
                 .setNegativeButton(android.R.string.no, new DialogInterface.OnClickListener() {
@@ -639,29 +669,6 @@ public class InstanceCreationActivity extends AppCompatActivity
                 })
                 .setIcon(android.R.drawable.ic_dialog_alert)
                 .show();
-    }
-
-    private String getPlaceType(List<Integer> placeTypes) {
-        StringBuffer placeTypesString = new StringBuffer();
-        Field[] fields = Place.class.getDeclaredFields();
-
-        for (Integer placeType : placeTypes) {
-            for (Field field : fields) {
-                Class<?> type = field.getType();
-
-                if (type == int.class) {
-                    try {
-                        if (placeType == field.getInt(null)) {
-                            placeTypesString.append(field.getName());
-                            placeTypesString.append(", ");
-                        }
-                    } catch (IllegalAccessException e) {
-                        e.printStackTrace();
-                    }
-                }
-            }
-        }
-        return placeTypesString.toString();
     }
 
     private void openAutocompleteActivity(int requestCode) {
@@ -810,9 +817,6 @@ public class InstanceCreationActivity extends AppCompatActivity
      * fetching an address.
      */
     protected void startSearchAddressIntentService(Location location, String key) {
-//        //Locations have been added; update view
-//        loadSemanticLocationFragment();
-
         // Create an intent for passing to the intent service responsible for fetching the address.
         Intent intent = new Intent(this, FetchAddressIntentService.class);
 
@@ -865,17 +869,18 @@ public class InstanceCreationActivity extends AppCompatActivity
         // onConnected() will be called again automatically when the service reconnects
     }
 
-    private void addContextToDB(String type, String label) {
-        MithrilDBHelper.getHelper(this).addContext(mithrilDB, type, label);
+    private void enableAndAddContextToDB(String contextType, String contextLabel) {
+        MithrilDBHelper.getHelper(this).addContext(mithrilDB, contextType, contextLabel, true);
     }
 
-    private void removeContextFromDB(String label) {
-        MithrilDBHelper.getHelper(this).deleteContext(mithrilDB, label);
+    private void disableContextInDB(String label, String type) {
+        MithrilDBHelper.getHelper(this).updateContext(mithrilDB, label, type, false);
     }
 
     private void enableContext(String contextType, String contextLabel, String serializedJsonContext) {
         editor.putString(contextType + contextLabel, serializedJsonContext);
         editor.apply();
+        enableAndAddContextToDB(contextType, contextLabel);
     }
 
     private void disableContext(String contextType, String contextLabel) {
@@ -883,11 +888,11 @@ public class InstanceCreationActivity extends AppCompatActivity
             editor.remove(contextType + contextLabel);
             editor.apply();
         }
+        disableContextInDB(contextLabel, contextType);
     }
 
     class AddressResultReceiver extends ResultReceiver {
         private Context context;
-        private SharedPreferences sharedPref;
         /**
          * The formatted location address.
          */
@@ -912,7 +917,6 @@ public class InstanceCreationActivity extends AppCompatActivity
                 mAddressOutput = new Address(context.getResources().getConfiguration().getLocales().get(0));
             else
                 mAddressOutput = new Address(context.getResources().getConfiguration().locale);
-            sharedPref = context.getSharedPreferences(MithrilApplication.getSharedPreferencesName(), Context.MODE_PRIVATE);
         }
 
         @Override
@@ -922,10 +926,10 @@ public class InstanceCreationActivity extends AppCompatActivity
             if (key.equals(null))
                 throw new AddressKeyMissingError();
             else
-                storeAddressInDB(key, resultCode, resultData);
+                storeAddressInSharedPreferences(key, resultCode, resultData);
         }
 
-        protected void storeAddressInDB(String key, int resultCode, Bundle resultData) {
+        protected void storeAddressInSharedPreferences(String key, int resultCode, Bundle resultData) {
             // Display the address string
             // or an error message sent from the intent service.
             Gson gson = new Gson();
@@ -939,219 +943,15 @@ public class InstanceCreationActivity extends AppCompatActivity
             Log.d(MithrilApplication.getDebugTag(), "Prefs address " + resultData.getString(MithrilApplication.ADDRESS_KEY) + mAddressRequested + key + json);
             // Show a toast message if an address was found.
             if (resultCode == MithrilApplication.SUCCESS_RESULT) {
-//                Log.d(MithrilApplication.getDebugMithrilApplication.getDebugTag()(), getString(R.string.address_found) + ":" + mAddressOutput);
-//                PermissionHelper.toast(context, getString(R.string.address_found) + ":" + mAddressOutput);
-                addContextToDB(MithrilApplication.getPrefKeyContextTypeLocation(), key);
-                storeInSharedPreferences(key, mAddressOutput);
+                SemanticLocation tempSemanticLocation = null;
+                for (Map.Entry<String, SemanticLocation> semanticLocation : semanticLocations.entrySet())
+                    if (semanticLocation.getKey().equals(key))
+                        tempSemanticLocation = semanticLocation.getValue();
+                tempSemanticLocation.setAddress(mAddressOutput);
+                semanticLocations.put(key, tempSemanticLocation);
             }
             // Reset. Enable the Fetch Address button and stop showing the progress bar.
             mAddressRequested = false;
         }
-
-        /**
-         * From http://stackoverflow.com/a/18463758/1816861
-         *
-         * @param key
-         * @param address To Retreive
-         *                Gson gson = new Gson();
-         *                String json = mPrefs.getString("MyObject", "");
-         *                MyObject obj = gson.fromJson(json, MyObject.class);
-         */
-        public void storeInSharedPreferences(String key, Address address) {
-            SemanticLocation tempSemanticLocation = null;
-            for (Map.Entry<String, SemanticLocation> semanticLocation : semanticLocations.entrySet())
-                if (semanticLocation.getKey().equals(key))
-                    tempSemanticLocation = semanticLocation.getValue();
-            tempSemanticLocation.setAddress(address);
-            semanticLocations.put(key, tempSemanticLocation);
-
-            tempSemanticLocation.setEnabled(true);
-            enableContext(MithrilApplication.getPrefKeyContextTypeLocation(),
-                    key,
-                    InstanceCreationActivity.contextDataStoreGson.toJson(tempSemanticLocation));
-
-            //Locations have been added; update view
-            loadSemanticLocationFragment();
-        }
     }
 }
-//    /**
-//     * Builds and returns a GeofencingRequest. Specifies the list of geofences to be monitored.
-//     * Also specifies how the geofence notifications are initially triggered.
-//     */
-//    private GeofencingRequest getGeofencingRequest() {
-//        GeofencingRequest.Builder builder = new GeofencingRequest.Builder();
-//
-//        // The INITIAL_TRIGGER_ENTER flag indicates that geofencing service should trigger a
-//        // GEOFENCE_TRANSITION_ENTER notification when the geofence is added and if the device
-//        // is already inside that geofence.
-//        builder.setInitialTrigger(GeofencingRequest.INITIAL_TRIGGER_ENTER);
-//
-//        // Add the geofences to be monitored by geofencing service.
-//        builder.addGeofences(mGeofenceList);
-//
-//        // Return a GeofencingRequest.
-//        return builder.build();
-//    }
-//
-//    /**
-//     * Adds geofences, which sets alerts to be notified when the device enters or exits one of the
-//     * specified geofences. Handles the success or failure results returned by addGeofences().
-//     */
-//    public void addGeofences() {
-//        if (!mGoogleApiClient.isConnected()) {
-//            Toast.makeText(this, getString(R.string.not_connected), Toast.LENGTH_SHORT).show();
-//            return;
-//        }
-//
-//        try {
-//            LocationServices.GeofencingApi.addGeofences(
-//                    mGoogleApiClient,
-//                    // The GeofenceRequest object.
-//                    getGeofencingRequest(),
-//                    // A pending intent that is reused when calling removeGeofences(). This
-//                    // pending intent is used to generate an intent when a matched geofence
-//                    // transition is observed.
-//                    getGeofencePendingIntent()
-//            ).setResultCallback(this); // Result processed in onResult().
-//        } catch (SecurityException securityException) {
-//            // Catch exception generated if the app does not use ACCESS_FINE_LOCATION permission.
-//            logSecurityException(securityException);
-//        }
-//    }
-//
-//    /**
-//     * Removes geofences, which stops further notifications when the device enters or exits
-//     * previously registered geofences.
-//     */
-//    public void removeGeofences() {
-//        if (!mGoogleApiClient.isConnected()) {
-//            Toast.makeText(this, getString(R.string.not_connected), Toast.LENGTH_SHORT).show();
-//            return;
-//        }
-//        try {
-//            // Remove geofences.
-//            LocationServices.GeofencingApi.removeGeofences(
-//                    mGoogleApiClient,
-//                    // This is the same pending intent that was used in addGeofences().
-//                    getGeofencePendingIntent()
-//            ).setResultCallback(this); // Result processed in onResult().
-//        } catch (SecurityException securityException) {
-//            // Catch exception generated if the app does not use ACCESS_FINE_LOCATION permission.
-//            logSecurityException(securityException);
-//        }
-//    }
-//
-//    /**
-//     * Removes geofences, which stops further notifications when the device enters or exits this geofence.
-//     */
-//    public void updateGeofences(String semanticIdentifier) {
-//        List<String> geofencesToRemove = new ArrayList<>();
-//        geofencesToRemove.add(semanticIdentifier);
-//        if (!mGoogleApiClient.isConnected()) {
-//            Toast.makeText(this, getString(R.string.not_connected), Toast.LENGTH_SHORT).show();
-//            return;
-//        }
-//        try {
-//            // Remove geofences.
-//            LocationServices.GeofencingApi.removeGeofences(
-//                    mGoogleApiClient,
-//                    geofencesToRemove
-//            ).setResultCallback(this); // Result processed in onResult().
-//        } catch (SecurityException securityException) {
-//            // Catch exception generated if the app does not use ACCESS_FINE_LOCATION permission.
-//            logSecurityException(securityException);
-//        }
-//    }
-//
-//    private void logSecurityException(SecurityException securityException) {
-//        Log.e(MithrilApplication.getDebugTag(), "Invalid location permission. " +
-//                "You need to use ACCESS_FINE_LOCATION with geofences", securityException);
-//    }
-//
-//    /**
-//     * Runs when the result of calling addGeofences() and removeGeofences() becomes available.
-//     * Either method can complete successfully or with an error.
-//     * <p>
-//     * Since this activity implements the {@link ResultCallback} interface, we are required to
-//     * define this method.
-//     *
-//     * @param status The Status returned through a PendingIntent when addGeofences() or
-//     *               removeGeofences() get called.
-//     */
-//    public void onResult(Status status) {
-//        if (status.isSuccess()) {
-//            // Update state and save in shared preferences.
-//            mGeofencesAdded = !mGeofencesAdded;
-//            SharedPreferences.Editor editor = sharedPreferences.edit();
-//            editor.putBoolean(MithrilApplication.GEOFENCES_ADDED_KEY, mGeofencesAdded);
-//            editor.apply();
-//
-//            // Update the UI. Adding geofences enables the Remove Geofences button, and removing
-//            // geofences enables the Add Geofences button.
-////            setButtonsEnabledState();
-//
-//            Toast.makeText(
-//                    this,
-//                    getString(mGeofencesAdded ? R.string.geofences_added :
-//                            R.string.geofences_removed),
-//                    Toast.LENGTH_SHORT
-//            ).show();
-//        } else {
-//            // Get the status code for the error and log it using a user-friendly message.
-//            String errorMessage = GeofenceErrorMessages.getErrorString(this,
-//                    status.getStatusCode());
-//            Log.e(MithrilApplication.getDebugTag(), errorMessage);
-//        }
-//    }
-//
-//    /**
-//     * Gets a PendingIntent to send with the request to add or remove Geofences. Location Services
-//     * issues the Intent inside this PendingIntent whenever a geofence transition occurs for the
-//     * current list of geofences.
-//     *
-//     * @return A PendingIntent for the IntentService that handles geofence transitions.
-//     */
-//    private PendingIntent getGeofencePendingIntent() {
-//        // Reuse the PendingIntent if we already have it.
-//        if (mGeofencePendingIntent != null) {
-//            return mGeofencePendingIntent;
-//        }
-//        Intent intent = new Intent(this, GeofenceTransitionsIntentService.class);
-//        // We use FLAG_UPDATE_CURRENT so that we get the same pending intent back when calling
-//        // addGeofences() and removeGeofences().
-//        return PendingIntent.getService(this, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
-//    }
-//
-//    /**
-//     * This sample hard codes geofence data. A real app might dynamically create geofences based on
-//     * the user's location.
-//     */
-//    public void populateGeofenceList(String semanticIdentifier, double latitude, double longitude) {
-////        for (Map.Entry<String, LatLng> entry : MithrilApplication.BALTIMORE_COUNTY_LANDMARKS.entrySet()) {
-//
-//        mGeofenceList.add(new Geofence.Builder()
-//                // Set the request ID of the geofence. This is a string to identify this
-//                // geofence.
-//                .setRequestId(semanticIdentifier)
-//
-//                // Set the circular region of this geofence.
-//                .setCircularRegion(
-//                        latitude,
-//                        longitude,
-//                        MithrilApplication.GEOFENCE_RADIUS_IN_METERS
-//                )
-//
-//                // Set the expiration duration of the geofence. This geofence gets automatically
-//                // removed after this period of time.
-//                .setExpirationDuration(Geofence.NEVER_EXPIRE)
-//
-//                // Set the transition types of interest. Alerts are only generated for these
-//                // transition. We track entry and exit transitions in this sample.
-//                .setTransitionTypes(Geofence.GEOFENCE_TRANSITION_ENTER |
-//                        Geofence.GEOFENCE_TRANSITION_EXIT)
-//
-//                // Create the geofence.
-//                .build());
-////        }
-//    }

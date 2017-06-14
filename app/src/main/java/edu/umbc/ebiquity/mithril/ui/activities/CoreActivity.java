@@ -599,7 +599,10 @@ public class CoreActivity extends AppCompatActivity
 //    }
 
     private void launchInstanceCreationActivity() {
-        editor.putBoolean(MithrilApplication.getPrefKeyInitInstancesCreated(), false);
+        editor.putBoolean(MithrilApplication.getPrefKeyLocaInstancesCreated(), false);
+        editor.putBoolean(MithrilApplication.getPrefKeyPresInstancesCreated(), false);
+        editor.putBoolean(MithrilApplication.getPrefKeyActiInstancesCreated(), false);
+        editor.putBoolean(MithrilApplication.getPrefKeyTimeInstancesCreated(), false);
         editor.apply();
         startActivity(new Intent(this, InstanceCreationActivity.class));
     }

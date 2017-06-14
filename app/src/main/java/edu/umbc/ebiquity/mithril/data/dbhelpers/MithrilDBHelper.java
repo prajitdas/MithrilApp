@@ -186,10 +186,12 @@ public class MithrilDBHelper extends SQLiteOpenHelper {
     private final static String CONTEXTID = "id"; // ID of the context instance
     private final static String CONTEXTTYPE = "type"; // Context type; i.e. location, time, activity, presence
     private final static String CONTEXTSEMANTICLABEL = "label"; // Semantic context label
+    private final static String CONTEXTENABLED = "enabled"; // Context maybe disabled by the user
     private final static String CREATE_CONTEXT_TABLE = "CREATE TABLE " + getContextTableName() + " (" +
-            CONTEXTID + " INTEGER PRIMARY KEY AUTOINCREMENT," +
-            CONTEXTTYPE + " TEXT NOT NULL," +
-            CONTEXTSEMANTICLABEL + " TEXT NOT NULL" +
+            CONTEXTID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
+            CONTEXTTYPE + " TEXT NOT NULL, " +
+            CONTEXTSEMANTICLABEL + " TEXT NOT NULL, " +
+            CONTEXTENABLED + " INTEGER NOT NULL DEAFULT 0 " +
             ");";
     /**
      * -- Table 5: policyrules
@@ -636,7 +638,7 @@ public class MithrilDBHelper extends SQLiteOpenHelper {
 //                                                pack.packageName) != 0
                                 );
                                 /*
-                                 * The following fix is no longer required. There was a flaw in insert permission we should have used insertOrThrow
+                                 * The following fix is no longer required. There was a flaw in insert permission we should have used insertWithOnConflict
                                  * - PKD, Dec 27, 2016. Carrie Fisher AKA Princess Leia Organa (Skywalker) passed away today at 0855 PST. The world will miss her. :(
                                  * ---------------------------------------------------------------------------------------------------------------------------------------------
                                  * The following shell script may be used to extract exact permission data.
@@ -846,7 +848,7 @@ public class MithrilDBHelper extends SQLiteOpenHelper {
         values.put(APPTYPE, anAppData.getAppType());
         values.put(APPUID, anAppData.getUid());
         try {
-            insertedRowId = db.insertOrThrow(getAppsTableName(), null, values);
+            insertedRowId = db.insertWithOnConflict(getAppsTableName(), null, values, SQLiteDatabase.CONFLICT_REPLACE);
         } catch (SQLException e) {
             Log.e(MithrilApplication.getDebugTag(), "Error inserting " + values, e);
             return -1;
@@ -873,7 +875,7 @@ public class MithrilDBHelper extends SQLiteOpenHelper {
         values.put(PERMICON, getBitmapAsByteArray(aPermData.getPermissionIcon()));
         values.put(PERMOP, aPermData.getOp());
         try {
-            insertedRowId = db.insertOrThrow(getPermissionsTableName(), null, values);
+            insertedRowId = db.insertWithOnConflict(getPermissionsTableName(), null, values, SQLiteDatabase.CONFLICT_REPLACE);
         } catch (SQLiteConstraintException e) {
             updateConflictedGooglePermissions(db, aPermData);
             throw new PermissionWasUpdateException("Exception occured for " + aPermData.getPermissionName());
@@ -926,7 +928,7 @@ public class MithrilDBHelper extends SQLiteOpenHelper {
                 values.put(APPPERMRESPERID, permId);
                 values.put(APPPERMGRANTED, appPermission.getValue());
                 try {
-                    insertedRowId = db.insertOrThrow(getAppPermTableName(), null, values);
+                    insertedRowId = db.insertWithOnConflict(getAppPermTableName(), null, values, SQLiteDatabase.CONFLICT_REPLACE);
                 } catch (SQLiteConstraintException e) {
                     Log.e(MithrilApplication.getDebugTag(), "there was a SQLite Constraint Exception " + values, e);
                     return -1;
@@ -939,13 +941,17 @@ public class MithrilDBHelper extends SQLiteOpenHelper {
         return insertedRowId;
     }
 
-    public long addContext(SQLiteDatabase db, String type, String label) {
+    public long addContext(SQLiteDatabase db, String type, String label, boolean enabled) {
         long insertedRowId;
         ContentValues values = new ContentValues();
         values.put(CONTEXTTYPE, type);
         values.put(CONTEXTSEMANTICLABEL, label);
+        if(enabled)
+            values.put(CONTEXTENABLED, 1);
+        else
+            values.put(CONTEXTENABLED, 0);
         try {
-            insertedRowId = db.insertOrThrow(getContextTableName(), null, values);
+            insertedRowId = db.insertWithOnConflict(getContextTableName(), null, values, SQLiteDatabase.CONFLICT_REPLACE);
         } catch (SQLException e) {
             Log.e(MithrilApplication.getDebugTag(), "Error inserting " + values, e);
             return -1;
@@ -1523,7 +1529,8 @@ public class MithrilDBHelper extends SQLiteOpenHelper {
                 getPolicyRulesTableName() + ", " + getContextTableName() +
                 " WHERE " +
                 getPolicyRulesTableName() + "." + POLRULCTXID + " = " + getContextTableName() + "." + CONTEXTID +
-                ";";
+                " AND " +
+                getContextTableName() + "." + CONTEXTENABLED + " = 1;";
 
         Cursor cursor = db.rawQuery(selectQuery, null);
         try {
@@ -1575,7 +1582,9 @@ public class MithrilDBHelper extends SQLiteOpenHelper {
                 " AND " +
                 getPolicyRulesTableName() + "." + POLRULCTXID + " = " + getContextTableName() + "." + CONTEXTID +
                 " AND " +
-                getAppsTableName() + "." + APPPACKAGENAME + " = '" + appPkgName + "';";
+                getAppsTableName() + "." + APPPACKAGENAME + " = '" + appPkgName +
+                "' AND " +
+                getContextTableName() + "." + CONTEXTENABLED + " = 1;";
 
         Cursor cursor = db.rawQuery(selectQuery, null);
         try {
@@ -1629,7 +1638,9 @@ public class MithrilDBHelper extends SQLiteOpenHelper {
                 " AND " +
                 getPolicyRulesTableName() + "." + POLRULCTXID + " = " + getContextTableName() + "." + CONTEXTID +
                 " AND " +
-                getAppsTableName() + "." + APPPACKAGENAME + " = '" + appPkgName + "';";
+                getAppsTableName() + "." + APPPACKAGENAME + " = '" + appPkgName + "'" +
+                " AND " +
+                getContextTableName() + "." + CONTEXTENABLED + " = 1;";
 
         Cursor cursor = db.rawQuery(selectQuery, null);
         try {
@@ -1703,7 +1714,9 @@ public class MithrilDBHelper extends SQLiteOpenHelper {
                 " FROM " +
                 getContextTableName() +
                 " WHERE " +
-                getContextTableName() + "." + CONTEXTID + " = " + id + ";";
+                getContextTableName() + "." + CONTEXTID + " = " + id +
+                " AND " +
+                getContextTableName() + "." + CONTEXTENABLED + " = 1;";
 
         Cursor cursor = db.rawQuery(selectQuery, null);
         try {
@@ -1727,7 +1740,9 @@ public class MithrilDBHelper extends SQLiteOpenHelper {
                 " WHERE " +
                 getContextTableName() + "." + CONTEXTSEMANTICLABEL + " = '" + label + "'" +
                 " AND " +
-                getContextTableName() + "." + CONTEXTTYPE + " = '" + type + "';";
+                getContextTableName() + "." + CONTEXTTYPE + " = '" + type + "'" +
+                " AND " +
+                getContextTableName() + "." + CONTEXTENABLED + " = 1;";
 
         Cursor cursor = db.rawQuery(selectQuery, null);
         try {
@@ -1851,13 +1866,17 @@ public class MithrilDBHelper extends SQLiteOpenHelper {
         }
     }
 
-    private int updateContext(SQLiteDatabase db, String label, String type) {
+    public int updateContext(SQLiteDatabase db, String label, String type, boolean enabled) {
         ContentValues values = new ContentValues();
         values.put(CONTEXTTYPE, type);
         values.put(CONTEXTSEMANTICLABEL, label);
+        if(enabled)
+            values.put(CONTEXTENABLED, 1);
+        else
+            values.put(CONTEXTENABLED, 0);
         try {
-            return db.update(getContextTableName(), values, CONTEXTSEMANTICLABEL + " = ?",
-                    new String[]{String.valueOf(label)});
+            return db.update(getContextTableName(), values, CONTEXTSEMANTICLABEL + " = ? AND " + CONTEXTTYPE + " = ? ",
+                    new String[]{label, type});
         } catch (SQLException e) {
             throw new SQLException("Exception " + e + " error updating Context: " + label);
         }
@@ -1922,10 +1941,10 @@ public class MithrilDBHelper extends SQLiteOpenHelper {
         }
     }
 
-    public void deleteContext(SQLiteDatabase db, String label) {
+    public void deleteContext(SQLiteDatabase db, String label, String type) {
         try {
-            db.delete(getContextTableName(), CONTEXTSEMANTICLABEL + " = ?",
-                    new String[]{String.valueOf(label)});
+            db.delete(getContextTableName(), CONTEXTSEMANTICLABEL + " = ? AND " + CONTEXTTYPE + " = ? ",
+                    new String[]{label, type});
         } catch (SQLException e) {
             throw new SQLException("Could not find " + e);
         }

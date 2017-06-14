@@ -185,7 +185,10 @@ public class MithrilApplication extends Application {
     private static final String PREF_KEY_LIST_OF_ACTIVITY_INSTANCES = "listOfActivityInstances";
     private static final String PREF_KEY_LIST_OF_PRESENCE_INSTANCES = "listOfPresenceInstances";
     private static final String PREF_KEY_LIST_OF_TEMPORAL_INSTANCES = "listOfTemporalInstances";
-    private static final String PREF_KEY_INIT_INSTANCES_CREATED = "initInstancesCreated";
+    private static final String PREF_KEY_LOCA_INSTANCES_CREATED = "locaInstancesCreated";
+    private static final String PREF_KEY_TIME_INSTANCES_CREATED = "timeInstancesCreated";
+    private static final String PREF_KEY_PRES_INSTANCES_CREATED = "presInstancesCreated";
+    private static final String PREF_KEY_ACTI_INSTANCES_CREATED = "actiInstancesCreated";
 
     private static final String PREF_KEY_USER_DENIED_USAGE_STATS_PERMISSIONS = "userDeniedUsageStatsPermissions";
     private static final String PREF_KEY_USER_DENIED_PERMISSIONS = "userDeniedPermissions";
@@ -761,10 +764,6 @@ public class MithrilApplication extends Application {
         return PREF_KEY_LIST_OF_TEMPORAL_INSTANCES;
     }
 
-    public static String getPrefKeyInitInstancesCreated() {
-        return PREF_KEY_INIT_INSTANCES_CREATED;
-    }
-
     public static String getPrefHomeLocationKey() {
         return PREF_HOME_LOCATION_KEY;
     }
@@ -919,6 +918,22 @@ public class MithrilApplication extends Application {
 
     public static String getPrefKeyPermGroupName() {
         return PREF_KEY_PERM_GROUP_NAME;
+    }
+
+    public static String getPrefKeyLocaInstancesCreated() {
+        return PREF_KEY_LOCA_INSTANCES_CREATED;
+    }
+
+    public static String getPrefKeyTimeInstancesCreated() {
+        return PREF_KEY_TIME_INSTANCES_CREATED;
+    }
+
+    public static String getPrefKeyPresInstancesCreated() {
+        return PREF_KEY_PRES_INSTANCES_CREATED;
+    }
+
+    public static String getPrefKeyActiInstancesCreated() {
+        return PREF_KEY_ACTI_INSTANCES_CREATED;
     }
 
     public static float getSmallestDisplacement() {
