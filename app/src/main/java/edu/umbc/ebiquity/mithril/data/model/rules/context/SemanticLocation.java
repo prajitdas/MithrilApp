@@ -5,6 +5,8 @@ import android.location.Location;
 import android.os.Parcel;
 import android.os.Parcelable;
 
+import java.util.Locale;
+
 import edu.umbc.ebiquity.mithril.MithrilApplication;
 
 public class SemanticLocation implements Parcelable, SemanticUserContext {
@@ -21,7 +23,7 @@ public class SemanticLocation implements Parcelable, SemanticUserContext {
     };
     private final String type = MithrilApplication.getPrefKeyContextTypeLocation();
     private Location location;
-    private Address address;
+    private Address address = new Address(Locale.getDefault());
     private String inferredLocation;
     private boolean enabled = false;
     private CharSequence details;
