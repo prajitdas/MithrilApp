@@ -3,16 +3,13 @@ package edu.umbc.ebiquity.mithril.ui.activities;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.FragmentManager;
-import android.app.PendingIntent;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.content.res.Resources;
 import android.database.sqlite.SQLiteDatabase;
 import android.location.Address;
 import android.location.Location;
-import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
@@ -21,8 +18,6 @@ import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
-import android.text.Html;
-import android.text.Spanned;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -36,10 +31,7 @@ import com.google.android.gms.common.GoogleApiAvailability;
 import com.google.android.gms.common.GooglePlayServicesNotAvailableException;
 import com.google.android.gms.common.GooglePlayServicesRepairableException;
 import com.google.android.gms.common.api.GoogleApiClient;
-import com.google.android.gms.common.api.ResultCallback;
 import com.google.android.gms.common.api.Status;
-import com.google.android.gms.location.Geofence;
-import com.google.android.gms.location.GeofencingRequest;
 import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.location.places.Place;
 import com.google.android.gms.location.places.ui.PlaceAutocomplete;
@@ -64,9 +56,7 @@ import edu.umbc.ebiquity.mithril.ui.fragments.instancecreationactivityfragments.
 import edu.umbc.ebiquity.mithril.ui.fragments.instancecreationactivityfragments.SemanticNearActorFragment;
 import edu.umbc.ebiquity.mithril.ui.fragments.instancecreationactivityfragments.SemanticTimeFragment;
 import edu.umbc.ebiquity.mithril.util.services.FetchAddressIntentService;
-import edu.umbc.ebiquity.mithril.util.services.GeofenceTransitionsIntentService;
 import edu.umbc.ebiquity.mithril.util.specialtasks.errorsnexceptions.AddressKeyMissingError;
-import edu.umbc.ebiquity.mithril.util.specialtasks.errorsnexceptions.GeofenceErrorMessages;
 import edu.umbc.ebiquity.mithril.util.specialtasks.permissions.PermissionHelper;
 
 public class InstanceCreationActivity extends AppCompatActivity
@@ -75,14 +65,15 @@ public class InstanceCreationActivity extends AppCompatActivity
         SemanticNearActorFragment.OnListFragmentInteractionListener,
         SemanticActivityFragment.OnListFragmentInteractionListener,
         GoogleApiClient.ConnectionCallbacks,
-        GoogleApiClient.OnConnectionFailedListener {//,
-//        ResultCallback<Status> {
+        GoogleApiClient.OnConnectionFailedListener {
+//, ResultCallback<Status> {
 
     private static final String FRAGMENT_LOCATION = "location";
     private static final String FRAGMENT_PRESENCE = "presence";
     private static final String FRAGMENT_TEMPORAL = "temporal";
     private static final String FRAGMENT_ACTIVITY = "activity";
     private static String currentFragment = new String();
+    private static Gson contextDataStoreGson = new Gson();
     private final int PLACE_AUTOCOMPLETE_REQUEST_CODE_HOME = 1;
     private final int PLACE_AUTOCOMPLETE_REQUEST_CODE_WORK = 2;
     private final int PLACE_AUTOCOMPLETE_REQUEST_CODE_MORE = 3;
@@ -120,7 +111,6 @@ public class InstanceCreationActivity extends AppCompatActivity
      * GoogleApiClient connects.
      */
     private boolean mAddressRequested;
-    private AddressResultReceiver mAddressResultReceiver;
     /**
      * Used to keep track of whether geofences were added.
      */
@@ -129,6 +119,7 @@ public class InstanceCreationActivity extends AppCompatActivity
      * Used when requesting to add or remove geofences.
      */
 //    private PendingIntent mGeofencePendingIntent;
+    private AddressResultReceiver mAddressResultReceiver;
 
     /**
      * Helper method to format information about a place nicely.
@@ -553,11 +544,9 @@ public class InstanceCreationActivity extends AppCompatActivity
                 .setMessage("Are you sure you want to disable this context piece?")
                 .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int which) {
-                        editor.remove(item.getInferredTime());
                         removeContextFromDB(item.getInferredTime());
                         semanticTimes.remove(item.getInferredTime());
-                        editor.remove(item.getInferredTime());
-                        editor.apply();
+                        disableContext(MithrilApplication.getPrefKeyContextTypeTemporal(), item.getInferredTime());
                         loadSemanticTemporalFragment();
                     }
                 })
@@ -582,12 +571,10 @@ public class InstanceCreationActivity extends AppCompatActivity
                 .setMessage("Are you sure you want to delete this context piece?")
                 .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int which) {
-                        editor.remove(item.getInferredLocation());
+//                        updateGeofences(item.getInferredLocation());
                         removeContextFromDB(item.getInferredLocation());
                         semanticLocations.remove(item.getInferredLocation());
-//                        updateGeofences(item.getInferredLocation());
-                        editor.remove(item.getInferredLocation());
-                        editor.apply();
+                        disableContext(MithrilApplication.getPrefKeyContextTypeLocation(), item.getInferredLocation());
                         loadSemanticLocationFragment();
                     }
                 })
@@ -612,11 +599,9 @@ public class InstanceCreationActivity extends AppCompatActivity
                 .setMessage("Are you sure you want to delete this context piece?")
                 .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int which) {
-                        editor.remove(item.getInferredActivity());
                         removeContextFromDB(item.getInferredActivity());
                         semanticActivities.remove(item.getInferredActivity());
-                        editor.remove(item.getInferredActivity());
-                        editor.apply();
+                        disableContext(MithrilApplication.getPrefKeyContextTypeActivity(), item.getInferredActivity());
                         loadSemanticActivityFragment();
                     }
                 })
@@ -641,11 +626,9 @@ public class InstanceCreationActivity extends AppCompatActivity
                 .setMessage("Are you sure you want to delete this context piece?")
                 .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int which) {
-                        editor.remove(item.getInferredRelationship());
                         removeContextFromDB(item.getInferredRelationship());
                         semanticNearActors.remove(item.getInferredRelationship());
-                        editor.remove(item.getInferredRelationship());
-                        editor.apply();
+                        disableContext(MithrilApplication.getPrefKeyContextTypePresence(), item.getInferredRelationship());
                         loadSemanticPresenceFragment();
                     }
                 })
@@ -729,9 +712,6 @@ public class InstanceCreationActivity extends AppCompatActivity
                 isThereLocationContextToSave = true;
                 Place place = PlaceAutocomplete.getPlace(this, data);
 
-                editor.putString(MithrilApplication.getPrefHomeLocationKey(), place.getAddress().toString());
-                editor.apply();
-
                 Location userInputLocation = new Location("placesAPI");
                 userInputLocation.setLatitude(place.getLatLng().latitude);
                 userInputLocation.setLongitude(place.getLatLng().longitude);
@@ -756,9 +736,6 @@ public class InstanceCreationActivity extends AppCompatActivity
             if (resultCode == Activity.RESULT_OK) {
                 isThereLocationContextToSave = true;
                 Place place = PlaceAutocomplete.getPlace(this, data);
-
-                editor.putString(MithrilApplication.getPrefWorkLocationKey(), place.getAddress().toString());
-                editor.apply();
 
                 Location userInputLocation = new Location("placesAPI");
                 userInputLocation.setLatitude(place.getLatLng().latitude);
@@ -799,12 +776,6 @@ public class InstanceCreationActivity extends AppCompatActivity
         final String[] listOfLocationContextPiecesFromTheOntology = MithrilApplication.getContextArrayLocation();
         for (int index = 0; index < listOfLocationContextPiecesFromTheOntology.length; index++)
             arrayAdapter.add(listOfLocationContextPiecesFromTheOntology[index]);
-//        arrayAdapter.add("Grocery Store");
-//        arrayAdapter.add("Pub");
-//        arrayAdapter.add("Restaurant");
-//        arrayAdapter.add("Movie");
-//        arrayAdapter.add("Mall");
-//        arrayAdapter.add("Gym");
 
         AlertDialog.Builder dialog = new AlertDialog.Builder(InstanceCreationActivity.this);
         dialog.setIcon(R.drawable.map_marker);
@@ -813,9 +784,6 @@ public class InstanceCreationActivity extends AppCompatActivity
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 String semanticLocationLabel = arrayAdapter.getItem(which);
-
-                editor.putString(semanticLocationLabel, place.getAddress().toString());
-                editor.apply();
 
                 Location userInputLocation = new Location("placesAPI");
                 userInputLocation.setLatitude(place.getLatLng().latitude);
@@ -887,14 +855,6 @@ public class InstanceCreationActivity extends AppCompatActivity
         // Refer to the javadoc for ConnectionResult to see what error codes might be returned in
         // onConnectionFailed.
         Log.i(MithrilApplication.getDebugTag(), "Connection failed: ConnectionResult.getErrorCode() = " + result.getErrorCode());
-    }
-
-    @Override
-    public void onConnectionSuspended(int cause) {
-        // The connection to Google Play services was lost for some reason.
-        Log.i(MithrilApplication.getDebugTag(), "Connection suspended");
-
-        // onConnected() will be called again automatically when the service reconnects
     }
 
 //    /**
@@ -1078,12 +1038,32 @@ public class InstanceCreationActivity extends AppCompatActivity
 ////        }
 //    }
 
+    @Override
+    public void onConnectionSuspended(int cause) {
+        // The connection to Google Play services was lost for some reason.
+        Log.i(MithrilApplication.getDebugTag(), "Connection suspended");
+
+        // onConnected() will be called again automatically when the service reconnects
+    }
+
     private void addContextToDB(String type, String label) {
         MithrilDBHelper.getHelper(this).addContext(mithrilDB, type, label);
     }
 
     private void removeContextFromDB(String label) {
         MithrilDBHelper.getHelper(this).deleteContext(mithrilDB, label);
+    }
+
+    private void enableContext(String contextType, String contextLabel, String serializedJsonContext) {
+        editor.putString(contextType + contextLabel, serializedJsonContext);
+        editor.apply();
+    }
+
+    private void disableContext(String contextType, String contextLabel) {
+        if (sharedPreferences.contains(contextType + contextLabel)) {
+            editor.remove(contextType + contextLabel);
+            editor.apply();
+        }
     }
 
     class AddressResultReceiver extends ResultReceiver {
@@ -1166,11 +1146,9 @@ public class InstanceCreationActivity extends AppCompatActivity
             tempSemanticLocation.setAddress(address);
             semanticLocations.put(key, tempSemanticLocation);
 
-            SharedPreferences.Editor editor = context.getSharedPreferences(MithrilApplication.getSharedPreferencesName(), Context.MODE_PRIVATE).edit();
-            Gson storeDataGson = new Gson();
-            String storeDataJson = storeDataGson.toJson(tempSemanticLocation);
-            editor.putString(MithrilApplication.getPrefKeyContextTypeLocation() + key, storeDataJson);
-            editor.apply();
+            enableContext(MithrilApplication.getPrefKeyContextTypeLocation(),
+                    key,
+                    InstanceCreationActivity.contextDataStoreGson.toJson(tempSemanticLocation));
 
             //Locations have been added; update view
             loadSemanticLocationFragment();
