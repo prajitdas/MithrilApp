@@ -1,30 +1,17 @@
 package edu.umbc.ebiquity.mithril.util.specialtasks.detect.policyconflicts;
 
 import android.content.Context;
-import android.content.SharedPreferences;
-import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
-import android.location.Address;
-import android.location.Location;
 import android.util.Log;
-import android.widget.Toast;
-
-import com.google.gson.Gson;
 
 import java.sql.Timestamp;
 import java.util.List;
-import java.util.Map;
 
 import edu.umbc.ebiquity.mithril.MithrilApplication;
 import edu.umbc.ebiquity.mithril.data.dbhelpers.MithrilDBHelper;
 import edu.umbc.ebiquity.mithril.data.model.rules.Action;
 import edu.umbc.ebiquity.mithril.data.model.rules.PolicyRule;
-import edu.umbc.ebiquity.mithril.data.model.rules.RepeatFrequency;
 import edu.umbc.ebiquity.mithril.data.model.rules.Violation;
-import edu.umbc.ebiquity.mithril.data.model.rules.context.SemanticLocation;
-import edu.umbc.ebiquity.mithril.data.model.rules.context.SemanticTime;
-import edu.umbc.ebiquity.mithril.data.model.rules.context.SemanticUserContext;
-import edu.umbc.ebiquity.mithril.util.specialtasks.errorsnexceptions.CWAException;
 
 /**
  * Created by prajit on 12/13/16.

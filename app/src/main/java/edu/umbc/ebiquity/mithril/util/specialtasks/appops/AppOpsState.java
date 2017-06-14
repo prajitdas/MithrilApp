@@ -35,8 +35,8 @@ package edu.umbc.ebiquity.mithril.util.specialtasks.appops;
  */
 
 import android.app.AppOpsManager;
-import android.app.AppOpsManager.PackageOps;
 import android.app.AppOpsManager.OpEntry;
+import android.app.AppOpsManager.PackageOps;
 import android.content.Context;
 import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageInfo;

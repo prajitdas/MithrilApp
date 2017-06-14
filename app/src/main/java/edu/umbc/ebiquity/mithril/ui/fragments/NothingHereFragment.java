@@ -9,14 +9,13 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-import edu.umbc.ebiquity.mithril.MithrilApplication;
 import edu.umbc.ebiquity.mithril.R;
 
 public class NothingHereFragment extends Fragment {
 
+    private static final String WHAT_CORE_ACTIVITY_FRAGMENT_ARE_WE_IN = "coreActivityFragment";
     private OnFragmentInteractionListener mListener;
     private String fragmentType;
-    private static final String WHAT_CORE_ACTIVITY_FRAGMENT_ARE_WE_IN = "coreActivityFragment";
 
     public NothingHereFragment() {
         // Required empty public constructor

@@ -17,7 +17,6 @@ import java.util.TreeMap;
 
 import edu.umbc.ebiquity.mithril.MithrilApplication;
 import edu.umbc.ebiquity.mithril.util.specialtasks.detect.policyconflicts.ViolationDetector;
-import edu.umbc.ebiquity.mithril.util.specialtasks.errorsnexceptions.CWAException;
 
 /*
  * Taken from:

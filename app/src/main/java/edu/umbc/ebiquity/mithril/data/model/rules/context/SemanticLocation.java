@@ -5,15 +5,24 @@ import android.location.Location;
 import android.os.Parcel;
 import android.os.Parcelable;
 
-import java.util.Locale;
-
 import edu.umbc.ebiquity.mithril.MithrilApplication;
 
 public class SemanticLocation implements Parcelable, SemanticUserContext {
+    public static final Creator<SemanticLocation> CREATOR = new Creator<SemanticLocation>() {
+        @Override
+        public SemanticLocation createFromParcel(Parcel in) {
+            return new SemanticLocation(in);
+        }
+
+        @Override
+        public SemanticLocation[] newArray(int size) {
+            return new SemanticLocation[size];
+        }
+    };
+    private final String type = MithrilApplication.getPrefKeyContextTypeLocation();
     private Location location;
     private Address address;
     private String inferredLocation;
-    private final String type = MithrilApplication.getPrefKeyContextTypeLocation();
     private boolean enabled = false;
     private CharSequence details;
 
@@ -44,18 +53,6 @@ public class SemanticLocation implements Parcelable, SemanticUserContext {
     public int describeContents() {
         return 0;
     }
-
-    public static final Creator<SemanticLocation> CREATOR = new Creator<SemanticLocation>() {
-        @Override
-        public SemanticLocation createFromParcel(Parcel in) {
-            return new SemanticLocation(in);
-        }
-
-        @Override
-        public SemanticLocation[] newArray(int size) {
-            return new SemanticLocation[size];
-        }
-    };
 
     public Location getLocation() {
         return location;
@@ -92,6 +89,11 @@ public class SemanticLocation implements Parcelable, SemanticUserContext {
     }
 
     @Override
+    public void setLabel(String label) {
+        inferredLocation = label;
+    }
+
+    @Override
     public boolean isEnabled() {
         return enabled;
     }
@@ -99,11 +101,6 @@ public class SemanticLocation implements Parcelable, SemanticUserContext {
     @Override
     public void setEnabled(boolean enabled) {
         this.enabled = enabled;
-    }
-
-    @Override
-    public void setLabel(String label) {
-        inferredLocation = label;
     }
 
     public CharSequence getDetails() {

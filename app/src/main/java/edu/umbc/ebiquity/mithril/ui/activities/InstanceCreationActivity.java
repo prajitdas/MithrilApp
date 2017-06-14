@@ -717,7 +717,7 @@ public class InstanceCreationActivity extends AppCompatActivity
                 userInputLocation.setLongitude(place.getLatLng().longitude);
 
                 SemanticLocation semanticLocation = new SemanticLocation(MithrilApplication.getPrefHomeLocationKey(), userInputLocation);
-//                semanticLocation.setLocationDetails(getPlaceType(place.getPlaceTypes()));
+//                semanticLocation.setDetails(getPlaceType(place.getPlaceTypes()));
                 semanticLocation.setDetails(place.getName().toString());
 
                 semanticLocations.put(MithrilApplication.getPrefHomeLocationKey(), semanticLocation);
@@ -742,7 +742,7 @@ public class InstanceCreationActivity extends AppCompatActivity
                 userInputLocation.setLongitude(place.getLatLng().longitude);
 
                 SemanticLocation semanticLocation = new SemanticLocation(MithrilApplication.getPrefWorkLocationKey(), userInputLocation);
-//                semanticLocation.setLocationDetails(getPlaceType(place.getPlaceTypes()));
+//                semanticLocation.setDetails(getPlaceType(place.getPlaceTypes()));
                 semanticLocation.setDetails(place.getName().toString());
 
                 semanticLocations.put(MithrilApplication.getPrefWorkLocationKey(), semanticLocation);
@@ -790,7 +790,7 @@ public class InstanceCreationActivity extends AppCompatActivity
                 userInputLocation.setLongitude(place.getLatLng().longitude);
 
                 SemanticLocation semanticLocation = new SemanticLocation(semanticLocationLabel, userInputLocation);
-//                semanticLocation.setLocationDetails(getPlaceType(place.getPlaceTypes()));
+//                semanticLocation.setDetails(getPlaceType(place.getPlaceTypes()));
                 semanticLocation.setDetails(place.getName().toString());
 
                 semanticLocations.put(semanticLocationLabel, semanticLocation);

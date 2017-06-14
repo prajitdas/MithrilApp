@@ -2,11 +2,9 @@ package edu.umbc.ebiquity.mithril.util.specialtasks.root;
 
 import android.util.Log;
 
-import java.io.BufferedReader;
 import java.io.DataOutputStream;
 import java.io.File;
 import java.io.IOException;
-import java.io.InputStreamReader;
 
 import edu.umbc.ebiquity.mithril.MithrilApplication;
 import edu.umbc.ebiquity.mithril.util.specialtasks.errorsnexceptions.PhoneNotRootedException;
@@ -20,6 +18,12 @@ public class RootAccess {
     private Process rootProcess;
     private boolean rooted;
 
+    public RootAccess() throws PhoneNotRootedException {
+        testRooted();
+        if (!isRooted())
+            throw new PhoneNotRootedException();
+    }
+
     public Process getRootProcess() {
         return rootProcess;
     }
@@ -28,18 +32,12 @@ public class RootAccess {
         this.rootProcess = rootProcess;
     }
 
-    public void setRooted(boolean rooted) {
-        this.rooted = rooted;
-    }
-
     public boolean isRooted() {
         return rooted;
     }
 
-    public RootAccess() throws PhoneNotRootedException {
-        testRooted();
-        if (!isRooted())
-            throw new PhoneNotRootedException();
+    public void setRooted(boolean rooted) {
+        this.rooted = rooted;
     }
 
     public boolean runScript(String[] statementsToRun) throws PhoneNotRootedException {

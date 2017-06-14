@@ -30,7 +30,6 @@ import edu.umbc.ebiquity.mithril.MithrilApplication;
 import edu.umbc.ebiquity.mithril.R;
 import edu.umbc.ebiquity.mithril.data.model.rules.AppUsageStats;
 import edu.umbc.ebiquity.mithril.data.model.rules.Resource;
-import edu.umbc.ebiquity.mithril.ui.adapters.UsageStatsRecyclerViewAdapter;
 import edu.umbc.ebiquity.mithril.util.specialtasks.appops.AppOpsState;
 
 /**

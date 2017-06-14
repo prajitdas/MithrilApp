@@ -5,15 +5,11 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.CheckBox;
-import android.widget.CompoundButton;
 import android.widget.TextView;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
-import java.util.Map;
 
 import edu.umbc.ebiquity.mithril.R;
 import edu.umbc.ebiquity.mithril.data.model.rules.context.SemanticLocation;
@@ -27,8 +23,8 @@ import edu.umbc.ebiquity.mithril.ui.fragments.instancecreationactivityfragments.
 public class SemanticLocationRecyclerViewAdapter extends RecyclerView.Adapter<SemanticLocationRecyclerViewAdapter.ViewHolder> {
 
     private final List<SemanticLocation> semanticLocations;
-    private List<SemanticLocation> checkedLocations = new ArrayList<>();
     private final OnListFragmentInteractionListener mListener;
+    private List<SemanticLocation> checkedLocations = new ArrayList<>();
     private View view;
 
     public SemanticLocationRecyclerViewAdapter(List<SemanticLocation> items, OnListFragmentInteractionListener listener) {
