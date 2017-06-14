@@ -31,6 +31,7 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.Toast;
 
+import com.google.android.gms.awareness.Awareness;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GoogleApiAvailability;
 import com.google.android.gms.common.GooglePlayServicesNotAvailableException;
@@ -38,6 +39,7 @@ import com.google.android.gms.common.GooglePlayServicesRepairableException;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.common.api.ResultCallback;
 import com.google.android.gms.common.api.Status;
+import com.google.android.gms.location.DetectedActivity;
 import com.google.android.gms.location.Geofence;
 import com.google.android.gms.location.GeofencingRequest;
 import com.google.android.gms.location.LocationServices;
@@ -158,10 +160,15 @@ public class InstanceCreationActivity extends AppCompatActivity
     }
 
     private void initData() {
+        GoogleApiClient client = new GoogleApiClient.Builder(this)
+                .addApi(Awareness.API)
+                .addConnectionCallbacks(this)
+                .addOnConnectionFailedListener(this)
+                .build();
         mithrilDB = MithrilDBHelper.getHelper(this).getWritableDatabase();
         Gson retrieveDataGson = new Gson();
-        String retrieveDataJson = null;
-        Map<String, ?> allPrefs = new HashMap<>();
+        String retrieveDataJson;
+        Map<String, ?> allPrefs;
         try {
             allPrefs = sharedPreferences.getAll();
             for (Map.Entry<String, ?> aPref : allPrefs.entrySet()) {
