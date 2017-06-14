@@ -191,7 +191,7 @@ public class MithrilDBHelper extends SQLiteOpenHelper {
             CONTEXTID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
             CONTEXTTYPE + " TEXT NOT NULL, " +
             CONTEXTSEMANTICLABEL + " TEXT NOT NULL, " +
-            CONTEXTENABLED + " INTEGER NOT NULL DEAFULT 0 " +
+            CONTEXTENABLED + " INTEGER NOT NULL DEFAULT 0 " +
             ");";
     /**
      * -- Table 5: policyrules
