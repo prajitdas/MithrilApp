@@ -9,17 +9,33 @@ import edu.umbc.ebiquity.mithril.MithrilApplication;
 import edu.umbc.ebiquity.mithril.data.model.rules.RepeatFrequency;
 
 public class SemanticTime implements Parcelable, SemanticUserContext {
-    private boolean repeats;
     private RepeatFrequency repeatFrequency;
     private Timestamp first;
-    private long period;
+    private int period;
     private String inferredTime;
     private final String type = MithrilApplication.getPrefKeyContextTypeTemporal();
+    private boolean enabled = false;
 
     protected SemanticTime(Parcel in) {
-        repeats = in.readByte() != 0;
-        period = in.readLong();
+        period = in.readInt();
         inferredTime = in.readString();
+        enabled = in.readByte() != 0;
+        first = new Timestamp(in.readLong());
+        repeatFrequency = RepeatFrequency.charSeqToRepeatFrequency(in.readCharSequence());
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeInt(period);
+        dest.writeString(inferredTime);
+        dest.writeByte((byte) (enabled ? 1 : 0));
+        dest.writeLong(first.getTime());
+        dest.writeCharSequence(repeatFrequency.getRepFreqCharSeq());
+    }
+
+    @Override
+    public int describeContents() {
+        return 0;
     }
 
     public static final Creator<SemanticTime> CREATOR = new Creator<SemanticTime>() {
@@ -33,58 +49,6 @@ public class SemanticTime implements Parcelable, SemanticUserContext {
             return new SemanticTime[size];
         }
     };
-
-    public SemanticTime(boolean repeats, RepeatFrequency repeatFrequency, Timestamp first, long period, String inferredTime) {
-        this.repeats = repeats;
-        this.repeatFrequency = repeatFrequency;
-        this.first = first;
-        this.period = period;
-        this.inferredTime = inferredTime;
-    }
-
-    public SemanticTime(boolean repeats, RepeatFrequency repeatFrequency, Timestamp first, String inferredTime) {
-        this.repeats = repeats;
-        this.repeatFrequency = repeatFrequency;
-        this.first = first;
-        this.period = MithrilApplication.getDefaultTimeSlot();
-        this.inferredTime = inferredTime;
-    }
-
-    @Override
-    public int describeContents() {
-        return 0;
-    }
-
-    @Override
-    public void writeToParcel(Parcel dest, int flags) {
-        dest.writeByte((byte) (repeats ? 1 : 0));
-        dest.writeLong(period);
-        dest.writeString(inferredTime);
-        dest.writeString(type);
-    }
-
-    @Override
-    public String getType() {
-        return null;
-    }
-
-    @Override
-    public String getLabel() {
-        return null;
-    }
-
-    @Override
-    public void setLabel(String label) {
-
-    }
-
-    public boolean isRepeats() {
-        return repeats;
-    }
-
-    public void setRepeats(boolean repeats) {
-        this.repeats = repeats;
-    }
 
     public RepeatFrequency getRepeatFrequency() {
         return repeatFrequency;
@@ -102,11 +66,11 @@ public class SemanticTime implements Parcelable, SemanticUserContext {
         this.first = first;
     }
 
-    public long getPeriod() {
+    public int getPeriod() {
         return period;
     }
 
-    public void setPeriod(long period) {
+    public void setPeriod(int period) {
         this.period = period;
     }
 
@@ -119,40 +83,27 @@ public class SemanticTime implements Parcelable, SemanticUserContext {
     }
 
     @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (!(o instanceof SemanticTime)) return false;
-
-        SemanticTime that = (SemanticTime) o;
-
-        if (isRepeats() != that.isRepeats()) return false;
-        if (getPeriod() != that.getPeriod()) return false;
-        if (getRepeatFrequency() != that.getRepeatFrequency()) return false;
-        if (!getFirst().equals(that.getFirst())) return false;
-        if (!getInferredTime().equals(that.getInferredTime())) return false;
-        return getType().equals(that.getType());
+    public String getType() {
+        return type;
     }
 
     @Override
-    public int hashCode() {
-        int result = (isRepeats() ? 1 : 0);
-        result = 31 * result + getRepeatFrequency().hashCode();
-        result = 31 * result + getFirst().hashCode();
-        result = 31 * result + (int) (getPeriod() ^ (getPeriod() >>> 32));
-        result = 31 * result + getInferredTime().hashCode();
-        result = 31 * result + getType().hashCode();
-        return result;
+    public String getLabel() {
+        return inferredTime;
     }
 
     @Override
-    public String toString() {
-        return "SemanticTime{" +
-                "repeats=" + repeats +
-                ", repeatFrequency=" + repeatFrequency +
-                ", first=" + first +
-                ", period=" + period +
-                ", inferredTime='" + inferredTime + '\'' +
-                ", type='" + type + '\'' +
-                '}';
+    public boolean isEnabled() {
+        return enabled;
+    }
+
+    @Override
+    public void setEnabled(boolean enabled) {
+        this.enabled = enabled;
+    }
+
+    @Override
+    public void setLabel(String label) {
+        inferredTime = label;
     }
 }

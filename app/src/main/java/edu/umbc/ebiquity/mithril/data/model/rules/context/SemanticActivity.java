@@ -6,42 +6,20 @@ import android.os.Parcelable;
 import edu.umbc.ebiquity.mithril.MithrilApplication;
 
 public class SemanticActivity implements Parcelable, SemanticUserContext {
-    public static final Parcelable.Creator<SemanticActivity> CREATOR =
-            new Parcelable.Creator<SemanticActivity>() {
-                @Override
-                public SemanticActivity createFromParcel(Parcel in) {
-                    return new SemanticActivity(in.readString());
-                }
-
-                @Override
-                public SemanticActivity[] newArray(int size) {
-                    return new SemanticActivity[size];
-                }
-            };
     private String inferredActivity;
     private final String type = MithrilApplication.getPrefKeyContextTypeActivity();
+    private boolean enabled = false;
 
-    public SemanticActivity(String inferredActivity) {
-        setInferredActivity(inferredActivity);
-    }
-
-    public SemanticActivity() {
-        setInferredActivity(MithrilApplication.getContextDefaultActivity());
-    }
-
-    public String getInferredActivity() {
-        return inferredActivity;
-    }
-
-    public void setInferredActivity(String inferredActivity) {
-        this.inferredActivity = inferredActivity;
+    protected SemanticActivity(Parcel in) {
+        inferredActivity = in.readString();
+        enabled = in.readByte() != 0;
     }
 
     @Override
-    public String toString() {
-        return "SemanticActivity{" +
-                ", inferredActivity='" + inferredActivity + '\'' +
-                '}';
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeString(inferredActivity);
+        dest.writeString(type);
+        dest.writeByte((byte) (enabled ? 1 : 0));
     }
 
     @Override
@@ -49,24 +27,24 @@ public class SemanticActivity implements Parcelable, SemanticUserContext {
         return 0;
     }
 
-    @Override
-    public void writeToParcel(Parcel dest, int flags) {
-        dest.writeString(inferredActivity);
+    public static final Creator<SemanticActivity> CREATOR = new Creator<SemanticActivity>() {
+        @Override
+        public SemanticActivity createFromParcel(Parcel in) {
+            return new SemanticActivity(in);
+        }
+
+        @Override
+        public SemanticActivity[] newArray(int size) {
+            return new SemanticActivity[size];
+        }
+    };
+
+    public String getInferredActivity() {
+        return inferredActivity;
     }
 
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (!(o instanceof SemanticActivity)) return false;
-
-        SemanticActivity that = (SemanticActivity) o;
-
-        return getInferredActivity().equals(that.getInferredActivity());
-    }
-
-    @Override
-    public int hashCode() {
-        return getInferredActivity().hashCode();
+    public void setInferredActivity(String inferredActivity) {
+        this.inferredActivity = inferredActivity;
     }
 
     @Override
@@ -80,7 +58,37 @@ public class SemanticActivity implements Parcelable, SemanticUserContext {
     }
 
     @Override
+    public boolean isEnabled() {
+        return enabled;
+    }
+
+    @Override
     public void setLabel(String label) {
         inferredActivity = label;
+    }
+
+    @Override
+    public void setEnabled(boolean enabled) {
+        this.enabled = enabled;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof SemanticActivity)) return false;
+
+        SemanticActivity that = (SemanticActivity) o;
+
+        if (isEnabled() != that.isEnabled()) return false;
+        if (!getInferredActivity().equals(that.getInferredActivity())) return false;
+        return getType().equals(that.getType());
+    }
+
+    @Override
+    public int hashCode() {
+        int result = getInferredActivity().hashCode();
+        result = 31 * result + getType().hashCode();
+        result = 31 * result + (isEnabled() ? 1 : 0);
+        return result;
     }
 }

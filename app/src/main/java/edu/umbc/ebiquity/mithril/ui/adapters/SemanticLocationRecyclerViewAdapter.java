@@ -55,8 +55,8 @@ public class SemanticLocationRecyclerViewAdapter extends RecyclerView.Adapter<Se
                 semanticLocation.getAddress().getPostalCode());
 
         if(semanticLocation.getAddress().equals(new Address(Locale.getDefault()))) {
-            if(semanticLocation.getLocationDetails() != null)
-                holder.mDetail.setText(semanticLocation.getLocationDetails());
+            if(semanticLocation.getDetails() != null)
+                holder.mDetail.setText(semanticLocation.getDetails());
             else {
                 StringBuffer latLng = new StringBuffer("Lat: ");
                 latLng.append(Double.toString(semanticLocation.getLocation().getLatitude()));
@@ -65,8 +65,8 @@ public class SemanticLocationRecyclerViewAdapter extends RecyclerView.Adapter<Se
                 holder.mDetail.setText(latLng.toString());
             }
         } else {
-            if(semanticLocation.getLocationDetails() != null)
-                holder.mDetail.setText(semanticLocation.getLocationDetails());
+            if(semanticLocation.getDetails() != null)
+                holder.mDetail.setText(semanticLocation.getDetails());
             else
                 holder.mDetail.setText(addressLine);
         }

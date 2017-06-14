@@ -718,7 +718,7 @@ public class InstanceCreationActivity extends AppCompatActivity
 
                 SemanticLocation semanticLocation = new SemanticLocation(MithrilApplication.getPrefHomeLocationKey(), userInputLocation);
 //                semanticLocation.setLocationDetails(getPlaceType(place.getPlaceTypes()));
-                semanticLocation.setLocationDetails(place.getName().toString());
+                semanticLocation.setDetails(place.getName().toString());
 
                 semanticLocations.put(MithrilApplication.getPrefHomeLocationKey(), semanticLocation);
                 /**
@@ -743,7 +743,7 @@ public class InstanceCreationActivity extends AppCompatActivity
 
                 SemanticLocation semanticLocation = new SemanticLocation(MithrilApplication.getPrefWorkLocationKey(), userInputLocation);
 //                semanticLocation.setLocationDetails(getPlaceType(place.getPlaceTypes()));
-                semanticLocation.setLocationDetails(place.getName().toString());
+                semanticLocation.setDetails(place.getName().toString());
 
                 semanticLocations.put(MithrilApplication.getPrefWorkLocationKey(), semanticLocation);
                 /**
@@ -791,7 +791,7 @@ public class InstanceCreationActivity extends AppCompatActivity
 
                 SemanticLocation semanticLocation = new SemanticLocation(semanticLocationLabel, userInputLocation);
 //                semanticLocation.setLocationDetails(getPlaceType(place.getPlaceTypes()));
-                semanticLocation.setLocationDetails(place.getName().toString());
+                semanticLocation.setDetails(place.getName().toString());
 
                 semanticLocations.put(semanticLocationLabel, semanticLocation);
                 /**
@@ -965,6 +965,7 @@ public class InstanceCreationActivity extends AppCompatActivity
             tempSemanticLocation.setAddress(address);
             semanticLocations.put(key, tempSemanticLocation);
 
+            tempSemanticLocation.setEnabled(true);
             enableContext(MithrilApplication.getPrefKeyContextTypeLocation(),
                     key,
                     InstanceCreationActivity.contextDataStoreGson.toJson(tempSemanticLocation));

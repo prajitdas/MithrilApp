@@ -10,72 +10,52 @@ import java.util.Locale;
 import edu.umbc.ebiquity.mithril.MithrilApplication;
 
 public class SemanticLocation implements Parcelable, SemanticUserContext {
-    public static final Creator<SemanticLocation> CREATOR =
-            new Creator<SemanticLocation>() {
-                @Override
-                public SemanticLocation createFromParcel(Parcel in) {
-                    String inferredLocation = in.readString();
-                    Location location = Location.CREATOR.createFromParcel(in);
-                    Address address = Address.CREATOR.createFromParcel(in);
-                    return new SemanticLocation(inferredLocation, location, address);
-                }
-
-                @Override
-                public SemanticLocation[] newArray(int size) {
-                    return new SemanticLocation[size];
-                }
-            };
     private Location location;
     private Address address;
     private String inferredLocation;
     private final String type = MithrilApplication.getPrefKeyContextTypeLocation();
+    private boolean enabled = false;
+    private CharSequence details;
 
-    public String getLocationDetails() {
-        return locationDetails;
+    public SemanticLocation(Parcel in) {
+        location = in.readParcelable(Location.class.getClassLoader());
+        address = in.readParcelable(Address.class.getClassLoader());
+        inferredLocation = in.readString();
+        enabled = in.readByte() != 0;
+        details = in.readCharSequence();
     }
 
-    public void setLocationDetails(String locationDetails) {
-        this.locationDetails = locationDetails;
-    }
-
-    private String locationDetails;
-
-    public SemanticLocation(String inferredLocation, Location location, Address address) {
-        this.inferredLocation = inferredLocation;
+    public SemanticLocation(String label, Location location) {
+        this.inferredLocation = label;
         this.location = location;
-        this.address = address;
     }
 
-    public SemanticLocation(String locationkey, Location location) {
-        this.location = location;
-        this.inferredLocation = locationkey;
-        this.address = new Address(Locale.getDefault());
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeParcelable(location, flags);
+        dest.writeParcelable(address, flags);
+        dest.writeString(inferredLocation);
+        dest.writeString(type);
+        dest.writeByte((byte) (enabled ? 1 : 0));
+        dest.writeCharSequence(details);
     }
 
-    public SemanticLocation(Address address, Location location, String key) {
-        this.address = address;
-        this.location = location;
-
-//        SharedPreferences sharedPreferences = context.getSharedPreferences(MithrilApplication.getSharedPreferencesName(), Context.MODE_PRIVATE);
-//        String homeLocation = sharedPreferences.getString(MithrilApplication.getPrefHomeLocationKey(), null);
-////        String workLocation = sharedPreferences.getString(MithrilApplication.getPrefWorkLocationKey(), null);
-//        if (address.getPostalCode().equals(homeLocation))
-//            this.inferredLocation = "home";
-//        else
-        this.inferredLocation = key;
+    @Override
+    public int describeContents() {
+        return 0;
     }
 
-    public SemanticLocation(String inferredLocation) {
-        this.inferredLocation = inferredLocation;
-        this.location = null;
-        this.address = null;
-    }
+    public static final Creator<SemanticLocation> CREATOR = new Creator<SemanticLocation>() {
+        @Override
+        public SemanticLocation createFromParcel(Parcel in) {
+            return new SemanticLocation(in);
+        }
 
-    public SemanticLocation() {
-        this.inferredLocation = MithrilApplication.getContextDefaultWorkLocation();
-        this.location = null;
-        this.address = null;
-    }
+        @Override
+        public SemanticLocation[] newArray(int size) {
+            return new SemanticLocation[size];
+        }
+    };
 
     public Location getLocation() {
         return location;
@@ -93,73 +73,12 @@ public class SemanticLocation implements Parcelable, SemanticUserContext {
         this.address = address;
     }
 
-    /* (non-Javadoc)
-     * @see java.lang.Object#equals(java.lang.Object)
-     */
-    @Override
-    public boolean equals(Object obj) {
-        if (this == obj) {
-            return true;
-        }
-        if (obj == null) {
-            return false;
-        }
-        if (getClass() != obj.getClass()) {
-            return false;
-        }
-        SemanticLocation other = (SemanticLocation) obj;
-        if (inferredLocation == null) {
-            if (other.inferredLocation != null) {
-                return false;
-            }
-        } else if (!inferredLocation.equals(other.inferredLocation)) {
-            return false;
-        }
-        return true;
-    }
-
-    /**
-     * @return the inferredLocation
-     */
     public String getInferredLocation() {
         return inferredLocation;
     }
 
-    /**
-     * @param inferredLocation the inferredLocation to set
-     */
     public void setInferredLocation(String inferredLocation) {
         this.inferredLocation = inferredLocation;
-    }
-
-    /* (non-Javadoc)
-     * @see java.lang.Object#hashCode()
-     */
-    @Override
-    public int hashCode() {
-        final int prime = 31;
-        int result = 1;
-        result = prime
-                * result
-                + ((inferredLocation == null) ? 0 : inferredLocation.hashCode());
-        return result;
-    }
-
-    @Override
-    public String toString() {
-        return inferredLocation;
-    }
-
-    @Override
-    public int describeContents() {
-        return 0;
-    }
-
-    @Override
-    public void writeToParcel(Parcel dest, int flags) {
-        dest.writeParcelable(location, flags);
-        dest.writeParcelable(address, flags);
-        dest.writeString(inferredLocation);
     }
 
     @Override
@@ -173,7 +92,25 @@ public class SemanticLocation implements Parcelable, SemanticUserContext {
     }
 
     @Override
+    public boolean isEnabled() {
+        return enabled;
+    }
+
+    @Override
+    public void setEnabled(boolean enabled) {
+        this.enabled = enabled;
+    }
+
+    @Override
     public void setLabel(String label) {
         inferredLocation = label;
+    }
+
+    public CharSequence getDetails() {
+        return details;
+    }
+
+    public void setDetails(CharSequence details) {
+        this.details = details;
     }
 }
