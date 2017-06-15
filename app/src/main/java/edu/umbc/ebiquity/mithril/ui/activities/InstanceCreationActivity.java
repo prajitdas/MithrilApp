@@ -446,12 +446,16 @@ public class InstanceCreationActivity extends AppCompatActivity
             if(MithrilDBHelper.getHelper(this).findContextIdByLabelAndType(mithrilDB,
                     tempContext.getLabel(),
                     tempContext.getType()) == -1) {
-                contextEntry.getValue().setEnabled(true);
-                addContext(MithrilApplication.getPrefKeyContextTypeLocation(),
+                addContext(contextEntry.getValue().getType(),
                         contextEntry.getKey(),
                         InstanceCreationActivity.contextDataStoreGson.toJson(contextEntry.getValue()));
-                semanticLocations.put(contextEntry.getKey(), contextEntry.getValue());
+            } else {
+                enableContext(contextEntry.getValue().getType(),
+                        contextEntry.getKey(),
+                        InstanceCreationActivity.contextDataStoreGson.toJson(contextEntry.getValue()));
             }
+            contextEntry.getValue().setEnabled(true);
+            semanticLocations.put(contextEntry.getKey(), contextEntry.getValue());
         }
         isThereLocationContextToSave = false;
         refreshVisibleFragment();
@@ -463,12 +467,16 @@ public class InstanceCreationActivity extends AppCompatActivity
             if(MithrilDBHelper.getHelper(this).findContextIdByLabelAndType(mithrilDB,
                     tempContext.getLabel(),
                     tempContext.getType()) == -1) {
-                contextEntry.getValue().setEnabled(true);
-                addContext(MithrilApplication.getPrefKeyContextTypeTemporal(),
+                addContext(contextEntry.getValue().getType(),
                         contextEntry.getKey(),
                         InstanceCreationActivity.contextDataStoreGson.toJson(contextEntry.getValue()));
-                semanticTimes.put(contextEntry.getKey(), contextEntry.getValue());
+            } else {
+                enableContext(contextEntry.getValue().getType(),
+                        contextEntry.getKey(),
+                        InstanceCreationActivity.contextDataStoreGson.toJson(contextEntry.getValue()));
             }
+            contextEntry.getValue().setEnabled(true);
+            semanticTimes.put(contextEntry.getKey(), contextEntry.getValue());
         }
         isThereTemporalContextToSave = false;
         refreshVisibleFragment();
@@ -480,12 +488,16 @@ public class InstanceCreationActivity extends AppCompatActivity
             if(MithrilDBHelper.getHelper(this).findContextIdByLabelAndType(mithrilDB,
                     tempContext.getLabel(),
                     tempContext.getType()) == -1) {
-                contextEntry.getValue().setEnabled(true);
-                addContext(MithrilApplication.getPrefKeyContextTypePresence(),
+                addContext(contextEntry.getValue().getType(),
                         contextEntry.getKey(),
                         InstanceCreationActivity.contextDataStoreGson.toJson(contextEntry.getValue()));
-                semanticNearActors.put(contextEntry.getKey(), contextEntry.getValue());
+            } else {
+                enableContext(contextEntry.getValue().getType(),
+                        contextEntry.getKey(),
+                        InstanceCreationActivity.contextDataStoreGson.toJson(contextEntry.getValue()));
             }
+            contextEntry.getValue().setEnabled(true);
+            semanticNearActors.put(contextEntry.getKey(), contextEntry.getValue());
         }
         isTherePresenceContextToSave = false;
         refreshVisibleFragment();
@@ -497,12 +509,16 @@ public class InstanceCreationActivity extends AppCompatActivity
             if(MithrilDBHelper.getHelper(this).findContextIdByLabelAndType(mithrilDB,
                     tempContext.getLabel(),
                     tempContext.getType()) == -1) {
-                contextEntry.getValue().setEnabled(true);
-                enableContext(MithrilApplication.getPrefKeyContextTypeActivity(),
+                addContext(contextEntry.getValue().getType(),
                         contextEntry.getKey(),
                         InstanceCreationActivity.contextDataStoreGson.toJson(contextEntry.getValue()));
-                semanticActivities.put(contextEntry.getKey(), contextEntry.getValue());
+            } else {
+                enableContext(contextEntry.getValue().getType(),
+                        contextEntry.getKey(),
+                        InstanceCreationActivity.contextDataStoreGson.toJson(contextEntry.getValue()));
             }
+            contextEntry.getValue().setEnabled(true);
+            semanticActivities.put(contextEntry.getKey(), contextEntry.getValue());
         }
         isThereActivityContextToSave = false;
         refreshVisibleFragment();
@@ -591,6 +607,7 @@ public class InstanceCreationActivity extends AppCompatActivity
                         if(item.isEnabled()) {
                             item.setEnabled(false);
                             disableContext(item.getType(), item.getLabel());
+                            isThereTemporalContextToSave = true;
                         } else {
                             item.setEnabled(true);
                             enableContext(item.getType(),
@@ -625,6 +642,7 @@ public class InstanceCreationActivity extends AppCompatActivity
                         if(item.isEnabled()) {
                             item.setEnabled(false);
                             disableContext(item.getType(), item.getLabel());
+                            isThereLocationContextToSave = true;
                         } else {
                             item.setEnabled(true);
                             enableContext(item.getType(),
@@ -659,6 +677,7 @@ public class InstanceCreationActivity extends AppCompatActivity
                         if(item.isEnabled()) {
                             item.setEnabled(false);
                             disableContext(item.getType(), item.getLabel());
+                            isThereActivityContextToSave = true;
                         } else {
                             item.setEnabled(true);
                             enableContext(item.getType(),
@@ -693,6 +712,7 @@ public class InstanceCreationActivity extends AppCompatActivity
                         if(item.isEnabled()) {
                             item.setEnabled(false);
                             disableContext(item.getType(), item.getLabel());
+                            isTherePresenceContextToSave = true;
                         } else {
                             item.setEnabled(true);
                             enableContext(item.getType(),
