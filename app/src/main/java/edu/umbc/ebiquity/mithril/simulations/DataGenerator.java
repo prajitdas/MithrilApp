@@ -18,7 +18,7 @@ public class DataGenerator {
                         MithrilAC.getPrefHomeLocationKey(),
                         MithrilAC.getPrefKeyContextTypeLocation()),
                 MithrilDBHelper.getHelper(context).findAppIdByName(mithrilDB, "com.twitter.android"),
-                Action.ALLOW,
+                Action.DENY,
                 AppOpsManager.permissionToOpCode(android.Manifest.permission.CAMERA));
     }
 
@@ -29,7 +29,7 @@ public class DataGenerator {
                         MithrilAC.getPrefHomeLocationKey(),
                         MithrilAC.getPrefKeyContextTypeLocation()),
                 MithrilDBHelper.getHelper(context).findAppIdByName(mithrilDB, "com.twitter.android"),
-                Action.ALLOW,
+                Action.DENY,
                 AppOpsManager.permissionToOpCode(Manifest.permission.ACCESS_FINE_LOCATION));
     }
 
