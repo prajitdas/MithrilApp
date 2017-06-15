@@ -125,7 +125,7 @@ public class GeofenceTransitionsIntentService extends IntentService {
                 MithrilDBHelper.getHelper(this).findContextIdByLabelAndType(
                         mithrilDB,
                         label,
-                        MithrilApplication.getPrefKeyContextTypeLocation()),
+                        MithrilApplication.getPrefKeyContextTypeLocation()).first,
                 startOrEnd);
     }
 

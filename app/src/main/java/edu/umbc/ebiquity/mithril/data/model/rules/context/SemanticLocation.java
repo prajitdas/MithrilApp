@@ -26,19 +26,20 @@ public class SemanticLocation implements Parcelable, SemanticUserContext {
     private Address address = new Address(Locale.getDefault());
     private String inferredLocation;
     private boolean enabled = false;
-    private CharSequence details;
+    private String details = "default-details";
 
     public SemanticLocation(Parcel in) {
         location = in.readParcelable(Location.class.getClassLoader());
         address = in.readParcelable(Address.class.getClassLoader());
         inferredLocation = in.readString();
         enabled = in.readByte() != 0;
-        details = in.readCharSequence();
+        details = in.readString();
     }
 
     public SemanticLocation(String label, Location location) {
         this.inferredLocation = label;
         this.location = location;
+        this.details = label;
     }
 
     @Override
@@ -46,9 +47,8 @@ public class SemanticLocation implements Parcelable, SemanticUserContext {
         dest.writeParcelable(location, flags);
         dest.writeParcelable(address, flags);
         dest.writeString(inferredLocation);
-        dest.writeString(type);
         dest.writeByte((byte) (enabled ? 1 : 0));
-        dest.writeCharSequence(details);
+        dest.writeString(details);
     }
 
     @Override
@@ -105,11 +105,11 @@ public class SemanticLocation implements Parcelable, SemanticUserContext {
         this.enabled = enabled;
     }
 
-    public CharSequence getDetails() {
+    public String getDetails() {
         return details;
     }
 
-    public void setDetails(CharSequence details) {
+    public void setDetails(String details) {
         this.details = details;
     }
 }

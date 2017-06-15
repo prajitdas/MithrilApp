@@ -88,7 +88,6 @@ public class SemanticNearActor implements Parcelable, SemanticUserContext {
     @Override
     public void writeToParcel(Parcel dest, int flags) {
         dest.writeString(inferredRelationship);
-        dest.writeString(type);
         dest.writeByte((byte) (enabled ? 1 : 0));
     }
 }

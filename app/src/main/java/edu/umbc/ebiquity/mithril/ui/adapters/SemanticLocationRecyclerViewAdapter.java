@@ -45,27 +45,30 @@ public class SemanticLocationRecyclerViewAdapter extends RecyclerView.Adapter<Se
         holder.mItem = semanticLocation;
         holder.mLabel.setText(semanticLocation.getInferredLocation());
 
-        String addressLine = new String(
-                semanticLocation.getAddress().getAddressLine(0) + ", " +
-                semanticLocation.getAddress().getLocality() + ", " +
-                semanticLocation.getAddress().getPostalCode());
+        if(semanticLocation.isEnabled()) {
+            String addressLine = new String(
+                    semanticLocation.getAddress().getAddressLine(0) + ", " +
+                            semanticLocation.getAddress().getLocality() + ", " +
+                            semanticLocation.getAddress().getPostalCode());
 
-        if(semanticLocation.getAddress().equals(new Address(Locale.getDefault()))) {
-            if(semanticLocation.getDetails() != null)
-                holder.mDetail.setText(semanticLocation.getDetails());
-            else {
-                StringBuffer latLng = new StringBuffer("Lat: ");
-                latLng.append(Double.toString(semanticLocation.getLocation().getLatitude()));
-                latLng.append(", Lng: ");
-                latLng.append(Double.toString(semanticLocation.getLocation().getLongitude()));
-                holder.mDetail.setText(latLng.toString());
+            if (semanticLocation.getAddress().equals(new Address(Locale.getDefault()))) {
+                if (semanticLocation.getDetails() != null)
+                    holder.mDetail.setText(semanticLocation.getDetails());
+                else {
+                    StringBuffer latLng = new StringBuffer("Lat: ");
+                    latLng.append(Double.toString(semanticLocation.getLocation().getLatitude()));
+                    latLng.append(", Lng: ");
+                    latLng.append(Double.toString(semanticLocation.getLocation().getLongitude()));
+                    holder.mDetail.setText(latLng.toString());
+                }
+            } else {
+                if (semanticLocation.getDetails() != null)
+                    holder.mDetail.setText(semanticLocation.getDetails());
+                else
+                    holder.mDetail.setText(addressLine);
             }
-        } else {
-            if(semanticLocation.getDetails() != null)
-                holder.mDetail.setText(semanticLocation.getDetails());
-            else
-                holder.mDetail.setText(addressLine);
-        }
+        } else
+            holder.mDetail.setText(R.string.click_save_button_to_enable_context);
         holder.mView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

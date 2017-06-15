@@ -19,6 +19,7 @@ import android.support.design.widget.BottomNavigationView;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
+import android.util.Pair;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -440,48 +441,68 @@ public class InstanceCreationActivity extends AppCompatActivity
     }
 
     private void setupLocationAwareness() {
-        for (Map.Entry<String, SemanticLocation> semanticLocationEntry : semanticLocations.entrySet()) {
-            semanticLocationEntry.getValue().setEnabled(true);
-            enableContext(MithrilApplication.getPrefKeyContextTypeLocation(),
-                    semanticLocationEntry.getKey(),
-                    InstanceCreationActivity.contextDataStoreGson.toJson(semanticLocationEntry.getValue()));
-            semanticLocations.put(semanticLocationEntry.getKey(), semanticLocationEntry.getValue());
+        for (Map.Entry<String, SemanticLocation> contextEntry : semanticLocations.entrySet()) {
+            SemanticLocation tempContext = contextEntry.getValue();
+            if(MithrilDBHelper.getHelper(this).findContextIdByLabelAndType(mithrilDB,
+                    tempContext.getLabel(),
+                    tempContext.getType()) == -1) {
+                contextEntry.getValue().setEnabled(true);
+                addContext(MithrilApplication.getPrefKeyContextTypeLocation(),
+                        contextEntry.getKey(),
+                        InstanceCreationActivity.contextDataStoreGson.toJson(contextEntry.getValue()));
+                semanticLocations.put(contextEntry.getKey(), contextEntry.getValue());
+            }
         }
         isThereLocationContextToSave = false;
         refreshVisibleFragment();
     }
 
     private void setupTemporalAwareness() {
-        for (Map.Entry<String, SemanticTime> semanticTimeEntry : semanticTimes.entrySet()) {
-            semanticTimeEntry.getValue().setEnabled(true);
-            enableContext(MithrilApplication.getPrefKeyContextTypeTemporal(),
-                    semanticTimeEntry.getKey(),
-                    InstanceCreationActivity.contextDataStoreGson.toJson(semanticTimeEntry.getValue()));
-            semanticTimes.put(semanticTimeEntry.getKey(), semanticTimeEntry.getValue());
+        for (Map.Entry<String, SemanticTime> contextEntry : semanticTimes.entrySet()) {
+            SemanticTime tempContext = contextEntry.getValue();
+            if(MithrilDBHelper.getHelper(this).findContextIdByLabelAndType(mithrilDB,
+                    tempContext.getLabel(),
+                    tempContext.getType()) == -1) {
+                contextEntry.getValue().setEnabled(true);
+                addContext(MithrilApplication.getPrefKeyContextTypeTemporal(),
+                        contextEntry.getKey(),
+                        InstanceCreationActivity.contextDataStoreGson.toJson(contextEntry.getValue()));
+                semanticTimes.put(contextEntry.getKey(), contextEntry.getValue());
+            }
         }
         isThereTemporalContextToSave = false;
         refreshVisibleFragment();
     }
 
     private void setupPresenceAwareness() {
-        for (Map.Entry<String, SemanticNearActor> semanticNearActorEntry : semanticNearActors.entrySet()) {
-            semanticNearActorEntry.getValue().setEnabled(true);
-            enableContext(MithrilApplication.getPrefKeyContextTypePresence(),
-                    semanticNearActorEntry.getKey(),
-                    InstanceCreationActivity.contextDataStoreGson.toJson(semanticNearActorEntry.getValue()));
-            semanticNearActors.put(semanticNearActorEntry.getKey(), semanticNearActorEntry.getValue());
+        for (Map.Entry<String, SemanticNearActor> contextEntry : semanticNearActors.entrySet()) {
+            SemanticNearActor tempContext = contextEntry.getValue();
+            if(MithrilDBHelper.getHelper(this).findContextIdByLabelAndType(mithrilDB,
+                    tempContext.getLabel(),
+                    tempContext.getType()) == -1) {
+                contextEntry.getValue().setEnabled(true);
+                addContext(MithrilApplication.getPrefKeyContextTypePresence(),
+                        contextEntry.getKey(),
+                        InstanceCreationActivity.contextDataStoreGson.toJson(contextEntry.getValue()));
+                semanticNearActors.put(contextEntry.getKey(), contextEntry.getValue());
+            }
         }
         isTherePresenceContextToSave = false;
         refreshVisibleFragment();
     }
 
     private void setupActivityAwareness() {
-        for (Map.Entry<String, SemanticActivity> semanticActivityEntry : semanticActivities.entrySet()) {
-            semanticActivityEntry.getValue().setEnabled(true);
-            enableContext(MithrilApplication.getPrefKeyContextTypeActivity(),
-                    semanticActivityEntry.getKey(),
-                    InstanceCreationActivity.contextDataStoreGson.toJson(semanticActivityEntry.getValue()));
-            semanticActivities.put(semanticActivityEntry.getKey(), semanticActivityEntry.getValue());
+        for (Map.Entry<String, SemanticActivity> contextEntry : semanticActivities.entrySet()) {
+            SemanticActivity tempContext = contextEntry.getValue();
+            if(MithrilDBHelper.getHelper(this).findContextIdByLabelAndType(mithrilDB,
+                    tempContext.getLabel(),
+                    tempContext.getType()) == -1) {
+                contextEntry.getValue().setEnabled(true);
+                enableContext(MithrilApplication.getPrefKeyContextTypeActivity(),
+                        contextEntry.getKey(),
+                        InstanceCreationActivity.contextDataStoreGson.toJson(contextEntry.getValue()));
+                semanticActivities.put(contextEntry.getKey(), contextEntry.getValue());
+            }
         }
         isThereActivityContextToSave = false;
         refreshVisibleFragment();
@@ -567,11 +588,16 @@ public class InstanceCreationActivity extends AppCompatActivity
                 .setMessage("Please confirm changes for: " + item.getLabel())
                 .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int which) {
-                        semanticTimes.remove(item.getInferredTime());
-                        if(item.isEnabled())
-                            disableContext(MithrilApplication.getPrefKeyContextTypeTemporal(), item.getInferredTime());
-                        else
-                            enableAndAddContextToDB(MithrilApplication.getPrefKeyContextTypeTemporal(), item.getInferredTime());
+                        if(item.isEnabled()) {
+                            item.setEnabled(false);
+                            disableContext(item.getType(), item.getLabel());
+                        } else {
+                            item.setEnabled(true);
+                            enableContext(item.getType(),
+                                    item.getLabel(),
+                                    InstanceCreationActivity.contextDataStoreGson.toJson(item));
+                        }
+                        semanticTimes.put(item.getLabel(), item);
                         refreshVisibleFragment();
                     }
                 })
@@ -596,11 +622,16 @@ public class InstanceCreationActivity extends AppCompatActivity
                 .setMessage("Please confirm changes for: " + item.getLabel())
                 .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int which) {
-                        semanticLocations.remove(item.getInferredLocation());
-                        if(item.isEnabled())
-                            disableContext(MithrilApplication.getPrefKeyContextTypeLocation(), item.getInferredLocation());
-                        else
-                            enableAndAddContextToDB(MithrilApplication.getPrefKeyContextTypeLocation(), item.getInferredLocation());
+                        if(item.isEnabled()) {
+                            item.setEnabled(false);
+                            disableContext(item.getType(), item.getLabel());
+                        } else {
+                            item.setEnabled(true);
+                            enableContext(item.getType(),
+                                    item.getLabel(),
+                                    InstanceCreationActivity.contextDataStoreGson.toJson(item));
+                        }
+                        semanticLocations.put(item.getLabel(), item);
                         refreshVisibleFragment();
                     }
                 })
@@ -625,11 +656,16 @@ public class InstanceCreationActivity extends AppCompatActivity
                 .setMessage("Please confirm changes for: " + item.getLabel())
                 .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int which) {
-                        semanticActivities.remove(item.getInferredActivity());
-                        if(item.isEnabled())
-                            disableContext(MithrilApplication.getPrefKeyContextTypeActivity(), item.getInferredActivity());
-                        else
-                            enableAndAddContextToDB(MithrilApplication.getPrefKeyContextTypeActivity(), item.getInferredActivity());
+                        if(item.isEnabled()) {
+                            item.setEnabled(false);
+                            disableContext(item.getType(), item.getLabel());
+                        } else {
+                            item.setEnabled(true);
+                            enableContext(item.getType(),
+                                    item.getLabel(),
+                                    InstanceCreationActivity.contextDataStoreGson.toJson(item));
+                        }
+                        semanticActivities.put(item.getLabel(), item);
                         refreshVisibleFragment();
                     }
                 })
@@ -654,11 +690,16 @@ public class InstanceCreationActivity extends AppCompatActivity
                 .setMessage("Please confirm changes for: " + item.getLabel())
                 .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int which) {
-                        semanticNearActors.remove(item.getInferredRelationship());
-                        if(item.isEnabled())
-                            disableContext(MithrilApplication.getPrefKeyContextTypePresence(), item.getInferredRelationship());
-                        else
-                            enableAndAddContextToDB(MithrilApplication.getPrefKeyContextTypePresence(), item.getInferredRelationship());
+                        if(item.isEnabled()) {
+                            item.setEnabled(false);
+                            disableContext(item.getType(), item.getLabel());
+                        } else {
+                            item.setEnabled(true);
+                            enableContext(item.getType(),
+                                    item.getLabel(),
+                                    InstanceCreationActivity.contextDataStoreGson.toJson(item));
+                        }
+                        semanticNearActors.put(item.getLabel(), item);
                         refreshVisibleFragment();
                     }
                 })
@@ -805,7 +846,6 @@ public class InstanceCreationActivity extends AppCompatActivity
                  * We know the location has changed, let's check the address
                  */
                 mAddressRequested = true;
-
                 startSearchAddressIntentService(userInputLocation, semanticLocationLabel);
             }
         });
@@ -869,18 +909,28 @@ public class InstanceCreationActivity extends AppCompatActivity
         // onConnected() will be called again automatically when the service reconnects
     }
 
-    private void enableAndAddContextToDB(String contextType, String contextLabel) {
+    private void addContextToDB(String contextType, String contextLabel) {
         MithrilDBHelper.getHelper(this).addContext(mithrilDB, contextType, contextLabel, true);
+    }
+
+    private void enableContextInDB(String contextType, String contextLabel) {
+        MithrilDBHelper.getHelper(this).updateContext(mithrilDB, contextLabel, contextType, true);
     }
 
     private void disableContextInDB(String label, String type) {
         MithrilDBHelper.getHelper(this).updateContext(mithrilDB, label, type, false);
     }
 
+    private void addContext(String contextType, String contextLabel, String serializedJsonContext) {
+        editor.putString(contextType + contextLabel, serializedJsonContext);
+        editor.apply();
+        addContextToDB(contextType, contextLabel);
+    }
+
     private void enableContext(String contextType, String contextLabel, String serializedJsonContext) {
         editor.putString(contextType + contextLabel, serializedJsonContext);
         editor.apply();
-        enableAndAddContextToDB(contextType, contextLabel);
+        enableContextInDB(contextType, contextLabel);
     }
 
     private void disableContext(String contextType, String contextLabel) {
@@ -949,6 +999,7 @@ public class InstanceCreationActivity extends AppCompatActivity
                         tempSemanticLocation = semanticLocation.getValue();
                 tempSemanticLocation.setAddress(mAddressOutput);
                 semanticLocations.put(key, tempSemanticLocation);
+                refreshVisibleFragment();
             }
             // Reset. Enable the Fetch Address button and stop showing the progress bar.
             mAddressRequested = false;

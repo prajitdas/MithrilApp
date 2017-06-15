@@ -20,6 +20,7 @@ import android.graphics.Canvas;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.util.Log;
+import android.util.Pair;
 
 import java.io.ByteArrayOutputStream;
 import java.sql.Timestamp;
@@ -190,7 +191,7 @@ public class MithrilDBHelper extends SQLiteOpenHelper {
             CONTEXTTYPE + " TEXT NOT NULL, " +
             CONTEXTSEMANTICLABEL + " TEXT NOT NULL, " +
             CONTEXTENABLED + " INTEGER NOT NULL DEFAULT 0, " +
-            "CONSTRAINT context_unique_name UNIQUE("+CONTEXTTYPE+", "+CONTEXTSEMANTICLABEL+", "+CONTEXTENABLED+") ON CONFLICT ABORT);";
+            "CONSTRAINT context_unique_name UNIQUE("+CONTEXTTYPE+", "+CONTEXTSEMANTICLABEL+") ON CONFLICT REPLACE);";
     /**
      * -- Table 5: policyrules
      CREATE TABLE policyrules (
