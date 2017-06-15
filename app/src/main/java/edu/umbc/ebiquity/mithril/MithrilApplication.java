@@ -36,6 +36,8 @@ public class MithrilApplication extends Application {
     public static final String LOCATION_DATA_EXTRA = MITHRIL_APP_PACKAGE_NAME + ".LOCATION_DATA_EXTRA";
     public static final String GEOFENCES_ADDED_KEY = MITHRIL_APP_PACKAGE_NAME + ".GEOFENCES_ADDED_KEY";
     public static final String ADDRESS_KEY = "ADDRESS_KEY";
+    public static final String NO_FLAGS = "no-flags";
+    public static final String NORMAL_PROTECTION_LEVEL = "normal";
 
     private static final String CALENDAR_PERMISSION_GROUP_DESC = "Calendar permission group";
     private static final String CAMERA_PERMISSION_GROUP_DESC = "Camera permission group";

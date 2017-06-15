@@ -103,8 +103,7 @@ public class MithrilDBHelper extends SQLiteOpenHelper {
             APPINSTALLED + " BOOL NOT NULL DEFAULT 1, " +
             APPTYPE + " TEXT NOT NULL," +
             APPINSTALLTIME + " timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP," +
-            "CONSTRAINT apps_unique_key UNIQUE(" + APPPACKAGENAME + ") " +
-            ");";
+            "CONSTRAINT apps_unique_key UNIQUE(" + APPPACKAGENAME + ") ON CONFLICT REPLACE);";
     /**
      * -- Table 2: permissions
      CREATE TABLE permissions (
@@ -133,14 +132,13 @@ public class MithrilDBHelper extends SQLiteOpenHelper {
             PERMID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
             PERMNAME + " TEXT NOT NULL, " +
             PERMLABEL + " TEXT NULL, " +
-            PERMPROTECTIONLEVEL + " TEXT NOT NULL, " +
-            PERMGROUP + " TEXT NULL, " +
-            PERMFLAG + " TEXT NULL, " +
+            PERMPROTECTIONLEVEL + " TEXT NOT NULL DEFAULT '"+MithrilApplication.NORMAL_PROTECTION_LEVEL+"', " +
+            PERMGROUP + " TEXT NOT NULL DEFAULT '"+MithrilApplication.NO_PERMISSION_GROUP.first+"', " +
+            PERMFLAG + " TEXT NOT NULL DEFAULT '"+MithrilApplication.NO_FLAGS+"', " +
             PERMDESC + " TEXT NULL, " +
             PERMICON + " BLOB, " +
             PERMOP + " INTEGER NOT NULL DEFAULT -1, " +
-            "CONSTRAINT permissions_unique_name UNIQUE(" + PERMNAME + ") " +
-            ");";
+            "CONSTRAINT permissions_unique_name UNIQUE(" + PERMNAME + ") ON CONFLICT ABORT);";
     /**
      * -- Table 3: appperm
      CREATE TABLE appperm (
@@ -191,8 +189,8 @@ public class MithrilDBHelper extends SQLiteOpenHelper {
             CONTEXTID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
             CONTEXTTYPE + " TEXT NOT NULL, " +
             CONTEXTSEMANTICLABEL + " TEXT NOT NULL, " +
-            CONTEXTENABLED + " INTEGER NOT NULL DEFAULT 0 " +
-            "UNIQUE KEY("+CONTEXTTYPE+", "+CONTEXTSEMANTICLABEL+", "+CONTEXTENABLED+"));";
+            CONTEXTENABLED + " INTEGER NOT NULL DEFAULT 0, " +
+            "CONSTRAINT context_unique_name UNIQUE("+CONTEXTTYPE+", "+CONTEXTSEMANTICLABEL+", "+CONTEXTENABLED+") ON CONFLICT ABORT);";
     /**
      * -- Table 5: policyrules
      CREATE TABLE policyrules (
@@ -251,8 +249,7 @@ public class MithrilDBHelper extends SQLiteOpenHelper {
             CTXTID + " INTEGER NOT NULL, " +
             CTXTTRANSITION + " TEXT NOT NULL, " +
             CTXTTIME + " timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP, " +
-            "FOREIGN KEY(" + CTXTID + ") REFERENCES " + getContextLogTableName() + "(" + CONTEXTID + ")" +
-            ");";
+            "FOREIGN KEY(" + CTXTID + ") REFERENCES " + getContextLogTableName() + "(" + CONTEXTID + "));";
     /**
      * -- Table 7: violationlog
      CREATE TABLE violationlog (
@@ -290,8 +287,7 @@ public class MithrilDBHelper extends SQLiteOpenHelper {
             VIOLATIONTIME + " timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP, " +
             "PRIMARY KEY("+VIOLATIONAPPID+", "+VIOLATIONCTXID+", "+VIOLATIONOPERATION+"), " +
             "FOREIGN KEY(" + VIOLATIONAPPID + ") REFERENCES " + getAppsTableName() + "(" + APPID + ") ON DELETE CASCADE, " +
-            "FOREIGN KEY(" + VIOLATIONCTXID + ") REFERENCES " + getContextTableName() + "(" + CONTEXTID + ")" +
-            ");";
+            "FOREIGN KEY(" + VIOLATIONCTXID + ") REFERENCES " + getContextTableName() + "(" + CONTEXTID + "));";
     /**
      * -- Table 8: actionlog
      CREATE TABLE actionlog (
@@ -325,8 +321,7 @@ public class MithrilDBHelper extends SQLiteOpenHelper {
             ACTIONTIME + " INTEGER NOT NULL  DEFAULT CURRENT_TIMESTAMP, " +
             ACTION + " INTEGER NOT NULL, " +
             "FOREIGN KEY(" + ACTIONAPPID + ") REFERENCES " + getAppsTableName() + "(" + APPID + ") ON DELETE CASCADE, " +
-            "FOREIGN KEY(" + ACTIONCTXID + ") REFERENCES " + getContextTableName() + "(" + CONTEXTID + ")" +
-            ");";
+            "FOREIGN KEY(" + ACTIONCTXID + ") REFERENCES " + getContextTableName() + "(" + CONTEXTID + "));";
     /**
      * -- views
      * -- View: apppermview
@@ -552,18 +547,12 @@ public class MithrilDBHelper extends SQLiteOpenHelper {
 
         for (PermissionGroupInfo permissionGroupInfo : permissionGroupInfoList) {
             String groupName = permissionGroupInfo == null ? null : permissionGroupInfo.name;
-//            if(groupName == null)
-//                Log.d(MithrilApplication.getDebugTag(), "Result is: null");
-//            else
-//                Log.d(MithrilApplication.getDebugTag(), "Result is: "+groupName);
             try {
                 for (PermissionInfo permissionInfo : packageManager.queryPermissionsByGroup(groupName, 0)) {
-//                    if (permissionInfo.group == null)
                     if (groupName == null)
-                        addPermission(db, getPermData(packageManager, permissionInfo));
+                        addPermission(db, getPermData(packageManager, MithrilApplication.NO_PERMISSION_GROUP.first, permissionInfo));
                     else
                         addPermission(db, getPermData(packageManager, groupName, permissionInfo));
-                    Log.d(MithrilApplication.getDebugTag(), "Found permission: "+permissionInfo.packageName);
                 }
             } catch (NameNotFoundException exception) {
                 Log.e(MithrilApplication.getDebugTag(), "Some error due to " + exception.getMessage());
@@ -726,59 +715,9 @@ public class MithrilDBHelper extends SQLiteOpenHelper {
 
         tempPermData.setPermissionIcon(getPermissionIconBitmap(permissionInfo));
         tempPermData.setPermissionLabel(permissionInfo.loadLabel(packageManager).toString());
-//        Log.d(MithrilApplication.getDebugTag(), "Label: "+permissionInfo.loadLabel(packageManager).toString()+", end label");
 
         tempPermData.setOp(AppOpsManager.permissionToOpCode(permissionInfo.name));
-
-        return tempPermData;
-    }
-
-    private PermData getPermData(PackageManager packageManager, PermissionInfo permissionInfo) {
-        PermData tempPermData = new PermData();
-
-        tempPermData.setPermissionName(permissionInfo.name);
-        //Setting the protection level
-        switch (permissionInfo.protectionLevel) {
-            case PermissionInfo.PROTECTION_NORMAL:
-                tempPermData.setPermissionProtectionLevel(MithrilApplication.getPermissionProtectionLevelNormal());
-                break;
-            case PermissionInfo.PROTECTION_DANGEROUS:
-                tempPermData.setPermissionProtectionLevel(MithrilApplication.getPermissionProtectionLevelDangerous());
-                break;
-            case PermissionInfo.PROTECTION_SIGNATURE:
-                tempPermData.setPermissionProtectionLevel(MithrilApplication.getPermissionProtectionLevelSignature());
-                break;
-            case PermissionInfo.PROTECTION_FLAG_PRIVILEGED:
-                tempPermData.setPermissionProtectionLevel(MithrilApplication.getPermissionProtectionLevelPrivileged());
-                break;
-            default:
-                tempPermData.setPermissionProtectionLevel(MithrilApplication.getPermissionProtectionLevelUnknown());
-                break;
-        }
-
-        tempPermData.setPermissionGroup(MithrilApplication.NO_PERMISSION_GROUP.first);
-
-        //Setting the protection level
-        switch (permissionInfo.flags) {
-            case PermissionInfo.FLAG_COSTS_MONEY:
-                tempPermData.setPermissionFlag(MithrilApplication.getPermissionFlagCostsMoney());
-                break;
-            case PermissionInfo.FLAG_INSTALLED:
-                tempPermData.setPermissionFlag(MithrilApplication.getPermissionFlagInstalled());
-                break;
-            default:
-                tempPermData.setPermissionFlag(MithrilApplication.getPermissionFlagNone());
-                break;
-        }
-        //Permission description can be null. We are preventing a null pointer exception here.
-        tempPermData.setPermissionDescription(permissionInfo.loadDescription(packageManager)
-                == null
-                ? context.getResources().getString(R.string.no_description_available_txt)
-                : permissionInfo.loadDescription(packageManager).toString());
-
-        tempPermData.setPermissionIcon(getPermissionIconBitmap(permissionInfo));
-        tempPermData.setPermissionLabel(permissionInfo.loadLabel(packageManager).toString());
-//        Log.d(MithrilApplication.getDebugTag(), "Label: "+permissionInfo.loadLabel(packageManager).toString()+", end label");
+//        Log.d(MithrilApplication.getDebugTag(), "Permission: "+permissionInfo.name);
 
         return tempPermData;
     }
@@ -910,14 +849,14 @@ public class MithrilDBHelper extends SQLiteOpenHelper {
                     try {
                         permissionInfo = packageManager.getPermissionInfo(appPermission.getKey(), flags);
                     } catch (NameNotFoundException e) {
-                        Log.e(MithrilApplication.getDebugTag(), "Permission NameNotFoundException for: " + e.getMessage());
+                        Log.e(MithrilApplication.getDebugTag(), "In app: "+anAppData.getAppName()+" found permission: "+ e.getMessage() +" but then got NameNotFoundException");
                         continue;
                         //TODO This is a big problem. Why are we not getting the permission info for certain installed permissions???
                     }
 
                     try {
                         if (permissionInfo.group == null)
-                            permId = addPermission(db, getPermData(packageManager, permissionInfo));
+                            permId = addPermission(db, getPermData(packageManager, MithrilApplication.NO_PERMISSION_GROUP.first, permissionInfo));
                         else
                             permId = addPermission(db, getPermData(packageManager, permissionInfo.group, permissionInfo));
                     } catch (PermissionWasUpdateException e) {
