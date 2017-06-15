@@ -65,7 +65,6 @@ public class InstanceCreationActivity extends AppCompatActivity
         SemanticActivityFragment.OnListFragmentInteractionListener,
         GoogleApiClient.ConnectionCallbacks,
         GoogleApiClient.OnConnectionFailedListener {
-//, ResultCallback<Status> {
 
     private static final String FRAGMENT_LOCATION = "location";
     private static final String FRAGMENT_PRESENCE = "presence";
@@ -80,10 +79,6 @@ public class InstanceCreationActivity extends AppCompatActivity
      * Provides the entry point to Google Play services: Geo fence
      */
     protected GoogleApiClient mGoogleApiClient;
-    /**
-     * The list of geofences used in this sample.
-     */
-//    protected List<Geofence> mGeofenceList = new ArrayList<>();
     private SQLiteDatabase mithrilDB;
     private BottomNavigationView bottomNavigationView;
     private SharedPreferences.Editor editor;
@@ -448,13 +443,6 @@ public class InstanceCreationActivity extends AppCompatActivity
             setupActivityAwareness();
     }
 
-//    private void forcedSaveContext() {
-//        setupLocationAwareness();
-//        setupTemporalAwareness();
-//        setupPresenceAwareness();
-//        setupActivityAwareness();
-//    }
-
     private void setupLocationAwareness() {
         for (Map.Entry<String, SemanticLocation> contextEntry : semanticLocations.entrySet()) {
 //            SemanticLocation tempContext = contextEntry.getValue();
@@ -462,9 +450,9 @@ public class InstanceCreationActivity extends AppCompatActivity
 //            if(MithrilDBHelper.getHelper(this).findContextIdByLabelAndType(mithrilDB,
 //                    tempContext.getLabel(),
 //                    tempContext.getType()) == -1) {
-                addContext(contextEntry.getValue().getType(),
-                        contextEntry.getKey(),
-                        InstanceCreationActivity.contextDataStoreGson.toJson(contextEntry.getValue()));
+            addContext(contextEntry.getValue().getType(),
+                    contextEntry.getKey(),
+                    InstanceCreationActivity.contextDataStoreGson.toJson(contextEntry.getValue()));
 //            } else {
 //                enableContext(contextEntry.getValue().getType(),
 //                        contextEntry.getKey(),
@@ -483,9 +471,9 @@ public class InstanceCreationActivity extends AppCompatActivity
 //            if(MithrilDBHelper.getHelper(this).findContextIdByLabelAndType(mithrilDB,
 //                    tempContext.getLabel(),
 //                    tempContext.getType()) == -1) {
-                addContext(contextEntry.getValue().getType(),
-                        contextEntry.getKey(),
-                        InstanceCreationActivity.contextDataStoreGson.toJson(contextEntry.getValue()));
+            addContext(contextEntry.getValue().getType(),
+                    contextEntry.getKey(),
+                    InstanceCreationActivity.contextDataStoreGson.toJson(contextEntry.getValue()));
 //            } else {
 //                enableContext(contextEntry.getValue().getType(),
 //                        contextEntry.getKey(),
@@ -504,9 +492,9 @@ public class InstanceCreationActivity extends AppCompatActivity
 //            if(MithrilDBHelper.getHelper(this).findContextIdByLabelAndType(mithrilDB,
 //                    tempContext.getLabel(),
 //                    tempContext.getType()) == -1) {
-                addContext(contextEntry.getValue().getType(),
-                        contextEntry.getKey(),
-                        InstanceCreationActivity.contextDataStoreGson.toJson(contextEntry.getValue()));
+            addContext(contextEntry.getValue().getType(),
+                    contextEntry.getKey(),
+                    InstanceCreationActivity.contextDataStoreGson.toJson(contextEntry.getValue()));
 //            } else {
 //                enableContext(contextEntry.getValue().getType(),
 //                        contextEntry.getKey(),
@@ -525,9 +513,9 @@ public class InstanceCreationActivity extends AppCompatActivity
 //            if(MithrilDBHelper.getHelper(this).findContextIdByLabelAndType(mithrilDB,
 //                    tempContext.getLabel(),
 //                    tempContext.getType()) == -1) {
-                addContext(contextEntry.getValue().getType(),
-                        contextEntry.getKey(),
-                        InstanceCreationActivity.contextDataStoreGson.toJson(contextEntry.getValue()));
+            addContext(contextEntry.getValue().getType(),
+                    contextEntry.getKey(),
+                    InstanceCreationActivity.contextDataStoreGson.toJson(contextEntry.getValue()));
 //            } else {
 //                enableContext(contextEntry.getValue().getType(),
 //                        contextEntry.getKey(),
@@ -608,149 +596,6 @@ public class InstanceCreationActivity extends AppCompatActivity
         startActivity(launchNextActivity);
     }
 
-    @Override
-    public void onListFragmentInteraction(final SemanticTime item) {
-//        AlertDialog.Builder builder;
-//        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-//            builder = new AlertDialog.Builder(this, android.R.style.Theme_Material_Dialog_Alert);
-//        } else {
-//            builder = new AlertDialog.Builder(this);
-//        }
-//        builder.setTitle(item.isEnabled() ? "Disabling context" : "Enabling context")
-//                .setMessage("Please confirm changes for: " + item.getLabel())
-//                .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
-//                    public void onClick(DialogInterface dialog, int which) {
-//                        if(item.isEnabled()) {
-//                            item.setEnabled(false);
-//                            disableContext(item.getType(),
-//                                    item.getLabel(),
-//                                    InstanceCreationActivity.contextDataStoreGson.toJson(item));
-//                        } else {
-//                            item.setEnabled(true);
-//                            enableContext(item.getType(),
-//                                    item.getLabel(),
-//                                    InstanceCreationActivity.contextDataStoreGson.toJson(item));
-//                        }
-//                        semanticTimes.put(item.getLabel(), item);
-//                        refreshVisibleFragment();
-//                    }
-//                })
-//                .setNegativeButton(android.R.string.no, new DialogInterface.OnClickListener() {
-//                    public void onClick(DialogInterface dialog, int which) {
-//                        // do nothing
-//                    }
-//                })
-//                .setIcon(android.R.drawable.ic_dialog_alert)
-//                .show();
-    }
-
-    @Override
-    public void onListFragmentInteraction(final SemanticLocation item) {
-//        AlertDialog.Builder builder;
-//        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-//            builder = new AlertDialog.Builder(this, android.R.style.Theme_Material_Dialog_Alert);
-//        } else {
-//            builder = new AlertDialog.Builder(this);
-//        }
-//        builder.setTitle(item.isEnabled() ? "Disabling context" : "Enabling context")
-//                .setMessage("Please confirm changes for: " + item.getLabel())
-//                .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
-//                    public void onClick(DialogInterface dialog, int which) {
-//                        if(item.isEnabled()) {
-//                            item.setEnabled(false);
-//                            disableContext(item.getType(),
-//                                    item.getLabel(),
-//                                    InstanceCreationActivity.contextDataStoreGson.toJson(item));
-//                        } else {
-//                            item.setEnabled(true);
-//                            enableContext(item.getType(),
-//                                    item.getLabel(),
-//                                    InstanceCreationActivity.contextDataStoreGson.toJson(item));
-//                        }
-//                        semanticLocations.put(item.getLabel(), item);
-//                        refreshVisibleFragment();
-//                    }
-//                })
-//                .setNegativeButton(android.R.string.no, new DialogInterface.OnClickListener() {
-//                    public void onClick(DialogInterface dialog, int which) {
-//                        // do nothing
-//                    }
-//                })
-//                .setIcon(android.R.drawable.ic_dialog_alert)
-//                .show();
-    }
-
-    @Override
-    public void onListFragmentInteraction(final SemanticActivity item) {
-//        AlertDialog.Builder builder;
-//        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-//            builder = new AlertDialog.Builder(this, android.R.style.Theme_Material_Dialog_Alert);
-//        } else {
-//            builder = new AlertDialog.Builder(this);
-//        }
-//        builder.setTitle(item.isEnabled() ? "Disabling context" : "Enabling context")
-//                .setMessage("Please confirm changes for: " + item.getLabel())
-//                .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
-//                    public void onClick(DialogInterface dialog, int which) {
-//                        if(item.isEnabled()) {
-//                            item.setEnabled(false);
-//                            disableContext(item.getType(),
-//                                    item.getLabel(),
-//                                    InstanceCreationActivity.contextDataStoreGson.toJson(item));
-//                        } else {
-//                            item.setEnabled(true);
-//                            enableContext(item.getType(),
-//                                    item.getLabel(),
-//                                    InstanceCreationActivity.contextDataStoreGson.toJson(item));
-//                        }
-//                        semanticActivities.put(item.getLabel(), item);
-//                        refreshVisibleFragment();
-//                    }
-//                })
-//                .setNegativeButton(android.R.string.no, new DialogInterface.OnClickListener() {
-//                    public void onClick(DialogInterface dialog, int which) {
-//                        // do nothing
-//                    }
-//                })
-//                .setIcon(android.R.drawable.ic_dialog_alert)
-//                .show();
-    }
-
-    @Override
-    public void onListFragmentInteraction(final SemanticNearActor item) {
-//        AlertDialog.Builder builder;
-//        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-//            builder = new AlertDialog.Builder(this, android.R.style.Theme_Material_Dialog_Alert);
-//        } else {
-//            builder = new AlertDialog.Builder(this);
-//        }
-//        builder.setTitle(item.isEnabled() ? "Disabling context" : "Enabling context")
-//                .setMessage("Please confirm changes for: " + item.getLabel())
-//                .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
-//                    public void onClick(DialogInterface dialog, int which) {
-//                        if(item.isEnabled()) {
-//                            item.setEnabled(false);
-//                            disableContext(item.getType(),
-//                                    item.getLabel(),
-//                                    InstanceCreationActivity.contextDataStoreGson.toJson(item));
-//                        } else {
-//                            item.setEnabled(true);
-//                            enableContext(item.getType(),
-//                                    item.getLabel(),
-//                                    InstanceCreationActivity.contextDataStoreGson.toJson(item));
-//                        }
-//                        semanticNearActors.put(item.getLabel(), item);
-//                        refreshVisibleFragment();
-//                    }
-//                })
-//                .setNegativeButton(android.R.string.no, new DialogInterface.OnClickListener() {
-//                    public void onClick(DialogInterface dialog, int which) {
-//                        // do nothing
-//                    }
-//                })
-//                .setIcon(android.R.drawable.ic_dialog_alert)
-//                .show();
-    }
 
     private void openAutocompleteActivity(int requestCode) {
         try {
@@ -953,31 +798,31 @@ public class InstanceCreationActivity extends AppCompatActivity
         MithrilDBHelper.getHelper(this).addContext(mithrilDB, contextType, contextLabel, true);
     }
 
-//    private void enableContextInDB(String contextType, String contextLabel) {
-//        MithrilDBHelper.getHelper(this).updateContext(mithrilDB, contextLabel, contextType, true);
-//    }
-//
-//    private void disableContextInDB(String label, String type) {
-//        MithrilDBHelper.getHelper(this).updateContext(mithrilDB, label, type, false);
-//    }
-
     private void addContext(String contextType, String contextLabel, String serializedJsonContext) {
         editor.putString(contextType + contextLabel, serializedJsonContext);
         editor.apply();
         addContextToDB(contextType, contextLabel);
     }
 
-//    private void enableContext(String contextType, String contextLabel, String serializedJsonContext) {
-//        editor.putString(contextType + contextLabel, serializedJsonContext);
-//        editor.apply();
-//        enableContextInDB(contextType, contextLabel);
-//    }
-//
-//    private void disableContext(String contextType, String contextLabel, String serializedJsonContext) {
-//        editor.putString(contextType + contextLabel, serializedJsonContext);
-//        editor.apply();
-//        disableContextInDB(contextLabel, contextType);
-//    }
+    @Override
+    public void onListFragmentInteraction(SemanticTime item) {
+
+    }
+
+    @Override
+    public void onListFragmentInteraction(SemanticLocation item) {
+
+    }
+
+    @Override
+    public void onListFragmentInteraction(SemanticActivity item) {
+
+    }
+
+    @Override
+    public void onListFragmentInteraction(SemanticNearActor item) {
+
+    }
 
     class AddressResultReceiver extends ResultReceiver {
         private Context context;
@@ -1044,3 +889,165 @@ public class InstanceCreationActivity extends AppCompatActivity
         }
     }
 }
+//    @Override
+//    public void onListFragmentInteraction(final SemanticTime item) {
+//        AlertDialog.Builder builder;
+//        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+//            builder = new AlertDialog.Builder(this, android.R.style.Theme_Material_Dialog_Alert);
+//        } else {
+//            builder = new AlertDialog.Builder(this);
+//        }
+//        builder.setTitle(item.isEnabled() ? "Disabling context" : "Enabling context")
+//                .setMessage("Please confirm changes for: " + item.getLabel())
+//                .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
+//                    public void onClick(DialogInterface dialog, int which) {
+//                        if(item.isEnabled()) {
+//                            item.setEnabled(false);
+//                            disableContext(item.getType(),
+//                                    item.getLabel(),
+//                                    InstanceCreationActivity.contextDataStoreGson.toJson(item));
+//                        } else {
+//                            item.setEnabled(true);
+//                            enableContext(item.getType(),
+//                                    item.getLabel(),
+//                                    InstanceCreationActivity.contextDataStoreGson.toJson(item));
+//                        }
+//                        semanticTimes.put(item.getLabel(), item);
+//                        refreshVisibleFragment();
+//                    }
+//                })
+//                .setNegativeButton(android.R.string.no, new DialogInterface.OnClickListener() {
+//                    public void onClick(DialogInterface dialog, int which) {
+//                        // do nothing
+//                    }
+//                })
+//                .setIcon(android.R.drawable.ic_dialog_alert)
+//                .show();
+//    }
+//
+//    @Override
+//    public void onListFragmentInteraction(final SemanticLocation item) {
+//        AlertDialog.Builder builder;
+//        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+//            builder = new AlertDialog.Builder(this, android.R.style.Theme_Material_Dialog_Alert);
+//        } else {
+//            builder = new AlertDialog.Builder(this);
+//        }
+//        builder.setTitle(item.isEnabled() ? "Disabling context" : "Enabling context")
+//                .setMessage("Please confirm changes for: " + item.getLabel())
+//                .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
+//                    public void onClick(DialogInterface dialog, int which) {
+//                        if(item.isEnabled()) {
+//                            item.setEnabled(false);
+//                            disableContext(item.getType(),
+//                                    item.getLabel(),
+//                                    InstanceCreationActivity.contextDataStoreGson.toJson(item));
+//                        } else {
+//                            item.setEnabled(true);
+//                            enableContext(item.getType(),
+//                                    item.getLabel(),
+//                                    InstanceCreationActivity.contextDataStoreGson.toJson(item));
+//                        }
+//                        semanticLocations.put(item.getLabel(), item);
+//                        refreshVisibleFragment();
+//                    }
+//                })
+//                .setNegativeButton(android.R.string.no, new DialogInterface.OnClickListener() {
+//                    public void onClick(DialogInterface dialog, int which) {
+//                        // do nothing
+//                    }
+//                })
+//                .setIcon(android.R.drawable.ic_dialog_alert)
+//                .show();
+//    }
+//
+//    @Override
+//    public void onListFragmentInteraction(final SemanticActivity item) {
+//        AlertDialog.Builder builder;
+//        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+//            builder = new AlertDialog.Builder(this, android.R.style.Theme_Material_Dialog_Alert);
+//        } else {
+//            builder = new AlertDialog.Builder(this);
+//        }
+//        builder.setTitle(item.isEnabled() ? "Disabling context" : "Enabling context")
+//                .setMessage("Please confirm changes for: " + item.getLabel())
+//                .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
+//                    public void onClick(DialogInterface dialog, int which) {
+//                        if(item.isEnabled()) {
+//                            item.setEnabled(false);
+//                            disableContext(item.getType(),
+//                                    item.getLabel(),
+//                                    InstanceCreationActivity.contextDataStoreGson.toJson(item));
+//                        } else {
+//                            item.setEnabled(true);
+//                            enableContext(item.getType(),
+//                                    item.getLabel(),
+//                                    InstanceCreationActivity.contextDataStoreGson.toJson(item));
+//                        }
+//                        semanticActivities.put(item.getLabel(), item);
+//                        refreshVisibleFragment();
+//                    }
+//                })
+//                .setNegativeButton(android.R.string.no, new DialogInterface.OnClickListener() {
+//                    public void onClick(DialogInterface dialog, int which) {
+//                        // do nothing
+//                    }
+//                })
+//                .setIcon(android.R.drawable.ic_dialog_alert)
+//                .show();
+//    }
+//
+//    @Override
+//    public void onListFragmentInteraction(final SemanticNearActor item) {
+//        AlertDialog.Builder builder;
+//        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+//            builder = new AlertDialog.Builder(this, android.R.style.Theme_Material_Dialog_Alert);
+//        } else {
+//            builder = new AlertDialog.Builder(this);
+//        }
+//        builder.setTitle(item.isEnabled() ? "Disabling context" : "Enabling context")
+//                .setMessage("Please confirm changes for: " + item.getLabel())
+//                .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
+//                    public void onClick(DialogInterface dialog, int which) {
+//                        if(item.isEnabled()) {
+//                            item.setEnabled(false);
+//                            disableContext(item.getType(),
+//                                    item.getLabel(),
+//                                    InstanceCreationActivity.contextDataStoreGson.toJson(item));
+//                        } else {
+//                            item.setEnabled(true);
+//                            enableContext(item.getType(),
+//                                    item.getLabel(),
+//                                    InstanceCreationActivity.contextDataStoreGson.toJson(item));
+//                        }
+//                        semanticNearActors.put(item.getLabel(), item);
+//                        refreshVisibleFragment();
+//                    }
+//                })
+//                .setNegativeButton(android.R.string.no, new DialogInterface.OnClickListener() {
+//                    public void onClick(DialogInterface dialog, int which) {
+//                        // do nothing
+//                    }
+//                })
+//                .setIcon(android.R.drawable.ic_dialog_alert)
+//                .show();
+//    }
+//    private void enableContextInDB(String contextType, String contextLabel) {
+//        MithrilDBHelper.getHelper(this).updateContext(mithrilDB, contextLabel, contextType, true);
+//    }
+//
+//    private void disableContextInDB(String label, String type) {
+//        MithrilDBHelper.getHelper(this).updateContext(mithrilDB, label, type, false);
+//    }
+//
+//    private void enableContext(String contextType, String contextLabel, String serializedJsonContext) {
+//        editor.putString(contextType + contextLabel, serializedJsonContext);
+//        editor.apply();
+//        enableContextInDB(contextType, contextLabel);
+//    }
+//
+//    private void disableContext(String contextType, String contextLabel, String serializedJsonContext) {
+//        editor.putString(contextType + contextLabel, serializedJsonContext);
+//        editor.apply();
+//        disableContextInDB(contextLabel, contextType);
+//    }
