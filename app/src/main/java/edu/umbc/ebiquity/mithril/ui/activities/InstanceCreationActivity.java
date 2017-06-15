@@ -138,18 +138,26 @@ public class InstanceCreationActivity extends AppCompatActivity
             for (Map.Entry<String, ?> aPref : allPrefs.entrySet()) {
                 if (aPref.getKey().startsWith(MithrilApplication.getPrefKeyContextTypeLocation())) {
                     retrieveDataJson = sharedPreferences.getString(aPref.getKey(), "");
+                    if(!retrieveDataGson.fromJson(retrieveDataJson, SemanticLocation.class).isEnabled())
+                        isThereLocationContextToSave = true;
                     //Filtering out by location keys the main key starts from after the word "Location"
                     semanticLocations.put(aPref.getKey().substring(8), retrieveDataGson.fromJson(retrieveDataJson, SemanticLocation.class));
                 } else if (aPref.getKey().startsWith(MithrilApplication.getPrefKeyContextTypeTemporal())) {
                     retrieveDataJson = sharedPreferences.getString(aPref.getKey(), "");
+                    if(!retrieveDataGson.fromJson(retrieveDataJson, SemanticTime.class).isEnabled())
+                        isThereTemporalContextToSave = true;
                     //Filtering out by location keys the main key starts from after the word "Temporal"
                     semanticTimes.put(aPref.getKey().substring(8), retrieveDataGson.fromJson(retrieveDataJson, SemanticTime.class));
                 } else if (aPref.getKey().startsWith(MithrilApplication.getPrefKeyContextTypePresence())) {
                     retrieveDataJson = sharedPreferences.getString(aPref.getKey(), "");
+                    if(!retrieveDataGson.fromJson(retrieveDataJson, SemanticNearActor.class).isEnabled())
+                        isTherePresenceContextToSave = true;
                     //Filtering out by location keys the main key starts from after the word "Presence"
                     semanticNearActors.put(aPref.getKey().substring(8), retrieveDataGson.fromJson(retrieveDataJson, SemanticNearActor.class));
                 } else if (aPref.getKey().startsWith(MithrilApplication.getPrefKeyContextTypeActivity())) {
                     retrieveDataJson = sharedPreferences.getString(aPref.getKey(), "");
+                    if(!retrieveDataGson.fromJson(retrieveDataJson, SemanticActivity.class).isEnabled())
+                        isThereActivityContextToSave = true;
                     //Filtering out by location keys the main key starts from after the word "Activity"
                     semanticActivities.put(aPref.getKey().substring(8), retrieveDataGson.fromJson(retrieveDataJson, SemanticActivity.class));
                 }
@@ -555,8 +563,9 @@ public class InstanceCreationActivity extends AppCompatActivity
             editor.putBoolean(MithrilApplication.getPrefKeyActiInstancesCreated(), true);
             editor.putBoolean(MithrilApplication.getPrefKeyTimeInstancesCreated(), true);
             editor.apply();
-            if (!sharedPreferences.getBoolean(MithrilApplication.getPrefKeyPoliciesDownloaded(), false))
+            if (!sharedPreferences.getBoolean(MithrilApplication.getPrefKeyPoliciesDownloaded(), false)) {
                 startNextActivity(this, DownloadPoliciesActivity.class);
+            }
             else
                 startNextActivity(this, CoreActivity.class);
         }
@@ -609,7 +618,6 @@ public class InstanceCreationActivity extends AppCompatActivity
                             disableContext(item.getType(),
                                     item.getLabel(),
                                     InstanceCreationActivity.contextDataStoreGson.toJson(item));
-                            isThereTemporalContextToSave = true;
                         } else {
                             item.setEnabled(true);
                             enableContext(item.getType(),
@@ -646,7 +654,6 @@ public class InstanceCreationActivity extends AppCompatActivity
                             disableContext(item.getType(),
                                     item.getLabel(),
                                     InstanceCreationActivity.contextDataStoreGson.toJson(item));
-                            isThereLocationContextToSave = true;
                         } else {
                             item.setEnabled(true);
                             enableContext(item.getType(),
@@ -683,7 +690,6 @@ public class InstanceCreationActivity extends AppCompatActivity
                             disableContext(item.getType(),
                                     item.getLabel(),
                                     InstanceCreationActivity.contextDataStoreGson.toJson(item));
-                            isThereActivityContextToSave = true;
                         } else {
                             item.setEnabled(true);
                             enableContext(item.getType(),
@@ -720,7 +726,6 @@ public class InstanceCreationActivity extends AppCompatActivity
                             disableContext(item.getType(),
                                     item.getLabel(),
                                     InstanceCreationActivity.contextDataStoreGson.toJson(item));
-                            isTherePresenceContextToSave = true;
                         } else {
                             item.setEnabled(true);
                             enableContext(item.getType(),

@@ -24,7 +24,6 @@ public class SemanticLocationRecyclerViewAdapter extends RecyclerView.Adapter<Se
 
     private final List<SemanticLocation> semanticLocations;
     private final OnListFragmentInteractionListener mListener;
-    private List<SemanticLocation> checkedLocations = new ArrayList<>();
     private View view;
 
     public SemanticLocationRecyclerViewAdapter(List<SemanticLocation> items, OnListFragmentInteractionListener listener) {

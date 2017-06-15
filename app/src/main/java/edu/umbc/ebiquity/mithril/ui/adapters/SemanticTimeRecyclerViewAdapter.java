@@ -38,7 +38,10 @@ public class SemanticTimeRecyclerViewAdapter extends RecyclerView.Adapter<Semant
     public void onBindViewHolder(final ViewHolder holder, int position) {
         holder.mItem = semanticTimes.get(position);
         holder.mLabel.setText(semanticTimes.get(position).getInferredTime());
-        holder.mDetail.setText(semanticTimes.get(position).getRepeatFrequency().getRepFreqCharSeq());
+        if(semanticTimes.get(position).isEnabled())
+            holder.mDetail.setText(semanticTimes.get(position).getRepeatFrequency().getRepFreqCharSeq());
+        else
+            holder.mDetail.setText(R.string.click_save_button_to_enable_context);
 
         holder.mView.setOnClickListener(new View.OnClickListener() {
             @Override

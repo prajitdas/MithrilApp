@@ -38,7 +38,10 @@ public class SemanticActivityRecyclerViewAdapter extends RecyclerView.Adapter<Se
     public void onBindViewHolder(final ViewHolder holder, int position) {
         holder.mItem = semanticActivities.get(position);
         holder.mLabel.setText(semanticActivities.get(position).getInferredActivity());
-        holder.mDetail.setText(semanticActivities.get(position).getInferredActivity());
+        if(semanticActivities.get(position).isEnabled())
+            holder.mDetail.setText(semanticActivities.get(position).getInferredActivity());
+        else
+            holder.mDetail.setText(R.string.click_save_button_to_enable_context);
 
         holder.mView.setOnClickListener(new View.OnClickListener() {
             @Override

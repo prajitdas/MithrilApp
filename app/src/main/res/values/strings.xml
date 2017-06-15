@@ -108,7 +108,7 @@
     <string name="pol_rule_changing_done_btn_label">Done with changes</string>
     <string name="pol_rule_changing_add_more_consequents_label">Add more consequents</string>
 
-    <string name="click_save_button_to_enable_context">Click save button to enable context</string>
+    <string name="click_save_button_to_enable_context">Click save button to enable all context</string>
     <string name="pol_rule_cond_heading_text">Choose the desired policy rule conditions</string>
     <string name="pol_rule_cond_time_context_text">Time</string>
     <string name="pol_rule_cond_location_context_text">Location</string>
