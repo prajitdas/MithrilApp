@@ -192,7 +192,7 @@ public class MithrilDBHelper extends SQLiteOpenHelper {
             CONTEXTTYPE + " TEXT NOT NULL, " +
             CONTEXTSEMANTICLABEL + " TEXT NOT NULL, " +
             CONTEXTENABLED + " INTEGER NOT NULL DEFAULT 0 " +
-            ");";
+            "UNIQUE KEY("+CONTEXTTYPE+", "+CONTEXTSEMANTICLABEL+", "+CONTEXTENABLED+"));";
     /**
      * -- Table 5: policyrules
      CREATE TABLE policyrules (
@@ -523,11 +523,9 @@ public class MithrilDBHelper extends SQLiteOpenHelper {
         loadAndroidPermissionsIntoDB(db);
         //Load all the apps and app permissions that are known for this device into the database. We will refer to them in the future.
         loadRealAppDataIntoDB(db);
-        //We have to get the policies from somewhere. The best case scenario would be a server that gives us the policies.
-        loadPoliciesForApps(db);
     }
 
-    public void loadDefaultDataIntoDB(SQLiteDatabase db) throws SQLException {
+    private void loadDefaultDataIntoDB(SQLiteDatabase db) throws SQLException {
         addPolicyRule(db, DataGenerator.generateSocialMediaCameraAccessRuleForHome(db, context));
         addPolicyRule(db, DataGenerator.generateSocialMediaLocationAccessRuleForHome(db, context));
         addPolicyRule(db, DataGenerator.generateSocialMediaCameraAccessRuleForWork(db, context));
@@ -678,7 +676,9 @@ public class MithrilDBHelper extends SQLiteOpenHelper {
         }
     }
 
-    private void loadPoliciesForApps(SQLiteDatabase db) {
+    public void loadPoliciesForApps(SQLiteDatabase db) {
+        //We have to get the policies from somewhere. The best case scenario would be a server that gives us the policies.
+        loadDefaultDataIntoDB(db);
     }
 
     private PermData getPermData(PackageManager packageManager, String groupName, PermissionInfo permissionInfo) {
