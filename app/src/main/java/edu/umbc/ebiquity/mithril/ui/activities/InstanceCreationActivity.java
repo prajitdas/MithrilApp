@@ -448,6 +448,13 @@ public class InstanceCreationActivity extends AppCompatActivity
             setupActivityAwareness();
     }
 
+    private void forcedSaveContext() {
+        setupLocationAwareness();
+        setupTemporalAwareness();
+        setupPresenceAwareness();
+        setupActivityAwareness();
+    }
+
     private void setupLocationAwareness() {
         for (Map.Entry<String, SemanticLocation> contextEntry : semanticLocations.entrySet()) {
             SemanticLocation tempContext = contextEntry.getValue();
@@ -593,7 +600,8 @@ public class InstanceCreationActivity extends AppCompatActivity
     }
 
     private void startNextActivity(Context context, Class activityClass) {
-        saveContext();
+        if (activityClass.isInstance(DownloadPoliciesActivity.class))
+            forcedSaveContext();
         Intent launchNextActivity = new Intent(context, activityClass);
         launchNextActivity.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
         launchNextActivity.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
