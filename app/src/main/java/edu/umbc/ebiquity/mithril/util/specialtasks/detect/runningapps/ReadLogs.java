@@ -14,7 +14,7 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 
-import edu.umbc.ebiquity.mithril.MithrilApplication;
+import edu.umbc.ebiquity.mithril.MithrilAC;
 
 /*
  * This class will provide utility to read logs.
@@ -32,14 +32,14 @@ public class ReadLogs {
         StringBuilder logBuilder = new StringBuilder();
         try {
             //logcat -d dumps and exits the process! Won't work for me :(
-            Process process = Runtime.getRuntime().exec(MithrilApplication.getCmdDetectAppLaunch());
+            Process process = Runtime.getRuntime().exec(MithrilAC.getCmdDetectAppLaunch());
             BufferedReader appLaunchData = new BufferedReader(
                     new InputStreamReader(process.getInputStream()));
 
             String line;
             while ((line = appLaunchData.readLine()) != null) {
-                if (line.contains(MithrilApplication.getLogIntent())) {
-//                    Log.d(MithrilApplication.getDebugTag(), "another app launch: " + line);
+                if (line.contains(MithrilAC.getLogIntent())) {
+//                    Log.d(MithrilAC.getDebugTag(), "another app launch: " + line);
                     String date = line.substring(0, 4);
                     String time = line.substring(7, 12);
                     int appLuanchedIdx = line.indexOf("cmp=");
@@ -51,7 +51,7 @@ public class ReadLogs {
             }
         } catch (IOException e) {
         }
-//        Log.d(MithrilApplication.getDebugTag(), "ReadLogLog app launch: " + logBuilder);
+//        Log.d(MithrilAC.getDebugTag(), "ReadLogLog app launch: " + logBuilder);
         return logBuilder.toString();
     }
 }

@@ -6,7 +6,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.widget.TextView;
 
-import edu.umbc.ebiquity.mithril.MithrilApplication;
+import edu.umbc.ebiquity.mithril.MithrilAC;
 import edu.umbc.ebiquity.mithril.R;
 import edu.umbc.ebiquity.mithril.data.model.components.AppData;
 import edu.umbc.ebiquity.mithril.ui.fragments.showpermissiondetailsactivityfragments.PermissionDetailFragment;
@@ -33,8 +33,8 @@ public class ShowPermissionDetailActivity extends AppCompatActivity
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar_view_permission_details);
         setSupportActionBar(toolbar);
 
-        permGroupName = getIntent().getStringExtra(MithrilApplication.getPrefKeyPermGroupName());
-        permGroupLabel = getIntent().getStringExtra(MithrilApplication.getPrefKeyPermGroupLabel());
+        permGroupName = getIntent().getStringExtra(MithrilAC.getPrefKeyPermGroupName());
+        permGroupLabel = getIntent().getStringExtra(MithrilAC.getPrefKeyPermGroupLabel());
 
         TextView mTxtViewPermGroup = (TextView) findViewById(R.id.textViewPermissionDetails);
         mTxtViewPermGroup.setText(permGroupLabel);
@@ -49,7 +49,7 @@ public class ShowPermissionDetailActivity extends AppCompatActivity
      */
     private void loadPermissionDetailFragment() {
         Bundle data = new Bundle();
-        data.putString(MithrilApplication.getPrefKeyPermGroupName(), permGroupName);
+        data.putString(MithrilAC.getPrefKeyPermGroupName(), permGroupName);
 
         PermissionDetailFragment permissionDetailFragment = new PermissionDetailFragment();
         permissionDetailFragment.setArguments(data);

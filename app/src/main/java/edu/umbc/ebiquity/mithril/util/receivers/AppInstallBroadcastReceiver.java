@@ -13,7 +13,7 @@ import android.graphics.drawable.BitmapDrawable;
 import java.util.HashMap;
 import java.util.Map;
 
-import edu.umbc.ebiquity.mithril.MithrilApplication;
+import edu.umbc.ebiquity.mithril.MithrilAC;
 import edu.umbc.ebiquity.mithril.R;
 import edu.umbc.ebiquity.mithril.data.dbhelpers.MithrilDBHelper;
 import edu.umbc.ebiquity.mithril.data.model.components.AppData;
@@ -32,8 +32,8 @@ public class AppInstallBroadcastReceiver extends BroadcastReceiver {
     public void onReceive(Context context, Intent intent) {
         packageManager = context.getPackageManager();
         initDB(context);
-//        Log.d(MithrilApplication.getDebugTag(), "Action: "+intent.getAction());
-//        Log.d(MithrilApplication.getDebugTag(), "Uid: "+Integer.toString(intent.getIntExtra(Intent.EXTRA_UID, 0)));
+//        Log.d(MithrilAC.getDebugTag(), "Action: "+intent.getAction());
+//        Log.d(MithrilAC.getDebugTag(), "Uid: "+Integer.toString(intent.getIntExtra(Intent.EXTRA_UID, 0)));
 
         /**
          * Broadcast Action: A new application package has been installed on the device. The data contains the name of the package. Note that the newly installed package does not receive this broadcast.
@@ -47,14 +47,14 @@ public class AppInstallBroadcastReceiver extends BroadcastReceiver {
             String[] packagesInstalled = packageManager.getPackagesForUid(intent.getIntExtra(Intent.EXTRA_UID, 0));
             for (String pkgName : packagesInstalled) {
                 try {
-//                    Log.d(MithrilApplication.getDebugTag(), "Package: "+pkgName);
+//                    Log.d(MithrilAC.getDebugTag(), "Package: "+pkgName);
                     PackageInfo packageInfo = packageManager.getPackageInfo(pkgName, flags);
                     AppData tempAppData = new AppData();
                     if (packageInfo.packageName != null) {
                         if (packageInfo.applicationInfo.loadDescription(packageManager) != null)
                             tempAppData.setAppDescription(packageInfo.applicationInfo.loadDescription(packageManager).toString());
                         else
-                            tempAppData.setAppDescription(MithrilApplication.getDefaultDescription());
+                            tempAppData.setAppDescription(MithrilAC.getDefaultDescription());
                         tempAppData.setAssociatedProcessName(packageInfo.applicationInfo.processName);
                         tempAppData.setTargetSdkVersion(packageInfo.applicationInfo.targetSdkVersion);
                         if (packageInfo.applicationInfo.loadIcon(packageManager) instanceof BitmapDrawable)
@@ -67,9 +67,9 @@ public class AppInstallBroadcastReceiver extends BroadcastReceiver {
                         tempAppData.setVersionInfo(packageInfo.versionName);
                         tempAppData.setInstalled(true);
                         if ((packageInfo.applicationInfo.flags & ApplicationInfo.FLAG_SYSTEM) == 1)
-                            tempAppData.setAppType(MithrilApplication.getPrefKeySystemAppsDisplay());
+                            tempAppData.setAppType(MithrilAC.getPrefKeySystemAppsDisplay());
                         else
-                            tempAppData.setAppType(MithrilApplication.getPrefKeyUserAppsDisplay());
+                            tempAppData.setAppType(MithrilAC.getPrefKeyUserAppsDisplay());
                         tempAppData.setUid(packageInfo.applicationInfo.uid);
 
                         //App permissions
@@ -110,7 +110,7 @@ public class AppInstallBroadcastReceiver extends BroadcastReceiver {
 //                                                            permissionInfo.group,
 //                                                            permissionInfo));
 //                                        } catch (PackageManager.NameNotFoundException exception) {
-//                                            Log.e(MithrilApplication.getDebugTag(), "Some error due to " + exception.getMessage());
+//                                            Log.e(MithrilAC.getDebugTag(), "Some error due to " + exception.getMessage());
 //                                            mithrilDBHelper.addPermission(mithrilDB, mithrilDBHelper.getPermData(packageManager, permissionName));
 //                                        }
 //                                    }

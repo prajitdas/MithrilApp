@@ -11,7 +11,7 @@ import android.widget.TextView;
 
 import java.util.List;
 
-import edu.umbc.ebiquity.mithril.MithrilApplication;
+import edu.umbc.ebiquity.mithril.MithrilAC;
 import edu.umbc.ebiquity.mithril.R;
 import edu.umbc.ebiquity.mithril.ui.fragments.coreactivityfragments.PermissionsFragment.OnListFragmentInteractionListener;
 
@@ -45,27 +45,27 @@ public class InstalledPermissionRecyclerViewAdapter extends RecyclerView.Adapter
         Pair<String, String> permPair = (Pair<String, String>) mValues.get(position);
         holder.mItem = permPair;
 
-        if (permPair.first.equals(MithrilApplication.CONTACTS_PERMISSION_GROUP.first))
+        if (permPair.first.equals(MithrilAC.CONTACTS_PERMISSION_GROUP.first))
             holder.mPermIcon.setImageDrawable(context.getResources().getDrawable(R.drawable.contacts, context.getTheme()));
-        else if (permPair.first.equals(MithrilApplication.CALENDAR_PERMISSION_GROUP.first))
+        else if (permPair.first.equals(MithrilAC.CALENDAR_PERMISSION_GROUP.first))
             holder.mPermIcon.setImageDrawable(context.getResources().getDrawable(R.drawable.calendar, context.getTheme()));
-        else if (permPair.first.equals(MithrilApplication.CAMERA_PERMISSION_GROUP.first))
+        else if (permPair.first.equals(MithrilAC.CAMERA_PERMISSION_GROUP.first))
             holder.mPermIcon.setImageDrawable(context.getResources().getDrawable(R.drawable.camera, context.getTheme()));
-        else if (permPair.first.equals(MithrilApplication.LOCATION_PERMISSION_GROUP.first))
+        else if (permPair.first.equals(MithrilAC.LOCATION_PERMISSION_GROUP.first))
             holder.mPermIcon.setImageDrawable(context.getResources().getDrawable(R.drawable.map_marker, context.getTheme()));
-        else if (permPair.first.equals(MithrilApplication.MICROPHONE_PERMISSION_GROUP.first))
+        else if (permPair.first.equals(MithrilAC.MICROPHONE_PERMISSION_GROUP.first))
             holder.mPermIcon.setImageDrawable(context.getResources().getDrawable(R.drawable.microphone, context.getTheme()));
-        else if (permPair.first.equals(MithrilApplication.PHONE_PERMISSION_GROUP.first))
+        else if (permPair.first.equals(MithrilAC.PHONE_PERMISSION_GROUP.first))
             holder.mPermIcon.setImageDrawable(context.getResources().getDrawable(R.drawable.phone, context.getTheme()));
-        else if (permPair.first.equals(MithrilApplication.SENSORS_PERMISSION_GROUP.first))
+        else if (permPair.first.equals(MithrilAC.SENSORS_PERMISSION_GROUP.first))
             holder.mPermIcon.setImageDrawable(context.getResources().getDrawable(R.drawable.thermometer_lines, context.getTheme()));
-        else if (permPair.first.equals(MithrilApplication.SMS_PERMISSION_GROUP.first))
+        else if (permPair.first.equals(MithrilAC.SMS_PERMISSION_GROUP.first))
             holder.mPermIcon.setImageDrawable(context.getResources().getDrawable(R.drawable.message_text_outline, context.getTheme()));
-        else if (permPair.first.equals(MithrilApplication.STORAGE_PERMISSION_GROUP.first))
+        else if (permPair.first.equals(MithrilAC.STORAGE_PERMISSION_GROUP.first))
             holder.mPermIcon.setImageDrawable(context.getResources().getDrawable(R.drawable.harddisk, context.getTheme()));
-        else if (permPair.first.equals(MithrilApplication.SYSTEM_TOOLS_PERMISSION_GROUP.first))
+        else if (permPair.first.equals(MithrilAC.SYSTEM_TOOLS_PERMISSION_GROUP.first))
             holder.mPermIcon.setImageDrawable(context.getResources().getDrawable(R.drawable.security, context.getTheme()));
-        else if (permPair.first.equals(MithrilApplication.CAR_INFORMATION_PERMISSION_GROUP.first))
+        else if (permPair.first.equals(MithrilAC.CAR_INFORMATION_PERMISSION_GROUP.first))
             holder.mPermIcon.setImageDrawable(context.getResources().getDrawable(R.drawable.car, context.getTheme()));
         else
             holder.mPermIcon.setImageDrawable(context.getResources().getDrawable(R.drawable.help, context.getTheme()));

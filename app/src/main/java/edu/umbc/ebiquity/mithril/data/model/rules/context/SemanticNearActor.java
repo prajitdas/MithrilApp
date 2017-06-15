@@ -3,18 +3,9 @@ package edu.umbc.ebiquity.mithril.data.model.rules.context;
 import android.os.Parcel;
 import android.os.Parcelable;
 
-import edu.umbc.ebiquity.mithril.MithrilApplication;
+import edu.umbc.ebiquity.mithril.MithrilAC;
 
 public class SemanticNearActor implements Parcelable, SemanticUserContext {
-    private String inferredRelationship;
-    private final String type = MithrilApplication.getPrefKeyContextTypePresence();
-    private boolean enabled = false;
-
-    protected SemanticNearActor(Parcel in) {
-        inferredRelationship = in.readString();
-        enabled = in.readByte() != 0;
-    }
-
     public static final Creator<SemanticNearActor> CREATOR = new Creator<SemanticNearActor>() {
         @Override
         public SemanticNearActor createFromParcel(Parcel in) {
@@ -26,6 +17,14 @@ public class SemanticNearActor implements Parcelable, SemanticUserContext {
             return new SemanticNearActor[size];
         }
     };
+    private final String type = MithrilAC.getPrefKeyContextTypePresence();
+    private String inferredRelationship;
+    private boolean enabled = false;
+
+    protected SemanticNearActor(Parcel in) {
+        inferredRelationship = in.readString();
+        enabled = in.readByte() != 0;
+    }
 
     public String getInferredRelationship() {
         return inferredRelationship;
@@ -46,6 +45,11 @@ public class SemanticNearActor implements Parcelable, SemanticUserContext {
     }
 
     @Override
+    public void setLabel(String label) {
+        inferredRelationship = label;
+    }
+
+    @Override
     public boolean isEnabled() {
         return enabled;
     }
@@ -53,11 +57,6 @@ public class SemanticNearActor implements Parcelable, SemanticUserContext {
     @Override
     public void setEnabled(boolean enabled) {
         this.enabled = enabled;
-    }
-
-    @Override
-    public void setLabel(String label) {
-        inferredRelationship = label;
     }
 
     @Override

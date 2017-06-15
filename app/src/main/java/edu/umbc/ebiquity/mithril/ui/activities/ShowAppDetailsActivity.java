@@ -9,7 +9,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.widget.TextView;
 
-import edu.umbc.ebiquity.mithril.MithrilApplication;
+import edu.umbc.ebiquity.mithril.MithrilAC;
 import edu.umbc.ebiquity.mithril.R;
 import edu.umbc.ebiquity.mithril.data.model.components.PermData;
 import edu.umbc.ebiquity.mithril.ui.fragments.showappdetailsactivityfragments.AppDetailFragment;
@@ -43,7 +43,7 @@ public class ShowAppDetailsActivity extends AppCompatActivity
 
         packageManager = getApplicationContext().getPackageManager();
 
-        packageName = getIntent().getStringExtra(MithrilApplication.getPrefKeyAppPkgName());
+        packageName = getIntent().getStringExtra(MithrilAC.getPrefKeyAppPkgName());
 
 //        mImgBtnLaunchApp = (ImageButton) findViewById(R.id.launch_app_btn);
 //        mImgBtnAppIsGood = (ImageButton) findViewById(R.id.app_is_good_btn);
@@ -59,7 +59,7 @@ public class ShowAppDetailsActivity extends AppCompatActivity
         mTxtViewAppName.setText(
                 (
                         applicationInfo !=
-                                null ? packageManager.getApplicationLabel(applicationInfo).toString() : MithrilApplication.getPermissionProtectionLevelUnknown()
+                                null ? packageManager.getApplicationLabel(applicationInfo).toString() : MithrilAC.getPermissionProtectionLevelUnknown()
                 ) +
                         " (" +
                         packageName +
@@ -77,7 +77,7 @@ public class ShowAppDetailsActivity extends AppCompatActivity
      */
     private void loadViewAppDetailsFragment() {
         Bundle data = new Bundle();
-        data.putString(MithrilApplication.getPrefKeyAppPkgName(), packageName);
+        data.putString(MithrilAC.getPrefKeyAppPkgName(), packageName);
 
         AppDetailFragment appDetailFragment = new AppDetailFragment();
         appDetailFragment.setArguments(data);

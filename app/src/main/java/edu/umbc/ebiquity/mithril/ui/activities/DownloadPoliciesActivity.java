@@ -12,7 +12,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
 
-import edu.umbc.ebiquity.mithril.MithrilApplication;
+import edu.umbc.ebiquity.mithril.MithrilAC;
 import edu.umbc.ebiquity.mithril.R;
 import edu.umbc.ebiquity.mithril.data.dbhelpers.MithrilDBHelper;
 
@@ -30,8 +30,8 @@ public class DownloadPoliciesActivity extends AppCompatActivity {
             @Override
             public void handleMessage(Message message) {
                 if (message.what == POLICIESLOADED) {
-                    SharedPreferences.Editor editor = getSharedPreferences(MithrilApplication.getSharedPreferencesName(), Context.MODE_PRIVATE).edit();
-                    editor.putBoolean(MithrilApplication.getPrefKeyPoliciesDownloaded(), true);
+                    SharedPreferences.Editor editor = getSharedPreferences(MithrilAC.getSharedPreferencesName(), Context.MODE_PRIVATE).edit();
+                    editor.putBoolean(MithrilAC.getPrefKeyPoliciesDownloaded(), true);
                     editor.apply();
                     startNextActivity(getApplicationContext(), CoreActivity.class);
                 }
@@ -72,9 +72,9 @@ public class DownloadPoliciesActivity extends AppCompatActivity {
                     if (mithrilDB != null)
                         mithrilDB.close();
                 } catch (SQLException e) {
-                    Log.e(MithrilApplication.getDebugTag(), "Must have already inserted the policy!"+e.getMessage());
+                    Log.e(MithrilAC.getDebugTag(), "Must have already inserted the policy!" + e.getMessage());
                 }
-                handler.sendEmptyMessageDelayed(POLICIESLOADED, MithrilApplication.getMillisecondsPerSecond() * 5);
+                handler.sendEmptyMessageDelayed(POLICIESLOADED, MithrilAC.getMillisecondsPerSecond() * 5);
             }
         }).start();
     }

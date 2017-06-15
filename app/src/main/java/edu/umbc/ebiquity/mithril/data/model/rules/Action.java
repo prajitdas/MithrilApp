@@ -2,7 +2,7 @@ package edu.umbc.ebiquity.mithril.data.model.rules;
 
 import android.util.Log;
 
-import edu.umbc.ebiquity.mithril.MithrilApplication;
+import edu.umbc.ebiquity.mithril.MithrilAC;
 
 public enum Action {
     ALLOW(1), ALLOW_WITH_CAVEAT(2), DENY(0);
@@ -19,7 +19,7 @@ public enum Action {
         else if(actionInt == 2)
             actionString = "Allow_with_caveat";
         else
-            Log.e(MithrilApplication.getDebugTag(), "Illegal action");
+            Log.e(MithrilAC.getDebugTag(), "Illegal action");
     }
 
     public int getValue() {

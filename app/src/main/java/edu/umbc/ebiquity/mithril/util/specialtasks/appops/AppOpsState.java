@@ -57,7 +57,7 @@ import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 
-import edu.umbc.ebiquity.mithril.MithrilApplication;
+import edu.umbc.ebiquity.mithril.MithrilAC;
 import edu.umbc.ebiquity.mithril.R;
 
 public class AppOpsState {
@@ -336,7 +336,7 @@ public class AppOpsState {
                 boolean entryExe = opEntry.getTime() != 0;
                 if (lastExe == entryExe) {
                     if (DEBUG)
-                        Log.d(MithrilApplication.getDebugTag(), "Add op " + opEntry.getOp() + " to package "
+                        Log.d(MithrilAC.getDebugTag(), "Add op " + opEntry.getOp() + " to package "
                             + pkgOps.getPackageName() + ": append to " + last);
                     last.addOp(opEntry);
                     return;
@@ -350,7 +350,7 @@ public class AppOpsState {
         }
         entry = new AppOpEntry(pkgOps, opEntry, appEntry, switchOrder);
         if (DEBUG)
-            Log.d(MithrilApplication.getDebugTag(), "Add op " + opEntry.getOp() + " to package "
+            Log.d(MithrilAC.getDebugTag(), "Add op " + opEntry.getOp() + " to package "
                 + pkgOps.getPackageName() + ": making new " + entry);
         entries.add(entry);
     }
@@ -370,10 +370,10 @@ public class AppOpsState {
             if (appInfo == null) {
                 try {
                     appInfo = packageManager.getApplicationInfo(packageName,
-                            PackageManager.GET_DISABLED_COMPONENTS
+                            PackageManager.MATCH_DISABLED_COMPONENTS
                                     | PackageManager.GET_UNINSTALLED_PACKAGES);
                 } catch (PackageManager.NameNotFoundException e) {
-                    Log.w(MithrilApplication.getDebugTag(), "Unable to find info for package " + packageName);
+                    Log.w(MithrilAC.getDebugTag(), "Unable to find info for package " + packageName);
                     return null;
                 }
             }
@@ -411,13 +411,13 @@ public class AppOpsState {
             try {
                 pkgs = appOpsManager.getOpsForPackage(uid, packageName, tpl.ops);
             } catch (Exception e) {
-                Log.e(MithrilApplication.getDebugTag(), e.getMessage());
+                Log.e(MithrilAC.getDebugTag(), e.getMessage());
             }
         } else {
             try {
                 pkgs = appOpsManager.getPackagesForOps(tpl.ops);
             } catch (Exception e) {
-                Log.e(MithrilApplication.getDebugTag(), e.getMessage());
+                Log.e(MithrilAC.getDebugTag(), e.getMessage());
             }
         }
         if (pkgs != null) {
@@ -462,20 +462,20 @@ public class AppOpsState {
                         if ((appInfo.requestedPermissionsFlags[j]
                                 & PackageInfo.REQUESTED_PERMISSION_GRANTED) == 0) {
                             if (DEBUG)
-                                Log.d(MithrilApplication.getDebugTag(), "Pkg " + appInfo.packageName + " perm "
+                                Log.d(MithrilAC.getDebugTag(), "Pkg " + appInfo.packageName + " perm "
                                     + appInfo.requestedPermissions[j] + " not granted; skipping");
                             continue;
                         }
                     }
                     if (DEBUG)
-                        Log.d(MithrilApplication.getDebugTag(), "Pkg " + appInfo.packageName + ": requested perm "
+                        Log.d(MithrilAC.getDebugTag(), "Pkg " + appInfo.packageName + ": requested perm "
                             + appInfo.requestedPermissions[j]);
                     for (int k = 0; k < perms.size(); k++) {
                         if (!perms.get(k).equals(appInfo.requestedPermissions[j])) {
                             continue;
                         }
                         if (DEBUG)
-                            Log.d(MithrilApplication.getDebugTag(), "Pkg " + appInfo.packageName + " perm " + perms.get(k)
+                            Log.d(MithrilAC.getDebugTag(), "Pkg " + appInfo.packageName + " perm " + perms.get(k)
                                 + " has op " + permOps.get(k) + ": " + appEntry.hasOp(permOps.get(k)));
                         if (appEntry.hasOp(permOps.get(k))) {
                             continue;

@@ -7,7 +7,7 @@ import android.util.Log;
 import java.sql.Timestamp;
 import java.util.List;
 
-import edu.umbc.ebiquity.mithril.MithrilApplication;
+import edu.umbc.ebiquity.mithril.MithrilAC;
 import edu.umbc.ebiquity.mithril.data.dbhelpers.MithrilDBHelper;
 import edu.umbc.ebiquity.mithril.data.model.rules.Action;
 import edu.umbc.ebiquity.mithril.data.model.rules.PolicyRule;
@@ -41,7 +41,7 @@ public class ViolationDetector {
 //            semanticLocation.setInferredLocation(detectedAddress.getLocality());
 //        else if (level.equals("building"))
 //            semanticLocation.setInferredLocation(detectedAddress.getPremises());
-//        if (contextLevel.equals(MithrilApplication.getPrefKeyCurrentLocation()))
+//        if (contextLevel.equals(MithrilAC.getPrefKeyCurrentLocation()))
 //            semanticUserContext.setSemanticLocation(semanticLocation);
 //        else if (contextLevel.equals("loctime")) {
 //            semanticUserContext.setSemanticLocation(semanticLocation);
@@ -72,12 +72,12 @@ public class ViolationDetector {
         // Let's test the rules we found
         if (rulesForApp.size() > 0) {
             for (PolicyRule rule : rulesForApp) {
-                Log.d(MithrilApplication.getDebugTag(), "Found rule: " + rule.getName());
+                Log.d(MithrilAC.getDebugTag(), "Found rule: " + rule.getName());
                 //There is a rule for this app with current context as it's context
                 if (currentContext.contains(rule.getCtxId())) {
                     //Rule has a deny action, we may have a violation
                     if (rule.getAction().equals(Action.DENY)) {
-                        Log.d(MithrilApplication.getDebugTag(), "Eureka!");
+                        Log.d(MithrilAC.getDebugTag(), "Eureka!");
                         MithrilDBHelper.getHelper(context).addViolation(mithrilDB,
                                 new Violation(rule.getAppId(),
                                         rule.getCtxId(),
@@ -89,11 +89,11 @@ public class ViolationDetector {
                         );
                     } //Rule has an allow action, nothing to do
                     else if (rule.getAction().equals(Action.ALLOW)) {
-                        Log.d(MithrilApplication.getDebugTag(), "No violation for: " + currentPackageName);
+                        Log.d(MithrilAC.getDebugTag(), "No violation for: " + currentPackageName);
                     }
                 } // Rule context does not match current context, we might have an error here, check carefully
                 else {
-                    Log.d(MithrilApplication.getDebugTag(),
+                    Log.d(MithrilAC.getDebugTag(),
                             "Rule context does not match current context for: " +
                                     currentPackageName +
                                     " " +
@@ -102,14 +102,14 @@ public class ViolationDetector {
             }
         } //No rules found! We have a default violation... Opportunity for ML?
         else {
-            Log.d(MithrilApplication.getDebugTag(), "Default violation scenario. Do something!");
+            Log.d(MithrilAC.getDebugTag(), "Default violation scenario. Do something!");
             for(Integer currCtxtId : currentContext) {
                 MithrilDBHelper.getHelper(context).addViolation(mithrilDB,
                         new Violation(
                                 MithrilDBHelper.getHelper(context).findAppIdByName(mithrilDB, currentPackageName),
                                 currCtxtId,
                                 operationPerformed,
-                                MithrilApplication.getPolRulDefaultRule(),
+                                MithrilAC.getPolRulDefaultRule(),
                                 false,
                                 new Timestamp(System.currentTimeMillis())
                         )
@@ -120,35 +120,35 @@ public class ViolationDetector {
 //                        Violation violation;
 //                        //Is this allowed?
 //                        //Do we need temporal context?
-//                        if (rule.getContextType().equals(MithrilApplication.getPrefKeyTemporal())) {
+//                        if (rule.getContextType().equals(MithrilAC.getPrefKeyTemporal())) {
 //                            violation = weNeedTimeViolationCheck(context, new SemanticTime(rule.getSemanticContextLabel()));
 //                            if(violation != null)
 //                                mithrilDBHelper.addViolation(mithrilDB, violation);
 //                        }
 //                        //Do we need location?
-//                        else if (rule.getContextType().equals(MithrilApplication.getPrefKeyLocation())) {
+//                        else if (rule.getContextType().equals(MithrilAC.getPrefKeyLocation())) {
 //                            violation = weNeedLocationViolationCheck(context, new SemanticLocation(rule.getSemanticContextLabel()));
 //                            if(violation != null)
 //                                mithrilDBHelper.addViolation(mithrilDB, violation);
 //                        }
 //                        //Do we need activity?
-//                        else if (rule.getContextType().equals(MithrilApplication.getPrefKeyActivity()))
+//                        else if (rule.getContextType().equals(MithrilAC.getPrefKeyActivity()))
 //                            weNeedActivityViolationCheck();
 //                        //Do we need nearby actors?
-//                        else if (rule.getContextType().equals(MithrilApplication.getPrefKeyPresence()))
+//                        else if (rule.getContextType().equals(MithrilAC.getPrefKeyPresence()))
 //                            weNeedNearActorsViolationCheck();
 //                } else {
-//                    Log.e(MithrilApplication.getDebugTag(), "Serious error! DB contains deny rules. This violates our CWA");
+//                    Log.e(MithrilAC.getDebugTag(), "Serious error! DB contains deny rules. This violates our CWA");
 ////                    throw new CWAException(); //Something is wrong!!!! We have a Closed World Assumption we cannot have deny rules...
 //                }
 //            }
 //        } //No rules found! We have a violation...
 //        else {
 //        }
-//            if (MithrilDBHelper.getHelper(context).findAppTypeByAppPkgName(mithrilDB, currentPackageName).equals(MithrilApplication.getPrefKeyUserAppsDisplay())) {
+//            if (MithrilDBHelper.getHelper(context).findAppTypeByAppPkgName(mithrilDB, currentPackageName).equals(MithrilAC.getPrefKeyUserAppsDisplay())) {
 
                 //            PermissionHelper.toast(context, "Mithril detects user app launch: " + currentPackageName, Toast.LENGTH_SHORT).show();
-                //            Log.d(MithrilApplication.getDebugTag(), "Mithril detects user app launch: " + currentPackageName);
+        //            Log.d(MithrilAC.getDebugTag(), "Mithril detects user app launch: " + currentPackageName);
                 /**
                  * PolicyConflictDetector object to be created and sent the requester, resource, context combo to receive a decision!!!
                  */
@@ -165,13 +165,13 @@ public class ViolationDetector {
                 //            SemanticUserContext currSemanticUserContext = getCurrentSemanticUserContext();
                 //            if (currSemanticUserContext != null) {
                 //                //Rule 1 is allow youtube at home
-                //                if (contextLevel.equals(MithrilApplication.getPrefKeyCurrentLocation())
+        //                if (contextLevel.equals(MithrilAC.getPrefKeyCurrentLocation())
                 //                        && !currSemanticUserContext.getSemanticLocation().getInferredLocation().equals("21227")) {
                 //                    if (currentPackageName.equals("com.google.android.youtube")) {
-                //                        editor.putString(MithrilApplication.getPrefKeyAppPkgName(), currentPackageName);
-                //                        editor.putString(MithrilApplication.getPrefKeyCurrentLocation(), "Home");
+        //                        editor.putString(MithrilAC.getPrefKeyAppPkgName(), currentPackageName);
+        //                        editor.putString(MithrilAC.getPrefKeyCurrentLocation(), "Home");
                 ////                        PermissionHelper.toast(context, "Rule 1 violation detected!");
-                //                        Log.d(MithrilApplication.getDebugTag(), "Rule 1 violation detected!");
+        //                        Log.d(MithrilAC.getDebugTag(), "Rule 1 violation detected!");
                 //                    }
                 //                }
                 //                //Rule 2 is allow youtube at work during lunch hours
@@ -179,29 +179,29 @@ public class ViolationDetector {
                 //                        && !currSemanticUserContext.getSemanticLocation().getInferredLocation().equals("21250")
                 //                        && !currSemanticUserContext.getSemanticTime().getDeviceTime().equals("Lunch")) {
                 //                    if (currentPackageName.equals("com.google.android.youtube")) {
-                //                        editor.putString(MithrilApplication.getPrefKeyAppPkgName(), currentPackageName);
-                //                        editor.putString(MithrilApplication.getPrefKeyCurrentLocation(), "Work");
-                //                        editor.putString(MithrilApplication.getPrefKeyCurrentTime(), "Lunch");
+        //                        editor.putString(MithrilAC.getPrefKeyAppPkgName(), currentPackageName);
+        //                        editor.putString(MithrilAC.getPrefKeyCurrentLocation(), "Work");
+        //                        editor.putString(MithrilAC.getPrefKeyCurrentTime(), "Lunch");
                 ////                        editor.apply();
                 ////                        PermissionHelper.toast(context, "Rule 2 violation detected!");
-                //                        Log.d(MithrilApplication.getDebugTag(), "Rule 2 violation detected!");
+        //                        Log.d(MithrilAC.getDebugTag(), "Rule 2 violation detected!");
                 //                    }
                 //                }
                 //                //Rule 3 is allow SQLite at work
-                //                else if (contextLevel.equals(MithrilApplication.getPrefKeyCurrentLocation())
+        //                else if (contextLevel.equals(MithrilAC.getPrefKeyCurrentLocation())
                 //                        && !currSemanticUserContext.getSemanticLocation().getInferredLocation().equals("21250")) {
                 //                    if (currentPackageName.equals("oliver.ehrenmueller.dbadmin")) {
-                //                        editor.putString(MithrilApplication.getPrefKeyAppPkgName(), currentPackageName);
-                //                        editor.putString(MithrilApplication.getPrefKeyCurrentLocation(), "Work");
+        //                        editor.putString(MithrilAC.getPrefKeyAppPkgName(), currentPackageName);
+        //                        editor.putString(MithrilAC.getPrefKeyCurrentLocation(), "Work");
                 ////                editor.apply();
                 ////                        PermissionHelper.toast(context, "Rule 3 violation detected!");
-                //                        Log.d(MithrilApplication.getDebugTag(), "Rule 2 violation detected!");
+        //                        Log.d(MithrilAC.getDebugTag(), "Rule 2 violation detected!");
                 //                    }
                 //                }
                 ////            // If no rules are broken then we will show no violations
                 ////            else {
-                ////                editor.remove(MithrilApplication.getPrefKeyCurrentLocation());
-                ////                editor.remove(MithrilApplication.getPrefKeyCurrentTime());
+        ////                editor.remove(MithrilAC.getPrefKeyCurrentLocation());
+        ////                editor.remove(MithrilAC.getPrefKeyCurrentTime());
                 ////                PermissionHelper.toast(context, "All good!");
                 ////            }
                 //
@@ -209,7 +209,7 @@ public class ViolationDetector {
                 //            }
 //            }
 //        } catch (SQLException e) {
-//            Log.e(MithrilApplication.getDebugTag(), e.getMessage() + " it seems there is no policy for this app!");
+//            Log.e(MithrilAC.getDebugTag(), e.getMessage() + " it seems there is no policy for this app!");
 //        }
         mithrilDB.close();
     }
@@ -233,15 +233,15 @@ public class ViolationDetector {
 //    }
 //
 //    private static Violation weNeedLocationViolationCheck(Context context, SemanticLocation semanticLocation) {
-//        SharedPreferences sharedPref = context.getSharedPreferences(MithrilApplication.getSharedPreferencesName(), Context.MODE_PRIVATE);
+//        SharedPreferences sharedPref = context.getSharedPreferences(MithrilAC.getSharedPreferencesName(), Context.MODE_PRIVATE);
 //
 //        Gson gson = new Gson();
 //        String json = null;
 //
-////        json = sharedPref.getString(MithrilApplication.getPrefKeyCurrentAddress(), null);
+////        json = sharedPref.getString(MithrilAC.getPrefKeyCurrentAddress(), null);
 ////        detectedAddress = gson.fromJson(json, Address.class);
 ////
-////        json = sharedPref.getString(MithrilApplication.getPrefKeyCurrentLocation(), null);
+////        json = sharedPref.getString(MithrilAC.getPrefKeyCurrentLocation(), null);
 ////        detectedLocation = gson.fromJson(json, Location.class);
 ////        if(semanticLocation.getInferredLocation() != currentLocation)
 ////            return new Violation();

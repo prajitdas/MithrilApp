@@ -10,7 +10,7 @@ import android.widget.TextView;
 
 import java.util.List;
 
-import edu.umbc.ebiquity.mithril.MithrilApplication;
+import edu.umbc.ebiquity.mithril.MithrilAC;
 import edu.umbc.ebiquity.mithril.R;
 import edu.umbc.ebiquity.mithril.data.model.components.ServData;
 import edu.umbc.ebiquity.mithril.ui.fragments.coreactivityfragments.ServicesFragment.OnListFragmentInteractionListener;
@@ -45,9 +45,9 @@ public class InstalledServicesRecyclerViewAdapter extends RecyclerView.Adapter<I
         holder.mItem = mValues.get(position);
 
         String servAppType = mValues.get(position).getAppType();
-        if (servAppType.equals(MithrilApplication.getPrefKeySystemAppsDisplay())) {
+        if (servAppType.equals(MithrilAC.getPrefKeySystemAppsDisplay())) {
             holder.mServIcon.setImageDrawable(context.getResources().getDrawable(R.drawable.settings, context.getTheme()));
-        } else if (servAppType.equals(MithrilApplication.getPrefKeyUserAppsDisplay())) {
+        } else if (servAppType.equals(MithrilAC.getPrefKeyUserAppsDisplay())) {
             holder.mServIcon.setImageDrawable(view.getContext().getResources().getDrawable(R.drawable.account, view.getContext().getTheme()));
         }
 

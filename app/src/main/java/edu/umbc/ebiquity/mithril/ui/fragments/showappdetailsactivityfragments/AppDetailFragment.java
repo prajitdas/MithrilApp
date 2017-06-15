@@ -16,7 +16,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-import edu.umbc.ebiquity.mithril.MithrilApplication;
+import edu.umbc.ebiquity.mithril.MithrilAC;
 import edu.umbc.ebiquity.mithril.R;
 import edu.umbc.ebiquity.mithril.data.dbhelpers.MithrilDBHelper;
 import edu.umbc.ebiquity.mithril.data.model.components.PermData;
@@ -66,9 +66,9 @@ public class AppDetailFragment extends Fragment {
 
         if (getArguments() != null) {
             mColumnCount = getArguments().getInt(ARG_COLUMN_COUNT);
-            mAppPackageName = getArguments().getString(MithrilApplication.getPrefKeyAppPkgName());
+            mAppPackageName = getArguments().getString(MithrilAC.getPrefKeyAppPkgName());
         }
-//        Log.d(MithrilApplication.getDebugTag(), mAppPackageName);
+//        Log.d(MithrilAC.getDebugTag(), mAppPackageName);
     }
 
     @Override

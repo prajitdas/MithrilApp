@@ -90,6 +90,7 @@
         android:required="true" />
 
     <application
+        android:name=".MithrilAC"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/short_app_name"
         android:supportsRtl="true"

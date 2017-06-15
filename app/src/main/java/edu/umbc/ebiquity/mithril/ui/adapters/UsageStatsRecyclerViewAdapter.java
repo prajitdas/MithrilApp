@@ -20,7 +20,7 @@ import java.util.GregorianCalendar;
 import java.util.List;
 import java.util.Map;
 
-import edu.umbc.ebiquity.mithril.MithrilApplication;
+import edu.umbc.ebiquity.mithril.MithrilAC;
 import edu.umbc.ebiquity.mithril.R;
 import edu.umbc.ebiquity.mithril.data.model.rules.AppUsageStats;
 import edu.umbc.ebiquity.mithril.data.model.rules.Resource;
@@ -75,9 +75,9 @@ public class UsageStatsRecyclerViewAdapter extends RecyclerView.Adapter<UsageSta
                 }
             });
         } catch (SQLException e) {
-            Log.e(MithrilApplication.getDebugTag(), "Could not find " + e);
+            Log.e(MithrilAC.getDebugTag(), "Could not find " + e);
         } catch (PackageManager.NameNotFoundException e) {
-            Log.e(MithrilApplication.getDebugTag(), "Could not find the package" + e);
+            Log.e(MithrilAC.getDebugTag(), "Could not find the package" + e);
         }
     }
 

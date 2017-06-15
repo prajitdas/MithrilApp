@@ -34,7 +34,7 @@ import com.google.android.gms.location.GeofencingEvent;
 import java.util.ArrayList;
 import java.util.List;
 
-import edu.umbc.ebiquity.mithril.MithrilApplication;
+import edu.umbc.ebiquity.mithril.MithrilAC;
 import edu.umbc.ebiquity.mithril.R;
 import edu.umbc.ebiquity.mithril.data.dbhelpers.MithrilDBHelper;
 import edu.umbc.ebiquity.mithril.ui.activities.CoreActivity;
@@ -58,8 +58,8 @@ public class GeofenceTransitionsIntentService extends IntentService {
      * constructor with the name for a worker thread.
      */
     public GeofenceTransitionsIntentService() {
-        // Use the MithrilApplication.getDebugTag()+TAG to name the worker thread.
-        super(MithrilApplication.getDebugTag()+TAG);
+        // Use the MithrilAC.getDebugTag()+TAG to name the worker thread.
+        super(MithrilAC.getDebugTag() + TAG);
     }
 
     @Override
@@ -79,7 +79,7 @@ public class GeofenceTransitionsIntentService extends IntentService {
         if (geofencingEvent.hasError()) {
             String errorMessage = GeofenceErrorMessages.getErrorString(this,
                     geofencingEvent.getErrorCode());
-            Log.e(MithrilApplication.getDebugTag()+TAG, errorMessage);
+            Log.e(MithrilAC.getDebugTag() + TAG, errorMessage);
             return;
         }
 
@@ -89,13 +89,13 @@ public class GeofenceTransitionsIntentService extends IntentService {
         // Test that the reported transition was of interest.
         if (geofenceTransition == Geofence.GEOFENCE_TRANSITION_ENTER) {
             addContextLogToDB(gatherTransitionDetails(geofencingEvent, geofenceTransition).split(" ")[1],
-                    MithrilApplication.getPrefStartKey());
+                    MithrilAC.getPrefStartKey());
         } else if (geofenceTransition == Geofence.GEOFENCE_TRANSITION_EXIT) {
             addContextLogToDB(gatherTransitionDetails(geofencingEvent, geofenceTransition).split(" ")[1],
-                    MithrilApplication.getPrefEndKey());
+                    MithrilAC.getPrefEndKey());
         } else {
             // Log the error.
-            Log.e(MithrilApplication.getDebugTag()+TAG, getString(R.string.geofence_transition_invalid_type, geofenceTransition));
+            Log.e(MithrilAC.getDebugTag() + TAG, getString(R.string.geofence_transition_invalid_type, geofenceTransition));
         }
     }
 
@@ -112,7 +112,7 @@ public class GeofenceTransitionsIntentService extends IntentService {
 
         // Send notification and log the transition details.
         sendNotification(geofenceTransitionDetails);
-        Log.i(MithrilApplication.getDebugTag()+TAG, geofenceTransitionDetails);
+        Log.i(MithrilAC.getDebugTag() + TAG, geofenceTransitionDetails);
 //            findCurrentActivityIfAny();
 //            findCurrentTemporalInfoIfAny();
 //            findCurrentPresenceInfoIfAny();
@@ -125,7 +125,7 @@ public class GeofenceTransitionsIntentService extends IntentService {
                 MithrilDBHelper.getHelper(this).findContextIdByLabelAndType(
                         mithrilDB,
                         label,
-                        MithrilApplication.getPrefKeyContextTypeLocation()),
+                        MithrilAC.getPrefKeyContextTypeLocation()),
                 startOrEnd);
     }
 

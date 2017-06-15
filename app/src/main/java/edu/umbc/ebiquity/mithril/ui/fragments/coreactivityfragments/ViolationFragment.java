@@ -98,19 +98,19 @@ public class ViolationFragment extends Fragment {
 //        String appPkgName = sharedPref.getString(MithrilApplication.getPrefKeyAppPkgName(), "Youtube");
         /*
         if (appPkgName.equals("com.google.android.youtube") &&
-                sharedPref.contains(MithrilApplication.getPrefKeyCurrentTime()))
+                sharedPref.contains(MithrilAC.getPrefKeyCurrentTime()))
             violationItems.add(new Violation("App package name: " +
-                    sharedPref.getString(MithrilApplication.getPrefKeyAppPkgName(), "Youtube") +
+                    sharedPref.getString(MithrilAC.getPrefKeyAppPkgName(), "Youtube") +
                     "Location context: " +
-                    sharedPref.getString(MithrilApplication.getPrefKeyCurrentLocation(), "location") +
+                    sharedPref.getString(MithrilAC.getPrefKeyCurrentLocation(), "location") +
                     "Temporal context: " +
-                    sharedPref.getString(MithrilApplication.getPrefKeyCurrentTime(), "time"), 1, 1, true));
+                    sharedPref.getString(MithrilAC.getPrefKeyCurrentTime(), "time"), 1, 1, true));
         else if (appPkgName.equals("com.google.android.youtube") &&
-                !sharedPref.contains(MithrilApplication.getPrefKeyCurrentTime()))
+                !sharedPref.contains(MithrilAC.getPrefKeyCurrentTime()))
             violationItems.add(new Violation("App package name: " +
-                    sharedPref.getString(MithrilApplication.getPrefKeyAppPkgName(), "Youtube") +
+                    sharedPref.getString(MithrilAC.getPrefKeyAppPkgName(), "Youtube") +
                     "Location context: " +
-                    sharedPref.getString(MithrilApplication.getPrefKeyCurrentLocation(), "location"), 1, 1, true));
+                    sharedPref.getString(MithrilAC.getPrefKeyCurrentLocation(), "location"), 1, 1, true));
         else
         */
 //        violationItems.clear();

@@ -16,7 +16,7 @@ import java.util.HashMap;
 /**
  * Created by Prajit Kumar Das on 5/1/2016.
  */
-public class MithrilApplication extends Application {
+public class MithrilAC extends Application {
     /**
      * Public stuff! Make them private if you can...
      */
@@ -38,39 +38,35 @@ public class MithrilApplication extends Application {
     public static final String ADDRESS_KEY = "ADDRESS_KEY";
     public static final String NO_FLAGS = "no-flags";
     public static final String NORMAL_PROTECTION_LEVEL = "normal";
-
-    private static final String CALENDAR_PERMISSION_GROUP_DESC = "Calendar permission group";
-    private static final String CAMERA_PERMISSION_GROUP_DESC = "Camera permission group";
-    private static final String CONTACTS_PERMISSION_GROUP_DESC = "Contacts permission group";
-    private static final String LOCATION_PERMISSION_GROUP_DESC = "Location permission group";
-    private static final String MICROPHONE_PERMISSION_GROUP_DESC = "Microphone permission group";
-    private static final String PHONE_PERMISSION_GROUP_DESC = "Phone permission group";
-    private static final String SENSORS_PERMISSION_GROUP_DESC = "Sensors permission group";
-    private static final String SMS_PERMISSION_GROUP_DESC = "SMS permission group";
-    private static final String STORAGE_PERMISSION_GROUP_DESC = "Storage permission group";
-    private static final String SYSTEM_TOOLS_PERMISSION_GROUP_DESC = "System tools permission group";
-    private static final String CAR_INFORMATION_PERMISSION_GROUP_DESC = "Car information permission group";
-    private static final String NO_PERMISSION_GROUP_DESC = "No permission group";
-
-    public static final Pair<String, String> CALENDAR_PERMISSION_GROUP = new Pair<>("android.permission-group.CALENDAR", CALENDAR_PERMISSION_GROUP_DESC);
-    public static final Pair<String, String> CAMERA_PERMISSION_GROUP = new Pair<>("android.permission-group.CAMERA", CAMERA_PERMISSION_GROUP_DESC);
-    public static final Pair<String, String> CONTACTS_PERMISSION_GROUP = new Pair<>("android.permission-group.CONTACTS", CONTACTS_PERMISSION_GROUP_DESC);
-    public static final Pair<String, String> LOCATION_PERMISSION_GROUP = new Pair<>("android.permission-group.LOCATION", LOCATION_PERMISSION_GROUP_DESC);
-    public static final Pair<String, String> MICROPHONE_PERMISSION_GROUP = new Pair<>("android.permission-group.MICROPHONE", MICROPHONE_PERMISSION_GROUP_DESC);
-    public static final Pair<String, String> PHONE_PERMISSION_GROUP = new Pair<>("android.permission-group.PHONE", PHONE_PERMISSION_GROUP_DESC);
-    public static final Pair<String, String> SENSORS_PERMISSION_GROUP = new Pair<>("android.permission-group.SENSORS", SENSORS_PERMISSION_GROUP_DESC);
-    public static final Pair<String, String> SMS_PERMISSION_GROUP = new Pair<>("android.permission-group.SMS", SMS_PERMISSION_GROUP_DESC);
-    public static final Pair<String, String> STORAGE_PERMISSION_GROUP = new Pair<>("android.permission-group.STORAGE", STORAGE_PERMISSION_GROUP_DESC);
-    public static final Pair<String, String> SYSTEM_TOOLS_PERMISSION_GROUP = new Pair<>("android.permission-group.SYSTEM_TOOLS", SYSTEM_TOOLS_PERMISSION_GROUP_DESC);
-    public static final Pair<String, String> CAR_INFORMATION_PERMISSION_GROUP = new Pair<>("com.google.android.gms.permission.CAR_INFORMATION", CAR_INFORMATION_PERMISSION_GROUP_DESC);
-    public static final Pair<String, String> NO_PERMISSION_GROUP = new Pair<>("no-groups", NO_PERMISSION_GROUP_DESC);
-
     public static final float GEOFENCE_RADIUS_IN_METERS = 200; // 200 meters
     /**
      * Map for storing information about airports in the San Francisco bay area.
      */
     public static final HashMap<String, LatLng> BALTIMORE_COUNTY_LANDMARKS = new HashMap<String, LatLng>();
-    
+    private static final String CALENDAR_PERMISSION_GROUP_DESC = "Calendar permission group";
+    public static final Pair<String, String> CALENDAR_PERMISSION_GROUP = new Pair<>("android.permission-group.CALENDAR", CALENDAR_PERMISSION_GROUP_DESC);
+    private static final String CAMERA_PERMISSION_GROUP_DESC = "Camera permission group";
+    public static final Pair<String, String> CAMERA_PERMISSION_GROUP = new Pair<>("android.permission-group.CAMERA", CAMERA_PERMISSION_GROUP_DESC);
+    private static final String CONTACTS_PERMISSION_GROUP_DESC = "Contacts permission group";
+    public static final Pair<String, String> CONTACTS_PERMISSION_GROUP = new Pair<>("android.permission-group.CONTACTS", CONTACTS_PERMISSION_GROUP_DESC);
+    private static final String LOCATION_PERMISSION_GROUP_DESC = "Location permission group";
+    public static final Pair<String, String> LOCATION_PERMISSION_GROUP = new Pair<>("android.permission-group.LOCATION", LOCATION_PERMISSION_GROUP_DESC);
+    private static final String MICROPHONE_PERMISSION_GROUP_DESC = "Microphone permission group";
+    public static final Pair<String, String> MICROPHONE_PERMISSION_GROUP = new Pair<>("android.permission-group.MICROPHONE", MICROPHONE_PERMISSION_GROUP_DESC);
+    private static final String PHONE_PERMISSION_GROUP_DESC = "Phone permission group";
+    public static final Pair<String, String> PHONE_PERMISSION_GROUP = new Pair<>("android.permission-group.PHONE", PHONE_PERMISSION_GROUP_DESC);
+    private static final String SENSORS_PERMISSION_GROUP_DESC = "Sensors permission group";
+    public static final Pair<String, String> SENSORS_PERMISSION_GROUP = new Pair<>("android.permission-group.SENSORS", SENSORS_PERMISSION_GROUP_DESC);
+    private static final String SMS_PERMISSION_GROUP_DESC = "SMS permission group";
+    public static final Pair<String, String> SMS_PERMISSION_GROUP = new Pair<>("android.permission-group.SMS", SMS_PERMISSION_GROUP_DESC);
+    private static final String STORAGE_PERMISSION_GROUP_DESC = "Storage permission group";
+    public static final Pair<String, String> STORAGE_PERMISSION_GROUP = new Pair<>("android.permission-group.STORAGE", STORAGE_PERMISSION_GROUP_DESC);
+    private static final String SYSTEM_TOOLS_PERMISSION_GROUP_DESC = "System tools permission group";
+    public static final Pair<String, String> SYSTEM_TOOLS_PERMISSION_GROUP = new Pair<>("android.permission-group.SYSTEM_TOOLS", SYSTEM_TOOLS_PERMISSION_GROUP_DESC);
+    private static final String CAR_INFORMATION_PERMISSION_GROUP_DESC = "Car information permission group";
+    public static final Pair<String, String> CAR_INFORMATION_PERMISSION_GROUP = new Pair<>("com.google.android.gms.permission.CAR_INFORMATION", CAR_INFORMATION_PERMISSION_GROUP_DESC);
+    private static final String NO_PERMISSION_GROUP_DESC = "No permission group";
+    public static final Pair<String, String> NO_PERMISSION_GROUP = new Pair<>("no-groups", NO_PERMISSION_GROUP_DESC);
     /**
      * Private variables start
      */
@@ -132,26 +128,7 @@ public class MithrilApplication extends Application {
     private static final String BACK_PRESSED_USER_AGREEMENT_SCREEN = "backPressed";
 
     //Preference keys
-//    private static final String PREF_KEY_CURRENT_TIME = "time";
-//    private static final String PREF_KEY_CURRENT_LOCATION = "currloc";
-//    private static final String PREF_KEY_SEMANTIC = "Semantic";
-//    private static final String PREF_KEY_SEMANTIC_LOCATION = PREF_KEY_SEMANTIC + PREF_KEY_LOCATION;
-//    private static final String PREF_KEY_SEMANTIC_ACTIVITY = PREF_KEY_SEMANTIC + PREF_KEY_ACTIVITY;
-//    private static final String PREF_KEY_SEMANTIC_TEMPORAL = PREF_KEY_SEMANTIC + PREF_KEY_TEMPORAL;
-//    private static final String PREF_KEY_SEMANTIC_PRESENCE = PREF_KEY_SEMANTIC + PREF_KEY_PRESENCE;
-//    private static final String PREF_KEY_CURRENT_ADDRESS = "curraddr";
-//    private static final String PREF_KEY_WHAT_LEVEL = "level";
-    //Make sure they match the values from preferences.xml
-//    private static final String PREF_ALL_DONE_KEY = "prefsDone";
-//    private static final String PREF_LOCATION_CONTEXT_ENABLE_KEY = "enableLocationContext";
-//    private static final String PREF_PRESENCE_INFO_CONTEXT_ENABLE_KEY = "enablePresenceInfoContext";
-//    private static final String PREF_PRESENCE_INFO_COLLEAGUE_KEY = "presenceInfoSupervisor";
-//    private static final String PREF_PRESENCE_INFO_SUPERVISOR_KEY = "presenceInfoColleague";
-//    private static final String PREF_TEMPORAL_CONTEXT_ENABLE_KEY = "enableTemporalContext";
-
-    private static final String PREF_KEY_RESET_ENABLED = "reset";
     private static final String PREF_KEY_POLICIES_DOWNLOADED = "policiesDownloaded";
-//    private static final String PREF_WHAT_FRAGMENT_KEY = "whatFragment";
 
     private static final String PREF_KEY_CONTEXT_TYPE_LOCATION = "Location";
     private static final String PREF_KEY_CONTEXT_TYPE_ACTIVITY = "Activity";
@@ -166,10 +143,6 @@ public class MithrilApplication extends Application {
     private static final String PREF_WORK_TEMPORAL_KEY = "Work";
     private static final String PREF_DND_TEMPORAL_KEY = "DND";
 
-//    private static final String PREF_WORK_HOURS_START_KEY = "workHoursStart";
-//    private static final String PREF_WORK_HOURS_END_KEY = "workHoursEnd";
-//    private static final String PREF_DND_HOURS_START_KEY = "dndHoursStart";
-//    private static final String PREF_DND_HOURS_END_KEY = "dndHoursEnd";
     private static final String PREF_MONDAY = "Monday";
     private static final String PREF_TUESDAY = "Tuesday";
     private static final String PREF_WEDNESDAY = "Wednesday";
@@ -1068,10 +1041,6 @@ public class MithrilApplication extends Application {
 
     public static String getCmdDetectAppLaunchTime() {
         return CMD_DETECT_APP_LAUNCH_TIME;
-    }
-
-    public static String getPrefKeyResetEnabled() {
-        return PREF_KEY_RESET_ENABLED;
     }
 
     public static String getPrefKeyUserContinueClicked() {

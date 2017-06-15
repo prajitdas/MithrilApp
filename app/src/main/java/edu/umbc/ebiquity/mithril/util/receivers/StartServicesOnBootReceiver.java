@@ -8,7 +8,7 @@ import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.support.v4.content.ContextCompat;
 
-import edu.umbc.ebiquity.mithril.MithrilApplication;
+import edu.umbc.ebiquity.mithril.MithrilAC;
 import edu.umbc.ebiquity.mithril.util.services.AppLaunchDetectorService;
 import edu.umbc.ebiquity.mithril.util.specialtasks.permissions.PermissionHelper;
 
@@ -17,9 +17,9 @@ public class StartServicesOnBootReceiver extends BroadcastReceiver {
 
     @Override
     public void onReceive(Context context, Intent intent) {
-        sharedPref = context.getSharedPreferences(MithrilApplication.getSharedPreferencesName(), Context.MODE_PRIVATE);
+        sharedPref = context.getSharedPreferences(MithrilAC.getSharedPreferencesName(), Context.MODE_PRIVATE);
         // We have got the user agreement part done! Now we can start services...
-        if (sharedPref.getBoolean(MithrilApplication.getPrefKeyUserAgreementCopied(), false)) {
+        if (sharedPref.getBoolean(MithrilAC.getPrefKeyUserAgreementCopied(), false)) {
             if (intent.getAction().equals(Intent.ACTION_BOOT_COMPLETED)) {
                 if (PermissionHelper.isExplicitPermissionAcquisitionNecessary()) {
                     if (!PermissionHelper.needsUsageStatsPermission(context))
@@ -30,8 +30,8 @@ public class StartServicesOnBootReceiver extends BroadcastReceiver {
                         * Get any previous setting for location updates
                         * Gets "false" if an error occurs
                         */
-                        if (sharedPref.contains(MithrilApplication.getPrefKeyLocationUpdateServiceState())) {
-                            updatesRequested = sharedPref.getBoolean(MithrilApplication.getPrefKeyLocationUpdateServiceState(), false);
+                        if (sharedPref.contains(MithrilAC.getPrefKeyLocationUpdateServiceState())) {
+                            updatesRequested = sharedPref.getBoolean(MithrilAC.getPrefKeyLocationUpdateServiceState(), false);
                         }
 //                        if (updatesRequested) {
 //                            context.startService(new Intent(context, LocationUpdateService.class));
@@ -40,7 +40,7 @@ public class StartServicesOnBootReceiver extends BroadcastReceiver {
                 }
             }
 //            } else {
-//                Log.e(MithrilApplication.getDebugTag(), "Received unexpected intent " + intent.toString());
+//                Log.e(MithrilAC.getDebugTag(), "Received unexpected intent " + intent.toString());
 //            }
         }
     }

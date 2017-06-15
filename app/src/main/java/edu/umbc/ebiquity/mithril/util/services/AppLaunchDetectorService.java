@@ -10,7 +10,7 @@ import android.util.Log;
 import java.util.Timer;
 import java.util.TimerTask;
 
-import edu.umbc.ebiquity.mithril.MithrilApplication;
+import edu.umbc.ebiquity.mithril.MithrilAC;
 import edu.umbc.ebiquity.mithril.util.specialtasks.detect.runningapps.AppLaunchDetector;
 
 public class AppLaunchDetectorService extends Service {
@@ -37,14 +37,14 @@ public class AppLaunchDetectorService extends Service {
                 mTimer = new Timer();
             }
         } catch (NullPointerException e) {
-            Log.d(MithrilApplication.getDebugTag(), "Check if we have the right permissions, we probably could not instantiate the detector");
+            Log.d(MithrilAC.getDebugTag(), "Check if we have the right permissions, we probably could not instantiate the detector");
         }
     }
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
         // schedule task
-        mTimer.scheduleAtFixedRate(new LaunchedAppDetectTimerTask(), 0, MithrilApplication.getLaunchDetectInterval());
+        mTimer.scheduleAtFixedRate(new LaunchedAppDetectTimerTask(), 0, MithrilAC.getLaunchDetectInterval());
         return super.onStartCommand(intent, flags, startId);
     }
 

@@ -7,7 +7,7 @@ import android.os.Parcelable;
 
 import java.util.Locale;
 
-import edu.umbc.ebiquity.mithril.MithrilApplication;
+import edu.umbc.ebiquity.mithril.MithrilAC;
 
 public class SemanticLocation implements Parcelable, SemanticUserContext {
     public static final Creator<SemanticLocation> CREATOR = new Creator<SemanticLocation>() {
@@ -21,7 +21,7 @@ public class SemanticLocation implements Parcelable, SemanticUserContext {
             return new SemanticLocation[size];
         }
     };
-    private final String type = MithrilApplication.getPrefKeyContextTypeLocation();
+    private final String type = MithrilAC.getPrefKeyContextTypeLocation();
     private Location location;
     private Address address = new Address(Locale.getDefault());
     private String inferredLocation;

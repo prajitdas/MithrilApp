@@ -19,7 +19,6 @@ import android.support.design.widget.BottomNavigationView;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
-import android.util.Pair;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -43,7 +42,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
-import edu.umbc.ebiquity.mithril.MithrilApplication;
+import edu.umbc.ebiquity.mithril.MithrilAC;
 import edu.umbc.ebiquity.mithril.R;
 import edu.umbc.ebiquity.mithril.data.dbhelpers.MithrilDBHelper;
 import edu.umbc.ebiquity.mithril.data.model.rules.context.SemanticActivity;
@@ -131,25 +130,25 @@ public class InstanceCreationActivity extends AppCompatActivity
         try {
             allPrefs = sharedPreferences.getAll();
             for (Map.Entry<String, ?> aPref : allPrefs.entrySet()) {
-                if (aPref.getKey().startsWith(MithrilApplication.getPrefKeyContextTypeLocation())) {
+                if (aPref.getKey().startsWith(MithrilAC.getPrefKeyContextTypeLocation())) {
                     retrieveDataJson = sharedPreferences.getString(aPref.getKey(), "");
                     if(!retrieveDataGson.fromJson(retrieveDataJson, SemanticLocation.class).isEnabled())
                         isThereLocationContextToSave = true;
                     //Filtering out by location keys the main key starts from after the word "Location"
                     semanticLocations.put(aPref.getKey().substring(8), retrieveDataGson.fromJson(retrieveDataJson, SemanticLocation.class));
-                } else if (aPref.getKey().startsWith(MithrilApplication.getPrefKeyContextTypeTemporal())) {
+                } else if (aPref.getKey().startsWith(MithrilAC.getPrefKeyContextTypeTemporal())) {
                     retrieveDataJson = sharedPreferences.getString(aPref.getKey(), "");
                     if(!retrieveDataGson.fromJson(retrieveDataJson, SemanticTime.class).isEnabled())
                         isThereTemporalContextToSave = true;
                     //Filtering out by location keys the main key starts from after the word "Temporal"
                     semanticTimes.put(aPref.getKey().substring(8), retrieveDataGson.fromJson(retrieveDataJson, SemanticTime.class));
-                } else if (aPref.getKey().startsWith(MithrilApplication.getPrefKeyContextTypePresence())) {
+                } else if (aPref.getKey().startsWith(MithrilAC.getPrefKeyContextTypePresence())) {
                     retrieveDataJson = sharedPreferences.getString(aPref.getKey(), "");
                     if(!retrieveDataGson.fromJson(retrieveDataJson, SemanticNearActor.class).isEnabled())
                         isTherePresenceContextToSave = true;
                     //Filtering out by location keys the main key starts from after the word "Presence"
                     semanticNearActors.put(aPref.getKey().substring(8), retrieveDataGson.fromJson(retrieveDataJson, SemanticNearActor.class));
-                } else if (aPref.getKey().startsWith(MithrilApplication.getPrefKeyContextTypeActivity())) {
+                } else if (aPref.getKey().startsWith(MithrilAC.getPrefKeyContextTypeActivity())) {
                     retrieveDataJson = sharedPreferences.getString(aPref.getKey(), "");
                     if(!retrieveDataGson.fromJson(retrieveDataJson, SemanticActivity.class).isEnabled())
                         isThereActivityContextToSave = true;
@@ -158,7 +157,7 @@ public class InstanceCreationActivity extends AppCompatActivity
                 }
             }
         } catch (NullPointerException e) {
-            Log.d(MithrilApplication.getDebugTag(), "Prefs empty somehow?!");
+            Log.d(MithrilAC.getDebugTag(), "Prefs empty somehow?!");
         }
     }
 
@@ -169,7 +168,7 @@ public class InstanceCreationActivity extends AppCompatActivity
     }
 
     private void initViews() {
-        editor = getSharedPreferences(MithrilApplication.getSharedPreferencesName(), Context.MODE_PRIVATE).edit();
+        editor = getSharedPreferences(MithrilAC.getSharedPreferencesName(), Context.MODE_PRIVATE).edit();
         activityBaseTitle = getApplicationContext().getResources().getString(R.string.title_activity_instance_creation);
 
         mAddressResultReceiver = new AddressResultReceiver(new Handler(), this);
@@ -222,9 +221,9 @@ public class InstanceCreationActivity extends AppCompatActivity
         mFirstMajorCtxtBtn.setText(R.string.pref_home_location_summary);
         mSecondMajorCtxtBtn.setText(R.string.pref_work_location_summary);
 
-        if (!sharedPreferences.getBoolean(MithrilApplication.getPrefKeyLocaInstancesCreated(), false)) {
+        if (!sharedPreferences.getBoolean(MithrilAC.getPrefKeyLocaInstancesCreated(), false)) {
             PermissionHelper.toast(getApplicationContext(), getApplicationContext().getResources().getString(R.string.tooltip_location), Toast.LENGTH_SHORT);
-            editor.putBoolean(MithrilApplication.getPrefKeyLocaInstancesCreated(), true);
+            editor.putBoolean(MithrilAC.getPrefKeyLocaInstancesCreated(), true);
             editor.apply();
         }
 
@@ -240,9 +239,9 @@ public class InstanceCreationActivity extends AppCompatActivity
         mFirstMajorCtxtBtn.setText(R.string.pref_work_hours_context_summary);
         mSecondMajorCtxtBtn.setText(R.string.pref_DND_hours_context_summary);
 
-        if (!sharedPreferences.getBoolean(MithrilApplication.getPrefKeyTimeInstancesCreated(), false)) {
+        if (!sharedPreferences.getBoolean(MithrilAC.getPrefKeyTimeInstancesCreated(), false)) {
             PermissionHelper.toast(getApplicationContext(), getApplicationContext().getResources().getString(R.string.tooltip_temporal), Toast.LENGTH_SHORT);
-            editor.putBoolean(MithrilApplication.getPrefKeyTimeInstancesCreated(), true);
+            editor.putBoolean(MithrilAC.getPrefKeyTimeInstancesCreated(), true);
             editor.apply();
         }
 
@@ -258,9 +257,9 @@ public class InstanceCreationActivity extends AppCompatActivity
         mFirstMajorCtxtBtn.setText(R.string.pref_presence_info_supervisor_summary);
         mSecondMajorCtxtBtn.setText(R.string.pref_presence_info_colleague_summary);
 
-        if (!sharedPreferences.getBoolean(MithrilApplication.getPrefKeyPresInstancesCreated(), false)) {
+        if (!sharedPreferences.getBoolean(MithrilAC.getPrefKeyPresInstancesCreated(), false)) {
             PermissionHelper.toast(getApplicationContext(), getApplicationContext().getResources().getString(R.string.tooltip_presence_related), Toast.LENGTH_SHORT);
-            editor.putBoolean(MithrilApplication.getPrefKeyTimeInstancesCreated(), true);
+            editor.putBoolean(MithrilAC.getPrefKeyTimeInstancesCreated(), true);
             editor.apply();
         }
 
@@ -276,9 +275,9 @@ public class InstanceCreationActivity extends AppCompatActivity
         mFirstMajorCtxtBtn.setText(R.string.pref_personal_activity_context_title);
         mSecondMajorCtxtBtn.setText(R.string.pref_professional_activity_context_title);
 
-        if (!sharedPreferences.getBoolean(MithrilApplication.getPrefKeyActiInstancesCreated(), false)) {
+        if (!sharedPreferences.getBoolean(MithrilAC.getPrefKeyActiInstancesCreated(), false)) {
             PermissionHelper.toast(getApplicationContext(), getApplicationContext().getResources().getString(R.string.tooltip_activity), Toast.LENGTH_SHORT);
-            editor.putBoolean(MithrilApplication.getPrefKeyTimeInstancesCreated(), true);
+            editor.putBoolean(MithrilAC.getPrefKeyTimeInstancesCreated(), true);
             editor.apply();
         }
 
@@ -377,7 +376,7 @@ public class InstanceCreationActivity extends AppCompatActivity
 
     private void loadSemanticLocationFragment() {
         Bundle data = new Bundle();
-        data.putParcelableList(MithrilApplication.getPrefKeyListOfLocationInstances(), new ArrayList<>(semanticLocations.values()));
+        data.putParcelableList(MithrilAC.getPrefKeyListOfLocationInstances(), new ArrayList<>(semanticLocations.values()));
 
         SemanticLocationFragment semanticLocationFragment = new SemanticLocationFragment();
         semanticLocationFragment.setArguments(data);
@@ -389,7 +388,7 @@ public class InstanceCreationActivity extends AppCompatActivity
 
     private void loadSemanticTemporalFragment() {
         Bundle data = new Bundle();
-        data.putParcelableList(MithrilApplication.getPrefKeyListOfTemporalInstances(), new ArrayList<>(semanticTimes.values()));
+        data.putParcelableList(MithrilAC.getPrefKeyListOfTemporalInstances(), new ArrayList<>(semanticTimes.values()));
 
         SemanticTimeFragment semanticTimeFragment = new SemanticTimeFragment();
         semanticTimeFragment.setArguments(data);
@@ -401,7 +400,7 @@ public class InstanceCreationActivity extends AppCompatActivity
 
     private void loadSemanticPresenceFragment() {
         Bundle data = new Bundle();
-        data.putParcelableList(MithrilApplication.getPrefKeyListOfPresenceInstances(), new ArrayList<>(semanticNearActors.values()));
+        data.putParcelableList(MithrilAC.getPrefKeyListOfPresenceInstances(), new ArrayList<>(semanticNearActors.values()));
 
         SemanticNearActorFragment semanticNearActorFragment = new SemanticNearActorFragment();
         semanticNearActorFragment.setArguments(data);
@@ -413,7 +412,7 @@ public class InstanceCreationActivity extends AppCompatActivity
 
     private void loadSemanticActivityFragment() {
         Bundle data = new Bundle();
-        data.putParcelableList(MithrilApplication.getPrefKeyListOfActivityInstances(), new ArrayList<>(semanticActivities.values()));
+        data.putParcelableList(MithrilAC.getPrefKeyListOfActivityInstances(), new ArrayList<>(semanticActivities.values()));
 
         SemanticActivityFragment semanticActivityFragment = new SemanticActivityFragment();
         semanticActivityFragment.setArguments(data);
@@ -553,12 +552,12 @@ public class InstanceCreationActivity extends AppCompatActivity
         // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
         if (id == R.id.done_with_instances_settings) {
-            editor.putBoolean(MithrilApplication.getPrefKeyLocaInstancesCreated(), true);
-            editor.putBoolean(MithrilApplication.getPrefKeyPresInstancesCreated(), true);
-            editor.putBoolean(MithrilApplication.getPrefKeyActiInstancesCreated(), true);
-            editor.putBoolean(MithrilApplication.getPrefKeyTimeInstancesCreated(), true);
+            editor.putBoolean(MithrilAC.getPrefKeyLocaInstancesCreated(), true);
+            editor.putBoolean(MithrilAC.getPrefKeyPresInstancesCreated(), true);
+            editor.putBoolean(MithrilAC.getPrefKeyActiInstancesCreated(), true);
+            editor.putBoolean(MithrilAC.getPrefKeyTimeInstancesCreated(), true);
             editor.apply();
-            if (!sharedPreferences.getBoolean(MithrilApplication.getPrefKeyPoliciesDownloaded(), false)) {
+            if (!sharedPreferences.getBoolean(MithrilAC.getPrefKeyPoliciesDownloaded(), false)) {
                 startNextActivity(this, DownloadPoliciesActivity.class);
             }
             else
@@ -568,11 +567,11 @@ public class InstanceCreationActivity extends AppCompatActivity
     }
 
     private void testInitInstancesCreateAndLaunchNextActivity() {
-        sharedPreferences = getApplicationContext().getSharedPreferences(MithrilApplication.getSharedPreferencesName(), Context.MODE_PRIVATE);
-        if (sharedPreferences.getBoolean(MithrilApplication.getPrefKeyLocaInstancesCreated(), false) &&
-                sharedPreferences.getBoolean(MithrilApplication.getPrefKeyPresInstancesCreated(), false) &&
-                sharedPreferences.getBoolean(MithrilApplication.getPrefKeyActiInstancesCreated(), false) &&
-                sharedPreferences.getBoolean(MithrilApplication.getPrefKeyTimeInstancesCreated(), false))
+        sharedPreferences = getApplicationContext().getSharedPreferences(MithrilAC.getSharedPreferencesName(), Context.MODE_PRIVATE);
+        if (sharedPreferences.getBoolean(MithrilAC.getPrefKeyLocaInstancesCreated(), false) &&
+                sharedPreferences.getBoolean(MithrilAC.getPrefKeyPresInstancesCreated(), false) &&
+                sharedPreferences.getBoolean(MithrilAC.getPrefKeyActiInstancesCreated(), false) &&
+                sharedPreferences.getBoolean(MithrilAC.getPrefKeyTimeInstancesCreated(), false))
             startNextActivity(this, CoreActivity.class);
     }
 
@@ -614,7 +613,7 @@ public class InstanceCreationActivity extends AppCompatActivity
             String message = "Google Play Services is not available: " +
                     GoogleApiAvailability.getInstance().getErrorString(e.errorCode);
 
-            Log.e(MithrilApplication.getDebugTag(), message);
+            Log.e(MithrilAC.getDebugTag(), message);
             PermissionHelper.toast(this, message, Toast.LENGTH_SHORT);
         }
     }
@@ -649,19 +648,19 @@ public class InstanceCreationActivity extends AppCompatActivity
                 userInputLocation.setLatitude(place.getLatLng().latitude);
                 userInputLocation.setLongitude(place.getLatLng().longitude);
 
-                SemanticLocation semanticLocation = new SemanticLocation(MithrilApplication.getPrefHomeLocationKey(), userInputLocation);
+                SemanticLocation semanticLocation = new SemanticLocation(MithrilAC.getPrefHomeLocationKey(), userInputLocation);
 //                semanticLocation.setDetails(getPlaceType(place.getPlaceTypes()));
                 semanticLocation.setDetails(place.getName().toString());
 
-                semanticLocations.put(MithrilApplication.getPrefHomeLocationKey(), semanticLocation);
+                semanticLocations.put(MithrilAC.getPrefHomeLocationKey(), semanticLocation);
                 /**
                  * We know the location has changed, let's check the address
                  */
                 mAddressRequested = true;
-                startSearchAddressIntentService(userInputLocation, MithrilApplication.getPrefHomeLocationKey());
+                startSearchAddressIntentService(userInputLocation, MithrilAC.getPrefHomeLocationKey());
             } else if (resultCode == PlaceAutocomplete.RESULT_ERROR) {
                 Status status = PlaceAutocomplete.getStatus(this, data);
-                Log.e(MithrilApplication.getDebugTag(), "Error: Status = " + status.toString());
+                Log.e(MithrilAC.getDebugTag(), "Error: Status = " + status.toString());
             } else if (resultCode == Activity.RESULT_CANCELED) {
                 // Indicates that the activity closed before a selection was made. For example if the user pressed the back button.
             }
@@ -674,19 +673,19 @@ public class InstanceCreationActivity extends AppCompatActivity
                 userInputLocation.setLatitude(place.getLatLng().latitude);
                 userInputLocation.setLongitude(place.getLatLng().longitude);
 
-                SemanticLocation semanticLocation = new SemanticLocation(MithrilApplication.getPrefWorkLocationKey(), userInputLocation);
+                SemanticLocation semanticLocation = new SemanticLocation(MithrilAC.getPrefWorkLocationKey(), userInputLocation);
 //                semanticLocation.setDetails(getPlaceType(place.getPlaceTypes()));
                 semanticLocation.setDetails(place.getName().toString());
 
-                semanticLocations.put(MithrilApplication.getPrefWorkLocationKey(), semanticLocation);
+                semanticLocations.put(MithrilAC.getPrefWorkLocationKey(), semanticLocation);
                 /**
                  * We know the location has changed, let's check the address
                  */
                 mAddressRequested = true;
-                startSearchAddressIntentService(userInputLocation, MithrilApplication.getPrefWorkLocationKey());
+                startSearchAddressIntentService(userInputLocation, MithrilAC.getPrefWorkLocationKey());
             } else if (resultCode == PlaceAutocomplete.RESULT_ERROR) {
                 Status status = PlaceAutocomplete.getStatus(this, data);
-                Log.e(MithrilApplication.getDebugTag(), "Error: Status = " + status.toString());
+                Log.e(MithrilAC.getDebugTag(), "Error: Status = " + status.toString());
             } else if (resultCode == Activity.RESULT_CANCELED) {
                 // Indicates that the activity closed before a selection was made. For example if the user pressed the back button.
             }
@@ -697,7 +696,7 @@ public class InstanceCreationActivity extends AppCompatActivity
                 getOtherSemanticLocationLabel(place);
             } else if (resultCode == PlaceAutocomplete.RESULT_ERROR) {
                 Status status = PlaceAutocomplete.getStatus(this, data);
-                Log.e(MithrilApplication.getDebugTag(), "Error: Status = " + status.toString());
+                Log.e(MithrilAC.getDebugTag(), "Error: Status = " + status.toString());
             } else if (resultCode == Activity.RESULT_CANCELED) {
                 // Indicates that the activity closed before a selection was made. For example if the user pressed the back button.
             }
@@ -706,7 +705,7 @@ public class InstanceCreationActivity extends AppCompatActivity
 
     private void getOtherSemanticLocationLabel(final Place place) {
         final ArrayAdapter<String> arrayAdapter = new ArrayAdapter<>(InstanceCreationActivity.this, android.R.layout.select_dialog_singlechoice);
-        final String[] listOfLocationContextPiecesFromTheOntology = MithrilApplication.getContextArrayLocation();
+        final String[] listOfLocationContextPiecesFromTheOntology = MithrilAC.getContextArrayLocation();
         for (int index = 0; index < listOfLocationContextPiecesFromTheOntology.length; index++)
             arrayAdapter.add(listOfLocationContextPiecesFromTheOntology[index]);
 
@@ -745,14 +744,14 @@ public class InstanceCreationActivity extends AppCompatActivity
         // Create an intent for passing to the intent service responsible for fetching the address.
         Intent intent = new Intent(this, FetchAddressIntentService.class);
 
-        intent.putExtra(MithrilApplication.ADDRESS_REQUESTED_EXTRA, mAddressRequested);
-        intent.putExtra(MithrilApplication.ADDRESS_KEY, key);
+        intent.putExtra(MithrilAC.ADDRESS_REQUESTED_EXTRA, mAddressRequested);
+        intent.putExtra(MithrilAC.ADDRESS_KEY, key);
 
         // Pass the result receiver as an extra to the service.
-        intent.putExtra(MithrilApplication.RECEIVER, mAddressResultReceiver);
+        intent.putExtra(MithrilAC.RECEIVER, mAddressResultReceiver);
 
         // Pass the location data as an extra to the service.
-        intent.putExtra(MithrilApplication.LOCATION_DATA_EXTRA, location);
+        intent.putExtra(MithrilAC.LOCATION_DATA_EXTRA, location);
 
         // Start the service. If the service isn't already running, it is instantiated and started
         // (creating a process for it if needed); if it is running then it remains running. The
@@ -776,20 +775,20 @@ public class InstanceCreationActivity extends AppCompatActivity
      */
     @Override
     public void onConnected(Bundle connectionHint) {
-        Log.i(MithrilApplication.getDebugTag(), "Connected to GoogleApiClient");
+        Log.i(MithrilAC.getDebugTag(), "Connected to GoogleApiClient");
     }
 
     @Override
     public void onConnectionFailed(ConnectionResult result) {
         // Refer to the javadoc for ConnectionResult to see what error codes might be returned in
         // onConnectionFailed.
-        Log.i(MithrilApplication.getDebugTag(), "Connection failed: ConnectionResult.getErrorCode() = " + result.getErrorCode());
+        Log.i(MithrilAC.getDebugTag(), "Connection failed: ConnectionResult.getErrorCode() = " + result.getErrorCode());
     }
 
     @Override
     public void onConnectionSuspended(int cause) {
         // The connection to Google Play services was lost for some reason.
-        Log.i(MithrilApplication.getDebugTag(), "Connection suspended");
+        Log.i(MithrilAC.getDebugTag(), "Connection suspended");
 
         // onConnected() will be called again automatically when the service reconnects
     }
@@ -854,8 +853,8 @@ public class InstanceCreationActivity extends AppCompatActivity
 
         @Override
         protected void onReceiveResult(int resultCode, Bundle resultData) {
-            mAddressRequested = resultData.getBoolean(MithrilApplication.ADDRESS_REQUESTED_EXTRA, false);
-            String key = resultData.getString(MithrilApplication.ADDRESS_KEY, null);
+            mAddressRequested = resultData.getBoolean(MithrilAC.ADDRESS_REQUESTED_EXTRA, false);
+            String key = resultData.getString(MithrilAC.ADDRESS_KEY, null);
             if (key.equals(null))
                 throw new AddressKeyMissingError();
             else
@@ -866,16 +865,16 @@ public class InstanceCreationActivity extends AppCompatActivity
             // Display the address string
             // or an error message sent from the intent service.
             Gson gson = new Gson();
-            String json = resultData.getString(MithrilApplication.RESULT_DATA_KEY, "");
+            String json = resultData.getString(MithrilAC.RESULT_DATA_KEY, "");
             try {
                 mAddressOutput = gson.fromJson(json, Address.class);
             } catch (JsonSyntaxException e) {
-                Log.d(MithrilApplication.getDebugTag(), e.getMessage());
+                Log.d(MithrilAC.getDebugTag(), e.getMessage());
             }
 
-            Log.d(MithrilApplication.getDebugTag(), "Prefs address " + resultData.getString(MithrilApplication.ADDRESS_KEY) + mAddressRequested + key + json);
+            Log.d(MithrilAC.getDebugTag(), "Prefs address " + resultData.getString(MithrilAC.ADDRESS_KEY) + mAddressRequested + key + json);
             // Show a toast message if an address was found.
-            if (resultCode == MithrilApplication.SUCCESS_RESULT) {
+            if (resultCode == MithrilAC.SUCCESS_RESULT) {
                 SemanticLocation tempSemanticLocation = null;
                 for (Map.Entry<String, SemanticLocation> semanticLocation : semanticLocations.entrySet())
                     if (semanticLocation.getKey().equals(key))

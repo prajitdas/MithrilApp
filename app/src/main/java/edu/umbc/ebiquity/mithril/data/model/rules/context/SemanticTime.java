@@ -5,15 +5,26 @@ import android.os.Parcelable;
 
 import java.sql.Timestamp;
 
-import edu.umbc.ebiquity.mithril.MithrilApplication;
+import edu.umbc.ebiquity.mithril.MithrilAC;
 import edu.umbc.ebiquity.mithril.data.model.rules.RepeatFrequency;
 
 public class SemanticTime implements Parcelable, SemanticUserContext {
+    public static final Creator<SemanticTime> CREATOR = new Creator<SemanticTime>() {
+        @Override
+        public SemanticTime createFromParcel(Parcel in) {
+            return new SemanticTime(in);
+        }
+
+        @Override
+        public SemanticTime[] newArray(int size) {
+            return new SemanticTime[size];
+        }
+    };
+    private final String type = MithrilAC.getPrefKeyContextTypeTemporal();
     private RepeatFrequency repeatFrequency;
     private Timestamp first;
     private int period;
     private String inferredTime;
-    private final String type = MithrilApplication.getPrefKeyContextTypeTemporal();
     private boolean enabled = false;
 
     protected SemanticTime(Parcel in) {
@@ -37,18 +48,6 @@ public class SemanticTime implements Parcelable, SemanticUserContext {
     public int describeContents() {
         return 0;
     }
-
-    public static final Creator<SemanticTime> CREATOR = new Creator<SemanticTime>() {
-        @Override
-        public SemanticTime createFromParcel(Parcel in) {
-            return new SemanticTime(in);
-        }
-
-        @Override
-        public SemanticTime[] newArray(int size) {
-            return new SemanticTime[size];
-        }
-    };
 
     public RepeatFrequency getRepeatFrequency() {
         return repeatFrequency;
@@ -93,6 +92,11 @@ public class SemanticTime implements Parcelable, SemanticUserContext {
     }
 
     @Override
+    public void setLabel(String label) {
+        inferredTime = label;
+    }
+
+    @Override
     public boolean isEnabled() {
         return enabled;
     }
@@ -100,10 +104,5 @@ public class SemanticTime implements Parcelable, SemanticUserContext {
     @Override
     public void setEnabled(boolean enabled) {
         this.enabled = enabled;
-    }
-
-    @Override
-    public void setLabel(String label) {
-        inferredTime = label;
     }
 }

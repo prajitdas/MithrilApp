@@ -20,7 +20,6 @@ import android.graphics.Canvas;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.util.Log;
-import android.util.Pair;
 
 import java.io.ByteArrayOutputStream;
 import java.sql.Timestamp;
@@ -29,7 +28,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import edu.umbc.ebiquity.mithril.MithrilApplication;
+import edu.umbc.ebiquity.mithril.MithrilAC;
 import edu.umbc.ebiquity.mithril.R;
 import edu.umbc.ebiquity.mithril.data.model.components.AppData;
 import edu.umbc.ebiquity.mithril.data.model.components.PermData;
@@ -46,7 +45,7 @@ public class MithrilDBHelper extends SQLiteOpenHelper {
     // DO NOT DO THIS!!!
     // THIS IS CREATING A NEW VERSION OF DATABASE ON EACH APP LAUNCH THUS TAKING UP HUGE AMOUNTS OF STORAGE SPACE AND SLOWING DOWN THE COMPLETE APP!
 
-    private final static String DATABASE_NAME = MithrilApplication.getDatabaseName();
+    private final static String DATABASE_NAME = MithrilAC.getDatabaseName();
     /**
      * Following are table names in our database
      */
@@ -133,9 +132,9 @@ public class MithrilDBHelper extends SQLiteOpenHelper {
             PERMID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
             PERMNAME + " TEXT NOT NULL, " +
             PERMLABEL + " TEXT NULL, " +
-            PERMPROTECTIONLEVEL + " TEXT NOT NULL DEFAULT '"+MithrilApplication.NORMAL_PROTECTION_LEVEL+"', " +
-            PERMGROUP + " TEXT NOT NULL DEFAULT '"+MithrilApplication.NO_PERMISSION_GROUP.first+"', " +
-            PERMFLAG + " TEXT NOT NULL DEFAULT '"+MithrilApplication.NO_FLAGS+"', " +
+            PERMPROTECTIONLEVEL + " TEXT NOT NULL DEFAULT '" + MithrilAC.NORMAL_PROTECTION_LEVEL + "', " +
+            PERMGROUP + " TEXT NOT NULL DEFAULT '" + MithrilAC.NO_PERMISSION_GROUP.first + "', " +
+            PERMFLAG + " TEXT NOT NULL DEFAULT '" + MithrilAC.NO_FLAGS + "', " +
             PERMDESC + " TEXT NULL, " +
             PERMICON + " BLOB, " +
             PERMOP + " INTEGER NOT NULL DEFAULT -1, " +
@@ -465,9 +464,9 @@ public class MithrilDBHelper extends SQLiteOpenHelper {
 
             db.execSQL(CREATE_APP_PERM_VIEW);
         } catch (SQLException sqlException) {
-            Log.e(MithrilApplication.getDebugTag(), "Following error occurred while creating the SQLite DB - " + sqlException.getMessage());
+            Log.e(MithrilAC.getDebugTag(), "Following error occurred while creating the SQLite DB - " + sqlException.getMessage());
         } catch (Exception e) {
-            Log.e(MithrilApplication.getDebugTag(), "Some other error occurred while creating the SQLite DB - " + e.getMessage());
+            Log.e(MithrilAC.getDebugTag(), "Some other error occurred while creating the SQLite DB - " + e.getMessage());
         }
         loadDB(db);
     }
@@ -530,20 +529,20 @@ public class MithrilDBHelper extends SQLiteOpenHelper {
 
     private void insertHardcodedGooglePermissions(SQLiteDatabase db) {
         try {
-            db.execSQL(MithrilApplication.getInsertStatementGooglePermissions());
+            db.execSQL(MithrilAC.getInsertStatementGooglePermissions());
         } catch (SQLException sqlException) {
-            Log.e(MithrilApplication.getDebugTag(), "Following error occurred while inserting data in SQLite DB - " + sqlException.getMessage());
+            Log.e(MithrilAC.getDebugTag(), "Following error occurred while inserting data in SQLite DB - " + sqlException.getMessage());
         } catch (Exception e) {
-            Log.e(MithrilApplication.getDebugTag(), "Some other error occurred while inserting data in SQLite DB - " + e.getMessage());
+            Log.e(MithrilAC.getDebugTag(), "Some other error occurred while inserting data in SQLite DB - " + e.getMessage());
         }
     }
 
     private void loadAndroidPermissionsIntoDB(SQLiteDatabase db) {
-//		Log.d(MithrilApplication.getDebugTag(), "I came to loadAndroidPermissionsIntoDB");
+//		Log.d(MithrilAC.getDebugTag(), "I came to loadAndroidPermissionsIntoDB");
         PackageManager packageManager = getContext().getPackageManager();
 
         List<PermissionGroupInfo> permissionGroupInfoList = packageManager.getAllPermissionGroups(PackageManager.GET_META_DATA);
-//		Log.d(MithrilApplication.getDebugTag(), "Size is: " + Integer.toString(permisisonGroupInfoList.size()));
+//		Log.d(MithrilAC.getDebugTag(), "Size is: " + Integer.toString(permisisonGroupInfoList.size()));
         permissionGroupInfoList.add(null);
 
         for (PermissionGroupInfo permissionGroupInfo : permissionGroupInfoList) {
@@ -551,14 +550,14 @@ public class MithrilDBHelper extends SQLiteOpenHelper {
             try {
                 for (PermissionInfo permissionInfo : packageManager.queryPermissionsByGroup(groupName, 0)) {
                     if (groupName == null)
-                        addPermission(db, getPermData(packageManager, MithrilApplication.NO_PERMISSION_GROUP.first, permissionInfo));
+                        addPermission(db, getPermData(packageManager, MithrilAC.NO_PERMISSION_GROUP.first, permissionInfo));
                     else
                         addPermission(db, getPermData(packageManager, groupName, permissionInfo));
                 }
             } catch (NameNotFoundException exception) {
-                Log.e(MithrilApplication.getDebugTag(), "Some error due to " + exception.getMessage());
+                Log.e(MithrilAC.getDebugTag(), "Some error due to " + exception.getMessage());
             } catch (PermissionWasUpdateException exception) {
-                Log.e(MithrilApplication.getDebugTag(), "PermissionWasUpdateException: Ignore this? " + exception.getMessage());
+                Log.e(MithrilAC.getDebugTag(), "PermissionWasUpdateException: Ignore this? " + exception.getMessage());
             }
         }
     }
@@ -578,7 +577,7 @@ public class MithrilDBHelper extends SQLiteOpenHelper {
                         if (pack.applicationInfo.loadDescription(packageManager) != null)
                             tempAppData.setAppDescription(pack.applicationInfo.loadDescription(packageManager).toString());
                         else
-                            tempAppData.setAppDescription(MithrilApplication.getDefaultDescription());
+                            tempAppData.setAppDescription(MithrilAC.getDefaultDescription());
 
                         //App process name
                         tempAppData.setAssociatedProcessName(pack.applicationInfo.processName);
@@ -598,7 +597,7 @@ public class MithrilDBHelper extends SQLiteOpenHelper {
 
                         //App package name
                         tempAppData.setPackageName(pack.packageName);
-//                        Log.d(MithrilApplication.getDebugTag(), "Inserting app: "+pack.packageName+" into the DB!");
+//                        Log.d(MithrilAC.getDebugTag(), "Inserting app: "+pack.packageName+" into the DB!");
 
                         //App version info
                         tempAppData.setVersionInfo(pack.versionName);
@@ -608,9 +607,9 @@ public class MithrilDBHelper extends SQLiteOpenHelper {
 
                         //App type
                         if ((pack.applicationInfo.flags & ApplicationInfo.FLAG_SYSTEM) == 1)
-                            tempAppData.setAppType(MithrilApplication.getPrefKeySystemAppsDisplay());
+                            tempAppData.setAppType(MithrilAC.getPrefKeySystemAppsDisplay());
                         else
-                            tempAppData.setAppType(MithrilApplication.getPrefKeyUserAppsDisplay());
+                            tempAppData.setAppType(MithrilAC.getPrefKeyUserAppsDisplay());
 
                         //App uid
                         tempAppData.setUid(pack.applicationInfo.uid);
@@ -656,11 +655,11 @@ public class MithrilDBHelper extends SQLiteOpenHelper {
                     addAppPerm(db, tempAppData, appId);
 
 //                    long insertedRowId = addApp(db, tempAppData);
-//                    Log.d(MithrilApplication.getDebugTag(), "Inserted record id is: "+Long.toString(insertedRowId));
+//                    Log.d(MithrilAC.getDebugTag(), "Inserted record id is: "+Long.toString(insertedRowId));
 //				} catch (ClassCastException e){
-//					Log.d(MithrilApplication.getDebugTag(), e.getMessage());
+//					Log.d(MithrilAC.getDebugTag(), e.getMessage());
                 } catch (Exception e) {
-                    Log.d(MithrilApplication.getDebugTag(), e.getMessage());
+                    Log.d(MithrilAC.getDebugTag(), e.getMessage());
                 }
             }
         }
@@ -678,19 +677,19 @@ public class MithrilDBHelper extends SQLiteOpenHelper {
         //Setting the protection level
         switch (permissionInfo.protectionLevel) {
             case PermissionInfo.PROTECTION_NORMAL:
-                tempPermData.setPermissionProtectionLevel(MithrilApplication.getPermissionProtectionLevelNormal());
+                tempPermData.setPermissionProtectionLevel(MithrilAC.getPermissionProtectionLevelNormal());
                 break;
             case PermissionInfo.PROTECTION_DANGEROUS:
-                tempPermData.setPermissionProtectionLevel(MithrilApplication.getPermissionProtectionLevelDangerous());
+                tempPermData.setPermissionProtectionLevel(MithrilAC.getPermissionProtectionLevelDangerous());
                 break;
             case PermissionInfo.PROTECTION_SIGNATURE:
-                tempPermData.setPermissionProtectionLevel(MithrilApplication.getPermissionProtectionLevelSignature());
+                tempPermData.setPermissionProtectionLevel(MithrilAC.getPermissionProtectionLevelSignature());
                 break;
             case PermissionInfo.PROTECTION_FLAG_PRIVILEGED:
-                tempPermData.setPermissionProtectionLevel(MithrilApplication.getPermissionProtectionLevelPrivileged());
+                tempPermData.setPermissionProtectionLevel(MithrilAC.getPermissionProtectionLevelPrivileged());
                 break;
             default:
-                tempPermData.setPermissionProtectionLevel(MithrilApplication.getPermissionProtectionLevelUnknown());
+                tempPermData.setPermissionProtectionLevel(MithrilAC.getPermissionProtectionLevelUnknown());
                 break;
         }
 
@@ -699,13 +698,13 @@ public class MithrilDBHelper extends SQLiteOpenHelper {
         //Setting the protection level
         switch (permissionInfo.flags) {
             case PermissionInfo.FLAG_COSTS_MONEY:
-                tempPermData.setPermissionFlag(MithrilApplication.getPermissionFlagCostsMoney());
+                tempPermData.setPermissionFlag(MithrilAC.getPermissionFlagCostsMoney());
                 break;
             case PermissionInfo.FLAG_INSTALLED:
-                tempPermData.setPermissionFlag(MithrilApplication.getPermissionFlagInstalled());
+                tempPermData.setPermissionFlag(MithrilAC.getPermissionFlagInstalled());
                 break;
             default:
-                tempPermData.setPermissionFlag(MithrilApplication.getPermissionFlagNone());
+                tempPermData.setPermissionFlag(MithrilAC.getPermissionFlagNone());
                 break;
         }
         //Permission description can be null. We are preventing a null pointer exception here.
@@ -718,7 +717,7 @@ public class MithrilDBHelper extends SQLiteOpenHelper {
         tempPermData.setPermissionLabel(permissionInfo.loadLabel(packageManager).toString());
 
         tempPermData.setOp(AppOpsManager.permissionToOpCode(permissionInfo.name));
-//        Log.d(MithrilApplication.getDebugTag(), "Permission: "+permissionInfo.name);
+//        Log.d(MithrilAC.getDebugTag(), "Permission: "+permissionInfo.name);
 
         return tempPermData;
     }
@@ -790,7 +789,7 @@ public class MithrilDBHelper extends SQLiteOpenHelper {
         try {
             insertedRowId = db.insertWithOnConflict(getAppsTableName(), null, values, SQLiteDatabase.CONFLICT_REPLACE);
         } catch (SQLException e) {
-            Log.e(MithrilApplication.getDebugTag(), "Error inserting " + values, e);
+            Log.e(MithrilAC.getDebugTag(), "Error inserting " + values, e);
             return -1;
         }
         return insertedRowId;
@@ -820,7 +819,7 @@ public class MithrilDBHelper extends SQLiteOpenHelper {
             updateConflictedGooglePermissions(db, aPermData);
             throw new PermissionWasUpdateException("Exception occured for " + aPermData.getPermissionName());
         } catch (SQLException e) {
-            Log.e(MithrilApplication.getDebugTag(), "Error inserting " + values, e);
+            Log.e(MithrilAC.getDebugTag(), "Error inserting " + values, e);
         }
         return insertedRowId;
     }
@@ -836,7 +835,7 @@ public class MithrilDBHelper extends SQLiteOpenHelper {
         int flags = PackageManager.GET_META_DATA;
         Map<String, Boolean> appPermissions = anAppData.getPermissions();
 //        if(appPermissions == null)
-//            Log.d(MithrilApplication.getDebugTag(), "we got null for: "+anAppData.getAppName());
+//            Log.d(MithrilAC.getDebugTag(), "we got null for: "+anAppData.getAppName());
         long insertedRowId = -1;
         if (appPermissions != null) {
             ContentValues values = new ContentValues();
@@ -850,18 +849,18 @@ public class MithrilDBHelper extends SQLiteOpenHelper {
                     try {
                         permissionInfo = packageManager.getPermissionInfo(appPermission.getKey(), flags);
                     } catch (NameNotFoundException e) {
-                        Log.e(MithrilApplication.getDebugTag(), "In app: "+anAppData.getAppName()+" found permission: "+ e.getMessage() +" but then got NameNotFoundException");
+                        Log.e(MithrilAC.getDebugTag(), "In app: " + anAppData.getAppName() + " found permission: " + e.getMessage() + " but then got NameNotFoundException");
                         continue;
                         //TODO This is a big problem. Why are we not getting the permission info for certain installed permissions???
                     }
 
                     try {
                         if (permissionInfo.group == null)
-                            permId = addPermission(db, getPermData(packageManager, MithrilApplication.NO_PERMISSION_GROUP.first, permissionInfo));
+                            permId = addPermission(db, getPermData(packageManager, MithrilAC.NO_PERMISSION_GROUP.first, permissionInfo));
                         else
                             permId = addPermission(db, getPermData(packageManager, permissionInfo.group, permissionInfo));
                     } catch (PermissionWasUpdateException e) {
-                        Log.e(MithrilApplication.getDebugTag(), "So the permission was potentially updated, search for the id again " + e.getMessage());
+                        Log.e(MithrilAC.getDebugTag(), "So the permission was potentially updated, search for the id again " + e.getMessage());
                         permId = findPermissionsByName(db, appPermission.getKey());
                     }
                 }
@@ -870,10 +869,10 @@ public class MithrilDBHelper extends SQLiteOpenHelper {
                 try {
                     insertedRowId = db.insertWithOnConflict(getAppPermTableName(), null, values, SQLiteDatabase.CONFLICT_REPLACE);
                 } catch (SQLiteConstraintException e) {
-                    Log.e(MithrilApplication.getDebugTag(), "there was a SQLite Constraint Exception " + values, e);
+                    Log.e(MithrilAC.getDebugTag(), "there was a SQLite Constraint Exception " + values, e);
                     return -1;
                 } catch (SQLException e) {
-                    Log.e(MithrilApplication.getDebugTag(), "Error inserting " + values, e);
+                    Log.e(MithrilAC.getDebugTag(), "Error inserting " + values, e);
                     return -1;
                 }
             }
@@ -893,7 +892,7 @@ public class MithrilDBHelper extends SQLiteOpenHelper {
         try {
             insertedRowId = db.insertWithOnConflict(getContextTableName(), null, values, SQLiteDatabase.CONFLICT_REPLACE);
         } catch (SQLException e) {
-            Log.e(MithrilApplication.getDebugTag(), "Error inserting " + values, e);
+            Log.e(MithrilAC.getDebugTag(), "Error inserting " + values, e);
             return -1;
         }
         return insertedRowId;
@@ -913,7 +912,7 @@ public class MithrilDBHelper extends SQLiteOpenHelper {
         try {
             insertedRowId = db.insertOrThrow(getContextLogTableName(), null, values);
         } catch (SQLException e) {
-            Log.e(MithrilApplication.getDebugTag(), "Error inserting " + values, e);
+            Log.e(MithrilAC.getDebugTag(), "Error inserting " + values, e);
             return -1;
         }
         return insertedRowId;
@@ -935,7 +934,7 @@ public class MithrilDBHelper extends SQLiteOpenHelper {
         try {
             insertedRowId = db.insertOrThrow(getActionLogTableName(), null, values);
         } catch (SQLException e) {
-            Log.e(MithrilApplication.getDebugTag(), "Error inserting " + values, e);
+            Log.e(MithrilAC.getDebugTag(), "Error inserting " + values, e);
             return -1;
         }
         return insertedRowId;
@@ -988,7 +987,7 @@ public class MithrilDBHelper extends SQLiteOpenHelper {
         try {
             insertedRowId = db.insertOrThrow(getViolationsLogTableName(), null, values);
         } catch (SQLException e) {
-            Log.e(MithrilApplication.getDebugTag(), "Error inserting " + values, e);
+            Log.e(MithrilAC.getDebugTag(), "Error inserting " + values, e);
             return -1;
         }
         return insertedRowId;
@@ -1214,7 +1213,7 @@ public class MithrilDBHelper extends SQLiteOpenHelper {
                 } while (cursor.moveToNext());
             }
         } catch (SQLException e) {
-            Log.d(MithrilApplication.getDebugTag(), "Could not find " + e.getMessage());
+            Log.d(MithrilAC.getDebugTag(), "Could not find " + e.getMessage());
             return null;
         } finally {
             cursor.close();
@@ -1255,7 +1254,7 @@ public class MithrilDBHelper extends SQLiteOpenHelper {
                 } while (cursor.moveToNext());
             }
         } catch (SQLException e) {
-            Log.d(MithrilApplication.getDebugTag(), "Could not find " + e.getMessage());
+            Log.d(MithrilAC.getDebugTag(), "Could not find " + e.getMessage());
             return null;
         } finally {
             cursor.close();
@@ -1320,7 +1319,7 @@ public class MithrilDBHelper extends SQLiteOpenHelper {
             cursor.close();
         }
 //      if (permId == -1)
-//          Log.d(MithrilApplication.getDebugTag(), permissionName);
+//          Log.d(MithrilAC.getDebugTag(), permissionName);
         return permId;
     }
 
@@ -1396,7 +1395,7 @@ public class MithrilDBHelper extends SQLiteOpenHelper {
                             cursor.getInt(1),
                             cursor.getInt(2),
                             cursor.getString(3),
-                            cursor.getInt(4) == 1 ? true : false,
+                            cursor.getInt(4) == 1,
                             new Timestamp(cursor.getLong(5))
                     );
                     violations.add(tempViolation);
@@ -1437,7 +1436,7 @@ public class MithrilDBHelper extends SQLiteOpenHelper {
                             cursor.getInt(1),
                             cursor.getInt(2),
                             cursor.getString(3),
-                            cursor.getInt(4) == 1 ? true : false,
+                            cursor.getInt(4) == 1,
                             new Timestamp(cursor.getLong(5))
                     );
                     violations.add(tempViolation);
@@ -1712,7 +1711,7 @@ public class MithrilDBHelper extends SQLiteOpenHelper {
         try {
             if (cursor.moveToFirst()) {
                 do {
-                    Log.e(MithrilApplication.getDebugTag(), Long.toString(cursor.getLong(1)));
+                    Log.e(MithrilAC.getDebugTag(), Long.toString(cursor.getLong(1)));
                     userContext.put(cursor.getString(0), cursor.getLong(1));
                 } while (cursor.moveToNext());
             }
@@ -1734,17 +1733,17 @@ public class MithrilDBHelper extends SQLiteOpenHelper {
                 " WHERE " +
                 getContextLogTableName() + "." + CTXTTIME + " < current_timestamp " +
                 " AND " +
-                getContextLogTableName() + "." + CTXTTRANSITION + " = '" + MithrilApplication.getPrefStartKey() + "' " +
+                getContextLogTableName() + "." + CTXTTRANSITION + " = '" + MithrilAC.getPrefStartKey() + "' " +
                 " OR " +
                 getContextLogTableName() + "." + CTXTTIME + " > current_timestamp " +
                 " AND " +
-                getContextLogTableName() + "." + CTXTTRANSITION + " = '" + MithrilApplication.getPrefEndKey() + "';";
+                getContextLogTableName() + "." + CTXTTRANSITION + " = '" + MithrilAC.getPrefEndKey() + "';";
 
         Cursor cursor = db.rawQuery(selectQuery, null);
         try {
             if (cursor.moveToFirst()) {
                 do {
-                    Log.e(MithrilApplication.getDebugTag(), Long.toString(cursor.getLong(0)));
+                    Log.e(MithrilAC.getDebugTag(), Long.toString(cursor.getLong(0)));
                     currentContext.add(cursor.getInt(0));
                 } while (cursor.moveToNext());
             }
@@ -1832,9 +1831,9 @@ public class MithrilDBHelper extends SQLiteOpenHelper {
         values.put(PERMDESC, aPermData.getPermissionDescription());
         values.put(PERMICON, getBitmapAsByteArray(aPermData.getPermissionIcon()));
         values.put(PERMLABEL, aPermData.getPermissionLabel());
-        if (aPermData.getPermissionGroup().equals(MithrilApplication.NO_PERMISSION_GROUP))
+        if (aPermData.getPermissionGroup().equals(MithrilAC.NO_PERMISSION_GROUP))
             values.put(PERMGROUP, aPermData.getPermissionGroup());
-        if (aPermData.getPermissionFlag().equals(MithrilApplication.getPermissionFlagNone()))
+        if (aPermData.getPermissionFlag().equals(MithrilAC.getPermissionFlagNone()))
             values.put(PERMFLAG, aPermData.getPermissionFlag());
         try {
             return db.update(getPermissionsTableName(), values, PERMNAME + " = ?",
@@ -1873,7 +1872,7 @@ public class MithrilDBHelper extends SQLiteOpenHelper {
      */
     public void deleteAppByUID(SQLiteDatabase db, int uid) {
         try {
-//            Log.d(MithrilApplication.getDebugTag(), "Deleting this: " + Integer.toString(uid));
+//            Log.d(MithrilAC.getDebugTag(), "Deleting this: " + Integer.toString(uid));
             db.delete(getAppsTableName(), APPUID + " = ?",
                     new String[]{String.valueOf(uid)});
         } catch (SQLException e) {

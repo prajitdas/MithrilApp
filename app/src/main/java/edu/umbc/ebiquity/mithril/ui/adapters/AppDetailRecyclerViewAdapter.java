@@ -12,7 +12,7 @@ import android.widget.TextView;
 import java.util.List;
 import java.util.regex.Pattern;
 
-import edu.umbc.ebiquity.mithril.MithrilApplication;
+import edu.umbc.ebiquity.mithril.MithrilAC;
 import edu.umbc.ebiquity.mithril.R;
 import edu.umbc.ebiquity.mithril.data.model.components.PermData;
 import edu.umbc.ebiquity.mithril.ui.fragments.showappdetailsactivityfragments.AppDetailFragment.OnListFragmentInteractionListener;
@@ -52,16 +52,16 @@ public class AppDetailRecyclerViewAdapter extends RecyclerView.Adapter<AppDetail
         holder.mPermissionLabel.setText(mValues.get(position).getPermissionLabel());
         holder.mPermissionName.setText(mValues.get(position).getPermissionName());
 
-        if (permProtLvl.equals(MithrilApplication.getPermissionProtectionLevelNormal())) {
+        if (permProtLvl.equals(MithrilAC.getPermissionProtectionLevelNormal())) {
             holder.mPermissionProtectionLevel.setImageDrawable(context.getResources().getDrawable(R.drawable.comment_check_outline, context.getTheme()));
 //            cardView.setCardBackgroundColor(Color.GREEN);
-        } else if (permProtLvl.equals(MithrilApplication.getPermissionProtectionLevelDangerous())) {
+        } else if (permProtLvl.equals(MithrilAC.getPermissionProtectionLevelDangerous())) {
             holder.mPermissionProtectionLevel.setImageDrawable(view.getContext().getResources().getDrawable(R.drawable.comment_alert_outline, view.getContext().getTheme()));
 //            cardView.setCardBackgroundColor(Color.RED);
-        } else if (permProtLvl.equals(MithrilApplication.getPermissionProtectionLevelSignature())) {
+        } else if (permProtLvl.equals(MithrilAC.getPermissionProtectionLevelSignature())) {
             holder.mPermissionProtectionLevel.setImageDrawable(view.getContext().getResources().getDrawable(R.drawable.comment_processing_outline, view.getContext().getTheme()));
 //            cardView.setCardBackgroundColor(Color.YELLOW);
-        } else if (permProtLvl.equals(MithrilApplication.getPermissionProtectionLevelPrivileged())) {
+        } else if (permProtLvl.equals(MithrilAC.getPermissionProtectionLevelPrivileged())) {
             holder.mPermissionProtectionLevel.setImageDrawable(view.getContext().getResources().getDrawable(R.drawable.comment_remove_outline, view.getContext().getTheme()));
 //            cardView.setCardBackgroundColor(Color.BLUE);
         } else {
@@ -69,7 +69,7 @@ public class AppDetailRecyclerViewAdapter extends RecyclerView.Adapter<AppDetail
 //            cardView.setCardBackgroundColor(Color.GRAY);
         }
 
-        if (!mValues.get(position).getPermissionGroup().equals(MithrilApplication.NO_PERMISSION_GROUP)) {
+        if (!mValues.get(position).getPermissionGroup().equals(MithrilAC.NO_PERMISSION_GROUP)) {
             String[] words = mValues.get(position).getPermissionGroup().split(Pattern.quote("."));
             //In a group, the last word is most important for group identification, so use that I guess!
             holder.mPermissionGroup.setText(words[words.length - 1]);

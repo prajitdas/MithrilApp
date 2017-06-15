@@ -25,7 +25,7 @@ import com.android.internal.logging.MetricsProto;
 
 import java.util.List;
 
-import edu.umbc.ebiquity.mithril.MithrilApplication;
+import edu.umbc.ebiquity.mithril.MithrilAC;
 import edu.umbc.ebiquity.mithril.R;
 import edu.umbc.ebiquity.mithril.util.specialtasks.appops.AppOpsState;
 
@@ -83,7 +83,7 @@ public class AppOpsDetailsActivity extends AppCompatActivity {
                     PackageManager.GET_DISABLED_COMPONENTS |
                             PackageManager.GET_UNINSTALLED_PACKAGES);
         } catch (PackageManager.NameNotFoundException e) {
-            Log.e(MithrilApplication.getDebugTag(), "Exception when retrieving package:" + packageName, e);
+            Log.e(MithrilAC.getDebugTag(), "Exception when retrieving package:" + packageName, e);
             mPackageInfo = null;
         }
         return packageName;

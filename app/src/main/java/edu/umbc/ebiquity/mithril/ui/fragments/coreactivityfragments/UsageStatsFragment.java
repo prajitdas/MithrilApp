@@ -26,7 +26,7 @@ import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
 
-import edu.umbc.ebiquity.mithril.MithrilApplication;
+import edu.umbc.ebiquity.mithril.MithrilAC;
 import edu.umbc.ebiquity.mithril.R;
 import edu.umbc.ebiquity.mithril.data.model.rules.AppUsageStats;
 import edu.umbc.ebiquity.mithril.data.model.rules.Resource;
@@ -166,7 +166,7 @@ public class UsageStatsFragment extends Fragment {
                 String lastPermGroup = "";
                 List<AppOpsState.AppOpEntry> entries = mState.buildState(AppOpsState.ALL_OPS_TEMPLATE,
                         appInfo.uid, usageStat.getPackageName());
-                Log.d(MithrilApplication.getDebugTag(), "Whoa!"+Integer.toString(entries.size()));
+                Log.d(MithrilAC.getDebugTag(), "Whoa!" + Integer.toString(entries.size()));
                 for (final AppOpsState.AppOpEntry entry : entries) {
                     Resource tempRes = new Resource();
                     final AppOpsManager.OpEntry firstOp = entry.getOpEntry(0);
@@ -185,7 +185,7 @@ public class UsageStatsFragment extends Fragment {
                                 }
                             }
                         } catch (PackageManager.NameNotFoundException e) {
-                            Log.e(MithrilApplication.getDebugTag(), e.getMessage());
+                            Log.e(MithrilAC.getDebugTag(), e.getMessage());
                         }
                     }
                     tempRes.setLabel(entry.getSwitchText(mState).toString());
@@ -205,12 +205,12 @@ public class UsageStatsFragment extends Fragment {
                                     entry.getPackageOps().getPackageName(), isChecked
                                     ? AppOpsManager.MODE_ALLOWED : AppOpsManager.MODE_IGNORED);
                                 } catch (AppOpsException e) {
-                                    Log.e(MithrilApplication.getDebugTag(), e.getMessage());
+                    Log.e(MithrilAC.getDebugTag(), e.getMessage());
                                 }
                             }
                         });
                     } catch (AppOpsException e) {
-                        Log.e(MithrilApplication.getDebugTag(), e.getMessage());
+                     Log.e(MithrilAC.getDebugTag(), e.getMessage());
                     }
                     */
                     tempListOfResource.add(tempRes);
@@ -237,13 +237,13 @@ public class UsageStatsFragment extends Fragment {
 
     public void sortList() {
         if (mDisplayOrder == _DISPLAY_ORDER_USAGE_TIME) {
-            if (localLOGV) Log.i(MithrilApplication.getDebugTag(), "Sorting by usage time");
+            if (localLOGV) Log.i(MithrilAC.getDebugTag(), "Sorting by usage time");
             Collections.sort(usageStats, mUsageTimeComparator);
         } else if (mDisplayOrder == _DISPLAY_ORDER_LAST_TIME_USED) {
-            if (localLOGV) Log.i(MithrilApplication.getDebugTag(), "Sorting by last time used");
+            if (localLOGV) Log.i(MithrilAC.getDebugTag(), "Sorting by last time used");
             Collections.sort(usageStats, mLastTimeUsedComparator);
         } else if (mDisplayOrder == _DISPLAY_ORDER_APP_NAME) {
-            if (localLOGV) Log.i(MithrilApplication.getDebugTag(), "Sorting by application name");
+            if (localLOGV) Log.i(MithrilAC.getDebugTag(), "Sorting by application name");
             Collections.sort(usageStats, mAppLabelComparator);
         }
     }

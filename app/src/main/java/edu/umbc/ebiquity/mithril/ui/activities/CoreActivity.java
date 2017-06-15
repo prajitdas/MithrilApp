@@ -45,7 +45,8 @@ import java.io.OutputStream;
 import java.util.Calendar;
 import java.util.List;
 
-import edu.umbc.ebiquity.mithril.MithrilApplication;
+import edu.umbc.ebiquity.mithril.BuildConfig;
+import edu.umbc.ebiquity.mithril.MithrilAC;
 import edu.umbc.ebiquity.mithril.R;
 import edu.umbc.ebiquity.mithril.data.dbhelpers.MithrilDBHelper;
 import edu.umbc.ebiquity.mithril.data.model.components.AppData;
@@ -80,18 +81,13 @@ public class CoreActivity extends AppCompatActivity
         EmptyFragment.OnFragmentInteractionListener,
         NothingHereFragment.OnFragmentInteractionListener,
         UsageStatsFragment.OnListFragmentInteractionListener {
-    private final File downloadsDirectory = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS);
-    private final String agreementFile = MithrilApplication.getFlierPdfFileName();
     private static final String WHAT_CORE_ACTIVITY_FRAGMENT_ARE_WE_IN = "coreActivityFragment";
-
+    private final File downloadsDirectory = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS);
+    private final String agreementFile = MithrilAC.getFlierPdfFileName();
     private Boolean exit = false;
     private SQLiteDatabase mithrilDB;
     private SharedPreferences sharedPreferences;
     private SharedPreferences.Editor editor;
-//    private RootAccess rootAccess = null;
-
-//    private Violation violationItemSelected = null;
-//    private List<AppData> appDataItemsSelected = null;
     private List<Violation> violationItems;
     private FloatingActionButton fab;
 
@@ -184,7 +180,7 @@ public class CoreActivity extends AppCompatActivity
             else
                 loadContentProvidersFragment();
         } else if (id == R.id.nav_exit) {
-            PermissionHelper.quitMithril(this, MithrilApplication.MITHRIL_BYE_BYE_MESSAGE);
+            PermissionHelper.quitMithril(this, MithrilAC.MITHRIL_BYE_BYE_MESSAGE);
         } else if (id == R.id.nav_settings) {
             launchInstanceCreationActivity();
         } else if (id == R.id.nav_about) {
@@ -261,28 +257,6 @@ public class CoreActivity extends AppCompatActivity
         int id = item.getItemId();
         if (id == R.id.capture_exec_settings) {
             executeRules();
-            navigationView.getMenu().getItem(4).getSubMenu().getItem(3).setEnabled(true);
-            SharedPreferences.Editor editor = this.getSharedPreferences(MithrilApplication.getSharedPreferencesName(), Context.MODE_PRIVATE).edit();
-            editor.putBoolean(MithrilApplication.getPrefKeyResetEnabled(), true);
-            editor.apply();
-//            We do not need root access if we are a privileged app.
-//            if (rootAccess == null) {
-//                try {
-//                    rootAccess = new RootAccess();
-//                    if (!rootAccess.isRooted())
-//                        rootAccess = null;
-//                    else {
-//                        rootAccess.runScript(new String[]{
-//                                MithrilApplication.getCmdGrantUpdateAppOpsStats(),
-//                                MithrilApplication.getCmdGrantGetAppOpsStats(),
-//                                MithrilApplication.getCmdGrantManageAppOpsRestrictions()
-//                        });
-//                    }
-//                } catch (PhoneNotRootedException phoneNotRootedException) {
-//                    Log.d(MithrilApplication.getDebugTag(), "Phone is not rooted do non-root behavior" + phoneNotRootedException.getMessage());
-//                    PermissionHelper.toast(this, "Phone is not rooted do non-root behavior" + phoneNotRootedException.getMessage(), Toast.LENGTH_SHORT);
-//                }
-//            }
             return true;
         }
         return super.onOptionsItemSelected(item);
@@ -298,40 +272,33 @@ public class CoreActivity extends AppCompatActivity
             ApplicationInfo applicationInfo = packageManager.getApplicationInfo(packageName, PackageManager.GET_META_DATA);
             int uid = applicationInfo.uid;
 
-            // Without being a privileged app we cannot execute the next line!
-//            int altMode = appOpsManager.checkOpNoThrow(AppOpsManager.OPSTR_READ_CONTACTS, uid, packageName);
-            // Testing if we can do this for our own app. It works!
-//            int altMode = appOpsManager.checkOpNoThrow(AppOpsManager.OPSTR_READ_CONTACTS, android.os.Process.myUid(), this.getPackageName());
-
-            Log.d(MithrilApplication.getDebugTag(), "Mode allowed: " + Integer.toString(AppOpsManager.MODE_ALLOWED));
-            Log.d(MithrilApplication.getDebugTag(), "Mode default: " + Integer.toString(AppOpsManager.MODE_DEFAULT));
-            Log.d(MithrilApplication.getDebugTag(), "Mode error: " + Integer.toString(AppOpsManager.MODE_ERRORED));
-            Log.d(MithrilApplication.getDebugTag(), "Mode ignored: " + Integer.toString(AppOpsManager.MODE_IGNORED));
-
-//            Log.d(MithrilApplication.getDebugTag(), "Alt mode: " + Integer.toString(altMode));
+            Log.d(MithrilAC.getDebugTag(), "Mode allowed: " + Integer.toString(AppOpsManager.MODE_ALLOWED));
+            Log.d(MithrilAC.getDebugTag(), "Mode default: " + Integer.toString(AppOpsManager.MODE_DEFAULT));
+            Log.d(MithrilAC.getDebugTag(), "Mode error: " + Integer.toString(AppOpsManager.MODE_ERRORED));
+            Log.d(MithrilAC.getDebugTag(), "Mode ignored: " + Integer.toString(AppOpsManager.MODE_IGNORED));
 
             /*
              * Check and block read contacts for Gmail app
              */
             int mode = appOpsManager.checkOpNoThrow(AppOpsManager.OPSTR_READ_CONTACTS, uid, packageName);
             PermissionHelper.toast(this, "Executing: " + packageName + " got mode: " + Integer.toString(mode), Toast.LENGTH_SHORT);
-            Log.d(MithrilApplication.getDebugTag(), "Executing: " + packageName + " got mode: " + Integer.toString(mode));
+            Log.d(MithrilAC.getDebugTag(), "Executing: " + packageName + " got mode: " + Integer.toString(mode));
 
             int modeToSet = AppOpsManager.MODE_ALLOWED;
-            if(mode == AppOpsManager.MODE_ALLOWED)
+            if (mode == AppOpsManager.MODE_ALLOWED)
                 modeToSet = AppOpsManager.MODE_IGNORED;
             appOpsManager.setMode(AppOpsManager.OP_READ_CONTACTS, uid, packageName, modeToSet);
 
             mode = appOpsManager.checkOpNoThrow(AppOpsManager.OPSTR_READ_CONTACTS, uid, packageName);
             PermissionHelper.toast(this, "Executing: " + packageName + " got mode: " + Integer.toString(mode), Toast.LENGTH_SHORT);
-            Log.d(MithrilApplication.getDebugTag(), "Executing: " + packageName + " got mode: " + Integer.toString(mode));
+            Log.d(MithrilAC.getDebugTag(), "Executing: " + packageName + " got mode: " + Integer.toString(mode));
 
             /*
              * Check and block write contacts for Gmail app
              */
             mode = appOpsManager.checkOpNoThrow(AppOpsManager.OPSTR_WRITE_CONTACTS, uid, packageName);
             PermissionHelper.toast(this, "Executing: " + packageName + " got mode: " + Integer.toString(mode), Toast.LENGTH_SHORT);
-            Log.d(MithrilApplication.getDebugTag(), "Executing: " + packageName + " got mode: " + Integer.toString(mode));
+            Log.d(MithrilAC.getDebugTag(), "Executing: " + packageName + " got mode: " + Integer.toString(mode));
 
             modeToSet = AppOpsManager.MODE_ALLOWED;
             if (mode == AppOpsManager.MODE_ALLOWED)
@@ -340,25 +307,24 @@ public class CoreActivity extends AppCompatActivity
 
             mode = appOpsManager.checkOpNoThrow(AppOpsManager.OPSTR_WRITE_CONTACTS, uid, packageName);
             PermissionHelper.toast(this, "Executing: " + packageName + " got mode: " + Integer.toString(mode), Toast.LENGTH_SHORT);
-            Log.d(MithrilApplication.getDebugTag(), "Executing: " + packageName + " got mode: " + Integer.toString(mode));
+            Log.d(MithrilAC.getDebugTag(), "Executing: " + packageName + " got mode: " + Integer.toString(mode));
         } catch (PackageManager.NameNotFoundException e) {
-            Log.d(MithrilApplication.getDebugTag(), "AppOpsManager execute: " + e.getMessage());
+            Log.d(MithrilAC.getDebugTag(), "AppOpsManager execute: " + e.getMessage());
         } catch (Exception e) {
             PermissionHelper.toast(this, "Mithril does not seem to have UPDATE_APP_OPS_STATS permission. Cannot execute any rules. Sorry!", Toast.LENGTH_SHORT);
-            Log.d(MithrilApplication.getDebugTag(), "Mithril does not seem to have UPDATE_APP_OPS_STATS permission. Cannot execute any rules. Sorry! " + e.getMessage());
+            Log.d(MithrilAC.getDebugTag(), "Mithril does not seem to have UPDATE_APP_OPS_STATS permission. Cannot execute any rules. Sorry! " + e.getMessage());
         }
     }
 
     private void initHouseKeepingTasks() {
         if (PermissionHelper.isPermissionGranted(this, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED &&
                 !PermissionHelper.needsUsageStatsPermission(this)) {
-//            startService(new Intent(this, LocationUpdateService.class));
             startService(new Intent(this, AppLaunchDetectorService.class));
         } else
-            PermissionHelper.quitMithril(this, MithrilApplication.MITHRIL_BYE_BYE_MESSAGE);
+            PermissionHelper.quitMithril(this, MithrilAC.MITHRIL_BYE_BYE_MESSAGE);
         initDB(this);
-        sharedPreferences = getApplicationContext().getSharedPreferences(MithrilApplication.getSharedPreferencesName(), Context.MODE_PRIVATE);
-        editor = getSharedPreferences(MithrilApplication.getSharedPreferencesName(), Context.MODE_PRIVATE).edit();
+        sharedPreferences = getApplicationContext().getSharedPreferences(MithrilAC.getSharedPreferencesName(), Context.MODE_PRIVATE);
+        editor = getSharedPreferences(MithrilAC.getSharedPreferencesName(), Context.MODE_PRIVATE).edit();
         //Agreement has not been copied to downloads folder yet, do it now
         if (!isAgreementDownloaded())
             copyAssets(downloadsDirectory, agreementFile);
@@ -390,8 +356,9 @@ public class CoreActivity extends AppCompatActivity
         navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
 
-        if (sharedPreferences.getBoolean(MithrilApplication.getPrefKeyResetEnabled(), false))
-            navigationView.getMenu().getItem(3).getSubMenu().getItem(3).setEnabled(true);
+        // do something for a debug build
+        if (BuildConfig.DEBUG)
+            navigationView.getMenu().getItem(4).getSubMenu().getItem(3).setEnabled(true);
 
         applyHeaderView();
     }
@@ -407,13 +374,13 @@ public class CoreActivity extends AppCompatActivity
     }
 
     private void showAgreementDownloadedSnackbar() {
-        if (sharedPreferences.getBoolean(MithrilApplication.getPrefKeyShouldShowAgreementSnackbar(), true)) {
+        if (sharedPreferences.getBoolean(MithrilAC.getPrefKeyShouldShowAgreementSnackbar(), true)) {
             if (isAgreementDownloaded()) {
                 showSnackbar(findViewById(R.id.main_coordinator_layout),
                         getResources().getString(R.string.agreement_copied));
 
-                SharedPreferences.Editor editor = this.getSharedPreferences(MithrilApplication.getSharedPreferencesName(), Context.MODE_PRIVATE).edit();
-                editor.putBoolean(MithrilApplication.getPrefKeyShouldShowAgreementSnackbar(), false);
+                SharedPreferences.Editor editor = this.getSharedPreferences(MithrilAC.getSharedPreferencesName(), Context.MODE_PRIVATE).edit();
+                editor.putBoolean(MithrilAC.getPrefKeyShouldShowAgreementSnackbar(), false);
                 editor.apply();
             }
         }
@@ -480,7 +447,7 @@ public class CoreActivity extends AppCompatActivity
                         try {
                             appOpsManager.setMode(AppOpsManager.OP_GET_USAGE_STATS, android.os.Process.myUid(), getApplicationContext().getPackageName(), AppOpsManager.MODE_DEFAULT);
                         } catch (Exception e) {
-                            Log.e(MithrilApplication.getDebugTag(), e.getMessage());
+                            Log.e(MithrilAC.getDebugTag(), e.getMessage());
                         }
                         ((ActivityManager) builder.getContext().getSystemService(ACTIVITY_SERVICE)).clearApplicationUserData();
                         PermissionHelper.toast(builder.getContext(), "App was reset!", Toast.LENGTH_SHORT);
@@ -558,9 +525,10 @@ public class CoreActivity extends AppCompatActivity
         fragmentManager.beginTransaction().replace(R.id.container_core, new UsageStatsFragment())
                 .commit();
     }
+
     private void loadAllAppsFragment() {
         Bundle data = new Bundle();
-        data.putString(MithrilApplication.getPrefKeyAppDisplayType(), MithrilApplication.getPrefKeyAllAppsDisplay());
+        data.putString(MithrilAC.getPrefKeyAppDisplayType(), MithrilAC.getPrefKeyAllAppsDisplay());
 
         AppsFragment aShowappsFragment = new AppsFragment();
         aShowappsFragment.setArguments(data);
@@ -572,7 +540,7 @@ public class CoreActivity extends AppCompatActivity
 
     private void loadSystemAppsFragment() {
         Bundle data = new Bundle();
-        data.putString(MithrilApplication.getPrefKeyAppDisplayType(), MithrilApplication.getPrefKeySystemAppsDisplay());
+        data.putString(MithrilAC.getPrefKeyAppDisplayType(), MithrilAC.getPrefKeySystemAppsDisplay());
 
         AppsFragment aShowappsFragment = new AppsFragment();
         aShowappsFragment.setArguments(data);
@@ -584,7 +552,7 @@ public class CoreActivity extends AppCompatActivity
 
     private void loadUserAppsFragment() {
         Bundle data = new Bundle();
-        data.putString(MithrilApplication.getPrefKeyAppDisplayType(), MithrilApplication.getPrefKeyUserAppsDisplay());
+        data.putString(MithrilAC.getPrefKeyAppDisplayType(), MithrilAC.getPrefKeyUserAppsDisplay());
 
         AppsFragment aShowappsFragment = new AppsFragment();
         aShowappsFragment.setArguments(data);
@@ -594,26 +562,13 @@ public class CoreActivity extends AppCompatActivity
                 .commit();
     }
 
-//    private void launchPrefsActivity() {
-//        startActivity(new Intent(this, PrefsActivity.class));
-//    }
-
     private void launchInstanceCreationActivity() {
-        editor.putBoolean(MithrilApplication.getPrefKeyLocaInstancesCreated(), false);
-        editor.putBoolean(MithrilApplication.getPrefKeyPresInstancesCreated(), false);
-        editor.putBoolean(MithrilApplication.getPrefKeyActiInstancesCreated(), false);
-        editor.putBoolean(MithrilApplication.getPrefKeyTimeInstancesCreated(), false);
+        editor.putBoolean(MithrilAC.getPrefKeyLocaInstancesCreated(), false);
+        editor.putBoolean(MithrilAC.getPrefKeyPresInstancesCreated(), false);
+        editor.putBoolean(MithrilAC.getPrefKeyActiInstancesCreated(), false);
+        editor.putBoolean(MithrilAC.getPrefKeyTimeInstancesCreated(), false);
         editor.apply();
         startActivity(new Intent(this, InstanceCreationActivity.class));
-    }
-
-    private void launchUsageStatsActivity() {
-        startActivity(new Intent(this, UsageStatsActivity.class));
-//        Intent intent = new Intent(this, AppOpsDetailsActivity.class);
-//        Bundle b = new Bundle();
-//        b.putString("package", "com.google.android.youtube"); //Your id
-//        intent.putExtras(b); //Put your id to your next Intent
-//        startActivity(intent);
     }
 
     private boolean isViolationListEmpty() {
@@ -630,7 +585,7 @@ public class CoreActivity extends AppCompatActivity
         try {
             writeFile(new FileOutputStream(file));
         } catch (FileNotFoundException e) {
-            Log.e(MithrilApplication.getDebugTag(), e.getMessage());
+            Log.e(MithrilAC.getDebugTag(), e.getMessage());
         }
     }
 
@@ -638,7 +593,7 @@ public class CoreActivity extends AppCompatActivity
         AssetManager assetManager = getAssets();
         InputStream in = null;
         try {
-            in = assetManager.open(MithrilApplication.getFlierPdfFileName());
+            in = assetManager.open(MithrilAC.getFlierPdfFileName());
 
             copyFile(in, destination);
 
@@ -646,20 +601,20 @@ public class CoreActivity extends AppCompatActivity
             destination.flush();
             destination.close();
         } catch (IOException iOException) {
-            Log.e(MithrilApplication.getDebugTag(), iOException.getMessage());
+            Log.e(MithrilAC.getDebugTag(), iOException.getMessage());
         } finally {
             if (in != null) {
                 try {
                     in.close();
                 } catch (IOException e) {
-                    Log.d(MithrilApplication.getDebugTag(), "Flier file threw NullPointerException");
+                    Log.d(MithrilAC.getDebugTag(), "Flier file threw NullPointerException");
                 }
             }
             if (destination != null) {
                 try {
                     destination.close();
                 } catch (IOException e) {
-                    Log.d(MithrilApplication.getDebugTag(), "output file threw NullPointerException");
+                    Log.d(MithrilAC.getDebugTag(), "output file threw NullPointerException");
                 }
             }
         }
@@ -671,33 +626,31 @@ public class CoreActivity extends AppCompatActivity
         while ((read = in.read(buffer)) != -1) {
             out.write(buffer, 0, read);
         }
-        SharedPreferences.Editor editor = this.getSharedPreferences(MithrilApplication.getSharedPreferencesName(), Context.MODE_PRIVATE).edit();
-        editor.putBoolean(MithrilApplication.getPrefKeyUserAgreementCopied(), true);
+        SharedPreferences.Editor editor = this.getSharedPreferences(MithrilAC.getSharedPreferencesName(), Context.MODE_PRIVATE).edit();
+        editor.putBoolean(MithrilAC.getPrefKeyUserAgreementCopied(), true);
         editor.apply();
     }
 
     private boolean isAgreementDownloaded() {
-        return sharedPreferences.getBoolean(MithrilApplication.getPrefKeyUserAgreementCopied(), false) && new File(downloadsDirectory, agreementFile).exists();
+        return sharedPreferences.getBoolean(MithrilAC.getPrefKeyUserAgreementCopied(), false) && new File(downloadsDirectory, agreementFile).exists();
     }
 
     @Override
     public void onListFragmentInteraction(AppData item) {
         //TODO Do something with the App selected
         Intent intent = new Intent(this, ShowAppDetailsActivity.class);
-        intent.putExtra(MithrilApplication.getPrefKeyAppPkgName(), item.getPackageName());
+        intent.putExtra(MithrilAC.getPrefKeyAppPkgName(), item.getPackageName());
         startActivity(intent);
     }
 
     @Override
     public void onListFragmentInteraction(Violation item) {
         //TODO Do something with the Violation selected
-//        violationItemSelected = item;
     }
 
     @Override
     public void onListFragmentLongInteraction(List<AppData> items) {
         //TODO Do something with the Apps selected
-//        appDataItemsSelected = items;
     }
 
     @Override
@@ -709,8 +662,8 @@ public class CoreActivity extends AppCompatActivity
     public void onListFragmentInteraction(Pair<String, String> item) {
         //TODO Do something with the Perm group selected
         Intent intent = new Intent(this, ShowPermissionDetailActivity.class);
-        intent.putExtra(MithrilApplication.getPrefKeyPermGroupName(), item.first);
-        intent.putExtra(MithrilApplication.getPrefKeyPermGroupLabel(), item.second);
+        intent.putExtra(MithrilAC.getPrefKeyPermGroupName(), item.first);
+        intent.putExtra(MithrilAC.getPrefKeyPermGroupLabel(), item.second);
         startActivity(intent);
     }
 

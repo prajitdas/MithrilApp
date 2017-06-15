@@ -16,7 +16,7 @@ import android.widget.ToggleButton;
 
 import java.util.List;
 
-import edu.umbc.ebiquity.mithril.MithrilApplication;
+import edu.umbc.ebiquity.mithril.MithrilAC;
 import edu.umbc.ebiquity.mithril.R;
 import edu.umbc.ebiquity.mithril.util.specialtasks.permissions.PermissionHelper;
 
@@ -59,7 +59,7 @@ public class PermissionAcquisitionActivity extends AppCompatActivity {
 
     private void initViews() {
         setContentView(R.layout.activity_permission_acquisition);
-        editor = getSharedPreferences(MithrilApplication.getSharedPreferencesName(), Context.MODE_PRIVATE).edit();
+        editor = getSharedPreferences(MithrilAC.getSharedPreferencesName(), Context.MODE_PRIVATE).edit();
 
         mGenericPermToggleButton = (ToggleButton) findViewById(R.id.genericPermToggleButton);
         mSpecialPermToggleButton = (ToggleButton) findViewById(R.id.specialPermToggleButton);
@@ -78,7 +78,7 @@ public class PermissionAcquisitionActivity extends AppCompatActivity {
         mQuitAppButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                PermissionHelper.quitMithril(v.getContext(), MithrilApplication.MITHRIL_BYE_BYE_MESSAGE);
+                PermissionHelper.quitMithril(v.getContext(), MithrilAC.MITHRIL_BYE_BYE_MESSAGE);
             }
         });
     }
@@ -105,7 +105,7 @@ public class PermissionAcquisitionActivity extends AppCompatActivity {
                 else
                     buttonView.setChecked(false);
                 if (PermissionHelper.needsUsageStatsPermission(buttonView.getContext()))
-                    startActivityForResult(new Intent(Settings.ACTION_USAGE_ACCESS_SETTINGS), MithrilApplication.USAGE_STATS_PERMISSION_REQUEST_CODE);
+                    startActivityForResult(new Intent(Settings.ACTION_USAGE_ACCESS_SETTINGS), MithrilAC.USAGE_STATS_PERMISSION_REQUEST_CODE);
                 else
                     PermissionHelper.toast(buttonView.getContext(), "We have PACKAGE_USAGE_STATS permission already. Thank you!");
             }
@@ -122,13 +122,13 @@ public class PermissionAcquisitionActivity extends AppCompatActivity {
             stringBuffer.append(permission);
         }
         if (permissionStrings.length > 0)
-            ActivityCompat.requestPermissions(this, permissionStrings, MithrilApplication.ALL_PERMISSIONS_MITHRIL_REQUEST_CODE);
+            ActivityCompat.requestPermissions(this, permissionStrings, MithrilAC.ALL_PERMISSIONS_MITHRIL_REQUEST_CODE);
     }
 
     @Override
     public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
         switch (requestCode) {
-            case MithrilApplication.ALL_PERMISSIONS_MITHRIL_REQUEST_CODE: {
+            case MithrilAC.ALL_PERMISSIONS_MITHRIL_REQUEST_CODE: {
                 // If request is cancelled, the result arrays are empty.
                 if (grantResults.length > 0) {
                     for (int i = 0; i < grantResults.length; i++) {
@@ -150,29 +150,29 @@ public class PermissionAcquisitionActivity extends AppCompatActivity {
     }
 
     private void resultOkay() {
-        editor.putBoolean(MithrilApplication.getPrefKeyUserDeniedPermissions(), false);
+        editor.putBoolean(MithrilAC.getPrefKeyUserDeniedPermissions(), false);
         editor.apply();
         if (isPermissionAcquisitionComplete())
             startNextActivity(this, InstanceCreationActivity.class);
     }
 
     private void resultCanceled() {
-        editor.putBoolean(MithrilApplication.getPrefKeyUserDeniedPermissions(), true);
+        editor.putBoolean(MithrilAC.getPrefKeyUserDeniedPermissions(), true);
         editor.apply();
         PermissionHelper.quitMithril(this);
     }
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        if (requestCode == MithrilApplication.USAGE_STATS_PERMISSION_REQUEST_CODE) {
+        if (requestCode == MithrilAC.USAGE_STATS_PERMISSION_REQUEST_CODE) {
             if (resultCode == Activity.RESULT_OK) {
-                editor.putBoolean(MithrilApplication.getPrefKeyUserDeniedPermissions(), false);
+                editor.putBoolean(MithrilAC.getPrefKeyUserDeniedPermissions(), false);
                 editor.apply();
                 if (isPermissionAcquisitionComplete()) {
                     startNextActivity(this, InstanceCreationActivity.class);
                 }
             } else {
-                editor.putBoolean(MithrilApplication.getPrefKeyUserDeniedPermissions(), true);
+                editor.putBoolean(MithrilAC.getPrefKeyUserDeniedPermissions(), true);
                 editor.apply();
             }
         }

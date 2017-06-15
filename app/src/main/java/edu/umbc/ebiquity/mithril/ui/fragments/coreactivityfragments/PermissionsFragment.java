@@ -14,7 +14,7 @@ import android.view.ViewGroup;
 import java.util.Arrays;
 import java.util.List;
 
-import edu.umbc.ebiquity.mithril.MithrilApplication;
+import edu.umbc.ebiquity.mithril.MithrilAC;
 import edu.umbc.ebiquity.mithril.R;
 import edu.umbc.ebiquity.mithril.ui.adapters.InstalledPermissionRecyclerViewAdapter;
 
@@ -32,18 +32,18 @@ public class PermissionsFragment extends Fragment {
     private int mColumnCount = 1;
     private OnListFragmentInteractionListener mListener;
     private List<Pair<String, String>> permGrpDesc = Arrays.asList(
-            MithrilApplication.CALENDAR_PERMISSION_GROUP,
-            MithrilApplication.CAMERA_PERMISSION_GROUP,
-            MithrilApplication.CONTACTS_PERMISSION_GROUP,
-            MithrilApplication.LOCATION_PERMISSION_GROUP,
-            MithrilApplication.MICROPHONE_PERMISSION_GROUP,
-            MithrilApplication.PHONE_PERMISSION_GROUP,
-            MithrilApplication.SENSORS_PERMISSION_GROUP,
-            MithrilApplication.SMS_PERMISSION_GROUP,
-            MithrilApplication.STORAGE_PERMISSION_GROUP,
-            MithrilApplication.SYSTEM_TOOLS_PERMISSION_GROUP,
-            MithrilApplication.CAR_INFORMATION_PERMISSION_GROUP,
-            MithrilApplication.NO_PERMISSION_GROUP
+            MithrilAC.CALENDAR_PERMISSION_GROUP,
+            MithrilAC.CAMERA_PERMISSION_GROUP,
+            MithrilAC.CONTACTS_PERMISSION_GROUP,
+            MithrilAC.LOCATION_PERMISSION_GROUP,
+            MithrilAC.MICROPHONE_PERMISSION_GROUP,
+            MithrilAC.PHONE_PERMISSION_GROUP,
+            MithrilAC.SENSORS_PERMISSION_GROUP,
+            MithrilAC.SMS_PERMISSION_GROUP,
+            MithrilAC.STORAGE_PERMISSION_GROUP,
+            MithrilAC.SYSTEM_TOOLS_PERMISSION_GROUP,
+            MithrilAC.CAR_INFORMATION_PERMISSION_GROUP,
+            MithrilAC.NO_PERMISSION_GROUP
     );
 
     /**

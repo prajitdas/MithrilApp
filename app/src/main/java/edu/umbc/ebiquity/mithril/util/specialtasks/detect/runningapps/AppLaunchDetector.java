@@ -15,7 +15,7 @@ import java.util.List;
 import java.util.SortedMap;
 import java.util.TreeMap;
 
-import edu.umbc.ebiquity.mithril.MithrilApplication;
+import edu.umbc.ebiquity.mithril.MithrilAC;
 import edu.umbc.ebiquity.mithril.util.specialtasks.detect.policyconflicts.ViolationDetector;
 
 /*
@@ -37,7 +37,7 @@ public class AppLaunchDetector {
          * Technique from: https://github.com/ricvalerio/foregroundappchecker
          * On Nexus 5x it detects foreground launcher events after the app event!!
          */
-            if (MithrilApplication.getDeviceName().equals("LGE Nexus 5")) {
+            if (MithrilAC.getDeviceName().equals("LGE Nexus 5")) {
                 UsageEvents usageEvents = usageStatsManager.queryEvents(time - 1000 * 3600, time);
                 SortedMap<Long, UsageEvents.Event> runningTasks = new TreeMap<>();
                 if (usageEvents != null) {
@@ -55,7 +55,7 @@ public class AppLaunchDetector {
                         runningTasks.put(event.getTimeStamp(), event);
                     }
                     if (runningTasks.isEmpty()) {
-//                    Log.d(MithrilApplication.getDebugTag(), "tasks are empty");
+//                    Log.d(MithrilAC.getDebugTag(), "tasks are empty");
                         return null;
                     }
                     if (runningTasks.get(runningTasks.lastKey()).getEventType() == UsageEvents.Event.MOVE_TO_FOREGROUND) {
@@ -73,7 +73,7 @@ public class AppLaunchDetector {
                         runningTasks.put(usageStats.getLastTimeUsed(), usageStats);
                     }
                     if (runningTasks.isEmpty()) {
-//                    Log.d(MithrilApplication.getDebugTag(), "tasks are empty");
+//                    Log.d(MithrilAC.getDebugTag(), "tasks are empty");
                         return null;
                     }
                     currentPackageName = runningTasks.get(runningTasks.lastKey()).getPackageName();
@@ -81,19 +81,19 @@ public class AppLaunchDetector {
             }
 
             if (currentPackageName != null) {
-                if (currentPackageName.equals(MithrilApplication.getLauncherName(context)) || currentPackageName.equals(context.getPackageName()))
+                if (currentPackageName.equals(MithrilAC.getLauncherName(context)) || currentPackageName.equals(context.getPackageName()))
                     currentPackageName = null;
                 else {
 //                    try {
                         ViolationDetector.detectViolation(context, currentPackageName, getOp(currentPackageName));
 //                    } catch (CWAException cwaException) {
                         //Something is wrong!!!! We have a Closed World Assumption we cannot have deny rules...
-                        //                Log.e(MithrilApplication.getDebugTag(), "Serious error! DB contains deny rules. This violates our CWA");
+                    //                Log.e(MithrilAC.getDebugTag(), "Serious error! DB contains deny rules. This violates our CWA");
 //                    }
                 }
             }
         } catch (SecurityException e) {
-            Log.d(MithrilApplication.getDebugTag(), "Probably a security exception because we don't have the right permissions " + e.getMessage());
+            Log.d(MithrilAC.getDebugTag(), "Probably a security exception because we don't have the right permissions " + e.getMessage());
         }
         return currentPackageName;
     }

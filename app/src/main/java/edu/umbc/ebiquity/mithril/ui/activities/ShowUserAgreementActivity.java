@@ -21,7 +21,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 
-import edu.umbc.ebiquity.mithril.MithrilApplication;
+import edu.umbc.ebiquity.mithril.MithrilAC;
 import edu.umbc.ebiquity.mithril.R;
 import edu.umbc.ebiquity.mithril.util.specialtasks.permissions.PermissionHelper;
 
@@ -103,7 +103,7 @@ public class ShowUserAgreementActivity extends AppCompatActivity {
 
     private void initViews() {
         setContentView(R.layout.activity_show_user_agreement);
-        sharedPreferences = getSharedPreferences(MithrilApplication.getSharedPreferencesName(), Context.MODE_PRIVATE);
+        sharedPreferences = getSharedPreferences(MithrilAC.getSharedPreferencesName(), Context.MODE_PRIVATE);
 
         mImageView = (ImageView) findViewById(R.id.image);
         mButtonNext = (Button) findViewById(R.id.next);
@@ -117,7 +117,7 @@ public class ShowUserAgreementActivity extends AppCompatActivity {
         mButtonNext.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (sharedPreferences.getInt(MithrilApplication.getPrefKeyUserAgreementPageNumber(), 0) == 1) {
+                if (sharedPreferences.getInt(MithrilAC.getPrefKeyUserAgreementPageNumber(), 0) == 1) {
                     showPage(0);
                     mButtonNext.setText(R.string.next);
                 } else {
@@ -129,8 +129,8 @@ public class ShowUserAgreementActivity extends AppCompatActivity {
         mIAgreeBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                SharedPreferences.Editor editor = v.getContext().getSharedPreferences(MithrilApplication.getSharedPreferencesName(), Context.MODE_PRIVATE).edit();
-                editor.putBoolean(MithrilApplication.getPrefKeyUserConsent(), true);
+                SharedPreferences.Editor editor = v.getContext().getSharedPreferences(MithrilAC.getSharedPreferencesName(), Context.MODE_PRIVATE).edit();
+                editor.putBoolean(MithrilAC.getPrefKeyUserConsent(), true);
                 editor.apply();
                 // User has agreed, ask for permissions
                 startNextActivity(v.getContext(), PermissionAcquisitionActivity.class);
@@ -139,10 +139,10 @@ public class ShowUserAgreementActivity extends AppCompatActivity {
         mIDisagreeBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                SharedPreferences.Editor editor = v.getContext().getSharedPreferences(MithrilApplication.getSharedPreferencesName(), Context.MODE_PRIVATE).edit();
-                editor.putBoolean(MithrilApplication.getPrefKeyUserConsent(), false);
+                SharedPreferences.Editor editor = v.getContext().getSharedPreferences(MithrilAC.getSharedPreferencesName(), Context.MODE_PRIVATE).edit();
+                editor.putBoolean(MithrilAC.getPrefKeyUserConsent(), false);
                 editor.apply();
-                PermissionHelper.quitMithril(v.getContext(), MithrilApplication.MITHRIL_BYE_BYE_MESSAGE);
+                PermissionHelper.quitMithril(v.getContext(), MithrilAC.MITHRIL_BYE_BYE_MESSAGE);
             }
         });
     }
@@ -152,16 +152,16 @@ public class ShowUserAgreementActivity extends AppCompatActivity {
      */
     private void openRenderer() throws IOException {
         File parent = getFilesDir();
-        String child = MithrilApplication.getFlierPdfFileName();
+        String child = MithrilAC.getFlierPdfFileName();
         // Copy the pdf to a usable location
         copyAssets(parent, child);
 
 //        String strDir = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS)+ File.separator + "Pdfs";
 //        File fileDir = new File(strDir);
 //        fileDir.mkdirs();
-//        File file = new File(fileDir, MithrilApplication.getFlierPdfFileName());
+//        File file = new File(fileDir, MithrilAC.getFlierPdfFileName());
 //        File file = new File(parent, child);
-        //new File("/data/data/" + getPackageName() + "/files/" + MithrilApplication.getFlierPdfFileName());
+        //new File("/data/data/" + getPackageName() + "/files/" + MithrilAC.getFlierPdfFileName());
 
         // In this sample, we read a PDF from the assets directory.
         try {
@@ -176,7 +176,7 @@ public class ShowUserAgreementActivity extends AppCompatActivity {
             // Showing initial page
             showPage(index);
         } catch (FileNotFoundException e) {
-            Log.e(MithrilApplication.getDebugTag(), MithrilApplication.getFlierPdfFileName() + " not found. Make sure the file name/path is correct!");
+            Log.e(MithrilAC.getDebugTag(), MithrilAC.getFlierPdfFileName() + " not found. Make sure the file name/path is correct!");
             // File could not be found!
         }
     }
@@ -188,11 +188,11 @@ public class ShowUserAgreementActivity extends AppCompatActivity {
             try {
                 writeFile(openFileOutput(file.getName(), Context.MODE_PRIVATE));
             } catch (FileNotFoundException e) {
-                Log.e(MithrilApplication.getDebugTag(), MithrilApplication.getFlierPdfFileName() + " not found. Make sure the file name/path is correct!");
+                Log.e(MithrilAC.getDebugTag(), MithrilAC.getFlierPdfFileName() + " not found. Make sure the file name/path is correct!");
                 // File could not be found!
             }
 //        } else {
-//            Log.d(MithrilApplication.getDebugTag(), "file already exists");
+//            Log.d(MithrilAC.getDebugTag(), "file already exists");
         }
     }
 
@@ -200,7 +200,7 @@ public class ShowUserAgreementActivity extends AppCompatActivity {
         AssetManager assetManager = getAssets();
         InputStream in = null;
         try {
-            in = assetManager.open(MithrilApplication.getFlierPdfFileName());
+            in = assetManager.open(MithrilAC.getFlierPdfFileName());
 
             copyFile(in, destination);
 
@@ -208,20 +208,20 @@ public class ShowUserAgreementActivity extends AppCompatActivity {
             destination.flush();
             destination.close();
         } catch (IOException iOException) {
-//            Log.e(MithrilApplication.getDebugTag(), iOException.getMessage());
+//            Log.e(MithrilAC.getDebugTag(), iOException.getMessage());
         } finally {
             if (in != null) {
                 try {
                     in.close();
                 } catch (IOException e) {
-//                    Log.d(MithrilApplication.getDebugTag(), "Filer file threw NullPointerException");
+//                    Log.d(MithrilAC.getDebugTag(), "Filer file threw NullPointerException");
                 }
             }
             if (destination != null) {
                 try {
                     destination.close();
                 } catch (IOException e) {
-//                    Log.d(MithrilApplication.getDebugTag(), "output file threw NullPointerException");
+//                    Log.d(MithrilAC.getDebugTag(), "output file threw NullPointerException");
                 }
             }
         }
@@ -264,8 +264,8 @@ public class ShowUserAgreementActivity extends AppCompatActivity {
         }
         // Use `openPage` to open a specific page in PDF.
         mCurrentPage = mPdfRenderer.openPage(index);
-        SharedPreferences.Editor editor = this.getSharedPreferences(MithrilApplication.getSharedPreferencesName(), Context.MODE_PRIVATE).edit();
-        editor.putInt(MithrilApplication.getPrefKeyUserAgreementPageNumber(), index);
+        SharedPreferences.Editor editor = this.getSharedPreferences(MithrilAC.getSharedPreferencesName(), Context.MODE_PRIVATE).edit();
+        editor.putInt(MithrilAC.getPrefKeyUserAgreementPageNumber(), index);
         editor.apply();
         // Important: the destination bitmap must be ARGB (not RGB).
         Bitmap bitmap = Bitmap.createBitmap(

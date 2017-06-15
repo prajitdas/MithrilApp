@@ -8,7 +8,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.Button;
 
-import edu.umbc.ebiquity.mithril.MithrilApplication;
+import edu.umbc.ebiquity.mithril.MithrilAC;
 import edu.umbc.ebiquity.mithril.R;
 import edu.umbc.ebiquity.mithril.util.specialtasks.permissions.PermissionHelper;
 
@@ -47,24 +47,24 @@ public class LauncherActivity extends AppCompatActivity {
     }
 
     private void testUserAgreementAndLaunchNextActivity() {
-        sharedPreferences = getSharedPreferences(MithrilApplication.getSharedPreferencesName(), Context.MODE_PRIVATE);
+        sharedPreferences = getSharedPreferences(MithrilAC.getSharedPreferencesName(), Context.MODE_PRIVATE);
         if (PermissionHelper.isAllRequiredPermissionsGranted(this) && !PermissionHelper.needsUsageStatsPermission(this)) {
-            if (sharedPreferences.contains(MithrilApplication.getPrefKeyLocaInstancesCreated()) &&
-                    sharedPreferences.contains(MithrilApplication.getPrefKeyPresInstancesCreated()) &&
-                    sharedPreferences.contains(MithrilApplication.getPrefKeyActiInstancesCreated()) &&
-                    sharedPreferences.contains(MithrilApplication.getPrefKeyTimeInstancesCreated()) &&
-                    sharedPreferences.getBoolean(MithrilApplication.getPrefKeyLocaInstancesCreated(), false) &&
-                    sharedPreferences.getBoolean(MithrilApplication.getPrefKeyPresInstancesCreated(), false) &&
-                    sharedPreferences.getBoolean(MithrilApplication.getPrefKeyActiInstancesCreated(), false) &&
-                    sharedPreferences.getBoolean(MithrilApplication.getPrefKeyTimeInstancesCreated(), false))
+            if (sharedPreferences.contains(MithrilAC.getPrefKeyLocaInstancesCreated()) &&
+                    sharedPreferences.contains(MithrilAC.getPrefKeyPresInstancesCreated()) &&
+                    sharedPreferences.contains(MithrilAC.getPrefKeyActiInstancesCreated()) &&
+                    sharedPreferences.contains(MithrilAC.getPrefKeyTimeInstancesCreated()) &&
+                    sharedPreferences.getBoolean(MithrilAC.getPrefKeyLocaInstancesCreated(), false) &&
+                    sharedPreferences.getBoolean(MithrilAC.getPrefKeyPresInstancesCreated(), false) &&
+                    sharedPreferences.getBoolean(MithrilAC.getPrefKeyActiInstancesCreated(), false) &&
+                    sharedPreferences.getBoolean(MithrilAC.getPrefKeyTimeInstancesCreated(), false))
                 startNextActivity(this, CoreActivity.class);
             else
                 startNextActivity(this, InstanceCreationActivity.class);
-        } else if (sharedPreferences.contains(MithrilApplication.getPrefKeyUserConsent()) &&
-                    sharedPreferences.getBoolean(MithrilApplication.getPrefKeyUserConsent(), false))
+        } else if (sharedPreferences.contains(MithrilAC.getPrefKeyUserConsent()) &&
+                sharedPreferences.getBoolean(MithrilAC.getPrefKeyUserConsent(), false))
             startNextActivity(this, PermissionAcquisitionActivity.class);
-        else if (sharedPreferences.contains(MithrilApplication.getPrefKeyUserContinueClicked()) &&
-                sharedPreferences.getBoolean(MithrilApplication.getPrefKeyUserContinueClicked(), false))
+        else if (sharedPreferences.contains(MithrilAC.getPrefKeyUserContinueClicked()) &&
+                sharedPreferences.getBoolean(MithrilAC.getPrefKeyUserContinueClicked(), false))
             startNextActivity(this, ShowUserAgreementActivity.class);
     }
 
@@ -79,8 +79,8 @@ public class LauncherActivity extends AppCompatActivity {
         mContinueToUserAgreementBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                SharedPreferences.Editor editor = getSharedPreferences(MithrilApplication.getSharedPreferencesName(), Context.MODE_PRIVATE).edit();
-                editor.putBoolean(MithrilApplication.getPrefKeyUserContinueClicked(), true);
+                SharedPreferences.Editor editor = getSharedPreferences(MithrilAC.getSharedPreferencesName(), Context.MODE_PRIVATE).edit();
+                editor.putBoolean(MithrilAC.getPrefKeyUserContinueClicked(), true);
                 editor.apply();
                 startNextActivity(v.getContext(), ShowUserAgreementActivity.class);
             }

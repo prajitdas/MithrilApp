@@ -3,11 +3,22 @@ package edu.umbc.ebiquity.mithril.data.model.rules.context;
 import android.os.Parcel;
 import android.os.Parcelable;
 
-import edu.umbc.ebiquity.mithril.MithrilApplication;
+import edu.umbc.ebiquity.mithril.MithrilAC;
 
 public class SemanticActivity implements Parcelable, SemanticUserContext {
+    public static final Creator<SemanticActivity> CREATOR = new Creator<SemanticActivity>() {
+        @Override
+        public SemanticActivity createFromParcel(Parcel in) {
+            return new SemanticActivity(in);
+        }
+
+        @Override
+        public SemanticActivity[] newArray(int size) {
+            return new SemanticActivity[size];
+        }
+    };
+    private final String type = MithrilAC.getPrefKeyContextTypeActivity();
     private String inferredActivity;
-    private final String type = MithrilApplication.getPrefKeyContextTypeActivity();
     private boolean enabled = false;
 
     protected SemanticActivity(Parcel in) {
@@ -25,18 +36,6 @@ public class SemanticActivity implements Parcelable, SemanticUserContext {
     public int describeContents() {
         return 0;
     }
-
-    public static final Creator<SemanticActivity> CREATOR = new Creator<SemanticActivity>() {
-        @Override
-        public SemanticActivity createFromParcel(Parcel in) {
-            return new SemanticActivity(in);
-        }
-
-        @Override
-        public SemanticActivity[] newArray(int size) {
-            return new SemanticActivity[size];
-        }
-    };
 
     public String getInferredActivity() {
         return inferredActivity;
@@ -57,13 +56,13 @@ public class SemanticActivity implements Parcelable, SemanticUserContext {
     }
 
     @Override
-    public boolean isEnabled() {
-        return enabled;
+    public void setLabel(String label) {
+        inferredActivity = label;
     }
 
     @Override
-    public void setLabel(String label) {
-        inferredActivity = label;
+    public boolean isEnabled() {
+        return enabled;
     }
 
     @Override

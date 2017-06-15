@@ -6,7 +6,7 @@ import java.io.DataOutputStream;
 import java.io.File;
 import java.io.IOException;
 
-import edu.umbc.ebiquity.mithril.MithrilApplication;
+import edu.umbc.ebiquity.mithril.MithrilAC;
 import edu.umbc.ebiquity.mithril.util.specialtasks.errorsnexceptions.PhoneNotRootedException;
 
 /*
@@ -53,7 +53,7 @@ public class RootAccess {
             runOnSU(statementsToRun);
         } catch (IOException e) {
             // TODO Code to run in input/output exception
-            Log.d(MithrilApplication.getDebugTag(), "Can't root, I/O exception: " + e.getMessage());
+            Log.d(MithrilAC.getDebugTag(), "Can't root, I/O exception: " + e.getMessage());
             throw new PhoneNotRootedException();
         }
         return true;
@@ -88,20 +88,20 @@ public class RootAccess {
                 rootProcess.waitFor();
                 if (rootProcess.exitValue() != 255) {
                     // TODO Code to run on success
-                    Log.d(MithrilApplication.getDebugTag(), "Got root!");
+                    Log.d(MithrilAC.getDebugTag(), "Got root!");
                 } else {
                     // TODO Code to run on unsuccessful
-                    Log.d(MithrilApplication.getDebugTag(), "Can't root, exit value = " + Integer.toString(rootProcess.exitValue()));
+                    Log.d(MithrilAC.getDebugTag(), "Can't root, exit value = " + Integer.toString(rootProcess.exitValue()));
                     throw new PhoneNotRootedException();
                 }
             } catch (InterruptedException e) {
                 // TODO Code to run in interrupted exception
-                Log.d(MithrilApplication.getDebugTag(), "Can't root, interrupted exception: " + e.getMessage());
+                Log.d(MithrilAC.getDebugTag(), "Can't root, interrupted exception: " + e.getMessage());
                 throw new PhoneNotRootedException();
             }
         } catch (IOException e) {
             // TODO Code to run in input/output exception
-            Log.d(MithrilApplication.getDebugTag(), "Can't root, I/O exception: " + e.getMessage());
+            Log.d(MithrilAC.getDebugTag(), "Can't root, I/O exception: " + e.getMessage());
             throw new PhoneNotRootedException();
         }
 //        return output.toString();

@@ -12,7 +12,7 @@ import android.widget.CompoundButton;
 import java.util.HashSet;
 import java.util.Set;
 
-import edu.umbc.ebiquity.mithril.MithrilApplication;
+import edu.umbc.ebiquity.mithril.MithrilAC;
 import edu.umbc.ebiquity.mithril.R;
 
 /**
@@ -113,7 +113,7 @@ public class DayOfWeekPreference extends DialogPreference {
     }
 
     private void initViews(Context context) {
-        SharedPreferences sharedPrefs = context.getSharedPreferences(MithrilApplication.getSharedPreferencesName(), Context.MODE_PRIVATE);
+        SharedPreferences sharedPrefs = context.getSharedPreferences(MithrilAC.getSharedPreferencesName(), Context.MODE_PRIVATE);
         setDaysOfWeekForPref(sharedPrefs.getString(this.getKey(), empty));
 
         mMondayCheckbox = (CheckBox) view.findViewById(R.id.monday);
@@ -146,17 +146,17 @@ public class DayOfWeekPreference extends DialogPreference {
         daysOfWeek.clear();
         if (!string.equals(empty)) {
             for (String day : string.split(delimiter)) {
-                if (day.equals(MithrilApplication.getPrefMonday()))
+                if (day.equals(MithrilAC.getPrefMonday()))
                     daysOfWeek.add(DayOfWeek.Monday);
-                else if (day.equals(MithrilApplication.getPrefTuesday()))
+                else if (day.equals(MithrilAC.getPrefTuesday()))
                     daysOfWeek.add(DayOfWeek.Tuesday);
-                else if (day.equals(MithrilApplication.getPrefWednesday()))
+                else if (day.equals(MithrilAC.getPrefWednesday()))
                     daysOfWeek.add(DayOfWeek.Wednesday);
-                else if (day.equals(MithrilApplication.getPrefThursday()))
+                else if (day.equals(MithrilAC.getPrefThursday()))
                     daysOfWeek.add(DayOfWeek.Thursday);
-                else if (day.equals(MithrilApplication.getPrefFriday()))
+                else if (day.equals(MithrilAC.getPrefFriday()))
                     daysOfWeek.add(DayOfWeek.Friday);
-                else if (day.equals(MithrilApplication.getPrefSaturday()))
+                else if (day.equals(MithrilAC.getPrefSaturday()))
                     daysOfWeek.add(DayOfWeek.Saturday);
                 else
                     daysOfWeek.add(DayOfWeek.Sunday);
@@ -169,7 +169,7 @@ public class DayOfWeekPreference extends DialogPreference {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                 if (isChecked) {
-                    if (!daysOfWeek.contains(MithrilApplication.getPrefMonday()))
+                    if (!daysOfWeek.contains(MithrilAC.getPrefMonday()))
                         daysOfWeek.add(DayOfWeek.Monday);
                 } else
                     daysOfWeek.remove(DayOfWeek.Monday);
@@ -180,7 +180,7 @@ public class DayOfWeekPreference extends DialogPreference {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                 if (isChecked) {
-                    if (!daysOfWeek.contains(MithrilApplication.getPrefTuesday()))
+                    if (!daysOfWeek.contains(MithrilAC.getPrefTuesday()))
                         daysOfWeek.add(DayOfWeek.Tuesday);
                 } else
                     daysOfWeek.remove(DayOfWeek.Tuesday);
@@ -191,7 +191,7 @@ public class DayOfWeekPreference extends DialogPreference {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                 if (isChecked) {
-                    if (!daysOfWeek.contains(MithrilApplication.getPrefWednesday()))
+                    if (!daysOfWeek.contains(MithrilAC.getPrefWednesday()))
                         daysOfWeek.add(DayOfWeek.Wednesday);
                 } else
                     daysOfWeek.remove(DayOfWeek.Wednesday);
@@ -202,7 +202,7 @@ public class DayOfWeekPreference extends DialogPreference {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                 if (isChecked) {
-                    if (!daysOfWeek.contains(MithrilApplication.getPrefThursday()))
+                    if (!daysOfWeek.contains(MithrilAC.getPrefThursday()))
                         daysOfWeek.add(DayOfWeek.Thursday);
                 } else
                     daysOfWeek.remove(DayOfWeek.Thursday);
@@ -213,7 +213,7 @@ public class DayOfWeekPreference extends DialogPreference {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                 if (isChecked) {
-                    if (!daysOfWeek.contains(MithrilApplication.getPrefFriday()))
+                    if (!daysOfWeek.contains(MithrilAC.getPrefFriday()))
                         daysOfWeek.add(DayOfWeek.Friday);
                 } else
                     daysOfWeek.remove(DayOfWeek.Friday);
@@ -224,7 +224,7 @@ public class DayOfWeekPreference extends DialogPreference {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                 if (isChecked) {
-                    if (!daysOfWeek.contains(MithrilApplication.getPrefSaturday()))
+                    if (!daysOfWeek.contains(MithrilAC.getPrefSaturday()))
                         daysOfWeek.add(DayOfWeek.Saturday);
                 } else
                     daysOfWeek.remove(DayOfWeek.Saturday);
@@ -235,7 +235,7 @@ public class DayOfWeekPreference extends DialogPreference {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                 if (isChecked) {
-                    if (!daysOfWeek.contains(MithrilApplication.getPrefSunday()))
+                    if (!daysOfWeek.contains(MithrilAC.getPrefSunday()))
                         daysOfWeek.add(DayOfWeek.Sunday);
                 } else
                     daysOfWeek.remove(DayOfWeek.Sunday);
