@@ -20,6 +20,7 @@ import android.graphics.Canvas;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.util.Log;
+import android.util.Pair;
 
 import java.io.ByteArrayOutputStream;
 import java.sql.Timestamp;
@@ -1649,8 +1650,8 @@ public class MithrilDBHelper extends SQLiteOpenHelper {
         return Action.DENY;
     }
 
-    public Map<String, String> findContextByID(SQLiteDatabase db, int id) {
-        Map<String, String> userContext = new HashMap<>();
+    public Pair<String, String> findContextByID(SQLiteDatabase db, int id) {
+        Pair<String, String> userContext = null;
         // Select Query
         String selectQuery = "SELECT " +
                 getContextTableName() + "." + CONTEXTTYPE + ", " +
@@ -1665,7 +1666,7 @@ public class MithrilDBHelper extends SQLiteOpenHelper {
         Cursor cursor = db.rawQuery(selectQuery, null);
         try {
             if (cursor.moveToFirst()) {
-                userContext.put(cursor.getString(0), cursor.getString(1));
+                userContext = new Pair<>(cursor.getString(0), cursor.getString(1));
             }
         } catch (SQLException e) {
             throw new SQLException("Could not find " + e);

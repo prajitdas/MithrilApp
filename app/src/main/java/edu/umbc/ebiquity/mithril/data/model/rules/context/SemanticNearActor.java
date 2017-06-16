@@ -5,7 +5,7 @@ import android.os.Parcelable;
 
 import edu.umbc.ebiquity.mithril.MithrilAC;
 
-public class SemanticNearActor implements Parcelable, SemanticUserContext {
+public class SemanticNearActor extends SemanticUserContext implements Parcelable {
     public static final Creator<SemanticNearActor> CREATOR = new Creator<SemanticNearActor>() {
         @Override
         public SemanticNearActor createFromParcel(Parcel in) {

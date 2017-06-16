@@ -2,48 +2,72 @@ package edu.umbc.ebiquity.mithril.ui.fragments.rulechangeactivityfragments;
 
 import android.app.Fragment;
 import android.content.Context;
-import android.net.Uri;
+import android.content.SharedPreferences;
+import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
+import android.support.v7.widget.GridLayoutManager;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
+import android.util.Pair;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.google.gson.Gson;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+
+import edu.umbc.ebiquity.mithril.MithrilAC;
 import edu.umbc.ebiquity.mithril.R;
+import edu.umbc.ebiquity.mithril.data.dbhelpers.MithrilDBHelper;
+import edu.umbc.ebiquity.mithril.data.model.rules.Violation;
+import edu.umbc.ebiquity.mithril.data.model.rules.context.SemanticActivity;
+import edu.umbc.ebiquity.mithril.data.model.rules.context.SemanticLocation;
+import edu.umbc.ebiquity.mithril.data.model.rules.context.SemanticNearActor;
+import edu.umbc.ebiquity.mithril.data.model.rules.context.SemanticTime;
+import edu.umbc.ebiquity.mithril.data.model.rules.context.SemanticUserContext;
+import edu.umbc.ebiquity.mithril.ui.adapters.SemanticUserContextRecyclerViewAdapter;
 
 /**
  * Created by prajit on 6/16/17.
  */
 
 public class RuleChangeFragment extends Fragment {
-    // TODO: Rename parameter arguments, choose names that match
-    // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-    private static final String ARG_PARAM1 = "param1";
-    private static final String ARG_PARAM2 = "param2";
 
-    // TODO: Rename and change types of parameters
-    private String mParam1;
-    private String mParam2;
-
-    private RuleChangeFragment.OnFragmentInteractionListener mListener;
-
-    public RuleChangeFragment() {
-        // Required empty public constructor
-    }
+    // TODO: Customize parameter argument names
+    private static final String ARG_COLUMN_COUNT = "column-count";
+    /**
+     * An array of violation items.
+     */
+    private List<SemanticUserContext> contextPieces = new ArrayList<>();
+    //    /**
+//     * A map of violation items, by ID.
+//     */
+//    public Map<String, Violation> violationItemsMap = new HashMap<>();
+    private SQLiteDatabase mithrilDB;
+    private View view;
+    // TODO: Customize parameters
+    private int mColumnCount = 1;
+    private RuleChangeFragment.OnListFragmentInteractionListener mListener;
+    private Violation violation;
+    private SharedPreferences sharedPreferences;
 
     /**
-     * Use this factory method to create a new instance of
-     * this fragment using the provided parameters.
-     *
-     * @param param1 Parameter 1.
-     * @param param2 Parameter 2.
-     * @return A new instance of fragment AboutFragment.
+     * Mandatory empty constructor for the fragment manager to instantiate the
+     * fragment (e.g. upon screen orientation changes).
      */
-    // TODO: Rename and change types and number of parameters
-    public static RuleChangeFragment newInstance(String param1, String param2) {
+    public RuleChangeFragment() {
+    }
+
+    // TODO: Customize parameter initialization
+    @SuppressWarnings("unused")
+    public static RuleChangeFragment newInstance(int columnCount, Violation violation) {
         RuleChangeFragment fragment = new RuleChangeFragment();
         Bundle args = new Bundle();
-        args.putString(ARG_PARAM1, param1);
-        args.putString(ARG_PARAM2, param2);
+        args.putInt(ARG_COLUMN_COUNT, columnCount);
+        args.putParcelable("rule", violation);
         fragment.setArguments(args);
         return fragment;
     }
@@ -51,34 +75,63 @@ public class RuleChangeFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
         if (getArguments() != null) {
-            mParam1 = getArguments().getString(ARG_PARAM1);
-            mParam2 = getArguments().getString(ARG_PARAM2);
+            mColumnCount = getArguments().getInt(ARG_COLUMN_COUNT);
+            violation = getArguments().getParcelable("rule");
         }
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_about, container, false);
+        view = inflater.inflate(R.layout.fragment_semanticusercontext_list, container, false);
+
+        initData();
+
+        // Set the adapter
+        if (view instanceof RecyclerView) {
+            Context context = view.getContext();
+            RecyclerView recyclerView = (RecyclerView) view;
+            if (mColumnCount <= 1) {
+                recyclerView.setLayoutManager(new LinearLayoutManager(context));
+            } else {
+                recyclerView.setLayoutManager(new GridLayoutManager(context, mColumnCount));
+            }
+            recyclerView.setAdapter(new SemanticUserContextRecyclerViewAdapter(contextPieces, mListener));
+        }
+        return view;
     }
 
-    // TODO: Rename method, update argument and hook method into UI event
-    public void onButtonPressed(Uri uri) {
-        if (mListener != null) {
-            mListener.onFragmentInteraction(uri);
-        }
+    private void initData() {
+        initDB(view.getContext());
+
+        Gson retrieveDataGson = new Gson();
+        String retrieveDataJson;
+        SemanticUserContext semanticUserContext = null;
+        Pair<String, String> contextPiece = MithrilDBHelper.getHelper(getActivity()).findContextByID(mithrilDB, violation.getCtxId());
+        sharedPreferences = getActivity().getSharedPreferences(MithrilAC.getSharedPreferencesName(), Context.MODE_PRIVATE);
+        retrieveDataJson = sharedPreferences.getString(contextPiece.first+contextPiece.second, "");
+        if(contextPiece.first.equals(MithrilAC.getPrefKeyContextTypeLocation()))
+            semanticUserContext = retrieveDataGson.fromJson(retrieveDataJson, SemanticLocation.class);
+        else if(contextPiece.first.equals(MithrilAC.getPrefKeyContextTypeActivity()))
+            semanticUserContext = retrieveDataGson.fromJson(retrieveDataJson, SemanticActivity.class);
+        else if(contextPiece.first.equals(MithrilAC.getPrefKeyContextTypePresence()))
+            semanticUserContext = retrieveDataGson.fromJson(retrieveDataJson, SemanticNearActor.class);
+        else if(contextPiece.first.equals(MithrilAC.getPrefKeyContextTypeTemporal()))
+            semanticUserContext = retrieveDataGson.fromJson(retrieveDataJson, SemanticTime.class);
+
+        contextPieces.add(semanticUserContext);
     }
 
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
-        if (context instanceof RuleChangeFragment.OnFragmentInteractionListener) {
-            mListener = (RuleChangeFragment.OnFragmentInteractionListener) context;
+        if (context instanceof RuleChangeFragment.OnListFragmentInteractionListener) {
+            mListener = (RuleChangeFragment.OnListFragmentInteractionListener) context;
         } else {
             throw new RuntimeException(context.toString()
-                    + " must implement OnFragmentInteractionListener");
+                    + " must implement OnListFragmentInteractionListener");
         }
     }
 
@@ -86,6 +139,17 @@ public class RuleChangeFragment extends Fragment {
     public void onDetach() {
         super.onDetach();
         mListener = null;
+        closeDB();
+    }
+
+    private void initDB(Context context) {
+        // Let's get the DB instances loaded too
+        mithrilDB = MithrilDBHelper.getHelper(context).getWritableDatabase();
+    }
+
+    private void closeDB() {
+        if (mithrilDB != null)
+            mithrilDB.close();
     }
 
     /**
@@ -98,8 +162,8 @@ public class RuleChangeFragment extends Fragment {
      * "http://developer.android.com/training/basics/fragments/communicating.html"
      * >Communicating with Other Fragments</a> for more information.
      */
-    public interface OnFragmentInteractionListener {
+    public interface OnListFragmentInteractionListener {
         // TODO: Update argument type and name
-        void onFragmentInteraction(Uri uri);
+        void onListFragmentInteraction(SemanticUserContext item);
     }
 }

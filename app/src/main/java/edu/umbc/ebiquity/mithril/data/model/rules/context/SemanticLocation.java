@@ -11,7 +11,7 @@ import java.util.Locale;
 
 import edu.umbc.ebiquity.mithril.MithrilAC;
 
-public class SemanticLocation implements Parcelable, SemanticUserContext {
+public class SemanticLocation extends SemanticUserContext implements Parcelable {
     private final String type = MithrilAC.getPrefKeyContextTypeLocation();
     private Location location;
     private Address address = new Address(Locale.getDefault());

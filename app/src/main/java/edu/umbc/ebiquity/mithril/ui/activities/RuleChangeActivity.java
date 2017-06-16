@@ -1,39 +1,45 @@
 package edu.umbc.ebiquity.mithril.ui.activities;
 
+import android.app.FragmentManager;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 
+import edu.umbc.ebiquity.mithril.MithrilAC;
 import edu.umbc.ebiquity.mithril.R;
 import edu.umbc.ebiquity.mithril.data.dbhelpers.MithrilDBHelper;
+import edu.umbc.ebiquity.mithril.data.model.rules.Violation;
+import edu.umbc.ebiquity.mithril.data.model.rules.context.SemanticUserContext;
+import edu.umbc.ebiquity.mithril.ui.fragments.coreactivityfragments.AppsFragment;
+import edu.umbc.ebiquity.mithril.ui.fragments.rulechangeactivityfragments.RuleChangeFragment;
 
-public class RuleChangeActivity extends AppCompatActivity {
-    private SQLiteDatabase mithrilDB;
-    private SharedPreferences sharedPreferences;
+public class RuleChangeActivity extends AppCompatActivity  implements RuleChangeFragment.OnListFragmentInteractionListener {
+    private Violation currentViolation;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_rule_change);
+        currentViolation = getIntent().getParcelableExtra("rule");
+        loadRuleChangeFragment();
+    }
 
-        initDB(this);
+    private void loadRuleChangeFragment() {
+        Bundle data = new Bundle();
+        data.putParcelable("rule", currentViolation);
+
+        RuleChangeFragment aRuleChangeFragment = new RuleChangeFragment();
+        aRuleChangeFragment.setArguments(data);
+
+        FragmentManager fragmentManager = getFragmentManager();
+        fragmentManager.beginTransaction().replace(R.id.container_core, aRuleChangeFragment)
+                .commit();
     }
 
     @Override
-    public void onDestroy() {
-        closeDB();
-        super.onDestroy();
-    }
+    public void onListFragmentInteraction(SemanticUserContext item) {
 
-    private void initDB(Context context) {
-        // Let's get the DB instances loaded too
-        mithrilDB = MithrilDBHelper.getHelper(context).getWritableDatabase();
-    }
-
-    private void closeDB() {
-        if (mithrilDB != null)
-            mithrilDB.close();
     }
 }

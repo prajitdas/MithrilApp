@@ -8,7 +8,7 @@ import java.sql.Timestamp;
 import edu.umbc.ebiquity.mithril.MithrilAC;
 import edu.umbc.ebiquity.mithril.data.model.rules.RepeatFrequency;
 
-public class SemanticTime implements Parcelable, SemanticUserContext {
+public class SemanticTime extends SemanticUserContext implements Parcelable {
     public static final Creator<SemanticTime> CREATOR = new Creator<SemanticTime>() {
         @Override
         public SemanticTime createFromParcel(Parcel in) {
