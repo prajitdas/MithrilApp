@@ -6,6 +6,7 @@ import android.content.SharedPreferences;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
 
 import edu.umbc.ebiquity.mithril.MithrilAC;
 import edu.umbc.ebiquity.mithril.R;
@@ -22,6 +23,10 @@ public class RuleChangeActivity extends AppCompatActivity  implements RuleChange
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_rule_change);
+
+        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar_rule_change);
+        setSupportActionBar(toolbar);
+
         currentViolation = getIntent().getParcelableExtra("rule");
         loadRuleChangeFragment();
     }
@@ -34,7 +39,7 @@ public class RuleChangeActivity extends AppCompatActivity  implements RuleChange
         aRuleChangeFragment.setArguments(data);
 
         FragmentManager fragmentManager = getFragmentManager();
-        fragmentManager.beginTransaction().replace(R.id.container_core, aRuleChangeFragment)
+        fragmentManager.beginTransaction().replace(R.id.container_rule_change, aRuleChangeFragment)
                 .commit();
     }
 

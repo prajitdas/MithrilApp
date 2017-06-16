@@ -376,7 +376,7 @@ public class CoreActivity extends AppCompatActivity
     private void showAgreementDownloadedSnackbar() {
         if (sharedPreferences.getBoolean(MithrilAC.getPrefKeyShouldShowAgreementSnackbar(), true)) {
             if (isAgreementDownloaded()) {
-                showSnackbar(findViewById(R.id.main_coordinator_layout),
+                showSnackbar(findViewById(R.id.core_coordinator_layout),
                         getResources().getString(R.string.agreement_copied));
 
                 SharedPreferences.Editor editor = this.getSharedPreferences(MithrilAC.getSharedPreferencesName(), Context.MODE_PRIVATE).edit();
