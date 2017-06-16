@@ -82,19 +82,20 @@ public class AppLaunchDetector {
                 }
             }
 
-            if (currentPackageName != null) {
-                if (currentPackageName.equals(MithrilAC.getLauncherName(context)) || currentPackageName.equals(context.getPackageName()))
-                    currentPackageName = null;
-                else {
+            if (currentPackageName != null &&
+                    !currentPackageName.equals(MithrilAC.getLauncherName(context)) &&
+                    !currentPackageName.equals(context.getPackageName()))
+//                    currentPackageName = null;
+//                else {
 //                    try {
 //                        ViolationDetector.detectViolation(context, currentPackageName, getOp(currentPackageName), location);
 //                    } catch (CWAException cwaException) {
                         //Something is wrong!!!! We have a Closed World Assumption we cannot have deny rules...
                     //                Log.e(MithrilAC.getDebugTag(), "Serious error! DB contains deny rules. This violates our CWA");
 //                    }
-                    return new Pair<String, Integer>(currentPackageName, getOp(currentPackageName));
-                }
-            }
+                return new Pair<>(currentPackageName, getOp(currentPackageName));
+//                }
+//            }
         } catch (SecurityException e) {
             Log.d(MithrilAC.getDebugTag(), "Probably a security exception because we don't have the right permissions " + e.getMessage());
         }
@@ -102,6 +103,6 @@ public class AppLaunchDetector {
     }
 
     private int getOp(String currentPackageName) {
-        return 0;
+        return 1;
     }
 }

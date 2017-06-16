@@ -87,6 +87,7 @@ public class ViolationDetector {
                     retrieveDataJson = sharedPreferences.getString(aPref.getKey(), "");
                     semanticLocation = retrieveDataGson.fromJson(retrieveDataJson, SemanticLocation.class);
                     if (semanticLocation.isEnabled())
+                        Log.d(MithrilAC.getDebugTag(), "Came into the test and found: " + location.toString());
                         if(semanticLocation.getLocation().distanceTo(location) < 1000)
                             currentContext.add(
                                     MithrilDBHelper.getHelper(context).findContextIdByLabelAndType(
@@ -97,15 +98,18 @@ public class ViolationDetector {
                 }
             }
         } catch (NullPointerException e) {
-        Log.d(MithrilAC.getDebugTag(), "Prefs empty somehow?!");
-    }
+            Log.d(MithrilAC.getDebugTag(), "Prefs empty somehow?!");
+        }
 
 //        try {
         List<PolicyRule> rulesForApp = MithrilDBHelper.getHelper(context).findAllPoliciesForAppWhenPerformingOp(mithrilDB, currentPackageName, operationPerformed);
         // Let's test the rules we found
         if (rulesForApp.size() > 0) {
             for (PolicyRule rule : rulesForApp) {
-                Log.d(MithrilAC.getDebugTag(), "Found rule: " + rule.getName());
+                Log.d(MithrilAC.getDebugTag(), "Found rule: " +
+                        rule.getName() +
+                        Integer.toString(rule.getCtxId()) +
+                        Integer.toString(currentContext.get(0)));
                 //There is a rule for this app with current context as it's context
                 if (currentContext.contains(rule.getCtxId())) {
                     //Rule has a deny action, we may have a violation
