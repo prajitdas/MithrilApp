@@ -71,35 +71,10 @@ public class ViolationDetector {
      * 3) Search policy list for a rule that matches the current combo of requester-resource-context combo
      * 4) If no such rule is found then detect this as a violation and request a user action on it or if in execution mode, block this access
      */
-    public static void detectViolation(Context context, String currentPackageName, int operationPerformed, Location location) { //throws CWAException {
+    public static void detectViolation(Context context, String currentPackageName, int operationPerformed, SemanticLocation semanticLocation) { //throws CWAException {
         SQLiteDatabase mithrilDB = MithrilDBHelper.getHelper(context).getWritableDatabase();
-        List<Integer> currentContext = MithrilDBHelper.getHelper(context).findCurrentContextFromLogs(mithrilDB);
-
-        SemanticLocation semanticLocation;
-        SharedPreferences sharedPreferences = context.getSharedPreferences(MithrilAC.getSharedPreferencesName(), Context.MODE_PRIVATE);
-        Gson retrieveDataGson = new Gson();
-        String retrieveDataJson;
-        Map<String, ?> allPrefs;
-        try {
-            allPrefs = sharedPreferences.getAll();
-            for (Map.Entry<String, ?> aPref : allPrefs.entrySet()) {
-                if (aPref.getKey().startsWith(MithrilAC.getPrefKeyContextTypeLocation())) {
-                    retrieveDataJson = sharedPreferences.getString(aPref.getKey(), "");
-                    semanticLocation = retrieveDataGson.fromJson(retrieveDataJson, SemanticLocation.class);
-                    if (semanticLocation.isEnabled())
-                        Log.d(MithrilAC.getDebugTag(), "Came into the test and found: " + location.toString());
-                        if(semanticLocation.getLocation().distanceTo(location) < 1000)
-                            currentContext.add(
-                                    MithrilDBHelper.getHelper(context).findContextIdByLabelAndType(
-                                            mithrilDB,
-                                            semanticLocation.getLabel(),
-                                            semanticLocation.getType())
-                                    );
-                }
-            }
-        } catch (NullPointerException e) {
-            Log.d(MithrilAC.getDebugTag(), "Prefs empty somehow?!");
-        }
+//        List<Integer> currentContext = MithrilDBHelper.getHelper(context).findCurrentContextFromLogs(mithrilDB);
+        int id = MithrilDBHelper.getHelper(context).findContextIdByLabelAndType(mithrilDB, semanticLocation.getLabel(), semanticLocation.getType());
 
 //        try {
         List<PolicyRule> rulesForApp = MithrilDBHelper.getHelper(context).findAllPoliciesForAppWhenPerformingOp(mithrilDB, currentPackageName, operationPerformed);
@@ -109,9 +84,9 @@ public class ViolationDetector {
                 Log.d(MithrilAC.getDebugTag(), "Found rule: " +
                         rule.getName() +
                         Integer.toString(rule.getCtxId()) +
-                        Integer.toString(currentContext.get(0)));
+                        semanticLocation.getInferredLocation());
                 //There is a rule for this app with current context as it's context
-                if (currentContext.contains(rule.getCtxId())) {
+                if (id == rule.getCtxId()) {
                     //Rule has a deny action, we may have a violation
                     if (rule.getAction().equals(Action.DENY)) {
                         Log.d(MithrilAC.getDebugTag(), "Eureka!");
@@ -139,19 +114,19 @@ public class ViolationDetector {
             }
         } //No rules found! We have a default violation... Opportunity for ML?
         else {
-            Log.d(MithrilAC.getDebugTag(), "Default violation scenario. Do something!");
-            for(Integer currCtxtId : currentContext) {
-                MithrilDBHelper.getHelper(context).addViolation(mithrilDB,
-                        new Violation(
-                                MithrilDBHelper.getHelper(context).findAppIdByName(mithrilDB, currentPackageName),
-                                currCtxtId,
-                                operationPerformed,
-                                MithrilAC.getPolRulDefaultRule(),
-                                false,
-                                new Timestamp(System.currentTimeMillis())
-                        )
-                );
-            }
+//            Log.d(MithrilAC.getDebugTag(), "Default violation scenario. Do something!");
+//            for(Integer currCtxtId : currentContext) {
+//                MithrilDBHelper.getHelper(context).addViolation(mithrilDB,
+//                        new Violation(
+//                                MithrilDBHelper.getHelper(context).findAppIdByName(mithrilDB, currentPackageName),
+//                                currCtxtId,
+//                                operationPerformed,
+//                                MithrilAC.getPolRulDefaultRule(),
+//                                false,
+//                                new Timestamp(System.currentTimeMillis())
+//                        )
+//                );
+//            }
         }
                 //Rule was a deny, we may have a violation
 //                        Violation violation;

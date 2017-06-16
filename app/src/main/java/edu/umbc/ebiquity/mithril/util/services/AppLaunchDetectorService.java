@@ -17,11 +17,15 @@ import android.util.Pair;
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.gson.Gson;
 
+import java.util.Map;
 import java.util.Timer;
 import java.util.TimerTask;
 
 import edu.umbc.ebiquity.mithril.MithrilAC;
+import edu.umbc.ebiquity.mithril.data.dbhelpers.MithrilDBHelper;
+import edu.umbc.ebiquity.mithril.data.model.rules.context.SemanticLocation;
 import edu.umbc.ebiquity.mithril.util.specialtasks.detect.policyconflicts.ViolationDetector;
 import edu.umbc.ebiquity.mithril.util.specialtasks.detect.runningapps.AppLaunchDetector;
 
@@ -45,7 +49,7 @@ public class AppLaunchDetectorService extends Service {
     public void onCreate() {
         context = this;
         mFusedLocationClient = LocationServices.getFusedLocationProviderClient(context);
-        sharedPrefs = getApplicationContext().getSharedPreferences(MithrilAC.getSharedPreferencesName(), Context.MODE_PRIVATE);
+        sharedPrefs = getSharedPreferences(MithrilAC.getSharedPreferencesName(), Context.MODE_PRIVATE);
         editor = getSharedPreferences(MithrilAC.getSharedPreferencesName(), Context.MODE_PRIVATE).edit();
         try {
             appLaunchDetector = new AppLaunchDetector();
@@ -99,8 +103,8 @@ public class AppLaunchDetectorService extends Service {
         }
     }
 
-    private Location getlocation() {
-        final Location[] locationFound = {null};
+    private SemanticLocation getlocation() {
+        final SemanticLocation[] semanticLocation = {null};
         if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION)
                 != PackageManager.PERMISSION_GRANTED &&
                 ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION)
@@ -118,11 +122,34 @@ public class AppLaunchDetectorService extends Service {
                         public void onSuccess(Location location) {
                             // Got last known location. In some rare situations this can be null.
                             if (location != null) {
-                                locationFound[0] = location;
+                                semanticLocation[0] = getSemanticLocation(location);
                             }
                         }
                     });
         }
-        return locationFound[0];
+        return semanticLocation[0];
+    }
+
+    private SemanticLocation getSemanticLocation(Location location) {
+        SemanticLocation semanticLocation = null;
+        Gson retrieveDataGson = new Gson();
+        String retrieveDataJson;
+        Map<String, ?> allPrefs;
+        try {
+            allPrefs = sharedPrefs.getAll();
+            for (Map.Entry<String, ?> aPref : allPrefs.entrySet()) {
+                if (aPref.getKey().startsWith(MithrilAC.getPrefKeyContextTypeLocation())) {
+                    retrieveDataJson = sharedPrefs.getString(aPref.getKey(), "");
+                    semanticLocation = retrieveDataGson.fromJson(retrieveDataJson, SemanticLocation.class);
+                    if (semanticLocation.isEnabled())
+                        Log.d(MithrilAC.getDebugTag(), "Came into the test and found: " + location.toString());
+                    if(semanticLocation.getLocation().distanceTo(location) < 1000)
+                        return semanticLocation;
+                }
+            }
+        } catch (NullPointerException e) {
+            Log.d(MithrilAC.getDebugTag(), "Prefs empty somehow?!");
+        }
+        return semanticLocation;
     }
 }
