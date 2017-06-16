@@ -13,7 +13,7 @@ import edu.umbc.ebiquity.mithril.data.model.rules.PolicyRule;
 
 public class DataGenerator {
     public static PolicyRule generateSocialMediaCameraAccessRuleForHome(SQLiteDatabase mithrilDB, Context context) {
-        return new PolicyRule("Camera access at Home",
+        return new PolicyRule("Camera used at Home",
                 MithrilDBHelper.getHelper(context).findContextIdByLabelAndType(mithrilDB,
                         MithrilAC.getPrefHomeLocationKey(),
                         MithrilAC.getPrefKeyContextTypeLocation()),
@@ -24,7 +24,7 @@ public class DataGenerator {
 
     public static PolicyRule generateSocialMediaLocationAccessRuleForHome(SQLiteDatabase mithrilDB, Context context) {
         Log.d(MithrilAC.getDebugTag(), MithrilAC.getPrefHomeLocationKey() + MithrilAC.getPrefKeyContextTypeLocation());
-        return new PolicyRule("Location access at Home",
+        return new PolicyRule("Location accessed at Home",
                 MithrilDBHelper.getHelper(context).findContextIdByLabelAndType(mithrilDB,
                         MithrilAC.getPrefHomeLocationKey(),
                         MithrilAC.getPrefKeyContextTypeLocation()),
@@ -34,7 +34,7 @@ public class DataGenerator {
     }
 
     public static PolicyRule generateSocialMediaCameraAccessRuleForWork(SQLiteDatabase mithrilDB, Context context) {
-        return new PolicyRule("Camera access at Work",
+        return new PolicyRule("Camera used at Work",
                 MithrilDBHelper.getHelper(context).findContextIdByLabelAndType(mithrilDB,
                         MithrilAC.getPrefWorkLocationKey(),
                         MithrilAC.getPrefKeyContextTypeLocation()),
@@ -44,7 +44,7 @@ public class DataGenerator {
     }
 
     public static PolicyRule generateSocialMediaLocationAccessRuleForWork(SQLiteDatabase mithrilDB, Context context) {
-        return new PolicyRule("Location access at Work",
+        return new PolicyRule("Location accessed at Work",
                 MithrilDBHelper.getHelper(context).findContextIdByLabelAndType(mithrilDB,
                         MithrilAC.getPrefWorkLocationKey(),
                         MithrilAC.getPrefKeyContextTypeLocation()),
@@ -54,7 +54,7 @@ public class DataGenerator {
     }
 
     public static PolicyRule generateEmailClientLocationAccessRuleForWork(SQLiteDatabase mithrilDB, Context context) {
-        return new PolicyRule("Location access at Work",
+        return new PolicyRule("Location accessed at Work",
                 MithrilDBHelper.getHelper(context).findContextIdByLabelAndType(mithrilDB,
                         MithrilAC.getPrefWorkLocationKey(),
                         MithrilAC.getPrefKeyContextTypeLocation()),
@@ -64,7 +64,7 @@ public class DataGenerator {
     }
 
     public static PolicyRule generateEmailClientReadContactsAccessRuleForWork(SQLiteDatabase mithrilDB, Context context) {
-        return new PolicyRule("Contact access at Work",
+        return new PolicyRule("Contacts read at Work",
                 MithrilDBHelper.getHelper(context).findContextIdByLabelAndType(mithrilDB,
                         MithrilAC.getPrefWorkLocationKey(),
                         MithrilAC.getPrefKeyContextTypeLocation()),
@@ -74,7 +74,7 @@ public class DataGenerator {
     }
 
     public static PolicyRule generateEmailClientWriteContactsAccessRuleForWork(SQLiteDatabase mithrilDB, Context context) {
-        return new PolicyRule("Contact access at Work",
+        return new PolicyRule("Contacts saved at Work",
                 MithrilDBHelper.getHelper(context).findContextIdByLabelAndType(mithrilDB,
                         MithrilAC.getPrefWorkLocationKey(),
                         MithrilAC.getPrefKeyContextTypeLocation()),
@@ -84,7 +84,7 @@ public class DataGenerator {
     }
 
     public static PolicyRule generateEmailClientWriteStorageAccessRuleForWork(SQLiteDatabase mithrilDB, Context context) {
-        return new PolicyRule("Write phone storage at Work",
+        return new PolicyRule("Saved to phone storage at Work",
                 MithrilDBHelper.getHelper(context).findContextIdByLabelAndType(mithrilDB,
                         MithrilAC.getPrefWorkLocationKey(),
                         MithrilAC.getPrefKeyContextTypeLocation()),
