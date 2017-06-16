@@ -1,4 +1,4 @@
-package edu.umbc.ebiquity.mithril.ui.fragments.coreactivityfragments;
+package edu.umbc.ebiquity.mithril.ui.fragments.rulechangeactivityfragments;
 
 import android.app.Fragment;
 import android.content.Context;
@@ -11,14 +11,10 @@ import android.view.ViewGroup;
 import edu.umbc.ebiquity.mithril.R;
 
 /**
- * A simple {@link Fragment} subclass.
- * Activities that contain this fragment must implement the
- * {@link AboutFragment.OnFragmentInteractionListener} interface
- * to handle interaction events.
- * Use the {@link AboutFragment#newInstance} factory method to
- * create an instance of this fragment.
+ * Created by prajit on 6/16/17.
  */
-public class AboutFragment extends Fragment {
+
+public class RuleChangeFragment extends Fragment {
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";
@@ -28,9 +24,9 @@ public class AboutFragment extends Fragment {
     private String mParam1;
     private String mParam2;
 
-    private OnFragmentInteractionListener mListener;
+    private RuleChangeFragment.OnFragmentInteractionListener mListener;
 
-    public AboutFragment() {
+    public RuleChangeFragment() {
         // Required empty public constructor
     }
 
@@ -43,8 +39,8 @@ public class AboutFragment extends Fragment {
      * @return A new instance of fragment AboutFragment.
      */
     // TODO: Rename and change types and number of parameters
-    public static AboutFragment newInstance(String param1, String param2) {
-        AboutFragment fragment = new AboutFragment();
+    public static RuleChangeFragment newInstance(String param1, String param2) {
+        RuleChangeFragment fragment = new RuleChangeFragment();
         Bundle args = new Bundle();
         args.putString(ARG_PARAM1, param1);
         args.putString(ARG_PARAM2, param2);
@@ -78,8 +74,8 @@ public class AboutFragment extends Fragment {
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
-        if (context instanceof OnFragmentInteractionListener) {
-            mListener = (OnFragmentInteractionListener) context;
+        if (context instanceof RuleChangeFragment.OnFragmentInteractionListener) {
+            mListener = (RuleChangeFragment.OnFragmentInteractionListener) context;
         } else {
             throw new RuntimeException(context.toString()
                     + " must implement OnFragmentInteractionListener");

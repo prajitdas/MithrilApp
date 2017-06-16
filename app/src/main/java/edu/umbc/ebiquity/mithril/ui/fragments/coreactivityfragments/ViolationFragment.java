@@ -32,7 +32,7 @@ public class ViolationFragment extends Fragment {
     /**
      * An array of violation items.
      */
-    public List<Violation> violationItems = new ArrayList<Violation>();
+    public List<Violation> violationItems = new ArrayList<>();
 //    /**
 //     * A map of violation items, by ID.
 //     */
@@ -93,31 +93,6 @@ public class ViolationFragment extends Fragment {
     private void initData() {
         initDB(view.getContext());
         violationItems = MithrilDBHelper.getHelper(view.getContext()).findAllViolations(mithrilDB);
-
-//        SharedPreferences sharedPref = getActivity().getSharedPreferences(MithrilApplication.getSharedPreferencesName(), Context.MODE_PRIVATE);
-//        String appPkgName = sharedPref.getString(MithrilApplication.getPrefKeyAppPkgName(), "Youtube");
-        /*
-        if (appPkgName.equals("com.google.android.youtube") &&
-                sharedPref.contains(MithrilAC.getPrefKeyCurrentTime()))
-            violationItems.add(new Violation("App package name: " +
-                    sharedPref.getString(MithrilAC.getPrefKeyAppPkgName(), "Youtube") +
-                    "Location context: " +
-                    sharedPref.getString(MithrilAC.getPrefKeyCurrentLocation(), "location") +
-                    "Temporal context: " +
-                    sharedPref.getString(MithrilAC.getPrefKeyCurrentTime(), "time"), 1, 1, true));
-        else if (appPkgName.equals("com.google.android.youtube") &&
-                !sharedPref.contains(MithrilAC.getPrefKeyCurrentTime()))
-            violationItems.add(new Violation("App package name: " +
-                    sharedPref.getString(MithrilAC.getPrefKeyAppPkgName(), "Youtube") +
-                    "Location context: " +
-                    sharedPref.getString(MithrilAC.getPrefKeyCurrentLocation(), "location"), 1, 1, true));
-        else
-        */
-//        violationItems.clear();
-
-//        // Add some violation items.
-//        for (Violation item : violationItems)
-//            violationItemsMap.put(item.getDesc(), item);
     }
 
     @Override

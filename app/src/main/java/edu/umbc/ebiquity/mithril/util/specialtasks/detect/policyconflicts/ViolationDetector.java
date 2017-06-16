@@ -1,24 +1,18 @@
 package edu.umbc.ebiquity.mithril.util.specialtasks.detect.policyconflicts;
 
 import android.content.Context;
-import android.content.SharedPreferences;
 import android.database.sqlite.SQLiteDatabase;
-import android.location.Location;
 import android.util.Log;
 
-import com.google.gson.Gson;
-
 import java.sql.Timestamp;
+import java.util.ArrayList;
 import java.util.List;
-import java.util.Locale;
-import java.util.Map;
 
 import edu.umbc.ebiquity.mithril.MithrilAC;
 import edu.umbc.ebiquity.mithril.data.dbhelpers.MithrilDBHelper;
 import edu.umbc.ebiquity.mithril.data.model.rules.Action;
 import edu.umbc.ebiquity.mithril.data.model.rules.PolicyRule;
 import edu.umbc.ebiquity.mithril.data.model.rules.Violation;
-import edu.umbc.ebiquity.mithril.data.model.rules.context.SemanticActivity;
 import edu.umbc.ebiquity.mithril.data.model.rules.context.SemanticLocation;
 
 /**
@@ -42,8 +36,9 @@ public class ViolationDetector {
      */
     public static void detectViolation(Context context, String currentPackageName, int operationPerformed, SemanticLocation semanticLocation) { //throws CWAException {
         SQLiteDatabase mithrilDB = MithrilDBHelper.getHelper(context).getWritableDatabase();
-//        List<Integer> currentContext = MithrilDBHelper.getHelper(context).findCurrentContextFromLogs(mithrilDB);
-        int id = MithrilDBHelper.getHelper(context).findContextIdByLabelAndType(mithrilDB, semanticLocation.getLabel(), semanticLocation.getType());
+        List<Integer> currentContext = new ArrayList<>();
+//                MithrilDBHelper.getHelper(context).findCurrentContextFromLogs(mithrilDB);
+        currentContext.add(MithrilDBHelper.getHelper(context).findContextIdByLabelAndType(mithrilDB, semanticLocation.getLabel(), semanticLocation.getType()));
 
 //        try {
         List<PolicyRule> rulesForApp = MithrilDBHelper.getHelper(context).findAllPoliciesForAppWhenPerformingOp(mithrilDB, currentPackageName, operationPerformed);
@@ -55,7 +50,7 @@ public class ViolationDetector {
                         Integer.toString(rule.getCtxId()) +
                         semanticLocation.getInferredLocation());
                 //There is a rule for this app with current context as it's context
-                if (id == rule.getCtxId()) {
+                if (currentContext.contains(rule.getCtxId())) {
                     //Rule has a deny action, we may have a violation
                     if (rule.getAction().equals(Action.DENY)) {
                         Log.d(MithrilAC.getDebugTag(), "Eureka!");

@@ -1,14 +1,36 @@
 package edu.umbc.ebiquity.mithril.data.model.rules;
 
+import android.os.Parcel;
+import android.os.Parcelable;
+
 import java.sql.Timestamp;
 
-public class Violation {
+public class Violation implements Parcelable {
+    public static final Creator<Violation> CREATOR = new Creator<Violation>() {
+        @Override
+        public Violation createFromParcel(Parcel in) {
+            return new Violation(in);
+        }
+
+        @Override
+        public Violation[] newArray(int size) {
+            return new Violation[size];
+        }
+    };
     private int appId;
     private int ctxId;
     private int oprId;
     private String desc;
     private boolean marker;
     private Timestamp time;
+
+    protected Violation(Parcel in) {
+        appId = in.readInt();
+        ctxId = in.readInt();
+        oprId = in.readInt();
+        desc = in.readString();
+        marker = in.readByte() != 0;
+    }
 
     public Violation(int appId, int ctxId, int oprId, String desc, boolean marker, Timestamp time) {
         this.appId = appId;
@@ -17,6 +39,20 @@ public class Violation {
         this.desc = desc;
         this.marker = marker;
         this.time = time;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeInt(appId);
+        dest.writeInt(ctxId);
+        dest.writeInt(oprId);
+        dest.writeString(desc);
+        dest.writeByte((byte) (marker ? 1 : 0));
+    }
+
+    @Override
+    public int describeContents() {
+        return 0;
     }
 
     public int getAppId() {
@@ -95,13 +131,6 @@ public class Violation {
 
     @Override
     public String toString() {
-        return "Violation{" +
-                "appId=" + appId +
-                ", ctxId=" + ctxId +
-                ", oprId=" + oprId +
-                ", desc='" + desc + '\'' +
-                ", marker=" + marker +
-                ", time=" + time +
-                '}';
+        return getDesc();
     }
 }

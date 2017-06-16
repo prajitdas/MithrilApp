@@ -5,7 +5,6 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -16,7 +15,6 @@ import edu.umbc.ebiquity.mithril.data.dbhelpers.MithrilDBHelper;
 import edu.umbc.ebiquity.mithril.data.model.components.AppData;
 import edu.umbc.ebiquity.mithril.data.model.rules.Violation;
 import edu.umbc.ebiquity.mithril.ui.fragments.coreactivityfragments.ViolationFragment.OnListFragmentInteractionListener;
-import edu.umbc.ebiquity.mithril.util.specialtasks.permissions.PermissionHelper;
 
 /**
  * {@link RecyclerView.Adapter} that can display a {@link Violation} and makes a call to the
@@ -43,28 +41,24 @@ public class ViolationRecyclerViewAdapter extends RecyclerView.Adapter<Violation
 
     @Override
     public void onBindViewHolder(final ViewHolder holder, int position) {
-//        Resources res = view.getContext().getResources();
-//        Drawable drawable;
-//        drawable = res.getDrawable(R.drawable.ic_launcher, view.getContext().getTheme());
-
         SQLiteDatabase mithrilDB = MithrilDBHelper.getHelper(view.getContext()).getWritableDatabase();
         AppData violatingApp = MithrilDBHelper.getHelper(view.getContext()).findAppById(mithrilDB, mValues.get(position).getAppId());
 
         holder.mItem = mValues.get(position);
         holder.mViolatingAppIcon.setImageBitmap(violatingApp.getIcon());
         holder.mViolationText.setText(violatingApp.getAppName() + " " + mValues.get(position).getDesc());
-        holder.mResponseYesButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                PermissionHelper.toast(view.getContext(), "Yes!!!");
-            }
-        });
-        holder.mResponseNoButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                PermissionHelper.toast(view.getContext(), "No!!");
-            }
-        });
+//        holder.mResponseYesButton.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                PermissionHelper.toast(view.getContext(), "Good! Will treat this as a TRUE violation in the future...");
+//            }
+//        });
+//        holder.mResponseNoButton.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                PermissionHelper.toast(view.getContext(), "False violation...");
+//            }
+//        });
 
         holder.mView.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -87,8 +81,8 @@ public class ViolationRecyclerViewAdapter extends RecyclerView.Adapter<Violation
         private final View mView;
         private final ImageView mViolatingAppIcon;
         private final TextView mViolationText;
-        private final ImageButton mResponseYesButton;
-        private final ImageButton mResponseNoButton;
+//        private final ImageButton mResponseYesButton;
+//        private final ImageButton mResponseNoButton;
 
         private Violation mItem;
 
@@ -97,8 +91,8 @@ public class ViolationRecyclerViewAdapter extends RecyclerView.Adapter<Violation
             mView = view;
             mViolatingAppIcon = (ImageView) view.findViewById(R.id.violatingAppIcon);
             mViolationText = (TextView) view.findViewById(R.id.violationText);
-            mResponseYesButton = (ImageButton) view.findViewById(R.id.mResponseYesButton);
-            mResponseNoButton = (ImageButton) view.findViewById(R.id.responseNoButton);
+//            mResponseYesButton = (ImageButton) view.findViewById(R.id.mResponseYesButton);
+//            mResponseNoButton = (ImageButton) view.findViewById(R.id.responseNoButton);
         }
 
         @Override

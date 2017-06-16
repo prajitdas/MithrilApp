@@ -12,9 +12,50 @@
     tools:context=".ui.activities.RuleChangeActivity"
     tools:showIn="@layout/app_bar_rule_change">
 
+    <ImageButton
+        android:id="@+id/mResponseYesButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentStart="true"
+        android:backgroundTint="@color/colorButton"
+        android:paddingEnd="20dp"
+        android:paddingLeft="20dp"
+        android:paddingRight="20dp"
+        android:paddingStart="20dp"
+        android:src="@drawable/thumb_up"
+        android:tint="@android:color/holo_green_dark" />
+
+    <ImageButton
+        android:id="@+id/responseNoButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentEnd="true"
+        android:backgroundTint="@color/colorButton"
+        android:paddingEnd="20dp"
+        android:paddingLeft="20dp"
+        android:paddingRight="20dp"
+        android:paddingStart="20dp"
+        android:src="@drawable/thumb_down"
+        android:tint="@android:color/holo_red_dark" />
+
     <FrameLayout
         android:id="@+id/container_rule_change"
         android:layout_width="match_parent"
-        android:layout_height="match_parent" />
+        android:layout_height="match_parent"
+        android:layout_above="@id/mResponseYesButton" />
+
+    <!--<android.support.design.widget.FloatingActionButton-->
+    <!--android:id="@+id/fab_rule_change"-->
+    <!--android:layout_width="wrap_content"-->
+    <!--android:layout_height="wrap_content"-->
+    <!--android:layout_gravity="bottom|end"-->
+    <!--android:layout_margin="@dimen/fab_margin"-->
+    <!--app:backgroundTint="@color/colorButton"-->
+    <!--app:rippleColor="@color/colorPrimaryLight"-->
+    <!--app:fabSize="auto"-->
+    <!--android:elevation="@dimen/fab_margin"-->
+    <!--app:srcCompat="@drawable/pencil" />-->
 
 </RelativeLayout>
