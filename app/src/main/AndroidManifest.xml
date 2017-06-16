@@ -184,10 +184,6 @@
             <!--</intent-filter>-->
         <!--</activity>-->
         <activity
-            android:name=".ui.activities.UsageStatsActivity"
-            android:label="@string/title_activity_usage_stats"
-            android:theme="@style/AppTheme.NoActionBar" />
-        <activity
             android:name=".ui.activities.AppOpsDetailsActivity"
             android:label="@string/title_activity_app_ops_details"
             android:theme="@style/AppTheme.NoActionBar" />

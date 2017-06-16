@@ -525,6 +525,11 @@ public class MithrilDBHelper extends SQLiteOpenHelper {
         addPolicyRule(db, DataGenerator.generateSocialMediaLocationAccessRuleForHome(db, context));
         addPolicyRule(db, DataGenerator.generateSocialMediaCameraAccessRuleForWork(db, context));
         addPolicyRule(db, DataGenerator.generateSocialMediaLocationAccessRuleForWork(db, context));
+        addPolicyRule(db, DataGenerator.generateEmailClientLocationAccessRuleForWork(db, context));
+        addPolicyRule(db, DataGenerator.generateEmailClientReadContactsAccessRuleForWork(db, context));
+        addPolicyRule(db, DataGenerator.generateEmailClientWriteContactsAccessRuleForWork(db, context));
+        addPolicyRule(db, DataGenerator.generateEmailClientReadStorageAccessRuleForWork(db, context));
+        addPolicyRule(db, DataGenerator.generateEmailClientWriteStorageAccessRuleForWork(db, context));
     }
 
     private void insertHardcodedGooglePermissions(SQLiteDatabase db) {

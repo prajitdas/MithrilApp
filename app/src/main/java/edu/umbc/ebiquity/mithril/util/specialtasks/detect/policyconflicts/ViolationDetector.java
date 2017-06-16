@@ -26,37 +26,6 @@ import edu.umbc.ebiquity.mithril.data.model.rules.context.SemanticLocation;
  */
 
 public class ViolationDetector {
-//    public static void setSemanticUserContext(SemanticUserContext aSemanticUserContext, Context context) {
-//        semanticUserContext = aSemanticUserContext;
-//        if (detectedAddress == null)
-//            semanticUserContext = null;//.setSemanticLocation(null);
-//        else
-//            semanticUserContext = new SemanticLocation();
-        //TODO FIX THIS!!!
-//        SemanticLocation semanticLocation = new SemanticLocation();
-        // TODO 1451649600 Is equivalent to: 01/01/2016 @ 12:00pm (UTC)
-//        SemanticTime semanticTime = new SemanticTime(false, RepeatFrequency.WEEKDAYS, new Timestamp(1451649600), "Lunch");
-        // getLocality() ("Mountain View", for example)
-        // getAdminArea() ("CA", for example)
-        // getPostalCode() ("94043", for example)
-        // getCountryCode() ("US", for example)
-        // getCountryName() ("United States", for example)
-//        if (level.equals("home"))
-//        semanticLocation.setInferredLocation(detectedAddress.getPostalCode());
-//        else if (level.equals("work"))
-//            semanticLocation.setInferredLocation(detectedAddress.getPostalCode());
-//        else if (level.equals("city"))
-//            semanticLocation.setInferredLocation(detectedAddress.getLocality());
-//        else if (level.equals("building"))
-//            semanticLocation.setInferredLocation(detectedAddress.getPremises());
-//        if (contextLevel.equals(MithrilAC.getPrefKeyCurrentLocation()))
-//            semanticUserContext.setSemanticLocation(semanticLocation);
-//        else if (contextLevel.equals("loctime")) {
-//            semanticUserContext.setSemanticLocation(semanticLocation);
-//            semanticUserContext.setSemanticTime(semanticTime);
-//        }
-//    }
-
     /**
      * Algorithm for violation detection:
      * Design assumption: Given a policy, a policy rule, has
@@ -128,135 +97,18 @@ public class ViolationDetector {
 //                );
 //            }
         }
-                //Rule was a deny, we may have a violation
-//                        Violation violation;
-//                        //Is this allowed?
-//                        //Do we need temporal context?
-//                        if (rule.getContextType().equals(MithrilAC.getPrefKeyTemporal())) {
-//                            violation = weNeedTimeViolationCheck(context, new SemanticTime(rule.getSemanticContextLabel()));
-//                            if(violation != null)
-//                                mithrilDBHelper.addViolation(mithrilDB, violation);
-//                        }
-//                        //Do we need location?
-//                        else if (rule.getContextType().equals(MithrilAC.getPrefKeyLocation())) {
-//                            violation = weNeedLocationViolationCheck(context, new SemanticLocation(rule.getSemanticContextLabel()));
-//                            if(violation != null)
-//                                mithrilDBHelper.addViolation(mithrilDB, violation);
-//                        }
-//                        //Do we need activity?
-//                        else if (rule.getContextType().equals(MithrilAC.getPrefKeyActivity()))
-//                            weNeedActivityViolationCheck();
-//                        //Do we need nearby actors?
-//                        else if (rule.getContextType().equals(MithrilAC.getPrefKeyPresence()))
-//                            weNeedNearActorsViolationCheck();
-//                } else {
-//                    Log.e(MithrilAC.getDebugTag(), "Serious error! DB contains deny rules. This violates our CWA");
-////                    throw new CWAException(); //Something is wrong!!!! We have a Closed World Assumption we cannot have deny rules...
-//                }
-//            }
-//        } //No rules found! We have a violation...
-//        else {
-//        }
-//            if (MithrilDBHelper.getHelper(context).findAppTypeByAppPkgName(mithrilDB, currentPackageName).equals(MithrilAC.getPrefKeyUserAppsDisplay())) {
 
-                //            PermissionHelper.toast(context, "Mithril detects user app launch: " + currentPackageName, Toast.LENGTH_SHORT).show();
-        //            Log.d(MithrilAC.getDebugTag(), "Mithril detects user app launch: " + currentPackageName);
-                /**
-                 * PolicyConflictDetector object to be created and sent the requester, resource, context combo to receive a decision!!!
-                 */
-                /**
-                 * TODO if an app is launched at a certain Semantic location, does the location we know match any policy?
-                 * TODO If it does then, can we determine if this is a violation?
-                 * TODO if this is a violation, then insert the information into the violation table.
-                 * TODO if it is not a violation, then what do we do? **DECIDE**
-                 * TODO !!!!DUMMY POLICY!!!!
-                 * REMOVE THIS AFTER DEMO
-                 * com.google.android.youtube launch is not allowed in US!
-                 * change policy to allowed in
-                 */
-                //            SemanticUserContext currSemanticUserContext = getCurrentSemanticUserContext();
-                //            if (currSemanticUserContext != null) {
-                //                //Rule 1 is allow youtube at home
-        //                if (contextLevel.equals(MithrilAC.getPrefKeyCurrentLocation())
-                //                        && !currSemanticUserContext.getSemanticLocation().getInferredLocation().equals("21227")) {
-                //                    if (currentPackageName.equals("com.google.android.youtube")) {
-        //                        editor.putString(MithrilAC.getPrefKeyAppPkgName(), currentPackageName);
-        //                        editor.putString(MithrilAC.getPrefKeyCurrentLocation(), "Home");
-                ////                        PermissionHelper.toast(context, "Rule 1 violation detected!");
-        //                        Log.d(MithrilAC.getDebugTag(), "Rule 1 violation detected!");
-                //                    }
-                //                }
-                //                //Rule 2 is allow youtube at work during lunch hours
-                //                else if (contextLevel.equals("loctime")
-                //                        && !currSemanticUserContext.getSemanticLocation().getInferredLocation().equals("21250")
-                //                        && !currSemanticUserContext.getSemanticTime().getDeviceTime().equals("Lunch")) {
-                //                    if (currentPackageName.equals("com.google.android.youtube")) {
-        //                        editor.putString(MithrilAC.getPrefKeyAppPkgName(), currentPackageName);
-        //                        editor.putString(MithrilAC.getPrefKeyCurrentLocation(), "Work");
-        //                        editor.putString(MithrilAC.getPrefKeyCurrentTime(), "Lunch");
-                ////                        editor.apply();
-                ////                        PermissionHelper.toast(context, "Rule 2 violation detected!");
-        //                        Log.d(MithrilAC.getDebugTag(), "Rule 2 violation detected!");
-                //                    }
-                //                }
-                //                //Rule 3 is allow SQLite at work
-        //                else if (contextLevel.equals(MithrilAC.getPrefKeyCurrentLocation())
-                //                        && !currSemanticUserContext.getSemanticLocation().getInferredLocation().equals("21250")) {
-                //                    if (currentPackageName.equals("oliver.ehrenmueller.dbadmin")) {
-        //                        editor.putString(MithrilAC.getPrefKeyAppPkgName(), currentPackageName);
-        //                        editor.putString(MithrilAC.getPrefKeyCurrentLocation(), "Work");
-                ////                editor.apply();
-                ////                        PermissionHelper.toast(context, "Rule 3 violation detected!");
-        //                        Log.d(MithrilAC.getDebugTag(), "Rule 2 violation detected!");
-                //                    }
-                //                }
-                ////            // If no rules are broken then we will show no violations
-                ////            else {
-        ////                editor.remove(MithrilAC.getPrefKeyCurrentLocation());
-        ////                editor.remove(MithrilAC.getPrefKeyCurrentTime());
-                ////                PermissionHelper.toast(context, "All good!");
-                ////            }
-                //
-                //                editor.apply();
-                //            }
-//            }
-//        } catch (SQLException e) {
-//            Log.e(MithrilAC.getDebugTag(), e.getMessage() + " it seems there is no policy for this app!");
-//        }
+        /**
+         * PolicyConflictDetector object to be created and sent the requester, resource, context combo to receive a decision!!!
+         * TODO if an app is launched at a certain Semantic location, does the location we know match any policy?
+         * TODO If it does then, can we determine if this is a violation?
+         * TODO if this is a violation, then insert the information into the violation table.
+         * TODO if it is not a violation, then what do we do? **DECIDE**
+         * TODO !!!!DUMMY POLICY!!!!
+         * REMOVE THIS AFTER DEMO
+         * com.google.android.youtube launch is not allowed in US!
+         * change policy to allowed in
+         */
         mithrilDB.close();
     }
-
-//    private static void weNeedIdentityViolationCheck() {
-//
-//    }
-//
-//    private static void weNeedNearActorsViolationCheck() {
-//
-//    }
-//
-//    private static Violation weNeedTimeViolationCheck(Context context, SemanticTime semanticTime) {
-////        if(semanticTime.getInferredTime() != currentTime)
-////            return new Violation();
-//        return null;
-//    }
-//
-//    private static void weNeedActivityViolationCheck() {
-//
-//    }
-//
-//    private static Violation weNeedLocationViolationCheck(Context context, SemanticLocation semanticLocation) {
-//        SharedPreferences sharedPref = context.getSharedPreferences(MithrilAC.getSharedPreferencesName(), Context.MODE_PRIVATE);
-//
-//        Gson gson = new Gson();
-//        String json = null;
-//
-////        json = sharedPref.getString(MithrilAC.getPrefKeyCurrentAddress(), null);
-////        detectedAddress = gson.fromJson(json, Address.class);
-////
-////        json = sharedPref.getString(MithrilAC.getPrefKeyCurrentLocation(), null);
-////        detectedLocation = gson.fromJson(json, Location.class);
-////        if(semanticLocation.getInferredLocation() != currentLocation)
-////            return new Violation();
-//        return null;
-//    }
 }

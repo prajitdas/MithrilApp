@@ -13,7 +13,7 @@ import edu.umbc.ebiquity.mithril.data.model.rules.PolicyRule;
 
 public class DataGenerator {
     public static PolicyRule generateSocialMediaCameraAccessRuleForHome(SQLiteDatabase mithrilDB, Context context) {
-        return new PolicyRule("SocialMediaCameraAccessRuleForHome",
+        return new PolicyRule("Camera access at Home",
                 MithrilDBHelper.getHelper(context).findContextIdByLabelAndType(mithrilDB,
                         MithrilAC.getPrefHomeLocationKey(),
                         MithrilAC.getPrefKeyContextTypeLocation()),
@@ -24,7 +24,7 @@ public class DataGenerator {
 
     public static PolicyRule generateSocialMediaLocationAccessRuleForHome(SQLiteDatabase mithrilDB, Context context) {
         Log.d(MithrilAC.getDebugTag(), MithrilAC.getPrefHomeLocationKey() + MithrilAC.getPrefKeyContextTypeLocation());
-        return new PolicyRule("SocialMediaLocationAccessRuleForHome",
+        return new PolicyRule("Location access at Home",
                 MithrilDBHelper.getHelper(context).findContextIdByLabelAndType(mithrilDB,
                         MithrilAC.getPrefHomeLocationKey(),
                         MithrilAC.getPrefKeyContextTypeLocation()),
@@ -34,7 +34,7 @@ public class DataGenerator {
     }
 
     public static PolicyRule generateSocialMediaCameraAccessRuleForWork(SQLiteDatabase mithrilDB, Context context) {
-        return new PolicyRule("SocialMediaCameraAccessRuleForWork",
+        return new PolicyRule("Camera access at Work",
                 MithrilDBHelper.getHelper(context).findContextIdByLabelAndType(mithrilDB,
                         MithrilAC.getPrefWorkLocationKey(),
                         MithrilAC.getPrefKeyContextTypeLocation()),
@@ -44,12 +44,62 @@ public class DataGenerator {
     }
 
     public static PolicyRule generateSocialMediaLocationAccessRuleForWork(SQLiteDatabase mithrilDB, Context context) {
-        return new PolicyRule("SocialMediaLocationAccessRuleForWork",
+        return new PolicyRule("Location access at Work",
                 MithrilDBHelper.getHelper(context).findContextIdByLabelAndType(mithrilDB,
                         MithrilAC.getPrefWorkLocationKey(),
                         MithrilAC.getPrefKeyContextTypeLocation()),
                 MithrilDBHelper.getHelper(context).findAppIdByName(mithrilDB, "com.twitter.android"),
                 Action.DENY,
                 AppOpsManager.permissionToOpCode(Manifest.permission.ACCESS_FINE_LOCATION));
+    }
+
+    public static PolicyRule generateEmailClientLocationAccessRuleForWork(SQLiteDatabase mithrilDB, Context context) {
+        return new PolicyRule("Location access at Work",
+                MithrilDBHelper.getHelper(context).findContextIdByLabelAndType(mithrilDB,
+                        MithrilAC.getPrefWorkLocationKey(),
+                        MithrilAC.getPrefKeyContextTypeLocation()),
+                MithrilDBHelper.getHelper(context).findAppIdByName(mithrilDB, "com.google.android.gm"),
+                Action.DENY,
+                AppOpsManager.permissionToOpCode(Manifest.permission.ACCESS_FINE_LOCATION));
+    }
+
+    public static PolicyRule generateEmailClientReadContactsAccessRuleForWork(SQLiteDatabase mithrilDB, Context context) {
+        return new PolicyRule("Contact access at Work",
+                MithrilDBHelper.getHelper(context).findContextIdByLabelAndType(mithrilDB,
+                        MithrilAC.getPrefWorkLocationKey(),
+                        MithrilAC.getPrefKeyContextTypeLocation()),
+                MithrilDBHelper.getHelper(context).findAppIdByName(mithrilDB, "com.google.android.gm"),
+                Action.DENY,
+                AppOpsManager.permissionToOpCode(Manifest.permission.READ_CONTACTS));
+    }
+
+    public static PolicyRule generateEmailClientWriteContactsAccessRuleForWork(SQLiteDatabase mithrilDB, Context context) {
+        return new PolicyRule("Contact access at Work",
+                MithrilDBHelper.getHelper(context).findContextIdByLabelAndType(mithrilDB,
+                        MithrilAC.getPrefWorkLocationKey(),
+                        MithrilAC.getPrefKeyContextTypeLocation()),
+                MithrilDBHelper.getHelper(context).findAppIdByName(mithrilDB, "com.google.android.gm"),
+                Action.DENY,
+                AppOpsManager.permissionToOpCode(Manifest.permission.WRITE_CONTACTS));
+    }
+
+    public static PolicyRule generateEmailClientWriteStorageAccessRuleForWork(SQLiteDatabase mithrilDB, Context context) {
+        return new PolicyRule("Write phone storage at Work",
+                MithrilDBHelper.getHelper(context).findContextIdByLabelAndType(mithrilDB,
+                        MithrilAC.getPrefWorkLocationKey(),
+                        MithrilAC.getPrefKeyContextTypeLocation()),
+                MithrilDBHelper.getHelper(context).findAppIdByName(mithrilDB, "com.google.android.gm"),
+                Action.DENY,
+                AppOpsManager.permissionToOpCode(Manifest.permission.WRITE_EXTERNAL_STORAGE));
+    }
+
+    public static PolicyRule generateEmailClientReadStorageAccessRuleForWork(SQLiteDatabase mithrilDB, Context context) {
+        return new PolicyRule("Read phone storage at Work",
+                MithrilDBHelper.getHelper(context).findContextIdByLabelAndType(mithrilDB,
+                        MithrilAC.getPrefWorkLocationKey(),
+                        MithrilAC.getPrefKeyContextTypeLocation()),
+                MithrilDBHelper.getHelper(context).findAppIdByName(mithrilDB, "com.google.android.gm"),
+                Action.DENY,
+                AppOpsManager.permissionToOpCode(Manifest.permission.READ_EXTERNAL_STORAGE));
     }
 }
