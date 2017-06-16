@@ -129,6 +129,7 @@ public class MithrilAC extends Application {
 
     //Preference keys
     private static final String PREF_KEY_POLICIES_DOWNLOADED = "policiesDownloaded";
+    private static final String PREF_KEY_LAST_RUNNING_APP = "lastRunningApp";
 
     private static final String PREF_KEY_CONTEXT_TYPE_LOCATION = "Location";
     private static final String PREF_KEY_CONTEXT_TYPE_ACTIVITY = "Activity";
@@ -941,6 +942,10 @@ public class MithrilAC extends Application {
 
     public static int getLaunchDetectionIntervalInSeconds() {
         return LAUNCH_DETECTION_INTERVAL_IN_SECONDS;
+    }
+
+    public static String getPrefKeyLastRunningApp() {
+        return PREF_KEY_LAST_RUNNING_APP;
     }
 
     public static String getPrefMonday() {

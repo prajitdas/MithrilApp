@@ -9,7 +9,9 @@ import android.app.usage.UsageEvents;
 import android.app.usage.UsageStats;
 import android.app.usage.UsageStatsManager;
 import android.content.Context;
+import android.location.Location;
 import android.util.Log;
+import android.util.Pair;
 
 import java.util.List;
 import java.util.SortedMap;
@@ -23,7 +25,7 @@ import edu.umbc.ebiquity.mithril.util.specialtasks.detect.policyconflicts.Violat
  * https://gist.github.com/plateaukao/011fa857d1919f2bbfdc
  */
 public class AppLaunchDetector {
-    public String getForegroundApp(Context context) {
+    public Pair<String, Integer> getForegroundApp(Context context) {
 //        if (!PermissionHelper.needsUsageStatsPermission(context))
 //            return null;
 
@@ -85,20 +87,21 @@ public class AppLaunchDetector {
                     currentPackageName = null;
                 else {
 //                    try {
-                        ViolationDetector.detectViolation(context, currentPackageName, getOp(currentPackageName));
+//                        ViolationDetector.detectViolation(context, currentPackageName, getOp(currentPackageName), location);
 //                    } catch (CWAException cwaException) {
                         //Something is wrong!!!! We have a Closed World Assumption we cannot have deny rules...
                     //                Log.e(MithrilAC.getDebugTag(), "Serious error! DB contains deny rules. This violates our CWA");
 //                    }
+                    return new Pair<String, Integer>(currentPackageName, getOp(currentPackageName));
                 }
             }
         } catch (SecurityException e) {
             Log.d(MithrilAC.getDebugTag(), "Probably a security exception because we don't have the right permissions " + e.getMessage());
         }
-        return currentPackageName;
+        return null;
     }
 
     private int getOp(String currentPackageName) {
-        return 1;
+        return 0;
     }
 }

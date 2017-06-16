@@ -1,16 +1,28 @@
 package edu.umbc.ebiquity.mithril.util.services;
 
+import android.Manifest;
 import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
+import android.content.pm.PackageManager;
+import android.location.Location;
+import android.os.Bundle;
 import android.os.Handler;
 import android.os.IBinder;
+import android.support.v4.app.ActivityCompat;
 import android.util.Log;
+import android.util.Pair;
+
+import com.google.android.gms.location.FusedLocationProviderClient;
+import com.google.android.gms.location.LocationServices;
+import com.google.android.gms.tasks.OnSuccessListener;
 
 import java.util.Timer;
 import java.util.TimerTask;
 
 import edu.umbc.ebiquity.mithril.MithrilAC;
+import edu.umbc.ebiquity.mithril.util.specialtasks.detect.policyconflicts.ViolationDetector;
 import edu.umbc.ebiquity.mithril.util.specialtasks.detect.runningapps.AppLaunchDetector;
 
 public class AppLaunchDetectorService extends Service {
@@ -20,6 +32,9 @@ public class AppLaunchDetectorService extends Service {
     // timer handling
     private Timer mTimer = null;
     private Context context;
+    private FusedLocationProviderClient mFusedLocationClient;
+    private SharedPreferences sharedPrefs;
+    private SharedPreferences.Editor editor;
 
     @Override
     public IBinder onBind(Intent intent) {
@@ -29,6 +44,9 @@ public class AppLaunchDetectorService extends Service {
     @Override
     public void onCreate() {
         context = this;
+        mFusedLocationClient = LocationServices.getFusedLocationProviderClient(context);
+        sharedPrefs = getApplicationContext().getSharedPreferences(MithrilAC.getSharedPreferencesName(), Context.MODE_PRIVATE);
+        editor = getSharedPreferences(MithrilAC.getSharedPreferencesName(), Context.MODE_PRIVATE).edit();
         try {
             appLaunchDetector = new AppLaunchDetector();
             if (mTimer != null) {
@@ -55,9 +73,56 @@ public class AppLaunchDetectorService extends Service {
             mHandler.post(new Runnable() {
                 @Override
                 public void run() {
-                    appLaunchDetector.getForegroundApp(context);
+                    Pair<String, Integer> pkgOpPair = appLaunchDetector.getForegroundApp(context);
+                    if (pkgOpPair != null) {
+                        if (sharedPrefs.contains(MithrilAC.getPrefKeyLastRunningApp())) {
+                            if (!sharedPrefs.getString(MithrilAC.getPrefKeyLastRunningApp(), "").equals(pkgOpPair.first)) {
+                                //last running app is not same as currently running one
+                                //detect violation, if any
+                                //no need to change sharedprefs
+                                ViolationDetector.detectViolation(context, pkgOpPair.first, pkgOpPair.second, getlocation());
+                            } else {
+                                //currently running app is same as previously detected app
+                                //nothing to do
+                            }
+                        } else{
+                            //no known last running app
+                            //add to sharedprefs currently running app and detect violation, if any
+                            editor.putString(MithrilAC.getPrefKeyLastRunningApp(), pkgOpPair.first);
+                            ViolationDetector.detectViolation(context, pkgOpPair.first, pkgOpPair.second, getlocation());
+                        }
+                    } else {
+                        //null! nothing to do
+                    }
                 }
             });
         }
+    }
+
+    private Location getlocation() {
+        final Location[] locationFound = {null};
+        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION)
+                != PackageManager.PERMISSION_GRANTED &&
+                ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION)
+                        != PackageManager.PERMISSION_GRANTED) {
+            // TODO: Consider calling
+            //    ActivityCompat#requestPermissions
+            // here to request the missing permissions, and then overriding
+            //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
+            //                                          int[] grantResults)
+            // to handle the case where the user grants the permission. See the documentation
+            // for ActivityCompat#requestPermissions for more details.
+            mFusedLocationClient.getLastLocation()
+                    .addOnSuccessListener(new OnSuccessListener<Location>() {
+                        @Override
+                        public void onSuccess(Location location) {
+                            // Got last known location. In some rare situations this can be null.
+                            if (location != null) {
+                                locationFound[0] = location;
+                            }
+                        }
+                    });
+        }
+        return locationFound[0];
     }
 }

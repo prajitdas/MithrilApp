@@ -1,17 +1,25 @@
 package edu.umbc.ebiquity.mithril.util.specialtasks.detect.policyconflicts;
 
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.database.sqlite.SQLiteDatabase;
+import android.location.Location;
 import android.util.Log;
+
+import com.google.gson.Gson;
 
 import java.sql.Timestamp;
 import java.util.List;
+import java.util.Locale;
+import java.util.Map;
 
 import edu.umbc.ebiquity.mithril.MithrilAC;
 import edu.umbc.ebiquity.mithril.data.dbhelpers.MithrilDBHelper;
 import edu.umbc.ebiquity.mithril.data.model.rules.Action;
 import edu.umbc.ebiquity.mithril.data.model.rules.PolicyRule;
 import edu.umbc.ebiquity.mithril.data.model.rules.Violation;
+import edu.umbc.ebiquity.mithril.data.model.rules.context.SemanticActivity;
+import edu.umbc.ebiquity.mithril.data.model.rules.context.SemanticLocation;
 
 /**
  * Created by prajit on 12/13/16.
@@ -63,9 +71,34 @@ public class ViolationDetector {
      * 3) Search policy list for a rule that matches the current combo of requester-resource-context combo
      * 4) If no such rule is found then detect this as a violation and request a user action on it or if in execution mode, block this access
      */
-    public static void detectViolation(Context context, String currentPackageName, int operationPerformed) { //throws CWAException {
+    public static void detectViolation(Context context, String currentPackageName, int operationPerformed, Location location) { //throws CWAException {
         SQLiteDatabase mithrilDB = MithrilDBHelper.getHelper(context).getWritableDatabase();
         List<Integer> currentContext = MithrilDBHelper.getHelper(context).findCurrentContextFromLogs(mithrilDB);
+
+        SemanticLocation semanticLocation;
+        SharedPreferences sharedPreferences = context.getSharedPreferences(MithrilAC.getSharedPreferencesName(), Context.MODE_PRIVATE);
+        Gson retrieveDataGson = new Gson();
+        String retrieveDataJson;
+        Map<String, ?> allPrefs;
+        try {
+            allPrefs = sharedPreferences.getAll();
+            for (Map.Entry<String, ?> aPref : allPrefs.entrySet()) {
+                if (aPref.getKey().startsWith(MithrilAC.getPrefKeyContextTypeLocation())) {
+                    retrieveDataJson = sharedPreferences.getString(aPref.getKey(), "");
+                    semanticLocation = retrieveDataGson.fromJson(retrieveDataJson, SemanticLocation.class);
+                    if (semanticLocation.isEnabled())
+                        if(semanticLocation.getLocation().distanceTo(location) < 1000)
+                            currentContext.add(
+                                    MithrilDBHelper.getHelper(context).findContextIdByLabelAndType(
+                                            mithrilDB,
+                                            semanticLocation.getLabel(),
+                                            semanticLocation.getType())
+                                    );
+                }
+            }
+        } catch (NullPointerException e) {
+        Log.d(MithrilAC.getDebugTag(), "Prefs empty somehow?!");
+    }
 
 //        try {
         List<PolicyRule> rulesForApp = MithrilDBHelper.getHelper(context).findAllPoliciesForAppWhenPerformingOp(mithrilDB, currentPackageName, operationPerformed);
