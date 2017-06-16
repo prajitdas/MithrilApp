@@ -46,11 +46,11 @@ import edu.umbc.ebiquity.mithril.MithrilAC;
  * <p>
  * For a simpler example that shows the use of Google Play services to fetch the last known location
  * of a device, see
- * https://github.com/googlesamples/android-play-location/tree/master/BasicLocation.
+ * https:github.com/googlesamples/android-play-location/tree/master/BasicLocation.
  * <p>
  * This sample uses Google Play services, but it does not require authentication. For a sample that
  * uses Google Play services for authentication, see
- * https://github.com/googlesamples/android-google-accounts/tree/master/QuickStart.
+ * https:github.com/googlesamples/android-google-accounts/tree/master/QuickStart.
  */
 public class LocationUpdateService extends Service implements
         ConnectionCallbacks,
@@ -95,37 +95,37 @@ public class LocationUpdateService extends Service implements
      * Represents a geographical location.
      */
     private Location mCurrentLocation;
-    // Flag that indicates if a request is underway.
+     Flag that indicates if a request is underway.
     private boolean mInProgress;
     private Boolean servicesAvailable = false;
     /**
      * Used to keep track of whether geofences were added.
      */
-//    private boolean mGeofencesAdded;
+    private boolean mGeofencesAdded;
 
     /**
      * Used when requesting to add or remove geofences.
      */
-//    private PendingIntent mGeofencePendingIntent;
+    private PendingIntent mGeofencePendingIntent;
     @Override
     public void onCreate() {
         super.onCreate();
 
         context = this;
         mResultReceiver = new AddressResultReceiver(new Handler(), this);
-        // Set defaults, then update using values stored in the Bundle.
+         Set defaults, then update using values stored in the Bundle.
         mAddressRequested = false;
 
         mInProgress = false;
-        // Create the LocationRequest object
+         Create the LocationRequest object
         mLocationRequest = LocationRequest.create();
-        // Use high accuracy
+         Use high accuracy
         mLocationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
-        // Set the update interval to 1 minute
+         Set the update interval to 1 minute
         mLocationRequest.setInterval(MithrilApplication.getUpdateInterval());
-        // Set the fastest update interval to 1 minute
+         Set the fastest update interval to 1 minute
         mLocationRequest.setFastestInterval(MithrilApplication.getFastestInterval());
-        // Set the minimum displacement between location updates in meters to 10m.
+         Set the minimum displacement between location updates in meters to 10m.
         mLocationRequest.setSmallestDisplacement(MithrilApplication.getSmallestDisplacement());
 
         servicesAvailable = servicesConnected();
@@ -143,21 +143,21 @@ public class LocationUpdateService extends Service implements
      * fetching an address.
      */
     protected void startSearchAddressIntentService() {
-        // Create an intent for passing to the intent service responsible for fetching the address.
+         Create an intent for passing to the intent service responsible for fetching the address.
         Intent intent = new Intent(this, FetchAddressIntentService.class);
 
         intent.putExtra(MithrilApplication.ADDRESS_REQUESTED_EXTRA, mAddressRequested);
         intent.putExtra(MithrilApplication.ADDRESS_KEY, MithrilApplication.getPrefKeyCurrentAddress());
 
-        // Pass the result receiver as an extra to the service.
+         Pass the result receiver as an extra to the service.
         intent.putExtra(MithrilApplication.RECEIVER, mResultReceiver);
 
-        // Pass the location data as an extra to the service.
+         Pass the location data as an extra to the service.
         intent.putExtra(MithrilApplication.LOCATION_DATA_EXTRA, mCurrentLocation);
 
-        // Start the service. If the service isn't already running, it is instantiated and started
-        // (creating a process for it if needed); if it is running then it remains running. The
-        // service kills itself automatically once all intents are processed.
+         Start the service. If the service isn't already running, it is instantiated and started
+         (creating a process for it if needed); if it is running then it remains running. The
+         service kills itself automatically once all intents are processed.
         startService(intent);
     }
 
@@ -178,7 +178,7 @@ public class LocationUpdateService extends Service implements
         int result = googleAPI.isGooglePlayServicesAvailable(this);
         if (result != ConnectionResult.SUCCESS) {
             if (googleAPI.isUserResolvableError(result)) {
-//                PermissionHelper.toast(this, result, Toast.LENGTH_SHORT);
+                PermissionHelper.toast(this, result, Toast.LENGTH_SHORT);
             }
             return false;
         }
@@ -193,8 +193,8 @@ public class LocationUpdateService extends Service implements
 
         setUpLocationClientIfNeeded();
         if (!mGoogleApiClient.isConnected() || !mGoogleApiClient.isConnecting() && !mInProgress) {
-//            Log.d(MithrilApplication.getDebugTag(), DateFormat.getDateTimeInstance().format(new Date()) + ": Started");
-//            appendLog(DateFormat.getDateTimeInstance().format(new Date()) + ": Started", sharedPref.getString(MithrilApplication.getPrefKeyLogFilename(), "sdcard/log.txt"));
+            Log.d(MithrilApplication.getDebugTag(), DateFormat.getDateTimeInstance().format(new Date()) + ": Started");
+            appendLog(DateFormat.getDateTimeInstance().format(new Date()) + ": Started", sharedPref.getString(MithrilApplication.getPrefKeyLogFilename(), "sdcard/log.txt"));
             mInProgress = true;
             mGoogleApiClient.connect();
         }
@@ -207,19 +207,19 @@ public class LocationUpdateService extends Service implements
             buildGoogleApiClient();
     }
 
-    // Define the callback method that receives location updates
+     Define the callback method that receives location updates
     @Override
     public void onLocationChanged(Location location) {
-        // Report to the UI that the location was updated
+         Report to the UI that the location was updated
         String msg = Double.toString(location.getLatitude()) + "," + Double.toString(location.getLongitude());
-//        Log.d(MithrilApplication.getDebugTag(), msg);
-//        PermissionHelper.toast(this, msg, Toast.LENGTH_SHORT);
-//        Log.d(MithrilApplication.getDebugTag(), DateFormat.getDateTimeInstance().format(new Date()) + ":" + msg);
-        appendLog(DateFormat.getDateTimeInstance().format(new Date()) + ":" + msg);//, sharedPref.getString(MithrilApplication.getPrefKeyLocationFilename(), "sdcard/location.txt"));
+        Log.d(MithrilApplication.getDebugTag(), msg);
+        PermissionHelper.toast(this, msg, Toast.LENGTH_SHORT);
+        Log.d(MithrilApplication.getDebugTag(), DateFormat.getDateTimeInstance().format(new Date()) + ":" + msg);
+        appendLog(DateFormat.getDateTimeInstance().format(new Date()) + ":" + msg);, sharedPref.getString(MithrilApplication.getPrefKeyLocationFilename(), "sdcard/location.txt"));
         mCurrentLocation = location;
         storeInSharedPreferences(MithrilApplication.getPrefKeyLocation(), mCurrentLocation);
 
-        //Store the current location in preferences
+        Store the current location in preferences
         String json = new GsonBuilder().create().toJson(mCurrentLocation, Location.class);
         SharedPreferences.Editor editor = this.getSharedPreferences(MithrilApplication.getSharedPreferencesName(), Context.MODE_PRIVATE).edit();
         editor.putString(MithrilApplication.getPrefKeyCurrentLocation(), json);
@@ -248,24 +248,24 @@ public class LocationUpdateService extends Service implements
             try {
                 logFile.createNewFile();
             } catch (IOException e) {
-                // TODO Auto-generated catch block
+                 TODO Auto-generated catch block
                 e.printStackTrace();
             }
         }
         try {
-            //BufferedWriter for performance, true to set append to file flag
+            BufferedWriter for performance, true to set append to file flag
             BufferedWriter buf = new BufferedWriter(new FileWriter(logFile, true));
             buf.append(text);
             buf.newLine();
             buf.close();
         } catch (IOException e) {
-            // TODO Auto-generated catch block
+             TODO Auto-generated catch block
             e.printStackTrace();
         }
     }
 
     /**
-     * From http://stackoverflow.com/a/18463758/1816861
+     * From http:stackoverflow.com/a/18463758/1816861
      *
      * @param key
      * @param location To Retreive
@@ -283,19 +283,19 @@ public class LocationUpdateService extends Service implements
 
     @Override
     public void onDestroy() {
-        // Turn off the request flag
+         Turn off the request flag
         this.mInProgress = false;
 
         if (this.servicesAvailable && this.mGoogleApiClient != null) {
             this.mGoogleApiClient.unregisterConnectionCallbacks(this);
             this.mGoogleApiClient.unregisterConnectionFailedListener(this);
             this.mGoogleApiClient.disconnect();
-            // Destroy the current location client
+             Destroy the current location client
             this.mGoogleApiClient = null;
         }
-        // Display the connection status
-        // PermissionHelper.toast(this, DateFormat.getDateTimeInstance().format(new Date()) + ":
-        // Disconnected. Please re-connect.", Toast.LENGTH_SHORT);
+         Display the connection status
+         PermissionHelper.toast(this, DateFormat.getDateTimeInstance().format(new Date()) + ":
+         Disconnected. Please re-connect.", Toast.LENGTH_SHORT);
 
         super.onDestroy();
     }
@@ -307,38 +307,38 @@ public class LocationUpdateService extends Service implements
      */
     @Override
     public void onConnected(Bundle bundle) throws SecurityException {
-//        Log.i(MithrilApplication.getDebugTag(), "Connected to GoogleApiClient");
-//
-//        // If the initial location was never previously requested, we use
-//        // FusedLocationApi.getLastLocation() to get it. If it was previously requested, we store
-//        // its value in the Bundle and check for it in onCreate(). We
-//        // do not request it again unless the user specifically requests location updates by pressing
-//        // the Start Updates button.
-//        //
-//        // Because we cache the value of the initial location in the Bundle, it means that if the
-//        // user launches the activity,
-//        // moves to a new location, and then changes the device orientation, the original location
-//        // is displayed as the activity is re-created.
-//        if (mCurrentLocation == null) {
-//            mCurrentLocation = LocationServices.FusedLocationApi.getLastLocation(mGoogleApiClient);
-//            mLastUpdateTime = DateFormat.getTimeInstance().format(new Date());
-//            updateUI();
-//        }
-//
-//        // If the user presses the Start Updates button before GoogleApiClient connects, we set
-//        // mRequestingLocationUpdates to true (see startUpdatesButtonHandler()). Here, we check
-//        // the value of mRequestingLocationUpdates and if it is true, we start location updates.
-//        if (mRequestingLocationUpdates) {
-//            startLocationUpdates();
-//        }
+        Log.i(MithrilApplication.getDebugTag(), "Connected to GoogleApiClient");
+
+         If the initial location was never previously requested, we use
+         FusedLocationApi.getLastLocation() to get it. If it was previously requested, we store
+         its value in the Bundle and check for it in onCreate(). We
+         do not request it again unless the user specifically requests location updates by pressing
+         the Start Updates button.
+        
+         Because we cache the value of the initial location in the Bundle, it means that if the
+         user launches the activity,
+         moves to a new location, and then changes the device orientation, the original location
+         is displayed as the activity is re-created.
+        if (mCurrentLocation == null) {
+            mCurrentLocation = LocationServices.FusedLocationApi.getLastLocation(mGoogleApiClient);
+            mLastUpdateTime = DateFormat.getTimeInstance().format(new Date());
+            updateUI();
+        }
+
+         If the user presses the Start Updates button before GoogleApiClient connects, we set
+         mRequestingLocationUpdates to true (see startUpdatesButtonHandler()). Here, we check
+         the value of mRequestingLocationUpdates and if it is true, we start location updates.
+        if (mRequestingLocationUpdates) {
+            startLocationUpdates();
+        }
         try {
             LocationServices.FusedLocationApi.requestLocationUpdates(this.mGoogleApiClient,
                     mLocationRequest, this);
         } catch (SecurityException e) {
-//            Log.e(MithrilApplication.getDebugTag(), "Get the permissions needed");
+            Log.e(MithrilApplication.getDebugTag(), "Get the permissions needed");
         }
-//        Log.d(MithrilApplication.getDebugTag(), DateFormat.getDateTimeInstance().format(new Date()) + ": Connected");
-        appendLog(DateFormat.getDateTimeInstance().format(new Date()) + ": Connected");//, sharedPref.getString(MithrilApplication.getPrefKeyLogFilename(), "sdcard/log.txt"));
+        Log.d(MithrilApplication.getDebugTag(), DateFormat.getDateTimeInstance().format(new Date()) + ": Connected");
+        appendLog(DateFormat.getDateTimeInstance().format(new Date()) + ": Connected");, sharedPref.getString(MithrilApplication.getPrefKeyLogFilename(), "sdcard/log.txt"));
     }
 
     /**
@@ -347,14 +347,14 @@ public class LocationUpdateService extends Service implements
      */
     @Override
     public void onConnectionSuspended(int i) {
-        // Turn off the request flag
+         Turn off the request flag
         mInProgress = false;
-        // Destroy the current location client
+         Destroy the current location client
         mGoogleApiClient = null;
-        // Display the connection status
-//        PermissionHelper.toast(this, DateFormat.getDateTimeInstance().format(new Date()) + ": Disconnected. Please re-connect.", Toast.LENGTH_SHORT);
-//        Log.d(MithrilApplication.getDebugTag(), DateFormat.getDateTimeInstance().format(new Date()) + ": Disconnected. Please re-connect.");
-//        appendLog(DateFormat.getDateTimeInstance().format(new Date()) + ": Disconnected", sharedPref.getString(MithrilApplication.getPrefKeyLogFilename(), "sdcard/log.txt"));
+         Display the connection status
+        PermissionHelper.toast(this, DateFormat.getDateTimeInstance().format(new Date()) + ": Disconnected. Please re-connect.", Toast.LENGTH_SHORT);
+        Log.d(MithrilApplication.getDebugTag(), DateFormat.getDateTimeInstance().format(new Date()) + ": Disconnected. Please re-connect.");
+        appendLog(DateFormat.getDateTimeInstance().format(new Date()) + ": Disconnected", sharedPref.getString(MithrilApplication.getPrefKeyLogFilename(), "sdcard/log.txt"));
     }
 
     /**
@@ -372,7 +372,7 @@ public class LocationUpdateService extends Service implements
          * error.
          */
         if (connectionResult.hasResolution()) {
-            // If no resolution is available, display an error dialog
+             If no resolution is available, display an error dialog
         } else {
         }
     }
@@ -404,7 +404,7 @@ public class LocationUpdateService extends Service implements
             super(handler);
 
             context = aContext;
-            // Set defaults, then update using values stored in the Bundle.
+             Set defaults, then update using values stored in the Bundle.
             mAddressRequested = false;
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N)
                 mAddressOutput = new Address(context.getResources().getConfiguration().getLocales().get(0));
@@ -419,9 +419,9 @@ public class LocationUpdateService extends Service implements
             String addressKey = resultData.getString(MithrilApplication.ADDRESS_KEY, null);
             if (addressKey.equals(null))
                 addressKey = MithrilApplication.getPrefKeyCurrentAddress();
-//            throw new AddressKeyMissingError();
-            // Display the address string
-            // or an error message sent from the intent service.
+            throw new AddressKeyMissingError();
+             Display the address string
+             or an error message sent from the intent service.
             Gson gson = new Gson();
             String json = resultData.getString(MithrilApplication.RESULT_DATA_KEY, "");
             try {
@@ -429,23 +429,23 @@ public class LocationUpdateService extends Service implements
             } catch (JsonSyntaxException e) {
                 Log.d(MithrilApplication.getDebugTag(), e.getMessage());
             }
-//            displayAddressOutput();
+            displayAddressOutput();
 
             Log.d(MithrilApplication.getDebugTag(), "Prajit error " + resultData.getString(MithrilApplication.ADDRESS_KEY) + mAddressRequested + addressKey + json);
-            // Show a toast message if an address was found.
+             Show a toast message if an address was found.
             if (resultCode == MithrilApplication.SUCCESS_RESULT) {
-//                Log.d(MithrilApplication.getDebugTag(), getString(R.string.address_found) + ":" + mAddressOutput);
-//                PermissionHelper.toast(context, getString(R.string.address_found) + ":" + mAddressOutput);
+                Log.d(MithrilApplication.getDebugTag(), getString(R.string.address_found) + ":" + mAddressOutput);
+                PermissionHelper.toast(context, getString(R.string.address_found) + ":" + mAddressOutput);
                 storeInSharedPreferences(resultData.getString(
                         addressKey),
                         mAddressOutput);
             }
-            // Reset. Enable the Fetch Address button and stop showing the progress bar.
+             Reset. Enable the Fetch Address button and stop showing the progress bar.
             mAddressRequested = false;
         }
 
         /**
-         * From http://stackoverflow.com/a/18463758/1816861
+         * From http:stackoverflow.com/a/18463758/1816861
          *
          * @param key
          * @param address To Retreive

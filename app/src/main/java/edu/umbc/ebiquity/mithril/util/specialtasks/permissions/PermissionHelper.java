@@ -26,6 +26,7 @@ import edu.umbc.ebiquity.mithril.MithrilAC;
 public class PermissionHelper {
     private static final List<String> permissionsRequired = Arrays.asList(
             Manifest.permission.ACCESS_FINE_LOCATION,
+            Manifest.permission.ACCESS_COARSE_LOCATION,
             Manifest.permission.WRITE_EXTERNAL_STORAGE,
             Manifest.permission.READ_EXTERNAL_STORAGE,
             Manifest.permission.READ_CALENDAR,
