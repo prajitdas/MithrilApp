@@ -78,6 +78,9 @@ public class InstanceCreationActivity extends AppCompatActivity
     private final int PLACE_AUTOCOMPLETE_REQUEST_CODE_HOME = 1;
     private final int PLACE_AUTOCOMPLETE_REQUEST_CODE_WORK = 2;
     private final int PLACE_AUTOCOMPLETE_REQUEST_CODE_MORE = 3;
+    private final int TIME_REQUEST_CODE_WORK = 4;
+    private final int TIME_REQUEST_CODE_DND = 5;
+    private final int TIME_REQUEST_CODE_MORE = 6;
     /**
      * Provides the entry point to Google Play services: Geo fence
      */
@@ -329,21 +332,21 @@ public class InstanceCreationActivity extends AppCompatActivity
             mOtherCtxtBtn.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-
+                    openTemporalDataEntryActivity(TIME_REQUEST_CODE_MORE, chooseATemporalLabel());
                 }
             });
 
             mFirstMajorCtxtBtn.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-
+                    openTemporalDataEntryActivity(TIME_REQUEST_CODE_WORK, MithrilAC.getPrefWorkTemporalKey());
                 }
             });
 
             mSecondMajorCtxtBtn.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-
+                    openTemporalDataEntryActivity(TIME_REQUEST_CODE_DND, MithrilAC.getPrefWorkTemporalKey());
                 }
             });
         } else if (currentFragment.equals(FRAGMENT_PRESENCE)) {
@@ -461,19 +464,10 @@ public class InstanceCreationActivity extends AppCompatActivity
 
     private void setupLocationAwareness() {
         for (Map.Entry<String, SemanticLocation> contextEntry : semanticLocations.entrySet()) {
-//            SemanticLocation tempContext = contextEntry.getValue();
             contextEntry.getValue().setEnabled(true);
-//            if(MithrilDBHelper.getHelper(this).findContextIdByLabelAndType(mithrilDB,
-//                    tempContext.getLabel(),
-//                    tempContext.getType()) == -1) {
             addContext(contextEntry.getValue().getType(),
                     contextEntry.getKey(),
                     InstanceCreationActivity.contextDataStoreGson.toJson(contextEntry.getValue()));
-//            } else {
-//                enableContext(contextEntry.getValue().getType(),
-//                        contextEntry.getKey(),
-//                        InstanceCreationActivity.contextDataStoreGson.toJson(contextEntry.getValue()));
-//            }
             semanticLocations.put(contextEntry.getKey(), contextEntry.getValue());
         }
         isThereLocationContextToSave = false;
@@ -482,19 +476,10 @@ public class InstanceCreationActivity extends AppCompatActivity
 
     private void setupTemporalAwareness() {
         for (Map.Entry<String, SemanticTime> contextEntry : semanticTimes.entrySet()) {
-//            SemanticTime tempContext = contextEntry.getValue();
             contextEntry.getValue().setEnabled(true);
-//            if(MithrilDBHelper.getHelper(this).findContextIdByLabelAndType(mithrilDB,
-//                    tempContext.getLabel(),
-//                    tempContext.getType()) == -1) {
             addContext(contextEntry.getValue().getType(),
                     contextEntry.getKey(),
                     InstanceCreationActivity.contextDataStoreGson.toJson(contextEntry.getValue()));
-//            } else {
-//                enableContext(contextEntry.getValue().getType(),
-//                        contextEntry.getKey(),
-//                        InstanceCreationActivity.contextDataStoreGson.toJson(contextEntry.getValue()));
-//            }
             semanticTimes.put(contextEntry.getKey(), contextEntry.getValue());
         }
         isThereTemporalContextToSave = false;
@@ -503,19 +488,10 @@ public class InstanceCreationActivity extends AppCompatActivity
 
     private void setupPresenceAwareness() {
         for (Map.Entry<String, SemanticNearActor> contextEntry : semanticNearActors.entrySet()) {
-//            SemanticNearActor tempContext = contextEntry.getValue();
             contextEntry.getValue().setEnabled(true);
-//            if(MithrilDBHelper.getHelper(this).findContextIdByLabelAndType(mithrilDB,
-//                    tempContext.getLabel(),
-//                    tempContext.getType()) == -1) {
             addContext(contextEntry.getValue().getType(),
                     contextEntry.getKey(),
                     InstanceCreationActivity.contextDataStoreGson.toJson(contextEntry.getValue()));
-//            } else {
-//                enableContext(contextEntry.getValue().getType(),
-//                        contextEntry.getKey(),
-//                        InstanceCreationActivity.contextDataStoreGson.toJson(contextEntry.getValue()));
-//            }
             semanticNearActors.put(contextEntry.getKey(), contextEntry.getValue());
         }
         isTherePresenceContextToSave = false;
@@ -524,19 +500,10 @@ public class InstanceCreationActivity extends AppCompatActivity
 
     private void setupActivityAwareness() {
         for (Map.Entry<String, SemanticActivity> contextEntry : semanticActivities.entrySet()) {
-//            SemanticActivity tempContext = contextEntry.getValue();
             contextEntry.getValue().setEnabled(true);
-//            if(MithrilDBHelper.getHelper(this).findContextIdByLabelAndType(mithrilDB,
-//                    tempContext.getLabel(),
-//                    tempContext.getType()) == -1) {
             addContext(contextEntry.getValue().getType(),
                     contextEntry.getKey(),
                     InstanceCreationActivity.contextDataStoreGson.toJson(contextEntry.getValue()));
-//            } else {
-//                enableContext(contextEntry.getValue().getType(),
-//                        contextEntry.getKey(),
-//                        InstanceCreationActivity.contextDataStoreGson.toJson(contextEntry.getValue()));
-//            }
             semanticActivities.put(contextEntry.getKey(), contextEntry.getValue());
         }
         isThereActivityContextToSave = false;
@@ -612,6 +579,12 @@ public class InstanceCreationActivity extends AppCompatActivity
         startActivity(launchNextActivity);
     }
 
+    private void openTemporalDataEntryActivity(int requestCode, String label) {
+        Intent intent = new Intent(this, TemporalDataEntryActivity.class);
+        intent.putExtra("label", label);
+        startActivityForResult(intent, requestCode);
+    }
+
     private void openAutocompleteActivity(int requestCode) {
         try {
             // The autocomplete activity requires Google Play Services to be available. The intent
@@ -655,87 +628,136 @@ public class InstanceCreationActivity extends AppCompatActivity
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode == PLACE_AUTOCOMPLETE_REQUEST_CODE_HOME) {
-            if (resultCode == Activity.RESULT_OK) {
-                isThereLocationContextToSave = true;
-                Place place = PlaceAutocomplete.getPlace(this, data);
-
-                Location userInputLocation = new Location("placesAPI");
-                userInputLocation.setLatitude(place.getLatLng().latitude);
-                userInputLocation.setLongitude(place.getLatLng().longitude);
-
-                SemanticLocation semanticLocation = new SemanticLocation(MithrilAC.getPrefHomeLocationKey(), userInputLocation);
-                semanticLocation.setDetails(formatPlaceDetails(getResources(),
-                        place.getName(),
-                        place.getId(),
-                        place.getAddress(),
-                        place.getPhoneNumber(),
-                        place.getWebsiteUri()).toString());
-
-                semanticLocations.put(MithrilAC.getPrefHomeLocationKey(), semanticLocation);
-                /**
-                 * We know the location has changed, let's check the address
-                 */
-                mAddressRequested = true;
-                startSearchAddressIntentService(userInputLocation, MithrilAC.getPrefHomeLocationKey());
-            } else if (resultCode == PlaceAutocomplete.RESULT_ERROR) {
-                Status status = PlaceAutocomplete.getStatus(this, data);
-                Log.e(MithrilAC.getDebugTag(), "Error: Status = " + status.toString());
-            } else if (resultCode == Activity.RESULT_CANCELED) {
-                // Indicates that the activity closed before a selection was made. For example if the user pressed the back button.
+        switch (requestCode) {
+            case PLACE_AUTOCOMPLETE_REQUEST_CODE_HOME: {
+                if (resultCode == Activity.RESULT_OK) {
+                    isThereLocationContextToSave = true;
+                    setHomeSemanticLocation(PlaceAutocomplete.getPlace(this, data));
+                } else if (resultCode == PlaceAutocomplete.RESULT_ERROR) {
+                    Status status = PlaceAutocomplete.getStatus(this, data);
+                    Log.e(MithrilAC.getDebugTag(), "Error: Status = " + status.toString());
+                } else if (resultCode == Activity.RESULT_CANCELED) {
+                    // Indicates that the activity closed before a selection was made. For example if the user pressed the back button.
+                }
+                break;
             }
-        } else if (requestCode == PLACE_AUTOCOMPLETE_REQUEST_CODE_WORK) {
-            if (resultCode == Activity.RESULT_OK) {
-                isThereLocationContextToSave = true;
-                Place place = PlaceAutocomplete.getPlace(this, data);
-
-                Location userInputLocation = new Location("placesAPI");
-                userInputLocation.setLatitude(place.getLatLng().latitude);
-                userInputLocation.setLongitude(place.getLatLng().longitude);
-
-                SemanticLocation semanticLocation = new SemanticLocation(MithrilAC.getPrefWorkLocationKey(), userInputLocation);
-                semanticLocation.setDetails(formatPlaceDetails(getResources(),
-                        place.getName(),
-                        place.getId(),
-                        place.getAddress(),
-                        place.getPhoneNumber(),
-                        place.getWebsiteUri()).toString());
-
-                semanticLocations.put(MithrilAC.getPrefWorkLocationKey(), semanticLocation);
-                /**
-                 * We know the location has changed, let's check the address
-                 */
-                mAddressRequested = true;
-                startSearchAddressIntentService(userInputLocation, MithrilAC.getPrefWorkLocationKey());
-            } else if (resultCode == PlaceAutocomplete.RESULT_ERROR) {
-                Status status = PlaceAutocomplete.getStatus(this, data);
-                Log.e(MithrilAC.getDebugTag(), "Error: Status = " + status.toString());
-            } else if (resultCode == Activity.RESULT_CANCELED) {
-                // Indicates that the activity closed before a selection was made. For example if the user pressed the back button.
+            case PLACE_AUTOCOMPLETE_REQUEST_CODE_WORK: {
+                if (resultCode == Activity.RESULT_OK) {
+                    isThereLocationContextToSave = true;
+                    setWorkSemanticLocation(PlaceAutocomplete.getPlace(this, data));
+                } else if (resultCode == PlaceAutocomplete.RESULT_ERROR) {
+                    Status status = PlaceAutocomplete.getStatus(this, data);
+                    Log.e(MithrilAC.getDebugTag(), "Error: Status = " + status.toString());
+                } else if (resultCode == Activity.RESULT_CANCELED) {
+                    // Indicates that the activity closed before a selection was made. For example if the user pressed the back button.
+                }
+                break;
             }
-        } else if (requestCode == PLACE_AUTOCOMPLETE_REQUEST_CODE_MORE) {
-            if (resultCode == Activity.RESULT_OK) {
-                isThereLocationContextToSave = true;
-                Place place = PlaceAutocomplete.getPlace(this, data);
-                getOtherSemanticLocationLabel(place);
-            } else if (resultCode == PlaceAutocomplete.RESULT_ERROR) {
-                Status status = PlaceAutocomplete.getStatus(this, data);
-                Log.e(MithrilAC.getDebugTag(), "Error: Status = " + status.toString());
-            } else if (resultCode == Activity.RESULT_CANCELED) {
-                // Indicates that the activity closed before a selection was made. For example if the user pressed the back button.
+            case PLACE_AUTOCOMPLETE_REQUEST_CODE_MORE: {
+                if (resultCode == Activity.RESULT_OK) {
+                    isThereLocationContextToSave = true;
+                    setMoreSemanticLocation(PlaceAutocomplete.getPlace(this, data));
+                } else if (resultCode == PlaceAutocomplete.RESULT_ERROR) {
+                    Status status = PlaceAutocomplete.getStatus(this, data);
+                    Log.e(MithrilAC.getDebugTag(), "Error: Status = " + status.toString());
+                } else if (resultCode == Activity.RESULT_CANCELED) {
+                    // Indicates that the activity closed before a selection was made. For example if the user pressed the back button.
+                }
+                break;
+            }
+            case TIME_REQUEST_CODE_WORK: {
+                if (resultCode == Activity.RESULT_OK) {
+                    isThereTemporalContextToSave = true;
+                    setWorkSemanticTemporal(data);
+                } else if (resultCode == Activity.RESULT_CANCELED) {
+                    // Indicates that the activity closed before a selection was made. For example if the user pressed the back button.
+                }
+                break;
+            }
+            case TIME_REQUEST_CODE_DND: {
+                if (resultCode == Activity.RESULT_OK) {
+                    isThereTemporalContextToSave = true;
+                    setDNDSemanticTemporal(data);
+                } else if (resultCode == Activity.RESULT_CANCELED) {
+                    // Indicates that the activity closed before a selection was made. For example if the user pressed the back button.
+                }
+                break;
+            }
+            case TIME_REQUEST_CODE_MORE: {
+                if (resultCode == Activity.RESULT_OK) {
+                    isThereTemporalContextToSave = true;
+                    setMoreSemanticTemporal(data);
+                } else if (resultCode == Activity.RESULT_CANCELED) {
+                    // Indicates that the activity closed before a selection was made. For example if the user pressed the back button.
+                }
+                break;
             }
         }
     }
 
-    private void getOtherSemanticLocationLabel(final Place place) {
-        final ArrayAdapter<String> arrayAdapter = new ArrayAdapter<>(InstanceCreationActivity.this, android.R.layout.select_dialog_singlechoice);
+    private void setWorkSemanticTemporal(Intent data) {
+
+    }
+
+    private void setDNDSemanticTemporal(Intent data) {
+
+    }
+
+    private void setMoreSemanticTemporal(Intent data) {
+
+    }
+
+    private void setHomeSemanticLocation(Place place) {
+        Location userInputLocation = new Location("placesAPI");
+        userInputLocation.setLatitude(place.getLatLng().latitude);
+        userInputLocation.setLongitude(place.getLatLng().longitude);
+
+        SemanticLocation semanticLocation = new SemanticLocation(MithrilAC.getPrefHomeLocationKey(), userInputLocation);
+        semanticLocation.setDetails(formatPlaceDetails(getResources(),
+                place.getName(),
+                place.getId(),
+                place.getAddress(),
+                place.getPhoneNumber(),
+                place.getWebsiteUri()).toString());
+
+        semanticLocations.put(MithrilAC.getPrefHomeLocationKey(), semanticLocation);
+        /**
+         * We know the location has changed, let's check the address
+         */
+        mAddressRequested = true;
+        startSearchAddressIntentService(userInputLocation, MithrilAC.getPrefHomeLocationKey());
+    }
+
+    private void setWorkSemanticLocation(Place place) {
+        Location userInputLocation = new Location("placesAPI");
+        userInputLocation.setLatitude(place.getLatLng().latitude);
+        userInputLocation.setLongitude(place.getLatLng().longitude);
+
+        SemanticLocation semanticLocation = new SemanticLocation(MithrilAC.getPrefWorkLocationKey(), userInputLocation);
+        semanticLocation.setDetails(formatPlaceDetails(getResources(),
+                place.getName(),
+                place.getId(),
+                place.getAddress(),
+                place.getPhoneNumber(),
+                place.getWebsiteUri()).toString());
+
+        semanticLocations.put(MithrilAC.getPrefWorkLocationKey(), semanticLocation);
+        /**
+         * We know the location has changed, let's check the address
+         */
+        mAddressRequested = true;
+        startSearchAddressIntentService(userInputLocation, MithrilAC.getPrefWorkLocationKey());
+    }
+
+    private void setMoreSemanticLocation(final Place place) {
+        final ArrayAdapter<String> arrayAdapter = new ArrayAdapter<>(this, android.R.layout.select_dialog_singlechoice);
         final String[] listOfLocationContextPiecesFromTheOntology = MithrilAC.getContextArrayLocation();
         for (int index = 0; index < listOfLocationContextPiecesFromTheOntology.length; index++)
             arrayAdapter.add(listOfLocationContextPiecesFromTheOntology[index]);
 
-        AlertDialog.Builder dialog = new AlertDialog.Builder(InstanceCreationActivity.this);
+        AlertDialog.Builder dialog = new AlertDialog.Builder(this);
         dialog.setIcon(R.drawable.map_marker);
-        dialog.setTitle("What location is this?");
+        dialog.setTitle("What location are you adding?");
         dialog.setAdapter(arrayAdapter, new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
@@ -762,6 +784,26 @@ public class InstanceCreationActivity extends AppCompatActivity
             }
         });
         dialog.show();
+    }
+
+    private String chooseATemporalLabel() {
+        final String[] temporalLabel = {null};
+        final ArrayAdapter<String> arrayAdapter = new ArrayAdapter<>(this, android.R.layout.select_dialog_singlechoice);
+        final String[] listOfTimeContextPiecesFromTheOntology = MithrilAC.getContextArrayTime();
+        for (int index = 0; index < listOfTimeContextPiecesFromTheOntology.length; index++)
+            arrayAdapter.add(listOfTimeContextPiecesFromTheOntology[index]);
+
+        AlertDialog.Builder dialog = new AlertDialog.Builder(this);
+        dialog.setIcon(R.drawable.map_marker);
+        dialog.setTitle("What time based context are you adding?");
+        dialog.setAdapter(arrayAdapter, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                temporalLabel[0] = arrayAdapter.getItem(which);
+            }
+        });
+        dialog.show();
+        return temporalLabel[0];
     }
 
     /**

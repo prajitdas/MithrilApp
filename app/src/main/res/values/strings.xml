@@ -147,7 +147,7 @@
     <string name="pref_header_temporal_context">Manage time prefs</string>
 
     <string name="pref_temporal_context_switch_key">enableTemporalContext</string>
-    <string name="pref_temporal_context_switch_title">Enable time prefs</string>
+    <string name="pref_temporal_context_switch_title">Adding temporal context for:&#160;</string>
     <string name="pref_temporal_context_switch_summary">Click to enable following time prefs</string>
 
     <!-- Work temporal context -->

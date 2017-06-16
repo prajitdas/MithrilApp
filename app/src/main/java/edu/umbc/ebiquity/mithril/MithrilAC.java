@@ -198,7 +198,7 @@ public class MithrilAC extends Application {
             "Department_Office", "Lab", "Supervisor_Office", "Government_Office", "Post_Office", "Secure_Government_Office"};
     private static final String CONTEXT_ARRAY_PRESENCE_INFO_IDENTITY[] = {"Public", "Professional_Network", "Personal_Network", "Superior",
             "Subordinate", "Colleague", "Family", "Friends", "Private"};
-    private static final String CONTEXT_ARRAY_TIME[] = {"Week_Day", "Working_Hours", "Weekend", "Off_Hours"};
+    private static final String CONTEXT_ARRAY_TIME[] = {"Weekday", "Weekend", "Off_Hours", "Lunch", "Break", "Family_Time"};
     /**
      * Resource constants
      */
