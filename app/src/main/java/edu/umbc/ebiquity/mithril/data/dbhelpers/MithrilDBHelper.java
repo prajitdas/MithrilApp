@@ -184,14 +184,14 @@ public class MithrilDBHelper extends SQLiteOpenHelper {
      */
     private final static String CONTEXTID = "id"; // ID of the context instance
     private final static String CONTEXTTYPE = "type"; // Context type; i.e. location, time, activity, presence
-    private final static String CONTEXTSEMANTICLABEL = "label"; // Semantic context label
+    private final static String CONTEXTSEMLBL = "label"; // Semantic context label
     private final static String CONTEXTENABLED = "enabled"; // Context maybe disabled by the user
     private final static String CREATE_CONTEXT_TABLE = "CREATE TABLE " + getContextTableName() + " (" +
             CONTEXTID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
             CONTEXTTYPE + " TEXT NOT NULL, " +
-            CONTEXTSEMANTICLABEL + " TEXT NOT NULL, " +
+            CONTEXTSEMLBL + " TEXT NOT NULL, " +
             CONTEXTENABLED + " INTEGER NOT NULL DEFAULT 0, " +
-            "CONSTRAINT context_unique_name UNIQUE("+CONTEXTTYPE+", "+CONTEXTSEMANTICLABEL+") ON CONFLICT REPLACE);";
+            "CONSTRAINT context_unique_name UNIQUE("+CONTEXTTYPE+", "+ CONTEXTSEMLBL +") ON CONFLICT REPLACE);";
     /**
      * -- Table 5: policyrules
      CREATE TABLE policyrules (
@@ -209,15 +209,15 @@ public class MithrilDBHelper extends SQLiteOpenHelper {
      ALTER TABLE policyrules ADD CONSTRAINT policyrules_context FOREIGN KEY policyrules_context (context_id)
      REFERENCES context (id);
      */
-//    private final static String POLRULID = "id"; // ID of policy defined
+    private final static String POLRULID = "id"; // ID of policy defined
     private final static String POLRULNAME = "name"; // Policy short name
     private final static String POLRULACTIN = "action"; // Action will be denoted as: 0 for to deny, 1 for allow
     private final static String POLRULAPPID = "appid"; // App id that sent the request
     private final static String POLRULCTXID = "ctxid"; // context id in which requested
     private final static String POLRULOP = "op"; // operation
     private final static String CREATE_POLICY_RULES_TABLE = "CREATE TABLE " + getPolicyRulesTableName() + " (" +
-//            POLRULID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
             POLRULNAME + " TEXT NOT NULL, " +
+            POLRULID + " INTEGER NOT NULL, " +
             POLRULACTIN + " INTEGER NOT NULL, " +
             POLRULAPPID + " INTEGER NOT NULL, " +
             POLRULCTXID + " INTEGER NOT NULL, " +
@@ -890,7 +890,7 @@ public class MithrilDBHelper extends SQLiteOpenHelper {
         long insertedRowId;
         ContentValues values = new ContentValues();
         values.put(CONTEXTTYPE, type);
-        values.put(CONTEXTSEMANTICLABEL, label);
+        values.put(CONTEXTSEMLBL, label);
         if(enabled)
             values.put(CONTEXTENABLED, 1);
         else
@@ -1655,7 +1655,7 @@ public class MithrilDBHelper extends SQLiteOpenHelper {
         // Select Query
         String selectQuery = "SELECT " +
                 getContextTableName() + "." + CONTEXTTYPE + ", " +
-                getContextTableName() + "." + CONTEXTSEMANTICLABEL +
+                getContextTableName() + "." + CONTEXTSEMLBL +
                 " FROM " +
                 getContextTableName() +
                 " WHERE " +
@@ -1683,7 +1683,7 @@ public class MithrilDBHelper extends SQLiteOpenHelper {
                 " FROM " +
                 getContextTableName() +
                 " WHERE " +
-                getContextTableName() + "." + CONTEXTSEMANTICLABEL + " = '" + label + "'" +
+                getContextTableName() + "." + CONTEXTSEMLBL + " = '" + label + "'" +
                 " AND " +
                 getContextTableName() + "." + CONTEXTTYPE + " = '" + type + "'" +
                 " AND " +
@@ -1814,13 +1814,13 @@ public class MithrilDBHelper extends SQLiteOpenHelper {
     public int updateContext(SQLiteDatabase db, String label, String type, boolean enabled) {
         ContentValues values = new ContentValues();
         values.put(CONTEXTTYPE, type);
-        values.put(CONTEXTSEMANTICLABEL, label);
+        values.put(CONTEXTSEMLBL, label);
         if(enabled)
             values.put(CONTEXTENABLED, 1);
         else
             values.put(CONTEXTENABLED, 0);
         try {
-            return db.update(getContextTableName(), values, CONTEXTSEMANTICLABEL + " = ? AND " + CONTEXTTYPE + " = ? ",
+            return db.update(getContextTableName(), values, CONTEXTSEMLBL + " = ? AND " + CONTEXTTYPE + " = ? ",
                     new String[]{label, type});
         } catch (SQLException e) {
             throw new SQLException("Exception " + e + " error updating Context: " + label);
@@ -1888,7 +1888,7 @@ public class MithrilDBHelper extends SQLiteOpenHelper {
 
     public void deleteContext(SQLiteDatabase db, String label, String type) {
         try {
-            db.delete(getContextTableName(), CONTEXTSEMANTICLABEL + " = ? AND " + CONTEXTTYPE + " = ? ",
+            db.delete(getContextTableName(), CONTEXTSEMLBL + " = ? AND " + CONTEXTTYPE + " = ? ",
                     new String[]{label, type});
         } catch (SQLException e) {
             throw new SQLException("Could not find " + e);

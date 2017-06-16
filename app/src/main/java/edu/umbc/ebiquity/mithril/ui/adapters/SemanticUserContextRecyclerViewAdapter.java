@@ -4,6 +4,8 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageButton;
+import android.widget.Spinner;
 import android.widget.TextView;
 
 import java.util.List;
@@ -42,6 +44,12 @@ public class SemanticUserContextRecyclerViewAdapter extends RecyclerView.Adapter
             holder.mDetail.setText(semanticUserContexts.get(position).getLabel());
         else
             holder.mDetail.setText(R.string.click_save_button_to_enable_context);
+        holder.mImageBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+            }
+        });
 
         holder.mView.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -64,6 +72,8 @@ public class SemanticUserContextRecyclerViewAdapter extends RecyclerView.Adapter
         public final View mView;
         public final TextView mLabel;
         public final TextView mDetail;
+        public final ImageButton mImageBtn;
+        public final Spinner mSpinner;
         public SemanticUserContext mItem;
 
         public ViewHolder(View view) {
@@ -71,6 +81,8 @@ public class SemanticUserContextRecyclerViewAdapter extends RecyclerView.Adapter
             mView = view;
             mLabel = (TextView) view.findViewById(R.id.semanticUserContextLabel);
             mDetail = (TextView) view.findViewById(R.id.semanticUserContextDetail);
+            mImageBtn = (ImageButton) view.findViewById(R.id.deleteContextBtn);
+            mSpinner = (Spinner) view.findViewById(R.id.spinner_rule_change);
         }
 
         @Override

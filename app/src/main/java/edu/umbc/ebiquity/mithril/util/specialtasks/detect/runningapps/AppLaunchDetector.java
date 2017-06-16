@@ -9,7 +9,6 @@ import android.app.usage.UsageEvents;
 import android.app.usage.UsageStats;
 import android.app.usage.UsageStatsManager;
 import android.content.Context;
-import android.location.Location;
 import android.util.Log;
 import android.util.Pair;
 
@@ -18,7 +17,6 @@ import java.util.SortedMap;
 import java.util.TreeMap;
 
 import edu.umbc.ebiquity.mithril.MithrilAC;
-import edu.umbc.ebiquity.mithril.util.specialtasks.detect.policyconflicts.ViolationDetector;
 
 /*
  * Taken from:
