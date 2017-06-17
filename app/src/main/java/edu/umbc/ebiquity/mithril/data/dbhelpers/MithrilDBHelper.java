@@ -209,20 +209,28 @@ public class MithrilDBHelper extends SQLiteOpenHelper {
      ALTER TABLE policyrules ADD CONSTRAINT policyrules_context FOREIGN KEY policyrules_context (context_id)
      REFERENCES context (id);
      */
-    private final static String POLRULID = "id"; // ID of policy defined
-    private final static String POLRULNAME = "name"; // Policy short name
+    private final static String POLRULID = "id"; // ID of policy defined; this will be used to determine if multiple rows belong to the same policy
     private final static String POLRULACTIN = "action"; // Action will be denoted as: 0 for to deny, 1 for allow
     private final static String POLRULAPPID = "appid"; // App id that sent the request
     private final static String POLRULCTXID = "ctxid"; // context id in which requested
-    private final static String POLRULOP = "op"; // operation
+    private final static String POLRULOPID = "op"; // operation
+    private final static String POLRULACTSTR = "actstr"; // Action string
+    private final static String POLRULAPPSTR = "appstr"; // App string
+    private final static String POLRULCTXSTR = "ctxstr"; // context string
+    private final static String POLRULOPSTR = "opstr"; // operation string
+    private final static String POLRULENABLED = "enabled"; // policy enabled or not
     private final static String CREATE_POLICY_RULES_TABLE = "CREATE TABLE " + getPolicyRulesTableName() + " (" +
-            POLRULNAME + " TEXT NOT NULL, " +
             POLRULID + " INTEGER NOT NULL, " +
             POLRULACTIN + " INTEGER NOT NULL, " +
             POLRULAPPID + " INTEGER NOT NULL, " +
             POLRULCTXID + " INTEGER NOT NULL, " +
-            POLRULOP + " INTEGER NOT NULL DEFAULT -1, " +
-            "PRIMARY KEY("+POLRULAPPID+", "+POLRULCTXID+", "+POLRULOP+"), " +
+            POLRULOPID + " INTEGER NOT NULL DEFAULT -1, " +
+            POLRULENABLED + " INTEGER NOT NULL, " +
+            POLRULACTSTR + " TEXT NOT NULL, " +
+            POLRULAPPSTR + " TEXT NOT NULL, " +
+            POLRULCTXSTR + " TEXT NOT NULL, " +
+            POLRULOPSTR + " TEXT NOT NULL, " +
+            "PRIMARY KEY("+POLRULAPPID+", "+POLRULCTXID+", "+ POLRULOPID +"), " +
             "FOREIGN KEY(" + POLRULAPPID + ") REFERENCES " + getAppsTableName() + "(" + APPID + ") ON DELETE CASCADE, " +
             "FOREIGN KEY(" + POLRULCTXID + ") REFERENCES " + getContextTableName() + "(" + CONTEXTID + ")" +
             ");";
@@ -951,17 +959,25 @@ public class MithrilDBHelper extends SQLiteOpenHelper {
      * @param aPolicyRule
      * @return
      */
-    public long addPolicyRule(SQLiteDatabase db, PolicyRule aPolicyRule) throws SQLException {
+    public long addPolicyRule(SQLiteDatabase db, PolicyRule aPolicyRule) throws SQLiteConstraintException {
         long insertedRowId;
         ContentValues values = new ContentValues();
-        values.put(POLRULNAME, aPolicyRule.getName());
+        values.put(POLRULID, aPolicyRule.getId());
+        values.put(POLRULAPPID, aPolicyRule.getAppId());
+        values.put(POLRULCTXID, aPolicyRule.getCtxId());
+        values.put(POLRULOPID, aPolicyRule.getOp());
+        values.put(POLRULACTSTR, aPolicyRule.getActStr());
+        values.put(POLRULAPPSTR, aPolicyRule.getAppStr());
+        values.put(POLRULCTXSTR, aPolicyRule.getCtxStr());
+        values.put(POLRULOPSTR, aPolicyRule.getOpStr());
+        if(aPolicyRule.isEnabled())
+            values.put(POLRULENABLED, 1);
+        else
+            values.put(POLRULENABLED, 0);
         if (aPolicyRule.getAction() == Action.ALLOW)
             values.put(POLRULACTIN, 1);
         else if (aPolicyRule.getAction() == Action.DENY)
             values.put(POLRULACTIN, 0);
-        values.put(POLRULAPPID, aPolicyRule.getAppId());
-        values.put(POLRULCTXID, aPolicyRule.getCtxId());
-        values.put(POLRULOP, aPolicyRule.getOp());
         insertedRowId = db.insertOrThrow(getPolicyRulesTableName(), null, values);
         return insertedRowId;
     }
@@ -1465,11 +1481,16 @@ public class MithrilDBHelper extends SQLiteOpenHelper {
         ArrayList<PolicyRule> policyRules = new ArrayList<>();
         // Select All Query
         String selectQuery = "SELECT " +
-                getPolicyRulesTableName() + "." + POLRULNAME + ", " +
+                getPolicyRulesTableName() + "." + POLRULID + ", " +
                 getPolicyRulesTableName() + "." + POLRULAPPID + ", " +
+                getPolicyRulesTableName() + "." + POLRULAPPSTR + ", " +
                 getPolicyRulesTableName() + "." + POLRULCTXID + ", " +
+                getPolicyRulesTableName() + "." + POLRULCTXSTR + ", " +
                 getPolicyRulesTableName() + "." + POLRULACTIN + ", " +
-                getPolicyRulesTableName() + "." + POLRULOP +
+                getPolicyRulesTableName() + "." + POLRULACTSTR + ", " +
+                getPolicyRulesTableName() + "." + POLRULOPID + ", " +
+                getPolicyRulesTableName() + "." + POLRULOPSTR  + ", " +
+                getPolicyRulesTableName() + "." + POLRULENABLED +
                 " FROM " +
                 getPolicyRulesTableName() + ", " + getContextTableName() +
                 " WHERE " +
@@ -1483,18 +1504,18 @@ public class MithrilDBHelper extends SQLiteOpenHelper {
             // looping through all rows and adding to list
             if (cursor.moveToFirst()) {
                 do {
-                    PolicyRule policyRule = new PolicyRule();
-                    policyRule.setName(cursor.getString(1));
-                    policyRule.setAppId(Integer.parseInt(cursor.getString(2)));
-                    policyRule.setCtxId(Integer.parseInt(cursor.getString(3)));
-                    if (Integer.parseInt(cursor.getString(4)) == 1)
-                        policyRule.setAction(Action.ALLOW);
-                    else
-                        policyRule.setAction(Action.DENY);
-                    policyRule.setOp(cursor.getInt(5));
-
                     // Adding policies to list
-                    policyRules.add(policyRule);
+                    policyRules.add(new PolicyRule(
+                            cursor.getInt(0),
+                            cursor.getInt(1),
+                            cursor.getString(2),
+                            cursor.getInt(3),
+                            cursor.getString(4),
+                            cursor.getInt(5)==1 ? Action.ALLOW : Action.DENY,
+                            cursor.getString(6),
+                            cursor.getInt(7),
+                            cursor.getString(8),
+                            cursor.getInt(9)==1 ? true : false));
                 } while (cursor.moveToNext());
             }
         } catch (SQLException e) {
@@ -1515,11 +1536,16 @@ public class MithrilDBHelper extends SQLiteOpenHelper {
         ArrayList<PolicyRule> policyRules = new ArrayList<>();
         // Select Policy Query
         String selectQuery = "SELECT " +
-                getPolicyRulesTableName() + "." + POLRULNAME + ", " +
+                getPolicyRulesTableName() + "." + POLRULID + ", " +
                 getPolicyRulesTableName() + "." + POLRULAPPID + ", " +
+                getPolicyRulesTableName() + "." + POLRULAPPSTR + ", " +
                 getPolicyRulesTableName() + "." + POLRULCTXID + ", " +
+                getPolicyRulesTableName() + "." + POLRULCTXSTR + ", " +
                 getPolicyRulesTableName() + "." + POLRULACTIN + ", " +
-                getPolicyRulesTableName() + "." + POLRULOP +
+                getPolicyRulesTableName() + "." + POLRULACTSTR + ", " +
+                getPolicyRulesTableName() + "." + POLRULOPID + ", " +
+                getPolicyRulesTableName() + "." + POLRULOPSTR  + ", " +
+                getPolicyRulesTableName() + "." + POLRULENABLED +
                 " FROM " +
                 getPolicyRulesTableName() + ", " + getAppsTableName() + ", " + getContextTableName() +
                 " WHERE " +
@@ -1537,18 +1563,18 @@ public class MithrilDBHelper extends SQLiteOpenHelper {
             // looping through all rows and adding to list
             if (cursor.moveToFirst()) {
                 do {
-                    PolicyRule policyRule = new PolicyRule();
-                    policyRule.setName(cursor.getString(0));
-                    policyRule.setAppId(Integer.parseInt(cursor.getString(1)));
-                    policyRule.setCtxId(Integer.parseInt(cursor.getString(2)));
-                    if (Integer.parseInt(cursor.getString(3)) == 1)
-                        policyRule.setAction(Action.ALLOW);
-                    else
-                        policyRule.setAction(Action.DENY);
-                    policyRule.setOp(cursor.getInt(4));
-
                     // Adding policies to list
-                    policyRules.add(policyRule);
+                    policyRules.add(new PolicyRule(
+                            cursor.getInt(0),
+                            cursor.getInt(1),
+                            cursor.getString(2),
+                            cursor.getInt(3),
+                            cursor.getString(4),
+                            cursor.getInt(5)==1 ? Action.ALLOW : Action.DENY,
+                            cursor.getString(6),
+                            cursor.getInt(7),
+                            cursor.getString(8),
+                            cursor.getInt(9)==1 ? true : false));
                 } while (cursor.moveToNext());
             }
         } catch (SQLException e) {
@@ -1569,15 +1595,20 @@ public class MithrilDBHelper extends SQLiteOpenHelper {
         ArrayList<PolicyRule> policyRules = new ArrayList<>();
         // Select Policy Query
         String selectQuery = "SELECT " +
-                getPolicyRulesTableName() + "." + POLRULNAME + ", " +
+                getPolicyRulesTableName() + "." + POLRULID + ", " +
                 getPolicyRulesTableName() + "." + POLRULAPPID + ", " +
+                getPolicyRulesTableName() + "." + POLRULAPPSTR + ", " +
                 getPolicyRulesTableName() + "." + POLRULCTXID + ", " +
+                getPolicyRulesTableName() + "." + POLRULCTXSTR + ", " +
                 getPolicyRulesTableName() + "." + POLRULACTIN + ", " +
-                getPolicyRulesTableName() + "." + POLRULOP +
+                getPolicyRulesTableName() + "." + POLRULACTSTR + ", " +
+                getPolicyRulesTableName() + "." + POLRULOPID + ", " +
+                getPolicyRulesTableName() + "." + POLRULOPSTR  + ", " +
+                getPolicyRulesTableName() + "." + POLRULENABLED +
                 " FROM " +
                 getPolicyRulesTableName() + ", " + getAppsTableName() + ", " + getContextTableName() +
                 " WHERE " +
-                getPolicyRulesTableName() + "." + POLRULOP + " = " + operation +
+                getPolicyRulesTableName() + "." + POLRULOPID + " = " + operation +
                 " AND " +
                 getPolicyRulesTableName() + "." + POLRULAPPID + " = " + getAppsTableName() + "." + APPID +
                 " AND " +
@@ -1593,18 +1624,18 @@ public class MithrilDBHelper extends SQLiteOpenHelper {
             // looping through all rows and adding to list
             if (cursor.moveToFirst()) {
                 do {
-                    PolicyRule policyRule = new PolicyRule();
-                    policyRule.setName(cursor.getString(0));
-                    policyRule.setAppId(Integer.parseInt(cursor.getString(1)));
-                    policyRule.setCtxId(Integer.parseInt(cursor.getString(2)));
-                    if (Integer.parseInt(cursor.getString(3)) == 1)
-                        policyRule.setAction(Action.ALLOW);
-                    else
-                        policyRule.setAction(Action.DENY);
-                    policyRule.setOp(cursor.getInt(4));
-
                     // Adding policies to list
-                    policyRules.add(policyRule);
+                    policyRules.add(new PolicyRule(
+                            cursor.getInt(0),
+                            cursor.getInt(1),
+                            cursor.getString(2),
+                            cursor.getInt(3),
+                            cursor.getString(4),
+                            cursor.getInt(5)==1 ? Action.ALLOW : Action.DENY,
+                            cursor.getString(6),
+                            cursor.getInt(7),
+                            cursor.getString(8),
+                            cursor.getInt(9)==1 ? true : false));
                 } while (cursor.moveToNext());
             }
         } catch (SQLException e) {
@@ -1793,21 +1824,29 @@ public class MithrilDBHelper extends SQLiteOpenHelper {
      * method to update single violation
      * Update is being removed because of the foreign key constraint as this causes an SQLException during insertion
      */
-    public int updatePolicyRule(SQLiteDatabase db, String name, int ctxtId, int appId, int op, Action anAction) {
+    public int updatePolicyRule(SQLiteDatabase db, PolicyRule aPolicyRule) {
         ContentValues values = new ContentValues();
-        values.put(POLRULNAME, name);
-        values.put(POLRULAPPID, appId);
-        values.put(POLRULCTXID, ctxtId);
-        values.put(POLRULOP, op);
-        if (anAction == Action.ALLOW)
+        values.put(POLRULID, aPolicyRule.getId());
+        values.put(POLRULAPPID, aPolicyRule.getAppId());
+        values.put(POLRULAPPSTR, aPolicyRule.getAppStr());
+        values.put(POLRULCTXID, aPolicyRule.getCtxId());
+        values.put(POLRULCTXSTR, aPolicyRule.getCtxStr());
+        if (aPolicyRule.getAction() == Action.ALLOW)
             values.put(POLRULACTIN, 1);
-        else if (anAction == Action.DENY)
+        else if (aPolicyRule.getAction() == Action.DENY)
             values.put(POLRULACTIN, 0);
+        values.put(POLRULACTSTR, aPolicyRule.getActStr());
+        values.put(POLRULOPID, aPolicyRule.getOp());
+        values.put(POLRULOPSTR, aPolicyRule.getOpStr());
+        if(aPolicyRule.isEnabled())
+            values.put(POLRULENABLED, 1);
+        else
+            values.put(POLRULENABLED, 0);
         try {
-            return db.update(getPolicyRulesTableName(), values, POLRULNAME + " = ?",
-                    new String[]{name});
+            return db.update(getPolicyRulesTableName(), values, POLRULID + " = ?",
+                    new String[]{String.valueOf(aPolicyRule.getId())});
         } catch (SQLException e) {
-            throw new SQLException("Exception " + e + " error updating Context: " + name);
+            throw new SQLException("Exception " + e + " error updating Context: " + aPolicyRule.getId());
         }
     }
 
@@ -1916,8 +1955,8 @@ public class MithrilDBHelper extends SQLiteOpenHelper {
      */
     public void deletePolicyRuleByName(SQLiteDatabase db, PolicyRule aPolicyRule) {
         try {
-            db.delete(getPolicyRulesTableName(), POLRULNAME + " = ?",
-                    new String[]{aPolicyRule.getName()});
+            db.delete(getPolicyRulesTableName(), POLRULID + " = ?",
+                    new String[]{String.valueOf(aPolicyRule.getId())});
         } catch (SQLException e) {
             throw new SQLException("Could not find " + e);
         }

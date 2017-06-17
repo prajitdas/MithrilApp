@@ -12,94 +12,138 @@ import edu.umbc.ebiquity.mithril.data.model.rules.Action;
 import edu.umbc.ebiquity.mithril.data.model.rules.PolicyRule;
 
 public class DataGenerator {
+    private static Action action = Action.DENY;
     public static PolicyRule generateSocialMediaCameraAccessRuleForHome(SQLiteDatabase mithrilDB, Context context) {
-        return new PolicyRule("Camera used at Home",
-                MithrilDBHelper.getHelper(context).findContextIdByLabelAndType(mithrilDB,
-                        MithrilAC.getPrefHomeLocationKey(),
-                        MithrilAC.getPrefKeyContextTypeLocation()),
+        return new PolicyRule(
+                0,
                 MithrilDBHelper.getHelper(context).findAppIdByName(mithrilDB, "com.twitter.android"),
-                Action.DENY,
-                AppOpsManager.permissionToOpCode(android.Manifest.permission.CAMERA));
+                "Twitter",
+                MithrilDBHelper.getHelper(context).findContextIdByLabelAndType(mithrilDB, MithrilAC.getPrefHomeLocationKey(), MithrilAC.getPrefKeyContextTypeLocation()),
+                MithrilAC.getPrefHomeLocationKey(),
+                action,
+                action.getActionString(),
+                AppOpsManager.permissionToOpCode(android.Manifest.permission.CAMERA),
+                AppOpsManager.opToPermission(AppOpsManager.permissionToOpCode(android.Manifest.permission.CAMERA)),
+                true
+        );
     }
 
     public static PolicyRule generateSocialMediaLocationAccessRuleForHome(SQLiteDatabase mithrilDB, Context context) {
-        Log.d(MithrilAC.getDebugTag(), MithrilAC.getPrefHomeLocationKey() + MithrilAC.getPrefKeyContextTypeLocation());
-        return new PolicyRule("Location accessed at Home",
-                MithrilDBHelper.getHelper(context).findContextIdByLabelAndType(mithrilDB,
-                        MithrilAC.getPrefHomeLocationKey(),
-                        MithrilAC.getPrefKeyContextTypeLocation()),
+        return new PolicyRule(
+                0,
                 MithrilDBHelper.getHelper(context).findAppIdByName(mithrilDB, "com.twitter.android"),
-                Action.DENY,
-                AppOpsManager.permissionToOpCode(Manifest.permission.ACCESS_FINE_LOCATION));
+                "Twitter",
+                MithrilDBHelper.getHelper(context).findContextIdByLabelAndType(mithrilDB, MithrilAC.getPrefHomeLocationKey(), MithrilAC.getPrefKeyContextTypeLocation()),
+                MithrilAC.getPrefHomeLocationKey(),
+                action,
+                action.getActionString(),
+                AppOpsManager.permissionToOpCode(android.Manifest.permission.ACCESS_FINE_LOCATION),
+                AppOpsManager.opToPermission(AppOpsManager.permissionToOpCode(android.Manifest.permission.ACCESS_FINE_LOCATION)),
+                true
+        );
     }
 
     public static PolicyRule generateSocialMediaCameraAccessRuleForWork(SQLiteDatabase mithrilDB, Context context) {
-        return new PolicyRule("Camera used at Work",
-                MithrilDBHelper.getHelper(context).findContextIdByLabelAndType(mithrilDB,
-                        MithrilAC.getPrefWorkLocationKey(),
-                        MithrilAC.getPrefKeyContextTypeLocation()),
+        return new PolicyRule(
+                0,
                 MithrilDBHelper.getHelper(context).findAppIdByName(mithrilDB, "com.twitter.android"),
-                Action.DENY,
-                AppOpsManager.permissionToOpCode(android.Manifest.permission.CAMERA));
+                "Twitter",
+                MithrilDBHelper.getHelper(context).findContextIdByLabelAndType(mithrilDB, MithrilAC.getPrefWorkLocationKey(), MithrilAC.getPrefKeyContextTypeLocation()),
+                MithrilAC.getPrefWorkLocationKey(),
+                action,
+                action.getActionString(),
+                AppOpsManager.permissionToOpCode(android.Manifest.permission.CAMERA),
+                AppOpsManager.opToPermission(AppOpsManager.permissionToOpCode(android.Manifest.permission.CAMERA)),
+                true
+        );
     }
 
     public static PolicyRule generateSocialMediaLocationAccessRuleForWork(SQLiteDatabase mithrilDB, Context context) {
-        return new PolicyRule("Location accessed at Work",
-                MithrilDBHelper.getHelper(context).findContextIdByLabelAndType(mithrilDB,
-                        MithrilAC.getPrefWorkLocationKey(),
-                        MithrilAC.getPrefKeyContextTypeLocation()),
+        return new PolicyRule(
+                0,
                 MithrilDBHelper.getHelper(context).findAppIdByName(mithrilDB, "com.twitter.android"),
-                Action.DENY,
-                AppOpsManager.permissionToOpCode(Manifest.permission.ACCESS_FINE_LOCATION));
+                "Twitter",
+                MithrilDBHelper.getHelper(context).findContextIdByLabelAndType(mithrilDB, MithrilAC.getPrefWorkLocationKey(), MithrilAC.getPrefKeyContextTypeLocation()),
+                MithrilAC.getPrefWorkLocationKey(),
+                action,
+                action.getActionString(),
+                AppOpsManager.permissionToOpCode(android.Manifest.permission.ACCESS_FINE_LOCATION),
+                AppOpsManager.opToPermission(AppOpsManager.permissionToOpCode(android.Manifest.permission.ACCESS_FINE_LOCATION)),
+                true
+        );
     }
 
     public static PolicyRule generateEmailClientLocationAccessRuleForWork(SQLiteDatabase mithrilDB, Context context) {
-        return new PolicyRule("Location accessed at Work",
-                MithrilDBHelper.getHelper(context).findContextIdByLabelAndType(mithrilDB,
-                        MithrilAC.getPrefWorkLocationKey(),
-                        MithrilAC.getPrefKeyContextTypeLocation()),
+        return new PolicyRule(
+                0,
                 MithrilDBHelper.getHelper(context).findAppIdByName(mithrilDB, "com.google.android.gm"),
-                Action.DENY,
-                AppOpsManager.permissionToOpCode(Manifest.permission.ACCESS_FINE_LOCATION));
+                "Gmail",
+                MithrilDBHelper.getHelper(context).findContextIdByLabelAndType(mithrilDB, MithrilAC.getPrefWorkLocationKey(), MithrilAC.getPrefKeyContextTypeLocation()),
+                MithrilAC.getPrefWorkLocationKey(),
+                action,
+                action.getActionString(),
+                AppOpsManager.permissionToOpCode(android.Manifest.permission.ACCESS_FINE_LOCATION),
+                AppOpsManager.opToPermission(AppOpsManager.permissionToOpCode(android.Manifest.permission.ACCESS_FINE_LOCATION)),
+                true
+        );
     }
 
     public static PolicyRule generateEmailClientReadContactsAccessRuleForWork(SQLiteDatabase mithrilDB, Context context) {
-        return new PolicyRule("Contacts read at Work",
-                MithrilDBHelper.getHelper(context).findContextIdByLabelAndType(mithrilDB,
-                        MithrilAC.getPrefWorkLocationKey(),
-                        MithrilAC.getPrefKeyContextTypeLocation()),
+        return new PolicyRule(
+                0,
                 MithrilDBHelper.getHelper(context).findAppIdByName(mithrilDB, "com.google.android.gm"),
-                Action.DENY,
-                AppOpsManager.permissionToOpCode(Manifest.permission.READ_CONTACTS));
+                "Gmail",
+                MithrilDBHelper.getHelper(context).findContextIdByLabelAndType(mithrilDB, MithrilAC.getPrefWorkLocationKey(), MithrilAC.getPrefKeyContextTypeLocation()),
+                MithrilAC.getPrefWorkLocationKey(),
+                action,
+                action.getActionString(),
+                AppOpsManager.permissionToOpCode(android.Manifest.permission.READ_CONTACTS),
+                AppOpsManager.opToPermission(AppOpsManager.permissionToOpCode(android.Manifest.permission.READ_CONTACTS)),
+                true
+        );
     }
 
     public static PolicyRule generateEmailClientWriteContactsAccessRuleForWork(SQLiteDatabase mithrilDB, Context context) {
-        return new PolicyRule("Contacts saved at Work",
-                MithrilDBHelper.getHelper(context).findContextIdByLabelAndType(mithrilDB,
-                        MithrilAC.getPrefWorkLocationKey(),
-                        MithrilAC.getPrefKeyContextTypeLocation()),
+        return new PolicyRule(
+                0,
                 MithrilDBHelper.getHelper(context).findAppIdByName(mithrilDB, "com.google.android.gm"),
-                Action.DENY,
-                AppOpsManager.permissionToOpCode(Manifest.permission.WRITE_CONTACTS));
+                "Gmail",
+                MithrilDBHelper.getHelper(context).findContextIdByLabelAndType(mithrilDB, MithrilAC.getPrefWorkLocationKey(), MithrilAC.getPrefKeyContextTypeLocation()),
+                MithrilAC.getPrefWorkLocationKey(),
+                action,
+                action.getActionString(),
+                AppOpsManager.permissionToOpCode(android.Manifest.permission.WRITE_CONTACTS),
+                AppOpsManager.opToPermission(AppOpsManager.permissionToOpCode(android.Manifest.permission.WRITE_CONTACTS)),
+                true
+        );
     }
 
     public static PolicyRule generateEmailClientWriteStorageAccessRuleForWork(SQLiteDatabase mithrilDB, Context context) {
-        return new PolicyRule("Saved to phone storage at Work",
-                MithrilDBHelper.getHelper(context).findContextIdByLabelAndType(mithrilDB,
-                        MithrilAC.getPrefWorkLocationKey(),
-                        MithrilAC.getPrefKeyContextTypeLocation()),
+        return new PolicyRule(
+                0,
                 MithrilDBHelper.getHelper(context).findAppIdByName(mithrilDB, "com.google.android.gm"),
-                Action.DENY,
-                AppOpsManager.permissionToOpCode(Manifest.permission.WRITE_EXTERNAL_STORAGE));
+                "Gmail",
+                MithrilDBHelper.getHelper(context).findContextIdByLabelAndType(mithrilDB, MithrilAC.getPrefWorkLocationKey(), MithrilAC.getPrefKeyContextTypeLocation()),
+                MithrilAC.getPrefWorkLocationKey(),
+                action,
+                action.getActionString(),
+                AppOpsManager.permissionToOpCode(android.Manifest.permission.WRITE_EXTERNAL_STORAGE),
+                AppOpsManager.opToPermission(AppOpsManager.permissionToOpCode(android.Manifest.permission.WRITE_EXTERNAL_STORAGE)),
+                true
+        );
     }
 
     public static PolicyRule generateEmailClientReadStorageAccessRuleForWork(SQLiteDatabase mithrilDB, Context context) {
-        return new PolicyRule("Read phone storage at Work",
-                MithrilDBHelper.getHelper(context).findContextIdByLabelAndType(mithrilDB,
-                        MithrilAC.getPrefWorkLocationKey(),
-                        MithrilAC.getPrefKeyContextTypeLocation()),
+        return new PolicyRule(
+                0,
                 MithrilDBHelper.getHelper(context).findAppIdByName(mithrilDB, "com.google.android.gm"),
-                Action.DENY,
-                AppOpsManager.permissionToOpCode(Manifest.permission.READ_EXTERNAL_STORAGE));
+                "Gmail",
+                MithrilDBHelper.getHelper(context).findContextIdByLabelAndType(mithrilDB, MithrilAC.getPrefWorkLocationKey(), MithrilAC.getPrefKeyContextTypeLocation()),
+                MithrilAC.getPrefWorkLocationKey(),
+                action,
+                action.getActionString(),
+                AppOpsManager.permissionToOpCode(android.Manifest.permission.READ_EXTERNAL_STORAGE),
+                AppOpsManager.opToPermission(AppOpsManager.permissionToOpCode(android.Manifest.permission.READ_EXTERNAL_STORAGE)),
+                true);
     }
 }

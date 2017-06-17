@@ -46,7 +46,7 @@ public class ViolationDetector {
         if (rulesForApp.size() > 0) {
             for (PolicyRule rule : rulesForApp) {
                 Log.d(MithrilAC.getDebugTag(), "Found rule: " +
-                        rule.getName() +
+                        rule.toString() +
                         Integer.toString(rule.getCtxId()) +
                         semanticLocation.getInferredLocation());
                 //There is a rule for this app with current context as it's context
@@ -58,7 +58,7 @@ public class ViolationDetector {
                                 new Violation(rule.getAppId(),
                                         rule.getCtxId(),
                                         rule.getOp(),
-                                        rule.getName(),
+                                        rule.toString(),
                                         false,
                                         new Timestamp(System.currentTimeMillis())
                                 )
