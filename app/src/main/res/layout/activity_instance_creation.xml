@@ -6,22 +6,6 @@
     android:layout_height="match_parent"
     tools:context=".ui.activities.InstanceCreationActivity">
 
-    <!--<TextView
-        android:id="@+id/message"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentEnd="true"
-        android:layout_alignParentStart="true"
-        android:layout_alignParentTop="true"
-        android:paddingBottom="@dimen/fab_margin"
-        android:paddingLeft="@dimen/fab_margin"
-        android:paddingRight="@dimen/fab_margin"
-        android:paddingTop="@dimen/fab_margin"
-        android:text="@string/text_instance_creation_location"
-        android:textAlignment="textStart"
-        android:textColor="@color/colorPrimaryText"
-        android:textSize="20sp" />-->
-
     <LinearLayout
         android:id="@+id/buttonLayout"
         android:layout_width="match_parent"
