@@ -4,7 +4,9 @@ package edu.umbc.ebiquity.mithril.data.model.components;
  * Created by Prajit on 1/25/2017.
  */
 
-public class ContentProvData {
+import android.support.annotation.NonNull;
+
+public class ContentProvData implements Comparable<ContentProvData>{
     private String authority;
     private int flags;
     private String writePermission;
@@ -157,5 +159,10 @@ public class ContentProvData {
                 ", packageName='" + packageName + '\'' +
                 ", label='" + label + '\'' +
                 '}';
+    }
+
+    @Override
+    public int compareTo(@NonNull ContentProvData o) {
+        return this.equals(o) ? 0 : 1;
     }
 }

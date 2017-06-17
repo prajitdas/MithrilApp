@@ -15,7 +15,7 @@ public class DataGenerator {
     private static Action action = Action.DENY;
     public static PolicyRule generateSocialMediaCameraAccessRuleForHome(SQLiteDatabase mithrilDB, Context context) {
         return new PolicyRule(
-                0,
+                1,
                 MithrilDBHelper.getHelper(context).findAppIdByName(mithrilDB, "com.twitter.android"),
                 "Twitter",
                 MithrilDBHelper.getHelper(context).findContextIdByLabelAndType(mithrilDB, MithrilAC.getPrefHomeLocationKey(), MithrilAC.getPrefKeyContextTypeLocation()),
@@ -30,7 +30,7 @@ public class DataGenerator {
 
     public static PolicyRule generateSocialMediaLocationAccessRuleForHome(SQLiteDatabase mithrilDB, Context context) {
         return new PolicyRule(
-                0,
+                2,
                 MithrilDBHelper.getHelper(context).findAppIdByName(mithrilDB, "com.twitter.android"),
                 "Twitter",
                 MithrilDBHelper.getHelper(context).findContextIdByLabelAndType(mithrilDB, MithrilAC.getPrefHomeLocationKey(), MithrilAC.getPrefKeyContextTypeLocation()),
@@ -45,7 +45,7 @@ public class DataGenerator {
 
     public static PolicyRule generateSocialMediaCameraAccessRuleForWork(SQLiteDatabase mithrilDB, Context context) {
         return new PolicyRule(
-                0,
+                3,
                 MithrilDBHelper.getHelper(context).findAppIdByName(mithrilDB, "com.twitter.android"),
                 "Twitter",
                 MithrilDBHelper.getHelper(context).findContextIdByLabelAndType(mithrilDB, MithrilAC.getPrefWorkLocationKey(), MithrilAC.getPrefKeyContextTypeLocation()),
@@ -60,7 +60,7 @@ public class DataGenerator {
 
     public static PolicyRule generateSocialMediaLocationAccessRuleForWork(SQLiteDatabase mithrilDB, Context context) {
         return new PolicyRule(
-                0,
+                4,
                 MithrilDBHelper.getHelper(context).findAppIdByName(mithrilDB, "com.twitter.android"),
                 "Twitter",
                 MithrilDBHelper.getHelper(context).findContextIdByLabelAndType(mithrilDB, MithrilAC.getPrefWorkLocationKey(), MithrilAC.getPrefKeyContextTypeLocation()),
@@ -75,7 +75,7 @@ public class DataGenerator {
 
     public static PolicyRule generateEmailClientLocationAccessRuleForWork(SQLiteDatabase mithrilDB, Context context) {
         return new PolicyRule(
-                0,
+                5,
                 MithrilDBHelper.getHelper(context).findAppIdByName(mithrilDB, "com.google.android.gm"),
                 "Gmail",
                 MithrilDBHelper.getHelper(context).findContextIdByLabelAndType(mithrilDB, MithrilAC.getPrefWorkLocationKey(), MithrilAC.getPrefKeyContextTypeLocation()),
@@ -90,7 +90,7 @@ public class DataGenerator {
 
     public static PolicyRule generateEmailClientReadContactsAccessRuleForWork(SQLiteDatabase mithrilDB, Context context) {
         return new PolicyRule(
-                0,
+                6,
                 MithrilDBHelper.getHelper(context).findAppIdByName(mithrilDB, "com.google.android.gm"),
                 "Gmail",
                 MithrilDBHelper.getHelper(context).findContextIdByLabelAndType(mithrilDB, MithrilAC.getPrefWorkLocationKey(), MithrilAC.getPrefKeyContextTypeLocation()),
@@ -105,7 +105,7 @@ public class DataGenerator {
 
     public static PolicyRule generateEmailClientWriteContactsAccessRuleForWork(SQLiteDatabase mithrilDB, Context context) {
         return new PolicyRule(
-                0,
+                7,
                 MithrilDBHelper.getHelper(context).findAppIdByName(mithrilDB, "com.google.android.gm"),
                 "Gmail",
                 MithrilDBHelper.getHelper(context).findContextIdByLabelAndType(mithrilDB, MithrilAC.getPrefWorkLocationKey(), MithrilAC.getPrefKeyContextTypeLocation()),
@@ -120,7 +120,7 @@ public class DataGenerator {
 
     public static PolicyRule generateEmailClientWriteStorageAccessRuleForWork(SQLiteDatabase mithrilDB, Context context) {
         return new PolicyRule(
-                0,
+                8,
                 MithrilDBHelper.getHelper(context).findAppIdByName(mithrilDB, "com.google.android.gm"),
                 "Gmail",
                 MithrilDBHelper.getHelper(context).findContextIdByLabelAndType(mithrilDB, MithrilAC.getPrefWorkLocationKey(), MithrilAC.getPrefKeyContextTypeLocation()),
@@ -135,7 +135,7 @@ public class DataGenerator {
 
     public static PolicyRule generateEmailClientReadStorageAccessRuleForWork(SQLiteDatabase mithrilDB, Context context) {
         return new PolicyRule(
-                0,
+                9,
                 MithrilDBHelper.getHelper(context).findAppIdByName(mithrilDB, "com.google.android.gm"),
                 "Gmail",
                 MithrilDBHelper.getHelper(context).findContextIdByLabelAndType(mithrilDB, MithrilAC.getPrefWorkLocationKey(), MithrilAC.getPrefKeyContextTypeLocation()),

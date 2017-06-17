@@ -129,6 +129,7 @@ public class MithrilDBHelper extends SQLiteOpenHelper {
     private final static String PERMDESC = "description";
     private final static String PERMICON = "icon";
     private final static String PERMOP = "op";
+    private final static String PERMRISK = "risklvl";
     private final static String CREATE_PERMISSIONS_TABLE = "CREATE TABLE " + getPermissionsTableName() + " (" +
             PERMID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
             PERMNAME + " TEXT NOT NULL, " +
@@ -139,6 +140,7 @@ public class MithrilDBHelper extends SQLiteOpenHelper {
             PERMDESC + " TEXT NULL, " +
             PERMICON + " BLOB, " +
             PERMOP + " INTEGER NOT NULL DEFAULT -1, " +
+            PERMRISK + " INTEGER NOT NULL DEFAULT 0, " +
             "CONSTRAINT permissions_unique_name UNIQUE(" + PERMNAME + ") ON CONFLICT ABORT);";
     /**
      * -- Table 3: appperm
