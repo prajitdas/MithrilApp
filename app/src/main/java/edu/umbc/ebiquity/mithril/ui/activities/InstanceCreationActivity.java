@@ -814,14 +814,14 @@ public class InstanceCreationActivity extends AppCompatActivity
         // Create an intent for passing to the intent service responsible for fetching the address.
         Intent intent = new Intent(this, FetchAddressIntentService.class);
 
-        intent.putExtra(MithrilAC.ADDRESS_REQUESTED_EXTRA, mAddressRequested);
-        intent.putExtra(MithrilAC.ADDRESS_KEY, key);
+        intent.putExtra(MithrilAC.getAddressRequestedExtra(), mAddressRequested);
+        intent.putExtra(MithrilAC.getAddressKey(), key);
 
         // Pass the result receiver as an extra to the service.
-        intent.putExtra(MithrilAC.RECEIVER, mAddressResultReceiver);
+        intent.putExtra(MithrilAC.getReceiver(), mAddressResultReceiver);
 
         // Pass the location data as an extra to the service.
-        intent.putExtra(MithrilAC.LOCATION_DATA_EXTRA, location);
+        intent.putExtra(MithrilAC.getLocationDataExtra(), location);
 
         // Start the service. If the service isn't already running, it is instantiated and started
         // (creating a process for it if needed); if it is running then it remains running. The
@@ -923,8 +923,8 @@ public class InstanceCreationActivity extends AppCompatActivity
 
         @Override
         protected void onReceiveResult(int resultCode, Bundle resultData) {
-            mAddressRequested = resultData.getBoolean(MithrilAC.ADDRESS_REQUESTED_EXTRA, false);
-            String key = resultData.getString(MithrilAC.ADDRESS_KEY, null);
+            mAddressRequested = resultData.getBoolean(MithrilAC.getAddressRequestedExtra(), false);
+            String key = resultData.getString(MithrilAC.getAddressKey(), null);
             if (key.equals(null))
                 throw new AddressKeyMissingError();
             else
@@ -935,14 +935,14 @@ public class InstanceCreationActivity extends AppCompatActivity
             // Display the address string
             // or an error message sent from the intent service.
             Gson gson = new Gson();
-            String json = resultData.getString(MithrilAC.RESULT_DATA_KEY, "");
+            String json = resultData.getString(MithrilAC.getResultDataKey(), "");
             try {
                 mAddressOutput = gson.fromJson(json, Address.class);
             } catch (JsonSyntaxException e) {
                 Log.d(MithrilAC.getDebugTag(), e.getMessage());
             }
 
-            Log.d(MithrilAC.getDebugTag(), "Prefs address " + resultData.getString(MithrilAC.ADDRESS_KEY) + mAddressRequested + key + json);
+            Log.d(MithrilAC.getDebugTag(), "Prefs address " + resultData.getString(MithrilAC.getAddressKey()) + mAddressRequested + key + json);
             // Show a toast message if an address was found.
             if (resultCode == MithrilAC.SUCCESS_RESULT) {
                 SemanticLocation tempSemanticLocation = null;

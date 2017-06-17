@@ -30,15 +30,15 @@ public class MithrilAC extends Application {
 
     public static final String MITHRIL_BYE_BYE_MESSAGE = "Bye! Thanks for helping with our survey...";
 
-    public static final String RECEIVER = MITHRIL_APP_PACKAGE_NAME + ".RECEIVER";
-    public static final String RESULT_DATA_KEY = MITHRIL_APP_PACKAGE_NAME + ".RESULT_DATA_KEY";
-    public static final String ADDRESS_REQUESTED_EXTRA = "ADDRESS_REQUESTED_EXTRA";
-    public static final String LOCATION_DATA_EXTRA = MITHRIL_APP_PACKAGE_NAME + ".LOCATION_DATA_EXTRA";
-    public static final String GEOFENCES_ADDED_KEY = MITHRIL_APP_PACKAGE_NAME + ".GEOFENCES_ADDED_KEY";
-    public static final String ADDRESS_KEY = "ADDRESS_KEY";
-    public static final String NO_FLAGS = "no-flags";
-    public static final String NORMAL_PROTECTION_LEVEL = "normal";
-    public static final float GEOFENCE_RADIUS_IN_METERS = 200; // 200 meters
+    private static final String RECEIVER = MITHRIL_APP_PACKAGE_NAME + ".RECEIVER";
+    private static final String RESULT_DATA_KEY = MITHRIL_APP_PACKAGE_NAME + ".RESULT_DATA_KEY";
+    private static final String ADDRESS_REQUESTED_EXTRA = "ADDRESS_REQUESTED_EXTRA";
+    private static final String LOCATION_DATA_EXTRA = MITHRIL_APP_PACKAGE_NAME + ".LOCATION_DATA_EXTRA";
+    private static final String GEOFENCES_ADDED_KEY = MITHRIL_APP_PACKAGE_NAME + ".GEOFENCES_ADDED_KEY";
+    private static final String ADDRESS_KEY = "ADDRESS_KEY";
+    private static final String NO_FLAGS = "no-flags";
+    private static final String NORMAL_PROTECTION_LEVEL = "normal";
+    private static final float GEOFENCE_RADIUS_IN_METERS = 200; // 200 meters
     /**
      * Map for storing information about airports in the San Francisco bay area.
      */
@@ -141,8 +141,21 @@ public class MithrilAC extends Application {
 
     private static final String PREF_HOME_LOCATION_KEY = "Home";
     private static final String PREF_WORK_LOCATION_KEY = "Work";
-    private static final String PREF_WORK_TEMPORAL_KEY = "Work";
-    private static final String PREF_DND_TEMPORAL_KEY = "DND";
+
+    private static final String PREF_TIME_INSTANT_SUNRISE_TEMPORAL_KEY = "Sunrise"; //Sunrise in a locale
+    private static final String PREF_TIME_INSTANT_SUNSET_TEMPORAL_KEY = "Sunset"; // Sunset in a locale
+    private static final String PREF_TIME_INTERVAL_WEEKEND_TEMPORAL_KEY = "Weekend"; //Saturday - Sunday
+    private static final String PREF_TIME_INTERVAL_WEEKDAY_TEMPORAL_KEY = "Weekday"; //Monday - Friday
+    private static final String PREF_TIME_INTERVAL_WORK_TEMPORAL_KEY = "Work"; //0900 - 1700
+    private static final String PREF_TIME_INTERVAL_DND_TEMPORAL_KEY = "DND"; //2100 - 0800
+    private static final String PREF_TIME_INTERVAL_MORNING_TEMPORAL_KEY = "Morning"; //0800 - 1200
+    private static final String PREF_TIME_INTERVAL_BREAKFAST_TEMPORAL_KEY = "Breakfast"; //0800 - 0830
+    private static final String PREF_TIME_INTERVAL_AFTERNOON_TEMPORAL_KEY = "Afternoon"; //1200 - 1600
+    private static final String PREF_TIME_INTERVAL_LUNCH_TEMPORAL_KEY = "Lunch"; //1200 - 1230
+    private static final String PREF_TIME_INTERVAL_EVENING_TEMPORAL_KEY = "Evening"; //1600 - 2100
+    private static final String PREF_TIME_INTERVAL_DINNER_TEMPORAL_KEY = "Dinner"; //1900 - 1930
+    private static final String PREF_TIME_INTERVAL_NIGHT_TEMPORAL_KEY = "Night"; //2100 - 0800
+    private static final String PREF_TIME_INTERVAL_HOLIDAY_TEMPORAL_KEY = "Holiday"; //Official holiday
 
     private static final String PREF_MONDAY = "Monday";
     private static final String PREF_TUESDAY = "Tuesday";
@@ -679,6 +692,41 @@ public class MithrilAC extends Application {
         return SHARED_PREFERENCES_NAME;
     }
 
+    public static String getReceiver() {
+        return RECEIVER;
+    }
+
+    public static String getResultDataKey() {
+        return RESULT_DATA_KEY;
+    }
+
+    public static String getLocationDataExtra() {
+        return LOCATION_DATA_EXTRA;
+    }
+
+    public static String getGeofencesAddedKey() {
+        return GEOFENCES_ADDED_KEY;
+    }
+
+    public static String getNoFlags() {
+        return NO_FLAGS;
+    }
+
+    public static String getNormalProtectionLevel() {
+        return NORMAL_PROTECTION_LEVEL;
+    }
+
+    public static float getGeofenceRadiusInMeters() {
+        return GEOFENCE_RADIUS_IN_METERS;
+    }
+
+    public static String getAddressRequestedExtra() {
+        return ADDRESS_REQUESTED_EXTRA;
+    }
+
+    public static String getAddressKey() {
+        return ADDRESS_KEY;
+    }
 
     public static String getPrefKeyContextTypeLocation() {
         return PREF_KEY_CONTEXT_TYPE_LOCATION;
@@ -696,12 +744,12 @@ public class MithrilAC extends Application {
         return PREF_KEY_CONTEXT_TYPE_PRESENCE;
     }
 
-    public static String getPrefWorkTemporalKey() {
-        return PREF_WORK_TEMPORAL_KEY;
+    public static String getPrefTimeIntervalWorkTemporalKey() {
+        return PREF_TIME_INTERVAL_WORK_TEMPORAL_KEY;
     }
 
-    public static String getPrefDndTemporalKey() {
-        return PREF_DND_TEMPORAL_KEY;
+    public static String getPrefTimeIntervalDndTemporalKey() {
+        return PREF_TIME_INTERVAL_DND_TEMPORAL_KEY;
     }
 
     public static long getDefaultTimeSlot() {
@@ -1030,6 +1078,103 @@ public class MithrilAC extends Application {
 
     public static String getCmdRevokeManageAppOpsRestrictions() {
         return CMD_REVOKE_MANAGE_APP_OPS_RESTRICTIONS;
+    }
+
+
+    public static String getCalendarPermissionGroupDesc() {
+        return CALENDAR_PERMISSION_GROUP_DESC;
+    }
+
+    public static String getCameraPermissionGroupDesc() {
+        return CAMERA_PERMISSION_GROUP_DESC;
+    }
+
+    public static String getContactsPermissionGroupDesc() {
+        return CONTACTS_PERMISSION_GROUP_DESC;
+    }
+
+    public static String getLocationPermissionGroupDesc() {
+        return LOCATION_PERMISSION_GROUP_DESC;
+    }
+
+    public static String getMicrophonePermissionGroupDesc() {
+        return MICROPHONE_PERMISSION_GROUP_DESC;
+    }
+
+    public static String getPhonePermissionGroupDesc() {
+        return PHONE_PERMISSION_GROUP_DESC;
+    }
+
+    public static String getSensorsPermissionGroupDesc() {
+        return SENSORS_PERMISSION_GROUP_DESC;
+    }
+
+    public static String getSmsPermissionGroupDesc() {
+        return SMS_PERMISSION_GROUP_DESC;
+    }
+
+    public static String getStoragePermissionGroupDesc() {
+        return STORAGE_PERMISSION_GROUP_DESC;
+    }
+
+    public static String getSystemToolsPermissionGroupDesc() {
+        return SYSTEM_TOOLS_PERMISSION_GROUP_DESC;
+    }
+
+    public static String getCarInformationPermissionGroupDesc() {
+        return CAR_INFORMATION_PERMISSION_GROUP_DESC;
+    }
+
+    public static String getNoPermissionGroupDesc() {
+        return NO_PERMISSION_GROUP_DESC;
+    }
+
+    public static String getPrefTimeIntervalWeekendTemporalKey() {
+        return PREF_TIME_INTERVAL_WEEKEND_TEMPORAL_KEY;
+    }
+
+    public static String getPrefTimeIntervalWeekdayTemporalKey() {
+        return PREF_TIME_INTERVAL_WEEKDAY_TEMPORAL_KEY;
+    }
+
+    public static String getPrefTimeInstantSunriseTemporalKey() {
+        return PREF_TIME_INSTANT_SUNRISE_TEMPORAL_KEY;
+    }
+
+    public static String getPrefTimeInstantSunsetTemporalKey() {
+        return PREF_TIME_INSTANT_SUNSET_TEMPORAL_KEY;
+    }
+
+    public static String getPrefTimeIntervalAfternoonTemporalKey() {
+        return PREF_TIME_INTERVAL_AFTERNOON_TEMPORAL_KEY;
+    }
+
+    public static String getPrefTimeIntervalEveningTemporalKey() {
+        return PREF_TIME_INTERVAL_EVENING_TEMPORAL_KEY;
+    }
+
+    public static String getPrefTimeIntervalHolidayTemporalKey() {
+        return PREF_TIME_INTERVAL_HOLIDAY_TEMPORAL_KEY;
+    }
+
+    public static String getPrefTimeIntervalMorningTemporalKey() {
+        return PREF_TIME_INTERVAL_MORNING_TEMPORAL_KEY;
+    }
+
+    public static String getPrefTimeIntervalNightTemporalKey() {
+        return PREF_TIME_INTERVAL_NIGHT_TEMPORAL_KEY;
+    }
+
+    public static String getPrefTimeIntervalBreakfastTemporalKey() {
+        return PREF_TIME_INTERVAL_BREAKFAST_TEMPORAL_KEY;
+    }
+
+    public static String getPrefTimeIntervalLunchTemporalKey() {
+        return PREF_TIME_INTERVAL_LUNCH_TEMPORAL_KEY;
+    }
+
+    public static String getPrefTimeIntervalDinnerTemporalKey() {
+        return PREF_TIME_INTERVAL_DINNER_TEMPORAL_KEY;
     }
 
     public static String getCmdRootPrivilege() {

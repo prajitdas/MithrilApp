@@ -29,6 +29,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import edu.umbc.ebiquity.mithril.BuildConfig;
 import edu.umbc.ebiquity.mithril.MithrilAC;
 import edu.umbc.ebiquity.mithril.R;
 import edu.umbc.ebiquity.mithril.data.model.components.AppData;
@@ -134,9 +135,9 @@ public class MithrilDBHelper extends SQLiteOpenHelper {
             PERMID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
             PERMNAME + " TEXT NOT NULL, " +
             PERMLABEL + " TEXT NULL, " +
-            PERMPROTECTIONLEVEL + " TEXT NOT NULL DEFAULT '" + MithrilAC.NORMAL_PROTECTION_LEVEL + "', " +
+            PERMPROTECTIONLEVEL + " TEXT NOT NULL DEFAULT '" + MithrilAC.getNormalProtectionLevel() + "', " +
             PERMGROUP + " TEXT NOT NULL DEFAULT '" + MithrilAC.NO_PERMISSION_GROUP.first + "', " +
-            PERMFLAG + " TEXT NOT NULL DEFAULT '" + MithrilAC.NO_FLAGS + "', " +
+            PERMFLAG + " TEXT NOT NULL DEFAULT '" + MithrilAC.getNoFlags() + "', " +
             PERMDESC + " TEXT NULL, " +
             PERMICON + " BLOB, " +
             PERMOP + " INTEGER NOT NULL DEFAULT -1, " +
@@ -220,7 +221,8 @@ public class MithrilDBHelper extends SQLiteOpenHelper {
     private final static String POLRULAPPSTR = "appstr"; // App string
     private final static String POLRULCTXSTR = "ctxstr"; // context string
     private final static String POLRULOPSTR = "opstr"; // operation string
-    private final static String POLRULENABLED = "enabled"; // policy enabled or not
+    private final static String POLRULENABLED = "enabled"; // policy enabled or not; a policy is enabled when the user verifies and approves it
+    //if a user verifies a policy then that policy has preceedence for conflict resolution
     private final static String CREATE_POLICY_RULES_TABLE = "CREATE TABLE " + getPolicyRulesTableName() + " (" +
             POLRULID + " INTEGER NOT NULL, " +
             POLRULACTIN + " INTEGER NOT NULL, " +
@@ -529,18 +531,25 @@ public class MithrilDBHelper extends SQLiteOpenHelper {
         loadAndroidPermissionsIntoDB(db);
         //Load all the apps and app permissions that are known for this device into the database. We will refer to them in the future.
         loadRealAppDataIntoDB(db);
+        //We have to get the policies from somewhere. The best case scenario would be a server that gives us the policies.
+        loadPoliciesForApps(db);
+    }
+
+    public void loadPoliciesForApps(SQLiteDatabase db) {
+        if(BuildConfig.DEBUG)
+            loadDefaultDataIntoDB(db);
     }
 
     private void loadDefaultDataIntoDB(SQLiteDatabase db) throws SQLException {
-        addPolicyRule(db, DataGenerator.generateSocialMediaCameraAccessRuleForHome(db, context));
-        addPolicyRule(db, DataGenerator.generateSocialMediaLocationAccessRuleForHome(db, context));
-        addPolicyRule(db, DataGenerator.generateSocialMediaCameraAccessRuleForWork(db, context));
-        addPolicyRule(db, DataGenerator.generateSocialMediaLocationAccessRuleForWork(db, context));
-        addPolicyRule(db, DataGenerator.generateEmailClientLocationAccessRuleForWork(db, context));
-        addPolicyRule(db, DataGenerator.generateEmailClientReadContactsAccessRuleForWork(db, context));
-        addPolicyRule(db, DataGenerator.generateEmailClientWriteContactsAccessRuleForWork(db, context));
-        addPolicyRule(db, DataGenerator.generateEmailClientReadStorageAccessRuleForWork(db, context));
-        addPolicyRule(db, DataGenerator.generateEmailClientWriteStorageAccessRuleForWork(db, context));
+        DataGenerator.setPolicySocialMediaCameraAccessAtHomeOnWeekends(db, context);
+        DataGenerator.setPolicySocialMediaCameraAccessAtWorkOnWeekdaysDuringLunchHours(db, context);
+        DataGenerator.setPolicySocialMediaLocationAccessAtHomeOnWeekdaysDuringEveningHours(db, context);
+        DataGenerator.setPolicyChatAppsReadSmsAccessAtWork(db, context);
+        DataGenerator.setPolicyChatAppsWriteSmsAccessAtWork(db, context);
+        DataGenerator.setPolicyChatAppsReceiveSmsAccessAtWork(db, context);
+        DataGenerator.setPolicyChatAppsSendSmsAccessAtWork(db, context);
+        DataGenerator.setPolicyEmailClientsReadCalendarAccessAtWorkDuringWeekdays(db, context);
+        DataGenerator.setPolicyEmailClientsWriteCalendarAccessAtWorkDuringWeekdays(db, context);
     }
 
     private void insertHardcodedGooglePermissions(SQLiteDatabase db) {
@@ -612,7 +621,13 @@ public class MithrilDBHelper extends SQLiteOpenHelper {
                         tempAppData.setAppName(pack.applicationInfo.loadLabel(packageManager).toString());
 
                         //App package name
-                        tempAppData.setPackageName(pack.packageName);
+                        tempA    public void loadPoliciesForApps(SQLiteDatabase db) {
+        //We have to get the policies from somewhere. The best case scenario would be a server that gives us the policies.
+        if(BuildConfig.DEBUG)
+            loadDefaultDataIntoDB(db);
+    }
+
+ppData.setPackageName(pack.packageName);
 //                        Log.d(MithrilAC.getDebugTag(), "Inserting app: "+pack.packageName+" into the DB!");
 
                         //App version info
@@ -679,11 +694,6 @@ public class MithrilDBHelper extends SQLiteOpenHelper {
                 }
             }
         }
-    }
-
-    public void loadPoliciesForApps(SQLiteDatabase db) {
-        //We have to get the policies from somewhere. The best case scenario would be a server that gives us the policies.
-        loadDefaultDataIntoDB(db);
     }
 
     private PermData getPermData(PackageManager packageManager, String groupName, PermissionInfo permissionInfo) {
@@ -1670,8 +1680,6 @@ public class MithrilDBHelper extends SQLiteOpenHelper {
             if (cursor.moveToFirst()) {
                 if (cursor.getInt(1) == 1)
                     return Action.ALLOW;
-                else if (cursor.getInt(1) == 2)
-                    return Action.ALLOW_WITH_CAVEAT;
                 else
                     return Action.DENY;
             }

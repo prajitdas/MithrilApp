@@ -50,10 +50,10 @@ public class FetchAddressIntentService extends IntentService {
      */
     @Override
     protected void onHandleIntent(Intent intent) {
-        addressKey = intent.getStringExtra(MithrilAC.ADDRESS_KEY);
+        addressKey = intent.getStringExtra(MithrilAC.getAddressKey());
         String errorMessage = "";
 
-        mReceiver = intent.getParcelableExtra(MithrilAC.RECEIVER);
+        mReceiver = intent.getParcelableExtra(MithrilAC.getReceiver());
         // Check if receiver was properly registered.
         if (mReceiver == null) {
 //            Log.wtf(MithrilAC.getDebugTag(), "No receiver received. There is nowhere to send the results.");
@@ -61,7 +61,7 @@ public class FetchAddressIntentService extends IntentService {
         }
 
         // Get the location passed to this service through an extra.
-        Location location = intent.getParcelableExtra(MithrilAC.LOCATION_DATA_EXTRA);
+        Location location = intent.getParcelableExtra(MithrilAC.getLocationDataExtra());
         // Make sure that the location data was really sent over through an extra. If it wasn't,
         // send an error error message and return.
         if (location == null) {
@@ -148,8 +148,8 @@ public class FetchAddressIntentService extends IntentService {
      */
     private void deliverResultToReceiver(int resultCode, String message) {
         Bundle bundle = new Bundle();
-        bundle.putString(MithrilAC.RESULT_DATA_KEY, message);
-        bundle.putString(MithrilAC.ADDRESS_KEY, addressKey);
+        bundle.putString(MithrilAC.getResultDataKey(), message);
+        bundle.putString(MithrilAC.getAddressKey(), addressKey);
 
         mReceiver.send(resultCode, bundle);
     }

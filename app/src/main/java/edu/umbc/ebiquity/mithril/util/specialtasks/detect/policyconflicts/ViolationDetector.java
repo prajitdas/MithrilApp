@@ -6,7 +6,9 @@ import android.util.Log;
 
 import java.sql.Timestamp;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import edu.umbc.ebiquity.mithril.MithrilAC;
 import edu.umbc.ebiquity.mithril.data.dbhelpers.MithrilDBHelper;
@@ -40,6 +42,7 @@ public class ViolationDetector {
 //                MithrilDBHelper.getHelper(context).findCurrentContextFromLogs(mithrilDB);
         currentContext.add(MithrilDBHelper.getHelper(context).findContextIdByLabelAndType(mithrilDB, semanticLocation.getLabel(), semanticLocation.getType()));
 
+        Map<Integer, List<Integer>> policyMap = new HashMap<>();
 //        try {
         List<PolicyRule> rulesForApp = MithrilDBHelper.getHelper(context).findAllPoliciesForAppWhenPerformingOp(mithrilDB, currentPackageName, operationPerformed);
         // Let's test the rules we found
