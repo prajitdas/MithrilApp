@@ -4,6 +4,7 @@ import android.Manifest;
 import android.app.AppOpsManager;
 import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
+import android.util.Log;
 
 import edu.umbc.ebiquity.mithril.MithrilAC;
 import edu.umbc.ebiquity.mithril.data.dbhelpers.MithrilDBHelper;
@@ -134,11 +135,16 @@ public class DataGenerator {
                                                String contextType,
                                                Action action,
                                                SQLiteDatabase mithrilDB, Context context) {
+        int appId, ctxtId;
+        appId = MithrilDBHelper.getHelper(context).findAppIdByName(mithrilDB, appPkgName);
+        ctxtId = MithrilDBHelper.getHelper(context).findContextIdByLabelAndType(mithrilDB, contextLabel, contextType);
+        if(appId == -1 || ctxtId == -1)
+            return null;
         return new PolicyRule(
                 policyId,
-                MithrilDBHelper.getHelper(context).findAppIdByName(mithrilDB, appPkgName),
+                appId,
                 appName,
-                MithrilDBHelper.getHelper(context).findContextIdByLabelAndType(mithrilDB, contextLabel, contextType),
+                ctxtId,
                 contextLabel,
                 action,
                 action.getActionString(),

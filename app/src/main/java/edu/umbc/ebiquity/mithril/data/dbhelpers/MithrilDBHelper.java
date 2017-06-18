@@ -13,6 +13,7 @@ import android.database.Cursor;
 import android.database.SQLException;
 import android.database.sqlite.SQLiteConstraintException;
 import android.database.sqlite.SQLiteDatabase;
+import android.database.sqlite.SQLiteException;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -23,6 +24,7 @@ import android.util.Log;
 import android.util.Pair;
 
 import java.io.ByteArrayOutputStream;
+import java.sql.SQLDataException;
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -967,26 +969,29 @@ public class MithrilDBHelper extends SQLiteOpenHelper {
      * @return
      */
     public long addPolicyRule(SQLiteDatabase db, PolicyRule aPolicyRule) throws SQLiteConstraintException {
-        long insertedRowId;
-        ContentValues values = new ContentValues();
-        values.put(POLRULID, aPolicyRule.getId());
-        values.put(POLRULAPPID, aPolicyRule.getAppId());
-        values.put(POLRULCTXID, aPolicyRule.getCtxId());
-        values.put(POLRULOPID, aPolicyRule.getOp());
-        values.put(POLRULACTSTR, aPolicyRule.getActStr());
-        values.put(POLRULAPPSTR, aPolicyRule.getAppStr());
-        values.put(POLRULCTXSTR, aPolicyRule.getCtxStr());
-        values.put(POLRULOPSTR, aPolicyRule.getOpStr());
-        if(aPolicyRule.isEnabled())
-            values.put(POLRULENABLED, 1);
-        else
-            values.put(POLRULENABLED, 0);
-        if (aPolicyRule.getAction() == Action.ALLOW)
-            values.put(POLRULACTIN, 1);
-        else if (aPolicyRule.getAction() == Action.DENY)
-            values.put(POLRULACTIN, 0);
-        insertedRowId = db.insertOrThrow(getPolicyRulesTableName(), null, values);
-        return insertedRowId;
+        if(aPolicyRule != null) {
+            long insertedRowId;
+            ContentValues values = new ContentValues();
+            values.put(POLRULID, aPolicyRule.getId());
+            values.put(POLRULAPPID, aPolicyRule.getAppId());
+            values.put(POLRULCTXID, aPolicyRule.getCtxId());
+            values.put(POLRULOPID, aPolicyRule.getOp());
+            values.put(POLRULACTSTR, aPolicyRule.getActStr());
+            values.put(POLRULAPPSTR, aPolicyRule.getAppStr());
+            values.put(POLRULCTXSTR, aPolicyRule.getCtxStr());
+            values.put(POLRULOPSTR, aPolicyRule.getOpStr());
+            if (aPolicyRule.isEnabled())
+                values.put(POLRULENABLED, 1);
+            else
+                values.put(POLRULENABLED, 0);
+            if (aPolicyRule.getAction() == Action.ALLOW)
+                values.put(POLRULACTIN, 1);
+            else if (aPolicyRule.getAction() == Action.DENY)
+                values.put(POLRULACTIN, 0);
+            insertedRowId = db.insertOrThrow(getPolicyRulesTableName(), null, values);
+            return insertedRowId;
+        } else
+            return -1;
     }
 
     /**
