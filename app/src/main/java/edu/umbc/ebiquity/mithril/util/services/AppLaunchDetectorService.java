@@ -30,6 +30,7 @@ import edu.umbc.ebiquity.mithril.MithrilAC;
 import edu.umbc.ebiquity.mithril.data.model.rules.context.SemanticLocation;
 import edu.umbc.ebiquity.mithril.util.specialtasks.detect.policyconflicts.ViolationDetector;
 import edu.umbc.ebiquity.mithril.util.specialtasks.detect.runningapps.AppLaunchDetector;
+import edu.umbc.ebiquity.mithril.util.specialtasks.errorsnexceptions.CWAException;
 import edu.umbc.ebiquity.mithril.util.specialtasks.permissions.PermissionHelper;
 
 public class AppLaunchDetectorService extends Service implements ConnectionCallbacks,
@@ -164,7 +165,11 @@ public class AppLaunchDetectorService extends Service implements ConnectionCallb
                                 editor.apply();
                                 Log.d(MithrilAC.getDebugTag(), pkgOpPair.first);
                                 requestLastLocation();
-                                ViolationDetector.detectViolation(context, pkgOpPair.first, pkgOpPair.second, getSemanticLocation(mCurrentLocation));
+                                try {
+                                    ViolationDetector.detectViolation(context, pkgOpPair.first, pkgOpPair.second, getSemanticLocation(mCurrentLocation));
+                                } catch (CWAException e) {
+                                    Log.e(MithrilAC.getDebugTag(), e.getMessage());
+                                }
                             } else {
                                 //currently running app is same as previously detected app
                                 //nothing to do
@@ -176,7 +181,11 @@ public class AppLaunchDetectorService extends Service implements ConnectionCallb
                             editor.apply();
                             Log.d(MithrilAC.getDebugTag(), pkgOpPair.first);
                             requestLastLocation();
-                            ViolationDetector.detectViolation(context, pkgOpPair.first, pkgOpPair.second, getSemanticLocation(mCurrentLocation));
+                            try {
+                                ViolationDetector.detectViolation(context, pkgOpPair.first, pkgOpPair.second, getSemanticLocation(mCurrentLocation));
+                            } catch (CWAException e) {
+                                Log.e(MithrilAC.getDebugTag(), e.getMessage());
+                            }
                         }
                     } else {
                         //null! nothing to do

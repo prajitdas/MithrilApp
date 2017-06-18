@@ -531,13 +531,14 @@ public class MithrilDBHelper extends SQLiteOpenHelper {
         loadAndroidPermissionsIntoDB(db);
         //Load all the apps and app permissions that are known for this device into the database. We will refer to them in the future.
         loadRealAppDataIntoDB(db);
-        //We have to get the policies from somewhere. The best case scenario would be a server that gives us the policies.
-        loadPoliciesForApps(db);
     }
 
     public void loadPoliciesForApps(SQLiteDatabase db) {
+        //We have to get the policies from somewhere. The best case scenario would be a server that gives us the policies.
         if(BuildConfig.DEBUG)
             loadDefaultDataIntoDB(db);
+//        else
+            // Load data from server
     }
 
     private void loadDefaultDataIntoDB(SQLiteDatabase db) throws SQLException {
@@ -621,13 +622,7 @@ public class MithrilDBHelper extends SQLiteOpenHelper {
                         tempAppData.setAppName(pack.applicationInfo.loadLabel(packageManager).toString());
 
                         //App package name
-                        tempA    public void loadPoliciesForApps(SQLiteDatabase db) {
-        //We have to get the policies from somewhere. The best case scenario would be a server that gives us the policies.
-        if(BuildConfig.DEBUG)
-            loadDefaultDataIntoDB(db);
-    }
-
-ppData.setPackageName(pack.packageName);
+                        tempAppData.setPackageName(pack.packageName);
 //                        Log.d(MithrilAC.getDebugTag(), "Inserting app: "+pack.packageName+" into the DB!");
 
                         //App version info

@@ -5,7 +5,7 @@ import android.util.Log;
 import edu.umbc.ebiquity.mithril.MithrilAC;
 
 public enum Action {
-    ALLOW(1);//, ALLOW_WITH_CAVEAT(2), DENY(0);
+    ALLOW(1), ALLOW_WITH_CAVEAT(2), DENY(0);
 
     private int value;
     private String actionString;

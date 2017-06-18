@@ -339,14 +339,14 @@ public class InstanceCreationActivity extends AppCompatActivity
             mFirstMajorCtxtBtn.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    openTemporalDataEntryActivity(TIME_REQUEST_CODE_WORK, MithrilAC.getPrefWorkTemporalKey());
+                    openTemporalDataEntryActivity(TIME_REQUEST_CODE_WORK, MithrilAC.getPrefTimeIntervalWorkTemporalKey());
                 }
             });
 
             mSecondMajorCtxtBtn.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    openTemporalDataEntryActivity(TIME_REQUEST_CODE_DND, MithrilAC.getPrefWorkTemporalKey());
+                    openTemporalDataEntryActivity(TIME_REQUEST_CODE_DND, MithrilAC.getPrefTimeIntervalDndTemporalKey());
                 }
             });
         } else if (currentFragment.equals(FRAGMENT_PRESENCE)) {

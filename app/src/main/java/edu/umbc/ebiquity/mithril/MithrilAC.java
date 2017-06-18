@@ -692,10 +692,6 @@ public class MithrilAC extends Application {
         return SHARED_PREFERENCES_NAME;
     }
 
-    public static String getReceiver() {
-        return RECEIVER;
-    }
-
     public static String getResultDataKey() {
         return RESULT_DATA_KEY;
     }
@@ -834,6 +830,10 @@ public class MithrilAC extends Application {
 
     public static String getDebugTag() {
         return DEBUG_TAG;
+    }
+
+    public static String getReceiver() {
+        return RECEIVER;
     }
 
     public static String[] getContextArrayActivity() {

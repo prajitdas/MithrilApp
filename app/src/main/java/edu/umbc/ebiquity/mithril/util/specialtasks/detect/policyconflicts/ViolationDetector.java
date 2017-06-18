@@ -16,6 +16,7 @@ import edu.umbc.ebiquity.mithril.data.model.rules.Action;
 import edu.umbc.ebiquity.mithril.data.model.rules.PolicyRule;
 import edu.umbc.ebiquity.mithril.data.model.rules.Violation;
 import edu.umbc.ebiquity.mithril.data.model.rules.context.SemanticLocation;
+import edu.umbc.ebiquity.mithril.util.specialtasks.errorsnexceptions.CWAException;
 
 /**
  * Created by prajit on 12/13/16.
@@ -36,7 +37,7 @@ public class ViolationDetector {
      * 3) Search policy list for a rule that matches the current combo of requester-resource-context combo
      * 4) If no such rule is found then detect this as a violation and request a user action on it or if in execution mode, block this access
      */
-    public static void detectViolation(Context context, String currentPackageName, int operationPerformed, SemanticLocation semanticLocation) { //throws CWAException {
+    public static void detectViolation(Context context, String currentPackageName, int operationPerformed, SemanticLocation semanticLocation) throws CWAException {
         SQLiteDatabase mithrilDB = MithrilDBHelper.getHelper(context).getWritableDatabase();
         List<Integer> currentContext = new ArrayList<>();
 //                MithrilDBHelper.getHelper(context).findCurrentContextFromLogs(mithrilDB);
@@ -48,6 +49,25 @@ public class ViolationDetector {
         // Let's test the rules we found
         if (rulesForApp.size() > 0) {
             for (PolicyRule rule : rulesForApp) {
+                /**
+                 * We have assumed a closed world. Explicit access has to be defined.
+                 * Although a deny rule may be used in a closed world, it may also create policy conflicts.
+                 * For example:
+                 * 1) Rule A states allow access to camera during lunch hours
+                 * 2) Rule B states deny access to camera at work
+                 * The conflict arises from the fact that we might be at work during lunch hours, what happens then?
+                 * We can ask the user about this. As in, should we allow camera access at work during lunch hours?
+                 * But now we have a new problem. Suppose that we have a rule that states that in presence of a
+                 * supervisor don't allow access to camera. Another rule states that in presence of a colleague
+                 * allow access to camera. A third rule states that allow access at a restaurant. What happens
+                 * if we are at a restaurant in our work place and having a team lunch with our colleagues and bosses?
+                 * There are too many conflicting rules to handle and the system will become increasingly difficult
+                 * to handle or use because we will be asking the users too many questions.
+                 * However, a safe bet is that if there is any rule that states when every one of these contextual
+                 * situations apply only then allow access then we are using a restrictive but safe access principle.
+                 */
+                if(rule.getAction().equals(Action.DENY))
+                    throw new CWAException();
                 Log.d(MithrilAC.getDebugTag(), "Found rule: " +
                         rule.toString() +
                         Integer.toString(rule.getCtxId()) +
