@@ -1,5 +1,6 @@
 package edu.umbc.ebiquity.mithril.util.specialtasks.detect.policyconflicts;
 
+import android.Manifest;
 import android.app.AppOpsManager;
 import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
@@ -163,7 +164,9 @@ public class ViolationDetector {
                             newPolicyId,
                             currentPackageName,
                             app.getAppName(),
-                            AppOpsManager.opToName(operationPerformed),
+                            // the name returned is not correct we have find the method that fixes that
+                            //AppOpsManager.opToName(operationPerformed),
+                            Manifest.permission.ACCESS_FINE_LOCATION,
                             ctxtTypeLabel.second,
                             ctxtTypeLabel.first,
                             Action.ALLOW,
@@ -174,7 +177,9 @@ public class ViolationDetector {
                                     appId,
                                     operationPerformed,
                                     app.getAppName(),
-                                    AppOpsManager.opToName(operationPerformed),
+                                    // the name returned is not correct we have find the method that fixes that
+                                    //AppOpsManager.opToName(operationPerformed),
+                                    Manifest.permission.ACCESS_FINE_LOCATION,
                                     false,
                                     true,
                                     new Timestamp(System.currentTimeMillis())
@@ -204,7 +209,9 @@ public class ViolationDetector {
                         newPolicyId,
                         currentPackageName,
                         app.getAppName(),
-                        AppOpsManager.opToName(operationPerformed),
+                        // the name returned is not correct we have find the method that fixes that
+                        //AppOpsManager.opToName(operationPerformed),
+                        Manifest.permission.ACCESS_FINE_LOCATION,
                         ctxtTypeLabel.second,
                         ctxtTypeLabel.first,
                         Action.ALLOW,
@@ -215,7 +222,9 @@ public class ViolationDetector {
                                 appId,
                                 operationPerformed,
                                 app.getAppName(),
-                                AppOpsManager.opToName(operationPerformed),
+                                // the name returned is not correct we have find the method that fixes that
+                                //AppOpsManager.opToName(operationPerformed),
+                                Manifest.permission.ACCESS_FINE_LOCATION,
                                 false,
                                 true,
                                 new Timestamp(System.currentTimeMillis())
