@@ -1678,37 +1678,52 @@ public class MithrilDBHelper extends SQLiteOpenHelper {
      * @param db database instance
      * @return all policies
      */
-    public Map<Long, Integer> findAllPoliciesForAppWhenPerformingOp(SQLiteDatabase db, String appPkgName, int operation) {
-        Map<Long, Integer> contextsInPolicy = new HashMap<>();
+    public List<PolicyRule> findAllPoliciesForAppWhenPerformingOp(SQLiteDatabase db, String appPkgName, int operation) {
+        List<PolicyRule> policyRules = new ArrayList<>();
         // Select Policy Query
         String selectQuery = "SELECT " +
+                getPolicyRulesTableName() + "." + POLRULID + ", " +
+                getPolicyRulesTableName() + "." + POLRULAPPID + ", " +
                 getPolicyRulesTableName() + "." + POLRULCTXID + ", " +
-                getPolicyRulesTableName() + "." + POLRULID +
+                getPolicyRulesTableName() + "." + POLRULOPID + ", " +
+                getPolicyRulesTableName() + "." + POLRULACTIN + ", " +
+                getPolicyRulesTableName() + "." + POLRULACTSTR + ", " +
+                getPolicyRulesTableName() + "." + POLRULAPPSTR + ", " +
+                getPolicyRulesTableName() + "." + POLRULCTXSTR + ", " +
+                getPolicyRulesTableName() + "." + POLRULOPSTR  + ", " +
+                getPolicyRulesTableName() + "." + POLRULENABLED +
                 " FROM " +
-                getPolicyRulesTableName() + ", " + getAppsTableName() + ", " + getContextTableName() +
+                getPolicyRulesTableName() + ", " + getAppsTableName() + ", " + getPermissionsTableName() +
                 " WHERE " +
-                getPolicyRulesTableName() + "." + POLRULOPID + " = " + operation +
-                " AND " +
                 getPolicyRulesTableName() + "." + POLRULAPPID + " = " + getAppsTableName() + "." + APPID +
                 " AND " +
                 getPolicyRulesTableName() + "." + POLRULCTXID + " = " + getContextTableName() + "." + CONTEXTID +
                 " AND " +
                 getAppsTableName() + "." + APPPACKAGENAME + " = '" + appPkgName + "'" +
                 " AND " +
+                getPolicyRulesTableName() + "." + POLRULOPID + " = " + operation +
+                " AND " +
                 getPolicyRulesTableName() + "." + POLRULENABLED + " = 0" +
                 " AND " +
-                getContextTableName() + "." + CONTEXTENABLED + " = 1" +
-                " ORDER BY " + getPolicyRulesTableName() + "." + POLRULID +
-                ";";
+                getContextTableName() + "." + CONTEXTENABLED + " = 1;";
 
         Cursor cursor = db.rawQuery(selectQuery, null);
         try {
-
             // looping through all rows and adding to list
             if (cursor.moveToFirst()) {
                 do {
                     // Adding policies to list
-                    contextsInPolicy.put(cursor.getLong(0), cursor.getInt(1));
+                    policyRules.add(new PolicyRule(
+                            cursor.getInt(0),
+                            cursor.getLong(1),
+                            cursor.getLong(2),
+                            cursor.getInt(3),
+                            cursor.getInt(4)==1 ? Action.ALLOW : Action.DENY,
+                            cursor.getString(5),
+                            cursor.getString(6),
+                            cursor.getString(7),
+                            cursor.getString(8),
+                            cursor.getInt(9)==1 ? true : false));
                 } while (cursor.moveToNext());
             }
         } catch (SQLException e) {
@@ -1717,7 +1732,7 @@ public class MithrilDBHelper extends SQLiteOpenHelper {
             cursor.close();
         }
         // return policy rules list
-        return contextsInPolicy;
+        return policyRules;
     }
 
     /**

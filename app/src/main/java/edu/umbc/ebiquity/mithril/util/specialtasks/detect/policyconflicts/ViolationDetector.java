@@ -79,10 +79,12 @@ public class ViolationDetector {
         Set<Long> currentContext = populateCurrentContext(mithrilDB, context, semanticUserContexts);
 
 //        try {
-        Map<Long, Integer> contextsInPolicy = MithrilDBHelper.getHelper(context).findAllPoliciesForAppWhenPerformingOp(mithrilDB, currentPackageName, operationPerformed);
-        Set<Long> policyContext = contextsInPolicy.keySet();
-        int policyId = contextsInPolicy.values().iterator().next();
-        List<PolicyRule> listOfPoliciesForCurrentAppAndOperation = MithrilDBHelper.getHelper(context).findAllPoliciesById(mithrilDB, policyId);
+        List<PolicyRule> policyRules = MithrilDBHelper.getHelper(context).findAllPoliciesForAppWhenPerformingOp(mithrilDB, currentPackageName, operationPerformed);
+        Set<Long> policyContext = new HashSet<>();
+        for(PolicyRule policyRule : policyRules)
+            policyContext.add(policyRule.getCtxId());
+//        int policyId = policyRules.get(0).getId();
+//        List<PolicyRule> listOfPoliciesForCurrentAppAndOperation = MithrilDBHelper.getHelper(context).findAllPoliciesById(mithrilDB, policyId);
         // Let's test the rules we found
         if (policyContext.size() > 0) {
             /**
@@ -108,7 +110,7 @@ public class ViolationDetector {
                  * We have an exact context match! Current context is an exact match for rule context.
                  * We have to do something...
                  */
-                for(PolicyRule rule : listOfPoliciesForCurrentAppAndOperation) {
+                for(PolicyRule rule : policyRules) {
                     //Rule has an deny action, we have a violation to ask questions about
                     if (rule.getAction().equals(Action.DENY)) {
                         //Rule has a deny action, we have a violation
@@ -122,11 +124,11 @@ public class ViolationDetector {
                          */
                         MithrilDBHelper.getHelper(context).addViolation(mithrilDB,
                                 new Violation(
-                                        listOfPoliciesForCurrentAppAndOperation.get(0).getId(),
-                                        listOfPoliciesForCurrentAppAndOperation.get(0).getAppId(),
-                                        listOfPoliciesForCurrentAppAndOperation.get(0).getOp(),
-                                        listOfPoliciesForCurrentAppAndOperation.get(0).getAppStr(),
-                                        listOfPoliciesForCurrentAppAndOperation.get(0).getOpStr(),
+                                        policyRules.get(0).getId(),
+                                        policyRules.get(0).getAppId(),
+                                        policyRules.get(0).getOp(),
+                                        policyRules.get(0).getAppStr(),
+                                        policyRules.get(0).getOpStr(),
                                         false,
                                         true,
                                         new Timestamp(System.currentTimeMillis())
@@ -196,11 +198,11 @@ public class ViolationDetector {
             for(long currCtxtId : currentContext) {
                 MithrilDBHelper.getHelper(context).addViolation(mithrilDB,
                         new Violation(
-                                listOfPoliciesForCurrentAppAndOperation.get(0).getId(),
-                                listOfPoliciesForCurrentAppAndOperation.get(0).getAppId(),
-                                listOfPoliciesForCurrentAppAndOperation.get(0).getOp(),
-                                listOfPoliciesForCurrentAppAndOperation.get(0).getAppStr(),
-                                listOfPoliciesForCurrentAppAndOperation.get(0).getOpStr(),
+                                policyRules.get(0).getId(),
+                                policyRules.get(0).getAppId(),
+                                policyRules.get(0).getOp(),
+                                policyRules.get(0).getAppStr(),
+                                policyRules.get(0).getOpStr(),
                                 false,
                                 true,
                                 new Timestamp(System.currentTimeMillis())

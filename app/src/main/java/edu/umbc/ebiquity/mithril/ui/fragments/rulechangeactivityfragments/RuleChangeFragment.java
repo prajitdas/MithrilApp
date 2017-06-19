@@ -22,6 +22,8 @@ import java.util.Map;
 import edu.umbc.ebiquity.mithril.MithrilAC;
 import edu.umbc.ebiquity.mithril.R;
 import edu.umbc.ebiquity.mithril.data.dbhelpers.MithrilDBHelper;
+import edu.umbc.ebiquity.mithril.data.model.Policy;
+import edu.umbc.ebiquity.mithril.data.model.rules.PolicyRule;
 import edu.umbc.ebiquity.mithril.data.model.rules.Violation;
 import edu.umbc.ebiquity.mithril.data.model.rules.context.SemanticActivity;
 import edu.umbc.ebiquity.mithril.data.model.rules.context.SemanticLocation;
@@ -106,14 +108,14 @@ public class RuleChangeFragment extends Fragment {
         Gson retrieveDataGson = new Gson();
         String retrieveDataJson;
         SemanticUserContext semanticUserContext = null;
-        Map<Long, Integer> contextsInPolicy = MithrilDBHelper.getHelper(getActivity()).findAllPoliciesForAppWhenPerformingOp(
+        List<PolicyRule> policyRules = MithrilDBHelper.getHelper(getActivity()).findAllPoliciesForAppWhenPerformingOp(
                 mithrilDB,
                 MithrilDBHelper.getHelper(getActivity()).findAppById(
                         mithrilDB,
                         violation.getAppId()).getPackageName(),
                 violation.getOprId());
-        for(Map.Entry<Long, Integer> contextEntry : contextsInPolicy.entrySet()) {
-            Pair<String, String> contextPiece = MithrilDBHelper.getHelper(getActivity()).findContextByID(mithrilDB, contextEntry.getKey());
+        for(PolicyRule policyRule : policyRules) {
+            Pair<String, String> contextPiece = MithrilDBHelper.getHelper(getActivity()).findContextByID(mithrilDB, policyRule.getId());
             sharedPreferences = getActivity().getSharedPreferences(MithrilAC.getSharedPreferencesName(), Context.MODE_PRIVATE);
             retrieveDataJson = sharedPreferences.getString(contextPiece.first + contextPiece.second, "");
             if (contextPiece.first.equals(MithrilAC.getPrefKeyContextTypeLocation()))
