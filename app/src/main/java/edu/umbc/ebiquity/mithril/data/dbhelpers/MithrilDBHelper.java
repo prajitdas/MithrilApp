@@ -1693,7 +1693,7 @@ public class MithrilDBHelper extends SQLiteOpenHelper {
                 getPolicyRulesTableName() + "." + POLRULOPSTR  + ", " +
                 getPolicyRulesTableName() + "." + POLRULENABLED +
                 " FROM " +
-                getPolicyRulesTableName() + ", " + getAppsTableName() + ", " + getPermissionsTableName() +
+                getPolicyRulesTableName() + ", " + getAppsTableName() + ", " + getContextTableName() +
                 " WHERE " +
                 getPolicyRulesTableName() + "." + POLRULAPPID + " = " + getAppsTableName() + "." + APPID +
                 " AND " +

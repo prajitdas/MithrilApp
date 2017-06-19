@@ -196,13 +196,26 @@ public class ViolationDetector {
              */
             Log.d(MithrilAC.getDebugTag(), "Default violation scenario. Do something!");
             for(long currCtxtId : currentContext) {
+                Pair<String, String> ctxtTypeLabel = MithrilDBHelper.getHelper(context).findContextByID(mithrilDB, currCtxtId);
+                int newPolicyId = MithrilDBHelper.getHelper(context).findMaxPolicyId(mithrilDB)+1;
+                AppData app = MithrilDBHelper.getHelper(context).findAppByAppPkgName(mithrilDB, currentPackageName);
+                long appId = MithrilDBHelper.getHelper(context).findAppIdByAppPkgName(mithrilDB, currentPackageName);
+                DataGenerator.createPolicyRule(
+                        newPolicyId,
+                        currentPackageName,
+                        app.getAppName(),
+                        AppOpsManager.opToName(operationPerformed),
+                        ctxtTypeLabel.second,
+                        ctxtTypeLabel.first,
+                        Action.ALLOW,
+                        mithrilDB, context);
                 MithrilDBHelper.getHelper(context).addViolation(mithrilDB,
                         new Violation(
-                                policyRules.get(0).getId(),
-                                policyRules.get(0).getAppId(),
-                                policyRules.get(0).getOp(),
-                                policyRules.get(0).getAppStr(),
-                                policyRules.get(0).getOpStr(),
+                                newPolicyId,
+                                appId,
+                                operationPerformed,
+                                app.getAppName(),
+                                AppOpsManager.opToName(operationPerformed),
                                 false,
                                 true,
                                 new Timestamp(System.currentTimeMillis())
