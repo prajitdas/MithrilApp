@@ -69,24 +69,4 @@ public class SemanticActivity extends SemanticUserContext implements Parcelable 
     public void setEnabled(boolean enabled) {
         this.enabled = enabled;
     }
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (!(o instanceof SemanticActivity)) return false;
-
-        SemanticActivity that = (SemanticActivity) o;
-
-        if (isEnabled() != that.isEnabled()) return false;
-        if (!getInferredActivity().equals(that.getInferredActivity())) return false;
-        return getType().equals(that.getType());
-    }
-
-    @Override
-    public int hashCode() {
-        int result = getInferredActivity().hashCode();
-        result = 31 * result + getType().hashCode();
-        result = 31 * result + (isEnabled() ? 1 : 0);
-        return result;
-    }
 }

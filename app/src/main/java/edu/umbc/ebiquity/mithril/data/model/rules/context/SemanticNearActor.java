@@ -60,26 +60,6 @@ public class SemanticNearActor extends SemanticUserContext implements Parcelable
     }
 
     @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (!(o instanceof SemanticNearActor)) return false;
-
-        SemanticNearActor that = (SemanticNearActor) o;
-
-        if (isEnabled() != that.isEnabled()) return false;
-        if (!getInferredRelationship().equals(that.getInferredRelationship())) return false;
-        return getType() != null ? getType().equals(that.getType()) : that.getType() == null;
-    }
-
-    @Override
-    public int hashCode() {
-        int result = getInferredRelationship().hashCode();
-        result = 31 * result + (getType() != null ? getType().hashCode() : 0);
-        result = 31 * result + (isEnabled() ? 1 : 0);
-        return result;
-    }
-
-    @Override
     public int describeContents() {
         return 0;
     }

@@ -240,7 +240,9 @@ public class AppLaunchDetectorService extends Service implements
         for (Map.Entry<Place, Float> placeEntry : guessCurrentPlace().entrySet())
             if (placeEntry.getValue() > likelihood)
                 currentPlace = placeEntry.getKey();
-        semanticLocation.setPlace(currentPlace);
+        semanticLocation.setName(currentPlace.getName());
+        semanticLocation.setPlaceId(currentPlace.getId());
+        semanticLocation.setPlaceTypes(currentPlace.getPlaceTypes());
         return semanticLocation;
     }
 

@@ -7,11 +7,9 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.content.res.Resources;
 import android.database.sqlite.SQLiteDatabase;
 import android.location.Address;
 import android.location.Location;
-import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
@@ -20,8 +18,6 @@ import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
-import android.text.Html;
-import android.text.Spanned;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -112,19 +108,6 @@ public class InstanceCreationActivity extends AppCompatActivity
      */
     private boolean mAddressRequested;
     private AddressResultReceiver mAddressResultReceiver;
-
-    /**
-     * Helper method to format information about a place nicely.
-     */
-    private static Spanned formatPlaceDetails(Resources res, CharSequence name, String id,
-                                              CharSequence address, CharSequence phoneNumber, Uri websiteUri) {
-        if (websiteUri == null)
-            return Html.fromHtml(res.getString(R.string.place_details,
-                    name, id, address, phoneNumber, Uri.EMPTY));
-        else
-            return Html.fromHtml(res.getString(R.string.place_details,
-                    name, id, address, phoneNumber, websiteUri));
-    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -712,13 +695,9 @@ public class InstanceCreationActivity extends AppCompatActivity
         userInputLocation.setLongitude(place.getLatLng().longitude);
 
         SemanticLocation semanticLocation = new SemanticLocation(MithrilAC.getPrefHomeLocationKey(), userInputLocation);
-        semanticLocation.setDetails(formatPlaceDetails(getResources(),
-                place.getName(),
-                place.getId(),
-                place.getAddress(),
-                place.getPhoneNumber(),
-                place.getWebsiteUri()).toString());
-        semanticLocation.setPlace(place);
+        semanticLocation.setName(place.getName());
+        semanticLocation.setPlaceId(place.getId());
+        semanticLocation.setPlaceTypes(place.getPlaceTypes());
 
         semanticLocations.put(MithrilAC.getPrefHomeLocationKey(), semanticLocation);
         /**
@@ -734,13 +713,9 @@ public class InstanceCreationActivity extends AppCompatActivity
         userInputLocation.setLongitude(place.getLatLng().longitude);
 
         SemanticLocation semanticLocation = new SemanticLocation(MithrilAC.getPrefWorkLocationKey(), userInputLocation);
-        semanticLocation.setDetails(formatPlaceDetails(getResources(),
-                place.getName(),
-                place.getId(),
-                place.getAddress(),
-                place.getPhoneNumber(),
-                place.getWebsiteUri()).toString());
-        semanticLocation.setPlace(place);
+        semanticLocation.setName(place.getName());
+        semanticLocation.setPlaceId(place.getId());
+        semanticLocation.setPlaceTypes(place.getPlaceTypes());
 
         semanticLocations.put(MithrilAC.getPrefWorkLocationKey(), semanticLocation);
         /**
@@ -769,13 +744,9 @@ public class InstanceCreationActivity extends AppCompatActivity
                 userInputLocation.setLongitude(place.getLatLng().longitude);
 
                 SemanticLocation semanticLocation = new SemanticLocation(semanticLocationLabel, userInputLocation);
-                semanticLocation.setDetails(formatPlaceDetails(getResources(),
-                        place.getName(),
-                        place.getId(),
-                        place.getAddress(),
-                        place.getPhoneNumber(),
-                        place.getWebsiteUri()).toString());
-                semanticLocation.setPlace(place);
+                semanticLocation.setName(place.getName());
+                semanticLocation.setPlaceId(place.getId());
+                semanticLocation.setPlaceTypes(place.getPlaceTypes());
 
                 semanticLocations.put(semanticLocationLabel, semanticLocation);
                 /**

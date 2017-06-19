@@ -5,8 +5,7 @@ import android.location.Location;
 import android.os.Parcel;
 import android.os.Parcelable;
 
-import com.google.android.gms.location.places.Place;
-
+import java.util.List;
 import java.util.Locale;
 
 import edu.umbc.ebiquity.mithril.MithrilAC;
@@ -28,8 +27,9 @@ public class SemanticLocation extends SemanticUserContext implements Parcelable 
     private Address address = new Address(Locale.getDefault());
     private String inferredLocation;
     private boolean enabled = false;
-    private String details = "default-details";
-    private Place place;
+    private CharSequence name;
+    private CharSequence placeId;
+    private List<Integer> placeTypes;
 
     public SemanticLocation(String inferredLocation, Location location) {
         this.location = location;
@@ -41,7 +41,9 @@ public class SemanticLocation extends SemanticUserContext implements Parcelable 
         address = in.readParcelable(Address.class.getClassLoader());
         inferredLocation = in.readString();
         enabled = in.readByte() != 0;
-        details = in.readString();
+        name = in.readCharSequence();
+        placeId = in.readCharSequence();
+        placeTypes = in.readArrayList(List.class.getClassLoader());
     }
 
     @Override
@@ -50,7 +52,9 @@ public class SemanticLocation extends SemanticUserContext implements Parcelable 
         dest.writeParcelable(address, flags);
         dest.writeString(inferredLocation);
         dest.writeByte((byte) (enabled ? 1 : 0));
-        dest.writeString(details);
+        dest.writeCharSequence(name);
+        dest.writeCharSequence(placeId);
+        dest.writeList(placeTypes);
     }
 
     @Override
@@ -97,49 +101,27 @@ public class SemanticLocation extends SemanticUserContext implements Parcelable 
         this.enabled = enabled;
     }
 
-    public String getDetails() {
-        return details;
+    public CharSequence getName() {
+        return name;
     }
 
-    public void setDetails(String details) {
-        this.details = details;
+    public void setName(CharSequence name) {
+        this.name = name;
     }
 
-    public Place getPlace() {
-        return place;
+    public CharSequence getPlaceId() {
+        return placeId;
     }
 
-    public void setPlace(Place place) {
-        this.place = place;
+    public void setPlaceId(CharSequence placeId) {
+        this.placeId = placeId;
     }
 
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (!(o instanceof SemanticLocation)) return false;
-
-        SemanticLocation that = (SemanticLocation) o;
-
-        if (isEnabled() != that.isEnabled()) return false;
-        if (!getType().equals(that.getType())) return false;
-        if (!getLocation().equals(that.getLocation())) return false;
-        if (getAddress() != null ? !getAddress().equals(that.getAddress()) : that.getAddress() != null)
-            return false;
-        if (!getInferredLocation().equals(that.getInferredLocation())) return false;
-        if (getDetails() != null ? !getDetails().equals(that.getDetails()) : that.getDetails() != null)
-            return false;
-        return getPlace() != null ? getPlace().equals(that.getPlace()) : that.getPlace() == null;
+    public List<Integer> getPlaceTypes() {
+        return placeTypes;
     }
 
-    @Override
-    public int hashCode() {
-        int result = getType().hashCode();
-        result = 31 * result + getLocation().hashCode();
-        result = 31 * result + (getAddress() != null ? getAddress().hashCode() : 0);
-        result = 31 * result + getInferredLocation().hashCode();
-        result = 31 * result + (isEnabled() ? 1 : 0);
-        result = 31 * result + (getDetails() != null ? getDetails().hashCode() : 0);
-        result = 31 * result + (getPlace() != null ? getPlace().hashCode() : 0);
-        return result;
+    public void setPlaceTypes(List<Integer> placeTypes) {
+        this.placeTypes = placeTypes;
     }
 }
