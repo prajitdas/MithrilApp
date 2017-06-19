@@ -3,12 +3,13 @@ package edu.umbc.ebiquity.mithril.data.model.rules;
 import android.graphics.drawable.Drawable;
 import android.os.Parcel;
 import android.os.Parcelable;
+import android.support.annotation.NonNull;
 
 /**
  * Created by prajit on 5/9/17.
  */
 
-public class Resource implements Parcelable{
+public class Resource implements Parcelable, Comparable {
     private String resourceName;
     private long beginTimeStamp;
     private long endTimeStamp;
@@ -179,5 +180,11 @@ public class Resource implements Parcelable{
         result = 31 * result + (getIcon() != null ? getIcon().hashCode() : 0);
         result = 31 * result + getRiskLevel();
         return result;
+    }
+
+    @Override
+    public int compareTo(@NonNull Object o) {
+        return (int)(this.getLastTimeUsed() - ((Resource) o).getLastTimeUsed());
+//        return ((Long) this.lastTimeUsed).compareTo(((Resource) o).lastTimeUsed);
     }
 }

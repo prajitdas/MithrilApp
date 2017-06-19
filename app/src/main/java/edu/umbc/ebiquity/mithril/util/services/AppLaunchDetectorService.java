@@ -81,7 +81,7 @@ public class AppLaunchDetectorService extends Service implements
          */
         setUpLocationClientIfNeeded();
         try {
-            appLaunchDetector = new AppLaunchDetector();
+            appLaunchDetector = new AppLaunchDetector(this);
             if (mTimer != null) {
                 mTimer.cancel();
             } else {// recreate new
