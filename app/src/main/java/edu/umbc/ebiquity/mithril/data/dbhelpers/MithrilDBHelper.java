@@ -560,7 +560,6 @@ public class MithrilDBHelper extends SQLiteOpenHelper {
         DataGenerator.setPolicySocialMediaCameraAccessAtWorkOnWeekdaysDuringLunchHours(db, context);
         DataGenerator.setPolicySocialMediaLocationAccessAtHomeOnWeekdaysDuringEveningHours(db, context);
         DataGenerator.setPolicyChatAppsReadSmsAccessAtWork(db, context);
-        DataGenerator.setPolicyChatAppsWriteSmsAccessAtWork(db, context);
         DataGenerator.setPolicyChatAppsReceiveSmsAccessAtWork(db, context);
         DataGenerator.setPolicyChatAppsSendSmsAccessAtWork(db, context);
         DataGenerator.setPolicyEmailClientsReadCalendarAccessAtWorkDuringWeekdays(db, context);
