@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.v7.widget.CardView
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.v7.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:card_view="http://schemas.android.com/apk/res-auto"
     android:id="@+id/card_view_semantic_user_context"
     android:layout_width="match_parent"
@@ -9,10 +8,12 @@
     android:layout_marginTop="@dimen/card_view_margin"
     android:elevation="@dimen/card_view_elevation"
     card_view:cardCornerRadius="@dimen/card_view_corner_radius">
+
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical">
+
         <TextView
             android:id="@+id/semanticUserContextLabel"
             android:layout_width="wrap_content"
@@ -45,15 +46,15 @@
             android:id="@+id/spinner_rule_change"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_centerVertical="true"
-            android:layout_below="@+id/semanticUserContextDetail" />
+            android:layout_below="@+id/semanticUserContextDetail"
+            android:layout_centerVertical="true" />
 
         <ImageButton
             android:id="@+id/deleteContextBtn"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_alignParentTop="true"
             android:layout_alignParentEnd="true"
+            android:layout_alignParentTop="true"
             android:backgroundTint="@color/colorButton"
             android:paddingEnd="20dp"
             android:paddingLeft="20dp"

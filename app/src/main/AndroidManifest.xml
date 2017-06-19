@@ -29,10 +29,12 @@
      like the app is getting that permission, even though it will never be
      checked, and new privileged apps can now request this one for real access.
      @SystemApi -->
-    <permission android:name="android.permission.REAL_GET_TASKS"
+    <permission
+        android:name="android.permission.REAL_GET_TASKS"
         tools:ignore="ProtectedPermissions" />
     <!-- @SystemApi Allows an application to read the low-level system log files. -->
-    <uses-permission android:name="android.permission.READ_LOGS"
+    <uses-permission
+        android:name="android.permission.READ_LOGS"
         tools:ignore="ProtectedPermissions" />
 
     <!-- dangerous permission type; request to be made explicitly; protectionLevel: PROTECTION_DANGEROUS; list as follows -->
@@ -162,26 +164,26 @@
                 android:value=".ui.activities.CoreActivity" />
         </activity>
         <!--<activity-->
-            <!--android:name=".ui.activities.PrefsActivity"-->
-            <!--android:label="@string/title_activity_prefs"-->
-            <!--android:parentActivityName=".ui.activities.CoreActivity"-->
-            <!--android:theme="@style/AppTheme.NoActionBar">-->
-            <!--<meta-data-->
-                <!--android:name="android.support.PARENT_ACTIVITY"-->
-                <!--android:value=".ui.activities.CoreActivity" />-->
+        <!--android:name=".ui.activities.PrefsActivity"-->
+        <!--android:label="@string/title_activity_prefs"-->
+        <!--android:parentActivityName=".ui.activities.CoreActivity"-->
+        <!--android:theme="@style/AppTheme.NoActionBar">-->
+        <!--<meta-data-->
+        <!--android:name="android.support.PARENT_ACTIVITY"-->
+        <!--android:value=".ui.activities.CoreActivity" />-->
         <!--</activity>-->
         <!-- TestActivity was used for the IEEE CIC paper. This will possibly be removed or modified in the future. -->
         <!--<activity-->
-            <!--android:name=".ui.activities.TestActivity"-->
-            <!--android:label="@string/title_activity_test_main"-->
-            <!--android:theme="@style/AppTheme.NoActionBar">-->
-            <!--<intent-filter>-->
-                <!--<action android:name="android.nfc.action.NDEF_DISCOVERED" />-->
+        <!--android:name=".ui.activities.TestActivity"-->
+        <!--android:label="@string/title_activity_test_main"-->
+        <!--android:theme="@style/AppTheme.NoActionBar">-->
+        <!--<intent-filter>-->
+        <!--<action android:name="android.nfc.action.NDEF_DISCOVERED" />-->
 
-                <!--<category android:name="android.intent.category.DEFAULT" />-->
+        <!--<category android:name="android.intent.category.DEFAULT" />-->
 
-                <!--<data android:mimeType="text/plain" />-->
-            <!--</intent-filter>-->
+        <!--<data android:mimeType="text/plain" />-->
+        <!--</intent-filter>-->
         <!--</activity>-->
         <activity
             android:name=".ui.activities.AppOpsDetailsActivity"

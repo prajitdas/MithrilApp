@@ -10,7 +10,6 @@ import android.os.Handler;
 import android.os.IBinder;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.text.TextUtils;
 import android.util.Log;
 import android.util.Pair;
 
@@ -165,6 +164,106 @@ public class AppLaunchDetectorService extends Service implements
         mCurrentLocation = location;
     }
 
+    private List<SemanticUserContext> getSemanticContexts() {
+        List<SemanticUserContext> semanticUserContextList = new ArrayList<>();
+
+        //We are always at some location... where are we now? Also we are only in one place at a time
+        requestLastLocation();
+        semanticUserContextList.add(getSemanticLocation(mCurrentLocation));
+
+        //Do we know the semantic temporal contexts?
+        for (SemanticTime semanticTime : getSemanticTimes())
+            semanticUserContextList.add(semanticTime);
+
+        //Do we detect any presence?
+        for (SemanticNearActor semanticNearActor : getSemanticNearActors())
+            semanticUserContextList.add(semanticNearActor);
+
+        //Do we know of any activity significant to the user?
+        for (SemanticActivity semanticActivity : getSemanticActivities())
+            semanticUserContextList.add(semanticActivity);
+
+        return semanticUserContextList;
+    }
+
+    private List<SemanticActivity> getSemanticActivities() {
+        return new ArrayList<>();
+    }
+
+    private List<SemanticNearActor> getSemanticNearActors() {
+        return new ArrayList<>();
+    }
+
+    private List<SemanticTime> getSemanticTimes() {
+        List<SemanticTime> semanticTimes = new ArrayList<>();
+
+        return semanticTimes;
+    }
+
+    private void requestLastLocation() {
+        try {
+            mCurrentLocation = LocationServices.FusedLocationApi.getLastLocation(mGoogleApiClient);
+        } catch (SecurityException e) {
+            Log.d(MithrilAC.getDebugTag(), e.getMessage());
+        }
+    }
+
+    private SemanticLocation getSemanticLocation(Location location) {
+        Log.d(MithrilAC.getDebugTag(), "Location found: " + Double.toString(location.getLatitude()) + Double.toString(location.getLongitude()));
+        SemanticLocation semanticLocation = null;
+        Gson retrieveDataGson = new Gson();
+        String retrieveDataJson;
+        Map<String, ?> allPrefs;
+        try {
+            allPrefs = sharedPrefs.getAll();
+            for (Map.Entry<String, ?> aPref : allPrefs.entrySet()) {
+                if (aPref.getKey().startsWith(MithrilAC.getPrefKeyContextTypeLocation())) {
+                    retrieveDataJson = sharedPrefs.getString(aPref.getKey(), "");
+                    semanticLocation = retrieveDataGson.fromJson(retrieveDataJson, SemanticLocation.class);
+                    if (semanticLocation.isEnabled())
+                        Log.d(MithrilAC.getDebugTag(), "Came into the test and found: " + location.toString());
+                    if (semanticLocation.getLocation().distanceTo(location) < 1000)
+                        return semanticLocation;
+                }
+            }
+        } catch (NullPointerException e) {
+            Log.d(MithrilAC.getDebugTag(), "Prefs empty somehow?!");
+        } catch (Exception e) {
+            Log.d(MithrilAC.getDebugTag(), "came here");
+        }
+        if (semanticLocation == null)
+            semanticLocation = new SemanticLocation(
+                    MithrilAC.getPrefKeyContextInstanceUnknown() + Long.toString(System.currentTimeMillis()),
+                    location);
+        Place currentPlace = null;
+        float likelihood = Float.MIN_VALUE;
+        for (Map.Entry<Place, Float> placeEntry : guessCurrentPlace().entrySet())
+            if (placeEntry.getValue() > likelihood)
+                currentPlace = placeEntry.getKey();
+        semanticLocation.setPlace(currentPlace);
+        return semanticLocation;
+    }
+
+    private Map<Place, Float> guessCurrentPlace() {
+        final Map<Place, Float> places = new HashMap<>();
+        PendingResult<PlaceLikelihoodBuffer> result;
+        try {
+            result = Places.PlaceDetectionApi
+                    .getCurrentPlace(mGoogleApiClient, null);
+            result.setResultCallback(new ResultCallback<PlaceLikelihoodBuffer>() {
+                @Override
+                public void onResult(PlaceLikelihoodBuffer likelyPlaces) {
+                    for (PlaceLikelihood placeLikelihood : likelyPlaces)
+                        places.put(placeLikelihood.getPlace(), placeLikelihood.getLikelihood());
+                    likelyPlaces.release();
+                }
+            });
+        } catch (SecurityException e) {
+            Log.e(MithrilAC.getDebugTag(), "security exception happened");
+        }
+        return places;
+    }
+
     private class LaunchedAppDetectTimerTask extends TimerTask {
         @Override
         public void run() {
@@ -219,105 +318,5 @@ public class AppLaunchDetectorService extends Service implements
                 }
             });
         }
-    }
-
-    private List<SemanticUserContext> getSemanticContexts() {
-        List<SemanticUserContext> semanticUserContextList = new ArrayList<>();
-
-        //We are always at some location... where are we now? Also we are only in one place at a time
-        requestLastLocation();
-        semanticUserContextList.add(getSemanticLocation(mCurrentLocation));
-
-        //Do we know the semantic temporal contexts?
-        for(SemanticTime semanticTime : getSemanticTimes())
-            semanticUserContextList.add(semanticTime);
-
-        //Do we detect any presence?
-        for(SemanticNearActor semanticNearActor : getSemanticNearActors())
-            semanticUserContextList.add(semanticNearActor);
-
-        //Do we know of any activity significant to the user?
-        for(SemanticActivity semanticActivity : getSemanticActivities())
-            semanticUserContextList.add(semanticActivity);
-
-        return semanticUserContextList;
-    }
-
-    private List<SemanticActivity> getSemanticActivities() {
-        return new ArrayList<>();
-    }
-
-    private List<SemanticNearActor> getSemanticNearActors() {
-        return new ArrayList<>();
-    }
-
-    private List<SemanticTime> getSemanticTimes() {
-        List<SemanticTime> semanticTimes = new ArrayList<>();
-
-        return semanticTimes;
-    }
-
-    private void requestLastLocation() {
-        try {
-            mCurrentLocation = LocationServices.FusedLocationApi.getLastLocation(mGoogleApiClient);
-        } catch (SecurityException e) {
-            Log.d(MithrilAC.getDebugTag(), e.getMessage());
-        }
-    }
-
-    private SemanticLocation getSemanticLocation(Location location) {
-        Log.d(MithrilAC.getDebugTag(), "Location found: "+Double.toString(location.getLatitude())+Double.toString(location.getLongitude()));
-        SemanticLocation semanticLocation = null;
-        Gson retrieveDataGson = new Gson();
-        String retrieveDataJson;
-        Map<String, ?> allPrefs;
-        try {
-            allPrefs = sharedPrefs.getAll();
-            for (Map.Entry<String, ?> aPref : allPrefs.entrySet()) {
-                if (aPref.getKey().startsWith(MithrilAC.getPrefKeyContextTypeLocation())) {
-                    retrieveDataJson = sharedPrefs.getString(aPref.getKey(), "");
-                    semanticLocation = retrieveDataGson.fromJson(retrieveDataJson, SemanticLocation.class);
-                    if (semanticLocation.isEnabled())
-                        Log.d(MithrilAC.getDebugTag(), "Came into the test and found: " + location.toString());
-                    if(semanticLocation.getLocation().distanceTo(location) < 1000)
-                        return semanticLocation;
-                }
-            }
-        } catch (NullPointerException e) {
-            Log.d(MithrilAC.getDebugTag(), "Prefs empty somehow?!");
-        } catch (Exception e) {
-            Log.d(MithrilAC.getDebugTag(), "came here");
-        }
-        if(semanticLocation == null)
-            semanticLocation = new SemanticLocation(
-                    MithrilAC.getPrefKeyContextInstanceUnknown()+Long.toString(System.currentTimeMillis()),
-                    location);
-        Place currentPlace = null;
-        float likelihood = Float.MIN_VALUE;
-        for(Map.Entry<Place, Float> placeEntry : guessCurrentPlace().entrySet())
-            if(placeEntry.getValue() > likelihood)
-                currentPlace = placeEntry.getKey();
-        semanticLocation.setPlace(currentPlace);
-        return semanticLocation;
-    }
-
-    private Map<Place, Float> guessCurrentPlace() {
-        final Map<Place, Float> places = new HashMap<>();
-        PendingResult<PlaceLikelihoodBuffer> result;
-        try {
-            result = Places.PlaceDetectionApi
-                    .getCurrentPlace(mGoogleApiClient, null);
-            result.setResultCallback(new ResultCallback<PlaceLikelihoodBuffer>() {
-                @Override
-                public void onResult(PlaceLikelihoodBuffer likelyPlaces) {
-                    for (PlaceLikelihood placeLikelihood : likelyPlaces)
-                        places.put(placeLikelihood.getPlace(), placeLikelihood.getLikelihood());
-                    likelyPlaces.release();
-                }
-            });
-        } catch (SecurityException e) {
-            Log.e(MithrilAC.getDebugTag(), "security exception happened");
-        }
-        return places;
     }
 }

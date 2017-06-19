@@ -8,10 +8,8 @@ import android.util.Log;
 import android.util.Pair;
 
 import java.sql.Timestamp;
-import java.util.Collection;
 import java.util.HashSet;
 import java.util.List;
-import java.util.Map;
 import java.util.Set;
 
 import edu.umbc.ebiquity.mithril.MithrilAC;
@@ -42,40 +40,40 @@ public class ViolationDetector {
      * 2) Determine the context information
      * 3) Search policy list for a rule that matches the current combo of requester-resource-context combo
      * 4) If no such rule is found then detect this as a violation and request a user action on it or if in execution mode, block this access
-     *
+     * <p>
      * The above thing was the algorithm before. We have to improve it...
-     *
+     * <p>
      * 1) Detect app launch and operation.
      * 2) Detect what is the current context.
-     *      we may find our that we are at an
-     *          unknown location or
-     *          in presence of an unknown person or
-     *          doing a previously unknown activity
-     *      if we do, then we add these as default_context_type_timesatamp
-     *      and we have to ask user to define a label for the context in a notification like Google Now or just ask them later
+     * we may find our that we are at an
+     * unknown location or
+     * in presence of an unknown person or
+     * doing a previously unknown activity
+     * if we do, then we add these as default_context_type_timesatamp
+     * and we have to ask user to define a label for the context in a notification like Google Now or just ask them later
      * 3) Search for policies that define for app launch and operation a series of context pieces of significance.
      * 4) If current context is an exact match or a subset of policy's context pieces, user has allowed this behavior before.
-     *      Subset: Policy states that during lunch hours on a weekday at work in presence of colleague allow camera access to social media apps.
-     *              Context is we are at work and its lunch hours on a weekday but no colleague is with us.
+     * Subset: Policy states that during lunch hours on a weekday at work in presence of colleague allow camera access to social media apps.
+     * Context is we are at work and its lunch hours on a weekday but no colleague is with us.
      * 5) If current context is
-     *      a) A superset of policy context
-     *          context is: lunch hours during weekday with boss, policy is for lunch hours on a weekday
-     *      or b) Is an unknown context
-     *          disjoint sets most probably, intersection is null
-     *          context is: we are at an unknown location and camera is accessed
-     *      or c) Context is known but does not match policy's context of significance
-     *          intersection set is non-null
-     *          context is: we are with our boss, having lunch at work on a weekday
-     *          and policy defines what to do if colleague is present and not when boss is present
+     * a) A superset of policy context
+     * context is: lunch hours during weekday with boss, policy is for lunch hours on a weekday
+     * or b) Is an unknown context
+     * disjoint sets most probably, intersection is null
+     * context is: we are at an unknown location and camera is accessed
+     * or c) Context is known but does not match policy's context of significance
+     * intersection set is non-null
+     * context is: we are with our boss, having lunch at work on a weekday
+     * and policy defines what to do if colleague is present and not when boss is present
      * In all the above three scenario we have app launch that is not governed by allow rules, i.e. we have a VIOLATION!
-     *
+     * <p>
      * Proper subset definition: A proper subset of a set A is a subset of A that is not equal to A.
      * In other words, if B is a proper subset of A, then all elements of B are in A but A contains at least one element that is not in B.
      * For example, if A={1,3,5} then B={1,5} is a proper subset of A. The set C={1,3,5} is a subset of A, but it is an improper subset of A
      * since C=A. The set D={1,4} is not even a subset of A, since 4 is not an element of A.
      */
     public static void detectViolation(Context context, String currentPackageName, int operationPerformed, List<SemanticUserContext> semanticUserContexts) throws SemanticInconsistencyException {
-        if(operationPerformed == AppOpsManager.OP_NONE)
+        if (operationPerformed == AppOpsManager.OP_NONE)
             return;
         SQLiteDatabase mithrilDB = MithrilDBHelper.getHelper(context).getWritableDatabase();
 //                MithrilDBHelper.getHelper(context).findCurrentContextFromLogs(mithrilDB);
@@ -84,7 +82,7 @@ public class ViolationDetector {
 //        try {
         List<PolicyRule> policyRules = MithrilDBHelper.getHelper(context).findAllPoliciesForAppWhenPerformingOp(mithrilDB, currentPackageName, operationPerformed);
         Set<Long> policyContext = new HashSet<>();
-        for(PolicyRule policyRule : policyRules)
+        for (PolicyRule policyRule : policyRules)
             policyContext.add(policyRule.getCtxId());
 //        int policyId = policyRules.get(0).getId();
 //        List<PolicyRule> listOfPoliciesForCurrentAppAndOperation = MithrilDBHelper.getHelper(context).findAllPoliciesById(mithrilDB, policyId);
@@ -108,12 +106,12 @@ public class ViolationDetector {
              * However, a safe bet is that if there is any rule that states when every one of these contextual
              * situations apply only then allow access then we are using a restrictive but safe access principle.
              */
-            if(policyContext.containsAll(currentContext)) {
+            if (policyContext.containsAll(currentContext)) {
                 /**
                  * We have an exact context match! Current context is an exact match for rule context.
                  * We have to do something...
                  */
-                for(PolicyRule rule : policyRules) {
+                for (PolicyRule rule : policyRules) {
                     //Rule has an deny action, we have a violation to ask questions about
                     if (rule.getAction().equals(Action.DENY)) {
                         //Rule has a deny action, we have a violation
@@ -157,9 +155,9 @@ public class ViolationDetector {
                  * Violations are by default marked true.
                  */
 
-                for(long currCtxtId : currentContext) {
+                for (long currCtxtId : currentContext) {
                     Pair<String, String> ctxtTypeLabel = MithrilDBHelper.getHelper(context).findContextByID(mithrilDB, currCtxtId);
-                    int newPolicyId = MithrilDBHelper.getHelper(context).findMaxPolicyId(mithrilDB)+1;
+                    int newPolicyId = MithrilDBHelper.getHelper(context).findMaxPolicyId(mithrilDB) + 1;
                     AppData app = MithrilDBHelper.getHelper(context).findAppByAppPkgName(mithrilDB, currentPackageName);
                     long appId = MithrilDBHelper.getHelper(context).findAppIdByAppPkgName(mithrilDB, currentPackageName);
                     DataGenerator.createPolicyRule(
@@ -189,8 +187,7 @@ public class ViolationDetector {
                     );
                 }
             }
-        }
-        else {
+        } else {
             /**
              * No rules were found... for the app and operation combo! We perhaps have a default violation...
              * Since we are using a Closed World Assumption, we are stating that explicit permissions
@@ -202,9 +199,9 @@ public class ViolationDetector {
              * and use user feedback as +ve or -ve reinforcement.
              */
             Log.d(MithrilAC.getDebugTag(), "Default violation scenario. Do something!");
-            for(long currCtxtId : currentContext) {
+            for (long currCtxtId : currentContext) {
                 Pair<String, String> ctxtTypeLabel = MithrilDBHelper.getHelper(context).findContextByID(mithrilDB, currCtxtId);
-                int newPolicyId = MithrilDBHelper.getHelper(context).findMaxPolicyId(mithrilDB)+1;
+                int newPolicyId = MithrilDBHelper.getHelper(context).findMaxPolicyId(mithrilDB) + 1;
                 AppData app = MithrilDBHelper.getHelper(context).findAppByAppPkgName(mithrilDB, currentPackageName);
                 long appId = MithrilDBHelper.getHelper(context).findAppIdByAppPkgName(mithrilDB, currentPackageName);
                 DataGenerator.createPolicyRule(
@@ -254,7 +251,7 @@ public class ViolationDetector {
         for (SemanticUserContext semanticUserContext : semanticUserContexts) {
             long contextId = MithrilDBHelper.getHelper(context).findContextIdByLabelAndType(mithrilDB, semanticUserContext.getLabel(), semanticUserContext.getType());
             //We found an unknown context, let's add that to the KB.
-            if(contextId == -1)
+            if (contextId == -1)
                 contextId = MithrilDBHelper.getHelper(context).addContext(
                         mithrilDB,
                         semanticUserContext.getType(),

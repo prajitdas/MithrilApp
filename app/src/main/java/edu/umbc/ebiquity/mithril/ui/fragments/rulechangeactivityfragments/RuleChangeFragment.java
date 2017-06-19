@@ -17,12 +17,10 @@ import com.google.gson.Gson;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
 import edu.umbc.ebiquity.mithril.MithrilAC;
 import edu.umbc.ebiquity.mithril.R;
 import edu.umbc.ebiquity.mithril.data.dbhelpers.MithrilDBHelper;
-import edu.umbc.ebiquity.mithril.data.model.Policy;
 import edu.umbc.ebiquity.mithril.data.model.rules.PolicyRule;
 import edu.umbc.ebiquity.mithril.data.model.rules.Violation;
 import edu.umbc.ebiquity.mithril.data.model.rules.context.SemanticActivity;
@@ -114,7 +112,7 @@ public class RuleChangeFragment extends Fragment {
                         mithrilDB,
                         violation.getAppId()).getPackageName(),
                 violation.getOprId());
-        for(PolicyRule policyRule : policyRules) {
+        for (PolicyRule policyRule : policyRules) {
             Pair<String, String> contextPiece = MithrilDBHelper.getHelper(getActivity()).findContextByID(mithrilDB, policyRule.getId());
             sharedPreferences = getActivity().getSharedPreferences(MithrilAC.getSharedPreferencesName(), Context.MODE_PRIVATE);
             retrieveDataJson = sharedPreferences.getString(contextPiece.first + contextPiece.second, "");

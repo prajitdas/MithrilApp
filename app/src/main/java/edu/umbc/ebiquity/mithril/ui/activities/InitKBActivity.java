@@ -25,7 +25,7 @@ public class InitKBActivity extends AppCompatActivity {
         handler = new Handler() {
             @Override
             public void handleMessage(Message message) {
-                if(message.what == KBLOADED) {
+                if (message.what == KBLOADED) {
                     startNextActivity(getApplicationContext(), InstanceCreationActivity.class);
                 }
             }

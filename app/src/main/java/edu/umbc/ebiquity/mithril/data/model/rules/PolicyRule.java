@@ -3,7 +3,18 @@ package edu.umbc.ebiquity.mithril.data.model.rules;
 import android.os.Parcel;
 import android.os.Parcelable;
 
-public class PolicyRule implements Parcelable{
+public class PolicyRule implements Parcelable {
+    public static final Creator<PolicyRule> CREATOR = new Creator<PolicyRule>() {
+        @Override
+        public PolicyRule createFromParcel(Parcel in) {
+            return new PolicyRule(in);
+        }
+
+        @Override
+        public PolicyRule[] newArray(int size) {
+            return new PolicyRule[size];
+        }
+    };
     private int id; // ID of policy defined; this will be used to determine if multiple rows belong to the same policy
     private long appId; // App id that sent the request
     private long ctxId; // context id in which requested
@@ -57,18 +68,6 @@ public class PolicyRule implements Parcelable{
     public int describeContents() {
         return 0;
     }
-
-    public static final Creator<PolicyRule> CREATOR = new Creator<PolicyRule>() {
-        @Override
-        public PolicyRule createFromParcel(Parcel in) {
-            return new PolicyRule(in);
-        }
-
-        @Override
-        public PolicyRule[] newArray(int size) {
-            return new PolicyRule[size];
-        }
-    };
 
     public int getId() {
         return id;
@@ -150,9 +149,9 @@ public class PolicyRule implements Parcelable{
         this.enabled = enabled;
     }
 
-        @Override
+    @Override
     public String toString() {
-        return "Policy: "+Integer.toString(getId())+" for app: "+getAppStr()+" with access to: "+getOpStr()+" in context: "+getCtxStr()+" is "+getActStr();
+        return "Policy: " + Integer.toString(getId()) + " for app: " + getAppStr() + " with access to: " + getOpStr() + " in context: " + getCtxStr() + " is " + getActStr();
     }
 
     @Override

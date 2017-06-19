@@ -14,16 +14,13 @@ import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageManager;
 import android.content.pm.PermissionGroupInfo;
 import android.content.pm.PermissionInfo;
-import android.util.ArrayMap;
 import android.util.Log;
 import android.util.Pair;
 
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
-import java.util.Map;
 import java.util.SortedMap;
 import java.util.TreeMap;
 
@@ -37,21 +34,21 @@ import edu.umbc.ebiquity.mithril.util.specialtasks.appops.AppOpsState;
  * https://gist.github.com/plateaukao/011fa857d1919f2bbfdc
  */
 public class AppLaunchDetector {
+    // Constants defining order for display order
+    private static final boolean localLOGV = false;
     private UsageStatsManager mUsageStatsManager;
     private Context context;
-//    private final ArrayMap<String, String> mAppLabelMap = new ArrayMap<>();
+    //    private final ArrayMap<String, String> mAppLabelMap = new ArrayMap<>();
 //    private final ArrayList<AppUsageStats> appUsageStats = new ArrayList<>();
     private String currentPackageName = null;
     private UsageStats currentUsageStats = null;
     private UsageEvents.Event currentUsageEvent = null;
-    // Constants defining order for display order
-    private static final boolean localLOGV = false;
-//    private static final int _DISPLAY_ORDER_USAGE_TIME = 0;
+    //    private static final int _DISPLAY_ORDER_USAGE_TIME = 0;
 //    private static final int _DISPLAY_ORDER_LAST_TIME_USED = 1;
 //    private static final int _DISPLAY_ORDER_APP_NAME = 2;
 //    private int mDisplayOrder = _DISPLAY_ORDER_USAGE_TIME;
     private LastTimeUsedComparator mLastTimeUsedComparator = new LastTimeUsedComparator();
-//    private UsageTimeComparator mUsageTimeComparator = new UsageTimeComparator();
+    //    private UsageTimeComparator mUsageTimeComparator = new UsageTimeComparator();
 //    private AppNameComparator mAppLabelComparator;
     private AppOpsState mState;
     private List<Resource> resources = new ArrayList<>();
@@ -127,8 +124,8 @@ public class AppLaunchDetector {
 //                    try {
 //                        ViolationDetector.detectViolation(context, currentPackageName, getOp(currentPackageName), location);
 //                    } catch (SemanticInconsistencyException cwaException) {
-                        //Something is wrong!!!! We have a Closed World Assumption we cannot have deny rules...
-                    //                Log.e(MithrilAC.getDebugTag(), "Serious error! DB contains deny rules. This violates our CWA");
+                //Something is wrong!!!! We have a Closed World Assumption we cannot have deny rules...
+                //                Log.e(MithrilAC.getDebugTag(), "Serious error! DB contains deny rules. This violates our CWA");
 //                    }
                 return new Pair<>(currentPackageName, getOp());
 //                }
@@ -176,10 +173,10 @@ public class AppLaunchDetector {
                 if (perm != null) {
                     try {
                         PermissionInfo pi = mPackageManager.getPermissionInfo(perm, 0);
-    //                            tempRes.setResourceName(pi.packageName);
+                        //                            tempRes.setResourceName(pi.packageName);
                         // We care about the resource group because that tells us what was used!
                         tempRes.setResourceName(pi.group);
-                        if (pi.group != null){// && !lastPermGroup.equals(pi.group)) {
+                        if (pi.group != null) {// && !lastPermGroup.equals(pi.group)) {
 //                            lastPermGroup = pi.group;
                             PermissionGroupInfo pgi = mPackageManager.getPermissionGroupInfo(pi.group, 0);
                             if (pgi.icon != 0) {
@@ -201,7 +198,7 @@ public class AppLaunchDetector {
             sortList();
             tempUsageStat.setResourcesUsed(resources);
         } catch (PackageManager.NameNotFoundException e) {
-            Log.e(MithrilAC.getDebugTag(), "This package may be gone"+e.getMessage());
+            Log.e(MithrilAC.getDebugTag(), "This package may be gone" + e.getMessage());
         }
         return AppOpsManager.OP_NONE;
     }
@@ -221,7 +218,7 @@ public class AppLaunchDetector {
 //            Collections.sort(resources, mUsageTimeComparator);
 //        } else if (mDisplayOrder == _DISPLAY_ORDER_LAST_TIME_USED) {
 //            if (localLOGV) Log.i(MithrilAC.getDebugTag(), "Sorting by last time used");
-            Collections.sort(resources, mLastTimeUsedComparator);
+        Collections.sort(resources, mLastTimeUsedComparator);
 //        } else if (mDisplayOrder == _DISPLAY_ORDER_APP_NAME) {
 //            if (localLOGV) Log.i(MithrilAC.getDebugTag(), "Sorting by application name");
 //            Collections.sort(resources, mAppLabelComparator);

@@ -29,7 +29,10 @@ public class MithrilAC extends Application {
     public static final String MITHRIL_APP_PACKAGE_NAME = "edu.umbc.ebiquity.mithril";
 
     public static final String MITHRIL_BYE_BYE_MESSAGE = "Bye! Thanks for helping with our survey...";
-
+    /**
+     * Map for storing information about airports in the San Francisco bay area.
+     */
+    public static final HashMap<String, LatLng> BALTIMORE_COUNTY_LANDMARKS = new HashMap<String, LatLng>();
     private static final String APP_RECEIVER = MITHRIL_APP_PACKAGE_NAME + ".APP_RECEIVER";
     private static final String RESULT_DATA_KEY = MITHRIL_APP_PACKAGE_NAME + ".RESULT_DATA_KEY";
     private static final String ADDRESS_REQUESTED_EXTRA = "ADDRESS_REQUESTED_EXTRA";
@@ -39,10 +42,6 @@ public class MithrilAC extends Application {
     private static final String NO_FLAGS = "no-flags";
     private static final String NORMAL_PROTECTION_LEVEL = "normal";
     private static final float GEOFENCE_RADIUS_IN_METERS = 200; // 200 meters
-    /**
-     * Map for storing information about airports in the San Francisco bay area.
-     */
-    public static final HashMap<String, LatLng> BALTIMORE_COUNTY_LANDMARKS = new HashMap<String, LatLng>();
     private static final String CALENDAR_PERMISSION_GROUP_DESC = "Calendar permission group";
     public static final Pair<String, String> CALENDAR_PERMISSION_GROUP = new Pair<>("android.permission-group.CALENDAR", CALENDAR_PERMISSION_GROUP_DESC);
     private static final String CAMERA_PERMISSION_GROUP_DESC = "Camera permission group";

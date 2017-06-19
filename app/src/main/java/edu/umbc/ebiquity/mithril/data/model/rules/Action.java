@@ -12,11 +12,11 @@ public enum Action {
 
     Action(int actionInt) {
         value = actionInt;
-        if(actionInt == 0)
+        if (actionInt == 0)
             actionString = "Deny";
-        else if(actionInt == 1)
+        else if (actionInt == 1)
             actionString = "Allow";
-        else if(actionInt == 2)
+        else if (actionInt == 2)
             actionString = "Allow_with_caveat";
         else
             Log.e(MithrilAC.getDebugTag(), "Illegal action");

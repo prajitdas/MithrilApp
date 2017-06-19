@@ -94,15 +94,15 @@ public class AppUsageStats {
         return resourcesUsed;
     }
 
-    public String getResourcesUsedString() {
-        StringBuffer resourcesString = new StringBuffer();
-        for(Resource resource : resourcesUsed)
-            resourcesString.append(resource.getResourceName());
-        return resourcesString.toString();
-    }
-
     public void setResourcesUsed(List<Resource> resourcesUsed) {
         this.resourcesUsed = resourcesUsed;
+    }
+
+    public String getResourcesUsedString() {
+        StringBuffer resourcesString = new StringBuffer();
+        for (Resource resource : resourcesUsed)
+            resourcesString.append(resource.getResourceName());
+        return resourcesString.toString();
     }
 
     public String getLabel() {

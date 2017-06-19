@@ -22,7 +22,7 @@ public class AppOpsException extends Exception {
 
     @Override
     public String getMessage() {
-        if(message == null)
+        if (message == null)
             return super.getMessage();
         return message;
     }

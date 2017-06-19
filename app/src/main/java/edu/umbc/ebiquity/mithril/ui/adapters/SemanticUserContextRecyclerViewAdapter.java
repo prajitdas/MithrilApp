@@ -40,7 +40,7 @@ public class SemanticUserContextRecyclerViewAdapter extends RecyclerView.Adapter
     public void onBindViewHolder(final ViewHolder holder, int position) {
         holder.mItem = semanticUserContexts.get(position);
         holder.mLabel.setText(semanticUserContexts.get(position).getType());
-        if(semanticUserContexts.get(position).isEnabled())
+        if (semanticUserContexts.get(position).isEnabled())
             holder.mDetail.setText(semanticUserContexts.get(position).getLabel());
         else
             holder.mDetail.setText(R.string.click_save_button_to_enable_context);

@@ -10,7 +10,7 @@ import edu.umbc.ebiquity.mithril.data.model.rules.Violation;
 import edu.umbc.ebiquity.mithril.data.model.rules.context.SemanticUserContext;
 import edu.umbc.ebiquity.mithril.ui.fragments.rulechangeactivityfragments.RuleChangeFragment;
 
-public class RuleChangeActivity extends AppCompatActivity  implements RuleChangeFragment.OnListFragmentInteractionListener {
+public class RuleChangeActivity extends AppCompatActivity implements RuleChangeFragment.OnListFragmentInteractionListener {
     private Violation currentViolation;
 
     @Override

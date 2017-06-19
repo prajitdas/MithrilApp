@@ -192,27 +192,27 @@ public class UsageStatsFragment extends Fragment {
                     tempRes.setRelativeLastTimeUsed(entry.getTimeText(context, true).toString());
                     /**
                      * Code to change operations will not be used right now
-                    final AppOpsManager appOps = (AppOpsManager) context.getSystemService(Context.APP_OPS_SERVICE);
-                    Switch sw = (Switch) view.findViewById(R.id.switchWidget);
-                    final int switchOp = AppOpsManager.opToSwitch(firstOp.getOp());
+                     final AppOpsManager appOps = (AppOpsManager) context.getSystemService(Context.APP_OPS_SERVICE);
+                     Switch sw = (Switch) view.findViewById(R.id.switchWidget);
+                     final int switchOp = AppOpsManager.opToSwitch(firstOp.getOp());
+                     try {
+                     int checkedVal = appOps.checkOp(switchOp, entry.getPackageOps().getUid(), entry.getPackageOps().getPackageName());
+                     sw.setChecked(checkedVal == AppOpsManager.MODE_ALLOWED);
+                     sw.setOnCheckedChangeListener(new Switch.OnCheckedChangeListener() {
+                    @Override public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                     try {
-                        int checkedVal = appOps.checkOp(switchOp, entry.getPackageOps().getUid(), entry.getPackageOps().getPackageName());
-                        sw.setChecked(checkedVal == AppOpsManager.MODE_ALLOWED);
-                        sw.setOnCheckedChangeListener(new Switch.OnCheckedChangeListener() {
-                            @Override public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                                try {
-                                    appOps.setMode(switchOp, entry.getPackageOps().getUid(),
-                                    entry.getPackageOps().getPackageName(), isChecked
-                                    ? AppOpsManager.MODE_ALLOWED : AppOpsManager.MODE_IGNORED);
-                                } catch (AppOpsException e) {
-                    Log.e(MithrilAC.getDebugTag(), e.getMessage());
-                                }
-                            }
-                        });
+                    appOps.setMode(switchOp, entry.getPackageOps().getUid(),
+                    entry.getPackageOps().getPackageName(), isChecked
+                    ? AppOpsManager.MODE_ALLOWED : AppOpsManager.MODE_IGNORED);
                     } catch (AppOpsException e) {
-                     Log.e(MithrilAC.getDebugTag(), e.getMessage());
+                    Log.e(MithrilAC.getDebugTag(), e.getMessage());
                     }
-                    */
+                    }
+                    });
+                     } catch (AppOpsException e) {
+                     Log.e(MithrilAC.getDebugTag(), e.getMessage());
+                     }
+                     */
                     tempListOfResource.add(tempRes);
                 }
                 tempUsageStat.setResourcesUsed(tempListOfResource);
@@ -231,7 +231,7 @@ public class UsageStatsFragment extends Fragment {
             // do nothing
             return;
         }
-        mDisplayOrder= sortOrder;
+        mDisplayOrder = sortOrder;
         sortList();
     }
 
@@ -282,9 +282,11 @@ public class UsageStatsFragment extends Fragment {
 
     public static class AppNameComparator implements Comparator<UsageStats> {
         private Map<String, String> mAppLabelList;
+
         AppNameComparator(Map<String, String> appList) {
             mAppLabelList = appList;
         }
+
         @Override
         public final int compare(UsageStats a, UsageStats b) {
             String alabel = mAppLabelList.get(a.getPackageName());
@@ -297,14 +299,14 @@ public class UsageStatsFragment extends Fragment {
         @Override
         public final int compare(UsageStats a, UsageStats b) {
             // return by descending order
-            return (int)(b.getLastTimeUsed() - a.getLastTimeUsed());
+            return (int) (b.getLastTimeUsed() - a.getLastTimeUsed());
         }
     }
 
     public static class UsageTimeComparator implements Comparator<UsageStats> {
         @Override
         public final int compare(UsageStats a, UsageStats b) {
-            return (int)(b.getTotalTimeInForeground() - a.getTotalTimeInForeground());
+            return (int) (b.getTotalTimeInForeground() - a.getTotalTimeInForeground());
         }
     }
 }

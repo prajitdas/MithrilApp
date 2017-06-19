@@ -38,7 +38,7 @@ public class SemanticNearActorsRecyclerViewAdapter extends RecyclerView.Adapter<
     public void onBindViewHolder(final ViewHolder holder, int position) {
         holder.mItem = semanticNearActors.get(position);
         holder.mLabel.setText(semanticNearActors.get(position).getInferredRelationship());
-        if(semanticNearActors.get(position).isEnabled())
+        if (semanticNearActors.get(position).isEnabled())
             holder.mDetail.setText(semanticNearActors.get(position).toString());
         else
             holder.mDetail.setText(R.string.click_save_button_to_enable_context);

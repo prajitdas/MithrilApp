@@ -152,25 +152,25 @@ public class InstanceCreationActivity extends AppCompatActivity
             for (Map.Entry<String, ?> aPref : allPrefs.entrySet()) {
                 if (aPref.getKey().startsWith(MithrilAC.getPrefKeyContextTypeLocation())) {
                     retrieveDataJson = sharedPreferences.getString(aPref.getKey(), "");
-                    if(!retrieveDataGson.fromJson(retrieveDataJson, SemanticLocation.class).isEnabled())
+                    if (!retrieveDataGson.fromJson(retrieveDataJson, SemanticLocation.class).isEnabled())
                         isThereLocationContextToSave = true;
                     //Filtering out by location keys the main key starts from after the word "Location"
                     semanticLocations.put(aPref.getKey().substring(8), retrieveDataGson.fromJson(retrieveDataJson, SemanticLocation.class));
                 } else if (aPref.getKey().startsWith(MithrilAC.getPrefKeyContextTypeTemporal())) {
                     retrieveDataJson = sharedPreferences.getString(aPref.getKey(), "");
-                    if(!retrieveDataGson.fromJson(retrieveDataJson, SemanticTime.class).isEnabled())
+                    if (!retrieveDataGson.fromJson(retrieveDataJson, SemanticTime.class).isEnabled())
                         isThereTemporalContextToSave = true;
                     //Filtering out by location keys the main key starts from after the word "Temporal"
                     semanticTimes.put(aPref.getKey().substring(8), retrieveDataGson.fromJson(retrieveDataJson, SemanticTime.class));
                 } else if (aPref.getKey().startsWith(MithrilAC.getPrefKeyContextTypePresence())) {
                     retrieveDataJson = sharedPreferences.getString(aPref.getKey(), "");
-                    if(!retrieveDataGson.fromJson(retrieveDataJson, SemanticNearActor.class).isEnabled())
+                    if (!retrieveDataGson.fromJson(retrieveDataJson, SemanticNearActor.class).isEnabled())
                         isTherePresenceContextToSave = true;
                     //Filtering out by location keys the main key starts from after the word "Presence"
                     semanticNearActors.put(aPref.getKey().substring(8), retrieveDataGson.fromJson(retrieveDataJson, SemanticNearActor.class));
                 } else if (aPref.getKey().startsWith(MithrilAC.getPrefKeyContextTypeActivity())) {
                     retrieveDataJson = sharedPreferences.getString(aPref.getKey(), "");
-                    if(!retrieveDataGson.fromJson(retrieveDataJson, SemanticActivity.class).isEnabled())
+                    if (!retrieveDataGson.fromJson(retrieveDataJson, SemanticActivity.class).isEnabled())
                         isThereActivityContextToSave = true;
                     //Filtering out by location keys the main key starts from after the word "Activity"
                     semanticActivities.put(aPref.getKey().substring(8), retrieveDataGson.fromJson(retrieveDataJson, SemanticActivity.class));
@@ -289,7 +289,7 @@ public class InstanceCreationActivity extends AppCompatActivity
     }
 
     private void handleActivity() {
-        setTitle(activityBaseTitle+getApplicationContext().getResources().getString(R.string.text_instance_creation_activity));
+        setTitle(activityBaseTitle + getApplicationContext().getResources().getString(R.string.text_instance_creation_activity));
 
         mOtherCtxtBtn.setText(R.string.pref_other_activity_context_title);
         mFirstMajorCtxtBtn.setText(R.string.pref_personal_activity_context_title);
@@ -512,13 +512,13 @@ public class InstanceCreationActivity extends AppCompatActivity
 
     private void refreshVisibleFragment() {
         //Context pieces have been added; update view
-        if(currentFragment.equals(FRAGMENT_LOCATION))
+        if (currentFragment.equals(FRAGMENT_LOCATION))
             loadSemanticLocationFragment();
-        else if(currentFragment.equals(FRAGMENT_TEMPORAL))
+        else if (currentFragment.equals(FRAGMENT_TEMPORAL))
             loadSemanticTemporalFragment();
-        else if(currentFragment.equals(FRAGMENT_PRESENCE))
+        else if (currentFragment.equals(FRAGMENT_PRESENCE))
             loadSemanticPresenceFragment();
-        else if(currentFragment.equals(FRAGMENT_TEMPORAL))
+        else if (currentFragment.equals(FRAGMENT_TEMPORAL))
             loadSemanticActivityFragment();
     }
 
@@ -543,8 +543,7 @@ public class InstanceCreationActivity extends AppCompatActivity
             editor.apply();
             if (!sharedPreferences.getBoolean(MithrilAC.getPrefKeyPoliciesDownloaded(), false)) {
                 startNextActivity(this, DownloadPoliciesActivity.class);
-            }
-            else
+            } else
                 startNextActivity(this, CoreActivity.class);
         }
         return super.onOptionsItemSelected(item);

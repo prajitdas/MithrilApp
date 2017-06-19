@@ -64,22 +64,22 @@ public class MithrilDBHelper extends SQLiteOpenHelper {
     /**
      * Following are table creation statements
      * -- Table 1: apps
-     CREATE TABLE apps (
-     id int NOT NULL AUTO_INCREMENT,
-     uid int NOT NULL,
-     description text NULL,
-     assocprocname text NULL,
-     targetsdkver int NOT NULL,
-     icon blob,
-     label text NOT NULL,
-     name text NOT NULL,
-     verinfo text NOT NULL,
-     installed bool NOT NULL DEFAULT true,
-     type int NOT NULL,
-     installdate timestamp NOT NULL ON UPDATE CURRENT_TIMESTAMP,
-     UNIQUE INDEX apps_unique_key (name),
-     CONSTRAINT apps_pk PRIMARY KEY (id)
-     ) COMMENT 'Table showing metadata for apps';
+     * CREATE TABLE apps (
+     * id int NOT NULL AUTO_INCREMENT,
+     * uid int NOT NULL,
+     * description text NULL,
+     * assocprocname text NULL,
+     * targetsdkver int NOT NULL,
+     * icon blob,
+     * label text NOT NULL,
+     * name text NOT NULL,
+     * verinfo text NOT NULL,
+     * installed bool NOT NULL DEFAULT true,
+     * type int NOT NULL,
+     * installdate timestamp NOT NULL ON UPDATE CURRENT_TIMESTAMP,
+     * UNIQUE INDEX apps_unique_key (name),
+     * CONSTRAINT apps_pk PRIMARY KEY (id)
+     * ) COMMENT 'Table showing metadata for apps';
      */
     private final static String APPID = "id"; // ID of an installed app
     private final static String APPUID = "uid";
@@ -109,18 +109,18 @@ public class MithrilDBHelper extends SQLiteOpenHelper {
             "CONSTRAINT apps_unique_key UNIQUE(" + APPPACKAGENAME + ") ON CONFLICT REPLACE);";
     /**
      * -- Table 2: permissions
-     CREATE TABLE permissions (
-     id int NOT NULL AUTO_INCREMENT,
-     name text NOT NULL,
-     label text NOT NULL,
-     protectionlvl text NOT NULL,
-     permgrp text NULL,
-     flags text NULL,
-     description text NULL,
-     icon blob,
-     UNIQUE INDEX permissions_unique_name (name),
-     CONSTRAINT permissions_pk PRIMARY KEY (id)
-     ) COMMENT 'Table showing metadata for permissions';
+     * CREATE TABLE permissions (
+     * id int NOT NULL AUTO_INCREMENT,
+     * name text NOT NULL,
+     * label text NOT NULL,
+     * protectionlvl text NOT NULL,
+     * permgrp text NULL,
+     * flags text NULL,
+     * description text NULL,
+     * icon blob,
+     * UNIQUE INDEX permissions_unique_name (name),
+     * CONSTRAINT permissions_pk PRIMARY KEY (id)
+     * ) COMMENT 'Table showing metadata for permissions';
      */
     private final static String PERMID = "id"; // ID of a known permission on the device
     private final static String PERMNAME = "name";
@@ -146,19 +146,19 @@ public class MithrilDBHelper extends SQLiteOpenHelper {
             "CONSTRAINT permissions_unique_name UNIQUE(" + PERMNAME + ") ON CONFLICT ABORT);";
     /**
      * -- Table 3: appperm
-     CREATE TABLE appperm (
-     id int NOT NULL AUTO_INCREMENT,
-     apps_id int NOT NULL,
-     permissions_id int NOT NULL,
-     granted int NOT NULL,
-     CONSTRAINT appperm_pk PRIMARY KEY (id,apps_id,permissions_id)
-     ) COMMENT 'Table showing apps and permissions';
-
-     ALTER TABLE appperm ADD CONSTRAINT appperm_apps FOREIGN KEY appperm_apps (apps_id)
-     REFERENCES apps (id) ON DELETE CASCADE;
-
-     ALTER TABLE appperm ADD CONSTRAINT appperm_permissions FOREIGN KEY appperm_permissions (permissions_id)
-     REFERENCES permissions (id);
+     * CREATE TABLE appperm (
+     * id int NOT NULL AUTO_INCREMENT,
+     * apps_id int NOT NULL,
+     * permissions_id int NOT NULL,
+     * granted int NOT NULL,
+     * CONSTRAINT appperm_pk PRIMARY KEY (id,apps_id,permissions_id)
+     * ) COMMENT 'Table showing apps and permissions';
+     * <p>
+     * ALTER TABLE appperm ADD CONSTRAINT appperm_apps FOREIGN KEY appperm_apps (apps_id)
+     * REFERENCES apps (id) ON DELETE CASCADE;
+     * <p>
+     * ALTER TABLE appperm ADD CONSTRAINT appperm_permissions FOREIGN KEY appperm_permissions (permissions_id)
+     * REFERENCES permissions (id);
      * ----------------------------------------------------------------------------------------------------------------
      * This table represents all the apps and their corresponding permissions. We also want to store the association between an app and an api call or a resource access.
      */
@@ -175,13 +175,13 @@ public class MithrilDBHelper extends SQLiteOpenHelper {
             ");";
     /**
      * -- Table 4: context
-     -- Table: context
-     CREATE TABLE context (
-     id int NOT NULL AUTO_INCREMENT,
-     type text NOT NULL,
-     value text NOT NULL,
-     CONSTRAINT context_pk PRIMARY KEY (id)
-     ) COMMENT 'Table showing context instances';
+     * -- Table: context
+     * CREATE TABLE context (
+     * id int NOT NULL AUTO_INCREMENT,
+     * type text NOT NULL,
+     * value text NOT NULL,
+     * CONSTRAINT context_pk PRIMARY KEY (id)
+     * ) COMMENT 'Table showing context instances';
      * --------------------------------------------------------------------------------------------------------------------------
      * An entry is made into this table every time we determine a change in context.
      * This could be where we could do energy efficient stuff as in we can save battery by determining context from historical data or some other way.
@@ -196,23 +196,23 @@ public class MithrilDBHelper extends SQLiteOpenHelper {
             CONTEXTSEMLBL + " TEXT NOT NULL, " +
             //context are by default enabled
             CONTEXTENABLED + " INTEGER NOT NULL DEFAULT 1, " +
-            "CONSTRAINT context_unique_name UNIQUE("+CONTEXTTYPE+", "+ CONTEXTSEMLBL +") ON CONFLICT REPLACE);";
+            "CONSTRAINT context_unique_name UNIQUE(" + CONTEXTTYPE + ", " + CONTEXTSEMLBL + ") ON CONFLICT REPLACE);";
     /**
      * -- Table 5: policyrules
-     CREATE TABLE policyrules (
-     id int NOT NULL AUTO_INCREMENT,
-     name text NOT NULL,
-     action int NOT NULL,
-     apps_id int NOT NULL,
-     context_id int NOT NULL,
-     CONSTRAINT policyrules_pk PRIMARY KEY (id)
-     ) COMMENT 'Table showing policy rules defined for apps and requested resources in given context';
-
-     ALTER TABLE policyrules ADD CONSTRAINT policyrules_apps FOREIGN KEY policyrules_apps (apps_id)
-     REFERENCES apps (id);
-
-     ALTER TABLE policyrules ADD CONSTRAINT policyrules_context FOREIGN KEY policyrules_context (context_id)
-     REFERENCES context (id);
+     * CREATE TABLE policyrules (
+     * id int NOT NULL AUTO_INCREMENT,
+     * name text NOT NULL,
+     * action int NOT NULL,
+     * apps_id int NOT NULL,
+     * context_id int NOT NULL,
+     * CONSTRAINT policyrules_pk PRIMARY KEY (id)
+     * ) COMMENT 'Table showing policy rules defined for apps and requested resources in given context';
+     * <p>
+     * ALTER TABLE policyrules ADD CONSTRAINT policyrules_apps FOREIGN KEY policyrules_apps (apps_id)
+     * REFERENCES apps (id);
+     * <p>
+     * ALTER TABLE policyrules ADD CONSTRAINT policyrules_context FOREIGN KEY policyrules_context (context_id)
+     * REFERENCES context (id);
      */
     private final static String POLRULID = "id"; // ID of policy defined; this will be used to determine if multiple rows belong to the same policy
     private final static String POLRULACTIN = "action"; // Action will be denoted as: 0 for to deny, 1 for allow
@@ -237,21 +237,21 @@ public class MithrilDBHelper extends SQLiteOpenHelper {
             POLRULAPPSTR + " TEXT NOT NULL, " +
             POLRULCTXSTR + " TEXT NOT NULL, " +
             POLRULOPSTR + " TEXT NOT NULL, " +
-            "PRIMARY KEY("+POLRULAPPID+", "+POLRULCTXID+", "+ POLRULOPID +"), " +
+            "PRIMARY KEY(" + POLRULAPPID + ", " + POLRULCTXID + ", " + POLRULOPID + "), " +
             "FOREIGN KEY(" + POLRULAPPID + ") REFERENCES " + getAppsTableName() + "(" + APPID + ") ON DELETE CASCADE, " +
             "FOREIGN KEY(" + POLRULCTXID + ") REFERENCES " + getContextTableName() + "(" + CONTEXTID + ")" +
             ");";
     /**
      * -- Table 6: contextlog
-     CREATE TABLE contextlog (
-     id int NOT NULL AUTO_INCREMENT,
-     time timestamp NOT NULL ON UPDATE CURRENT_TIMESTAMP,
-     context_id int NOT NULL,
-     CONSTRAINT contextlog_pk PRIMARY KEY (id)
-     ) COMMENT 'Table showing log of current user context';
-
-     ALTER TABLE contextlog ADD CONSTRAINT contextlog_context FOREIGN KEY contextlog_context (context_id)
-     REFERENCES context (id);
+     * CREATE TABLE contextlog (
+     * id int NOT NULL AUTO_INCREMENT,
+     * time timestamp NOT NULL ON UPDATE CURRENT_TIMESTAMP,
+     * context_id int NOT NULL,
+     * CONSTRAINT contextlog_pk PRIMARY KEY (id)
+     * ) COMMENT 'Table showing log of current user context';
+     * <p>
+     * ALTER TABLE contextlog ADD CONSTRAINT contextlog_context FOREIGN KEY contextlog_context (context_id)
+     * REFERENCES context (id);
      * --------------------------------------------------------------------------------------------------------------------------
      * An entry is made into this table every time we determine a change in context.
      * This could be where we could do energy efficient stuff as in we can save battery by determining context from historical data or some other way.
@@ -268,21 +268,21 @@ public class MithrilDBHelper extends SQLiteOpenHelper {
             "FOREIGN KEY(" + CTXTID + ") REFERENCES " + getContextLogTableName() + "(" + CONTEXTID + "));";
     /**
      * -- Table 7: violationlog
-     CREATE TABLE violationlog (
-     id int NOT NULL AUTO_INCREMENT,
-     description text NOT NULL,
-     marker bool NULL,
-     time timestamp NOT NULL ON UPDATE CURRENT_TIMESTAMP,
-     apps_id int NOT NULL,
-     context_id int NOT NULL,
-     CONSTRAINT violationlog_pk PRIMARY KEY (id)
-     ) COMMENT 'Table showing violations recorded by MithrilAC and subsequent user feedback';
-
-     ALTER TABLE violationlog ADD CONSTRAINT violationlog_apps FOREIGN KEY violationlog_apps (apps_id)
-     REFERENCES apps (id);
-
-     ALTER TABLE violationlog ADD CONSTRAINT violationlog_context FOREIGN KEY violationlog_context (context_id)
-     REFERENCES context (id);
+     * CREATE TABLE violationlog (
+     * id int NOT NULL AUTO_INCREMENT,
+     * description text NOT NULL,
+     * marker bool NULL,
+     * time timestamp NOT NULL ON UPDATE CURRENT_TIMESTAMP,
+     * apps_id int NOT NULL,
+     * context_id int NOT NULL,
+     * CONSTRAINT violationlog_pk PRIMARY KEY (id)
+     * ) COMMENT 'Table showing violations recorded by MithrilAC and subsequent user feedback';
+     * <p>
+     * ALTER TABLE violationlog ADD CONSTRAINT violationlog_apps FOREIGN KEY violationlog_apps (apps_id)
+     * REFERENCES apps (id);
+     * <p>
+     * ALTER TABLE violationlog ADD CONSTRAINT violationlog_context FOREIGN KEY violationlog_context (context_id)
+     * REFERENCES context (id);
      */
 //    private final static String VIOLATIONDESC = "description"; // An appropriate description of the violation. No idea how this will be generated but
 // This will be a general text that will have to be "reasoned" about!
@@ -313,24 +313,24 @@ public class MithrilDBHelper extends SQLiteOpenHelper {
             VIOLATIONTRUEFALSE + " INTEGER NOT NULL DEFAULT 1, " +
             VIOLATIONDETECTTIME + " timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP, " +
             VIOLATIONFEEDBACKTTIME + " timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP, " +
-            "PRIMARY KEY("+ VIOLATIONPOLICYID +", "+VIOLATIONAPPID+", "+VIOLATIONOPERATION+"), " +
+            "PRIMARY KEY(" + VIOLATIONPOLICYID + ", " + VIOLATIONAPPID + ", " + VIOLATIONOPERATION + "), " +
             "FOREIGN KEY(" + VIOLATIONAPPID + ") REFERENCES " + getAppsTableName() + "(" + APPID + ") ON DELETE CASCADE);";
     /**
      * -- Table 8: actionlog
-     CREATE TABLE actionlog (
-     id int NOT NULL AUTO_INCREMENT,
-     time timestamp NOT NULL ON UPDATE CURRENT_TIMESTAMP,
-     action int NOT NULL,
-     apps_id int NOT NULL,
-     context_id int NOT NULL,
-     CONSTRAINT actionlog_pk PRIMARY KEY (id)
-     ) COMMENT 'Table showing actions taken for each context, resource, requester tuple';
-
-     ALTER TABLE actionlog ADD CONSTRAINT actionlog_apps FOREIGN KEY actionlog_apps (apps_id)
-     REFERENCES apps (id);
-
-     ALTER TABLE actionlog ADD CONSTRAINT actionlog_context FOREIGN KEY actionlog_context (context_id)
-     REFERENCES context (id);
+     * CREATE TABLE actionlog (
+     * id int NOT NULL AUTO_INCREMENT,
+     * time timestamp NOT NULL ON UPDATE CURRENT_TIMESTAMP,
+     * action int NOT NULL,
+     * apps_id int NOT NULL,
+     * context_id int NOT NULL,
+     * CONSTRAINT actionlog_pk PRIMARY KEY (id)
+     * ) COMMENT 'Table showing actions taken for each context, resource, requester tuple';
+     * <p>
+     * ALTER TABLE actionlog ADD CONSTRAINT actionlog_apps FOREIGN KEY actionlog_apps (apps_id)
+     * REFERENCES apps (id);
+     * <p>
+     * ALTER TABLE actionlog ADD CONSTRAINT actionlog_context FOREIGN KEY actionlog_context (context_id)
+     * REFERENCES context (id);
      * ----------------------------------------------------------------------------------------------------------------
      * 0 for denied, 1 for allowed
      * Makes a record every time an action is taken for a certain requester, resource, context and applicable policy
@@ -352,24 +352,24 @@ public class MithrilDBHelper extends SQLiteOpenHelper {
     /**
      * -- views
      * -- View: apppermview
-     CREATE VIEW `mithril.db`.apppermview AS
-     SELECT
-     a.name as apppkgname,
-     p.name as permname,
-     p.protectionlvl as protectionlevel,
-     p.label as permlabel,
-     p.permgrp as permgroup
-     FROM
-     apps a,
-     permissions p,
-     appperm ap
-     WHERE
-     ap.apps_id = a.id
-     AND
-     ap.permissions_id = p.id;
-     ----------------------------
-     View 1 for App permissions
-     This table represents all the apps and their corresponding permissions. We also want to store the association between an app and an api call or a resource access.
+     * CREATE VIEW `mithril.db`.apppermview AS
+     * SELECT
+     * a.name as apppkgname,
+     * p.name as permname,
+     * p.protectionlvl as protectionlevel,
+     * p.label as permlabel,
+     * p.permgrp as permgroup
+     * FROM
+     * apps a,
+     * permissions p,
+     * appperm ap
+     * WHERE
+     * ap.apps_id = a.id
+     * AND
+     * ap.permissions_id = p.id;
+     * ----------------------------
+     * View 1 for App permissions
+     * This table represents all the apps and their corresponding permissions. We also want to store the association between an app and an api call or a resource access.
      */
     private final static String APPPERMVIEWAPPPKGNAME = "apppkgname"; // app package name
     private final static String APPPERMVIEWPERMNAME = "permname"; // app permission name
@@ -549,10 +549,10 @@ public class MithrilDBHelper extends SQLiteOpenHelper {
 
     public void loadPoliciesForApps(SQLiteDatabase db) throws SemanticInconsistencyException {
         //We have to get the policies from somewhere. The best case scenario would be a server that gives us the policies.
-        if(BuildConfig.DEBUG)
+        if (BuildConfig.DEBUG)
             loadDefaultDataIntoDB(db);
 //        else
-            // Load data from server
+        // Load data from server
     }
 
     private void loadDefaultDataIntoDB(SQLiteDatabase db) throws SQLException, SemanticInconsistencyException {
@@ -830,7 +830,6 @@ public class MithrilDBHelper extends SQLiteOpenHelper {
     }
 
     /**
-     *
      * @param db
      * @param aPermData
      * @return
@@ -859,7 +858,6 @@ public class MithrilDBHelper extends SQLiteOpenHelper {
     }
 
     /**
-     *
      * @param db
      * @param anAppData
      * @param appId
@@ -919,7 +917,7 @@ public class MithrilDBHelper extends SQLiteOpenHelper {
         ContentValues values = new ContentValues();
         values.put(CONTEXTTYPE, type);
         values.put(CONTEXTSEMLBL, label);
-        if(enabled)
+        if (enabled)
             values.put(CONTEXTENABLED, 1);
         else
             values.put(CONTEXTENABLED, 0);
@@ -933,7 +931,6 @@ public class MithrilDBHelper extends SQLiteOpenHelper {
     }
 
     /**
-     *
      * @param db
      * @param contextId
      * @return
@@ -953,7 +950,6 @@ public class MithrilDBHelper extends SQLiteOpenHelper {
     }
 
     /**
-     *
      * @param db
      * @param aRuleAction
      * @return
@@ -980,7 +976,7 @@ public class MithrilDBHelper extends SQLiteOpenHelper {
      * @return
      */
     public long addPolicyRule(SQLiteDatabase db, PolicyRule aPolicyRule) throws SQLiteConstraintException, SemanticInconsistencyException {
-        if(aPolicyRule != null) {
+        if (aPolicyRule != null) {
             List<PolicyRule> rules = findAllPoliciesById(db, aPolicyRule.getId());
             //Policy in table, check if we are conflicting
             if (rules.size() > 0) {
@@ -1029,16 +1025,16 @@ public class MithrilDBHelper extends SQLiteOpenHelper {
 
     /**
      * method to insert into violations table the violation
+     *
      * @param db         database instance
      * @param aViolation a violation
      * @return returns the inserted row id
-     *             VIOLATIONAPPID + " INTEGER NOT NULL, " +
-    VIOLATIONCTXID + " INTEGER NOT NULL, " +
-    VIOLATIONOPERATION + " INTEGER NOT NULL, " +
-    VIOLATIONDESC + " TEXT, " +
-    VIOLATIONTFMARKER + " INTEGER NOT NULL DEFAULT 0, " +
-    VIOLATIONDETECTTIME + " timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP, " +
-
+     * VIOLATIONAPPID + " INTEGER NOT NULL, " +
+     * VIOLATIONCTXID + " INTEGER NOT NULL, " +
+     * VIOLATIONOPERATION + " INTEGER NOT NULL, " +
+     * VIOLATIONDESC + " TEXT, " +
+     * VIOLATIONTFMARKER + " INTEGER NOT NULL DEFAULT 0, " +
+     * VIOLATIONDETECTTIME + " timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP, " +
      */
     public long addViolation(SQLiteDatabase db, Violation aViolation) {
         long insertedRowId;
@@ -1049,11 +1045,11 @@ public class MithrilDBHelper extends SQLiteOpenHelper {
         values.put(VIOLATIONAPPSTR, aViolation.getAppStr());
         values.put(VIOLATIONOPSTR, aViolation.getOpStr());
         values.put(VIOLATIONDETECTTIME, new Long(aViolation.getDetectedAtTime().getTime()));
-        if(aViolation.isAsked())
+        if (aViolation.isAsked())
             values.put(VIOLATIONASKED, 1);
         else
             values.put(VIOLATIONASKED, 0);
-        if(aViolation.isTvfv())
+        if (aViolation.isTvfv())
             values.put(VIOLATIONTRUEFALSE, 1);
         else
             values.put(VIOLATIONTRUEFALSE, 0);
@@ -1068,6 +1064,7 @@ public class MithrilDBHelper extends SQLiteOpenHelper {
 
     /**
      * Finds all apps
+     *
      * @param db database instance
      * @return returns list of apps
      */
@@ -1140,6 +1137,7 @@ public class MithrilDBHelper extends SQLiteOpenHelper {
 
     /**
      * Finds app by name
+     *
      * @param db database instance
      * @return AppData
      */
@@ -1187,6 +1185,7 @@ public class MithrilDBHelper extends SQLiteOpenHelper {
 
     /**
      * Finds app by id
+     *
      * @param db database instance
      * @return AppData
      */
@@ -1233,6 +1232,7 @@ public class MithrilDBHelper extends SQLiteOpenHelper {
 
     /**
      * Finds appType by appPkgName
+     *
      * @param db         database instance
      * @param appPkgName app pkg name
      * @return AppData
@@ -1260,6 +1260,7 @@ public class MithrilDBHelper extends SQLiteOpenHelper {
 
     /**
      * Temporary solution setup but eventually we will the join and populate with data from our servers
+     *
      * @param db             database instance
      * @param appPackageName app pkg name
      * @return List of PermData objects
@@ -1279,7 +1280,7 @@ public class MithrilDBHelper extends SQLiteOpenHelper {
         try {
             if (cursor.moveToFirst()) {
                 do {
-                    if(cursor.getInt(1) == 0)
+                    if (cursor.getInt(1) == 0)
                         permissionMap.put(cursor.getString(0), true);
                     else
                         permissionMap.put(cursor.getString(0), false);
@@ -1368,6 +1369,7 @@ public class MithrilDBHelper extends SQLiteOpenHelper {
 
     /**
      * Finds permissions by name
+     *
      * @param db database instance
      * @return permissionName
      */
@@ -1444,6 +1446,7 @@ public class MithrilDBHelper extends SQLiteOpenHelper {
 
     /**
      * Finds all violations
+     *
      * @param db database instance
      * @return all violations
      */
@@ -1488,6 +1491,7 @@ public class MithrilDBHelper extends SQLiteOpenHelper {
 
     /**
      * Finds all violations
+     *
      * @param db database instance
      * @return all violations
      */
@@ -1533,6 +1537,7 @@ public class MithrilDBHelper extends SQLiteOpenHelper {
 
     /**
      * Getting all policies
+     *
      * @param db database instance
      * @return all policies
      */
@@ -1548,7 +1553,7 @@ public class MithrilDBHelper extends SQLiteOpenHelper {
                 getPolicyRulesTableName() + "." + POLRULACTSTR + ", " +
                 getPolicyRulesTableName() + "." + POLRULAPPSTR + ", " +
                 getPolicyRulesTableName() + "." + POLRULCTXSTR + ", " +
-                getPolicyRulesTableName() + "." + POLRULOPSTR  + ", " +
+                getPolicyRulesTableName() + "." + POLRULOPSTR + ", " +
                 getPolicyRulesTableName() + "." + POLRULENABLED +
                 " FROM " +
                 getPolicyRulesTableName() + ", " + getContextTableName() +
@@ -1571,12 +1576,12 @@ public class MithrilDBHelper extends SQLiteOpenHelper {
                             cursor.getLong(1),
                             cursor.getLong(2),
                             cursor.getInt(3),
-                            cursor.getInt(4)==1 ? Action.ALLOW : Action.DENY,
+                            cursor.getInt(4) == 1 ? Action.ALLOW : Action.DENY,
                             cursor.getString(5),
                             cursor.getString(6),
                             cursor.getString(7),
                             cursor.getString(8),
-                            cursor.getInt(9)==1 ? true : false));
+                            cursor.getInt(9) == 1 ? true : false));
                 } while (cursor.moveToNext());
             }
         } catch (SQLException e) {
@@ -1590,6 +1595,7 @@ public class MithrilDBHelper extends SQLiteOpenHelper {
 
     /**
      * Getting all policies
+     *
      * @param db database instance
      * @return all policies
      */
@@ -1603,7 +1609,7 @@ public class MithrilDBHelper extends SQLiteOpenHelper {
         Cursor cursor = db.rawQuery(selectQuery, null);
         try {
             if (cursor.moveToFirst()) {
-                 return cursor.getInt(0);
+                return cursor.getInt(0);
             }
         } catch (SQLException e) {
             throw new SQLException("Could not find " + e);
@@ -1615,6 +1621,7 @@ public class MithrilDBHelper extends SQLiteOpenHelper {
 
     /**
      * Finds a policy based on the application being accessed
+     *
      * @param db database instance
      * @return all policies
      */
@@ -1630,7 +1637,7 @@ public class MithrilDBHelper extends SQLiteOpenHelper {
                 getPolicyRulesTableName() + "." + POLRULACTSTR + ", " +
                 getPolicyRulesTableName() + "." + POLRULAPPSTR + ", " +
                 getPolicyRulesTableName() + "." + POLRULCTXSTR + ", " +
-                getPolicyRulesTableName() + "." + POLRULOPSTR  + ", " +
+                getPolicyRulesTableName() + "." + POLRULOPSTR + ", " +
                 getPolicyRulesTableName() + "." + POLRULENABLED +
                 " FROM " +
                 getPolicyRulesTableName() + ", " + getAppsTableName() + ", " + getContextTableName() +
@@ -1656,12 +1663,12 @@ public class MithrilDBHelper extends SQLiteOpenHelper {
                             cursor.getLong(1),
                             cursor.getLong(2),
                             cursor.getInt(3),
-                            cursor.getInt(4)==1 ? Action.ALLOW : Action.DENY,
+                            cursor.getInt(4) == 1 ? Action.ALLOW : Action.DENY,
                             cursor.getString(5),
                             cursor.getString(6),
                             cursor.getString(7),
                             cursor.getString(8),
-                            cursor.getInt(9)==1 ? true : false));
+                            cursor.getInt(9) == 1 ? true : false));
                 } while (cursor.moveToNext());
             }
         } catch (SQLException e) {
@@ -1675,6 +1682,7 @@ public class MithrilDBHelper extends SQLiteOpenHelper {
 
     /**
      * Finds a policy based on the application being accessed
+     *
      * @param db database instance
      * @return all policies
      */
@@ -1690,7 +1698,7 @@ public class MithrilDBHelper extends SQLiteOpenHelper {
                 getPolicyRulesTableName() + "." + POLRULACTSTR + ", " +
                 getPolicyRulesTableName() + "." + POLRULAPPSTR + ", " +
                 getPolicyRulesTableName() + "." + POLRULCTXSTR + ", " +
-                getPolicyRulesTableName() + "." + POLRULOPSTR  + ", " +
+                getPolicyRulesTableName() + "." + POLRULOPSTR + ", " +
                 getPolicyRulesTableName() + "." + POLRULENABLED +
                 " FROM " +
                 getPolicyRulesTableName() + ", " + getAppsTableName() + ", " + getContextTableName() +
@@ -1718,12 +1726,12 @@ public class MithrilDBHelper extends SQLiteOpenHelper {
                             cursor.getLong(1),
                             cursor.getLong(2),
                             cursor.getInt(3),
-                            cursor.getInt(4)==1 ? Action.ALLOW : Action.DENY,
+                            cursor.getInt(4) == 1 ? Action.ALLOW : Action.DENY,
                             cursor.getString(5),
                             cursor.getString(6),
                             cursor.getString(7),
                             cursor.getString(8),
-                            cursor.getInt(9)==1 ? true : false));
+                            cursor.getInt(9) == 1 ? true : false));
                 } while (cursor.moveToNext());
             }
         } catch (SQLException e) {
@@ -1737,6 +1745,7 @@ public class MithrilDBHelper extends SQLiteOpenHelper {
 
     /**
      * Finds a resource based on the resource id
+     *
      * @param db database instance
      * @param id action id
      * @return action info
@@ -1890,11 +1899,11 @@ public class MithrilDBHelper extends SQLiteOpenHelper {
         values.put(VIOLATIONOPSTR, aViolation.getOpStr());
         values.put(VIOLATIONDETECTTIME, new Long(aViolation.getDetectedAtTime().getTime()));
         values.put(VIOLATIONFEEDBACKTTIME, new Long(aViolation.getFeedbackTime().getTime()));
-        if(aViolation.isAsked())
+        if (aViolation.isAsked())
             values.put(VIOLATIONASKED, 1);
         else
             values.put(VIOLATIONASKED, 0);
-        if(aViolation.isTvfv())
+        if (aViolation.isTvfv())
             values.put(VIOLATIONTRUEFALSE, 1);
         else
             values.put(VIOLATIONTRUEFALSE, 0);
@@ -1906,11 +1915,11 @@ public class MithrilDBHelper extends SQLiteOpenHelper {
 
         try {
             return db.update(getViolationsLogTableName(),
-                values,
-                VIOLATIONAPPID + " = ? AND " +
-                        VIOLATIONPOLICYID + " = ? AND " +
-                        VIOLATIONOPERATION + " = ? ",
-                args);
+                    values,
+                    VIOLATIONAPPID + " = ? AND " +
+                            VIOLATIONPOLICYID + " = ? AND " +
+                            VIOLATIONOPERATION + " = ? ",
+                    args);
         } catch (SQLException e) {
             throw new SQLException("Exception " + e + " error updating violation: " + aViolation.getPolicyId());
         }
@@ -1934,7 +1943,7 @@ public class MithrilDBHelper extends SQLiteOpenHelper {
         values.put(POLRULACTSTR, aPolicyRule.getActStr());
         values.put(POLRULOPID, aPolicyRule.getOp());
         values.put(POLRULOPSTR, aPolicyRule.getOpStr());
-        if(aPolicyRule.isEnabled())
+        if (aPolicyRule.isEnabled())
             values.put(POLRULENABLED, 1);
         else
             values.put(POLRULENABLED, 0);
@@ -1961,7 +1970,7 @@ public class MithrilDBHelper extends SQLiteOpenHelper {
         ContentValues values = new ContentValues();
         values.put(CONTEXTTYPE, type);
         values.put(CONTEXTSEMLBL, label);
-        if(enabled)
+        if (enabled)
             values.put(CONTEXTENABLED, 1);
         else
             values.put(CONTEXTENABLED, 0);
@@ -1997,6 +2006,7 @@ public class MithrilDBHelper extends SQLiteOpenHelper {
 
     /**
      * method to delete a row from a table based on the identifier
+     *
      * @param db database instance
      */
     public void deleteViolation(SQLiteDatabase db, Violation aViolation) {
@@ -2019,6 +2029,7 @@ public class MithrilDBHelper extends SQLiteOpenHelper {
 
     /**
      * Given a certain app uid deletes app from the database
+     *
      * @param db  database instance
      * @param uid app linux UID
      */
@@ -2042,7 +2053,6 @@ public class MithrilDBHelper extends SQLiteOpenHelper {
     }
 
     /**
-     *
      * @param db
      * @param anAction
      */
@@ -2056,7 +2066,6 @@ public class MithrilDBHelper extends SQLiteOpenHelper {
     }
 
     /**
-     *
      * @param db
      * @param aPolicyRule
      */

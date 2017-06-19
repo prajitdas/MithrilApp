@@ -14,6 +14,7 @@
         android:layout_marginTop="@dimen/card_view_margin"
         android:elevation="@dimen/card_view_elevation"
         card_view:cardCornerRadius="@dimen/card_view_corner_radius">
+
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -80,8 +81,8 @@
                 android:id="@+id/resourceUsed"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_toRightOf="@id/usagestats_app_icon"
                 android:layout_below="@id/usagestats_app_last_launch"
+                android:layout_toRightOf="@id/usagestats_app_icon"
                 android:paddingEnd="5dp"
                 android:paddingLeft="5dp"
                 android:paddingRight="5dp"

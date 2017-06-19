@@ -43,7 +43,7 @@ public class SemanticLocationRecyclerViewAdapter extends RecyclerView.Adapter<Se
         holder.mItem = semanticLocation;
         holder.mLabel.setText(semanticLocation.getInferredLocation());
 
-        if(semanticLocation.isEnabled()) {
+        if (semanticLocation.isEnabled()) {
             String addressLine = new String(
                     semanticLocation.getAddress().getAddressLine(0) + ", " +
                             semanticLocation.getAddress().getLocality() + ", " +

@@ -16,6 +16,20 @@ package edu.umbc.ebiquity.mithril.util.specialtasks.appops;
  * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
  * License for the specific language governing permissions and limitations
  * under the License.
+ * <p>
+ * Copyright (C) 2013 The Android Open Source Project
+ * <p>
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may not
+ * use this file except in compliance with the License. You may obtain a copy
+ * of the License at
+ * <p>
+ * http://www.apache.org/licenses/LICENSE-2.0
+ * <p>
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
+ * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
+ * License for the specific language governing permissions and limitations
+ * under the License.
  */
 
 /**
@@ -337,7 +351,7 @@ public class AppOpsState {
                 if (lastExe == entryExe) {
                     if (DEBUG)
                         Log.d(MithrilAC.getDebugTag(), "Add op " + opEntry.getOp() + " to package "
-                            + pkgOps.getPackageName() + ": append to " + last);
+                                + pkgOps.getPackageName() + ": append to " + last);
                     last.addOp(opEntry);
                     return;
                 }
@@ -351,7 +365,7 @@ public class AppOpsState {
         entry = new AppOpEntry(pkgOps, opEntry, appEntry, switchOrder);
         if (DEBUG)
             Log.d(MithrilAC.getDebugTag(), "Add op " + opEntry.getOp() + " to package "
-                + pkgOps.getPackageName() + ": making new " + entry);
+                    + pkgOps.getPackageName() + ": making new " + entry);
         entries.add(entry);
     }
 
@@ -463,20 +477,20 @@ public class AppOpsState {
                                 & PackageInfo.REQUESTED_PERMISSION_GRANTED) == 0) {
                             if (DEBUG)
                                 Log.d(MithrilAC.getDebugTag(), "Pkg " + appInfo.packageName + " perm "
-                                    + appInfo.requestedPermissions[j] + " not granted; skipping");
+                                        + appInfo.requestedPermissions[j] + " not granted; skipping");
                             continue;
                         }
                     }
                     if (DEBUG)
                         Log.d(MithrilAC.getDebugTag(), "Pkg " + appInfo.packageName + ": requested perm "
-                            + appInfo.requestedPermissions[j]);
+                                + appInfo.requestedPermissions[j]);
                     for (int k = 0; k < perms.size(); k++) {
                         if (!perms.get(k).equals(appInfo.requestedPermissions[j])) {
                             continue;
                         }
                         if (DEBUG)
                             Log.d(MithrilAC.getDebugTag(), "Pkg " + appInfo.packageName + " perm " + perms.get(k)
-                                + " has op " + permOps.get(k) + ": " + appEntry.hasOp(permOps.get(k)));
+                                    + " has op " + permOps.get(k) + ": " + appEntry.hasOp(permOps.get(k)));
                         if (appEntry.hasOp(permOps.get(k))) {
                             continue;
                         }

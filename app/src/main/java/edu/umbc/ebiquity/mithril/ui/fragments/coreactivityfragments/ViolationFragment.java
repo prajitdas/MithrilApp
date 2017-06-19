@@ -33,7 +33,7 @@ public class ViolationFragment extends Fragment {
      * An array of violation items.
      */
     public List<Violation> violationItems = new ArrayList<>();
-//    /**
+    //    /**
 //     * A map of violation items, by ID.
 //     */
 //    public Map<String, Violation> violationItemsMap = new HashMap<>();

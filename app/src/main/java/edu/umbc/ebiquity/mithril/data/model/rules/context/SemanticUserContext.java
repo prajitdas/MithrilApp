@@ -9,15 +9,15 @@ public class SemanticUserContext {
         return null;
     }
 
+    public void setLabel(String label) {
+
+    }
+
     public boolean isEnabled() {
         return false;
     }
 
     public void setEnabled(boolean enabled) {
-
-    }
-
-    public void setLabel(String label) {
 
     }
 }

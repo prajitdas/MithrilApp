@@ -120,9 +120,11 @@ public class UsageStatsRecyclerViewAdapter extends RecyclerView.Adapter<UsageSta
 
     public static class AppNameComparator implements Comparator<UsageStats> {
         private Map<String, String> mAppLabelList;
+
         AppNameComparator(Map<String, String> appList) {
             mAppLabelList = appList;
         }
+
         @Override
         public final int compare(UsageStats a, UsageStats b) {
             String alabel = mAppLabelList.get(a.getPackageName());
@@ -135,14 +137,14 @@ public class UsageStatsRecyclerViewAdapter extends RecyclerView.Adapter<UsageSta
         @Override
         public final int compare(UsageStats a, UsageStats b) {
             // return by descending order
-            return (int)(b.getLastTimeUsed() - a.getLastTimeUsed());
+            return (int) (b.getLastTimeUsed() - a.getLastTimeUsed());
         }
     }
 
     public static class UsageTimeComparator implements Comparator<UsageStats> {
         @Override
         public final int compare(UsageStats a, UsageStats b) {
-            return (int)(b.getTotalTimeInForeground() - a.getTotalTimeInForeground());
+            return (int) (b.getTotalTimeInForeground() - a.getTotalTimeInForeground());
         }
     }
 

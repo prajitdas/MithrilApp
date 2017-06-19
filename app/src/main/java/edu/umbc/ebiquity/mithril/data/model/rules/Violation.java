@@ -6,6 +6,17 @@ import android.os.Parcelable;
 import java.sql.Timestamp;
 
 public class Violation implements Parcelable {
+    public static final Creator<Violation> CREATOR = new Creator<Violation>() {
+        @Override
+        public Violation createFromParcel(Parcel in) {
+            return new Violation(in);
+        }
+
+        @Override
+        public Violation[] newArray(int size) {
+            return new Violation[size];
+        }
+    };
     private int policyId;
     private long appId;
     private int oprId;
@@ -52,18 +63,6 @@ public class Violation implements Parcelable {
     public int describeContents() {
         return 0;
     }
-
-    public static final Creator<Violation> CREATOR = new Creator<Violation>() {
-        @Override
-        public Violation createFromParcel(Parcel in) {
-            return new Violation(in);
-        }
-
-        @Override
-        public Violation[] newArray(int size) {
-            return new Violation[size];
-        }
-    };
 
     public int getPolicyId() {
         return policyId;
@@ -139,6 +138,6 @@ public class Violation implements Parcelable {
 
     @Override
     public String toString() {
-        return "Policy: "+ policyId +" for app: "+ appStr +" with access: " + opStr + " violated at: " + detectedAtTime;
+        return "Policy: " + policyId + " for app: " + appStr + " with access: " + opStr + " violated at: " + detectedAtTime;
     }
 }

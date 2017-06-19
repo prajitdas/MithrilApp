@@ -11,7 +11,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:measureWithLargestChild="true"
-        android:orientation="horizontal" >
+        android:orientation="horizontal">
 
         <Button
             android:id="@+id/firstCtxtBtn"
@@ -48,10 +48,10 @@
         android:layout_marginEnd="@dimen/activity_vertical_margin"
         android:layout_marginStart="@dimen/activity_vertical_margin"
         android:layout_marginTop="@dimen/activity_vertical_margin"
-        app:backgroundTint="@color/colorButton"
-        app:rippleColor="@color/colorPrimaryLight"
-        app:fabSize="auto"
         android:elevation="@dimen/fab_margin"
+        app:backgroundTint="@color/colorButton"
+        app:fabSize="auto"
+        app:rippleColor="@color/colorPrimaryLight"
         app:srcCompat="@drawable/content_save_settings" />
 
     <android.support.design.widget.BottomNavigationView

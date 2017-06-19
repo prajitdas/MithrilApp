@@ -10,6 +10,17 @@ import android.support.annotation.NonNull;
  */
 
 public class Resource implements Parcelable, Comparable {
+    public static final Creator<Resource> CREATOR = new Creator<Resource>() {
+        @Override
+        public Resource createFromParcel(Parcel in) {
+            return new Resource(in);
+        }
+
+        @Override
+        public Resource[] newArray(int size) {
+            return new Resource[size];
+        }
+    };
     private String resourceName;
     private long beginTimeStamp;
     private long endTimeStamp;
@@ -54,18 +65,6 @@ public class Resource implements Parcelable, Comparable {
     public int describeContents() {
         return 0;
     }
-
-    public static final Creator<Resource> CREATOR = new Creator<Resource>() {
-        @Override
-        public Resource createFromParcel(Parcel in) {
-            return new Resource(in);
-        }
-
-        @Override
-        public Resource[] newArray(int size) {
-            return new Resource[size];
-        }
-    };
 
     public String getResourceName() {
         return resourceName;
@@ -184,7 +183,7 @@ public class Resource implements Parcelable, Comparable {
 
     @Override
     public int compareTo(@NonNull Object o) {
-        return (int)(this.getLastTimeUsed() - ((Resource) o).getLastTimeUsed());
+        return (int) (this.getLastTimeUsed() - ((Resource) o).getLastTimeUsed());
 //        return ((Long) this.lastTimeUsed).compareTo(((Resource) o).lastTimeUsed);
     }
 }

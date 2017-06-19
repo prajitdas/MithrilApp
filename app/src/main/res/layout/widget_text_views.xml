@@ -1,5 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
-<!-- Copyright (C) 2015 The Android Open Source Project
+<?xml version="1.0" encoding="utf-8"?><!-- Copyright (C) 2015 The Android Open Source Project
 
      Licensed under the Apache License, Version 2.0 (the "License");
      you may not use this file except in compliance with the License.
@@ -17,34 +16,34 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:orientation="horizontal"
-    android:duplicateParentState="true">
+    android:duplicateParentState="true"
+    android:orientation="horizontal">
 
     <TextView
         android:id="@+id/widget_text1"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_weight="1"
         android:layout_gravity="fill_horizontal|top"
-        android:textAppearance="@android:style/TextAppearance.Material.Body1"
-        android:textColor="?android:attr/textColorSecondary"
-        android:textAlignment="viewStart"
-        android:singleLine="true"
+        android:layout_weight="1"
+        android:duplicateParentState="true"
         android:ellipsize="marquee"
-        android:duplicateParentState="true" />
+        android:singleLine="true"
+        android:textAlignment="viewStart"
+        android:textAppearance="@android:style/TextAppearance.Material.Body1"
+        android:textColor="?android:attr/textColorSecondary" />
 
     <TextView
         android:id="@+id/widget_text2"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_weight="1"
-        android:layout_marginStart="8dip"
         android:layout_gravity="fill_horizontal|top"
-        android:textAppearance="@android:style/TextAppearance.Material.Body1"
-        android:textColor="?android:attr/textColorSecondary"
-        android:textAlignment="viewEnd"
-        android:singleLine="true"
+        android:layout_marginStart="8dip"
+        android:layout_weight="1"
+        android:duplicateParentState="true"
         android:ellipsize="marquee"
-        android:duplicateParentState="true" />
+        android:singleLine="true"
+        android:textAlignment="viewEnd"
+        android:textAppearance="@android:style/TextAppearance.Material.Body1"
+        android:textColor="?android:attr/textColorSecondary" />
 
 </LinearLayout>

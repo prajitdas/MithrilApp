@@ -6,7 +6,7 @@ package edu.umbc.ebiquity.mithril.data.model.components;
 
 import android.support.annotation.NonNull;
 
-public class ContentProvData implements Comparable<ContentProvData>{
+public class ContentProvData implements Comparable<ContentProvData> {
     private String authority;
     private int flags;
     private String writePermission;
