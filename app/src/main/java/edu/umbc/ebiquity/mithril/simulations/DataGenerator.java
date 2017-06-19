@@ -14,6 +14,7 @@ import edu.umbc.ebiquity.mithril.util.specialtasks.errorsnexceptions.SemanticInc
 
 public class DataGenerator {
     /************************************************ End of policies ************************************************/
+
     private static Action actionAllow = Action.ALLOW;
     private static Action actionDeny = Action.DENY;
 
