@@ -31,17 +31,17 @@ public class SemanticLocation extends SemanticUserContext implements Parcelable 
     private String details = "default-details";
     private Place place;
 
+    public SemanticLocation(String inferredLocation, Location location) {
+        this.location = location;
+        this.inferredLocation = inferredLocation;
+    }
+
     protected SemanticLocation(Parcel in) {
         location = in.readParcelable(Location.class.getClassLoader());
         address = in.readParcelable(Address.class.getClassLoader());
         inferredLocation = in.readString();
         enabled = in.readByte() != 0;
         details = in.readString();
-    }
-
-    public SemanticLocation(String inferredLocation, Location location) {
-        this.location = location;
-        this.inferredLocation = inferredLocation;
     }
 
     @Override
@@ -61,16 +61,6 @@ public class SemanticLocation extends SemanticUserContext implements Parcelable 
     @Override
     public String getType() {
         return type;
-    }
-
-    @Override
-    public String getLabel() {
-        return inferredLocation;
-    }
-
-    @Override
-    public void setLabel(String label) {
-        inferredLocation = label;
     }
 
     public Location getLocation() {
@@ -133,21 +123,23 @@ public class SemanticLocation extends SemanticUserContext implements Parcelable 
         if (isEnabled() != that.isEnabled()) return false;
         if (!getType().equals(that.getType())) return false;
         if (!getLocation().equals(that.getLocation())) return false;
-        if (!getAddress().equals(that.getAddress())) return false;
+        if (getAddress() != null ? !getAddress().equals(that.getAddress()) : that.getAddress() != null)
+            return false;
         if (!getInferredLocation().equals(that.getInferredLocation())) return false;
-        if (!getDetails().equals(that.getDetails())) return false;
-        return getPlace().equals(that.getPlace());
+        if (getDetails() != null ? !getDetails().equals(that.getDetails()) : that.getDetails() != null)
+            return false;
+        return getPlace() != null ? getPlace().equals(that.getPlace()) : that.getPlace() == null;
     }
 
     @Override
     public int hashCode() {
         int result = getType().hashCode();
         result = 31 * result + getLocation().hashCode();
-        result = 31 * result + getAddress().hashCode();
+        result = 31 * result + (getAddress() != null ? getAddress().hashCode() : 0);
         result = 31 * result + getInferredLocation().hashCode();
         result = 31 * result + (isEnabled() ? 1 : 0);
-        result = 31 * result + getDetails().hashCode();
-        result = 31 * result + getPlace().hashCode();
+        result = 31 * result + (getDetails() != null ? getDetails().hashCode() : 0);
+        result = 31 * result + (getPlace() != null ? getPlace().hashCode() : 0);
         return result;
     }
 }
