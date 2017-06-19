@@ -10,6 +10,7 @@ import android.os.Handler;
 import android.os.IBinder;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.text.TextUtils;
 import android.util.Log;
 import android.util.Pair;
 
@@ -18,23 +19,38 @@ import com.google.android.gms.common.GoogleApiAvailability;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.common.api.GoogleApiClient.ConnectionCallbacks;
 import com.google.android.gms.common.api.GoogleApiClient.OnConnectionFailedListener;
+import com.google.android.gms.common.api.PendingResult;
+import com.google.android.gms.common.api.ResultCallback;
 import com.google.android.gms.location.LocationListener;
 import com.google.android.gms.location.LocationServices;
+import com.google.android.gms.location.places.Place;
+import com.google.android.gms.location.places.PlaceLikelihood;
+import com.google.android.gms.location.places.PlaceLikelihoodBuffer;
+import com.google.android.gms.location.places.Places;
 import com.google.gson.Gson;
 
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Timer;
 import java.util.TimerTask;
 
 import edu.umbc.ebiquity.mithril.MithrilAC;
+import edu.umbc.ebiquity.mithril.data.model.rules.context.SemanticActivity;
 import edu.umbc.ebiquity.mithril.data.model.rules.context.SemanticLocation;
+import edu.umbc.ebiquity.mithril.data.model.rules.context.SemanticNearActor;
+import edu.umbc.ebiquity.mithril.data.model.rules.context.SemanticTime;
+import edu.umbc.ebiquity.mithril.data.model.rules.context.SemanticUserContext;
 import edu.umbc.ebiquity.mithril.util.specialtasks.detect.policyconflicts.ViolationDetector;
 import edu.umbc.ebiquity.mithril.util.specialtasks.detect.runningapps.AppLaunchDetector;
-import edu.umbc.ebiquity.mithril.util.specialtasks.errorsnexceptions.CWAException;
+import edu.umbc.ebiquity.mithril.util.specialtasks.errorsnexceptions.SemanticInconsistencyException;
 import edu.umbc.ebiquity.mithril.util.specialtasks.permissions.PermissionHelper;
 
-public class AppLaunchDetectorService extends Service implements ConnectionCallbacks,
-        OnConnectionFailedListener, LocationListener {
+public class AppLaunchDetectorService extends Service implements
+        ConnectionCallbacks,
+        OnConnectionFailedListener,
+        LocationListener {
     private AppLaunchDetector appLaunchDetector;
     // run on another Thread to avoid crash
     private Handler mHandler = new Handler();
@@ -164,10 +180,14 @@ public class AppLaunchDetectorService extends Service implements ConnectionCallb
                                 editor.putString(MithrilAC.getPrefKeyLastRunningApp(), pkgOpPair.first);
                                 editor.apply();
                                 Log.d(MithrilAC.getDebugTag(), pkgOpPair.first);
-                                requestLastLocation();
+
                                 try {
-                                    ViolationDetector.detectViolation(context, pkgOpPair.first, pkgOpPair.second, getSemanticLocation(mCurrentLocation));
-                                } catch (CWAException e) {
+                                    ViolationDetector.detectViolation(
+                                            context,
+                                            pkgOpPair.first,
+                                            pkgOpPair.second,
+                                            getSemanticContexts());
+                                } catch (SemanticInconsistencyException e) {
                                     Log.e(MithrilAC.getDebugTag(), e.getMessage());
                                 }
                             } else {
@@ -175,15 +195,19 @@ public class AppLaunchDetectorService extends Service implements ConnectionCallb
                                 //nothing to do
                             }
                         } else {
-                            //no known last running app
+                            //there's no known last running app
                             //add to sharedprefs currently running app and detect violation, if any
                             editor.putString(MithrilAC.getPrefKeyLastRunningApp(), pkgOpPair.first);
                             editor.apply();
                             Log.d(MithrilAC.getDebugTag(), pkgOpPair.first);
-                            requestLastLocation();
+
                             try {
-                                ViolationDetector.detectViolation(context, pkgOpPair.first, pkgOpPair.second, getSemanticLocation(mCurrentLocation));
-                            } catch (CWAException e) {
+                                ViolationDetector.detectViolation(
+                                        context,
+                                        pkgOpPair.first,
+                                        pkgOpPair.second,
+                                        getSemanticContexts());
+                            } catch (SemanticInconsistencyException e) {
                                 Log.e(MithrilAC.getDebugTag(), e.getMessage());
                             }
                         }
@@ -193,6 +217,42 @@ public class AppLaunchDetectorService extends Service implements ConnectionCallb
                 }
             });
         }
+    }
+
+    private List<SemanticUserContext> getSemanticContexts() {
+        List<SemanticUserContext> semanticUserContextList = new ArrayList<>();
+
+        //We are always at some location... where are we now? Also we are only in one place at a time
+        requestLastLocation();
+        semanticUserContextList.add(getSemanticLocation(mCurrentLocation));
+
+        //Do we know the semantic temporal contexts?
+        for(SemanticTime semanticTime : getSemanticTimes())
+            semanticUserContextList.add(semanticTime);
+
+        //Do we detect any presence?
+        for(SemanticNearActor semanticNearActor : getSemanticNearActors())
+            semanticUserContextList.add(semanticNearActor);
+
+        //Do we know of any activity significant to the user?
+        for(SemanticActivity semanticActivity : getSemanticActivities())
+            semanticUserContextList.add(semanticActivity);
+
+        return semanticUserContextList;
+    }
+
+    private List<SemanticActivity> getSemanticActivities() {
+        return null;
+    }
+
+    private List<SemanticNearActor> getSemanticNearActors() {
+        return null;
+    }
+
+    private List<SemanticTime> getSemanticTimes() {
+        List<SemanticTime> semanticTimes = new ArrayList<>();
+
+        return semanticTimes;
     }
 
     private void requestLastLocation() {
@@ -226,6 +286,36 @@ public class AppLaunchDetectorService extends Service implements ConnectionCallb
         } catch (Exception e) {
             Log.d(MithrilAC.getDebugTag(), "came here");
         }
+        if(semanticLocation == null)
+            semanticLocation = new SemanticLocation(
+                    MithrilAC.getPrefKeyContextInstanceUnknown()+Long.toString(System.currentTimeMillis()),
+                    location);
+        Place currentPlace = null;
+        float likelihood = Float.MIN_VALUE;
+        for(Map.Entry<Place, Float> placeEntry : guessCurrentPlace().entrySet())
+            if(placeEntry.getValue() > likelihood)
+                currentPlace = placeEntry.getKey();
+        semanticLocation.setPlace(currentPlace);
         return semanticLocation;
+    }
+
+    private Map<Place, Float> guessCurrentPlace() {
+        final Map<Place, Float> places = new HashMap<>();
+        PendingResult<PlaceLikelihoodBuffer> result;
+        try {
+            result = Places.PlaceDetectionApi
+                    .getCurrentPlace(mGoogleApiClient, null);
+            result.setResultCallback(new ResultCallback<PlaceLikelihoodBuffer>() {
+                @Override
+                public void onResult(PlaceLikelihoodBuffer likelyPlaces) {
+                    for (PlaceLikelihood placeLikelihood : likelyPlaces)
+                        places.put(placeLikelihood.getPlace(), placeLikelihood.getLikelihood());
+                    likelyPlaces.release();
+                }
+            });
+        } catch (SecurityException e) {
+            Log.e(MithrilAC.getDebugTag(), "security exception happened");
+        }
+        return places;
     }
 }

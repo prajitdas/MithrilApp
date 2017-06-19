@@ -1159,7 +1159,7 @@ public class MithrilAppOpsManager {
 //
 //        /*
 //        Log.d(MithrilApplication.getDebugTag(), Integer.toString(uid)+", "+packageName+", "+Integer.toString(ops[index]));
-//        // Code to verify what run time methods we are able to see
+//        // Code to verify what run detectedAtTime methods we are able to see
 //        int count = 0;
 //        for (Method method : appOpsManagerClass.getDeclaredMethods()) {
 //            Log.d(MithrilApplication.getDebugTag(),"Method " + Integer.toString(count++) + method.toGenericString());
@@ -1242,7 +1242,7 @@ public class MithrilAppOpsManager {
 //     * or { #startOp(int, int, String)} for your actual security checks, which also
 //     * ensure that the given uid and package name are consistent.  This function can just be
 //     * used for a quick check to see if an operation has been disabled for the application,
-//     * as an early reject of some work.  This does not modify the time stamp or other data
+//     * as an early reject of some work.  This does not modify the detectedAtTime stamp or other data
 //     * about the operation.
 //     *
 //     * @param op          The operation to check.  One of the OP_* constants.
@@ -1322,7 +1322,7 @@ public class MithrilAppOpsManager {
 //     * or { #startOp(String, int, String)} for your actual security checks, which also
 //     * ensure that the given uid and package name are consistent.  This function can just be
 //     * used for a quick check to see if an operation has been disabled for the application,
-//     * as an early reject of some work.  This does not modify the time stamp or other data
+//     * as an early reject of some work.  This does not modify the detectedAtTime stamp or other data
 //     * about the operation.
 //     *
 //     * @param op          The operation to check.  One of the OPSTR_* constants.
@@ -1405,11 +1405,11 @@ public class MithrilAppOpsManager {
 //        private int mProxyUid;
 //        private String mProxyPackageName;
 //
-//        public OpEntry(int op, int mode, long time, long rejectTime, int duration,
+//        public OpEntry(int op, int mode, long detectedAtTime, long rejectTime, int duration,
 //                       int proxyUid, String proxyPackage) {
 //            mOp = op;
 //            mMode = mode;
-//            mTime = time;
+//            mTime = detectedAtTime;
 //            mRejectTime = rejectTime;
 //            mDuration = duration;
 //            mProxyUid = proxyUid;
@@ -2651,11 +2651,11 @@ public class MithrilAppOpsManager {
 //        private final int mDuration;
 //        private final int mProxyUid;
 //        private final String mProxyPackageName;
-//        public OpEntry(int op, int mode, long time, long rejectTime, int duration,
+//        public OpEntry(int op, int mode, long detectedAtTime, long rejectTime, int duration,
 //                       int proxyUid, String proxyPackage) {
 //            mOp = op;
 //            mMode = mode;
-//            mTime = time;
+//            mTime = detectedAtTime;
 //            mRejectTime = rejectTime;
 //            mDuration = duration;
 //            mProxyUid = proxyUid;
@@ -2945,7 +2945,7 @@ public class MithrilAppOpsManager {
 //     * or {@link #startOp(String, int, String)} for your actual security checks, which also
 //     * ensure that the given uid and package name are consistent.  This function can just be
 //     * used for a quick check to see if an operation has been disabled for the application,
-//     * as an early reject of some work.  This does not modify the time stamp or other data
+//     * as an early reject of some work.  This does not modify the detectedAtTime stamp or other data
 //     * about the operation.
 //     * @param op The operation to check.  One of the OPSTR_* constants.
 //     * @param uid The user id of the application attempting to perform the operation.
@@ -2969,8 +2969,8 @@ public class MithrilAppOpsManager {
 //     * Make note of an application performing an operation.  Note that you must pass
 //     * in both the uid and name of the application to be checked; this function will verify
 //     * that these two match, and if not, return {@link #MODE_IGNORED}.  If this call
-//     * succeeds, the last execution time of the operation for this app will be updated to
-//     * the current time.
+//     * succeeds, the last execution detectedAtTime of the operation for this app will be updated to
+//     * the current detectedAtTime.
 //     * @param op The operation to note.  One of the OPSTR_* constants.
 //     * @param uid The user id of the application attempting to perform the operation.
 //     * @param packageName The name of the application attempting to perform the operation.
@@ -2995,8 +2995,8 @@ public class MithrilAppOpsManager {
 //     * of the application that is being proxied while its UID will be inferred from
 //     * the IPC state; this function will verify that the calling uid and proxied
 //     * package name match, and if not, return {@link #MODE_IGNORED}. If this call
-//     * succeeds, the last execution time of the operation for the proxied app and
-//     * your app will be updated to the current time.
+//     * succeeds, the last execution detectedAtTime of the operation for the proxied app and
+//     * your app will be updated to the current detectedAtTime.
 //     * @param op The operation to note.  One of the OPSTR_* constants.
 //     * @param proxiedPackageName The name of the application calling into the proxy application.
 //     * @return Returns {@link #MODE_ALLOWED} if the operation is allowed, or
@@ -3018,8 +3018,8 @@ public class MithrilAppOpsManager {
 //     * Report that an application has started executing a long-running operation.  Note that you
 //     * must pass in both the uid and name of the application to be checked; this function will
 //     * verify that these two match, and if not, return {@link #MODE_IGNORED}.  If this call
-//     * succeeds, the last execution time of the operation for this app will be updated to
-//     * the current time and the operation will be marked as "running".  In this case you must
+//     * succeeds, the last execution detectedAtTime of the operation for this app will be updated to
+//     * the current detectedAtTime and the operation will be marked as "running".  In this case you must
 //     * later call {@link #finishOp(String, int, String)} to report when the application is no
 //     * longer performing the operation.
 //     * @param op The operation to start.  One of the OPSTR_* constants.
@@ -3055,7 +3055,7 @@ public class MithrilAppOpsManager {
 //     * or {@link #startOp(int, int, String)} for your actual security checks, which also
 //     * ensure that the given uid and package name are consistent.  This function can just be
 //     * used for a quick check to see if an operation has been disabled for the application,
-//     * as an early reject of some work.  This does not modify the time stamp or other data
+//     * as an early reject of some work.  This does not modify the detectedAtTime stamp or other data
 //     * about the operation.
 //     * @param op The operation to check.  One of the OP_* constants.
 //     * @param uid The user id of the application attempting to perform the operation.
@@ -3136,8 +3136,8 @@ public class MithrilAppOpsManager {
 //     * Make note of an application performing an operation.  Note that you must pass
 //     * in both the uid and name of the application to be checked; this function will verify
 //     * that these two match, and if not, return {@link #MODE_IGNORED}.  If this call
-//     * succeeds, the last execution time of the operation for this app will be updated to
-//     * the current time.
+//     * succeeds, the last execution detectedAtTime of the operation for this app will be updated to
+//     * the current detectedAtTime.
 //     * @param op The operation to note.  One of the OP_* constants.
 //     * @param uid The user id of the application attempting to perform the operation.
 //     * @param packageName The name of the application attempting to perform the operation.
@@ -3164,8 +3164,8 @@ public class MithrilAppOpsManager {
 //     * of the application that is being proxied while its UID will be inferred from
 //     * the IPC state; this function will verify that the calling uid and proxied
 //     * package name match, and if not, return {@link #MODE_IGNORED}. If this call
-//     * succeeds, the last execution time of the operation for the proxied app and
-//     * your app will be updated to the current time.
+//     * succeeds, the last execution detectedAtTime of the operation for the proxied app and
+//     * your app will be updated to the current detectedAtTime.
 //     * @param op The operation to note. One of the OPSTR_* constants.
 //     * @param proxiedPackageName The name of the application calling into the proxy application.
 //     * @return Returns {@link #MODE_ALLOWED} if the operation is allowed, or
@@ -3233,8 +3233,8 @@ public class MithrilAppOpsManager {
 //     * Report that an application has started executing a long-running operation.  Note that you
 //     * must pass in both the uid and name of the application to be checked; this function will
 //     * verify that these two match, and if not, return {@link #MODE_IGNORED}.  If this call
-//     * succeeds, the last execution time of the operation for this app will be updated to
-//     * the current time and the operation will be marked as "running".  In this case you must
+//     * succeeds, the last execution detectedAtTime of the operation for this app will be updated to
+//     * the current detectedAtTime and the operation will be marked as "running".  In this case you must
 //     * later call {@link #finishOp(int, int, String)} to report when the application is no
 //     * longer performing the operation.
 //     * @param op The operation to start.  One of the OP_* constants.

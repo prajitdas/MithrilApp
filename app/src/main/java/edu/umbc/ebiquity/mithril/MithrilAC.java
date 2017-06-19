@@ -30,7 +30,7 @@ public class MithrilAC extends Application {
 
     public static final String MITHRIL_BYE_BYE_MESSAGE = "Bye! Thanks for helping with our survey...";
 
-    private static final String RECEIVER = MITHRIL_APP_PACKAGE_NAME + ".RECEIVER";
+    private static final String APP_RECEIVER = MITHRIL_APP_PACKAGE_NAME + ".APP_RECEIVER";
     private static final String RESULT_DATA_KEY = MITHRIL_APP_PACKAGE_NAME + ".RESULT_DATA_KEY";
     private static final String ADDRESS_REQUESTED_EXTRA = "ADDRESS_REQUESTED_EXTRA";
     private static final String LOCATION_DATA_EXTRA = MITHRIL_APP_PACKAGE_NAME + ".LOCATION_DATA_EXTRA";
@@ -131,6 +131,7 @@ public class MithrilAC extends Application {
     private static final String PREF_KEY_POLICIES_DOWNLOADED = "policiesDownloaded";
     private static final String PREF_KEY_LAST_RUNNING_APP = "lastRunningApp";
 
+    private static final String PREF_KEY_CONTEXT_INSTANCE_UNKNOWN = "Unknown";
     private static final String PREF_KEY_CONTEXT_TYPE_LOCATION = "Location";
     private static final String PREF_KEY_CONTEXT_TYPE_ACTIVITY = "Activity";
     private static final String PREF_KEY_CONTEXT_TYPE_TEMPORAL = "Temporal";
@@ -832,8 +833,8 @@ public class MithrilAC extends Application {
         return DEBUG_TAG;
     }
 
-    public static String getReceiver() {
-        return RECEIVER;
+    public static String getAppReceiver() {
+        return APP_RECEIVER;
     }
 
     public static String[] getContextArrayActivity() {
@@ -1195,6 +1196,10 @@ public class MithrilAC extends Application {
 
     public static String getPrefKeyUserContinueClicked() {
         return PREF_KEY_USER_CONTINUE_CLICKED;
+    }
+
+    public static String getPrefKeyContextInstanceUnknown() {
+        return PREF_KEY_CONTEXT_INSTANCE_UNKNOWN;
     }
 
     public static String getLauncherName(Context context) {

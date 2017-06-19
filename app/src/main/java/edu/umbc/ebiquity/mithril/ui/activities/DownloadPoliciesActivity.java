@@ -15,6 +15,7 @@ import android.view.View;
 import edu.umbc.ebiquity.mithril.MithrilAC;
 import edu.umbc.ebiquity.mithril.R;
 import edu.umbc.ebiquity.mithril.data.dbhelpers.MithrilDBHelper;
+import edu.umbc.ebiquity.mithril.util.specialtasks.errorsnexceptions.SemanticInconsistencyException;
 
 public class DownloadPoliciesActivity extends AppCompatActivity {
     private static final int POLICIESLOADED = 0;
@@ -73,6 +74,9 @@ public class DownloadPoliciesActivity extends AppCompatActivity {
                         mithrilDB.close();
                 } catch (SQLException e) {
                     Log.e(MithrilAC.getDebugTag(), "Must have already inserted the policy!" + e.getMessage());
+                } catch (SemanticInconsistencyException e) {
+                    Log.e(MithrilAC.getDebugTag(), "Semantic inconsistency! " +
+                            "We somehow created a policy with conflicting decisions for different contexts" + e.getMessage());
                 }
                 handler.sendEmptyMessageDelayed(POLICIESLOADED, MithrilAC.getMillisecondsPerSecond() * 5);
             }

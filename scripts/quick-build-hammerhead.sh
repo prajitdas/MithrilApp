@@ -7,7 +7,7 @@ build="hammerhead"
 expected="Nexus 5"
 filename="lineage-14.1-"$date"-UNOFFICIAL-"$build".zip"
 if [[ $model == $expected ]]; then
-        #Measure execution time
+        #Measure execution detectedAtTime
         start_time=`date +%s`
 	#make clobber
         source build/envsetup.sh
@@ -25,7 +25,7 @@ if [[ $model == $expected ]]; then
 		adb reboot recovery
 	fi
         end_time=`date +%s`
-        echo execution time was `expr $end_time - $start_time` s.
+        echo execution detectedAtTime was `expr $end_time - $start_time` s.
 else
         echo "You have your $model device connected to the computer. This is a build process for the $expected. Please connect your $expected device to the computer and restart the build."
 fi

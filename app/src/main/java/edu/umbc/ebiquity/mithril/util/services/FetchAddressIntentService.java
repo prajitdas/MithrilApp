@@ -53,7 +53,7 @@ public class FetchAddressIntentService extends IntentService {
         addressKey = intent.getStringExtra(MithrilAC.getAddressKey());
         String errorMessage = "";
 
-        mReceiver = intent.getParcelableExtra(MithrilAC.getReceiver());
+        mReceiver = intent.getParcelableExtra(MithrilAC.getAppReceiver());
         // Check if receiver was properly registered.
         if (mReceiver == null) {
 //            Log.wtf(MithrilAC.getDebugTag(), "No receiver received. There is nowhere to send the results.");

@@ -614,7 +614,7 @@ public class InstanceCreationActivity extends AppCompatActivity
      * Location location = new Location("Test");
      * location.setLatitude(point.latitude);
      * location.setLongitude(point.longitude);
-     * location.setTime(new Date().getTime()); //Set time as current Date
+     * location.setDetectedAtTime(new Date().getDetectedAtTime()); //Set time as current Date
      * info.setText(location.toString());
      * <p>
      * //Convert Location to LatLng
@@ -719,6 +719,7 @@ public class InstanceCreationActivity extends AppCompatActivity
                 place.getAddress(),
                 place.getPhoneNumber(),
                 place.getWebsiteUri()).toString());
+        semanticLocation.setPlace(place);
 
         semanticLocations.put(MithrilAC.getPrefHomeLocationKey(), semanticLocation);
         /**
@@ -740,6 +741,7 @@ public class InstanceCreationActivity extends AppCompatActivity
                 place.getAddress(),
                 place.getPhoneNumber(),
                 place.getWebsiteUri()).toString());
+        semanticLocation.setPlace(place);
 
         semanticLocations.put(MithrilAC.getPrefWorkLocationKey(), semanticLocation);
         /**
@@ -774,6 +776,7 @@ public class InstanceCreationActivity extends AppCompatActivity
                         place.getAddress(),
                         place.getPhoneNumber(),
                         place.getWebsiteUri()).toString());
+                semanticLocation.setPlace(place);
 
                 semanticLocations.put(semanticLocationLabel, semanticLocation);
                 /**
@@ -818,7 +821,7 @@ public class InstanceCreationActivity extends AppCompatActivity
         intent.putExtra(MithrilAC.getAddressKey(), key);
 
         // Pass the result receiver as an extra to the service.
-        intent.putExtra(MithrilAC.getReceiver(), mAddressResultReceiver);
+        intent.putExtra(MithrilAC.getAppReceiver(), mAddressResultReceiver);
 
         // Pass the location data as an extra to the service.
         intent.putExtra(MithrilAC.getLocationDataExtra(), location);

@@ -180,7 +180,7 @@ public class MetricsEvent {
     // OS: 6.0
     DATA_USAGE_SUMMARY = 37;
 
-    // OPEN: Settings > Date & time
+    // OPEN: Settings > Date & detectedAtTime
     // CATEGORY: SETTINGS
     // OS: 6.0
     DATE_TIME = 38;
@@ -814,7 +814,7 @@ public class MetricsEvent {
     // OS: 6.0
     ACTION_BLUETOOTH_FILES = 162;
 
-    // ACTION: QS DND details panel > Increase / Decrease exit time
+    // ACTION: QS DND details panel > Increase / Decrease exit detectedAtTime
     //   SUBTYPE: true is increase, false is decrease
     // CATEGORY: QUICK_SETTINGS
     // OS: 6.0

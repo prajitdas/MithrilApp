@@ -6,6 +6,53 @@ import android.os.Parcelable;
 import java.sql.Timestamp;
 
 public class Violation implements Parcelable {
+    private int policyId;
+    private long appId;
+    private int oprId;
+    private String appStr; // App string
+    private String opStr; // operation string
+    private boolean asked; // user was asked about this violation
+    private boolean tvfv; //marked as true or false violation
+    private Timestamp detectedAtTime;
+    private Timestamp feedbackTime;
+
+    protected Violation(Parcel in) {
+        policyId = in.readInt();
+        appId = in.readLong();
+        oprId = in.readInt();
+        appStr = in.readString();
+        opStr = in.readString();
+        asked = in.readByte() != 0;
+        tvfv = in.readByte() != 0;
+    }
+
+    public Violation(int policyId, long appId, int oprId, String appStr, String opStr, boolean asked, boolean tvfv, Timestamp detectedAtTime) {
+        this.policyId = policyId;
+        this.appId = appId;
+        this.oprId = oprId;
+        this.appStr = appStr;
+        this.opStr = opStr;
+        this.asked = asked;
+        this.tvfv = tvfv;
+        this.detectedAtTime = detectedAtTime;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeInt(policyId);
+        dest.writeLong(appId);
+        dest.writeInt(oprId);
+        dest.writeString(appStr);
+        dest.writeString(opStr);
+        dest.writeByte((byte) (asked ? 1 : 0));
+        dest.writeByte((byte) (tvfv ? 1 : 0));
+    }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
     public static final Creator<Violation> CREATOR = new Creator<Violation>() {
         @Override
         public Violation createFromParcel(Parcel in) {
@@ -17,58 +64,21 @@ public class Violation implements Parcelable {
             return new Violation[size];
         }
     };
-    private int appId;
-    private int ctxId;
-    private int oprId;
-    private String desc;
-    private boolean marker;
-    private Timestamp time;
 
-    protected Violation(Parcel in) {
-        appId = in.readInt();
-        ctxId = in.readInt();
-        oprId = in.readInt();
-        desc = in.readString();
-        marker = in.readByte() != 0;
+    public int getPolicyId() {
+        return policyId;
     }
 
-    public Violation(int appId, int ctxId, int oprId, String desc, boolean marker, Timestamp time) {
-        this.appId = appId;
-        this.ctxId = ctxId;
-        this.oprId = oprId;
-        this.desc = desc;
-        this.marker = marker;
-        this.time = time;
+    public void setPolicyId(int policyId) {
+        this.policyId = policyId;
     }
 
-    @Override
-    public void writeToParcel(Parcel dest, int flags) {
-        dest.writeInt(appId);
-        dest.writeInt(ctxId);
-        dest.writeInt(oprId);
-        dest.writeString(desc);
-        dest.writeByte((byte) (marker ? 1 : 0));
-    }
-
-    @Override
-    public int describeContents() {
-        return 0;
-    }
-
-    public int getAppId() {
+    public long getAppId() {
         return appId;
     }
 
-    public void setAppId(int appId) {
+    public void setAppId(long appId) {
         this.appId = appId;
-    }
-
-    public int getCtxId() {
-        return ctxId;
-    }
-
-    public void setCtxId(int ctxId) {
-        this.ctxId = ctxId;
     }
 
     public int getOprId() {
@@ -79,58 +89,56 @@ public class Violation implements Parcelable {
         this.oprId = oprId;
     }
 
-    public String getDesc() {
-        return desc;
+    public String getAppStr() {
+        return appStr;
     }
 
-    public void setDesc(String desc) {
-        this.desc = desc;
+    public void setAppStr(String appStr) {
+        this.appStr = appStr;
     }
 
-    public boolean isMarker() {
-        return marker;
+    public String getOpStr() {
+        return opStr;
     }
 
-    public void setMarker(boolean marker) {
-        this.marker = marker;
+    public void setOpStr(String opStr) {
+        this.opStr = opStr;
     }
 
-    public Timestamp getTime() {
-        return time;
+    public boolean isAsked() {
+        return asked;
     }
 
-    public void setTime(Timestamp time) {
-        this.time = time;
+    public void setAsked(boolean asked) {
+        this.asked = asked;
     }
 
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (!(o instanceof Violation)) return false;
-
-        Violation violation = (Violation) o;
-
-        if (getAppId() != violation.getAppId()) return false;
-        if (getCtxId() != violation.getCtxId()) return false;
-        if (getOprId() != violation.getOprId()) return false;
-        if (isMarker() != violation.isMarker()) return false;
-        if (!getDesc().equals(violation.getDesc())) return false;
-        return getTime().equals(violation.getTime());
+    public boolean isTvfv() {
+        return tvfv;
     }
 
-    @Override
-    public int hashCode() {
-        int result = getAppId();
-        result = 31 * result + getCtxId();
-        result = 31 * result + getOprId();
-        result = 31 * result + getDesc().hashCode();
-        result = 31 * result + (isMarker() ? 1 : 0);
-        result = 31 * result + getTime().hashCode();
-        return result;
+    public void setTvfv(boolean tvfv) {
+        this.tvfv = tvfv;
+    }
+
+    public Timestamp getDetectedAtTime() {
+        return detectedAtTime;
+    }
+
+    public void setDetectedAtTime(Timestamp detectedAtTime) {
+        this.detectedAtTime = detectedAtTime;
+    }
+
+    public Timestamp getFeedbackTime() {
+        return feedbackTime;
+    }
+
+    public void setFeedbackTime(Timestamp feedbackTime) {
+        this.feedbackTime = feedbackTime;
     }
 
     @Override
     public String toString() {
-        return getDesc();
+        return "Policy: "+ policyId +" for app: "+ appStr +" with access: " + opStr + " violated at: " + detectedAtTime;
     }
 }

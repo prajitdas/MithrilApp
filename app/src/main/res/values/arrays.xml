@@ -2,8 +2,8 @@
 <resources>
     <!-- Display options for UsageStats class -->
     <string-array name="usage_stats_display_order_types">
-        <item>Usage time</item>
-        <item>Last time used</item>
+        <item>Usage detectedAtTime</item>
+        <item>Last detectedAtTime used</item>
         <item>App name</item>
     </string-array>
     <!-- User display names for app ops codes -->

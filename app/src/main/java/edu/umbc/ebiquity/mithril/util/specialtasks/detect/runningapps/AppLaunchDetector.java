@@ -87,7 +87,7 @@ public class AppLaunchDetector {
 //                else {
 //                    try {
 //                        ViolationDetector.detectViolation(context, currentPackageName, getOp(currentPackageName), location);
-//                    } catch (CWAException cwaException) {
+//                    } catch (SemanticInconsistencyException cwaException) {
                         //Something is wrong!!!! We have a Closed World Assumption we cannot have deny rules...
                     //                Log.e(MithrilAC.getDebugTag(), "Serious error! DB contains deny rules. This violates our CWA");
 //                    }

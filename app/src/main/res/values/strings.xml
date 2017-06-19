@@ -144,11 +144,11 @@
     <!-- Preference strings for Temporal context -->
     <string name="pref_choose_days">Choose the days</string>
 
-    <string name="pref_header_temporal_context">Manage time prefs</string>
+    <string name="pref_header_temporal_context">Manage detectedAtTime prefs</string>
 
     <string name="pref_temporal_context_switch_key">enableTemporalContext</string>
     <string name="pref_temporal_context_switch_title">Adding temporal context for:&#160;</string>
-    <string name="pref_temporal_context_switch_summary">Click to enable following time prefs</string>
+    <string name="pref_temporal_context_switch_summary">Click to enable following detectedAtTime prefs</string>
 
     <!-- Work temporal context -->
     <string name="pref_work_hours_context_summary">Work</string>
@@ -333,10 +333,10 @@
     ]]>
 
     </string>
-    <!-- label for last time used -->
-    <string name="last_time_used_label">Last time used</string>
-    <!-- label for usage time -->
-    <string name="usage_time_label">Usage time</string>
+    <!-- label for ldetectedAtTimetime used -->
+    <string name="last_time_used_label">Last detectedAtTime used</string>
+    <!-- label for usdetectedAtTimetime -->
+    <string name="usage_time_label">Usage detectedAtTime</string>
     <!-- label for text to indicate sort options -->
     <string name="display_order_text">Sort by:</string>
 

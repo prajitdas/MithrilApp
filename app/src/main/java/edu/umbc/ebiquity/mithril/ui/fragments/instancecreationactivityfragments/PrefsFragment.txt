@@ -302,7 +302,7 @@ public class PrefsFragment extends PreferenceFragment implements GoogleApiClient
      * Location location = new Location("Test");
      * location.setLatitude(point.latitude);
      * location.setLongitude(point.longitude);
-     * location.setTime(new Date().getTime()); //Set time as current Date
+     * location.setTime(new Date().getTime()); //Set detectedAtTime as current Date
      * info.setText(location.toString());
      * <p>
      * //Convert Location to LatLng
@@ -798,7 +798,7 @@ public class PrefsFragment extends PreferenceFragment implements GoogleApiClient
                 )
 
                 // Set the expiration duration of the geofence. This geofence gets automatically
-                // removed after this period of time.
+                // removed after this period of detectedAtTime.
                 .setExpirationDuration(Geofence.NEVER_EXPIRE)
 
                 // Set the transition types of interest. Alerts are only generated for these
