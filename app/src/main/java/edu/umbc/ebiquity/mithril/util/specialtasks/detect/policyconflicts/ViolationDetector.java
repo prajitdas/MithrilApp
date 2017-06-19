@@ -7,6 +7,7 @@ import android.util.Log;
 import android.util.Pair;
 
 import java.sql.Timestamp;
+import java.util.Collection;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
@@ -80,7 +81,7 @@ public class ViolationDetector {
 //        try {
         Map<Long, Integer> contextsInPolicy = MithrilDBHelper.getHelper(context).findAllPoliciesForAppWhenPerformingOp(mithrilDB, currentPackageName, operationPerformed);
         Set<Long> policyContext = contextsInPolicy.keySet();
-        int policyId = ((List<Integer>) contextsInPolicy.values()).get(0);
+        int policyId = contextsInPolicy.values().iterator().next();
         List<PolicyRule> listOfPoliciesForCurrentAppAndOperation = MithrilDBHelper.getHelper(context).findAllPoliciesById(mithrilDB, policyId);
         // Let's test the rules we found
         if (policyContext.size() > 0) {

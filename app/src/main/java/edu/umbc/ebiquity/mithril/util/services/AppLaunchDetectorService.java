@@ -135,6 +135,8 @@ public class AppLaunchDetectorService extends Service implements
     protected synchronized void buildGoogleApiClient() {
         mGoogleApiClient = new GoogleApiClient.Builder(this)
                 .addApi(LocationServices.API)
+                .addApi(Places.GEO_DATA_API)
+                .addApi(Places.PLACE_DETECTION_API)
                 .addConnectionCallbacks(AppLaunchDetectorService.this)
                 .addOnConnectionFailedListener(AppLaunchDetectorService.this)
                 .build();
@@ -242,11 +244,11 @@ public class AppLaunchDetectorService extends Service implements
     }
 
     private List<SemanticActivity> getSemanticActivities() {
-        return null;
+        return new ArrayList<>();
     }
 
     private List<SemanticNearActor> getSemanticNearActors() {
-        return null;
+        return new ArrayList<>();
     }
 
     private List<SemanticTime> getSemanticTimes() {

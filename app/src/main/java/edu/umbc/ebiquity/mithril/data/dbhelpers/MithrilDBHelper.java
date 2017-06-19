@@ -1698,7 +1698,7 @@ public class MithrilDBHelper extends SQLiteOpenHelper {
                 getPolicyRulesTableName() + "." + POLRULENABLED + " = 0" +
                 " AND " +
                 getContextTableName() + "." + CONTEXTENABLED + " = 1" +
-                " ORDER BY " +
+                " ORDER BY " + getPolicyRulesTableName() + "." + POLRULID +
                 ";";
 
         Cursor cursor = db.rawQuery(selectQuery, null);
