@@ -49,7 +49,7 @@ public class ViolationDetector {
      * unknown location or
      * in presence of an unknown person or
      * doing a previously unknown activity
-     * if we do, then we add these as default_context_type_timesatamp
+     * if we do, then we add these as default_context_type_timestamp
      * and we have to ask user to define a label for the context in a notification like Google Now or just ask them later
      * 3) Search for policies that define for app launch and operation a series of context pieces of significance.
      * 4) If current context is an exact match or a subset of policy's context pieces, user has allowed this behavior before.

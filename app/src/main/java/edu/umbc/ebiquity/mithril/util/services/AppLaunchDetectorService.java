@@ -4,8 +4,8 @@ import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.database.sqlite.SQLiteDatabase;
 import android.location.Location;
-import android.location.LocationManager;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.IBinder;
@@ -30,6 +30,8 @@ import com.google.android.gms.location.places.Places;
 import com.google.gson.Gson;
 
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -37,11 +39,13 @@ import java.util.Timer;
 import java.util.TimerTask;
 
 import edu.umbc.ebiquity.mithril.MithrilAC;
+import edu.umbc.ebiquity.mithril.data.dbhelpers.MithrilDBHelper;
 import edu.umbc.ebiquity.mithril.data.model.rules.context.SemanticActivity;
 import edu.umbc.ebiquity.mithril.data.model.rules.context.SemanticLocation;
 import edu.umbc.ebiquity.mithril.data.model.rules.context.SemanticNearActor;
 import edu.umbc.ebiquity.mithril.data.model.rules.context.SemanticTime;
 import edu.umbc.ebiquity.mithril.data.model.rules.context.SemanticUserContext;
+import edu.umbc.ebiquity.mithril.ui.activities.InstanceCreationActivity;
 import edu.umbc.ebiquity.mithril.util.specialtasks.detect.policyconflicts.ViolationDetector;
 import edu.umbc.ebiquity.mithril.util.specialtasks.detect.runningapps.AppLaunchDetector;
 import edu.umbc.ebiquity.mithril.util.specialtasks.errorsnexceptions.SemanticInconsistencyException;
@@ -51,6 +55,7 @@ public class AppLaunchDetectorService extends Service implements
         ConnectionCallbacks,
         OnConnectionFailedListener,
         LocationListener {
+    private SQLiteDatabase mithrilDB;
     private AppLaunchDetector appLaunchDetector;
     // run on another Thread to avoid crash
     private Handler mHandler = new Handler();
@@ -78,7 +83,8 @@ public class AppLaunchDetectorService extends Service implements
         mPlacesInProcgress = false;
         servicesAvailable = servicesConnected();
         sharedPrefs = getSharedPreferences(MithrilAC.getSharedPreferencesName(), Context.MODE_PRIVATE);
-        editor = getSharedPreferences(MithrilAC.getSharedPreferencesName(), Context.MODE_PRIVATE).edit();/*
+        editor = getSharedPreferences(MithrilAC.getSharedPreferencesName(), Context.MODE_PRIVATE).edit();
+        initDB(context);
         /* Create a new location client, using the enclosing class to
          * handle callbacks.
          */
@@ -93,6 +99,11 @@ public class AppLaunchDetectorService extends Service implements
         } catch (NullPointerException e) {
             Log.d(MithrilAC.getDebugTag(), "Check if we have the right permissions, we probably could not instantiate the detector");
         }
+    }
+
+    private void initDB(Context context) {
+        // Let's get the DB instances loaded too
+        mithrilDB = MithrilDBHelper.getHelper(context).getWritableDatabase();
     }
 
     @Override
@@ -230,6 +241,9 @@ public class AppLaunchDetectorService extends Service implements
     private void requestLastLocation() {
         try {
             mCurrentLocation = LocationServices.FusedLocationApi.getLastLocation(mGoogleApiClient);
+            Log.d(MithrilAC.getDebugTag(), "Location found: "
+                    + String.valueOf(mCurrentLocation.getLatitude())
+                    + String.valueOf(mCurrentLocation.getLongitude()));
         } catch (SecurityException e) {
             Log.d(MithrilAC.getDebugTag(), e.getMessage());
         }
@@ -239,17 +253,29 @@ public class AppLaunchDetectorService extends Service implements
         SemanticLocation semanticLocation = null;
         Gson retrieveDataGson = new Gson();
         String retrieveDataJson;
+        float distanceToKnownLocation = Float.MAX_VALUE;
         Map<String, ?> allPrefs;
         try {
             allPrefs = sharedPrefs.getAll();
             for (Map.Entry<String, ?> aPref : allPrefs.entrySet()) {
                 if (aPref.getKey().startsWith(MithrilAC.getPrefKeyContextTypeLocation())) {
                     retrieveDataJson = sharedPrefs.getString(aPref.getKey(), "");
-                    semanticLocation = retrieveDataGson.fromJson(retrieveDataJson, SemanticLocation.class);
-                    if (semanticLocation.isEnabled())
-                        Log.d(MithrilAC.getDebugTag(), "Came into the test and found: " + location.toString());
-                    if (semanticLocation.getLocation().distanceTo(location) < 1000)
-                        return semanticLocation;
+                    SemanticLocation tempSemanticLocation = retrieveDataGson.fromJson(retrieveDataJson, SemanticLocation.class);
+                    /**
+                     * We are parsing all known locations and we know the current location's distance to them.
+                     * Let's determine if we are at a certain known location and at what is that location.
+                     */
+                    float dist = tempSemanticLocation.getLocation().distanceTo(location);
+                    if (dist < 200 && distanceToKnownLocation > dist) {
+                        distanceToKnownLocation = dist;
+                        semanticLocation = tempSemanticLocation;
+                        Log.d(MithrilAC.getDebugTag(), "Passed location found: "
+                                + String.valueOf(location.getLatitude())
+                                + String.valueOf(location.getLongitude())
+                                + String.valueOf(dist)
+                                + aPref.getKey()
+                        );
+                    }
                 }
             }
         } catch (NullPointerException e) {
@@ -257,18 +283,26 @@ public class AppLaunchDetectorService extends Service implements
         } catch (Exception e) {
             Log.d(MithrilAC.getDebugTag(), "came here");
         }
-        if (semanticLocation == null)
+        if (semanticLocation == null) {
             semanticLocation = new SemanticLocation(
                     MithrilAC.getPrefKeyContextInstanceUnknown() + Long.toString(System.currentTimeMillis()),
                     location);
-        if(mGooglePlacesApiClient.isConnected()) {
-            Place currentPlace = guessCurrentPlace();
-            if(currentPlace != null) {
-                semanticLocation.setName(currentPlace.getName());
-                semanticLocation.setPlaceId(currentPlace.getId());
-                semanticLocation.setPlaceTypes(currentPlace.getPlaceTypes());
+            if (mGooglePlacesApiClient.isConnected()) {
+                Place currentPlace = guessCurrentPlace();
+                if (currentPlace != null) {
+                    semanticLocation.setName(currentPlace.getName());
+                    semanticLocation.setPlaceId(currentPlace.getId());
+                    semanticLocation.setPlaceTypes(currentPlace.getPlaceTypes());
+                }
             }
+            Gson contextDataStoreGson = new Gson();
+            addContext(
+                    MithrilAC.getPrefKeyContextTypeLocation(),
+                    MithrilAC.getPrefKeyContextInstanceUnknown() + String.valueOf(System.currentTimeMillis()),
+                    contextDataStoreGson.toJson(semanticLocation)
+            );
         }
+        Log.d(MithrilAC.getDebugTag(), "This is a test for location: "+semanticLocation.getLabel());
         return semanticLocation;
     }
 
@@ -295,6 +329,16 @@ public class AppLaunchDetectorService extends Service implements
             Log.e(MithrilAC.getDebugTag(), "security exception happened");
         }
         return currentPlace[0];
+    }
+
+    private void addContextToDB(String contextType, String contextLabel) {
+        MithrilDBHelper.getHelper(this).addContext(mithrilDB, contextType, contextLabel, true);
+    }
+
+    private void addContext(String contextType, String contextLabel, String serializedJsonContext) {
+        editor.putString(contextType + contextLabel, serializedJsonContext);
+        editor.apply();
+        addContextToDB(contextType, contextLabel);
     }
 
     private class LaunchedAppDetectTimerTask extends TimerTask {
