@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.location.Location;
+import android.location.LocationManager;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.IBinder;
@@ -59,6 +60,7 @@ public class AppLaunchDetectorService extends Service implements
     private SharedPreferences sharedPrefs;
     private SharedPreferences.Editor editor;
     private GoogleApiClient mGoogleApiClient;
+    private GoogleApiClient mGooglePlacesApiClient;
     private Location mCurrentLocation;
     private boolean servicesAvailable;
     private boolean mInProgress;
@@ -94,6 +96,10 @@ public class AppLaunchDetectorService extends Service implements
     @Override
     public void onDestroy() {
         mInProgress = false;
+        if(mGoogleApiClient != null)
+            mGoogleApiClient.connect();
+        if(mGooglePlacesApiClient != null)
+            mGooglePlacesApiClient.connect();
         super.onDestroy();
     }
 
@@ -109,6 +115,9 @@ public class AppLaunchDetectorService extends Service implements
             mInProgress = true;
             mGoogleApiClient.connect();
         }
+
+        if (!mGooglePlacesApiClient.isConnected() || !mGooglePlacesApiClient.isConnecting())
+            mGooglePlacesApiClient.connect();
 
         mTimer.scheduleAtFixedRate(new LaunchedAppDetectTimerTask(), 0, MithrilAC.getLaunchDetectInterval());
 
@@ -129,15 +138,25 @@ public class AppLaunchDetectorService extends Service implements
     private void setUpLocationClientIfNeeded() {
         if (mGoogleApiClient == null)
             buildGoogleApiClient();
+        if(mGooglePlacesApiClient == null)
+            buildGooglePlacesApiClient();
     }
 
     protected synchronized void buildGoogleApiClient() {
         mGoogleApiClient = new GoogleApiClient.Builder(this)
                 .addApi(LocationServices.API)
-                .addApi(Places.GEO_DATA_API)
-                .addApi(Places.PLACE_DETECTION_API)
                 .addConnectionCallbacks(AppLaunchDetectorService.this)
                 .addOnConnectionFailedListener(AppLaunchDetectorService.this)
+                .build();
+    }
+
+    protected synchronized void buildGooglePlacesApiClient() {
+        mGooglePlacesApiClient = new GoogleApiClient
+                .Builder(this)
+                .addApi(Places.GEO_DATA_API)
+                .addApi(Places.PLACE_DETECTION_API)
+                .addConnectionCallbacks(this)
+                .addOnConnectionFailedListener(this)
                 .build();
     }
 
@@ -151,6 +170,7 @@ public class AppLaunchDetectorService extends Service implements
         Log.d(MithrilAC.getDebugTag(), "Disconnected. Please re-connect.");
         mInProgress = false;
         mGoogleApiClient = null;
+        mGooglePlacesApiClient = null;
     }
 
     @Override
@@ -235,35 +255,38 @@ public class AppLaunchDetectorService extends Service implements
             semanticLocation = new SemanticLocation(
                     MithrilAC.getPrefKeyContextInstanceUnknown() + Long.toString(System.currentTimeMillis()),
                     location);
-        Place currentPlace = null;
-        float likelihood = Float.MIN_VALUE;
-        for (Map.Entry<Place, Float> placeEntry : guessCurrentPlace().entrySet())
-            if (placeEntry.getValue() > likelihood)
-                currentPlace = placeEntry.getKey();
-        semanticLocation.setName(currentPlace.getName());
-        semanticLocation.setPlaceId(currentPlace.getId());
-        semanticLocation.setPlaceTypes(currentPlace.getPlaceTypes());
+        if(mGooglePlacesApiClient.isConnected()) {
+            Place currentPlace = guessCurrentPlace();
+            if(currentPlace != null) {
+                semanticLocation.setName(currentPlace.getName());
+                semanticLocation.setPlaceId(currentPlace.getId());
+                semanticLocation.setPlaceTypes(currentPlace.getPlaceTypes());
+            }
+        }
         return semanticLocation;
     }
 
-    private Map<Place, Float> guessCurrentPlace() {
-        final Map<Place, Float> places = new HashMap<>();
+    private Place guessCurrentPlace() {
+        final Place[] currentPlace = new Place[1];
         PendingResult<PlaceLikelihoodBuffer> result;
         try {
             result = Places.PlaceDetectionApi
-                    .getCurrentPlace(mGoogleApiClient, null);
+                    .getCurrentPlace(mGooglePlacesApiClient, null);
             result.setResultCallback(new ResultCallback<PlaceLikelihoodBuffer>() {
                 @Override
                 public void onResult(PlaceLikelihoodBuffer likelyPlaces) {
+                    float mostLikelihood = Float.MIN_VALUE;
                     for (PlaceLikelihood placeLikelihood : likelyPlaces)
-                        places.put(placeLikelihood.getPlace(), placeLikelihood.getLikelihood());
+                        if(placeLikelihood.getLikelihood() > mostLikelihood)
+                            currentPlace[0] = placeLikelihood.getPlace();
+
                     likelyPlaces.release();
                 }
             });
         } catch (SecurityException e) {
             Log.e(MithrilAC.getDebugTag(), "security exception happened");
         }
-        return places;
+        return currentPlace[0];
     }
 
     private class LaunchedAppDetectTimerTask extends TimerTask {
