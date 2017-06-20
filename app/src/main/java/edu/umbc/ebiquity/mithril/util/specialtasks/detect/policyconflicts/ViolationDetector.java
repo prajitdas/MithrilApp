@@ -73,8 +73,14 @@ public class ViolationDetector {
      * since C=A. The set D={1,4} is not even a subset of A, since 4 is not an element of A.
      */
     public static void detectViolation(Context context, String currentPackageName, int operationPerformed, List<SemanticUserContext> semanticUserContexts) throws SemanticInconsistencyException {
-        if (operationPerformed == AppOpsManager.OP_NONE)
+        if(semanticUserContexts.size() == 0) {
+            Log.e(MithrilAC.getDebugTag(), "Houston, we have a problem! We can't detect current context");
             return;
+        }
+        if (operationPerformed == AppOpsManager.OP_NONE) {
+            Log.e(MithrilAC.getDebugTag(), "Houston, we have a problem! We couldn't figure out the operation for "+currentPackageName);
+            return;
+        }
         SQLiteDatabase mithrilDB = MithrilDBHelper.getHelper(context).getWritableDatabase();
 //                MithrilDBHelper.getHelper(context).findCurrentContextFromLogs(mithrilDB);
         Set<Long> currentContext = populateCurrentContext(mithrilDB, context, semanticUserContexts);

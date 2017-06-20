@@ -64,6 +64,7 @@ public class AppLaunchDetectorService extends Service implements
     private Location mCurrentLocation;
     private boolean servicesAvailable;
     private boolean mInProgress;
+    private boolean mPlacesInProcgress;
 
     @Override
     public IBinder onBind(Intent intent) {
@@ -74,6 +75,7 @@ public class AppLaunchDetectorService extends Service implements
     public void onCreate() {
         context = this;
         mInProgress = false;
+        mPlacesInProcgress = false;
         servicesAvailable = servicesConnected();
         sharedPrefs = getSharedPreferences(MithrilAC.getSharedPreferencesName(), Context.MODE_PRIVATE);
         editor = getSharedPreferences(MithrilAC.getSharedPreferencesName(), Context.MODE_PRIVATE).edit();/*
@@ -96,10 +98,7 @@ public class AppLaunchDetectorService extends Service implements
     @Override
     public void onDestroy() {
         mInProgress = false;
-        if(mGoogleApiClient != null)
-            mGoogleApiClient.connect();
-        if(mGooglePlacesApiClient != null)
-            mGooglePlacesApiClient.connect();
+        mPlacesInProcgress = false;
         super.onDestroy();
     }
 
@@ -116,8 +115,10 @@ public class AppLaunchDetectorService extends Service implements
             mGoogleApiClient.connect();
         }
 
-        if (!mGooglePlacesApiClient.isConnected() || !mGooglePlacesApiClient.isConnecting())
+        if (!mGooglePlacesApiClient.isConnected() || !mGooglePlacesApiClient.isConnecting() && !mPlacesInProcgress) {
+            mPlacesInProcgress = true;
             mGooglePlacesApiClient.connect();
+        }
 
         mTimer.scheduleAtFixedRate(new LaunchedAppDetectTimerTask(), 0, MithrilAC.getLaunchDetectInterval());
 
@@ -162,7 +163,10 @@ public class AppLaunchDetectorService extends Service implements
 
     @Override
     public void onConnected(@Nullable Bundle bundle) {
-        requestLastLocation();
+        if(mGoogleApiClient.isConnected())
+            requestLastLocation();
+        if(mGooglePlacesApiClient.isConnected())
+            guessCurrentPlace();
     }
 
     @Override
@@ -188,22 +192,25 @@ public class AppLaunchDetectorService extends Service implements
         List<SemanticUserContext> semanticUserContextList = new ArrayList<>();
 
         //We are always at some location... where are we now? Also we are only in one place at a time
-        requestLastLocation();
-        semanticUserContextList.add(getSemanticLocation(mCurrentLocation));
+        if(mGoogleApiClient.isConnected()) {
+            requestLastLocation();
+            semanticUserContextList.add(getSemanticLocation(mCurrentLocation));
 
-        //Do we know the semantic temporal contexts?
-        for (SemanticTime semanticTime : getSemanticTimes())
-            semanticUserContextList.add(semanticTime);
+            //Do we know the semantic temporal contexts?
+            for (SemanticTime semanticTime : getSemanticTimes())
+                semanticUserContextList.add(semanticTime);
 
-        //Do we detect any presence?
-        for (SemanticNearActor semanticNearActor : getSemanticNearActors())
-            semanticUserContextList.add(semanticNearActor);
+            //Do we detect any presence?
+            for (SemanticNearActor semanticNearActor : getSemanticNearActors())
+                semanticUserContextList.add(semanticNearActor);
 
-        //Do we know of any activity significant to the user?
-        for (SemanticActivity semanticActivity : getSemanticActivities())
-            semanticUserContextList.add(semanticActivity);
+            //Do we know of any activity significant to the user?
+            for (SemanticActivity semanticActivity : getSemanticActivities())
+                semanticUserContextList.add(semanticActivity);
 
-        return semanticUserContextList;
+            return semanticUserContextList;
+        }
+        return new ArrayList<>();
     }
 
     private List<SemanticActivity> getSemanticActivities() {
@@ -229,7 +236,6 @@ public class AppLaunchDetectorService extends Service implements
     }
 
     private SemanticLocation getSemanticLocation(Location location) {
-        Log.d(MithrilAC.getDebugTag(), "Location found: " + Double.toString(location.getLatitude()) + Double.toString(location.getLongitude()));
         SemanticLocation semanticLocation = null;
         Gson retrieveDataGson = new Gson();
         String retrieveDataJson;
@@ -267,6 +273,7 @@ public class AppLaunchDetectorService extends Service implements
     }
 
     private Place guessCurrentPlace() {
+        Log.d(MithrilAC.getDebugTag(), "in get current place");
         final Place[] currentPlace = new Place[1];
         PendingResult<PlaceLikelihoodBuffer> result;
         try {
@@ -277,9 +284,10 @@ public class AppLaunchDetectorService extends Service implements
                 public void onResult(PlaceLikelihoodBuffer likelyPlaces) {
                     float mostLikelihood = Float.MIN_VALUE;
                     for (PlaceLikelihood placeLikelihood : likelyPlaces)
-                        if(placeLikelihood.getLikelihood() > mostLikelihood)
+                        if(placeLikelihood.getLikelihood() > mostLikelihood) {
                             currentPlace[0] = placeLikelihood.getPlace();
-
+                            Log.d(MithrilAC.getDebugTag(), "Place found: " + placeLikelihood.getPlace().getAddress());
+                        }
                     likelyPlaces.release();
                 }
             });
