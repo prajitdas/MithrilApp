@@ -35,12 +35,12 @@ public class SetupGeofencesActivity extends AppCompatActivity implements
         GoogleApiClient.OnConnectionFailedListener,
         ResultCallback<Status> {
     private static final int SETUPGEOFENCESCOMPLETE = 0;
-    private ArrayList<SemanticLocation> semanticLocations;
     /**
      * Provides the entry point to Google Play services: Geo fence
      */
     protected GoogleApiClient mGoogleApiClient;
     protected List<Geofence> mGeofenceList;
+    private ArrayList<SemanticLocation> semanticLocations;
     private SharedPreferences sharedPrefs;
     /**
      * The list of geofences used in this sample.
@@ -64,7 +64,7 @@ public class SetupGeofencesActivity extends AppCompatActivity implements
             @Override
             public void handleMessage(Message message) {
                 if (message.what == SETUPGEOFENCESCOMPLETE) {
-                    if(mGeofencesAdded) {
+                    if (mGeofencesAdded) {
                         Intent resultIntent = new Intent();
                         resultIntent.putParcelableArrayListExtra(MithrilAC.getPrefKeyGeofenceList(), semanticLocations);
                         setResult(Activity.RESULT_OK, resultIntent);
@@ -103,7 +103,7 @@ public class SetupGeofencesActivity extends AppCompatActivity implements
 
     private void initData() {
         semanticLocations = getIntent().getParcelableArrayListExtra(MithrilAC.getPrefKeyGeofenceList());
-        if(semanticLocations.size() > 0) {
+        if (semanticLocations.size() > 0) {
             sharedPrefs = getSharedPreferences(MithrilAC.getSharedPreferencesName(), MODE_PRIVATE);
             /********************************************* Geofence related stuff **************************************************/
             // Empty list for storing geofences.
@@ -120,11 +120,11 @@ public class SetupGeofencesActivity extends AppCompatActivity implements
 
             for (SemanticLocation semanticLocation : semanticLocations) {
                 Log.d(MithrilAC.getDebugTag(), "To setup geofences: "
-                        +semanticLocation.getLabel()
-                        +", "
-                        +semanticLocation.getType()
-                        +", "
-                        +semanticLocation.getAddress());
+                        + semanticLocation.getLabel()
+                        + ", "
+                        + semanticLocation.getType()
+                        + ", "
+                        + semanticLocation.getAddress());
                 if (!semanticLocation.isGeofenced())
                     populateGeofenceList(
                             semanticLocation.getLabel(),
@@ -301,7 +301,7 @@ public class SetupGeofencesActivity extends AppCompatActivity implements
 
     private void updateSemanticLocations() {
         List<SemanticLocation> tempList = new ArrayList<>();
-        for(SemanticLocation semanticLocation : semanticLocations) {
+        for (SemanticLocation semanticLocation : semanticLocations) {
             semanticLocation.setGeofenced(true);
             tempList.add(semanticLocation);
         }
