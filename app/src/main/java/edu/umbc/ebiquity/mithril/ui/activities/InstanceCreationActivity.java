@@ -221,6 +221,10 @@ public class InstanceCreationActivity extends AppCompatActivity
     private void handleLocation() {
         setTitle(activityBaseTitle + getApplicationContext().getResources().getString(R.string.text_instance_creation_location));
 
+        mOtherCtxtBtn.setVisibility(View.VISIBLE);
+        mFirstMajorCtxtBtn.setVisibility(View.VISIBLE);
+        mSecondMajorCtxtBtn.setVisibility(View.VISIBLE);
+
         mOtherCtxtBtn.setText(R.string.pref_other_location_summary);
         mFirstMajorCtxtBtn.setText(R.string.pref_home_location_summary);
         mSecondMajorCtxtBtn.setText(R.string.pref_work_location_summary);
@@ -239,9 +243,12 @@ public class InstanceCreationActivity extends AppCompatActivity
     private void handleTemporal() {
         setTitle(activityBaseTitle + getApplicationContext().getResources().getString(R.string.text_instance_creation_temporal));
 
-        mOtherCtxtBtn.setText(R.string.pref_other_hours_context_summary);
-        mFirstMajorCtxtBtn.setText(R.string.pref_work_hours_context_summary);
-        mSecondMajorCtxtBtn.setText(R.string.pref_DND_hours_context_summary);
+        mOtherCtxtBtn.setVisibility(View.GONE);
+        mFirstMajorCtxtBtn.setVisibility(View.GONE);
+        mSecondMajorCtxtBtn.setVisibility(View.GONE);
+//        mOtherCtxtBtn.setText(R.string.pref_other_hours_context_summary);
+//        mFirstMajorCtxtBtn.setText(R.string.pref_work_hours_context_summary);
+//        mSecondMajorCtxtBtn.setText(R.string.pref_DND_hours_context_summary);
 
         if (!sharedPreferences.getBoolean(MithrilAC.getPrefKeyTimeInstancesCreated(), false)) {
             PermissionHelper.toast(getApplicationContext(), getApplicationContext().getResources().getString(R.string.tooltip_temporal), Toast.LENGTH_SHORT);
@@ -256,6 +263,10 @@ public class InstanceCreationActivity extends AppCompatActivity
 
     private void handlePresence() {
         setTitle(activityBaseTitle + getApplicationContext().getResources().getString(R.string.text_instance_creation_presence_related));
+
+        mOtherCtxtBtn.setVisibility(View.VISIBLE);
+        mFirstMajorCtxtBtn.setVisibility(View.VISIBLE);
+        mSecondMajorCtxtBtn.setVisibility(View.VISIBLE);
 
         mOtherCtxtBtn.setText(R.string.pref_presence_info_others_summary);
         mFirstMajorCtxtBtn.setText(R.string.pref_presence_info_supervisor_summary);
@@ -274,6 +285,10 @@ public class InstanceCreationActivity extends AppCompatActivity
 
     private void handleActivity() {
         setTitle(activityBaseTitle + getApplicationContext().getResources().getString(R.string.text_instance_creation_activity));
+
+        mOtherCtxtBtn.setVisibility(View.VISIBLE);
+        mFirstMajorCtxtBtn.setVisibility(View.VISIBLE);
+        mSecondMajorCtxtBtn.setVisibility(View.VISIBLE);
 
         mOtherCtxtBtn.setText(R.string.pref_other_activity_context_title);
         mFirstMajorCtxtBtn.setText(R.string.pref_personal_activity_context_title);
