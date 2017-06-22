@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -63,6 +64,7 @@ public class SemanticTimeFragment extends Fragment {
         if (getArguments() != null) {
             mColumnCount = getArguments().getInt(ARG_COLUMN_COUNT);
             semanticTimes = getArguments().getParcelableArrayList(MithrilAC.getPrefKeyListOfTemporalInstances());
+            Log.d(MithrilAC.getDebugTag(), "Time list contains"+String.valueOf(semanticTimes.size()));
         }
     }
 

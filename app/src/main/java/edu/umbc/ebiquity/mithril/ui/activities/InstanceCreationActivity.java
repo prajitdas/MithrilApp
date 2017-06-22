@@ -419,7 +419,7 @@ public class InstanceCreationActivity extends AppCompatActivity
 
     private void loadSemanticTemporalFragment() {
         Bundle data = new Bundle();
-        data.putParcelableList(MithrilAC.getPrefKeyListOfTemporalInstances(), new ArrayList<>(semanticTimes.values()));
+        data.putParcelableArrayList(MithrilAC.getPrefKeyListOfTemporalInstances(), new ArrayList<>(semanticTimes.values()));
 
         SemanticTimeFragment semanticTimeFragment = new SemanticTimeFragment();
         semanticTimeFragment.setArguments(data);
