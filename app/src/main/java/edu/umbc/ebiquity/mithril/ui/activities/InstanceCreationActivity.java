@@ -77,6 +77,7 @@ public class InstanceCreationActivity extends AppCompatActivity
     private final int TIME_REQUEST_CODE_WORK = 4;
     private final int TIME_REQUEST_CODE_DND = 5;
     private final int TIME_REQUEST_CODE_MORE = 6;
+    private final int GEOFENCE_REQUEST_CODE = 7;
     /**
      * Provides the entry point to Google Play services: Geo fence
      */
@@ -674,6 +675,14 @@ public class InstanceCreationActivity extends AppCompatActivity
                 }
                 break;
             }
+            case GEOFENCE_REQUEST_CODE: {
+                if (resultCode == Activity.RESULT_OK) {
+                    Log.d(MithrilAC.getDebugTag(), "Geofences successfully setup! All good...");
+                } else if (resultCode == Activity.RESULT_CANCELED) {
+                    Log.d(MithrilAC.getDebugTag(), "Are we in trouble?");
+                }
+                break;
+            }
         }
     }
 
@@ -705,6 +714,7 @@ public class InstanceCreationActivity extends AppCompatActivity
          */
         mAddressRequested = true;
         startSearchAddressIntentService(userInputLocation, MithrilAC.getPrefHomeLocationKey());
+        setupGeofencesActivity();
     }
 
     private void setWorkSemanticLocation(Place place) {
@@ -800,6 +810,11 @@ public class InstanceCreationActivity extends AppCompatActivity
         // (creating a process for it if needed); if it is running then it remains running. The
         // service kills itself automatically once all intents are processed.
         startService(intent);
+    }
+
+    private void setupGeofencesActivity() {
+        Intent intent = new Intent(this, SetupGeofencesActivity.class);
+        startActivityForResult(intent, GEOFENCE_REQUEST_CODE);
     }
 
     /**

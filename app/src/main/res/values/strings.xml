@@ -27,8 +27,9 @@
 
     <string name="mithril_service_name">Mithril App Launch Detector Service</string>
 
-    <string name="loading">Loading Mithril\'s\nKnowledge-Base&#8230;</string>
-    <string name="downloading_policies">Downloading policies&#8230;</string>
+    <string name="loading">Loading Mithril\'s\nKnowledge-Base</string>
+    <string name="downloading_policies">Downloading policies</string>
+    <string name="setting_geofences">Setting up Geofences</string>
     <string name="explanation">Tap device with NFC tag</string>
     <string name="no_description_available_txt">No description available!</string>
     <string name="no_data">No permission information is available for this app or this app doesn\'t use any permissions!</string>
@@ -251,6 +252,7 @@
     <string name="title_activity_show_permission_detail">Permission group details</string>
     <string name="title_activity_instance_creation">Add&#160;</string>
     <string name="title_activity_download_policies">Downloading policies&#8230;</string>
+    <string name="title_activity_setup_geofences">Geofences setup&#8230;</string>
 
     <string name="title_bottom_navigation_location">Location</string>
     <string name="text_instance_creation_location">location context</string>

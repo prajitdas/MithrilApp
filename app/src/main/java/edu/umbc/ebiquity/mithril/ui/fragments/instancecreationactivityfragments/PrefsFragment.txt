@@ -113,7 +113,7 @@ public class PrefsFragment extends PreferenceFragment implements GoogleApiClient
      */
     private static Spanned formatPlaceDetails(Resources res, CharSequence name, String id,
                                               CharSequence address, CharSequence phoneNumber, Uri websiteUri) {
-        Log.e(MithrilApplication.getDebugTag(), res.getString(R.string.place_details, name, id, address, phoneNumber,
+        Log.e(MithrilAC.getDebugTag(), res.getString(R.string.place_details, name, id, address, phoneNumber,
                 websiteUri));
         return Html.fromHtml(res.getString(R.string.place_details, name, id, address, phoneNumber,
                 websiteUri));
@@ -123,7 +123,7 @@ public class PrefsFragment extends PreferenceFragment implements GoogleApiClient
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         context = getActivity();
-        sharedPrefs = context.getSharedPreferences(MithrilApplication.getSharedPreferencesName(), MODE_PRIVATE);
+        sharedPrefs = context.getSharedPreferences(MithrilAC.getSharedPreferencesName(), MODE_PRIVATE);
         editor = sharedPrefs.edit();
 
         initViews();
@@ -136,25 +136,25 @@ public class PrefsFragment extends PreferenceFragment implements GoogleApiClient
         // Load the preferences from an XML resource
         addPreferencesFromResource(R.xml.preferences);
 
-        mSwitchPrefAllDone = (SwitchPreference) getPreferenceManager().findPreference(MithrilApplication.getPrefKeyInitInstancesCreated());
+        mSwitchPrefAllDone = (SwitchPreference) getPreferenceManager().findPreference(MithrilAC.getPrefKeyInitInstancesCreated());
 
-        mSwitchPrefEnableLocation = (SwitchPreference) getPreferenceManager().findPreference(MithrilApplication.getPrefLocationContextEnableKey());
-        mPrefHomeLocation = getPreferenceManager().findPreference(MithrilApplication.getPrefHomeLocationKey());
-        mPrefWorkLocation = getPreferenceManager().findPreference(MithrilApplication.getPrefWorkLocationKey());
+        mSwitchPrefEnableLocation = (SwitchPreference) getPreferenceManager().findPreference(MithrilAC.getPrefLocationContextEnableKey());
+        mPrefHomeLocation = getPreferenceManager().findPreference(MithrilAC.getPrefHomeLocationKey());
+        mPrefWorkLocation = getPreferenceManager().findPreference(MithrilAC.getPrefWorkLocationKey());
 
-        mSwitchPrefEnableTemporal = (SwitchPreference) getPreferenceManager().findPreference(MithrilApplication.getPrefTemporalContextEnableKey());
+        mSwitchPrefEnableTemporal = (SwitchPreference) getPreferenceManager().findPreference(MithrilAC.getPrefTemporalContextEnableKey());
 
-        mDayOfWeekPrefWorkDays = (DayOfWeekPreference) getPreferenceManager().findPreference(MithrilApplication.getPrefWorkDaysKey());
-        mTimePrefWorkHoursStart = (TimePreference) getPreferenceManager().findPreference(MithrilApplication.getPrefWorkHoursStartKey());
-        mTimePrefWorkHoursEnd = (TimePreference) getPreferenceManager().findPreference(MithrilApplication.getPrefWorkHoursEndKey());
+        mDayOfWeekPrefWorkDays = (DayOfWeekPreference) getPreferenceManager().findPreference(MithrilAC.getPrefWorkDaysKey());
+        mTimePrefWorkHoursStart = (TimePreference) getPreferenceManager().findPreference(MithrilAC.getPrefWorkHoursStartKey());
+        mTimePrefWorkHoursEnd = (TimePreference) getPreferenceManager().findPreference(MithrilAC.getPrefWorkHoursEndKey());
 
-        mDayOfWeekPrefDNDDays = (DayOfWeekPreference) getPreferenceManager().findPreference(MithrilApplication.getPrefDndDaysKey());
-        mTimePrefDNDHoursStart = (TimePreference) getPreferenceManager().findPreference(MithrilApplication.getPrefDndHoursStartKey());
-        mTimePrefDNDHoursEnd = (TimePreference) getPreferenceManager().findPreference(MithrilApplication.getPrefDndHoursEndKey());
+        mDayOfWeekPrefDNDDays = (DayOfWeekPreference) getPreferenceManager().findPreference(MithrilAC.getPrefDndDaysKey());
+        mTimePrefDNDHoursStart = (TimePreference) getPreferenceManager().findPreference(MithrilAC.getPrefDndHoursStartKey());
+        mTimePrefDNDHoursEnd = (TimePreference) getPreferenceManager().findPreference(MithrilAC.getPrefDndHoursEndKey());
 
-        mSwitchPrefEnablePresenceInfo = (SwitchPreference) getPreferenceManager().findPreference(MithrilApplication.getPrefPresenceInfoContextEnableKey());
-        mEditTextPrefPresenceInfoSupervisor = (EditTextPreference) getPreferenceManager().findPreference(MithrilApplication.getPrefPresenceInfoSupervisorKey());
-        mEditTextPrefPresenceInfoColleague = (EditTextPreference) getPreferenceManager().findPreference(MithrilApplication.getPrefPresenceInfoColleagueKey());
+        mSwitchPrefEnablePresenceInfo = (SwitchPreference) getPreferenceManager().findPreference(MithrilAC.getPrefPresenceInfoContextEnableKey());
+        mEditTextPrefPresenceInfoSupervisor = (EditTextPreference) getPreferenceManager().findPreference(MithrilAC.getPrefPresenceInfoSupervisorKey());
+        mEditTextPrefPresenceInfoColleague = (EditTextPreference) getPreferenceManager().findPreference(MithrilAC.getPrefPresenceInfoColleagueKey());
 
         /********************************************* Geofence related stuff **************************************************/
         // Empty list for storing geofences.
@@ -164,7 +164,7 @@ public class PrefsFragment extends PreferenceFragment implements GoogleApiClient
         mGeofencePendingIntent = null;
 
         // Get the value of mGeofencesAdded from SharedPreferences. Set to false as a default.
-        mGeofencesAdded = sharedPrefs.getBoolean(MithrilApplication.GEOFENCES_ADDED_KEY, false);
+        mGeofencesAdded = sharedPrefs.getBoolean(MithrilAC.GEOFENCES_ADDED_KEY, false);
 
         // Kick off the request to build GoogleApiClient.
         buildGoogleApiClient();
@@ -177,62 +177,62 @@ public class PrefsFragment extends PreferenceFragment implements GoogleApiClient
         // Set defaults, then update using values stored in the Bundle.
         mAddressRequested = false;
 
-        boolean isChecked = sharedPrefs.getBoolean(MithrilApplication.getPrefKeyInitInstancesCreated(), false);
+        boolean isChecked = sharedPrefs.getBoolean(MithrilAC.getPrefKeyInitInstancesCreated(), false);
         mSwitchPrefAllDone.setChecked(isChecked);
-        editor.putBoolean(MithrilApplication.getPrefKeyInitInstancesCreated(), isChecked);
+        editor.putBoolean(MithrilAC.getPrefKeyInitInstancesCreated(), isChecked);
 
-        isChecked = sharedPrefs.getBoolean(MithrilApplication.getPrefLocationContextEnableKey(), false);
+        isChecked = sharedPrefs.getBoolean(MithrilAC.getPrefLocationContextEnableKey(), false);
         mSwitchPrefEnableLocation.setChecked(isChecked);
-        editor.putBoolean(MithrilApplication.getPrefLocationContextEnableKey(), isChecked);
+        editor.putBoolean(MithrilAC.getPrefLocationContextEnableKey(), isChecked);
 
-        isChecked = sharedPrefs.getBoolean(MithrilApplication.getPrefTemporalContextEnableKey(), false);
+        isChecked = sharedPrefs.getBoolean(MithrilAC.getPrefTemporalContextEnableKey(), false);
         mSwitchPrefEnableTemporal.setChecked(isChecked);
-        editor.putBoolean(MithrilApplication.getPrefTemporalContextEnableKey(), isChecked);
+        editor.putBoolean(MithrilAC.getPrefTemporalContextEnableKey(), isChecked);
 
-        isChecked = sharedPrefs.getBoolean(MithrilApplication.getPrefPresenceInfoContextEnableKey(), false);
+        isChecked = sharedPrefs.getBoolean(MithrilAC.getPrefPresenceInfoContextEnableKey(), false);
         mSwitchPrefEnablePresenceInfo.setChecked(isChecked);
-        editor.putBoolean(MithrilApplication.getPrefPresenceInfoContextEnableKey(), isChecked);
+        editor.putBoolean(MithrilAC.getPrefPresenceInfoContextEnableKey(), isChecked);
 
         /********************************************** Location instances *************************************************/
 
-        mPrefHomeLocation.setSummary(sharedPrefs.getString(MithrilApplication.getPrefHomeLocationKey(), getResources().getString(R.string.pref_home_location_summary)));
-        mPrefWorkLocation.setSummary(sharedPrefs.getString(MithrilApplication.getPrefWorkLocationKey(), getResources().getString(R.string.pref_work_location_summary)));
+        mPrefHomeLocation.setSummary(sharedPrefs.getString(MithrilAC.getPrefHomeLocationKey(), getResources().getString(R.string.pref_home_location_summary)));
+        mPrefWorkLocation.setSummary(sharedPrefs.getString(MithrilAC.getPrefWorkLocationKey(), getResources().getString(R.string.pref_work_location_summary)));
 
         /********************************************** Temporal instances *************************************************/
 
-        String stringValue = sharedPrefs.getString(MithrilApplication.getPrefWorkDaysKey(), getResources().getString(R.string.pref_work_days));
-        mDayOfWeekPrefWorkDays.setSummary(sharedPrefs.getString(MithrilApplication.getPrefWorkDaysKey(), getResources().getString(R.string.pref_work_days)));
-        editor.putString(MithrilApplication.getPrefWorkDaysKey(), stringValue);
+        String stringValue = sharedPrefs.getString(MithrilAC.getPrefWorkDaysKey(), getResources().getString(R.string.pref_work_days));
+        mDayOfWeekPrefWorkDays.setSummary(sharedPrefs.getString(MithrilAC.getPrefWorkDaysKey(), getResources().getString(R.string.pref_work_days)));
+        editor.putString(MithrilAC.getPrefWorkDaysKey(), stringValue);
 
-        stringValue = sharedPrefs.getString(MithrilApplication.getPrefWorkHoursStartKey(), getResources().getString(R.string.pref_work_hours_start));
-        mTimePrefWorkHoursStart.setSummary(sharedPrefs.getString(MithrilApplication.getPrefWorkHoursStartKey(), getResources().getString(R.string.pref_work_hours_start)));
-        editor.putString(MithrilApplication.getPrefWorkHoursStartKey(), stringValue);
+        stringValue = sharedPrefs.getString(MithrilAC.getPrefWorkHoursStartKey(), getResources().getString(R.string.pref_work_hours_start));
+        mTimePrefWorkHoursStart.setSummary(sharedPrefs.getString(MithrilAC.getPrefWorkHoursStartKey(), getResources().getString(R.string.pref_work_hours_start)));
+        editor.putString(MithrilAC.getPrefWorkHoursStartKey(), stringValue);
 
-        stringValue = sharedPrefs.getString(MithrilApplication.getPrefWorkHoursEndKey(), getResources().getString(R.string.pref_work_hours_end));
-        mTimePrefWorkHoursEnd.setSummary(sharedPrefs.getString(MithrilApplication.getPrefWorkHoursEndKey(), getResources().getString(R.string.pref_work_hours_end)));
-        editor.putString(MithrilApplication.getPrefWorkHoursEndKey(), stringValue);
+        stringValue = sharedPrefs.getString(MithrilAC.getPrefWorkHoursEndKey(), getResources().getString(R.string.pref_work_hours_end));
+        mTimePrefWorkHoursEnd.setSummary(sharedPrefs.getString(MithrilAC.getPrefWorkHoursEndKey(), getResources().getString(R.string.pref_work_hours_end)));
+        editor.putString(MithrilAC.getPrefWorkHoursEndKey(), stringValue);
 
-        stringValue = sharedPrefs.getString(MithrilApplication.getPrefDndDaysKey(), getResources().getString(R.string.pref_DND_days));
-        mDayOfWeekPrefDNDDays.setSummary(sharedPrefs.getString(MithrilApplication.getPrefDndDaysKey(), getResources().getString(R.string.pref_DND_days)));
-        editor.putString(MithrilApplication.getPrefDndDaysKey(), stringValue);
+        stringValue = sharedPrefs.getString(MithrilAC.getPrefDndDaysKey(), getResources().getString(R.string.pref_DND_days));
+        mDayOfWeekPrefDNDDays.setSummary(sharedPrefs.getString(MithrilAC.getPrefDndDaysKey(), getResources().getString(R.string.pref_DND_days)));
+        editor.putString(MithrilAC.getPrefDndDaysKey(), stringValue);
 
-        stringValue = sharedPrefs.getString(MithrilApplication.getPrefDndHoursStartKey(), getResources().getString(R.string.pref_DND_hours_start));
-        mTimePrefDNDHoursStart.setSummary(sharedPrefs.getString(MithrilApplication.getPrefDndHoursStartKey(), getResources().getString(R.string.pref_DND_hours_start)));
-        editor.putString(MithrilApplication.getPrefDndHoursStartKey(), stringValue);
+        stringValue = sharedPrefs.getString(MithrilAC.getPrefDndHoursStartKey(), getResources().getString(R.string.pref_DND_hours_start));
+        mTimePrefDNDHoursStart.setSummary(sharedPrefs.getString(MithrilAC.getPrefDndHoursStartKey(), getResources().getString(R.string.pref_DND_hours_start)));
+        editor.putString(MithrilAC.getPrefDndHoursStartKey(), stringValue);
 
-        stringValue = sharedPrefs.getString(MithrilApplication.getPrefDndHoursEndKey(), getResources().getString(R.string.pref_DND_hours_end));
-        mTimePrefDNDHoursEnd.setSummary(sharedPrefs.getString(MithrilApplication.getPrefDndHoursEndKey(), getResources().getString(R.string.pref_DND_hours_end)));
-        editor.putString(MithrilApplication.getPrefDndHoursEndKey(), stringValue);
+        stringValue = sharedPrefs.getString(MithrilAC.getPrefDndHoursEndKey(), getResources().getString(R.string.pref_DND_hours_end));
+        mTimePrefDNDHoursEnd.setSummary(sharedPrefs.getString(MithrilAC.getPrefDndHoursEndKey(), getResources().getString(R.string.pref_DND_hours_end)));
+        editor.putString(MithrilAC.getPrefDndHoursEndKey(), stringValue);
 
         /********************************************** Presence info instances *************************************************/
 
-        stringValue = sharedPrefs.getString(MithrilApplication.getPrefPresenceInfoSupervisorKey(), getResources().getString(R.string.pref_presence_info_supervisor_summary));
-        mEditTextPrefPresenceInfoSupervisor.setText(sharedPrefs.getString(MithrilApplication.getPrefPresenceInfoSupervisorKey(), getResources().getString(R.string.pref_presence_info_supervisor_summary)));
-        editor.putString(MithrilApplication.getPrefPresenceInfoSupervisorKey(), stringValue);
+        stringValue = sharedPrefs.getString(MithrilAC.getPrefPresenceInfoSupervisorKey(), getResources().getString(R.string.pref_presence_info_supervisor_summary));
+        mEditTextPrefPresenceInfoSupervisor.setText(sharedPrefs.getString(MithrilAC.getPrefPresenceInfoSupervisorKey(), getResources().getString(R.string.pref_presence_info_supervisor_summary)));
+        editor.putString(MithrilAC.getPrefPresenceInfoSupervisorKey(), stringValue);
 
-        stringValue = sharedPrefs.getString(MithrilApplication.getPrefPresenceInfoColleagueKey(), getResources().getString(R.string.pref_presence_info_colleague_summary));
-        mEditTextPrefPresenceInfoColleague.setText(sharedPrefs.getString(MithrilApplication.getPrefPresenceInfoColleagueKey(), getResources().getString(R.string.pref_presence_info_colleague_summary)));
-        editor.putString(MithrilApplication.getPrefPresenceInfoColleagueKey(), stringValue);
+        stringValue = sharedPrefs.getString(MithrilAC.getPrefPresenceInfoColleagueKey(), getResources().getString(R.string.pref_presence_info_colleague_summary));
+        mEditTextPrefPresenceInfoColleague.setText(sharedPrefs.getString(MithrilAC.getPrefPresenceInfoColleagueKey(), getResources().getString(R.string.pref_presence_info_colleague_summary)));
+        editor.putString(MithrilAC.getPrefPresenceInfoColleagueKey(), stringValue);
 
         editor.apply();
     }
@@ -288,7 +288,7 @@ public class PrefsFragment extends PreferenceFragment implements GoogleApiClient
             String message = "Google Play Services is not available: " +
                     GoogleApiAvailability.getInstance().getErrorString(e.errorCode);
 
-            Log.e(MithrilApplication.getDebugTag(), message);
+            Log.e(MithrilAC.getDebugTag(), message);
             PermissionHelper.toast(getActivity(), message, Toast.LENGTH_SHORT);
         }
     }
@@ -322,25 +322,25 @@ public class PrefsFragment extends PreferenceFragment implements GoogleApiClient
                 Place place = PlaceAutocomplete.getPlace(getActivity(), data);
 
                 mPrefHomeLocation.setSummary(place.getAddress());
-                editor.putString(MithrilApplication.getPrefHomeLocationKey(), place.getAddress().toString());
+                editor.putString(MithrilAC.getPrefHomeLocationKey(), place.getAddress().toString());
                 editor.apply();
 
                 Location location = new Location("placesAPI");
                 location.setLatitude(place.getLatLng().latitude);
                 location.setLongitude(place.getLatLng().longitude);
-                homeSemanticLocation = new SemanticLocation(MithrilApplication.getPrefHomeLocationKey(), location);
+                homeSemanticLocation = new SemanticLocation(MithrilAC.getPrefHomeLocationKey(), location);
 
                 // We have a geofences to put around the home location now!
-                populateGeofenceList(MithrilApplication.getPrefHomeLocationKey(), location.getLatitude(), location.getLongitude());
+                populateGeofenceList(MithrilAC.getPrefHomeLocationKey(), location.getLatitude(), location.getLongitude());
 
                 /**
                  * We know the location has changed, let's check the address
                  */
                 mAddressRequested = true;
-                startSearchAddressIntentService(location, MithrilApplication.getPrefHomeLocationKey());
+                startSearchAddressIntentService(location, MithrilAC.getPrefHomeLocationKey());
             } else if (resultCode == PlaceAutocomplete.RESULT_ERROR) {
                 Status status = PlaceAutocomplete.getStatus(getActivity(), data);
-                Log.e(MithrilApplication.getDebugTag(), "Error: Status = " + status.toString());
+                Log.e(MithrilAC.getDebugTag(), "Error: Status = " + status.toString());
             } else if (resultCode == Activity.RESULT_CANCELED) {
                 // Indicates that the activity closed before a selection was made. For example if
                 // the user pressed the back button.
@@ -350,25 +350,25 @@ public class PrefsFragment extends PreferenceFragment implements GoogleApiClient
                 Place place = PlaceAutocomplete.getPlace(getActivity(), data);
 
                 mPrefWorkLocation.setSummary(place.getAddress());
-                editor.putString(MithrilApplication.getPrefWorkLocationKey(), place.getAddress().toString());
+                editor.putString(MithrilAC.getPrefWorkLocationKey(), place.getAddress().toString());
                 editor.apply();
 
                 Location location = new Location("placesAPI");
                 location.setLatitude(place.getLatLng().latitude);
                 location.setLongitude(place.getLatLng().longitude);
-                workSemanticLocation = new SemanticLocation(MithrilApplication.getPrefWorkLocationKey(), location);
+                workSemanticLocation = new SemanticLocation(MithrilAC.getPrefWorkLocationKey(), location);
 
                 // We have a geofences to put around the work location now!
-                populateGeofenceList(MithrilApplication.getPrefWorkLocationKey(), location.getLatitude(), location.getLongitude());
+                populateGeofenceList(MithrilAC.getPrefWorkLocationKey(), location.getLatitude(), location.getLongitude());
 
                 /**
                  * We know the location has changed, let's check the address
                  */
                 mAddressRequested = true;
-                startSearchAddressIntentService(location, MithrilApplication.getPrefWorkLocationKey());
+                startSearchAddressIntentService(location, MithrilAC.getPrefWorkLocationKey());
             } else if (resultCode == PlaceAutocomplete.RESULT_ERROR) {
                 Status status = PlaceAutocomplete.getStatus(getActivity(), data);
-                Log.e(MithrilApplication.getDebugTag(), "Error: Status = " + status.toString());
+                Log.e(MithrilAC.getDebugTag(), "Error: Status = " + status.toString());
             } else if (resultCode == Activity.RESULT_CANCELED) {
             }
         }
@@ -382,14 +382,14 @@ public class PrefsFragment extends PreferenceFragment implements GoogleApiClient
         // Create an intent for passing to the intent service responsible for fetching the address.
         Intent intent = new Intent(context, FetchAddressIntentService.class);
 
-        intent.putExtra(MithrilApplication.ADDRESS_REQUESTED_EXTRA, mAddressRequested);
-        intent.putExtra(MithrilApplication.ADDRESS_KEY, key);
+        intent.putExtra(MithrilAC.ADDRESS_REQUESTED_EXTRA, mAddressRequested);
+        intent.putExtra(MithrilAC.ADDRESS_KEY, key);
 
         // Pass the result receiver as an extra to the service.
-        intent.putExtra(MithrilApplication.RECEIVER, mResultReceiver);
+        intent.putExtra(MithrilAC.RECEIVER, mResultReceiver);
 
         // Pass the location data as an extra to the service.
-        intent.putExtra(MithrilApplication.LOCATION_DATA_EXTRA, location);
+        intent.putExtra(MithrilAC.LOCATION_DATA_EXTRA, location);
 
         // Start the service. If the service isn't already running, it is instantiated and started
         // (creating a process for it if needed); if it is running then it remains running. The
@@ -403,7 +403,7 @@ public class PrefsFragment extends PreferenceFragment implements GoogleApiClient
             public boolean onPreferenceChange(Preference preference, Object o) {
                 mSwitchPrefAllDone.setChecked((Boolean) o);
 
-                editor.putBoolean(MithrilApplication.getPrefKeyInitInstancesCreated(), mSwitchPrefAllDone.isChecked());
+                editor.putBoolean(MithrilAC.getPrefKeyInitInstancesCreated(), mSwitchPrefAllDone.isChecked());
                 editor.apply();
 
                 addGeofences();
@@ -420,7 +420,7 @@ public class PrefsFragment extends PreferenceFragment implements GoogleApiClient
             public boolean onPreferenceChange(Preference preference, Object o) {
                 mSwitchPrefEnableLocation.setChecked((Boolean) o);
 
-                editor.putBoolean(MithrilApplication.getPrefLocationContextEnableKey(), mSwitchPrefEnableLocation.isChecked());
+                editor.putBoolean(MithrilAC.getPrefLocationContextEnableKey(), mSwitchPrefEnableLocation.isChecked());
                 editor.apply();
 
                 mPrefHomeLocation.setEnabled(mSwitchPrefEnableLocation.isChecked());
@@ -437,7 +437,7 @@ public class PrefsFragment extends PreferenceFragment implements GoogleApiClient
                 String changedValue = (String) o;
                 preference.setSummary(changedValue);
 
-                editor.putString(MithrilApplication.getPrefHomeLocationKey(), changedValue);
+                editor.putString(MithrilAC.getPrefHomeLocationKey(), changedValue);
                 editor.apply();
 
                 return true;
@@ -451,7 +451,7 @@ public class PrefsFragment extends PreferenceFragment implements GoogleApiClient
                 String changedValue = (String) o;
                 preference.setSummary(changedValue);
 
-                editor.putString(MithrilApplication.getPrefWorkLocationKey(), changedValue);
+                editor.putString(MithrilAC.getPrefWorkLocationKey(), changedValue);
                 editor.apply();
 
                 return true;
@@ -463,7 +463,7 @@ public class PrefsFragment extends PreferenceFragment implements GoogleApiClient
             public boolean onPreferenceChange(Preference preference, Object o) {
                 mSwitchPrefEnableTemporal.setChecked((Boolean) o);
 
-                editor.putBoolean(MithrilApplication.getPrefTemporalContextEnableKey(), mSwitchPrefEnableTemporal.isChecked());
+                editor.putBoolean(MithrilAC.getPrefTemporalContextEnableKey(), mSwitchPrefEnableTemporal.isChecked());
                 editor.apply();
 
                 mDayOfWeekPrefWorkDays.setEnabled(mSwitchPrefEnableTemporal.isChecked());
@@ -484,9 +484,9 @@ public class PrefsFragment extends PreferenceFragment implements GoogleApiClient
                 //TODO Add code for storing preferences
                 String changedValue = (String) o;
                 preference.setSummary(changedValue);
-                Log.d(MithrilApplication.getDebugTag() + " persisting? ", changedValue);
+                Log.d(MithrilAC.getDebugTag() + " persisting? ", changedValue);
 
-                editor.putString(MithrilApplication.getPrefWorkDaysKey(), changedValue);
+                editor.putString(MithrilAC.getPrefWorkDaysKey(), changedValue);
                 editor.apply();
 
                 return true;
@@ -500,7 +500,7 @@ public class PrefsFragment extends PreferenceFragment implements GoogleApiClient
                 String changedValue = (String) o;
                 preference.setSummary(changedValue);
 
-                editor.putString(MithrilApplication.getPrefWorkHoursStartKey(), changedValue);
+                editor.putString(MithrilAC.getPrefWorkHoursStartKey(), changedValue);
                 editor.apply();
 
                 return true;
@@ -514,7 +514,7 @@ public class PrefsFragment extends PreferenceFragment implements GoogleApiClient
                 String changedValue = (String) o;
                 preference.setSummary(changedValue);
 
-                editor.putString(MithrilApplication.getPrefWorkHoursEndKey(), changedValue);
+                editor.putString(MithrilAC.getPrefWorkHoursEndKey(), changedValue);
                 editor.apply();
 
                 return true;
@@ -528,7 +528,7 @@ public class PrefsFragment extends PreferenceFragment implements GoogleApiClient
                 String changedValue = (String) o;
                 preference.setSummary(changedValue);
 
-                editor.putString(MithrilApplication.getPrefDndDaysKey(), changedValue);
+                editor.putString(MithrilAC.getPrefDndDaysKey(), changedValue);
                 editor.apply();
 
                 return true;
@@ -542,7 +542,7 @@ public class PrefsFragment extends PreferenceFragment implements GoogleApiClient
                 String changedValue = (String) o;
                 preference.setSummary(changedValue);
 
-                editor.putString(MithrilApplication.getPrefDndHoursStartKey(), changedValue);
+                editor.putString(MithrilAC.getPrefDndHoursStartKey(), changedValue);
                 editor.apply();
 
                 return true;
@@ -556,7 +556,7 @@ public class PrefsFragment extends PreferenceFragment implements GoogleApiClient
                 String changedValue = (String) o;
                 preference.setSummary(changedValue);
 
-                editor.putString(MithrilApplication.getPrefDndHoursEndKey(), changedValue);
+                editor.putString(MithrilAC.getPrefDndHoursEndKey(), changedValue);
                 editor.apply();
 
                 return true;
@@ -568,7 +568,7 @@ public class PrefsFragment extends PreferenceFragment implements GoogleApiClient
             public boolean onPreferenceChange(Preference preference, Object o) {
                 mSwitchPrefEnablePresenceInfo.setChecked((Boolean) o);
 
-                editor.putBoolean(MithrilApplication.getPrefPresenceInfoContextEnableKey(), mSwitchPrefEnablePresenceInfo.isChecked());
+                editor.putBoolean(MithrilAC.getPrefPresenceInfoContextEnableKey(), mSwitchPrefEnablePresenceInfo.isChecked());
                 editor.apply();
 
                 mEditTextPrefPresenceInfoColleague.setEnabled(mSwitchPrefEnablePresenceInfo.isChecked());
@@ -584,7 +584,7 @@ public class PrefsFragment extends PreferenceFragment implements GoogleApiClient
                 String changedValue = (String) o;
                 preference.setSummary(changedValue);
 
-                editor.putString(MithrilApplication.getPrefPresenceInfoSupervisorKey(), changedValue);
+                editor.putString(MithrilAC.getPrefPresenceInfoSupervisorKey(), changedValue);
                 editor.apply();
 
                 return true;
@@ -598,7 +598,7 @@ public class PrefsFragment extends PreferenceFragment implements GoogleApiClient
                 String changedValue = (String) o;
                 preference.setSummary(changedValue);
 
-                editor.putString(MithrilApplication.getPrefPresenceInfoColleagueKey(), changedValue);
+                editor.putString(MithrilAC.getPrefPresenceInfoColleagueKey(), changedValue);
                 editor.apply();
 
                 return true;
@@ -634,20 +634,20 @@ public class PrefsFragment extends PreferenceFragment implements GoogleApiClient
      */
     @Override
     public void onConnected(Bundle connectionHint) {
-        Log.i(MithrilApplication.getDebugTag(), "Connected to GoogleApiClient");
+        Log.i(MithrilAC.getDebugTag(), "Connected to GoogleApiClient");
     }
 
     @Override
     public void onConnectionFailed(ConnectionResult result) {
         // Refer to the javadoc for ConnectionResult to see what error codes might be returned in
         // onConnectionFailed.
-        Log.i(MithrilApplication.getDebugTag(), "Connection failed: ConnectionResult.getErrorCode() = " + result.getErrorCode());
+        Log.i(MithrilAC.getDebugTag(), "Connection failed: ConnectionResult.getErrorCode() = " + result.getErrorCode());
     }
 
     @Override
     public void onConnectionSuspended(int cause) {
         // The connection to Google Play services was lost for some reason.
-        Log.i(MithrilApplication.getDebugTag(), "Connection suspended");
+        Log.i(MithrilAC.getDebugTag(), "Connection suspended");
 
         // onConnected() will be called again automatically when the service reconnects
     }
@@ -720,7 +720,7 @@ public class PrefsFragment extends PreferenceFragment implements GoogleApiClient
     }
 
     private void logSecurityException(SecurityException securityException) {
-        Log.e(MithrilApplication.getDebugTag(), "Invalid location permission. " +
+        Log.e(MithrilAC.getDebugTag(), "Invalid location permission. " +
                 "You need to use ACCESS_FINE_LOCATION with geofences", securityException);
     }
 
@@ -739,7 +739,7 @@ public class PrefsFragment extends PreferenceFragment implements GoogleApiClient
             // Update state and save in shared preferences.
             mGeofencesAdded = !mGeofencesAdded;
             SharedPreferences.Editor editor = sharedPrefs.edit();
-            editor.putBoolean(MithrilApplication.GEOFENCES_ADDED_KEY, mGeofencesAdded);
+            editor.putBoolean(MithrilAC.GEOFENCES_ADDED_KEY, mGeofencesAdded);
             editor.apply();
 
             // Update the UI. Adding geofences enables the Remove Geofences button, and removing
@@ -756,7 +756,7 @@ public class PrefsFragment extends PreferenceFragment implements GoogleApiClient
             // Get the status code for the error and log it using a user-friendly message.
             String errorMessage = GeofenceErrorMessages.getErrorString(context,
                     status.getStatusCode());
-            Log.e(MithrilApplication.getDebugTag(), errorMessage);
+            Log.e(MithrilAC.getDebugTag(), errorMessage);
         }
     }
 
@@ -783,7 +783,7 @@ public class PrefsFragment extends PreferenceFragment implements GoogleApiClient
      * the user's location.
      */
     public void populateGeofenceList(String semanticIdentifier, double latitude, double longitude) {
-//        for (Map.Entry<String, LatLng> entry : MithrilApplication.BALTIMORE_COUNTY_LANDMARKS.entrySet()) {
+//        for (Map.Entry<String, LatLng> entry : MithrilAC.BALTIMORE_COUNTY_LANDMARKS.entrySet()) {
 
         mGeofenceList.add(new Geofence.Builder()
                 // Set the request ID of the geofence. This is a string to identify this
@@ -794,7 +794,7 @@ public class PrefsFragment extends PreferenceFragment implements GoogleApiClient
                 .setCircularRegion(
                         latitude,
                         longitude,
-                        MithrilApplication.GEOFENCE_RADIUS_IN_METERS
+                        MithrilAC.GEOFENCE_RADIUS_IN_METERS
                 )
 
                 // Set the expiration duration of the geofence. This geofence gets automatically
@@ -838,13 +838,13 @@ public class PrefsFragment extends PreferenceFragment implements GoogleApiClient
                 mAddressOutput = new Address(context.getResources().getConfiguration().getLocales().get(0));
             else
                 mAddressOutput = new Address(context.getResources().getConfiguration().locale);
-            sharedPref = context.getSharedPreferences(MithrilApplication.getSharedPreferencesName(), Context.MODE_PRIVATE);
+            sharedPref = context.getSharedPreferences(MithrilAC.getSharedPreferencesName(), Context.MODE_PRIVATE);
         }
 
         @Override
         protected void onReceiveResult(int resultCode, Bundle resultData) {
-            mAddressRequested = resultData.getBoolean(MithrilApplication.ADDRESS_REQUESTED_EXTRA, false);
-            String key = resultData.getString(MithrilApplication.ADDRESS_KEY, null);
+            mAddressRequested = resultData.getBoolean(MithrilAC.ADDRESS_REQUESTED_EXTRA, false);
+            String key = resultData.getString(MithrilAC.ADDRESS_KEY, null);
             if (key.equals(null))
                 throw new AddressKeyMissingError();
             else
@@ -855,17 +855,17 @@ public class PrefsFragment extends PreferenceFragment implements GoogleApiClient
             // Display the address string
             // or an error message sent from the intent service.
             Gson gson = new Gson();
-            String json = resultData.getString(MithrilApplication.RESULT_DATA_KEY, "");
+            String json = resultData.getString(MithrilAC.RESULT_DATA_KEY, "");
             try {
                 mAddressOutput = gson.fromJson(json, Address.class);
             } catch (JsonSyntaxException e) {
-                Log.d(MithrilApplication.getDebugTag(), e.getMessage());
+                Log.d(MithrilAC.getDebugTag(), e.getMessage());
             }
 
-            Log.d(MithrilApplication.getDebugTag(), "Prefs address " + resultData.getString(MithrilApplication.ADDRESS_KEY) + mAddressRequested + key + json);
+            Log.d(MithrilAC.getDebugTag(), "Prefs address " + resultData.getString(MithrilAC.ADDRESS_KEY) + mAddressRequested + key + json);
             // Show a toast message if an address was found.
-            if (resultCode == MithrilApplication.SUCCESS_RESULT) {
-//                Log.d(MithrilApplication.getDebugMithrilApplication.getDebugTag()(), getString(R.string.address_found) + ":" + mAddressOutput);
+            if (resultCode == MithrilAC.SUCCESS_RESULT) {
+//                Log.d(MithrilAC.getDebugMithrilAC.getDebugTag()(), getString(R.string.address_found) + ":" + mAddressOutput);
 //                PermissionHelper.toast(context, getString(R.string.address_found) + ":" + mAddressOutput);
                 storeInSharedPreferences(resultData.getString(
                         key),
@@ -885,7 +885,7 @@ public class PrefsFragment extends PreferenceFragment implements GoogleApiClient
          *                MyObject obj = gson.fromJson(json, MyObject.class);
          */
         public void storeInSharedPreferences(String key, Address address) {
-            SharedPreferences.Editor editor = context.getSharedPreferences(MithrilApplication.getSharedPreferencesName(), Context.MODE_PRIVATE).edit();
+            SharedPreferences.Editor editor = context.getSharedPreferences(MithrilAC.getSharedPreferencesName(), Context.MODE_PRIVATE).edit();
             Gson gson = new Gson();
             String json = gson.toJson(address);
             editor.putString(key, json);

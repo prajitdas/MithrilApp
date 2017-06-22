@@ -67,6 +67,7 @@ public class AppLaunchDetectorService extends Service implements
     private GoogleApiClient mGoogleApiClient;
     private GoogleApiClient mGooglePlacesApiClient;
     private Location mCurrentLocation;
+    private Place mCurrentPlace;
     private boolean servicesAvailable;
     private boolean mInProgress;
     private boolean mPlacesInProcgress;
@@ -288,11 +289,12 @@ public class AppLaunchDetectorService extends Service implements
                     MithrilAC.getPrefKeyContextInstanceUnknown() + Long.toString(System.currentTimeMillis()),
                     location);
             if (mGooglePlacesApiClient.isConnected()) {
-                Place currentPlace = guessCurrentPlace();
-                if (currentPlace != null) {
-                    semanticLocation.setName(currentPlace.getName());
-                    semanticLocation.setPlaceId(currentPlace.getId());
-                    semanticLocation.setPlaceTypes(currentPlace.getPlaceTypes());
+//                guessCurrentPlace();
+                if (mCurrentPlace != null) {
+                    Log.d(MithrilAC.getDebugTag(), "We at: " + mCurrentPlace.getAddress());
+                    semanticLocation.setName(mCurrentPlace.getName());
+                    semanticLocation.setPlaceId(mCurrentPlace.getId());
+                    semanticLocation.setPlaceTypes(mCurrentPlace.getPlaceTypes());
                 }
             }
             Gson contextDataStoreGson = new Gson();
@@ -306,9 +308,8 @@ public class AppLaunchDetectorService extends Service implements
         return semanticLocation;
     }
 
-    private Place guessCurrentPlace() {
+    private void guessCurrentPlace() {
         Log.d(MithrilAC.getDebugTag(), "in get current place");
-        final Place[] currentPlace = new Place[1];
         PendingResult<PlaceLikelihoodBuffer> result;
         try {
             result = Places.PlaceDetectionApi
@@ -319,16 +320,19 @@ public class AppLaunchDetectorService extends Service implements
                     float mostLikelihood = Float.MIN_VALUE;
                     for (PlaceLikelihood placeLikelihood : likelyPlaces)
                         if(placeLikelihood.getLikelihood() > mostLikelihood) {
-                            currentPlace[0] = placeLikelihood.getPlace();
-                            Log.d(MithrilAC.getDebugTag(), "Place found: " + placeLikelihood.getPlace().getAddress());
+                            mCurrentPlace = placeLikelihood.getPlace();
+                            Log.d(MithrilAC.getDebugTag(),
+                                    "Place found: " +
+                                    placeLikelihood.getPlace().getAddress() +
+                                    " with likelihood: " +
+                                    placeLikelihood.getLikelihood());
                         }
-                    likelyPlaces.release();
+//                    likelyPlaces.release();
                 }
             });
         } catch (SecurityException e) {
             Log.e(MithrilAC.getDebugTag(), "security exception happened");
         }
-        return currentPlace[0];
     }
 
     private void addContextToDB(String contextType, String contextLabel) {
