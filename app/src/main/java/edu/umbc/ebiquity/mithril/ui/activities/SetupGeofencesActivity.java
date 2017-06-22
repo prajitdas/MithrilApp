@@ -1,15 +1,12 @@
 package edu.umbc.ebiquity.mithril.ui.activities;
 
 import android.app.PendingIntent;
-import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.database.SQLException;
-import android.database.sqlite.SQLiteDatabase;
+import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.Toast;
@@ -27,25 +24,24 @@ import java.util.List;
 
 import edu.umbc.ebiquity.mithril.MithrilAC;
 import edu.umbc.ebiquity.mithril.R;
-import edu.umbc.ebiquity.mithril.data.dbhelpers.MithrilDBHelper;
 import edu.umbc.ebiquity.mithril.util.services.GeofenceTransitionsIntentService;
 import edu.umbc.ebiquity.mithril.util.specialtasks.errorsnexceptions.GeofenceErrorMessages;
-import edu.umbc.ebiquity.mithril.util.specialtasks.errorsnexceptions.SemanticInconsistencyException;
 
 public class SetupGeofencesActivity extends AppCompatActivity implements
         GoogleApiClient.ConnectionCallbacks,
         GoogleApiClient.OnConnectionFailedListener,
         ResultCallback<Status> {
-    private SharedPreferences sharedPrefs;
     private static final int SETUPGEOFENCESCOMPLETE = 0;
-    private Handler handler;
     /**
      * Provides the entry point to Google Play services: Geo fence
      */
     protected GoogleApiClient mGoogleApiClient;
+    protected List<Geofence> mGeofenceList;
+    private SharedPreferences sharedPrefs;
     /**
      * The list of geofences used in this sample.
      */
+    private Handler handler;
     /**
      * Used to keep track of whether geofences were added.
      */
@@ -54,7 +50,6 @@ public class SetupGeofencesActivity extends AppCompatActivity implements
      * Used when requesting to add or remove geofences.
      */
     private PendingIntent mGeofencePendingIntent;
-    protected List<Geofence> mGeofenceList;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -74,6 +69,16 @@ public class SetupGeofencesActivity extends AppCompatActivity implements
         initViews();
     }
 
+    private void makeFullScreen() {
+        getWindow().getDecorView().setSystemUiVisibility(
+                View.SYSTEM_UI_FLAG_LAYOUT_STABLE
+                        | View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
+                        | View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
+                        | View.SYSTEM_UI_FLAG_HIDE_NAVIGATION
+                        | View.SYSTEM_UI_FLAG_FULLSCREEN
+                        | View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY);
+    }
+
     private void initData() {
         sharedPrefs = getSharedPreferences(MithrilAC.getSharedPreferencesName(), MODE_PRIVATE);
         /********************************************* Geofence related stuff **************************************************/
@@ -88,6 +93,18 @@ public class SetupGeofencesActivity extends AppCompatActivity implements
 
         // Kick off the request to build GoogleApiClient.
         buildGoogleApiClient();
+    }
+
+    private void initViews() {
+        setContentView(R.layout.activity_download_policies);
+
+        // Start lengthy operation in a background thread
+        new Thread(new Runnable() {
+            public void run() {
+
+                handler.sendEmptyMessageDelayed(SETUPGEOFENCESCOMPLETE, MithrilAC.getMillisecondsPerSecond() * 5);
+            }
+        }).start();
     }
 
     /**
@@ -293,27 +310,5 @@ public class SetupGeofencesActivity extends AppCompatActivity implements
                 // Create the geofence.
                 .build());
 //        }
-    }
-
-    private void makeFullScreen() {
-        getWindow().getDecorView().setSystemUiVisibility(
-                View.SYSTEM_UI_FLAG_LAYOUT_STABLE
-                        | View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
-                        | View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
-                        | View.SYSTEM_UI_FLAG_HIDE_NAVIGATION
-                        | View.SYSTEM_UI_FLAG_FULLSCREEN
-                        | View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY);
-    }
-
-    private void initViews() {
-        setContentView(R.layout.activity_download_policies);
-
-        // Start lengthy operation in a background thread
-        new Thread(new Runnable() {
-            public void run() {
-
-                handler.sendEmptyMessageDelayed(SETUPGEOFENCESCOMPLETE, MithrilAC.getMillisecondsPerSecond() * 5);
-            }
-        }).start();
     }
 }

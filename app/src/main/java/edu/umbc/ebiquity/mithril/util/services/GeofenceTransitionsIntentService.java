@@ -42,7 +42,7 @@ import edu.umbc.ebiquity.mithril.util.specialtasks.errorsnexceptions.GeofenceErr
 
 /**
  * Listener for geofence transition changes.
- *
+ * <p>
  * Receives geofence transition events from Location Services in the form of an Intent containing
  * the transition type and geofence id(s) that triggered the transition. Creates a notification
  * as the output.
@@ -70,6 +70,7 @@ public class GeofenceTransitionsIntentService extends IntentService {
 
     /**
      * Handles incoming intents.
+     *
      * @param intent sent by Location Services. This Intent is provided to Location
      *               Services (inside a PendingIntent) when addGeofences() is called.
      */
@@ -136,9 +137,9 @@ public class GeofenceTransitionsIntentService extends IntentService {
     /**
      * Gets transition details and returns them as a formatted string.
      *
-     * @param context               The app context.
-     * @param geofenceTransition    The ID of the geofence transition.
-     * @param triggeringGeofences   The geofence(s) triggered.
+     * @param context             The app context.
+     * @param geofenceTransition  The ID of the geofence transition.
+     * @param triggeringGeofences The geofence(s) triggered.
      * @return The transition details formatted as String.
      */
     private String getGeofenceTransitionDetails(
@@ -207,7 +208,7 @@ public class GeofenceTransitionsIntentService extends IntentService {
     /**
      * Maps geofence transition types to their human-readable equivalents.
      *
-     * @param transitionType    A transition type constant defined in Geofence
+     * @param transitionType A transition type constant defined in Geofence
      * @return A String indicating the type of transition
      */
     private String getTransitionString(int transitionType) {

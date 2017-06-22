@@ -30,9 +30,6 @@ import com.google.android.gms.location.places.Places;
 import com.google.gson.Gson;
 
 import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Timer;
@@ -45,7 +42,6 @@ import edu.umbc.ebiquity.mithril.data.model.rules.context.SemanticLocation;
 import edu.umbc.ebiquity.mithril.data.model.rules.context.SemanticNearActor;
 import edu.umbc.ebiquity.mithril.data.model.rules.context.SemanticTime;
 import edu.umbc.ebiquity.mithril.data.model.rules.context.SemanticUserContext;
-import edu.umbc.ebiquity.mithril.ui.activities.InstanceCreationActivity;
 import edu.umbc.ebiquity.mithril.util.specialtasks.detect.policyconflicts.ViolationDetector;
 import edu.umbc.ebiquity.mithril.util.specialtasks.detect.runningapps.AppLaunchDetector;
 import edu.umbc.ebiquity.mithril.util.specialtasks.errorsnexceptions.SemanticInconsistencyException;
@@ -151,7 +147,7 @@ public class AppLaunchDetectorService extends Service implements
     private void setUpLocationClientIfNeeded() {
         if (mGoogleApiClient == null)
             buildGoogleApiClient();
-        if(mGooglePlacesApiClient == null)
+        if (mGooglePlacesApiClient == null)
             buildGooglePlacesApiClient();
     }
 
@@ -175,9 +171,9 @@ public class AppLaunchDetectorService extends Service implements
 
     @Override
     public void onConnected(@Nullable Bundle bundle) {
-        if(mGoogleApiClient.isConnected())
+        if (mGoogleApiClient.isConnected())
             requestLastLocation();
-        if(mGooglePlacesApiClient.isConnected())
+        if (mGooglePlacesApiClient.isConnected())
             guessCurrentPlace();
     }
 
@@ -204,7 +200,7 @@ public class AppLaunchDetectorService extends Service implements
         List<SemanticUserContext> semanticUserContextList = new ArrayList<>();
 
         //We are always at some location... where are we now? Also we are only in one place at a time
-        if(mGoogleApiClient.isConnected()) {
+        if (mGoogleApiClient.isConnected()) {
             requestLastLocation();
             semanticUserContextList.add(getSemanticLocation(mCurrentLocation));
 
@@ -304,7 +300,7 @@ public class AppLaunchDetectorService extends Service implements
                     contextDataStoreGson.toJson(semanticLocation)
             );
         }
-        Log.d(MithrilAC.getDebugTag(), "This is a test for location: "+semanticLocation.getLabel());
+        Log.d(MithrilAC.getDebugTag(), "This is a test for location: " + semanticLocation.getLabel());
         return semanticLocation;
     }
 
@@ -319,13 +315,13 @@ public class AppLaunchDetectorService extends Service implements
                 public void onResult(PlaceLikelihoodBuffer likelyPlaces) {
                     float mostLikelihood = Float.MIN_VALUE;
                     for (PlaceLikelihood placeLikelihood : likelyPlaces)
-                        if(placeLikelihood.getLikelihood() > mostLikelihood) {
+                        if (placeLikelihood.getLikelihood() > mostLikelihood) {
                             mCurrentPlace = placeLikelihood.getPlace();
                             Log.d(MithrilAC.getDebugTag(),
                                     "Place found: " +
-                                    placeLikelihood.getPlace().getAddress() +
-                                    " with likelihood: " +
-                                    placeLikelihood.getLikelihood());
+                                            placeLikelihood.getPlace().getAddress() +
+                                            " with likelihood: " +
+                                            placeLikelihood.getLikelihood());
                         }
 //                    likelyPlaces.release();
                 }
