@@ -4,11 +4,16 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".ui.fragments.coreactivityfragments.AboutFragment">
+
     <android.support.v7.widget.CardView
         xmlns:card_view="http://schemas.android.com/apk/res-auto"
         android:id="@+id/projectDetailsTextCardView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginBottom="@dimen/card_view_margin"
+        android:layout_marginEnd="@dimen/card_view_margin"
+        android:layout_marginStart="@dimen/card_view_margin"
+        android:layout_marginTop="@dimen/card_view_margin"
         android:elevation="@dimen/card_view_elevation"
         card_view:cardCornerRadius="@dimen/card_view_corner_radius">
 
@@ -24,11 +29,16 @@
             android:textColor="@color/colorPrimaryText"
             android:textSize="20sp" />
     </android.support.v7.widget.CardView>
+
     <android.support.v7.widget.CardView xmlns:card_view="http://schemas.android.com/apk/res-auto"
         android:id="@+id/aboutTextCardView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@+id/projectDetailsTextCardView"
+        android:layout_marginBottom="@dimen/card_view_margin"
+        android:layout_marginEnd="@dimen/card_view_margin"
+        android:layout_marginStart="@dimen/card_view_margin"
+        android:layout_marginTop="@dimen/card_view_margin"
         android:elevation="@dimen/card_view_elevation"
         card_view:cardCornerRadius="@dimen/card_view_corner_radius">
 
