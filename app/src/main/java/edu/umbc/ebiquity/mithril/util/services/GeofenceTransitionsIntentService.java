@@ -63,9 +63,9 @@ public class GeofenceTransitionsIntentService extends IntentService {
     protected void onHandleIntent(Intent intent) {
         GeofencingEvent geofencingEvent = GeofencingEvent.fromIntent(intent);
         if (geofencingEvent.hasError()) {
-            String errorMessage = GeofenceErrorMessages.getErrorString(this,
-                    geofencingEvent.getErrorCode());
-            Log.e(MithrilAC.getDebugTag() + TAG, errorMessage);
+            GeofenceErrorMessages.getErrorString(this, geofencingEvent.getErrorCode());
+//            String errorMessage =
+//            Log.e(MithrilAC.getDebugTag() + TAG, errorMessage);
             return;
         }
 
@@ -81,7 +81,7 @@ public class GeofenceTransitionsIntentService extends IntentService {
                     MithrilAC.getPrefEndKey());
         } else {
             // Log the error.
-            Log.e(MithrilAC.getDebugTag() + TAG, getString(R.string.geofence_transition_invalid_type, geofenceTransition));
+//            Log.e(MithrilAC.getDebugTag() + TAG, getString(R.string.geofence_transition_invalid_type, geofenceTransition));
         }
     }
 
