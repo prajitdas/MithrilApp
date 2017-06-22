@@ -1,5 +1,6 @@
 package edu.umbc.ebiquity.mithril.ui.activities;
 
+import android.app.Activity;
 import android.app.PendingIntent;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -27,6 +28,7 @@ import edu.umbc.ebiquity.mithril.R;
 import edu.umbc.ebiquity.mithril.data.model.rules.context.SemanticLocation;
 import edu.umbc.ebiquity.mithril.util.services.GeofenceTransitionsIntentService;
 import edu.umbc.ebiquity.mithril.util.specialtasks.errorsnexceptions.GeofenceErrorMessages;
+import edu.umbc.ebiquity.mithril.util.specialtasks.permissions.PermissionHelper;
 
 public class SetupGeofencesActivity extends AppCompatActivity implements
         GoogleApiClient.ConnectionCallbacks,
@@ -62,10 +64,14 @@ public class SetupGeofencesActivity extends AppCompatActivity implements
             @Override
             public void handleMessage(Message message) {
                 if (message.what == SETUPGEOFENCESCOMPLETE) {
-                    Intent resultIntent = new Intent();
-                    resultIntent.putParcelableArrayListExtra(MithrilAC.getPrefKeyGeofenceList(), semanticLocations);
-                    setResult(SetupGeofencesActivity.RESULT_OK, resultIntent);
-                    finish();
+                    if(mGeofencesAdded) {
+                        Intent resultIntent = new Intent();
+                        resultIntent.putParcelableArrayListExtra(MithrilAC.getPrefKeyGeofenceList(), semanticLocations);
+                        setResult(Activity.RESULT_OK, resultIntent);
+                        finish();
+                    } else {
+                        failedToSetupGeofences();
+                    }
                 }
             }
         };
@@ -73,6 +79,16 @@ public class SetupGeofencesActivity extends AppCompatActivity implements
         makeFullScreen();
         initData();
         initViews();
+    }
+
+    @Override
+    public void onBackPressed() {
+        PermissionHelper.toast(this, "Let me finish please...");
+    }
+
+    private void failedToSetupGeofences() {
+        setResult(Activity.RESULT_CANCELED);
+        finish();
     }
 
     private void makeFullScreen() {
@@ -90,26 +106,30 @@ public class SetupGeofencesActivity extends AppCompatActivity implements
                 .getParcelableArrayListExtra(
                         MithrilAC.getPrefKeyGeofenceList()
                 );
-        sharedPrefs = getSharedPreferences(MithrilAC.getSharedPreferencesName(), MODE_PRIVATE);
-        /********************************************* Geofence related stuff **************************************************/
-        // Empty list for storing geofences.
-        mGeofenceList = new ArrayList<>();
+        if(semanticLocations.size() > 0) {
+            sharedPrefs = getSharedPreferences(MithrilAC.getSharedPreferencesName(), MODE_PRIVATE);
+            /********************************************* Geofence related stuff **************************************************/
+            // Empty list for storing geofences.
+            mGeofenceList = new ArrayList<>();
 
-        // Initially set the PendingIntent used in addGeofences() and removeGeofences() to null.
-        mGeofencePendingIntent = null;
+            // Initially set the PendingIntent used in addGeofences() and removeGeofences() to null.
+            mGeofencePendingIntent = null;
 
-        // Get the value of mGeofencesAdded from SharedPreferences. Set to false as a default.
-        mGeofencesAdded = sharedPrefs.getBoolean(MithrilAC.getGeofencesAddedKey(), false);
+            // Get the value of mGeofencesAdded from SharedPreferences. Set to false as a default.
+            mGeofencesAdded = sharedPrefs.getBoolean(MithrilAC.getGeofencesAddedKey(), false);
 
-        // Kick off the request to build GoogleApiClient.
-        buildGoogleApiClient();
+            // Kick off the request to build GoogleApiClient.
+            buildGoogleApiClient();
 
-        for(SemanticLocation semanticLocation : semanticLocations)
-            if(!semanticLocation.isGeofenced())
-                populateGeofenceList(
-                        semanticLocation.getLabel(),
-                        semanticLocation.getLocation().getLatitude(),
-                        semanticLocation.getLocation().getLongitude());
+            for (SemanticLocation semanticLocation : semanticLocations)
+                if (!semanticLocation.isGeofenced())
+                    populateGeofenceList(
+                            semanticLocation.getLabel(),
+                            semanticLocation.getLocation().getLatitude(),
+                            semanticLocation.getLocation().getLongitude());
+        } else {
+            failedToSetupGeofences();
+        }
     }
 
     private void initViews() {
@@ -265,12 +285,8 @@ public class SetupGeofencesActivity extends AppCompatActivity implements
             // geofences enables the Add Geofences button.
 //            setButtonsEnabledState();
 
-            Toast.makeText(
-                    this,
-                    getString(mGeofencesAdded ? R.string.geofences_added :
-                            R.string.geofences_removed),
-                    Toast.LENGTH_SHORT
-            ).show();
+            PermissionHelper.toast(this,
+                    getString(mGeofencesAdded ? R.string.geofences_added : R.string.geofences_removed));
         } else {
             // Get the status code for the error and log it using a user-friendly message.
             String errorMessage = GeofenceErrorMessages.getErrorString(this,

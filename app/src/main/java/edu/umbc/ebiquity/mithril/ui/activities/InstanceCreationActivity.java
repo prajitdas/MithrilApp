@@ -456,7 +456,7 @@ public class InstanceCreationActivity extends AppCompatActivity
             semanticLocations.put(contextEntry.getKey(), contextEntry.getValue());
         }
         isThereLocationContextToSave = false;
-        setupGeofencesActivity();
+        setupGeofences();
         refreshVisibleFragment();
     }
 
@@ -813,10 +813,10 @@ public class InstanceCreationActivity extends AppCompatActivity
         startService(intent);
     }
 
-    private void setupGeofencesActivity() {
+    private void setupGeofences() {
         Intent intent = new Intent(this, SetupGeofencesActivity.class);
-        intent.putParcelableArrayListExtra(MithrilAC.getPrefKeyGeofenceList(),
-                (ArrayList<SemanticLocation>) semanticLocations.values());
+        ArrayList<SemanticLocation> tempList = new ArrayList<>(semanticLocations.values());
+        intent.putParcelableArrayListExtra(MithrilAC.getPrefKeyGeofenceList(), tempList);
         startActivityForResult(intent, GEOFENCE_REQUEST_CODE);
     }
 
