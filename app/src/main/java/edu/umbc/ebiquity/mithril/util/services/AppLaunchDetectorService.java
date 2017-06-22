@@ -288,7 +288,7 @@ public class AppLaunchDetectorService extends Service implements
 //                guessCurrentPlace();
                 if (mCurrentPlace != null) {
                     Log.d(MithrilAC.getDebugTag(), "We at: " + mCurrentPlace.getAddress());
-                    semanticLocation.setName(mCurrentPlace.getName());
+                    semanticLocation.setName(mCurrentPlace.getName().toString());
                     semanticLocation.setPlaceId(mCurrentPlace.getId());
                     semanticLocation.setPlaceTypes(mCurrentPlace.getPlaceTypes());
                 }

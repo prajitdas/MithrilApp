@@ -11,24 +11,13 @@ import java.util.Locale;
 import edu.umbc.ebiquity.mithril.MithrilAC;
 
 public class SemanticLocation extends SemanticUserContext implements Parcelable {
-    public static final Creator<SemanticLocation> CREATOR = new Creator<SemanticLocation>() {
-        @Override
-        public SemanticLocation createFromParcel(Parcel in) {
-            return new SemanticLocation(in);
-        }
-
-        @Override
-        public SemanticLocation[] newArray(int size) {
-            return new SemanticLocation[size];
-        }
-    };
     private final String type = MithrilAC.getPrefKeyContextTypeLocation();
     private Location location;
     private Address address = new Address(Locale.getDefault());
     private String inferredLocation;
     private boolean enabled = false;
-    private CharSequence name;
-    private CharSequence placeId;
+    private String name;
+    private String placeId;
     private List<Integer> placeTypes;
     private boolean geofenced = false;
 
@@ -42,8 +31,8 @@ public class SemanticLocation extends SemanticUserContext implements Parcelable 
         address = in.readParcelable(Address.class.getClassLoader());
         inferredLocation = in.readString();
         enabled = in.readByte() != 0;
-        name = in.readCharSequence();
-        placeId = in.readCharSequence();
+        name = in.readString();
+        placeId = in.readString();
         geofenced = in.readByte() != 0;
     }
 
@@ -53,8 +42,8 @@ public class SemanticLocation extends SemanticUserContext implements Parcelable 
         dest.writeParcelable(address, flags);
         dest.writeString(inferredLocation);
         dest.writeByte((byte) (enabled ? 1 : 0));
-        dest.writeCharSequence(name);
-        dest.writeCharSequence(placeId);
+        dest.writeString(name);
+        dest.writeString(placeId);
         dest.writeByte((byte) (geofenced ? 1 : 0));
     }
 
@@ -62,6 +51,18 @@ public class SemanticLocation extends SemanticUserContext implements Parcelable 
     public int describeContents() {
         return 0;
     }
+
+    public static final Creator<SemanticLocation> CREATOR = new Creator<SemanticLocation>() {
+        @Override
+        public SemanticLocation createFromParcel(Parcel in) {
+            return new SemanticLocation(in);
+        }
+
+        @Override
+        public SemanticLocation[] newArray(int size) {
+            return new SemanticLocation[size];
+        }
+    };
 
     @Override
     public String getType() {
@@ -112,19 +113,19 @@ public class SemanticLocation extends SemanticUserContext implements Parcelable 
         this.enabled = enabled;
     }
 
-    public CharSequence getName() {
+    public String getName() {
         return name;
     }
 
-    public void setName(CharSequence name) {
+    public void setName(String name) {
         this.name = name;
     }
 
-    public CharSequence getPlaceId() {
+    public String getPlaceId() {
         return placeId;
     }
 
-    public void setPlaceId(CharSequence placeId) {
+    public void setPlaceId(String placeId) {
         this.placeId = placeId;
     }
 

@@ -78,7 +78,8 @@ public class SetupGeofencesActivity extends AppCompatActivity implements
 
         makeFullScreen();
         initData();
-        initViews();
+        addGeofences();
+        letsPauseABit();
     }
 
     @Override
@@ -136,12 +137,10 @@ public class SetupGeofencesActivity extends AppCompatActivity implements
         }
     }
 
-    private void initViews() {
-        setContentView(R.layout.activity_download_policies);
+    private void letsPauseABit() {
         // Start lengthy operation in a background thread
         new Thread(new Runnable() {
             public void run() {
-                addGeofences();
                 handler.sendEmptyMessageDelayed(SETUPGEOFENCESCOMPLETE, MithrilAC.getMillisecondsPerSecond() * 5);
             }
         }).start();
