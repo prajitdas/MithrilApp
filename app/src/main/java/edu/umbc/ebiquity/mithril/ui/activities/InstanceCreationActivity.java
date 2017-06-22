@@ -38,7 +38,6 @@ import com.google.android.gms.location.places.ui.PlaceAutocomplete;
 import com.google.gson.Gson;
 import com.google.gson.JsonSyntaxException;
 
-import java.sql.Time;
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -407,7 +406,7 @@ public class InstanceCreationActivity extends AppCompatActivity
 
     private void loadSemanticLocationFragment() {
         Bundle data = new Bundle();
-        data.putParcelableList(MithrilAC.getPrefKeyListOfLocationInstances(), new ArrayList<>(semanticLocations.values()));
+        data.putParcelableArrayList(MithrilAC.getPrefKeyListOfLocationInstances(), new ArrayList<>(semanticLocations.values()));
 
         SemanticLocationFragment semanticLocationFragment = new SemanticLocationFragment();
         semanticLocationFragment.setArguments(data);
@@ -431,7 +430,7 @@ public class InstanceCreationActivity extends AppCompatActivity
 
     private void loadSemanticPresenceFragment() {
         Bundle data = new Bundle();
-        data.putParcelableList(MithrilAC.getPrefKeyListOfPresenceInstances(), new ArrayList<>(semanticNearActors.values()));
+        data.putParcelableArrayList(MithrilAC.getPrefKeyListOfPresenceInstances(), new ArrayList<>(semanticNearActors.values()));
 
         SemanticNearActorFragment semanticNearActorFragment = new SemanticNearActorFragment();
         semanticNearActorFragment.setArguments(data);
@@ -443,7 +442,7 @@ public class InstanceCreationActivity extends AppCompatActivity
 
     private void loadSemanticActivityFragment() {
         Bundle data = new Bundle();
-        data.putParcelableList(MithrilAC.getPrefKeyListOfActivityInstances(), new ArrayList<>(semanticActivities.values()));
+        data.putParcelableArrayList(MithrilAC.getPrefKeyListOfActivityInstances(), new ArrayList<>(semanticActivities.values()));
 
         SemanticActivityFragment semanticActivityFragment = new SemanticActivityFragment();
         semanticActivityFragment.setArguments(data);
