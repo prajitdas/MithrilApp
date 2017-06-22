@@ -1,19 +1,4 @@
 package edu.umbc.ebiquity.mithril.util.services;
-/**
- * Copyright 2014 Google Inc. All Rights Reserved.
- * <p>
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- * <p>
- * http://www.apache.org/licenses/LICENSE-2.0
- * <p>
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
 
 import android.app.IntentService;
 import android.app.NotificationManager;
@@ -105,18 +90,12 @@ public class GeofenceTransitionsIntentService extends IntentService {
         List<Geofence> triggeringGeofences = geofencingEvent.getTriggeringGeofences();
 
         // Get the transition details as a String.
-        String geofenceTransitionDetails = getGeofenceTransitionDetails(
-                this,
-                geofenceTransition,
-                triggeringGeofences
-        );
+        String geofenceTransitionDetails = getGeofenceTransitionDetails(geofenceTransition, triggeringGeofences);
 
         // Send notification and log the transition details.
         sendNotification(geofenceTransitionDetails);
         Log.i(MithrilAC.getDebugTag() + TAG, geofenceTransitionDetails);
-//            findCurrentActivityIfAny();
-//            findCurrentTemporalInfoIfAny();
-//            findCurrentPresenceInfoIfAny();
+
         return geofenceTransitionDetails;
     }
 
@@ -130,20 +109,14 @@ public class GeofenceTransitionsIntentService extends IntentService {
                 startOrEnd);
     }
 
-//    private void findCurrentPresenceInfoIfAny() {}
-//    private void findCurrentTemporalInfoIfAny() {}
-//    private void findCurrentActivityIfAny() {}
-
     /**
      * Gets transition details and returns them as a formatted string.
      *
-     * @param context             The app context.
      * @param geofenceTransition  The ID of the geofence transition.
      * @param triggeringGeofences The geofence(s) triggered.
      * @return The transition details formatted as String.
      */
     private String getGeofenceTransitionDetails(
-            Context context,
             int geofenceTransition,
             List<Geofence> triggeringGeofences) {
 
