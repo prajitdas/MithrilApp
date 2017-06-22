@@ -6,7 +6,6 @@
     app:layout_behavior="@string/appbar_scrolling_view_behavior"
     tools:context=".ui.activities.ShowPermissionDetailActivity"
     tools:showIn="@layout/activity_show_permission_detail">
-
     <TextView
         android:id="@+id/textViewPermissionDetails"
         android:layout_width="wrap_content"
@@ -22,9 +21,6 @@
         android:textAlignment="textStart"
         android:textColor="@color/colorPrimaryText"
         android:textSize="20sp" />
-
-    <!-- We do not show the above buttons for apps anymore :( -->
-    <!--android:layout_above="@id/app_is_bad_btn"-->
     <ScrollView
         android:id="@+id/app_details_scroll_view"
         android:layout_width="match_parent"
@@ -34,17 +30,14 @@
         android:fillViewport="true"
         android:scrollbarStyle="outsideInset"
         android:scrollbars="horizontal|vertical">
-
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:orientation="vertical">
-
             <FrameLayout
                 android:id="@+id/container_permission_details"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent" />
-
         </LinearLayout>
     </ScrollView>
 </RelativeLayout>

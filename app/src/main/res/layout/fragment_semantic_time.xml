@@ -1,51 +1,55 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.v7.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:card_view="http://schemas.android.com/apk/res-auto"
-    android:id="@+id/card_view_semantic_time"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:elevation="@dimen/card_view_elevation"
-    card_view:cardCornerRadius="@dimen/card_view_corner_radius">
+    android:orientation="horizontal">
 
-    <RelativeLayout
+    <android.support.v7.widget.CardView
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:card_view="http://schemas.android.com/apk/res-auto"
+        android:id="@+id/card_view_semantic_time"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical">
+        android:layout_marginBottom="@dimen/card_view_margin"
+        android:layout_marginEnd="@dimen/card_view_margin"
+        android:layout_marginStart="@dimen/card_view_margin"
+        android:layout_marginTop="@dimen/card_view_margin"
+        android:elevation="@dimen/card_view_elevation"
+        card_view:cardCornerRadius="@dimen/card_view_corner_radius">
 
-        <TextView
-            android:id="@+id/semanticTimeLabel"
-            android:layout_width="wrap_content"
+        <RelativeLayout
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_alignParentTop="true"
-            android:layout_marginBottom="@dimen/card_view_margin"
-            android:layout_marginEnd="@dimen/card_view_margin"
-            android:layout_marginStart="@dimen/card_view_margin"
-            android:layout_marginTop="@dimen/card_view_margin"
-            android:text="@string/app_name_placeholder_text"
-            android:textAppearance="@android:style/TextAppearance.Holo.Medium"
-            android:textColor="@color/colorPrimaryText"
-            android:textSize="20sp" />
+            android:orientation="vertical">
 
-        <TextView
-            android:id="@+id/semanticTimeDetail"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_below="@id/semanticTimeLabel"
-            android:layout_marginBottom="@dimen/card_view_margin"
-            android:layout_marginEnd="@dimen/card_view_margin"
-            android:layout_marginStart="@dimen/card_view_margin"
-            android:layout_marginTop="@dimen/card_view_margin"
-            android:text="@string/app_version_placeholder_text"
-            android:textAppearance="@android:style/TextAppearance.Holo.Small"
-            android:textColor="@color/colorSecondaryText"
-            android:textSize="15sp" />
-        <!--<Switch-->
-        <!--android:id="@+id/semanticTimeSwitch"-->
-        <!--android:layout_width="wrap_content"-->
-        <!--android:layout_height="wrap_content"-->
-        <!--android:layout_alignParentEnd="true"-->
-        <!--android:layout_centerVertical="true"-->
-        <!--android:enabled="true"-->
-        <!--android:checked="false" />-->
-    </RelativeLayout>
-</android.support.v7.widget.CardView>
+            <TextView
+                android:id="@+id/semanticTimeLabel"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentTop="true"
+                android:layout_marginBottom="@dimen/card_view_margin"
+                android:layout_marginEnd="@dimen/card_view_margin"
+                android:layout_marginStart="@dimen/card_view_margin"
+                android:layout_marginTop="@dimen/card_view_margin"
+                android:text="@string/app_name_placeholder_text"
+                android:textAppearance="@android:style/TextAppearance.Holo.Medium"
+                android:textColor="@color/colorPrimaryText"
+                android:textSize="20sp" />
+
+            <TextView
+                android:id="@+id/semanticTimeDetail"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/semanticTimeLabel"
+                android:layout_marginBottom="@dimen/card_view_margin"
+                android:layout_marginEnd="@dimen/card_view_margin"
+                android:layout_marginStart="@dimen/card_view_margin"
+                android:layout_marginTop="@dimen/card_view_margin"
+                android:text="@string/app_version_placeholder_text"
+                android:textAppearance="@android:style/TextAppearance.Holo.Small"
+                android:textColor="@color/colorSecondaryText"
+                android:textSize="15sp" />
+
+        </RelativeLayout>
+    </android.support.v7.widget.CardView>
+</LinearLayout>

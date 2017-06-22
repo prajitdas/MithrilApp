@@ -217,7 +217,7 @@ public class SetupGeofencesActivity extends AppCompatActivity implements
      */
     public void addGeofences() {
         if (!mGoogleApiClient.isConnected()) {
-            Toast.makeText(this, getString(R.string.not_connected), Toast.LENGTH_SHORT).show();
+            Log.d(MithrilAC.getDebugTag(), getString(R.string.not_connected));
             return;
         }
 
@@ -243,7 +243,7 @@ public class SetupGeofencesActivity extends AppCompatActivity implements
      */
     public void removeGeofences() {
         if (!mGoogleApiClient.isConnected()) {
-            Toast.makeText(this, getString(R.string.not_connected), Toast.LENGTH_SHORT).show();
+            Log.d(MithrilAC.getDebugTag(), getString(R.string.not_connected));
             return;
         }
         try {
