@@ -69,6 +69,16 @@ public class SemanticLocation extends SemanticUserContext implements Parcelable 
         return type;
     }
 
+    @Override
+    public String getLabel() {
+        return inferredLocation;
+    }
+
+    @Override
+    public void setLabel(String label) {
+        inferredLocation = label;
+    }
+
     public Location getLocation() {
         return location;
     }
