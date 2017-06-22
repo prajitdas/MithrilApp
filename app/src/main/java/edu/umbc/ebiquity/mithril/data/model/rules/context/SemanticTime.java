@@ -35,6 +35,14 @@ public class SemanticTime extends SemanticUserContext implements Parcelable {
         repeatFrequency = RepeatFrequency.charSeqToRepeatFrequency(in.readCharSequence());
     }
 
+    public SemanticTime(RepeatFrequency repeatFrequency, Timestamp first, int period, String inferredTime, boolean enabled) {
+        this.repeatFrequency = repeatFrequency;
+        this.first = first;
+        this.period = period;
+        this.inferredTime = inferredTime;
+        this.enabled = enabled;
+    }
+
     @Override
     public void writeToParcel(Parcel dest, int flags) {
         dest.writeInt(period);

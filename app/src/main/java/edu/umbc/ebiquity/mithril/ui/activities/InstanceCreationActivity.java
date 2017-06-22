@@ -38,6 +38,8 @@ import com.google.android.gms.location.places.ui.PlaceAutocomplete;
 import com.google.gson.Gson;
 import com.google.gson.JsonSyntaxException;
 
+import java.sql.Time;
+import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
@@ -45,6 +47,7 @@ import java.util.Map;
 import edu.umbc.ebiquity.mithril.MithrilAC;
 import edu.umbc.ebiquity.mithril.R;
 import edu.umbc.ebiquity.mithril.data.dbhelpers.MithrilDBHelper;
+import edu.umbc.ebiquity.mithril.data.model.rules.RepeatFrequency;
 import edu.umbc.ebiquity.mithril.data.model.rules.context.SemanticActivity;
 import edu.umbc.ebiquity.mithril.data.model.rules.context.SemanticLocation;
 import edu.umbc.ebiquity.mithril.data.model.rules.context.SemanticNearActor;
@@ -123,6 +126,8 @@ public class InstanceCreationActivity extends AppCompatActivity
 
         initData();
         initViews();
+        if(semanticTimes.size() == 0)
+            createSemanticTimes();
         mGoogleApiClient.connect();
     }
 
@@ -221,10 +226,6 @@ public class InstanceCreationActivity extends AppCompatActivity
     private void handleLocation() {
         setTitle(activityBaseTitle + getApplicationContext().getResources().getString(R.string.text_instance_creation_location));
 
-        mOtherCtxtBtn.setVisibility(View.VISIBLE);
-        mFirstMajorCtxtBtn.setVisibility(View.VISIBLE);
-        mSecondMajorCtxtBtn.setVisibility(View.VISIBLE);
-
         mOtherCtxtBtn.setText(R.string.pref_other_location_summary);
         mFirstMajorCtxtBtn.setText(R.string.pref_home_location_summary);
         mSecondMajorCtxtBtn.setText(R.string.pref_work_location_summary);
@@ -243,12 +244,9 @@ public class InstanceCreationActivity extends AppCompatActivity
     private void handleTemporal() {
         setTitle(activityBaseTitle + getApplicationContext().getResources().getString(R.string.text_instance_creation_temporal));
 
-        mOtherCtxtBtn.setVisibility(View.GONE);
-        mFirstMajorCtxtBtn.setVisibility(View.GONE);
-        mSecondMajorCtxtBtn.setVisibility(View.GONE);
-//        mOtherCtxtBtn.setText(R.string.pref_other_hours_context_summary);
-//        mFirstMajorCtxtBtn.setText(R.string.pref_work_hours_context_summary);
-//        mSecondMajorCtxtBtn.setText(R.string.pref_DND_hours_context_summary);
+        mOtherCtxtBtn.setText(R.string.pref_other_hours_context_summary);
+        mFirstMajorCtxtBtn.setText(R.string.pref_work_hours_context_summary);
+        mSecondMajorCtxtBtn.setText(R.string.pref_DND_hours_context_summary);
 
         if (!sharedPreferences.getBoolean(MithrilAC.getPrefKeyTimeInstancesCreated(), false)) {
             PermissionHelper.toast(getApplicationContext(), getApplicationContext().getResources().getString(R.string.tooltip_temporal), Toast.LENGTH_SHORT);
@@ -263,10 +261,6 @@ public class InstanceCreationActivity extends AppCompatActivity
 
     private void handlePresence() {
         setTitle(activityBaseTitle + getApplicationContext().getResources().getString(R.string.text_instance_creation_presence_related));
-
-        mOtherCtxtBtn.setVisibility(View.VISIBLE);
-        mFirstMajorCtxtBtn.setVisibility(View.VISIBLE);
-        mSecondMajorCtxtBtn.setVisibility(View.VISIBLE);
 
         mOtherCtxtBtn.setText(R.string.pref_presence_info_others_summary);
         mFirstMajorCtxtBtn.setText(R.string.pref_presence_info_supervisor_summary);
@@ -285,10 +279,6 @@ public class InstanceCreationActivity extends AppCompatActivity
 
     private void handleActivity() {
         setTitle(activityBaseTitle + getApplicationContext().getResources().getString(R.string.text_instance_creation_activity));
-
-        mOtherCtxtBtn.setVisibility(View.VISIBLE);
-        mFirstMajorCtxtBtn.setVisibility(View.VISIBLE);
-        mSecondMajorCtxtBtn.setVisibility(View.VISIBLE);
 
         mOtherCtxtBtn.setText(R.string.pref_other_activity_context_title);
         mFirstMajorCtxtBtn.setText(R.string.pref_personal_activity_context_title);
@@ -331,21 +321,43 @@ public class InstanceCreationActivity extends AppCompatActivity
             mOtherCtxtBtn.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    openTemporalDataEntryActivity(TIME_REQUEST_CODE_MORE, chooseATemporalLabel());
+//                    openTemporalDataEntryActivity(TIME_REQUEST_CODE_MORE, chooseATemporalLabel());
                 }
             });
 
             mFirstMajorCtxtBtn.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    openTemporalDataEntryActivity(TIME_REQUEST_CODE_WORK, MithrilAC.getPrefTimeIntervalWorkTemporalKey());
+                    SemanticTime semanticTime = new SemanticTime(
+                            RepeatFrequency.WEEKDAYS,
+                            new Timestamp(1497862800),
+                            /**
+                             * 1497862800 Is equivalent to: 06/19/2017 @ 9:00am (UTC)
+                             */
+                            8,
+                            "Work",
+                            true);
+                    semanticTimes.put(MithrilAC.getPrefKeyContextTypeTemporal()+semanticTime.getLabel(), semanticTime);
+                    saveSemanticTimeContext();
+//                    openTemporalDataEntryActivity(TIME_REQUEST_CODE_WORK, MithrilAC.getPrefTimeIntervalWorkTemporalKey());
                 }
             });
 
             mSecondMajorCtxtBtn.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    openTemporalDataEntryActivity(TIME_REQUEST_CODE_DND, MithrilAC.getPrefTimeIntervalDndTemporalKey());
+                    SemanticTime semanticTime = new SemanticTime(
+                            RepeatFrequency.DAILY,
+                            new Timestamp(1497823200),
+                            /**
+                             * 1497823200 Is equivalent to: 06/18/2017 @ 10:00pm (UTC)
+                             */
+                            10,
+                            "DND",
+                            true);
+                    semanticTimes.put(MithrilAC.getPrefKeyContextTypeTemporal()+semanticTime.getLabel(), semanticTime);
+                    saveSemanticTimeContext();
+//                    openTemporalDataEntryActivity(TIME_REQUEST_CODE_DND, MithrilAC.getPrefTimeIntervalDndTemporalKey());
                 }
             });
         } else if (currentFragment.equals(FRAGMENT_PRESENCE)) {
@@ -439,6 +451,36 @@ public class InstanceCreationActivity extends AppCompatActivity
         FragmentManager fragmentManager = getFragmentManager();
         fragmentManager.beginTransaction().replace(R.id.container_instances, new SemanticActivityFragment())
                 .commit();
+    }
+
+    private void createSemanticTimes() {
+        SemanticTime semanticTime = new SemanticTime(
+                RepeatFrequency.DAILY,
+                new Timestamp(System.currentTimeMillis()),
+                4,
+                "Family",
+                true);
+        semanticTimes.put(MithrilAC.getPrefKeyContextTypeTemporal()+semanticTime.getLabel(), semanticTime);
+        semanticTime = new SemanticTime(
+                RepeatFrequency.WEEKENDS,
+                new Timestamp(System.currentTimeMillis()),
+                48,
+                "Weekend",
+                true);
+        semanticTimes.put(MithrilAC.getPrefKeyContextTypeTemporal()+semanticTime.getLabel(), semanticTime);
+        semanticTime = new SemanticTime(
+                RepeatFrequency.WEEKLY,
+                new Timestamp(System.currentTimeMillis()),
+                1,
+                "Team_Meeting",
+                true);
+        semanticTimes.put(MithrilAC.getPrefKeyContextTypeTemporal()+semanticTime.getLabel(), semanticTime);
+        saveSemanticTimeContext();
+    }
+
+    private void saveSemanticTimeContext() {
+        isThereTemporalContextToSave = true;
+        saveContext();
     }
 
     private void setSaveBtnOnClickListener() {
