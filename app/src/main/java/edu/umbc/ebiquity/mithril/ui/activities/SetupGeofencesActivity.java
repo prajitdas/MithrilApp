@@ -102,10 +102,7 @@ public class SetupGeofencesActivity extends AppCompatActivity implements
     }
 
     private void initData() {
-        semanticLocations = getIntent()
-                .getParcelableArrayListExtra(
-                        MithrilAC.getPrefKeyGeofenceList()
-                );
+        semanticLocations = getIntent().getParcelableArrayListExtra(MithrilAC.getPrefKeyGeofenceList());
         if(semanticLocations.size() > 0) {
             sharedPrefs = getSharedPreferences(MithrilAC.getSharedPreferencesName(), MODE_PRIVATE);
             /********************************************* Geofence related stuff **************************************************/
@@ -121,12 +118,19 @@ public class SetupGeofencesActivity extends AppCompatActivity implements
             // Kick off the request to build GoogleApiClient.
             buildGoogleApiClient();
 
-            for (SemanticLocation semanticLocation : semanticLocations)
+            for (SemanticLocation semanticLocation : semanticLocations) {
+                Log.d(MithrilAC.getDebugTag(), "To setup geofences: "
+                        +semanticLocation.getLabel()
+                        +", "
+                        +semanticLocation.getType()
+                        +", "
+                        +semanticLocation.getAddress());
                 if (!semanticLocation.isGeofenced())
                     populateGeofenceList(
                             semanticLocation.getLabel(),
                             semanticLocation.getLocation().getLatitude(),
                             semanticLocation.getLocation().getLongitude());
+            }
         } else {
             failedToSetupGeofences();
         }
@@ -328,8 +332,7 @@ public class SetupGeofencesActivity extends AppCompatActivity implements
      * the user's location.
      */
     public void populateGeofenceList(String semanticIdentifier, double latitude, double longitude) {
-//        for (Map.Entry<String, LatLng> entry : MithrilAC.BALTIMORE_COUNTY_LANDMARKS.entrySet()) {
-
+        Log.d(MithrilAC.getDebugTag(), "Label is:" + semanticIdentifier);
         mGeofenceList.add(new Geofence.Builder()
                 // Set the request ID of the geofence. This is a string to identify this
                 // geofence.
@@ -353,6 +356,5 @@ public class SetupGeofencesActivity extends AppCompatActivity implements
 
                 // Create the geofence.
                 .build());
-//        }
     }
 }
