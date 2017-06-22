@@ -18,5 +18,6 @@ public class SemanticUserContext {
     }
 
     public void setEnabled(boolean enabled) {
+
     }
 }
