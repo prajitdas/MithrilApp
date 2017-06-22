@@ -24,6 +24,7 @@ import java.util.List;
 
 import edu.umbc.ebiquity.mithril.MithrilAC;
 import edu.umbc.ebiquity.mithril.R;
+import edu.umbc.ebiquity.mithril.data.model.rules.context.SemanticLocation;
 import edu.umbc.ebiquity.mithril.util.services.GeofenceTransitionsIntentService;
 import edu.umbc.ebiquity.mithril.util.specialtasks.errorsnexceptions.GeofenceErrorMessages;
 
@@ -32,6 +33,7 @@ public class SetupGeofencesActivity extends AppCompatActivity implements
         GoogleApiClient.OnConnectionFailedListener,
         ResultCallback<Status> {
     private static final int SETUPGEOFENCESCOMPLETE = 0;
+    private ArrayList<SemanticLocation> semanticLocations;
     /**
      * Provides the entry point to Google Play services: Geo fence
      */
@@ -56,15 +58,19 @@ public class SetupGeofencesActivity extends AppCompatActivity implements
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_setup_geofences);
 
-        makeFullScreen();
         handler = new Handler() {
             @Override
             public void handleMessage(Message message) {
                 if (message.what == SETUPGEOFENCESCOMPLETE) {
+                    Intent resultIntent = new Intent();
+                    resultIntent.putParcelableArrayListExtra(MithrilAC.getPrefKeyGeofenceList(), semanticLocations);
+                    setResult(SetupGeofencesActivity.RESULT_OK, resultIntent);
                     finish();
                 }
             }
         };
+
+        makeFullScreen();
         initData();
         initViews();
     }
@@ -80,6 +86,10 @@ public class SetupGeofencesActivity extends AppCompatActivity implements
     }
 
     private void initData() {
+        semanticLocations = getIntent()
+                .getParcelableArrayListExtra(
+                        MithrilAC.getPrefKeyGeofenceList()
+                );
         sharedPrefs = getSharedPreferences(MithrilAC.getSharedPreferencesName(), MODE_PRIVATE);
         /********************************************* Geofence related stuff **************************************************/
         // Empty list for storing geofences.
@@ -93,15 +103,21 @@ public class SetupGeofencesActivity extends AppCompatActivity implements
 
         // Kick off the request to build GoogleApiClient.
         buildGoogleApiClient();
+
+        for(SemanticLocation semanticLocation : semanticLocations)
+            if(!semanticLocation.isGeofenced())
+                populateGeofenceList(
+                        semanticLocation.getLabel(),
+                        semanticLocation.getLocation().getLatitude(),
+                        semanticLocation.getLocation().getLongitude());
     }
 
     private void initViews() {
         setContentView(R.layout.activity_download_policies);
-
         // Start lengthy operation in a background thread
         new Thread(new Runnable() {
             public void run() {
-
+                addGeofences();
                 handler.sendEmptyMessageDelayed(SETUPGEOFENCESCOMPLETE, MithrilAC.getMillisecondsPerSecond() * 5);
             }
         }).start();
@@ -238,10 +254,12 @@ public class SetupGeofencesActivity extends AppCompatActivity implements
     public void onResult(Status status) {
         if (status.isSuccess()) {
             // Update state and save in shared preferences.
-            mGeofencesAdded = !mGeofencesAdded;
+//            mGeofencesAdded = !mGeofencesAdded;
+            mGeofencesAdded = true;
             SharedPreferences.Editor editor = sharedPrefs.edit();
             editor.putBoolean(MithrilAC.getGeofencesAddedKey(), mGeofencesAdded);
             editor.apply();
+            updateSemanticLocations();
 
             // Update the UI. Adding geofences enables the Remove Geofences button, and removing
             // geofences enables the Add Geofences button.
@@ -259,6 +277,16 @@ public class SetupGeofencesActivity extends AppCompatActivity implements
                     status.getStatusCode());
             Log.e(MithrilAC.getDebugTag(), errorMessage);
         }
+    }
+
+    private void updateSemanticLocations() {
+        List<SemanticLocation> tempList = new ArrayList<>();
+        for(SemanticLocation semanticLocation : semanticLocations) {
+            semanticLocation.setGeofenced(true);
+            tempList.add(semanticLocation);
+        }
+        semanticLocations.clear();
+        semanticLocations.addAll(tempList);
     }
 
     /**

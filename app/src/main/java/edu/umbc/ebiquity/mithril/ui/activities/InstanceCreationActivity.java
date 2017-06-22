@@ -40,6 +40,7 @@ import com.google.gson.JsonSyntaxException;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import edu.umbc.ebiquity.mithril.MithrilAC;
@@ -455,6 +456,7 @@ public class InstanceCreationActivity extends AppCompatActivity
             semanticLocations.put(contextEntry.getKey(), contextEntry.getValue());
         }
         isThereLocationContextToSave = false;
+        setupGeofencesActivity();
         refreshVisibleFragment();
     }
 
@@ -714,7 +716,6 @@ public class InstanceCreationActivity extends AppCompatActivity
          */
         mAddressRequested = true;
         startSearchAddressIntentService(userInputLocation, MithrilAC.getPrefHomeLocationKey());
-        setupGeofencesActivity();
     }
 
     private void setWorkSemanticLocation(Place place) {
@@ -814,6 +815,8 @@ public class InstanceCreationActivity extends AppCompatActivity
 
     private void setupGeofencesActivity() {
         Intent intent = new Intent(this, SetupGeofencesActivity.class);
+        intent.putParcelableArrayListExtra(MithrilAC.getPrefKeyGeofenceList(),
+                (ArrayList<SemanticLocation>) semanticLocations.values());
         startActivityForResult(intent, GEOFENCE_REQUEST_CODE);
     }
 

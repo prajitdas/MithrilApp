@@ -196,6 +196,7 @@ public class MithrilAC extends Application {
     private static final String PREF_KEY_USER_AGREEMENT_PAGE_NUMBER = "UserAgreementPageNumber";
     private static final String PREF_KEY_USER_AGREEMENT_COPIED = "UserAgreementCopied";
     private static final String PREF_KEY_USER_CONTINUE_CLICKED = "ContinueButtonClicked";
+    private static final String PREF_KEY_GEOFENCE_LIST = "geofenceList";
     //End of preference keys
 
     private static final String DATABASE_NAME = "mithril.db";
@@ -682,6 +683,10 @@ public class MithrilAC extends Application {
 
     public static String getLogIntent() {
         return LOG_INTENT;
+    }
+
+    public static String getPrefKeyGeofenceList() {
+        return PREF_KEY_GEOFENCE_LIST;
     }
 
     public static String getBroadcastIntentCommandApp() {
