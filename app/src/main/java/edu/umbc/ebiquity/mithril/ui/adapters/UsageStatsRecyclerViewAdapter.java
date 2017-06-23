@@ -32,7 +32,6 @@ import edu.umbc.ebiquity.mithril.ui.fragments.coreactivityfragments.UsageStatsFr
  * TODO: Replace the implementation with code for your data type.
  */
 public class UsageStatsRecyclerViewAdapter extends RecyclerView.Adapter<UsageStatsRecyclerViewAdapter.ViewHolder> {
-
     private final List<AppUsageStats> mValues;
     private final OnListFragmentInteractionListener mListener;
     private Context context;
@@ -105,10 +104,12 @@ public class UsageStatsRecyclerViewAdapter extends RecyclerView.Adapter<UsageSta
     private String getUsageDetails(List<Resource> resourcesUsed) {
         StringBuffer resBuffer = new StringBuffer();
         for (Resource res : resourcesUsed) {
-            resBuffer.append(res.getLabel());
+            resBuffer.append(res.getResourceName());
             resBuffer.append(", ");
             resBuffer.append(res.getRelativeLastTimeUsed());
             resBuffer.append(", ");
+            resBuffer.append(res.getGroup());
+            resBuffer.append("; ");
         }
         return resBuffer.toString();
     }
@@ -116,36 +117,6 @@ public class UsageStatsRecyclerViewAdapter extends RecyclerView.Adapter<UsageSta
     @Override
     public int getItemCount() {
         return mValues.size();
-    }
-
-    public static class AppNameComparator implements Comparator<UsageStats> {
-        private Map<String, String> mAppLabelList;
-
-        AppNameComparator(Map<String, String> appList) {
-            mAppLabelList = appList;
-        }
-
-        @Override
-        public final int compare(UsageStats a, UsageStats b) {
-            String alabel = mAppLabelList.get(a.getPackageName());
-            String blabel = mAppLabelList.get(b.getPackageName());
-            return alabel.compareTo(blabel);
-        }
-    }
-
-    public static class LastTimeUsedComparator implements Comparator<UsageStats> {
-        @Override
-        public final int compare(UsageStats a, UsageStats b) {
-            // return by descending order
-            return (int) (b.getLastTimeUsed() - a.getLastTimeUsed());
-        }
-    }
-
-    public static class UsageTimeComparator implements Comparator<UsageStats> {
-        @Override
-        public final int compare(UsageStats a, UsageStats b) {
-            return (int) (b.getTotalTimeInForeground() - a.getTotalTimeInForeground());
-        }
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder {

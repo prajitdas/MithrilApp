@@ -163,56 +163,49 @@ public class UsageStatsFragment extends Fragment {
                  * If we are able to do that we will handle that. For now let's work with app launches only!
                  */
                 List<Resource> tempListOfResource = new ArrayList<>();
-                String lastPermGroup = "";
                 List<AppOpsState.AppOpEntry> entries = mState.buildState(AppOpsState.ALL_OPS_TEMPLATE,
                         appInfo.uid, usageStat.getPackageName());
                 Log.d(MithrilAC.getDebugTag(), "Whoa!" + Integer.toString(entries.size()));
+                int position = 0;
                 for (final AppOpsState.AppOpEntry entry : entries) {
-                    Resource tempRes = new Resource();
-                    final AppOpsManager.OpEntry firstOp = entry.getOpEntry(0);
-                    String perm = AppOpsManager.opToPermission(firstOp.getOp());
-                    if (perm != null) {
+                    AppOpsManager.OpEntry currEntry = entry.getOpEntry(position);
+                    String appOpName = AppOpsManager.opToPermission(currEntry.getOp());
+                    Log.d(MithrilAC.getDebugTag(), "Found usage of operation: " + appOpName);
+                    Resource tempRes = null;
+                    if (appOpName != null) {
                         try {
-                            PermissionInfo pi = mPm.getPermissionInfo(perm, 0);
-//                            tempRes.setResourceName(pi.packageName);
-                            // We care about the resource group because that tells us what was used!
-                            tempRes.setResourceName(pi.group);
-                            if (pi.group != null && !lastPermGroup.equals(pi.group)) {
-                                lastPermGroup = pi.group;
+                            PermissionInfo pi = mPm.getPermissionInfo(appOpName, 0);
+                            //                            tempRes.setResourceName(pi.packageName);
+                            if (pi.group != null) {// && !lastPermGroup.equals(pi.group)) {
                                 PermissionGroupInfo pgi = mPm.getPermissionGroupInfo(pi.group, 0);
-                                if (pgi.icon != 0) {
-                                    tempRes.setIcon(pgi.loadIcon(mPm));
-                                }
+                                // We care about the resource group because that tells us what was used!
+                                if (pgi != null)
+                                    tempRes = new Resource(
+                                            pi.name,
+                                            currEntry.getDuration(),
+                                            currEntry.getOp(),
+                                            currEntry.getTime(),
+                                            entry.getTimeText(context, true).toString(),
+                                            pgi.name,
+                                            MithrilAC.getRiskForPerm(appOpName)
+//                                        MithrilDBHelper.getHelper(context).findRiskLevelByPerm(mithrilDB, appOpName)
+                                    );
+                                else
+                                    tempRes = new Resource(
+                                            pi.name,
+                                            currEntry.getDuration(),
+                                            currEntry.getOp(),
+                                            currEntry.getTime(),
+                                            entry.getTimeText(context, true).toString(),
+                                            MithrilAC.getNoPermissionGroupDesc(),
+                                            MithrilAC.getRiskForPerm(appOpName)
+//                                        MithrilDBHelper.getHelper(context).findRiskLevelByPerm(mithrilDB, appOpName)
+                                    );
                             }
                         } catch (PackageManager.NameNotFoundException e) {
                             Log.e(MithrilAC.getDebugTag(), e.getMessage());
                         }
                     }
-                    tempRes.setLabel(entry.getSwitchText(mState).toString());
-                    tempRes.setRelativeLastTimeUsed(entry.getTimeText(context, true).toString());
-                    /**
-                     * Code to change operations will not be used right now
-                     final AppOpsManager appOps = (AppOpsManager) context.getSystemService(Context.APP_OPS_SERVICE);
-                     Switch sw = (Switch) view.findViewById(R.id.switchWidget);
-                     final int switchOp = AppOpsManager.opToSwitch(firstOp.getOp());
-                     try {
-                     int checkedVal = appOps.checkOp(switchOp, entry.getPackageOps().getUid(), entry.getPackageOps().getPackageName());
-                     sw.setChecked(checkedVal == AppOpsManager.MODE_ALLOWED);
-                     sw.setOnCheckedChangeListener(new Switch.OnCheckedChangeListener() {
-                    @Override public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                    try {
-                    appOps.setMode(switchOp, entry.getPackageOps().getUid(),
-                    entry.getPackageOps().getPackageName(), isChecked
-                    ? AppOpsManager.MODE_ALLOWED : AppOpsManager.MODE_IGNORED);
-                    } catch (AppOpsException e) {
-                    Log.e(MithrilAC.getDebugTag(), e.getMessage());
-                    }
-                    }
-                    });
-                     } catch (AppOpsException e) {
-                     Log.e(MithrilAC.getDebugTag(), e.getMessage());
-                     }
-                     */
                     tempListOfResource.add(tempRes);
                 }
                 tempUsageStat.setResourcesUsed(tempListOfResource);

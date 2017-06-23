@@ -1444,6 +1444,29 @@ public class MithrilDBHelper extends SQLiteOpenHelper {
         return permissions;
     }
 
+    public double findRiskLevelByPerm(SQLiteDatabase db, String appOpName) {
+        double risk = 0.0;
+        String selectQuery = "SELECT " +
+                getPermissionsTableName() + "." + PERMRISK +
+                " FROM " + getPermissionsTableName() +
+                " WHERE" +
+                getPermissionsTableName() + "." + PERMNAME + " = '" + appOpName + "'" +
+                ";";
+
+        Cursor cursor = db.rawQuery(selectQuery, null);
+        try {
+            if (cursor.moveToFirst()) {
+                return cursor.getDouble(0);
+            }
+        } catch (SQLException e) {
+            throw new SQLException("Could not find " + e);
+        } finally {
+            cursor.close();
+        }
+        return risk;
+    }
+
+
     /**
      * Finds all violations
      *

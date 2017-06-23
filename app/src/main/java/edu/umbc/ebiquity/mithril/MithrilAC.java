@@ -605,6 +605,10 @@ public class MithrilAC extends Application {
             "('android.permission.UPDATE_LOCK_TASK_PACKAGES', 'signature|setup', '" + NO_PERMISSION_GROUP.first + "', '" + PERMISSION_FLAG_NONE + "'),\n" +
             "('android.permission.SUBSTITUTE_NOTIFICATION_APP_NAME', 'signature|privileged', '" + NO_PERMISSION_GROUP.first + "', '" + PERMISSION_FLAG_NONE + "');\n";
 
+    public static double getRiskForPerm(String appOpName) {
+        return 1.0;
+    }
+
     public static String getPermissionProtectionLevelUnknown() {
         return PERMISSION_PROTECTION_LEVEL_UNKNOWN;
     }

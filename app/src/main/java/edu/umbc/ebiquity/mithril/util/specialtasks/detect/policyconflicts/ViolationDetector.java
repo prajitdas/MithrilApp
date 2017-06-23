@@ -17,6 +17,7 @@ import edu.umbc.ebiquity.mithril.data.dbhelpers.MithrilDBHelper;
 import edu.umbc.ebiquity.mithril.data.model.components.AppData;
 import edu.umbc.ebiquity.mithril.data.model.rules.Action;
 import edu.umbc.ebiquity.mithril.data.model.rules.PolicyRule;
+import edu.umbc.ebiquity.mithril.data.model.rules.Resource;
 import edu.umbc.ebiquity.mithril.data.model.rules.Violation;
 import edu.umbc.ebiquity.mithril.data.model.rules.context.SemanticUserContext;
 import edu.umbc.ebiquity.mithril.simulations.DataGenerator;
@@ -72,13 +73,13 @@ public class ViolationDetector {
      * For example, if A={1,3,5} then B={1,5} is a proper subset of A. The set C={1,3,5} is a subset of A, but it is an improper subset of A
      * since C=A. The set D={1,4} is not even a subset of A, since 4 is not an element of A.
      */
-    public static void detectViolation(Context context, String currentPackageName, int operationPerformed, List<SemanticUserContext> semanticUserContexts) throws SemanticInconsistencyException {
+    public static void detectViolation(Context context, String currentPackageName, List<Resource> operationsPerformed, List<SemanticUserContext> semanticUserContexts) throws SemanticInconsistencyException {
         if (semanticUserContexts.size() == 0) {
             Log.e(MithrilAC.getDebugTag(), "Houston, we have a problem! We can't detect current context");
             return;
         }
-        if (operationPerformed == AppOpsManager.OP_NONE) {
-            Log.e(MithrilAC.getDebugTag(), "Houston, we have a problem! We couldn't figure out the operation for " + currentPackageName);
+        if (operationsPerformed.get(0).getOp() == AppOpsManager.OP_NONE) {
+            Log.e(MithrilAC.getDebugTag(), "Houston, we have another problem! We couldn't figure out the operation for " + currentPackageName);
             return;
         }
         SQLiteDatabase mithrilDB = MithrilDBHelper.getHelper(context).getWritableDatabase();
@@ -86,7 +87,8 @@ public class ViolationDetector {
         Set<Long> currentContext = populateCurrentContext(mithrilDB, context, semanticUserContexts);
 
 //        try {
-        List<PolicyRule> policyRules = MithrilDBHelper.getHelper(context).findAllPoliciesForAppWhenPerformingOp(mithrilDB, currentPackageName, operationPerformed);
+        int lastOperationPerformed = operationsPerformed.get(0).getOp();
+        List<PolicyRule> policyRules = MithrilDBHelper.getHelper(context).findAllPoliciesForAppWhenPerformingOp(mithrilDB, currentPackageName, lastOperationPerformed);
         Set<Long> policyContext = new HashSet<>();
         for (PolicyRule policyRule : policyRules)
             policyContext.add(policyRule.getCtxId());
@@ -181,7 +183,7 @@ public class ViolationDetector {
                             new Violation(
                                     newPolicyId,
                                     appId,
-                                    operationPerformed,
+                                    lastOperationPerformed,
                                     app.getAppName(),
                                     // the name returned is not correct we have find the method that fixes that
                                     //AppOpsManager.opToName(operationPerformed),
@@ -225,7 +227,7 @@ public class ViolationDetector {
                         new Violation(
                                 newPolicyId,
                                 appId,
-                                operationPerformed,
+                                lastOperationPerformed,
                                 app.getAppName(),
                                 // the name returned is not correct we have find the method that fixes that
                                 //AppOpsManager.opToName(operationPerformed),

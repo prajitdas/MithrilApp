@@ -1,9 +1,5 @@
 package edu.umbc.ebiquity.mithril.util.specialtasks.detect.runningapps;
 
-/*
- * Created by prajit on 11/20/16.
- */
-
 import android.app.AppOpsManager;
 import android.app.Service;
 import android.app.usage.UsageEvents;
@@ -14,6 +10,8 @@ import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageManager;
 import android.content.pm.PermissionGroupInfo;
 import android.content.pm.PermissionInfo;
+import android.database.sqlite.SQLiteDatabase;
+import android.graphics.drawable.Drawable;
 import android.util.Log;
 import android.util.Pair;
 
@@ -25,6 +23,7 @@ import java.util.SortedMap;
 import java.util.TreeMap;
 
 import edu.umbc.ebiquity.mithril.MithrilAC;
+import edu.umbc.ebiquity.mithril.data.dbhelpers.MithrilDBHelper;
 import edu.umbc.ebiquity.mithril.data.model.rules.AppUsageStats;
 import edu.umbc.ebiquity.mithril.data.model.rules.Resource;
 import edu.umbc.ebiquity.mithril.util.specialtasks.appops.AppOpsState;
@@ -34,34 +33,23 @@ import edu.umbc.ebiquity.mithril.util.specialtasks.appops.AppOpsState;
  * https://gist.github.com/plateaukao/011fa857d1919f2bbfdc
  */
 public class AppLaunchDetector {
-    // Constants defining order for display order
-    private static final boolean localLOGV = false;
     private UsageStatsManager mUsageStatsManager;
     private Context context;
-    //    private final ArrayMap<String, String> mAppLabelMap = new ArrayMap<>();
-//    private final ArrayList<AppUsageStats> appUsageStats = new ArrayList<>();
     private String currentPackageName = null;
     private UsageStats currentUsageStats = null;
     private UsageEvents.Event currentUsageEvent = null;
-    //    private static final int _DISPLAY_ORDER_USAGE_TIME = 0;
-//    private static final int _DISPLAY_ORDER_LAST_TIME_USED = 1;
-//    private static final int _DISPLAY_ORDER_APP_NAME = 2;
-//    private int mDisplayOrder = _DISPLAY_ORDER_USAGE_TIME;
     private LastTimeUsedComparator mLastTimeUsedComparator = new LastTimeUsedComparator();
-    //    private UsageTimeComparator mUsageTimeComparator = new UsageTimeComparator();
-//    private AppNameComparator mAppLabelComparator;
-    private AppOpsState mState;
-    private List<Resource> resources = new ArrayList<>();
     private PackageManager mPackageManager;
+//    private SQLiteDatabase mithrilDB;
 
     public AppLaunchDetector(Context context) {
         this.context = context;
         mUsageStatsManager = (UsageStatsManager) this.context.getSystemService(Service.USAGE_STATS_SERVICE);
-        mState = new AppOpsState(this.context);
         mPackageManager = this.context.getPackageManager();
+//        mithrilDB = MithrilDBHelper.getHelper(this.context).getWritableDatabase();
     }
 
-    public Pair<String, Integer> getForegroundApp(Context context) {
+    public Pair<String, List<Resource>> getForegroundApp(Context context) {
         long time = System.currentTimeMillis();
         try {
             /*
@@ -136,18 +124,21 @@ public class AppLaunchDetector {
         return null;
     }
 
-    private int getOp() {
+    private List<Resource> getOp() {
         if (currentUsageEvent == null)
             return checkUsageStats();
         else
             return checkUsageEvent();
     }
 
-    private int checkUsageEvent() {
-        return AppOpsManager.OP_NONE;
+    private List<Resource> checkUsageEvent() {
+        List<Resource> resources = new ArrayList<>();
+        resources.add(new Resource(AppOpsManager.OP_NONE));
+        return resources;
     }
 
-    private int checkUsageStats() {
+    private List<Resource> checkUsageStats() {
+        List<Resource> resources = new ArrayList<>();
         try {
             ApplicationInfo appInfo = mPackageManager.getApplicationInfo(currentPackageName, 0);
             String label = appInfo.loadLabel(mPackageManager).toString();
@@ -158,99 +149,66 @@ public class AppLaunchDetector {
             tempUsageStat.setLabel(label);
             tempUsageStat.setIcon(appInfo.loadIcon(mPackageManager));
 
-//            List<Resource> tempListOfResource = new ArrayList<>();
-//            String lastPermGroup = "";
-            List<AppOpsState.AppOpEntry> entries = mState.buildState(
+            AppOpsState appOpsState = new AppOpsState(context);
+            List<AppOpsState.AppOpEntry> entries = appOpsState.buildState(
                     AppOpsState.ALL_OPS_TEMPLATE,
                     appInfo.uid,
                     currentPackageName);
-            Log.d(MithrilAC.getDebugTag(), "Whoa!" + Integer.toString(entries.size()));
+            int position = 0;
             for (AppOpsState.AppOpEntry entry : entries) {
-                Resource tempRes = new Resource();
-                AppOpsManager.OpEntry firstOp = entry.getOpEntry(0);
-                tempRes.setLastTimeUsed(entry.getTime());
-                String perm = AppOpsManager.opToPermission(firstOp.getOp());
-                if (perm != null) {
+                AppOpsManager.OpEntry currEntry = entry.getOpEntry(position);
+                String appOpName = AppOpsManager.opToPermission(currEntry.getOp());
+                Log.d(MithrilAC.getDebugTag(), "Found usage of operation: " + appOpName);
+                Resource tempRes = null;
+                if (appOpName != null) {
                     try {
-                        PermissionInfo pi = mPackageManager.getPermissionInfo(perm, 0);
+                        PermissionInfo pi = mPackageManager.getPermissionInfo(appOpName, 0);
                         //                            tempRes.setResourceName(pi.packageName);
-                        // We care about the resource group because that tells us what was used!
-                        tempRes.setResourceName(pi.group);
                         if (pi.group != null) {// && !lastPermGroup.equals(pi.group)) {
-//                            lastPermGroup = pi.group;
                             PermissionGroupInfo pgi = mPackageManager.getPermissionGroupInfo(pi.group, 0);
-                            if (pgi.icon != 0) {
-                                tempRes.setIcon(pgi.loadIcon(mPackageManager));
-                            }
+                            // We care about the resource group because that tells us what was used!
+                            if(pgi != null)
+                                tempRes = new Resource(
+                                        pi.name,
+                                        currEntry.getDuration(),
+                                        currEntry.getOp(),
+                                        currEntry.getTime(),
+                                        entry.getTimeText(context, true).toString(),
+                                        pgi.name,
+                                        MithrilAC.getRiskForPerm(appOpName)
+//                                        MithrilDBHelper.getHelper(context).findRiskLevelByPerm(mithrilDB, appOpName)
+                                );
+                            else
+                                tempRes = new Resource(
+                                        pi.name,
+                                        currEntry.getDuration(),
+                                        currEntry.getOp(),
+                                        currEntry.getTime(),
+                                        entry.getTimeText(context, true).toString(),
+                                        MithrilAC.getNoPermissionGroupDesc(),
+                                        MithrilAC.getRiskForPerm(appOpName)
+//                                        MithrilDBHelper.getHelper(context).findRiskLevelByPerm(mithrilDB, appOpName)
+                                );
                         }
                     } catch (PackageManager.NameNotFoundException e) {
                         Log.e(MithrilAC.getDebugTag(), e.getMessage());
                     }
                 }
-                tempRes.setLabel(entry.getSwitchText(mState).toString());
-                tempRes.setRelativeLastTimeUsed(entry.getTimeText(context, true).toString());
                 resources.add(tempRes);
+                position++;
             }
-//            appUsageStats.add(tempUsageStat);
-            // Sort list
-//            mAppLabelComparator = new AppNameComparator(mAppLabelMap);
-//            sortList(_DISPLAY_ORDER_LAST_TIME_USED);
-            sortList();
+            Collections.sort(resources, mLastTimeUsedComparator);
             tempUsageStat.setResourcesUsed(resources);
         } catch (PackageManager.NameNotFoundException e) {
             Log.e(MithrilAC.getDebugTag(), "This package may be gone" + e.getMessage());
         }
-        return AppOpsManager.OP_NONE;
+        return resources;
     }
-
-//    public void sortList(int sortOrder) {
-//        if (mDisplayOrder == sortOrder) {
-//            // do nothing
-//            return;
-//        }
-//        mDisplayOrder= sortOrder;
-//        sortList();
-//    }
-
-    public void sortList() {
-//        if (mDisplayOrder == _DISPLAY_ORDER_USAGE_TIME) {
-//            if (localLOGV) Log.i(MithrilAC.getDebugTag(), "Sorting by usage time");
-//            Collections.sort(resources, mUsageTimeComparator);
-//        } else if (mDisplayOrder == _DISPLAY_ORDER_LAST_TIME_USED) {
-//            if (localLOGV) Log.i(MithrilAC.getDebugTag(), "Sorting by last time used");
-        Collections.sort(resources, mLastTimeUsedComparator);
-//        } else if (mDisplayOrder == _DISPLAY_ORDER_APP_NAME) {
-//            if (localLOGV) Log.i(MithrilAC.getDebugTag(), "Sorting by application name");
-//            Collections.sort(resources, mAppLabelComparator);
-//        }
-    }
-
-//    public static class AppNameComparator implements Comparator<Resource> {
-//        private Map<String, String> mAppLabelList;
-//        AppNameComparator(Map<String, String> appList) {
-//            mAppLabelList = appList;
-//        }
-//        @Override
-//        public final int compare(Resource a, Resource b) {
-//            String alabel = mAppLabelList.get(a.getPackageName());
-//            String blabel = mAppLabelList.get(b.getPackageName());
-//            return alabel.compareTo(blabel);
-//        }
-//    }
 
     public static class LastTimeUsedComparator implements Comparator<Resource> {
         @Override
         public final int compare(Resource a, Resource b) {
             return a.compareTo(b);
-            // return by descending order
-//            return (int)(b.getLastTimeUsed() - a.getLastTimeUsed());
         }
     }
-
-//    public static class UsageTimeComparator implements Comparator<Resource> {
-//        @Override
-//        public final int compare(Resource a, Resource b) {
-//            return (int)(b.getTotalTimeInForeground() - a.getTotalTimeInForeground());
-//        }
-//    }
 }

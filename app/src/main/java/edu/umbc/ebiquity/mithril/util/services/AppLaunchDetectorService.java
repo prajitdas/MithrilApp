@@ -37,6 +37,7 @@ import java.util.TimerTask;
 
 import edu.umbc.ebiquity.mithril.MithrilAC;
 import edu.umbc.ebiquity.mithril.data.dbhelpers.MithrilDBHelper;
+import edu.umbc.ebiquity.mithril.data.model.rules.Resource;
 import edu.umbc.ebiquity.mithril.data.model.rules.context.SemanticActivity;
 import edu.umbc.ebiquity.mithril.data.model.rules.context.SemanticLocation;
 import edu.umbc.ebiquity.mithril.data.model.rules.context.SemanticNearActor;
@@ -348,7 +349,7 @@ public class AppLaunchDetectorService extends Service implements
             mHandler.post(new Runnable() {
                 @Override
                 public void run() {
-                    Pair<String, Integer> pkgOpPair = appLaunchDetector.getForegroundApp(context);
+                    Pair<String, List<Resource>> pkgOpPair = appLaunchDetector.getForegroundApp(context);
                     if (pkgOpPair != null) {
                         if (sharedPrefs.contains(MithrilAC.getPrefKeyLastRunningApp())) {
                             if (!sharedPrefs.getString(MithrilAC.getPrefKeyLastRunningApp(), "").equals(pkgOpPair.first)) {
