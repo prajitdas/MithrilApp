@@ -5,7 +5,7 @@ package edu.umbc.ebiquity.mithril.data.model.rules;
  */
 
 public enum RepeatFrequency {
-    DOES_NOT_REPEAT(-1), SECOND(0), MINUTE(1), HOURLY(2), DAILY(3), WEEKLY(4), WEEKDAYS(5), WEEKENDS(6), MONTHLY(7), QUARTERLY(8), YEARLY(9);
+    NEVER_REPEATS(-1), SECOND(0), MINUTE(1), HOURLY(2), DAILY(3), WEEKLY(4), WEEKDAYS(5), WEEKENDS(6), MONTHLY(7), QUARTERLY(8), YEARLY(9);
 
     private int repFreqCode;
     private CharSequence repFreqCharSeq;
@@ -57,7 +57,7 @@ public enum RepeatFrequency {
             return RepeatFrequency.QUARTERLY;
         else if (input.equals("Yearly"))
             return RepeatFrequency.YEARLY;
-        return RepeatFrequency.DOES_NOT_REPEAT;
+        return RepeatFrequency.NEVER_REPEATS;
     }
 
     public int getRepFreqCode() {

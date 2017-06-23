@@ -150,6 +150,12 @@
     <string name="pref_temporal_context_switch_key">enableTemporalContext</string>
     <string name="pref_temporal_context_switch_title">Adding temporal context for</string>
     <string name="pref_temporal_context_switch_summary">Click to enable following detectedAtTime prefs</string>
+    <string name="pref_temporal_context_choose_repeat_frequency">Repeat frequency</string>
+
+    <string name="first_occurrence">First occurrence:&#160;</string>
+    <string name="starting_time">Starts at</string>
+    <string name="ending_time">Ends at</string>
+    <string name="what_time_is_this">Choose label</string>
 
     <!-- Work temporal context -->
     <string name="pref_work_hours_context_summary">Work</string>
@@ -253,6 +259,7 @@
     <string name="title_activity_instance_creation">Add&#160;</string>
     <string name="title_activity_download_policies">Downloading policies&#8230;</string>
     <string name="title_activity_setup_geofences">Geofences setup&#8230;</string>
+    <string name="title_activity_temporal_data_entry">Time context entry</string>
 
     <string name="title_bottom_navigation_location">Location</string>
     <string name="text_instance_creation_location">location context</string>

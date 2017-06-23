@@ -320,7 +320,7 @@ public class InstanceCreationActivity extends AppCompatActivity
             mOtherCtxtBtn.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-//                    openTemporalDataEntryActivity(TIME_REQUEST_CODE_MORE, chooseATemporalLabel());
+                    openTemporalDataEntryActivity(TIME_REQUEST_CODE_MORE, chooseATemporalLabel());
                 }
             });
 
@@ -337,7 +337,7 @@ public class InstanceCreationActivity extends AppCompatActivity
                             "Work",
                             true);
                     semanticTimes.put(MithrilAC.getPrefKeyContextTypeTemporal()+semanticTime.getLabel(), semanticTime);
-                    saveSemanticTimeContext();
+                    isThereTemporalContextToSave = true;
 //                    openTemporalDataEntryActivity(TIME_REQUEST_CODE_WORK, MithrilAC.getPrefTimeIntervalWorkTemporalKey());
                 }
             });
@@ -355,7 +355,7 @@ public class InstanceCreationActivity extends AppCompatActivity
                             "DND",
                             true);
                     semanticTimes.put(MithrilAC.getPrefKeyContextTypeTemporal()+semanticTime.getLabel(), semanticTime);
-                    saveSemanticTimeContext();
+                    isThereTemporalContextToSave = true;
 //                    openTemporalDataEntryActivity(TIME_REQUEST_CODE_DND, MithrilAC.getPrefTimeIntervalDndTemporalKey());
                 }
             });
@@ -474,12 +474,7 @@ public class InstanceCreationActivity extends AppCompatActivity
                 "Team_Meeting",
                 true);
         semanticTimes.put(MithrilAC.getPrefKeyContextTypeTemporal()+semanticTime.getLabel(), semanticTime);
-        saveSemanticTimeContext();
-    }
-
-    private void saveSemanticTimeContext() {
         isThereTemporalContextToSave = true;
-        saveContext();
     }
 
     private void setSaveBtnOnClickListener() {

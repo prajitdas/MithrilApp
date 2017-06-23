@@ -154,6 +154,13 @@
                 android:value=".ui.activities.InstanceCreationActivity" />
         </activity>
         <activity
+            android:name=".ui.activities.TemporalDataEntryActivity"
+            android:label="@string/title_activity_temporal_data_entry"
+            android:theme="@style/AppTheme.NoActionBar">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".ui.activities.InstanceCreationActivity" />
+        </activity>        <activity
             android:name=".ui.activities.DownloadPoliciesActivity"
             android:label="@string/title_activity_download_policies"
             android:theme="@style/FullscreenTheme" />

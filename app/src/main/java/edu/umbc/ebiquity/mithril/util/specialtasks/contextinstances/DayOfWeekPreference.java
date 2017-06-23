@@ -14,14 +14,14 @@ import java.util.Set;
 
 import edu.umbc.ebiquity.mithril.MithrilAC;
 import edu.umbc.ebiquity.mithril.R;
+import edu.umbc.ebiquity.mithril.data.model.rules.RepeatFrequency;
 
 /**
  * Created by prajit on 2/19/17.
  * http://stackoverflow.com/questions/4505845/concise-way-of-writing-new-dialogpreference-classes
  */
-
 public class DayOfWeekPreference extends DialogPreference {
-    private Set<DayOfWeek> daysOfWeek = new HashSet<DayOfWeek>();
+    private Set<DayOfWeek> daysOfWeek = new HashSet<>();
     private String empty = "None!";
     private String delimiter = ", ";
 
@@ -110,6 +110,30 @@ public class DayOfWeekPreference extends DialogPreference {
                 setDaysOfWeekForPref(getPersistedString(defaultValue.toString()));
         } else
             setDaysOfWeekForPref(defaultValue.toString());
+    }
+
+    public boolean isWeekday() {
+        if(daysOfWeek.contains(DayOfWeek.Saturday) || daysOfWeek.contains(DayOfWeek.Sunday))
+            return false;
+        if(daysOfWeek.contains(DayOfWeek.Monday) &&
+                daysOfWeek.contains(DayOfWeek.Tuesday) &&
+                daysOfWeek.contains(DayOfWeek.Wednesday) &&
+                daysOfWeek.contains(DayOfWeek.Thursday) &&
+                daysOfWeek.contains(DayOfWeek.Friday))
+            return true;
+        return false;
+    }
+
+    public boolean isWeekend() {
+        if(daysOfWeek.contains(DayOfWeek.Monday) ||
+                daysOfWeek.contains(DayOfWeek.Tuesday) ||
+                daysOfWeek.contains(DayOfWeek.Wednesday) ||
+                daysOfWeek.contains(DayOfWeek.Thursday) ||
+                daysOfWeek.contains(DayOfWeek.Friday))
+            return false;
+        if(daysOfWeek.contains(DayOfWeek.Saturday) && daysOfWeek.contains(DayOfWeek.Sunday))
+            return true;
+        return false;
     }
 
     private void initViews(Context context) {
