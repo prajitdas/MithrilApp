@@ -24,6 +24,7 @@ import android.support.v7.widget.Toolbar;
 import android.widget.TimePicker;
 
 import java.sql.Timestamp;
+import java.util.Date;
 
 import edu.umbc.ebiquity.mithril.MithrilAC;
 import edu.umbc.ebiquity.mithril.R;
@@ -56,7 +57,6 @@ public class TemporalDataEntryActivity extends AppCompatActivity implements
     private final String type = MithrilAC.getPrefKeyContextTypeTemporal();
     private RepeatFrequency repeatFrequency;
     private Timestamp first;
-    private int period;
     private String inferredTime;
 
     @TargetApi(Build.VERSION_CODES.N)
@@ -149,15 +149,24 @@ public class TemporalDataEntryActivity extends AppCompatActivity implements
         });
 
         mDoneBtn.setOnClickListener(new View.OnClickListener() {
+            @TargetApi(Build.VERSION_CODES.N)
             @Override
             public void onClick(View v) {
                 if(startHour > -1 && endHour > -1) {
+                    final Calendar start = Calendar.getInstance();
+                    start.set(Calendar.HOUR, startHour);
+                    start.set(Calendar.MINUTE, startMinute);
+
+                    final Calendar end = Calendar.getInstance();
+                    end.set(Calendar.HOUR, endHour);
+                    end.set(Calendar.MINUTE, endMinute);
+
                     Intent resultIntent = new Intent();
                     resultIntent.putExtra(getType() + inferredTime,
                             new SemanticTime(
                                     getRepeatFrequency(),
                                     getFirst(),
-                                    getPeriod(),
+                                    (int) (end.getTimeInMillis() - start.getTimeInMillis()),
                                     inferredTime,
                                     true));
                     setResult(Activity.RESULT_OK, resultIntent);
@@ -200,10 +209,6 @@ public class TemporalDataEntryActivity extends AppCompatActivity implements
         this.first = first;
     }
 
-    public int getPeriod() {
-        return period;
-    }
-
     @Override
     public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
         setRepeatFrequency(RepeatFrequency.charSeqToRepeatFrequency((CharSequence) parent.getItemAtPosition(position)));
@@ -227,6 +232,7 @@ public class TemporalDataEntryActivity extends AppCompatActivity implements
 
     private boolean isStartClicked;
 
+    @TargetApi(Build.VERSION_CODES.N)
     @Override
     public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
         if(isStartClicked) {
@@ -235,6 +241,18 @@ public class TemporalDataEntryActivity extends AppCompatActivity implements
         } else {
             endHour = hourOfDay;
             endMinute = minute;
+        }
+        if(startHour > -1 && endHour > -1) {
+            final Calendar start = Calendar.getInstance();
+            start.set(Calendar.HOUR, startHour);
+            start.set(Calendar.MINUTE, startMinute);
+
+            final Calendar end = Calendar.getInstance();
+            end.set(Calendar.HOUR, endHour);
+            end.set(Calendar.MINUTE, endMinute);
+
+            if((end.getTimeInMillis() - start.getTimeInMillis()) < 0)
+                PermissionHelper.toast(this, "Your end time cannot be before your start time");
         }
     }
 }
