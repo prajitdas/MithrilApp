@@ -72,22 +72,10 @@
         android:text="@string/ending_time"/>
 
     <Button
-        android:id="@+id/chooseLabelBtn"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/temporalEndTimeBtn"
-        android:layout_marginTop="@dimen/fab_margin"
-        android:layout_marginBottom="@dimen/fab_margin"
-        android:layout_marginStart="@dimen/activity_vertical_margin"
-        android:layout_marginEnd="@dimen/activity_vertical_margin"
-        android:theme="@style/AppTheme.Button"
-        android:text="@string/what_time_is_this"/>
-
-    <Button
         android:id="@+id/doneLabelBtn"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/chooseLabelBtn"
+        android:layout_alignParentBottom="true"
         android:layout_marginTop="@dimen/fab_margin"
         android:layout_marginBottom="@dimen/fab_margin"
         android:layout_marginStart="@dimen/activity_vertical_margin"

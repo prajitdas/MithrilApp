@@ -3,8 +3,9 @@ package edu.umbc.ebiquity.mithril.ui.activities;
 import android.annotation.TargetApi;
 import android.app.Activity;
 import android.app.DatePickerDialog;
-import android.content.Context;
-import android.icu.text.DateFormat;
+import android.app.Dialog;
+import android.app.DialogFragment;
+import android.content.Intent;
 import android.icu.util.Calendar;
 import android.icu.util.GregorianCalendar;
 import android.os.Build;
@@ -20,21 +21,19 @@ import android.widget.Spinner;
 import android.support.v7.widget.Toolbar;
 
 import java.sql.Timestamp;
-import java.util.Date;
 
 import edu.umbc.ebiquity.mithril.MithrilAC;
 import edu.umbc.ebiquity.mithril.R;
 import edu.umbc.ebiquity.mithril.data.model.rules.RepeatFrequency;
 import edu.umbc.ebiquity.mithril.data.model.rules.context.SemanticTime;
 
-public class TemporalDataEntryActivity extends AppCompatActivity implements AdapterView.OnItemSelectedListener {
+public class TemporalDataEntryActivity extends AppCompatActivity
+        implements AdapterView.OnItemSelectedListener {
     private Button mTemporalFirstBtn;
     private Button mTemporalStartTimeBtn;
     private Button mTemporalEndTimeBtn;
-    private Button mChooseLabelBtn;
+    private Button mDoneBtn;
     private Spinner mSpinnerRepeatFrequency;
-
-    private SemanticTime semanticTime = new SemanticTime();;
 
     private int mYear;
     private int mMonth;
@@ -45,8 +44,8 @@ public class TemporalDataEntryActivity extends AppCompatActivity implements Adap
     private Timestamp first;
     private int period;
     private String inferredTime;
-    private boolean enabled = true;
 
+    @TargetApi(Build.VERSION_CODES.N)
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -64,11 +63,17 @@ public class TemporalDataEntryActivity extends AppCompatActivity implements Adap
         setSupportActionBar(toolbar);
 
         mTemporalFirstBtn = (Button) findViewById(R.id.temporalFirstBtn);
+        final Calendar c = Calendar.getInstance();
+        mYear = c.get(Calendar.YEAR);
+        mMonth = c.get(Calendar.MONTH);
+        mDay = c.get(Calendar.DAY_OF_MONTH);
+
         mTemporalStartTimeBtn = (Button) findViewById(R.id.temporalStartTimeBtn);
         mTemporalEndTimeBtn = (Button) findViewById(R.id.temporalEndTimeBtn);
-        mChooseLabelBtn = (Button) findViewById(R.id.chooseLabelBtn);
-        mSpinnerRepeatFrequency = (Spinner) findViewById(R.id.spinnerRepeatFrequency);
 
+        mDoneBtn = (Button) findViewById(R.id.doneLabelBtn);
+
+        mSpinnerRepeatFrequency = (Spinner) findViewById(R.id.spinnerRepeatFrequency);
         // Create an ArrayAdapter using the string array and a default spinner layout
         ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(this, R.array.freq_array, android.R.layout.simple_spinner_item);
         // Specify the layout to use when the list of choices appears
@@ -77,6 +82,7 @@ public class TemporalDataEntryActivity extends AppCompatActivity implements Adap
         mSpinnerRepeatFrequency.setAdapter(adapter);
 
         setOnclickListeners();
+        mSpinnerRepeatFrequency.setOnItemSelectedListener(this);
     }
 
     private void setOnclickListeners() {
@@ -103,10 +109,19 @@ public class TemporalDataEntryActivity extends AppCompatActivity implements Adap
             }
         });
 
-        mChooseLabelBtn.setOnClickListener(new View.OnClickListener() {
+        mDoneBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
+                Intent resultIntent = new Intent();
+                resultIntent.putExtra(getType()+getInferredTime(),
+                        new SemanticTime(
+                                getRepeatFrequency(),
+                                getFirst(),
+                                getPeriod(),
+                                getInferredTime(),
+                                true));
+                setResult(Activity.RESULT_OK, resultIntent);
+                finish();
             }
         });
     }
@@ -172,14 +187,6 @@ public class TemporalDataEntryActivity extends AppCompatActivity implements Adap
         this.inferredTime = inferredTime;
     }
 
-    public boolean isEnabled() {
-        return enabled;
-    }
-
-    public void setEnabled(boolean enabled) {
-        this.enabled = enabled;
-    }
-
     @Override
     public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
         setRepeatFrequency(RepeatFrequency.charSeqToRepeatFrequency((CharSequence) parent.getItemAtPosition(position)));
@@ -188,5 +195,51 @@ public class TemporalDataEntryActivity extends AppCompatActivity implements Adap
     @Override
     public void onNothingSelected(AdapterView<?> parent) {
         setRepeatFrequency(RepeatFrequency.NEVER_REPEATS);
+    }
+
+    public int getmYear() {
+        return mYear;
+    }
+
+    public void setmYear(int mYear) {
+        this.mYear = mYear;
+    }
+
+    public int getmMonth() {
+        return mMonth;
+    }
+
+    public void setmMonth(int mMonth) {
+        this.mMonth = mMonth;
+    }
+
+    public int getmDay() {
+        return mDay;
+    }
+
+    public void setmDay(int mDay) {
+        this.mDay = mDay;
+    }
+
+    public static class DatePickerFragment extends DialogFragment
+            implements DatePickerDialog.OnDateSetListener {
+
+        @TargetApi(Build.VERSION_CODES.N)
+        @Override
+        public Dialog onCreateDialog(Bundle savedInstanceState) {
+            // Use the current date as the default date in the picker
+            final Calendar c = Calendar.getInstance();
+            int year = c.get(Calendar.YEAR);
+            int month = c.get(Calendar.MONTH);
+            int day = c.get(Calendar.DAY_OF_MONTH);
+
+            // Create a new instance of DatePickerDialog and return it
+            return new DatePickerDialog(getActivity(), this, year, month, day);
+        }
+
+        public void onDateSet(DatePicker view, int year, int month, int day) {
+            // Do something with the date chosen by the user
+
+        }
     }
 }

@@ -43,10 +43,6 @@ public class SemanticTime extends SemanticUserContext implements Parcelable {
         this.enabled = enabled;
     }
 
-    public SemanticTime() {
-
-    }
-
     @Override
     public void writeToParcel(Parcel dest, int flags) {
         dest.writeInt(period);
