@@ -70,7 +70,7 @@ public class SetupGeofencesActivity extends AppCompatActivity implements
                         setResult(Activity.RESULT_OK, resultIntent);
                         finish();
                     } else {
-                        failedToSetupGeofences();
+                        failed();
                     }
                 }
             }
@@ -87,7 +87,7 @@ public class SetupGeofencesActivity extends AppCompatActivity implements
         PermissionHelper.toast(this, "Let me finish please...");
     }
 
-    private void failedToSetupGeofences() {
+    private void failed() {
         setResult(Activity.RESULT_CANCELED);
         finish();
     }
@@ -133,7 +133,7 @@ public class SetupGeofencesActivity extends AppCompatActivity implements
                             semanticLocation.getLocation().getLongitude());
             }
         } else {
-            failedToSetupGeofences();
+            failed();
         }
     }
 

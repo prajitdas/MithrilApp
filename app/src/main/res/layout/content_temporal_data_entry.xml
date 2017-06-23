@@ -24,6 +24,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_below="@+id/temporalFirstBtn"
+        android:layout_alignParentStart="true"
         android:layout_marginTop="@dimen/fab_margin"
         android:layout_marginBottom="@dimen/fab_margin"
         android:layout_marginStart="@dimen/activity_vertical_margin"
@@ -38,6 +39,8 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_below="@+id/temporalFirstBtn"
+        android:layout_toRightOf="@+id/textViewChooseRepeatFrequency"
+        android:layout_alignParentEnd="true"
         android:layout_marginTop="@dimen/fab_margin"
         android:layout_marginBottom="@dimen/fab_margin"
         android:layout_marginStart="@dimen/activity_vertical_margin"
@@ -79,5 +82,17 @@
         android:layout_marginEnd="@dimen/activity_vertical_margin"
         android:theme="@style/AppTheme.Button"
         android:text="@string/what_time_is_this"/>
+
+    <Button
+        android:id="@+id/doneLabelBtn"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/chooseLabelBtn"
+        android:layout_marginTop="@dimen/fab_margin"
+        android:layout_marginBottom="@dimen/fab_margin"
+        android:layout_marginStart="@dimen/activity_vertical_margin"
+        android:layout_marginEnd="@dimen/activity_vertical_margin"
+        android:theme="@style/AppTheme.Button"
+        android:text="@string/done_with_instances_settings"/>
 
 </RelativeLayout>
