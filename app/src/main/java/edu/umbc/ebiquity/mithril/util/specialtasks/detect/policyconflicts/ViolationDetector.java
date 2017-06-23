@@ -78,6 +78,10 @@ public class ViolationDetector {
             Log.e(MithrilAC.getDebugTag(), "Houston, we have a problem! We can't detect current context");
             return;
         }
+        if (operationsPerformed.size() == 0) {
+            Log.e(MithrilAC.getDebugTag(), "We might not have GET_APP_OPS_STATS permission!");
+            return;
+        }
         if (operationsPerformed.get(0).getOp() == AppOpsManager.OP_NONE) {
             Log.e(MithrilAC.getDebugTag(), "Houston, we have another problem! We couldn't figure out the operation for " + currentPackageName);
             return;

@@ -55,7 +55,7 @@ public class AppLaunchDetector {
             /*
              * Technique from: https://github.com/ricvalerio/foregroundappchecker
              * On Nexus 5x it detects foreground launcher events after the app event!!
-             */
+             *
             if (MithrilAC.getDeviceName().equals("LGE Nexus 5")) {
                 UsageEvents usageEvents = mUsageStatsManager.queryEvents(time - 1000 * 3600, time);
                 SortedMap<Long, UsageEvents.Event> runningTasks = new TreeMap<>();
@@ -67,14 +67,14 @@ public class AppLaunchDetector {
                  * Retrieve the next UsageEvents.Event from the collection and put the resulting data into eventOut.
                  * Parameters: eventOut	UsageEvents.Event: The UsageEvents.Event object that will receive the next event data.
                  * Returns: boolean	true if an event was available, false if there are no more events.
-                 */
+                 *
                     UsageEvents.Event event = new UsageEvents.Event();
                     while (usageEvents.hasNextEvent()) {
                         usageEvents.getNextEvent(event);
                         runningTasks.put(event.getTimeStamp(), event);
                     }
                     if (runningTasks.isEmpty()) {
-//                    Log.d(MithrilAC.getDebugTag(), "tasks are empty");
+                        Log.d(MithrilAC.getDebugTag(), "tasks are empty");
                         return null;
                     }
                     if (runningTasks.get(runningTasks.lastKey()).getEventType() == UsageEvents.Event.MOVE_TO_FOREGROUND) {
@@ -83,41 +83,30 @@ public class AppLaunchDetector {
                         currentPackageName = currentUsageEvent.getPackageName();
                     }
                 }
-            } else {
+            } else {*/
             /*
              * Previous technique did not work on Nexus 5(returns null on nexus 5 with Android 6.0.1 cm13.0), worked on Nexus 5X
              */
-                List<UsageStats> stats = mUsageStatsManager.queryUsageStats(UsageStatsManager.INTERVAL_DAILY, time - 1000 * 3600, time);
-                if (stats != null) {
-                    SortedMap<Long, UsageStats> runningTasks = new TreeMap<>();
-                    for (UsageStats usageStats : stats) {
-                        runningTasks.put(usageStats.getLastTimeUsed(), usageStats);
-                    }
-                    if (runningTasks.isEmpty()) {
-//                    Log.d(MithrilAC.getDebugTag(), "tasks are empty");
-                        return null;
-                    }
-                    //This is the trick! We get last key to find out last package running
-                    currentUsageStats = runningTasks.get(runningTasks.lastKey());
-                    currentUsageEvent = null;
-                    currentPackageName = currentUsageStats.getPackageName();
+            List<UsageStats> stats = mUsageStatsManager.queryUsageStats(UsageStatsManager.INTERVAL_DAILY, time - 1000 * 3600, time);
+            if (stats != null) {
+                SortedMap<Long, UsageStats> runningTasks = new TreeMap<>();
+                for (UsageStats usageStats : stats) {
+                    runningTasks.put(usageStats.getLastTimeUsed(), usageStats);
                 }
-            }
+                if (runningTasks.isEmpty()) {
+                    Log.d(MithrilAC.getDebugTag(), "tasks are empty");
+                    return null;
+                }
+                //This is the trick! We get last key to find out last package running
+                currentUsageStats = runningTasks.get(runningTasks.lastKey());
+                currentUsageEvent = null;
+                currentPackageName = currentUsageStats.getPackageName();
 
-            if (currentPackageName != null &&
-                    !currentPackageName.equals(MithrilAC.getLauncherName(context)) &&
-                    !currentPackageName.equals(context.getPackageName()))
-//                    currentPackageName = null;
-//                else {
-//                    try {
-//                        ViolationDetector.detectViolation(context, currentPackageName, getOp(currentPackageName), location);
-//                    } catch (SemanticInconsistencyException cwaException) {
-                //Something is wrong!!!! We have a Closed World Assumption we cannot have deny rules...
-                //                Log.e(MithrilAC.getDebugTag(), "Serious error! DB contains deny rules. This violates our CWA");
-//                    }
-                return new Pair<>(currentPackageName, getOp());
-//                }
-//            }
+                if (currentPackageName != null &&
+                        !currentPackageName.equals(MithrilAC.getLauncherName(context)) &&
+                        !currentPackageName.equals(context.getPackageName()))
+                    return new Pair<>(currentPackageName, getOp());
+            }
         } catch (SecurityException e) {
             Log.d(MithrilAC.getDebugTag(), "Probably a security exception because we don't have the right permissions " + e.getMessage());
         }
@@ -141,14 +130,6 @@ public class AppLaunchDetector {
         List<Resource> resources = new ArrayList<>();
         try {
             ApplicationInfo appInfo = mPackageManager.getApplicationInfo(currentPackageName, 0);
-            String label = appInfo.loadLabel(mPackageManager).toString();
-            AppUsageStats tempUsageStat = new AppUsageStats();
-            tempUsageStat.setLastTimeUsed(currentUsageStats.getLastTimeUsed());
-            tempUsageStat.setTotalTimeInForeground(currentUsageStats.getTotalTimeInForeground());
-            tempUsageStat.setPackageName(currentUsageStats.getPackageName());
-            tempUsageStat.setLabel(label);
-            tempUsageStat.setIcon(appInfo.loadIcon(mPackageManager));
-
             AppOpsState appOpsState = new AppOpsState(context);
             List<AppOpsState.AppOpEntry> entries = appOpsState.buildState(
                     AppOpsState.ALL_OPS_TEMPLATE,
@@ -156,49 +137,61 @@ public class AppLaunchDetector {
                     currentPackageName);
             int position = 0;
             for (AppOpsState.AppOpEntry entry : entries) {
-                AppOpsManager.OpEntry currEntry = entry.getOpEntry(position);
-                String appOpName = AppOpsManager.opToPermission(currEntry.getOp());
-                Log.d(MithrilAC.getDebugTag(), "Found usage of operation: " + appOpName);
-                Resource tempRes = null;
-                if (appOpName != null) {
-                    try {
-                        PermissionInfo pi = mPackageManager.getPermissionInfo(appOpName, 0);
-                        //                            tempRes.setResourceName(pi.packageName);
-                        if (pi.group != null) {// && !lastPermGroup.equals(pi.group)) {
-                            PermissionGroupInfo pgi = mPackageManager.getPermissionGroupInfo(pi.group, 0);
-                            // We care about the resource group because that tells us what was used!
-                            if(pgi != null)
-                                tempRes = new Resource(
-                                        pi.name,
-                                        currEntry.getDuration(),
-                                        currEntry.getOp(),
-                                        currEntry.getTime(),
-                                        entry.getTimeText(context, true).toString(),
-                                        pgi.name,
-                                        MithrilAC.getRiskForPerm(appOpName)
-//                                        MithrilDBHelper.getHelper(context).findRiskLevelByPerm(mithrilDB, appOpName)
-                                );
-                            else
-                                tempRes = new Resource(
-                                        pi.name,
-                                        currEntry.getDuration(),
-                                        currEntry.getOp(),
-                                        currEntry.getTime(),
-                                        entry.getTimeText(context, true).toString(),
-                                        MithrilAC.getNoPermissionGroupDesc(),
-                                        MithrilAC.getRiskForPerm(appOpName)
-//                                        MithrilDBHelper.getHelper(context).findRiskLevelByPerm(mithrilDB, appOpName)
-                                );
+                try {
+                    AppOpsManager.OpEntry currEntry = entry.getOpEntry(position);
+                    String appOpName = AppOpsManager.opToPermission(currEntry.getOp());
+                    Log.d(MithrilAC.getDebugTag(), "Found usage of operation: " + appOpName);
+                    Resource tempRes = null;
+                    if (appOpName != null) {
+                        try {
+                            PermissionInfo pi = mPackageManager.getPermissionInfo(appOpName, 0);
+                            //                            tempRes.setResourceName(pi.packageName);
+                            if (pi.group != null) {// && !lastPermGroup.equals(pi.group)) {
+                                PermissionGroupInfo pgi = mPackageManager.getPermissionGroupInfo(pi.group, 0);
+                                // We care about the resource group because that tells us what was used!
+                                if (pgi != null)
+                                    tempRes = new Resource(
+                                            pi.name, // Resource name
+                                            currEntry.getDuration(), // duration
+                                            currEntry.getOp(), // application operation
+                                            currEntry.getTime(), // time, most probably last time used
+                                            entry.getTimeText(context, true).toString(), // text version of when last used
+                                            pgi.name, // resource group, in this case we are using the permission's group
+                                            MithrilAC.getRiskForPerm(appOpName), // permission's risk level
+//                                        MithrilDBHelper.getHelper(context).findRiskLevelByPerm(mithrilDB, appOpName),
+                                            currEntry.getMode(), // mode of operation
+                                            currEntry.getRejectTime(), // when was this rejected the last time?
+                                            currEntry.getAllowedCount(), // how many times has this been allowed?
+                                            currEntry.getIgnoredCount() // how many times has this been ignored?
+                                    );
+                                else
+                                    tempRes = new Resource(
+                                            pi.name, // Resource name
+                                            currEntry.getDuration(), // duration
+                                            currEntry.getOp(), // application operation
+                                            currEntry.getTime(), // time, most probably last time used
+                                            entry.getTimeText(context, true).toString(), // text version of when last used
+                                            pgi.name, // resource group, in this case we are using the permission's group
+                                            MithrilAC.getRiskForPerm(appOpName), // permission's risk level
+//                                        MithrilDBHelper.getHelper(context).findRiskLevelByPerm(mithrilDB, appOpName),
+                                            currEntry.getMode(), // mode of operation
+                                            currEntry.getRejectTime(), // when was this rejected the last time?
+                                            currEntry.getAllowedCount(), // how many times has this been allowed?
+                                            currEntry.getIgnoredCount() // how many times has this been ignored?
+                                    );
+                            }
+                        } catch (PackageManager.NameNotFoundException e) {
+                            Log.e(MithrilAC.getDebugTag(), e.getMessage());
                         }
-                    } catch (PackageManager.NameNotFoundException e) {
-                        Log.e(MithrilAC.getDebugTag(), e.getMessage());
                     }
+                    if (tempRes != null)
+                        resources.add(tempRes);
+                    position++;
+                } catch (IndexOutOfBoundsException e) {
+                    Log.e(MithrilAC.getDebugTag(), "We might not have GET_APP_OPS_STATS permission!");
                 }
-                resources.add(tempRes);
-                position++;
             }
             Collections.sort(resources, mLastTimeUsedComparator);
-            tempUsageStat.setResourcesUsed(resources);
         } catch (PackageManager.NameNotFoundException e) {
             Log.e(MithrilAC.getDebugTag(), "This package may be gone" + e.getMessage());
         }

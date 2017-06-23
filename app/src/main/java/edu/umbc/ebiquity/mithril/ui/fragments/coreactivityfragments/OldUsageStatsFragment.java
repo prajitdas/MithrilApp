@@ -182,25 +182,33 @@ public class OldUsageStatsFragment extends Fragment {
                                 // We care about the resource group because that tells us what was used!
                                 if(pgi != null)
                                     tempRes = new Resource(
-                                            pi.name,
-                                            currEntry.getDuration(),
-                                            currEntry.getOp(),
-                                            currEntry.getTime(),
-                                            entry.getTimeText(context, true).toString(),
-                                            pgi.name,
-                                            MithrilAC.getRiskForPerm(appOpName)
-//                                        MithrilDBHelper.getHelper(context).findRiskLevelByPerm(mithrilDB, appOpName)
+                                            pi.name, // Resource name
+                                            currEntry.getDuration(), // duration
+                                            currEntry.getOp(), // application operation
+                                            currEntry.getTime(), // time, most probably last time used
+                                            entry.getTimeText(context, true).toString(), // text version of when last used
+                                            pgi.name, // resource group, in this case we are using the permission's group
+                                            MithrilAC.getRiskForPerm(appOpName), // permission's risk level
+//                                        MithrilDBHelper.getHelper(context).findRiskLevelByPerm(mithrilDB, appOpName),
+                                            currEntry.getMode(), // mode of operation
+                                            currEntry.getRejectTime(), // when was this rejected the last time?
+                                            currEntry.getAllowedCount(), // how many times has this been allowed?
+                                            currEntry.getIgnoredCount() // how many times has this been ignored?
                                     );
                                 else
                                     tempRes = new Resource(
-                                            pi.name,
-                                            currEntry.getDuration(),
-                                            currEntry.getOp(),
-                                            currEntry.getTime(),
-                                            entry.getTimeText(context, true).toString(),
-                                            MithrilAC.getNoPermissionGroupDesc(),
-                                            MithrilAC.getRiskForPerm(appOpName)
-//                                        MithrilDBHelper.getHelper(context).findRiskLevelByPerm(mithrilDB, appOpName)
+                                            pi.name, // Resource name
+                                            currEntry.getDuration(), // duration
+                                            currEntry.getOp(), // application operation
+                                            currEntry.getTime(), // time, most probably last time used
+                                            entry.getTimeText(context, true).toString(), // text version of when last used
+                                            pgi.name, // resource group, in this case we are using the permission's group
+                                            MithrilAC.getRiskForPerm(appOpName), // permission's risk level
+//                                        MithrilDBHelper.getHelper(context).findRiskLevelByPerm(mithrilDB, appOpName),
+                                            currEntry.getMode(), // mode of operation
+                                            currEntry.getRejectTime(), // when was this rejected the last time?
+                                            currEntry.getAllowedCount(), // how many times has this been allowed?
+                                            currEntry.getIgnoredCount() // how many times has this been ignored?
                                     );
                             }
                         } catch (PackageManager.NameNotFoundException e) {

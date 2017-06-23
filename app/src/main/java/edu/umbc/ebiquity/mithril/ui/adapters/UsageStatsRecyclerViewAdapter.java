@@ -61,7 +61,10 @@ public class UsageStatsRecyclerViewAdapter extends RecyclerView.Adapter<UsageSta
 
             holder.mAppUsageDetail.setText(getStringForHowLongWasUsed(mValues.get(position).getTotalTimeInForeground()));
             holder.mAppLastUsedTime.setText(getStringForLastTimeUsed(mValues.get(position).getLastTimeUsed()));
-            holder.mResourceUsed.setText(mValues.get(position).getResourcesUsedString());
+            if(mValues.get(position).getResourcesUsed().size() > 0)
+                holder.mResourceUsed.setText(mValues.get(position).getResourcesUsed().get(0).toString());
+            else
+                holder.mResourceUsed.setText("no resources used yet");
 
             holder.mView.setOnClickListener(new View.OnClickListener() {
                 @Override
