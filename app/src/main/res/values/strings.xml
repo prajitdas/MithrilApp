@@ -262,17 +262,17 @@
     <string name="title_activity_temporal_data_entry">Time context entry</string>
 
     <string-array name="freq_array">
-        <item>Second</item>
-        <item>Minute</item>
-        <item>Hourly</item>
+        <!--<item>Second</item>-->
+        <!--<item>Minute</item>-->
+        <!--<item>Hourly</item>-->
         <item>Daily</item>
         <item>Weekly</item>
         <item>Weekdays</item>
         <item>Weekends</item>
         <item>Monthly</item>
-        <item>Quarterly</item>
+        <!--<item>Quarterly</item>-->
         <item>Yearly</item>
-        <item>Never</item>
+        <!--<item>Never</item>-->
     </string-array>
 
     <string name="title_bottom_navigation_location">Location</string>
