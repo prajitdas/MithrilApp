@@ -1,5 +1,6 @@
 package edu.umbc.ebiquity.mithril.ui.activities;
 
+import android.annotation.TargetApi;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.FragmentManager;
@@ -38,10 +39,12 @@ import com.google.android.gms.location.places.ui.PlaceAutocomplete;
 import com.google.gson.Gson;
 import com.google.gson.JsonSyntaxException;
 
-import java.sql.Timestamp;
 import java.util.ArrayList;
+import android.icu.util.Calendar;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Map;
+import java.util.Set;
 
 import edu.umbc.ebiquity.mithril.MithrilAC;
 import edu.umbc.ebiquity.mithril.R;
@@ -56,9 +59,11 @@ import edu.umbc.ebiquity.mithril.ui.fragments.instancecreationactivityfragments.
 import edu.umbc.ebiquity.mithril.ui.fragments.instancecreationactivityfragments.SemanticNearActorFragment;
 import edu.umbc.ebiquity.mithril.ui.fragments.instancecreationactivityfragments.SemanticTimeFragment;
 import edu.umbc.ebiquity.mithril.util.services.FetchAddressIntentService;
+import edu.umbc.ebiquity.mithril.util.specialtasks.contextinstances.DayOfWeek;
 import edu.umbc.ebiquity.mithril.util.specialtasks.errorsnexceptions.AddressKeyMissingError;
 import edu.umbc.ebiquity.mithril.util.specialtasks.permissions.PermissionHelper;
 
+@TargetApi(Build.VERSION_CODES.N)
 public class InstanceCreationActivity extends AppCompatActivity
         implements SemanticTimeFragment.OnListFragmentInteractionListener,
         SemanticLocationFragment.OnListFragmentInteractionListener,
@@ -226,6 +231,9 @@ public class InstanceCreationActivity extends AppCompatActivity
     private void handleLocation() {
         setTitle(activityBaseTitle + getApplicationContext().getResources().getString(R.string.text_instance_creation_location));
 
+        mFirstMajorCtxtBtn.setVisibility(View.VISIBLE);
+        mSecondMajorCtxtBtn.setVisibility(View.VISIBLE);
+
         mOtherCtxtBtn.setText(R.string.pref_other_location_summary);
         mFirstMajorCtxtBtn.setText(R.string.pref_home_location_summary);
         mSecondMajorCtxtBtn.setText(R.string.pref_work_location_summary);
@@ -244,9 +252,10 @@ public class InstanceCreationActivity extends AppCompatActivity
     private void handleTemporal() {
         setTitle(activityBaseTitle + getApplicationContext().getResources().getString(R.string.text_instance_creation_temporal));
 
+        mFirstMajorCtxtBtn.setVisibility(View.GONE);
+        mSecondMajorCtxtBtn.setVisibility(View.GONE);
+
         mOtherCtxtBtn.setText(R.string.pref_other_hours_context_summary);
-        mFirstMajorCtxtBtn.setText(R.string.pref_work_hours_context_summary);
-        mSecondMajorCtxtBtn.setText(R.string.pref_DND_hours_context_summary);
 
         if (!sharedPreferences.getBoolean(MithrilAC.getPrefKeyTimeInstancesCreated(), false)) {
             PermissionHelper.toast(getApplicationContext(), getApplicationContext().getResources().getString(R.string.tooltip_temporal), Toast.LENGTH_SHORT);
@@ -261,6 +270,9 @@ public class InstanceCreationActivity extends AppCompatActivity
 
     private void handlePresence() {
         setTitle(activityBaseTitle + getApplicationContext().getResources().getString(R.string.text_instance_creation_presence_related));
+
+        mFirstMajorCtxtBtn.setVisibility(View.VISIBLE);
+        mSecondMajorCtxtBtn.setVisibility(View.VISIBLE);
 
         mOtherCtxtBtn.setText(R.string.pref_presence_info_others_summary);
         mFirstMajorCtxtBtn.setText(R.string.pref_presence_info_supervisor_summary);
@@ -279,6 +291,9 @@ public class InstanceCreationActivity extends AppCompatActivity
 
     private void handleActivity() {
         setTitle(activityBaseTitle + getApplicationContext().getResources().getString(R.string.text_instance_creation_activity));
+
+        mFirstMajorCtxtBtn.setVisibility(View.VISIBLE);
+        mSecondMajorCtxtBtn.setVisibility(View.VISIBLE);
 
         mOtherCtxtBtn.setText(R.string.pref_other_activity_context_title);
         mFirstMajorCtxtBtn.setText(R.string.pref_personal_activity_context_title);
@@ -322,20 +337,6 @@ public class InstanceCreationActivity extends AppCompatActivity
                 @Override
                 public void onClick(View v) {
                     chooseATemporalLabel();
-                }
-            });
-
-            mFirstMajorCtxtBtn.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    openTemporalDataEntryActivity(TIME_REQUEST_CODE_WORK, MithrilAC.getPrefTimeIntervalWorkTemporalKey());
-                }
-            });
-
-            mSecondMajorCtxtBtn.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    openTemporalDataEntryActivity(TIME_REQUEST_CODE_DND, MithrilAC.getPrefTimeIntervalDndTemporalKey());
                 }
             });
         } else if (currentFragment.equals(FRAGMENT_PRESENCE)) {
@@ -432,46 +433,196 @@ public class InstanceCreationActivity extends AppCompatActivity
     }
 
     private void createSemanticTimes() {
+        Set<DayOfWeek> dayOfWeek = new HashSet<>();
+        dayOfWeek.add(DayOfWeek.Saturday);
+        dayOfWeek.add(DayOfWeek.Sunday);
+
+        Calendar start = Calendar.getInstance();
+        start.set(Calendar.HOUR_OF_DAY, 0);
+        start.set(Calendar.MINUTE, 0);
+
+        Calendar end = Calendar.getInstance();
+        end.set(Calendar.HOUR_OF_DAY, 23);
+        end.set(Calendar.MINUTE, 59);
+        end.set(Calendar.SECOND, 59);
+
+        /**
+         * Weekend context creation
+         */
         SemanticTime semanticTime = new SemanticTime(
-                RepeatFrequency.DAILY,
-                new Timestamp(1497895200),
-                /**
-                 * 1497895200 Is equivalent to: 06/19/2017 @ 6:00pm (UTC)
-                 */
-                1,
-                "Family",
+                dayOfWeek,
+                start,
+                end,
+                MithrilAC.getWeekend(),
                 false);
         semanticTimes.put(MithrilAC.getPrefKeyContextTypeTemporal()+semanticTime.getLabel(), semanticTime);
+
+        /**********************************************************************************************************************/
+        dayOfWeek.add(DayOfWeek.Monday);
+        dayOfWeek.add(DayOfWeek.Tuesday);
+        dayOfWeek.add(DayOfWeek.Wednesday);
+        dayOfWeek.add(DayOfWeek.Thursday);
+        dayOfWeek.add(DayOfWeek.Friday);
+
+        start.set(Calendar.HOUR_OF_DAY, 8);
+        start.set(Calendar.MINUTE, 0);
+
+        end.set(Calendar.HOUR_OF_DAY, 8);
+        end.set(Calendar.MINUTE, 30);
+
+        /**
+         * Breakfast hours context
+         */
         semanticTime = new SemanticTime(
-                RepeatFrequency.WEEKEND,
-                new Timestamp(1498262400),
-                /**
-                 * 1498262400 Is equivalent to: 06/24/2017 @ 12:00am (UTC)
-                 */
-                48,
-                "Weekend",
+                dayOfWeek,
+                start,
+                end,
+                MithrilAC.getPrefTimeIntervalBreakfastTemporalKey(),
                 false);
         semanticTimes.put(MithrilAC.getPrefKeyContextTypeTemporal()+semanticTime.getLabel(), semanticTime);
+
+        /**********************************************************************************************************************/
+
+        dayOfWeek.remove(DayOfWeek.Sunday);
+        dayOfWeek.remove(DayOfWeek.Saturday);
+
+        start.set(Calendar.HOUR_OF_DAY, 8);
+        start.set(Calendar.MINUTE, 30);
+
+        end.set(Calendar.HOUR_OF_DAY, 12);
+        end.set(Calendar.MINUTE, 0);
+
+        /**
+         * Work_Morning hours context
+         */
         semanticTime = new SemanticTime(
-                RepeatFrequency.WEEKDAYS,
-                new Timestamp(1497862800),
-                /**
-                 * 1497862800 Is equivalent to: 06/19/2017 @ 9:00am (UTC)
-                 */
-                1,
-                "Team_Meeting",
+                dayOfWeek,
+                start,
+                end,
+                MithrilAC.getPrefTimeIntervalWorkMorningTemporalKey(),
                 false);
         semanticTimes.put(MithrilAC.getPrefKeyContextTypeTemporal()+semanticTime.getLabel(), semanticTime);
+
+        /**********************************************************************************************************************/
+
+        dayOfWeek.add(DayOfWeek.Saturday);
+        dayOfWeek.add(DayOfWeek.Sunday);
+
+        start.set(Calendar.HOUR_OF_DAY, 12);
+        start.set(Calendar.MINUTE, 0);
+
+        end.set(Calendar.HOUR_OF_DAY, 12);
+        end.set(Calendar.MINUTE, 30);
+
+        /**
+         * Lunch hours context
+         */
         semanticTime = new SemanticTime(
-                RepeatFrequency.MONDAY,
-                new Timestamp(1497862800),
-                /**
-                 * 1497862800 Is equivalent to: 06/19/2017 @ 9:00am (UTC)
-                 */
-                1,
-                "Team_Meeting",
+                dayOfWeek,
+                start,
+                end,
+                MithrilAC.getPrefTimeIntervalLunchTemporalKey(),
                 false);
         semanticTimes.put(MithrilAC.getPrefKeyContextTypeTemporal()+semanticTime.getLabel(), semanticTime);
+
+        /**********************************************************************************************************************/
+
+        dayOfWeek.remove(DayOfWeek.Sunday);
+        dayOfWeek.remove(DayOfWeek.Saturday);
+
+        start.set(Calendar.HOUR_OF_DAY, 12);
+        start.set(Calendar.MINUTE, 30);
+
+        end.set(Calendar.HOUR_OF_DAY, 16);
+        end.set(Calendar.MINUTE, 0);
+
+        /**
+         * Work_Afternoon hours context
+         */
+        semanticTime = new SemanticTime(
+                dayOfWeek,
+                start,
+                end,
+                MithrilAC.getPrefTimeIntervalLunchTemporalKey(),
+                false);
+        semanticTimes.put(MithrilAC.getPrefKeyContextTypeTemporal()+semanticTime.getLabel(), semanticTime);
+
+        /**********************************************************************************************************************/
+
+        dayOfWeek.add(DayOfWeek.Saturday);
+        dayOfWeek.add(DayOfWeek.Sunday);
+
+        start.set(Calendar.HOUR, 16);
+        start.set(Calendar.MINUTE, 0);
+
+        end.set(Calendar.HOUR, 19);
+        end.set(Calendar.MINUTE, 0);
+
+        /**
+         * Family_Time hours context
+         */
+        semanticTime = new SemanticTime(
+                dayOfWeek,
+                start,
+                end,
+                MithrilAC.getPrefTimeIntervalFamilyTemporalKey(),
+                false);
+        semanticTimes.put(MithrilAC.getPrefKeyContextTypeTemporal()+semanticTime.getLabel(), semanticTime);
+
+        /**********************************************************************************************************************/
+        start.set(Calendar.HOUR, 19);
+        start.set(Calendar.MINUTE, 0);
+
+        end.set(Calendar.HOUR, 19);
+        end.set(Calendar.MINUTE, 30);
+
+        /**
+         * Dinner hours context
+         */
+        semanticTime = new SemanticTime(
+                dayOfWeek,
+                start,
+                end,
+                MithrilAC.getPrefTimeIntervalDinnerTemporalKey(),
+                false);
+        semanticTimes.put(MithrilAC.getPrefKeyContextTypeTemporal()+semanticTime.getLabel(), semanticTime);
+
+        /**********************************************************************************************************************/
+        start.set(Calendar.HOUR, 19);
+        start.set(Calendar.MINUTE, 30);
+
+        end.set(Calendar.HOUR, 21);
+        end.set(Calendar.MINUTE, 0);
+
+        /**
+         * Personal hours context
+         */
+        semanticTime = new SemanticTime(
+                dayOfWeek,
+                start,
+                end,
+                MithrilAC.getPrefTimeIntervalPersonalTemporalKey(),
+                false);
+        semanticTimes.put(MithrilAC.getPrefKeyContextTypeTemporal()+semanticTime.getLabel(), semanticTime);
+
+        /**********************************************************************************************************************/
+        start.set(Calendar.HOUR, 21);
+        start.set(Calendar.MINUTE, 0);
+
+        end.set(Calendar.HOUR, 8);
+        end.set(Calendar.MINUTE, 0);
+
+        /**
+         * DND hours context
+         */
+        semanticTime = new SemanticTime(
+                dayOfWeek,
+                start,
+                end,
+                MithrilAC.getPrefTimeIntervalPersonalTemporalKey(),
+                false);
+        semanticTimes.put(MithrilAC.getPrefKeyContextTypeTemporal()+semanticTime.getLabel(), semanticTime);
+
         isThereTemporalContextToSave = true;
     }
 
@@ -614,39 +765,25 @@ public class InstanceCreationActivity extends AppCompatActivity
     }
 
     private void openTemporalDataEntryActivity(int requestCode, String label) {
-        SemanticTime semanticTime;
-        if(label == MithrilAC.getPrefTimeIntervalWorkTemporalKey()) {
-            semanticTime = new SemanticTime(
-                    RepeatFrequency.WEEKDAYS,
-                    new Timestamp(1497862800),
-                    /**
-                     * 1497862800 Is equivalent to: 06/19/2017 @ 9:00am (UTC)
-                     */
-                    8,
-                    label,
-                    false);
-        } else if (label == MithrilAC.getPrefTimeIntervalDndTemporalKey()) {
-            semanticTime = new SemanticTime(
-                    RepeatFrequency.DAILY,
-                    new Timestamp(1497823200),
-                    /**
-                     * 1497823200 Is equivalent to: 06/18/2017 @ 10:00pm (UTC)
-                     */
-                    8,
-                    label,
-                    false);
-            semanticTimes.put(MithrilAC.getPrefKeyContextTypeTemporal()+semanticTime.getLabel(), semanticTime);
-        } else {
-            semanticTime = new SemanticTime(
-                    RepeatFrequency.DAILY,
-                    new Timestamp(1497895200),
-                    /**
-                     * 1497895200 Is equivalent to: 06/19/2017 @ 6:00pm (UTC)
-                     */
-                    1,
-                    label,
-                    false);
-        }
+        Set<DayOfWeek> dayOfWeek = new HashSet<>();
+        dayOfWeek.add(DayOfWeek.Sunday);
+        dayOfWeek.add(DayOfWeek.Monday);
+        dayOfWeek.add(DayOfWeek.Tuesday);
+        dayOfWeek.add(DayOfWeek.Wednesday);
+        dayOfWeek.add(DayOfWeek.Thursday);
+        dayOfWeek.add(DayOfWeek.Friday);
+        dayOfWeek.add(DayOfWeek.Saturday);
+
+        Calendar start = Calendar.getInstance();
+        start.set(Calendar.HOUR, 0);
+        start.set(Calendar.MINUTE, 0);
+
+        Calendar end = Calendar.getInstance();
+        end.set(Calendar.HOUR, 0);
+        end.set(Calendar.MINUTE, 0);
+
+        SemanticTime semanticTime = new SemanticTime(dayOfWeek, start, end, label, false);
+
         Intent intent = new Intent(this, TemporalDataEntryActivity.class);
         intent.putExtra(MithrilAC.getPrefKeyTemporalLabel(), label);
         intent.putExtra(MithrilAC.getPrefKeyContextTypeTemporal(), semanticTime);

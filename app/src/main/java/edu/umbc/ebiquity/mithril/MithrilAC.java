@@ -146,20 +146,24 @@ public class MithrilAC extends Application {
 
     private static final String PREF_KEY_TEMPORAL_LABEL = "temporalLabel";
 
-    private static final String PREF_TIME_INSTANT_SUNRISE_TEMPORAL_KEY = "Sunrise"; //Sunrise in a locale
-    private static final String PREF_TIME_INSTANT_SUNSET_TEMPORAL_KEY = "Sunset"; // Sunset in a locale
     private static final String PREF_TIME_INTERVAL_WEEKEND_TEMPORAL_KEY = "Weekend"; //Saturday - Sunday
     private static final String PREF_TIME_INTERVAL_WEEKDAY_TEMPORAL_KEY = "Weekday"; //Monday - Friday
-    private static final String PREF_TIME_INTERVAL_WORK_TEMPORAL_KEY = "Work"; //0900 - 1700
-    private static final String PREF_TIME_INTERVAL_DND_TEMPORAL_KEY = "DND"; //2100 - 0800
-    private static final String PREF_TIME_INTERVAL_MORNING_TEMPORAL_KEY = "Morning"; //0800 - 1200
     private static final String PREF_TIME_INTERVAL_BREAKFAST_TEMPORAL_KEY = "Breakfast"; //0800 - 0830
-    private static final String PREF_TIME_INTERVAL_AFTERNOON_TEMPORAL_KEY = "Afternoon"; //1200 - 1600
+    private static final String PREF_TIME_INTERVAL_WORK_MORNING_TEMPORAL_KEY = "Work_Morning"; //0830 - 1200 only Monday - Friday
     private static final String PREF_TIME_INTERVAL_LUNCH_TEMPORAL_KEY = "Lunch"; //1200 - 1230
-    private static final String PREF_TIME_INTERVAL_EVENING_TEMPORAL_KEY = "Evening"; //1600 - 2100
+    private static final String PREF_TIME_INTERVAL_WORK_AFTERNOON_TEMPORAL_KEY = "Work_Afternoon"; //1230 - 1600 only Monday - Friday
+    private static final String PREF_TIME_INTERVAL_FAMILY_TEMPORAL_KEY = "Family_Time"; //1600 - 1900
     private static final String PREF_TIME_INTERVAL_DINNER_TEMPORAL_KEY = "Dinner"; //1900 - 1930
-    private static final String PREF_TIME_INTERVAL_NIGHT_TEMPORAL_KEY = "Night"; //2100 - 0800
-    private static final String PREF_TIME_INTERVAL_HOLIDAY_TEMPORAL_KEY = "Holiday"; //Official holiday
+    private static final String PREF_TIME_INTERVAL_PERSONAL_TEMPORAL_KEY = "Personal_Time"; //1930 - 2100
+    private static final String PREF_TIME_INTERVAL_DND_TEMPORAL_KEY = "DND"; //2100 - 0800
+//    private static final String PREF_TIME_INSTANT_SUNRISE_TEMPORAL_KEY = "Sunrise"; //Sunrise in a locale
+//    private static final String PREF_TIME_INSTANT_SUNSET_TEMPORAL_KEY = "Sunset"; // Sunset in a locale
+//    private static final String PREF_TIME_INTERVAL_MORNING_TEMPORAL_KEY = "Morning"; //0800 - 1200
+//    private static final String PREF_TIME_INTERVAL_AFTERNOON_TEMPORAL_KEY = "Afternoon"; //1200 - 1600
+//    private static final String PREF_TIME_INTERVAL_EVENING_TEMPORAL_KEY = "Evening"; //1600 - 2100
+//    private static final String PREF_TIME_INTERVAL_DINNER_TEMPORAL_KEY = "Dinner"; //1900 - 1930
+//    private static final String PREF_TIME_INTERVAL_NIGHT_TEMPORAL_KEY = "Night"; //2100 - 0800
+//    private static final String PREF_TIME_INTERVAL_HOLIDAY_TEMPORAL_KEY = "Holiday"; //Official holiday
 
     private static final String PREF_MONDAY = "Monday";
     private static final String PREF_TUESDAY = "Tuesday";
@@ -746,10 +750,6 @@ public class MithrilAC extends Application {
         return PREF_KEY_CONTEXT_TYPE_PRESENCE;
     }
 
-    public static String getPrefTimeIntervalWorkTemporalKey() {
-        return PREF_TIME_INTERVAL_WORK_TEMPORAL_KEY;
-    }
-
     public static String getPrefTimeIntervalDndTemporalKey() {
         return PREF_TIME_INTERVAL_DND_TEMPORAL_KEY;
     }
@@ -1143,34 +1143,6 @@ public class MithrilAC extends Application {
         return PREF_TIME_INTERVAL_WEEKDAY_TEMPORAL_KEY;
     }
 
-    public static String getPrefTimeInstantSunriseTemporalKey() {
-        return PREF_TIME_INSTANT_SUNRISE_TEMPORAL_KEY;
-    }
-
-    public static String getPrefTimeInstantSunsetTemporalKey() {
-        return PREF_TIME_INSTANT_SUNSET_TEMPORAL_KEY;
-    }
-
-    public static String getPrefTimeIntervalAfternoonTemporalKey() {
-        return PREF_TIME_INTERVAL_AFTERNOON_TEMPORAL_KEY;
-    }
-
-    public static String getPrefTimeIntervalEveningTemporalKey() {
-        return PREF_TIME_INTERVAL_EVENING_TEMPORAL_KEY;
-    }
-
-    public static String getPrefTimeIntervalHolidayTemporalKey() {
-        return PREF_TIME_INTERVAL_HOLIDAY_TEMPORAL_KEY;
-    }
-
-    public static String getPrefTimeIntervalMorningTemporalKey() {
-        return PREF_TIME_INTERVAL_MORNING_TEMPORAL_KEY;
-    }
-
-    public static String getPrefTimeIntervalNightTemporalKey() {
-        return PREF_TIME_INTERVAL_NIGHT_TEMPORAL_KEY;
-    }
-
     public static String getPrefTimeIntervalBreakfastTemporalKey() {
         return PREF_TIME_INTERVAL_BREAKFAST_TEMPORAL_KEY;
     }
@@ -1181,6 +1153,22 @@ public class MithrilAC extends Application {
 
     public static String getPrefTimeIntervalDinnerTemporalKey() {
         return PREF_TIME_INTERVAL_DINNER_TEMPORAL_KEY;
+    }
+
+    public static String getPrefTimeIntervalWorkMorningTemporalKey() {
+        return PREF_TIME_INTERVAL_WORK_MORNING_TEMPORAL_KEY;
+    }
+
+    public static String getPrefTimeIntervalWorkAfternoonTemporalKey() {
+        return PREF_TIME_INTERVAL_WORK_AFTERNOON_TEMPORAL_KEY;
+    }
+
+    public static String getPrefTimeIntervalFamilyTemporalKey() {
+        return PREF_TIME_INTERVAL_FAMILY_TEMPORAL_KEY;
+    }
+
+    public static String getPrefTimeIntervalPersonalTemporalKey() {
+        return PREF_TIME_INTERVAL_PERSONAL_TEMPORAL_KEY;
     }
 
     public static String getCmdRootPrivilege() {
@@ -1255,87 +1243,87 @@ public class MithrilAC extends Application {
         return PREF_KEY_TEMPORAL_LABEL;
     }
 
-    private static final String EVERY_SECOND = "every second";
-    private static final String EVERY_MINUTE = "every minute";
-    private static final String EVERY_HOUR = "every hour";
-    private static final String EVERY_DAY = "every day";
-    private static final String EVERY_MONDAY = "every Monday";
-    private static final String EVERY_TUESDAY = "every Tuesday";
-    private static final String EVERY_WEDNESDAY = "every Wednesday";
-    private static final String EVERY_THURSDAY = "every Thursday";
-    private static final String EVERY_FRIDAY = "every Friday";
-    private static final String EVERY_SATURDAY = "every Saturday";
-    private static final String EVERY_SUNDAY = "every Sunday";
-    private static final String EVERY_WEEKDAY = "every weekday";
-    private static final String EVERY_WEEKEND = "every weekend";
-    private static final String EVERY_MONTH = "every month";
-    private static final String EVERY_QUARTER = "every quarter";
+    private static final String SECOND = "Second";
+    private static final String MINUTE = "Minute";
+    private static final String HOUR = "Hour";
+    private static final String DAY = "Day";
+    private static final String MONDAY = "Monday";
+    private static final String TUESDAY = "Tuesday";
+    private static final String WEDNESDAY = "Wednesday";
+    private static final String THURSDAY = "Thursday";
+    private static final String FRIDAY = "Friday";
+    private static final String SATURDAY = "Saturday";
+    private static final String SUNDAY = "Sunday";
+    private static final String WEEKDAY = "Weekday";
+    private static final String WEEKEND = "Weekend";
+    private static final String MONTH = "Month";
+    private static final String QUARTER = "Quarter";
 
-    public static String getEverySecond() {
-        return EVERY_SECOND;
+    public static String getSecond() {
+        return SECOND;
     }
 
-    public static String getEveryMinute() {
-        return EVERY_MINUTE;
+    public static String getMinute() {
+        return MINUTE;
     }
 
-    public static String getEveryHour() {
-        return EVERY_HOUR;
+    public static String getHour() {
+        return HOUR;
     }
 
-    public static String getEveryDay() {
-        return EVERY_DAY;
+    public static String getDay() {
+        return DAY;
     }
 
-    public static String getEveryMonday() {
-        return EVERY_MONDAY;
+    public static String getMonday() {
+        return MONDAY;
     }
 
-    public static String getEveryTuesday() {
-        return EVERY_TUESDAY;
+    public static String getTuesday() {
+        return TUESDAY;
     }
 
-    public static String getEveryWednesday() {
-        return EVERY_WEDNESDAY;
+    public static String getWednesday() {
+        return WEDNESDAY;
     }
 
-    public static String getEveryThursday() {
-        return EVERY_THURSDAY;
+    public static String getThursday() {
+        return THURSDAY;
     }
 
-    public static String getEveryFriday() {
-        return EVERY_FRIDAY;
+    public static String getFriday() {
+        return FRIDAY;
     }
 
-    public static String getEverySaturday() {
-        return EVERY_SATURDAY;
+    public static String getSaturday() {
+        return SATURDAY;
     }
 
-    public static String getEverySunday() {
-        return EVERY_SUNDAY;
+    public static String getSunday() {
+        return SUNDAY;
     }
 
-    public static String getEveryWeekday() {
-        return EVERY_WEEKDAY;
+    public static String getWeekday() {
+        return WEEKDAY;
     }
 
-    public static String getEveryWeekend() {
-        return EVERY_WEEKEND;
+    public static String getWeekend() {
+        return WEEKEND;
     }
 
-    public static String getEveryMonth() {
-        return EVERY_MONTH;
+    public static String getMonth() {
+        return MONTH;
     }
 
-    public static String getEveryQuarter() {
-        return EVERY_QUARTER;
+    public static String getQuarter() {
+        return QUARTER;
     }
 
-    public static String getEveryYear() {
-        return EVERY_YEAR;
+    public static String getYear() {
+        return YEAR;
     }
 
-    private static final String EVERY_YEAR = "every year";
+    private static final String YEAR = "Year";
 
     public static String getNeverRepeats() {
         return NEVER_REPEATS;

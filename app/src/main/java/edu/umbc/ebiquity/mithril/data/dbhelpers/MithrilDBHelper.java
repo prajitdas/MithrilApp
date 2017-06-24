@@ -558,7 +558,7 @@ public class MithrilDBHelper extends SQLiteOpenHelper {
     private void loadDefaultDataIntoDB(SQLiteDatabase db) throws SQLException, SemanticInconsistencyException {
         DataGenerator.setPolicySocialMediaCameraAccessAtHomeOnWeekends(db, context);
         DataGenerator.setPolicySocialMediaCameraAccessAtWorkOnWeekdaysDuringLunchHours(db, context);
-        DataGenerator.setPolicySocialMediaLocationAccessAtHomeOnWeekdaysDuringEveningHours(db, context);
+        DataGenerator.setPolicySocialMediaLocationAccessAtHomeOnWeekdaysDuringEveningPersonalHours(db, context);
         DataGenerator.setPolicyChatAppsReadSmsAccessAtWork(db, context);
         DataGenerator.setPolicyChatAppsReceiveSmsAccessAtWork(db, context);
         DataGenerator.setPolicyChatAppsSendSmsAccessAtWork(db, context);

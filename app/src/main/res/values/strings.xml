@@ -152,9 +152,10 @@
     <string name="pref_temporal_context_switch_summary">Click to enable following detectedAtTime prefs</string>
     <string name="pref_temporal_context_choose_repeat_frequency">Repeat frequency</string>
 
-    <string name="first_occurrence">First occurrence:&#160;</string>
-    <string name="starting_time">Starts at</string>
-    <string name="ending_time">Ends at</string>
+    <string name="first_occurrence">Days:&#160;</string>
+    <string name="starting_time">Start time:&#160;</string>
+    <string name="ending_time">End time:&#160;</string>
+    <string name="enabled_time">Context enabled</string>
     <string name="what_time_is_this">Choose label</string>
 
     <!-- Work temporal context -->

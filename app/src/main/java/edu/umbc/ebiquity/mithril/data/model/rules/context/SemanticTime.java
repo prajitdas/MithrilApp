@@ -3,12 +3,44 @@ package edu.umbc.ebiquity.mithril.data.model.rules.context;
 import android.os.Parcel;
 import android.os.Parcelable;
 
-import java.sql.Timestamp;
+import android.icu.util.Calendar;
+import java.util.Set;
 
 import edu.umbc.ebiquity.mithril.MithrilAC;
-import edu.umbc.ebiquity.mithril.data.model.rules.RepeatFrequency;
+import edu.umbc.ebiquity.mithril.util.specialtasks.contextinstances.DayOfWeek;
 
 public class SemanticTime extends SemanticUserContext implements Parcelable {
+    private final String type = MithrilAC.getPrefKeyContextTypeTemporal();
+    private Set<DayOfWeek> dayOfWeek;
+    private Calendar start;
+    private Calendar end;
+    private String inferredTime;
+    private boolean enabled = false;
+
+    protected SemanticTime(Parcel in) {
+        inferredTime = in.readString();
+        enabled = in.readByte() != 0;
+    }
+
+    public SemanticTime(Set<DayOfWeek> dayOfWeek, Calendar start, Calendar end, String inferredTime, boolean enabled) {
+        this.dayOfWeek = dayOfWeek;
+        this.start = start;
+        this.end = end;
+        this.inferredTime = inferredTime;
+        this.enabled = enabled;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeString(inferredTime);
+        dest.writeByte((byte) (enabled ? 1 : 0));
+    }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
     public static final Creator<SemanticTime> CREATOR = new Creator<SemanticTime>() {
         @Override
         public SemanticTime createFromParcel(Parcel in) {
@@ -20,73 +52,27 @@ public class SemanticTime extends SemanticUserContext implements Parcelable {
             return new SemanticTime[size];
         }
     };
-    private final String type = MithrilAC.getPrefKeyContextTypeTemporal();
-    private RepeatFrequency repeatFrequency;
-    private Timestamp first;
-    private int period;
-    private String inferredTime;
-    private boolean enabled = false;
-
-    protected SemanticTime(Parcel in) {
-        period = in.readInt();
-        inferredTime = in.readString();
-        enabled = in.readByte() != 0;
-        first = new Timestamp(in.readLong());
-        repeatFrequency = RepeatFrequency.charSeqToRepeatFrequency(in.readCharSequence());
-    }
-
-    public SemanticTime(RepeatFrequency repeatFrequency, Timestamp first, int period, String inferredTime, boolean enabled) {
-        this.repeatFrequency = repeatFrequency;
-        this.first = first;
-        this.period = period;
-        this.inferredTime = inferredTime;
-        this.enabled = enabled;
-    }
 
     @Override
-    public void writeToParcel(Parcel dest, int flags) {
-        dest.writeInt(period);
-        dest.writeString(inferredTime);
-        dest.writeByte((byte) (enabled ? 1 : 0));
-        dest.writeLong(first.getTime());
-        dest.writeCharSequence(repeatFrequency.getRepFreqCharSeq());
-    }
-
-    @Override
-    public int describeContents() {
-        return 0;
-    }
-
-    public RepeatFrequency getRepeatFrequency() {
-        return repeatFrequency;
-    }
-
-    public void setRepeatFrequency(RepeatFrequency repeatFrequency) {
-        this.repeatFrequency = repeatFrequency;
-    }
-
-    public Timestamp getFirst() {
-        return first;
-    }
-
-    public void setFirst(Timestamp first) {
-        this.first = first;
-    }
-
-    public int getPeriod() {
-        return period;
-    }
-
-    public void setPeriod(int period) {
-        this.period = period;
-    }
-
-    public String getInferredTime() {
-        return inferredTime;
-    }
-
-    public void setInferredTime(String inferredTime) {
-        this.inferredTime = inferredTime;
+    public String toString() {
+        StringBuffer stringBufferDayOfWeek = new StringBuffer();
+        for(DayOfWeek aDay : dayOfWeek) {
+            if (aDay.equals(DayOfWeek.Monday))
+                stringBufferDayOfWeek.append(MithrilAC.getMonday());
+            else if (aDay.equals(DayOfWeek.Tuesday))
+                stringBufferDayOfWeek.append(MithrilAC.getTuesday());
+            else if (aDay.equals(DayOfWeek.Wednesday))
+                stringBufferDayOfWeek.append(MithrilAC.getWednesday());
+            else if (aDay.equals(DayOfWeek.Thursday))
+                stringBufferDayOfWeek.append(MithrilAC.getThursday());
+            else if (aDay.equals(DayOfWeek.Friday))
+                stringBufferDayOfWeek.append(MithrilAC.getFriday());
+            else if (aDay.equals(DayOfWeek.Saturday))
+                stringBufferDayOfWeek.append(MithrilAC.getSaturday());
+            else if (aDay.equals(DayOfWeek.Sunday))
+                stringBufferDayOfWeek.append(MithrilAC.getSunday());
+        }
+        return "\"" + inferredTime + "\" time context repeats every " + stringBufferDayOfWeek.toString();
     }
 
     @Override
@@ -104,6 +90,38 @@ public class SemanticTime extends SemanticUserContext implements Parcelable {
         inferredTime = label;
     }
 
+    public Set<DayOfWeek> getDayOfWeek() {
+        return dayOfWeek;
+    }
+
+    public void setDayOfWeek(Set<DayOfWeek> dayOfWeek) {
+        this.dayOfWeek = dayOfWeek;
+    }
+
+    public Calendar getStart() {
+        return start;
+    }
+
+    public void setStart(Calendar start) {
+        this.start = start;
+    }
+
+    public Calendar getEnd() {
+        return end;
+    }
+
+    public void setEnd(Calendar end) {
+        this.end = end;
+    }
+
+    public String getInferredTime() {
+        return inferredTime;
+    }
+
+    public void setInferredTime(String inferredTime) {
+        this.inferredTime = inferredTime;
+    }
+
     @Override
     public boolean isEnabled() {
         return enabled;
@@ -112,23 +130,5 @@ public class SemanticTime extends SemanticUserContext implements Parcelable {
     @Override
     public void setEnabled(boolean enabled) {
         this.enabled = enabled;
-    }
-
-    @Override
-    public String toString() {
-        if(repeatFrequency == null)
-            return "Not ready to display yet";
-        if (period == 1) {
-            if (repeatFrequency.getRepFreqCharSeq().toString().equals(MithrilAC.getNeverRepeats()))
-                return "\"" + inferredTime + "\" time context " + repeatFrequency.getRepFreqCharSeq().toString() +
-                        " and duration is " + String.valueOf(period) + " hour";
-            return "\"" + inferredTime + "\" time context repeats " + repeatFrequency.getRepFreqCharSeq().toString() +
-                    " and the duration is " + String.valueOf(period) + " hour";
-        }
-        if (repeatFrequency.getRepFreqCharSeq().toString().equals(MithrilAC.getNeverRepeats()))
-            return "\"" + inferredTime + "\" time context " + repeatFrequency.getRepFreqCharSeq().toString() +
-                    " and duration is " + String.valueOf(period) + " hours";
-        return "\"" + inferredTime + "\" time context repeats " + repeatFrequency.getRepFreqCharSeq().toString() +
-                " and the duration is " + String.valueOf(period) + " hours";
     }
 }

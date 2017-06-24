@@ -53,8 +53,8 @@ public class DataGenerator {
                 actionAllow, mithrilDB, context));
     }
 
-    /************ Social Media apps to be allowed location access at home if it's a weekday and it's evening time ************/
-    public static void setPolicySocialMediaLocationAccessAtHomeOnWeekdaysDuringEveningHours(SQLiteDatabase mithrilDB, Context context)
+    /************ Social Media apps to be allowed location access at home if it's a weekday and it's evening personal time ************/
+    public static void setPolicySocialMediaLocationAccessAtHomeOnWeekdaysDuringEveningPersonalHours(SQLiteDatabase mithrilDB, Context context)
             throws SemanticInconsistencyException {
         MithrilDBHelper.getHelper(context).addPolicyRule(mithrilDB, DataGenerator.createPolicyRule(3,
                 "com.twitter.android", "Twitter",
@@ -69,7 +69,7 @@ public class DataGenerator {
         MithrilDBHelper.getHelper(context).addPolicyRule(mithrilDB, DataGenerator.createPolicyRule(3,
                 "com.twitter.android", "Twitter",
                 Manifest.permission.ACCESS_FINE_LOCATION,
-                MithrilAC.getPrefTimeIntervalEveningTemporalKey(), MithrilAC.getPrefKeyContextTypeTemporal(),
+                MithrilAC.getPrefTimeIntervalPersonalTemporalKey(), MithrilAC.getPrefKeyContextTypeTemporal(),
                 actionAllow, mithrilDB, context));
     }
 

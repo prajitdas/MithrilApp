@@ -35,27 +35,17 @@ import edu.umbc.ebiquity.mithril.util.specialtasks.permissions.PermissionHelper;
 @TargetApi(Build.VERSION_CODES.N)
 public class TemporalDataEntryActivity extends AppCompatActivity implements
         AdapterView.OnItemSelectedListener,
-        DatePickerDialog.OnDateSetListener,
         TimePickerDialog.OnTimeSetListener {
-    private Button mTemporalFirstBtn;
-    private Button mTemporalStartTimeBtn;
-    private Button mTemporalEndTimeBtn;
+    private Button mDaysOfWeekBtn;
+    private Button mStartTimeBtn;
+    private Button mEndTimeBtn;
+    private Button mEnabledBtn;
     private Button mDoneBtn;
-    private Spinner mSpinnerRepeatFrequency;
-    private DatePickerDialog datePickerDialog;
+
     private TimePickerDialog startTimePickerDialog;
     private TimePickerDialog endTimePickerDialog;
 
-    private int mYear = -1;
-    private int mMonth = -1;
-    private int mDay = -1;
-
-    private int startHour = -1;
-    private int startMinute = -1;
-    private int endHour = -1;
-    private int endMinute = -1;
-
-    String label;
+    private String label;
     private SemanticTime semanticTime;
 
     @Override
@@ -74,64 +64,40 @@ public class TemporalDataEntryActivity extends AppCompatActivity implements
         String activityBaseTitle = getResources().getString(R.string.title_activity_temporal_data_entry);
         setTitle(activityBaseTitle + semanticTime.getLabel());
 
-        isStartClicked = false;
-
-        mTemporalFirstBtn = (Button) findViewById(R.id.temporalFirstBtn);
-        final Calendar c = Calendar.getInstance();
-        mYear = c.get(Calendar.YEAR);
-        mMonth = c.get(Calendar.MONTH);
-        mDay = c.get(Calendar.DAY_OF_MONTH);
-        datePickerDialog = new DatePickerDialog(this, TemporalDataEntryActivity.this, mYear, mMonth, mDay);
-
-        // Use the current time as the default values for the picker
-        int hour = c.get(Calendar.HOUR_OF_DAY);
-        int minute = c.get(Calendar.MINUTE);
+        mDaysOfWeekBtn = (Button) findViewById(R.id.daysOfWeekBtn);
+        mStartTimeBtn = (Button) findViewById(R.id.startTimeBtn);
+        mEndTimeBtn = (Button) findViewById(R.id.endTimeBtn);
+        mEnabledBtn = (Button) findViewById(R.id.enabledBtn);
+        mDoneBtn = (Button) findViewById(R.id.doneLabelBtn);
 
         // Create a new instance of TimePickerDialog
         startTimePickerDialog = new TimePickerDialog(
                 this,
                 this,
-                hour,
-                minute,
+                semanticTime.getStart().get(Calendar.HOUR_OF_DAY),
+                semanticTime.getStart().get(Calendar.MINUTE),
                 DateFormat.is24HourFormat(this));
 
         // Create a new instance of TimePickerDialog
         endTimePickerDialog = new TimePickerDialog(
                 this,
                 this,
-                hour,
-                minute,
+                semanticTime.getEnd().get(Calendar.HOUR_OF_DAY),
+                semanticTime.getEnd().get(Calendar.MINUTE),
                 DateFormat.is24HourFormat(this));
 
-        mTemporalStartTimeBtn = (Button) findViewById(R.id.temporalStartTimeBtn);
-        mTemporalEndTimeBtn = (Button) findViewById(R.id.temporalEndTimeBtn);
-
-        mDoneBtn = (Button) findViewById(R.id.doneLabelBtn);
-
-        mSpinnerRepeatFrequency = (Spinner) findViewById(R.id.spinnerRepeatFrequency);
-        // Create an ArrayAdapter using the string array and a default spinner layout
-        ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(
-                this,
-                R.array.freq_array,
-                android.R.layout.simple_spinner_item);
-        // Specify the layout to use when the list of choices appears
-        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        // Apply the adapter to the spinner
-        mSpinnerRepeatFrequency.setAdapter(adapter);
-
         setOnclickListeners();
-        mSpinnerRepeatFrequency.setOnItemSelectedListener(this);
     }
 
     private void setOnclickListeners() {
-        mTemporalFirstBtn.setOnClickListener(new View.OnClickListener() {
+        mDaysOfWeekBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                datePickerDialog.show();
+
             }
         });
 
-        mTemporalStartTimeBtn.setOnClickListener(new View.OnClickListener() {
+        mStartTimeBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 isStartClicked = true;
@@ -139,7 +105,7 @@ public class TemporalDataEntryActivity extends AppCompatActivity implements
             }
         });
 
-        mTemporalEndTimeBtn.setOnClickListener(new View.OnClickListener() {
+        mEndTimeBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 isStartClicked = false;
@@ -147,31 +113,24 @@ public class TemporalDataEntryActivity extends AppCompatActivity implements
             }
         });
 
+        mEnabledBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+            }
+        });
+
         mDoneBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(startHour > -1 && endHour > -1) {
-                    final Calendar start = Calendar.getInstance();
-                    start.set(Calendar.HOUR, startHour);
-                    start.set(Calendar.MINUTE, startMinute);
-
-                    final Calendar end = Calendar.getInstance();
-                    end.set(Calendar.HOUR, endHour);
-                    end.set(Calendar.MINUTE, endMinute);
-
-                    int period;
-                    if ((end.getTimeInMillis() - start.getTimeInMillis()) < 0)
-                        period = manageNextDayEnding(start, end);
-                    else
-                        period = (int) (end.getTimeInMillis() - start.getTimeInMillis());
-
+                if(semanticTime.getStart() > -1 && endHour > -1) {
                     Intent resultIntent = new Intent();
                     resultIntent.putExtra(MithrilAC.getPrefKeyTemporalLabel(), label);
                     resultIntent.putExtra(getType(),
                             new SemanticTime(
-                                    getRepeatFrequency(),
-                                    getFirst(),
-                                    period,
+                                    getDayOfWeek(),
+                                    getStart(),
+                                    getEnd(),
                                     label,
                                     false));
                     setResult(Activity.RESULT_OK, resultIntent);
@@ -205,12 +164,12 @@ public class TemporalDataEntryActivity extends AppCompatActivity implements
         return semanticTime.getType();
     }
 
-    public RepeatFrequency getRepeatFrequency() {
-        return semanticTime.getRepeatFrequency();
+    public Calendar getStart() {
+        return semanticTime.getStart();
     }
 
-    public Timestamp getFirst() {
-        return semanticTime.getFirst();
+    public Calendar getEnd() {
+        return semanticTime.getEnd();
     }
 
     @Override
@@ -221,17 +180,6 @@ public class TemporalDataEntryActivity extends AppCompatActivity implements
     @Override
     public void onNothingSelected(AdapterView<?> parent) {
         PermissionHelper.toast(this, "Choose NEVER_REPEAT if this does not repeat...");
-    }
-
-
-    @Override
-    public void onDateSet(DatePicker view, int year, int monthOfYear, int dayOfMonth) {
-        Calendar cal = new GregorianCalendar(year, monthOfYear, dayOfMonth);
-        mYear = year;
-        mMonth = monthOfYear;
-        mDay = dayOfMonth;
-        semanticTime.setFirst(new Timestamp(cal.getTimeInMillis()));
-        mTemporalFirstBtn.setText(getResources().getString(R.string.first_occurrence) + semanticTime.toString());
     }
 
     private boolean isStartClicked;
