@@ -1,28 +1,39 @@
 package edu.umbc.ebiquity.mithril.data.model.rules.context;
 
+import android.annotation.TargetApi;
+import android.os.Build;
 import android.os.Parcel;
 import android.os.Parcelable;
 
 import android.icu.util.Calendar;
+
+import java.util.List;
 import java.util.Set;
 
 import edu.umbc.ebiquity.mithril.MithrilAC;
 import edu.umbc.ebiquity.mithril.util.specialtasks.contextinstances.DayOfWeek;
 
+@TargetApi(Build.VERSION_CODES.N)
 public class SemanticTime extends SemanticUserContext implements Parcelable {
     private final String type = MithrilAC.getPrefKeyContextTypeTemporal();
-    private Set<DayOfWeek> dayOfWeek;
+    private List<DayOfWeek> dayOfWeek;
     private Calendar start;
     private Calendar end;
     private String inferredTime;
     private boolean enabled = false;
 
     protected SemanticTime(Parcel in) {
+        Calendar calendar = Calendar.getInstance();
         inferredTime = in.readString();
         enabled = in.readByte() != 0;
+        start.set(Calendar.HOUR_OF_DAY, in.readInt());
+        start.set(Calendar.MINUTE, in.readInt());
+        end.set(Calendar.HOUR_OF_DAY, in.readInt());
+        end.set(Calendar.MINUTE, in.readInt());
+        dayOfWeek = in.readArrayList(DayOfWeek.class.getClassLoader());
     }
 
-    public SemanticTime(Set<DayOfWeek> dayOfWeek, Calendar start, Calendar end, String inferredTime, boolean enabled) {
+    public SemanticTime(List<DayOfWeek> dayOfWeek, Calendar start, Calendar end, String inferredTime, boolean enabled) {
         this.dayOfWeek = dayOfWeek;
         this.start = start;
         this.end = end;
@@ -34,6 +45,11 @@ public class SemanticTime extends SemanticUserContext implements Parcelable {
     public void writeToParcel(Parcel dest, int flags) {
         dest.writeString(inferredTime);
         dest.writeByte((byte) (enabled ? 1 : 0));
+        dest.writeInt(start.get(Calendar.HOUR_OF_DAY));
+        dest.writeInt(start.get(Calendar.MINUTE));
+        dest.writeInt(end.get(Calendar.HOUR_OF_DAY));
+        dest.writeInt(end.get(Calendar.MINUTE));
+        dest.writeList(dayOfWeek);
     }
 
     @Override
@@ -53,8 +69,7 @@ public class SemanticTime extends SemanticUserContext implements Parcelable {
         }
     };
 
-    @Override
-    public String toString() {
+    public String getDayOfWeekString() {
         StringBuffer stringBufferDayOfWeek = new StringBuffer();
         for(DayOfWeek aDay : dayOfWeek) {
             if (aDay.equals(DayOfWeek.Monday))
@@ -72,7 +87,12 @@ public class SemanticTime extends SemanticUserContext implements Parcelable {
             else if (aDay.equals(DayOfWeek.Sunday))
                 stringBufferDayOfWeek.append(MithrilAC.getSunday());
         }
-        return "\"" + inferredTime + "\" time context repeats every " + stringBufferDayOfWeek.toString();
+        return stringBufferDayOfWeek.toString();
+    }
+
+    @Override
+    public String toString() {
+        return "\"" + inferredTime + "\" time context repeats every " + getDayOfWeekString();
     }
 
     @Override
@@ -90,11 +110,11 @@ public class SemanticTime extends SemanticUserContext implements Parcelable {
         inferredTime = label;
     }
 
-    public Set<DayOfWeek> getDayOfWeek() {
+    public List<DayOfWeek> getDayOfWeek() {
         return dayOfWeek;
     }
 
-    public void setDayOfWeek(Set<DayOfWeek> dayOfWeek) {
+    public void setDayOfWeek(List<DayOfWeek> dayOfWeek) {
         this.dayOfWeek = dayOfWeek;
     }
 

@@ -43,6 +43,7 @@ import java.util.ArrayList;
 import android.icu.util.Calendar;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
@@ -433,7 +434,7 @@ public class InstanceCreationActivity extends AppCompatActivity
     }
 
     private void createSemanticTimes() {
-        Set<DayOfWeek> dayOfWeek = new HashSet<>();
+        List<DayOfWeek> dayOfWeek = new ArrayList<>();
         dayOfWeek.add(DayOfWeek.Saturday);
         dayOfWeek.add(DayOfWeek.Sunday);
 
@@ -765,7 +766,7 @@ public class InstanceCreationActivity extends AppCompatActivity
     }
 
     private void openTemporalDataEntryActivity(int requestCode, String label) {
-        Set<DayOfWeek> dayOfWeek = new HashSet<>();
+        List<DayOfWeek> dayOfWeek = new ArrayList<>();
         dayOfWeek.add(DayOfWeek.Sunday);
         dayOfWeek.add(DayOfWeek.Monday);
         dayOfWeek.add(DayOfWeek.Tuesday);
