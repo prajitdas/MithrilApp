@@ -1255,6 +1255,94 @@ public class MithrilAC extends Application {
         return PREF_KEY_TEMPORAL_LABEL;
     }
 
+    private static final String EVERY_SECOND = "every second";
+    private static final String EVERY_MINUTE = "every minute";
+    private static final String EVERY_HOUR = "every hour";
+    private static final String EVERY_DAY = "every day";
+    private static final String EVERY_MONDAY = "every Monday";
+    private static final String EVERY_TUESDAY = "every Tuesday";
+    private static final String EVERY_WEDNESDAY = "every Wednesday";
+    private static final String EVERY_THURSDAY = "every Thursday";
+    private static final String EVERY_FRIDAY = "every Friday";
+    private static final String EVERY_SATURDAY = "every Saturday";
+    private static final String EVERY_SUNDAY = "every Sunday";
+    private static final String EVERY_WEEKDAY = "every weekday";
+    private static final String EVERY_WEEKEND = "every weekend";
+    private static final String EVERY_MONTH = "every month";
+    private static final String EVERY_QUARTER = "every quarter";
+
+    public static String getEverySecond() {
+        return EVERY_SECOND;
+    }
+
+    public static String getEveryMinute() {
+        return EVERY_MINUTE;
+    }
+
+    public static String getEveryHour() {
+        return EVERY_HOUR;
+    }
+
+    public static String getEveryDay() {
+        return EVERY_DAY;
+    }
+
+    public static String getEveryMonday() {
+        return EVERY_MONDAY;
+    }
+
+    public static String getEveryTuesday() {
+        return EVERY_TUESDAY;
+    }
+
+    public static String getEveryWednesday() {
+        return EVERY_WEDNESDAY;
+    }
+
+    public static String getEveryThursday() {
+        return EVERY_THURSDAY;
+    }
+
+    public static String getEveryFriday() {
+        return EVERY_FRIDAY;
+    }
+
+    public static String getEverySaturday() {
+        return EVERY_SATURDAY;
+    }
+
+    public static String getEverySunday() {
+        return EVERY_SUNDAY;
+    }
+
+    public static String getEveryWeekday() {
+        return EVERY_WEEKDAY;
+    }
+
+    public static String getEveryWeekend() {
+        return EVERY_WEEKEND;
+    }
+
+    public static String getEveryMonth() {
+        return EVERY_MONTH;
+    }
+
+    public static String getEveryQuarter() {
+        return EVERY_QUARTER;
+    }
+
+    public static String getEveryYear() {
+        return EVERY_YEAR;
+    }
+
+    private static final String EVERY_YEAR = "every year";
+
+    public static String getNeverRepeats() {
+        return NEVER_REPEATS;
+    }
+
+    private static final String NEVER_REPEATS = "never repeats";
+
     public static String getNotYet() {
         return NOT_YET;
     }

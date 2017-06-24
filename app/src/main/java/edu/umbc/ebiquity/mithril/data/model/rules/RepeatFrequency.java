@@ -1,11 +1,9 @@
 package edu.umbc.ebiquity.mithril.data.model.rules;
 
-/**
- * Created by prajit on 6/11/17.
- */
+import edu.umbc.ebiquity.mithril.MithrilAC;
 
 public enum RepeatFrequency {
-    NEVER_REPEATS(-1), SECOND(0), MINUTE(1), HOURLY(2), DAILY(3), WEEKLY(4), WEEKDAYS(5), WEEKENDS(6), MONTHLY(7), QUARTERLY(8), YEARLY(9);
+    NEVER_REPEATS(-1), SECOND(0), MINUTE(1), HOURLY(2), DAILY(3), MONDAY(4), TUESDAY(5), WEDNESDAY(6), THURSDAY(7), FRIDAY(8), SATURDAY(9), SUNDAY(10), WEEKDAYS(11), WEEKENDS(12), MONTHLY(13), QUARTERLY(14), YEARLY(15);
 
     private int repFreqCode;
     private CharSequence repFreqCharSeq;
@@ -13,49 +11,73 @@ public enum RepeatFrequency {
     RepeatFrequency(int repFreqCode) {
         this.repFreqCode = repFreqCode;
         if (repFreqCode == 0)
-            repFreqCharSeq = "Second";
+            repFreqCharSeq = MithrilAC.getEverySecond();
         else if (repFreqCode == 1)
-            repFreqCharSeq = "Minute";
+            repFreqCharSeq = MithrilAC.getEveryMinute();
         else if (repFreqCode == 2)
-            repFreqCharSeq = "Hourly";
+            repFreqCharSeq = MithrilAC.getEveryHour();
         else if (repFreqCode == 3)
-            repFreqCharSeq = "Daily";
+            repFreqCharSeq = MithrilAC.getEveryDay();
         else if (repFreqCode == 4)
-            repFreqCharSeq = "Weekly";
+            repFreqCharSeq = MithrilAC.getEveryMonday();
         else if (repFreqCode == 5)
-            repFreqCharSeq = "Weekdays";
+            repFreqCharSeq = MithrilAC.getEveryTuesday();
         else if (repFreqCode == 6)
-            repFreqCharSeq = "Weekends";
+            repFreqCharSeq = MithrilAC.getEveryWednesday();
         else if (repFreqCode == 7)
-            repFreqCharSeq = "Monthly";
+            repFreqCharSeq = MithrilAC.getEveryThursday();
         else if (repFreqCode == 8)
-            repFreqCharSeq = "Quarterly";
+            repFreqCharSeq = MithrilAC.getEveryFriday();
         else if (repFreqCode == 9)
-            repFreqCharSeq = "Yearly";
+            repFreqCharSeq = MithrilAC.getEverySaturday();
+        else if (repFreqCode == 10)
+            repFreqCharSeq = MithrilAC.getEverySunday();
+        else if (repFreqCode == 11)
+            repFreqCharSeq = MithrilAC.getEveryWeekday();
+        else if (repFreqCode == 12)
+            repFreqCharSeq = MithrilAC.getEveryWeekend();
+        else if (repFreqCode == 13)
+            repFreqCharSeq = MithrilAC.getEveryMonth();
+        else if (repFreqCode == 14)
+            repFreqCharSeq = MithrilAC.getEveryQuarter();
+        else if (repFreqCode == 15)
+            repFreqCharSeq = MithrilAC.getEveryYear();
         else
-            repFreqCharSeq = "Does not repeat";
+            repFreqCharSeq = MithrilAC.getNeverRepeats();
     }
 
     public static RepeatFrequency charSeqToRepeatFrequency(CharSequence input) {
-        if (input.equals("Second"))
+        if (input.equals(MithrilAC.getEverySecond()))
             return RepeatFrequency.SECOND;
-        else if (input.equals("Minute"))
+        else if (input.equals(MithrilAC.getEveryMinute()))
             return RepeatFrequency.MINUTE;
-        else if (input.equals("Hourly"))
+        else if (input.equals(MithrilAC.getEveryHour()))
             return RepeatFrequency.HOURLY;
-        else if (input.equals("Daily"))
+        else if (input.equals(MithrilAC.getEveryDay()))
             return RepeatFrequency.DAILY;
-        else if (input.equals("Weekly"))
-            return RepeatFrequency.WEEKLY;
-        else if (input.equals("Weekdays"))
+        else if (input.equals(MithrilAC.getEveryMonday()))
+            return RepeatFrequency.MONDAY;
+        else if (input.equals(MithrilAC.getEveryTuesday()))
+            return RepeatFrequency.MONDAY;
+        else if (input.equals(MithrilAC.getEveryWednesday()))
+            return RepeatFrequency.MONDAY;
+        else if (input.equals(MithrilAC.getEveryThursday()))
+            return RepeatFrequency.MONDAY;
+        else if (input.equals(MithrilAC.getEveryFriday()))
+            return RepeatFrequency.MONDAY;
+        else if (input.equals(MithrilAC.getEverySaturday()))
+            return RepeatFrequency.MONDAY;
+        else if (input.equals(MithrilAC.getEverySunday()))
+            return RepeatFrequency.MONDAY;
+        else if (input.equals(MithrilAC.getEveryWeekday()))
             return RepeatFrequency.WEEKDAYS;
-        else if (input.equals("Weekends"))
+        else if (input.equals(MithrilAC.getEveryWeekend()))
             return RepeatFrequency.WEEKENDS;
-        else if (input.equals("Monthly"))
+        else if (input.equals(MithrilAC.getEveryMonth()))
             return RepeatFrequency.MONTHLY;
-        else if (input.equals("Quarterly"))
+        else if (input.equals(MithrilAC.getEveryQuarter()))
             return RepeatFrequency.QUARTERLY;
-        else if (input.equals("Yearly"))
+        else if (input.equals(MithrilAC.getEveryYear()))
             return RepeatFrequency.YEARLY;
         return RepeatFrequency.NEVER_REPEATS;
     }

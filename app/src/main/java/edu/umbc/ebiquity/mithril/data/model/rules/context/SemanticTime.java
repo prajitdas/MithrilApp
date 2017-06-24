@@ -120,9 +120,9 @@ public class SemanticTime extends SemanticUserContext implements Parcelable {
         if (firstString.equals(MithrilAC.getNotYet()))
             return "Has not occurred yet!";
         else {
-            return "This is a " + inferredTime + " time that first occurred " + MithrilAC.getTimeText(true, first).toString() +
-                    ", repeats " + repeatFrequency.getRepFreqCharSeq().toString() +
-                    "and runs for " + String.valueOf(period);
+            return "This is a \"" + inferredTime + "\" event that first occurred on " + MithrilAC.getTimeText(true, first).toString() +
+                    ", that repeats " + repeatFrequency.getRepFreqCharSeq().toString() +
+                    " and the duration is set at " + String.valueOf(period) + " hours";
             }
         }
 }
