@@ -232,6 +232,7 @@ public class InstanceCreationActivity extends AppCompatActivity
     private void handleLocation() {
         setTitle(activityBaseTitle + getApplicationContext().getResources().getString(R.string.text_instance_creation_location));
 
+        mOtherCtxtBtn.setVisibility(View.VISIBLE);
         mFirstMajorCtxtBtn.setVisibility(View.VISIBLE);
         mSecondMajorCtxtBtn.setVisibility(View.VISIBLE);
 
@@ -253,10 +254,11 @@ public class InstanceCreationActivity extends AppCompatActivity
     private void handleTemporal() {
         setTitle(activityBaseTitle + getApplicationContext().getResources().getString(R.string.text_instance_creation_temporal));
 
+        mOtherCtxtBtn.setVisibility(View.GONE);
         mFirstMajorCtxtBtn.setVisibility(View.GONE);
         mSecondMajorCtxtBtn.setVisibility(View.GONE);
 
-        mOtherCtxtBtn.setText(R.string.pref_other_hours_context_summary);
+//        mOtherCtxtBtn.setText(R.string.pref_other_hours_context_summary);
 
         if (!sharedPreferences.getBoolean(MithrilAC.getPrefKeyTimeInstancesCreated(), false)) {
             PermissionHelper.toast(getApplicationContext(), getApplicationContext().getResources().getString(R.string.tooltip_temporal), Toast.LENGTH_SHORT);
@@ -272,6 +274,7 @@ public class InstanceCreationActivity extends AppCompatActivity
     private void handlePresence() {
         setTitle(activityBaseTitle + getApplicationContext().getResources().getString(R.string.text_instance_creation_presence_related));
 
+        mOtherCtxtBtn.setVisibility(View.VISIBLE);
         mFirstMajorCtxtBtn.setVisibility(View.VISIBLE);
         mSecondMajorCtxtBtn.setVisibility(View.VISIBLE);
 
@@ -293,6 +296,7 @@ public class InstanceCreationActivity extends AppCompatActivity
     private void handleActivity() {
         setTitle(activityBaseTitle + getApplicationContext().getResources().getString(R.string.text_instance_creation_activity));
 
+        mOtherCtxtBtn.setVisibility(View.VISIBLE);
         mFirstMajorCtxtBtn.setVisibility(View.VISIBLE);
         mSecondMajorCtxtBtn.setVisibility(View.VISIBLE);
 
@@ -333,13 +337,13 @@ public class InstanceCreationActivity extends AppCompatActivity
                     openAutocompleteActivity(PLACE_AUTOCOMPLETE_REQUEST_CODE_WORK);
                 }
             });
-        } else if (currentFragment.equals(FRAGMENT_TEMPORAL)) {
-            mOtherCtxtBtn.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    chooseATemporalLabel();
-                }
-            });
+//        } else if (currentFragment.equals(FRAGMENT_TEMPORAL)) {
+//            mOtherCtxtBtn.setOnClickListener(new View.OnClickListener() {
+//                @Override
+//                public void onClick(View v) {
+//                    chooseATemporalLabel();
+//                }
+//            });
         } else if (currentFragment.equals(FRAGMENT_PRESENCE)) {
             mOtherCtxtBtn.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -871,24 +875,24 @@ public class InstanceCreationActivity extends AppCompatActivity
                 }
                 break;
             }
-            case TIME_REQUEST_CODE_WORK: {
-                if (resultCode == Activity.RESULT_OK) {
-                    isThereTemporalContextToSave = true;
-                    setSemanticTemporal(data);
-                } else if (resultCode == Activity.RESULT_CANCELED) {
-                    // Indicates that the activity closed before a selection was made. For example if the user pressed the back button.
-                }
-                break;
-            }
-            case TIME_REQUEST_CODE_DND: {
-                if (resultCode == Activity.RESULT_OK) {
-                    isThereTemporalContextToSave = true;
-                    setSemanticTemporal(data);
-                } else if (resultCode == Activity.RESULT_CANCELED) {
-                    // Indicates that the activity closed before a selection was made. For example if the user pressed the back button.
-                }
-                break;
-            }
+//            case TIME_REQUEST_CODE_WORK: {
+//                if (resultCode == Activity.RESULT_OK) {
+//                    isThereTemporalContextToSave = true;
+//                    setSemanticTemporal(data);
+//                } else if (resultCode == Activity.RESULT_CANCELED) {
+//                    // Indicates that the activity closed before a selection was made. For example if the user pressed the back button.
+//                }
+//                break;
+//            }
+//            case TIME_REQUEST_CODE_DND: {
+//                if (resultCode == Activity.RESULT_OK) {
+//                    isThereTemporalContextToSave = true;
+//                    setSemanticTemporal(data);
+//                } else if (resultCode == Activity.RESULT_CANCELED) {
+//                    // Indicates that the activity closed before a selection was made. For example if the user pressed the back button.
+//                }
+//                break;
+//            }
             case TIME_REQUEST_CODE_MORE: {
                 if (resultCode == Activity.RESULT_OK) {
                     isThereTemporalContextToSave = true;

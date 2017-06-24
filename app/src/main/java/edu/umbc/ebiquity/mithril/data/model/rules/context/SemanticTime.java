@@ -23,7 +23,6 @@ public class SemanticTime extends SemanticUserContext implements Parcelable {
     private boolean enabled = false;
 
     protected SemanticTime(Parcel in) {
-        Calendar calendar = Calendar.getInstance();
         inferredTime = in.readString();
         enabled = in.readByte() != 0;
         start.set(Calendar.HOUR_OF_DAY, in.readInt());
