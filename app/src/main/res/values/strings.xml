@@ -260,6 +260,7 @@
     <string name="title_activity_download_policies">Downloading policies&#8230;</string>
     <string name="title_activity_setup_geofences">Geofences setup&#8230;</string>
     <string name="title_activity_temporal_data_entry">Time context entry</string>
+    <string name="title_activity_setup_timefences">Timefences setup&#8230;</string>
 
     <string-array name="freq_array">
         <!--<item>Second</item>-->

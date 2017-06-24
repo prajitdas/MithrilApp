@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".ui.activities.SetupTimefencesActivity">
+
+    <TextView
+        android:id="@+id/textViewProgress"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+        android:paddingBottom="@dimen/top_margin_fullscreen"
+        android:paddingTop="@dimen/top_margin_fullscreen"
+        android:text="@string/setting_geofences"
+        android:textAlignment="center"
+        android:textAppearance="@android:style/TextAppearance.Holo.Medium"
+        android:textColor="@color/colorPrimaryText"
+        android:textSize="25sp" />
+
+    <ProgressBar
+        android:id="@+id/progressBar"
+        style="@android:style/Widget.Material.ProgressBar.Horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/textViewProgress"
+        android:layout_marginEnd="@dimen/side_margin_fullscreen"
+        android:layout_marginStart="@dimen/side_margin_fullscreen"
+        android:indeterminate="true"
+        android:paddingBottom="@dimen/top_margin_fullscreen"
+        android:paddingTop="@dimen/top_margin_fullscreen"
+        android:theme="@style/LinearProgress" />
+
+    <ImageView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/progressBar"
+        android:layout_centerHorizontal="true"
+        android:adjustViewBounds="true"
+        android:elevation="500dp"
+        android:maxHeight="300dp"
+        android:maxWidth="300dp"
+        android:paddingBottom="@dimen/top_margin_fullscreen"
+        android:paddingTop="@dimen/top_margin_fullscreen"
+        android:src="@drawable/map_alternative" />
+
+</RelativeLayout>

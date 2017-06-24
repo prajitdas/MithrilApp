@@ -58,6 +58,7 @@ public class TemporalDataEntryActivity extends AppCompatActivity implements
     private RepeatFrequency repeatFrequency;
     private Timestamp first;
     private String inferredTime;
+    private SemanticTime semanticTime;
 
     @TargetApi(Build.VERSION_CODES.N)
     @Override
@@ -66,8 +67,10 @@ public class TemporalDataEntryActivity extends AppCompatActivity implements
         setContentView(R.layout.activity_temporal_data_entry);
 
         Bundle extras = getIntent().getExtras();
-        if (extras != null)
-            inferredTime = extras.getString(MithrilAC.getTemporalLabel());
+        if (extras != null) {
+            inferredTime = extras.getString(MithrilAC.getPrefKeyTemporalLabel());
+            semanticTime = extras.getParcelable(type);
+        }
         else
             failed();
 
@@ -160,21 +163,42 @@ public class TemporalDataEntryActivity extends AppCompatActivity implements
                     end.set(Calendar.HOUR, endHour);
                     end.set(Calendar.MINUTE, endMinute);
 
+                    int period;
+                    if ((end.getTimeInMillis() - start.getTimeInMillis()) < 0)
+                        period = manageNextDayEnding(start, end);
+                    else
+                        period = (int) (end.getTimeInMillis() - start.getTimeInMillis());
+
                     Intent resultIntent = new Intent();
-                    resultIntent.putExtra(MithrilAC.getTemporalLabel(), inferredTime);
-                    resultIntent.putExtra(getType() + inferredTime,
+                    resultIntent.putExtra(MithrilAC.getPrefKeyTemporalLabel(), inferredTime);
+                    resultIntent.putExtra(getType(),
                             new SemanticTime(
                                     getRepeatFrequency(),
                                     getFirst(),
-                                    (int) (end.getTimeInMillis() - start.getTimeInMillis()),
+                                    period,
                                     inferredTime,
-                                    true));
+                                    false));
                     setResult(Activity.RESULT_OK, resultIntent);
                     finish();
                 } else
                     PermissionHelper.toast(v.getContext(), "Did you choose both the starting and ending timings?");
             }
         });
+    }
+
+    @TargetApi(Build.VERSION_CODES.N)
+    private int manageNextDayEnding(Calendar start, Calendar end) {
+        int period = 0;
+        final Calendar dayEnd = Calendar.getInstance();
+        dayEnd.set(Calendar.HOUR, 23);
+        dayEnd.set(Calendar.MINUTE, 59);
+        period = (int) (dayEnd.getTimeInMillis() - start.getTimeInMillis());
+        period += 60000; // Adding 1 minute for the last minute of the day
+        final Calendar dayStart = Calendar.getInstance();
+        dayStart.set(Calendar.HOUR, 0);
+        dayStart.set(Calendar.MINUTE, 0);
+        period += (int) (end.getTimeInMillis() - dayStart.getTimeInMillis());
+        return period;
     }
 
     private void failed() {
@@ -242,17 +266,17 @@ public class TemporalDataEntryActivity extends AppCompatActivity implements
             endHour = hourOfDay;
             endMinute = minute;
         }
-        if(startHour > -1 && endHour > -1) {
-            final Calendar start = Calendar.getInstance();
-            start.set(Calendar.HOUR, startHour);
-            start.set(Calendar.MINUTE, startMinute);
-
-            final Calendar end = Calendar.getInstance();
-            end.set(Calendar.HOUR, endHour);
-            end.set(Calendar.MINUTE, endMinute);
-
-            if((end.getTimeInMillis() - start.getTimeInMillis()) < 0)
-                PermissionHelper.toast(this, "Your end time cannot be before your start time");
-        }
+//        if(startHour > -1 && endHour > -1) {
+//            final Calendar start = Calendar.getInstance();
+//            start.set(Calendar.HOUR, startHour);
+//            start.set(Calendar.MINUTE, startMinute);
+//
+//            final Calendar end = Calendar.getInstance();
+//            end.set(Calendar.HOUR, endHour);
+//            end.set(Calendar.MINUTE, endMinute);
+//
+//            if((end.getTimeInMillis() - start.getTimeInMillis()) < 0)
+//                PermissionHelper.toast(this, "Did you mean ");
+//        }
     }
 }

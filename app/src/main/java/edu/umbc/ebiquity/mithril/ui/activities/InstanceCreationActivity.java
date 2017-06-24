@@ -80,6 +80,7 @@ public class InstanceCreationActivity extends AppCompatActivity
     private final int TIME_REQUEST_CODE_DND = 5;
     private final int TIME_REQUEST_CODE_MORE = 6;
     private final int GEOFENCE_REQUEST_CODE = 7;
+    private final int TIMEFENCE_REQUEST_CODE = 8;
     /**
      * Provides the entry point to Google Play services: Geo fence
      */
@@ -439,7 +440,7 @@ public class InstanceCreationActivity extends AppCompatActivity
                  */
                 1,
                 "Family",
-                true);
+                false);
         semanticTimes.put(MithrilAC.getPrefKeyContextTypeTemporal()+semanticTime.getLabel(), semanticTime);
         semanticTime = new SemanticTime(
                 RepeatFrequency.WEEKENDS,
@@ -449,7 +450,7 @@ public class InstanceCreationActivity extends AppCompatActivity
                  */
                 48,
                 "Weekend",
-                true);
+                false);
         semanticTimes.put(MithrilAC.getPrefKeyContextTypeTemporal()+semanticTime.getLabel(), semanticTime);
         semanticTime = new SemanticTime(
                 RepeatFrequency.WEEKLY,
@@ -459,10 +460,9 @@ public class InstanceCreationActivity extends AppCompatActivity
                  */
                 1,
                 "Team_Meeting",
-                true);
+                false);
         semanticTimes.put(MithrilAC.getPrefKeyContextTypeTemporal()+semanticTime.getLabel(), semanticTime);
         isThereTemporalContextToSave = true;
-        saveContext();
     }
 
     private void setSaveBtnOnClickListener() {
@@ -507,6 +507,7 @@ public class InstanceCreationActivity extends AppCompatActivity
             semanticTimes.put(contextEntry.getKey(), contextEntry.getValue());
         }
         isThereTemporalContextToSave = false;
+        setTemporalFences();
         refreshVisibleFragment();
     }
 
@@ -613,7 +614,7 @@ public class InstanceCreationActivity extends AppCompatActivity
                      */
                     8,
                     label,
-                    true);
+                    false);
         } else if (label == MithrilAC.getPrefTimeIntervalDndTemporalKey()) {
             semanticTime = new SemanticTime(
                     RepeatFrequency.DAILY,
@@ -621,9 +622,9 @@ public class InstanceCreationActivity extends AppCompatActivity
                     /**
                      * 1497823200 Is equivalent to: 06/18/2017 @ 10:00pm (UTC)
                      */
-                    10,
-                    "DND",
-                    true);
+                    8,
+                    label,
+                    false);
             semanticTimes.put(MithrilAC.getPrefKeyContextTypeTemporal()+semanticTime.getLabel(), semanticTime);
         } else {
             semanticTime = new SemanticTime(
@@ -633,12 +634,12 @@ public class InstanceCreationActivity extends AppCompatActivity
                      * 1497895200 Is equivalent to: 06/19/2017 @ 6:00pm (UTC)
                      */
                     1,
-                    "Family",
-                    true);
+                    label,
+                    false);
         }
         Intent intent = new Intent(this, TemporalDataEntryActivity.class);
-        intent.putExtra(MithrilAC.getTemporalLabel(), label);
-        intent.putExtra(MithrilAC.getPrefKeyContextTypeTemporal()+label, semanticTime);
+        intent.putExtra(MithrilAC.getPrefKeyTemporalLabel(), label);
+        intent.putExtra(MithrilAC.getPrefKeyContextTypeTemporal(), semanticTime);
         startActivityForResult(intent, requestCode);
     }
 
@@ -763,12 +764,11 @@ public class InstanceCreationActivity extends AppCompatActivity
     private void setSemanticTemporal(Intent data) {
         Bundle bundle = data.getExtras();
         if(bundle != null) {
-            String label = bundle.getString(MithrilAC.getTemporalLabel());
-            SemanticTime semanticTime = bundle.getParcelable(
-                    MithrilAC.getPrefKeyContextTypeTemporal()+
-                            label);
+            String label = bundle.getString(MithrilAC.getPrefKeyTemporalLabel());
+            SemanticTime semanticTime = bundle.getParcelable(MithrilAC.getPrefKeyContextTypeTemporal());
             semanticTimes.put(label, semanticTime);
         }
+        bottomNavigationView.setSelectedItemId(R.id.navigation_temporal);
     }
 
     private void setHomeSemanticLocation(Place place) {
@@ -889,6 +889,14 @@ public class InstanceCreationActivity extends AppCompatActivity
         startActivityForResult(intent, GEOFENCE_REQUEST_CODE);
     }
 
+    private void setTemporalFences() {
+        //TODO IMPORTANT Setup the snapshot time fence thingy from:
+//        Intent intent = new Intent(this, SetupTimefencesActivity.class);
+//        ArrayList<SemanticTime> tempList = new ArrayList<>(semanticTimes.values());
+//        intent.putParcelableArrayListExtra(MithrilAC.getPrefKeyTimefenceList(), tempList);
+//        startActivityForResult(intent, TIMEFENCE_REQUEST_CODE);
+    }
+    
     /**
      * Builds a GoogleApiClient. Uses the {@code #addApi} method to request the LocationServices API.
      */

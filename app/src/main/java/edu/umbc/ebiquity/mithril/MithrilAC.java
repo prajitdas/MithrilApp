@@ -7,10 +7,12 @@ import android.content.pm.PackageManager;
 import android.content.pm.ResolveInfo;
 import android.os.Build;
 import android.text.TextUtils;
+import android.text.format.DateUtils;
 import android.util.Pair;
 
 import com.google.android.gms.maps.model.LatLng;
 
+import java.sql.Timestamp;
 import java.util.HashMap;
 
 /**
@@ -199,6 +201,7 @@ public class MithrilAC extends Application {
     private static final String PREF_KEY_USER_AGREEMENT_COPIED = "UserAgreementCopied";
     private static final String PREF_KEY_USER_CONTINUE_CLICKED = "ContinueButtonClicked";
     private static final String PREF_KEY_GEOFENCE_LIST = "geofenceList";
+    private static final String PREF_KEY_TIMEFENCE_LIST = "timefenceList";
     //End of preference keys
 
     private static final String DATABASE_NAME = "mithril.db";
@@ -681,6 +684,10 @@ public class MithrilAC extends Application {
 
     public static String getPrefKeyGeofenceList() {
         return PREF_KEY_GEOFENCE_LIST;
+    }
+
+    public static String getPrefKeyTimefenceList() {
+        return PREF_KEY_TIMEFENCE_LIST;
     }
 
     public static String getBroadcastIntentCommandApp() {
@@ -1196,10 +1203,6 @@ public class MithrilAC extends Application {
         return PREF_KEY_USER_CONTINUE_CLICKED;
     }
 
-    public static String getTemporalLabel() {
-        return PREF_KEY_TEMPORAL_LABEL;
-    }
-
     public static String getPrefKeyContextInstanceUnknown() {
         return PREF_KEY_CONTEXT_INSTANCE_UNKNOWN;
     }
@@ -1246,5 +1249,24 @@ public class MithrilAC extends Application {
         }
 
         return phrase.toString();
+    }
+
+    public static String getPrefKeyTemporalLabel() {
+        return PREF_KEY_TEMPORAL_LABEL;
+    }
+
+    public static String getNotYet() {
+        return NOT_YET;
+    }
+
+    private static final String NOT_YET = "Not yet";
+    public static CharSequence getTimeText(boolean showEmptyText, Timestamp time) {
+        if (time.getTime() > 0) {
+            return DateUtils.getRelativeTimeSpanString(time.getTime(),
+                    System.currentTimeMillis(),
+                    DateUtils.MINUTE_IN_MILLIS,
+                    DateUtils.FORMAT_ABBREV_RELATIVE);
+        }
+        return showEmptyText ? NOT_YET : "";
     }
 }

@@ -154,6 +154,14 @@
                 android:value=".ui.activities.InstanceCreationActivity" />
         </activity>
         <activity
+            android:name=".ui.activities.SetupTimefencesActivity"
+            android:label="@string/title_activity_setup_timefences"
+            android:theme="@style/FullscreenTheme">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".ui.activities.InstanceCreationActivity" />
+        </activity>
+        <activity
             android:name=".ui.activities.TemporalDataEntryActivity"
             android:label="@string/title_activity_temporal_data_entry"
             android:theme="@style/AppTheme.NoActionBar">

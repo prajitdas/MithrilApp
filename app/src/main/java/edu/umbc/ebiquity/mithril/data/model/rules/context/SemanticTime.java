@@ -113,4 +113,16 @@ public class SemanticTime extends SemanticUserContext implements Parcelable {
     public void setEnabled(boolean enabled) {
         this.enabled = enabled;
     }
+
+    @Override
+    public String toString() {
+        String firstString = MithrilAC.getTimeText(true, first).toString();
+        if (firstString.equals(MithrilAC.getNotYet()))
+            return "Has not occurred yet!";
+        else {
+            return "This is a " + inferredTime + " time that first occurred " + MithrilAC.getTimeText(true, first).toString() +
+                    ", repeats " + repeatFrequency.getRepFreqCharSeq().toString() +
+                    "and runs for " + String.valueOf(period);
+            }
+        }
 }
