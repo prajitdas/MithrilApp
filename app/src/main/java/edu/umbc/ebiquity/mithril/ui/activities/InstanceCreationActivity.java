@@ -453,7 +453,7 @@ public class InstanceCreationActivity extends AppCompatActivity
                 false);
         semanticTimes.put(MithrilAC.getPrefKeyContextTypeTemporal()+semanticTime.getLabel(), semanticTime);
         semanticTime = new SemanticTime(
-                RepeatFrequency.WEEKLY,
+                RepeatFrequency.MONDAY,
                 new Timestamp(1497862800),
                 /**
                  * 1497862800 Is equivalent to: 06/19/2017 @ 9:00am (UTC)

@@ -267,7 +267,13 @@
         <!--<item>Minute</item>-->
         <!--<item>Hourly</item>-->
         <item>Daily</item>
-        <item>Weekly</item>
+        <item>Monday</item>
+        <item>Tuesday</item>
+        <item>Wednesday</item>
+        <item>Thursday</item>
+        <item>Friday</item>
+        <item>Saturday</item>
+        <item>Sunday</item>
         <item>Weekdays</item>
         <item>Weekends</item>
         <item>Monthly</item>
