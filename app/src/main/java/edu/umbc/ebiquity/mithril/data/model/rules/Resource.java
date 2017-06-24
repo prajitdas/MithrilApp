@@ -9,6 +9,17 @@ import android.support.annotation.NonNull;
  */
 
 public class Resource implements Parcelable, Comparable {
+    public static final Creator<Resource> CREATOR = new Creator<Resource>() {
+        @Override
+        public Resource createFromParcel(Parcel in) {
+            return new Resource(in);
+        }
+
+        @Override
+        public Resource[] newArray(int size) {
+            return new Resource[size];
+        }
+    };
     private String resourceName;
     private int duration;
     private int op;
@@ -72,18 +83,6 @@ public class Resource implements Parcelable, Comparable {
     public int describeContents() {
         return 0;
     }
-
-    public static final Creator<Resource> CREATOR = new Creator<Resource>() {
-        @Override
-        public Resource createFromParcel(Parcel in) {
-            return new Resource(in);
-        }
-
-        @Override
-        public Resource[] newArray(int size) {
-            return new Resource[size];
-        }
-    };
 
     @Override
     public int compareTo(@NonNull Object o) {

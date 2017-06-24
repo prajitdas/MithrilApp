@@ -613,6 +613,24 @@ public class MithrilAC extends Application {
             "('android.permission.ACCESS_VR_MANAGER', 'signature', '" + NO_PERMISSION_GROUP.first + "', '" + PERMISSION_FLAG_NONE + "'),\n" +
             "('android.permission.UPDATE_LOCK_TASK_PACKAGES', 'signature|setup', '" + NO_PERMISSION_GROUP.first + "', '" + PERMISSION_FLAG_NONE + "'),\n" +
             "('android.permission.SUBSTITUTE_NOTIFICATION_APP_NAME', 'signature|privileged', '" + NO_PERMISSION_GROUP.first + "', '" + PERMISSION_FLAG_NONE + "');\n";
+    private static final String SECOND = "Second";
+    private static final String MINUTE = "Minute";
+    private static final String HOUR = "Hour";
+    private static final String DAY = "Day";
+    private static final String MONDAY = "Monday";
+    private static final String TUESDAY = "Tuesday";
+    private static final String WEDNESDAY = "Wednesday";
+    private static final String THURSDAY = "Thursday";
+    private static final String FRIDAY = "Friday";
+    private static final String SATURDAY = "Saturday";
+    private static final String SUNDAY = "Sunday";
+    private static final String WEEKDAY = "Weekday";
+    private static final String WEEKEND = "Weekend";
+    private static final String MONTH = "Month";
+    private static final String QUARTER = "Quarter";
+    private static final String YEAR = "Year";
+    private static final String NEVER_REPEATS = "never repeats";
+    private static final String NOT_YET = "Not yet";
 
     public static double getRiskForPerm(String appOpName) {
         return 1.0;
@@ -1086,7 +1104,6 @@ public class MithrilAC extends Application {
         return CMD_REVOKE_MANAGE_APP_OPS_RESTRICTIONS;
     }
 
-
     public static String getCalendarPermissionGroupDesc() {
         return CALENDAR_PERMISSION_GROUP_DESC;
     }
@@ -1243,22 +1260,6 @@ public class MithrilAC extends Application {
         return PREF_KEY_TEMPORAL_LABEL;
     }
 
-    private static final String SECOND = "Second";
-    private static final String MINUTE = "Minute";
-    private static final String HOUR = "Hour";
-    private static final String DAY = "Day";
-    private static final String MONDAY = "Monday";
-    private static final String TUESDAY = "Tuesday";
-    private static final String WEDNESDAY = "Wednesday";
-    private static final String THURSDAY = "Thursday";
-    private static final String FRIDAY = "Friday";
-    private static final String SATURDAY = "Saturday";
-    private static final String SUNDAY = "Sunday";
-    private static final String WEEKDAY = "Weekday";
-    private static final String WEEKEND = "Weekend";
-    private static final String MONTH = "Month";
-    private static final String QUARTER = "Quarter";
-
     public static String getSecond() {
         return SECOND;
     }
@@ -1323,19 +1324,14 @@ public class MithrilAC extends Application {
         return YEAR;
     }
 
-    private static final String YEAR = "Year";
-
     public static String getNeverRepeats() {
         return NEVER_REPEATS;
     }
-
-    private static final String NEVER_REPEATS = "never repeats";
 
     public static String getNotYet() {
         return NOT_YET;
     }
 
-    private static final String NOT_YET = "Not yet";
     public static CharSequence getTimeText(boolean showEmptyText, Timestamp time) {
         if (time.getTime() > 0) {
             return DateUtils.getRelativeTimeSpanString(time.getTime(),

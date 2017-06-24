@@ -168,7 +168,8 @@
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".ui.activities.InstanceCreationActivity" />
-        </activity>        <activity
+        </activity>
+        <activity
             android:name=".ui.activities.DownloadPoliciesActivity"
             android:label="@string/title_activity_download_policies"
             android:theme="@style/FullscreenTheme" />

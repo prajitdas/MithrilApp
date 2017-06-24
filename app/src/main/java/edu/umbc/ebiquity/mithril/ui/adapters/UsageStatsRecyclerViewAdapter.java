@@ -1,6 +1,5 @@
 package edu.umbc.ebiquity.mithril.ui.adapters;
 
-import android.app.usage.UsageStats;
 import android.content.Context;
 import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageManager;
@@ -15,10 +14,8 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import java.util.Calendar;
-import java.util.Comparator;
 import java.util.GregorianCalendar;
 import java.util.List;
-import java.util.Map;
 
 import edu.umbc.ebiquity.mithril.MithrilAC;
 import edu.umbc.ebiquity.mithril.R;
@@ -61,7 +58,7 @@ public class UsageStatsRecyclerViewAdapter extends RecyclerView.Adapter<UsageSta
 
             holder.mAppUsageDetail.setText(getStringForHowLongWasUsed(mValues.get(position).getTotalTimeInForeground()));
             holder.mAppLastUsedTime.setText(getStringForLastTimeUsed(mValues.get(position).getLastTimeUsed()));
-            if(mValues.get(position).getResourcesUsed().size() > 0)
+            if (mValues.get(position).getResourcesUsed().size() > 0)
                 holder.mResourceUsed.setText(mValues.get(position).getResourcesUsed().get(0).toString());
             else
                 holder.mResourceUsed.setText("no resources used yet");

@@ -28,7 +28,6 @@ import java.util.Map;
 
 import edu.umbc.ebiquity.mithril.MithrilAC;
 import edu.umbc.ebiquity.mithril.R;
-import edu.umbc.ebiquity.mithril.data.dbhelpers.MithrilDBHelper;
 import edu.umbc.ebiquity.mithril.data.model.rules.AppUsageStats;
 import edu.umbc.ebiquity.mithril.data.model.rules.Resource;
 import edu.umbc.ebiquity.mithril.util.specialtasks.appops.AppOpsState;
@@ -180,7 +179,7 @@ public class OldUsageStatsFragment extends Fragment {
                             if (pi.group != null) {// && !lastPermGroup.equals(pi.group)) {
                                 PermissionGroupInfo pgi = mPm.getPermissionGroupInfo(pi.group, 0);
                                 // We care about the resource group because that tells us what was used!
-                                if(pgi != null)
+                                if (pgi != null)
                                     tempRes = new Resource(
                                             pi.name, // Resource name
                                             currEntry.getDuration(), // duration

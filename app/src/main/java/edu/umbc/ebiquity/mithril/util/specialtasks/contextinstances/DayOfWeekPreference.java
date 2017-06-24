@@ -14,7 +14,6 @@ import java.util.Set;
 
 import edu.umbc.ebiquity.mithril.MithrilAC;
 import edu.umbc.ebiquity.mithril.R;
-import edu.umbc.ebiquity.mithril.data.model.rules.RepeatFrequency;
 
 /**
  * Created by prajit on 2/19/17.
@@ -113,9 +112,9 @@ public class DayOfWeekPreference extends DialogPreference {
     }
 
     public boolean isWeekday() {
-        if(daysOfWeek.contains(DayOfWeek.Saturday) || daysOfWeek.contains(DayOfWeek.Sunday))
+        if (daysOfWeek.contains(DayOfWeek.Saturday) || daysOfWeek.contains(DayOfWeek.Sunday))
             return false;
-        if(daysOfWeek.contains(DayOfWeek.Monday) &&
+        if (daysOfWeek.contains(DayOfWeek.Monday) &&
                 daysOfWeek.contains(DayOfWeek.Tuesday) &&
                 daysOfWeek.contains(DayOfWeek.Wednesday) &&
                 daysOfWeek.contains(DayOfWeek.Thursday) &&
@@ -125,13 +124,13 @@ public class DayOfWeekPreference extends DialogPreference {
     }
 
     public boolean isWeekend() {
-        if(daysOfWeek.contains(DayOfWeek.Monday) ||
+        if (daysOfWeek.contains(DayOfWeek.Monday) ||
                 daysOfWeek.contains(DayOfWeek.Tuesday) ||
                 daysOfWeek.contains(DayOfWeek.Wednesday) ||
                 daysOfWeek.contains(DayOfWeek.Thursday) ||
                 daysOfWeek.contains(DayOfWeek.Friday))
             return false;
-        if(daysOfWeek.contains(DayOfWeek.Saturday) && daysOfWeek.contains(DayOfWeek.Sunday))
+        if (daysOfWeek.contains(DayOfWeek.Saturday) && daysOfWeek.contains(DayOfWeek.Sunday))
             return true;
         return false;
     }

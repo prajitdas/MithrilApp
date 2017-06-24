@@ -214,7 +214,7 @@ public class UsageStatsFragment extends Fragment {
                             Log.e(MithrilAC.getDebugTag(), e.getMessage());
                         }
                     }
-                    if(tempRes != null)
+                    if (tempRes != null)
                         tempListOfResource.add(tempRes);
                 }
                 tempUsageStat.setResourcesUsed(tempListOfResource);

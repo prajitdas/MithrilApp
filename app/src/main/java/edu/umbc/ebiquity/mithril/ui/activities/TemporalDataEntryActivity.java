@@ -2,38 +2,23 @@ package edu.umbc.ebiquity.mithril.ui.activities;
 
 import android.annotation.TargetApi;
 import android.app.Activity;
-import android.app.DatePickerDialog;
-import android.app.Dialog;
-import android.app.DialogFragment;
 import android.app.TimePickerDialog;
 import android.content.Intent;
 import android.icu.util.Calendar;
-import android.icu.util.GregorianCalendar;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.text.format.DateFormat;
-import android.text.format.DateUtils;
 import android.view.View;
-import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
 import android.widget.Button;
-import android.widget.DatePicker;
-import android.widget.Spinner;
-import android.support.v7.widget.Toolbar;
 import android.widget.TimePicker;
 
-import java.sql.Timestamp;
-import java.util.Date;
 import java.util.List;
-import java.util.Set;
 
 import edu.umbc.ebiquity.mithril.MithrilAC;
 import edu.umbc.ebiquity.mithril.R;
-import edu.umbc.ebiquity.mithril.data.model.rules.RepeatFrequency;
 import edu.umbc.ebiquity.mithril.data.model.rules.context.SemanticTime;
 import edu.umbc.ebiquity.mithril.util.specialtasks.contextinstances.DayOfWeek;
-import edu.umbc.ebiquity.mithril.util.specialtasks.permissions.PermissionHelper;
 
 @TargetApi(Build.VERSION_CODES.N)
 public class TemporalDataEntryActivity extends AppCompatActivity implements
@@ -59,8 +44,7 @@ public class TemporalDataEntryActivity extends AppCompatActivity implements
         if (extras != null) {
             label = extras.getString(MithrilAC.getPrefKeyTemporalLabel());
             semanticTime = extras.getParcelable(MithrilAC.getPrefKeyContextTypeTemporal());
-        }
-        else
+        } else
             failed();
 
         String activityBaseTitle = getResources().getString(R.string.title_activity_temporal_data_entry);
@@ -76,13 +60,13 @@ public class TemporalDataEntryActivity extends AppCompatActivity implements
         mStartTimeBtn.setText(
                 getResources().getString(
                         R.string.starting_time) +
-                        semanticTime.getStart().toString());
+                        semanticTime.getStartTime());
 
         mEndTimeBtn = (Button) findViewById(R.id.endTimeBtn);
         mEndTimeBtn.setText(
                 getResources().getString(
                         R.string.ending_time) +
-                        semanticTime.getDayOfWeekString());
+                        semanticTime.getEndTime());
         mEnabledBtn = (Button) findViewById(R.id.enabledBtn);
         mDoneBtn = (Button) findViewById(R.id.doneLabelBtn);
 
@@ -90,16 +74,16 @@ public class TemporalDataEntryActivity extends AppCompatActivity implements
         startTimePickerDialog = new TimePickerDialog(
                 this,
                 this,
-                semanticTime.getStart().get(Calendar.HOUR_OF_DAY),
-                semanticTime.getStart().get(Calendar.MINUTE),
+                semanticTime.getStartHour(),
+                semanticTime.getStartMinute(),
                 DateFormat.is24HourFormat(this));
 
         // Create a new instance of TimePickerDialog
         endTimePickerDialog = new TimePickerDialog(
                 this,
                 this,
-                semanticTime.getEnd().get(Calendar.HOUR_OF_DAY),
-                semanticTime.getEnd().get(Calendar.MINUTE),
+                semanticTime.getEndHour(),
+                semanticTime.getEndMinute(),
                 DateFormat.is24HourFormat(this));
 
         setOnclickListeners();
@@ -142,14 +126,32 @@ public class TemporalDataEntryActivity extends AppCompatActivity implements
                 resultIntent.putExtra(getType(),
                         new SemanticTime(
                                 getDayOfWeek(),
-                                getStart(),
-                                getEnd(),
+                                getStartHour(),
+                                getStartMinute(),
+                                getEndHour(),
+                                getEndMinute(),
                                 label,
                                 false));
                 setResult(Activity.RESULT_OK, resultIntent);
                 finish();
             }
         });
+    }
+
+    private int getStartHour() {
+        return semanticTime.getStartHour();
+    }
+
+    private int getStartMinute() {
+        return semanticTime.getStartMinute();
+    }
+
+    private int getEndHour() {
+        return semanticTime.getEndHour();
+    }
+
+    private int getEndMinute() {
+        return semanticTime.getEndMinute();
     }
 
     private List<DayOfWeek> getDayOfWeek() {
@@ -165,22 +167,18 @@ public class TemporalDataEntryActivity extends AppCompatActivity implements
         return semanticTime.getType();
     }
 
-    public Calendar getStart() {
-        return semanticTime.getStart();
-    }
-
-    public Calendar getEnd() {
-        return semanticTime.getEnd();
-    }
-
     @Override
     public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
         Calendar calendar = Calendar.getInstance();
         calendar.set(Calendar.HOUR_OF_DAY, hourOfDay);
         calendar.set(Calendar.MINUTE, minute);
-        if(view.equals(startTimePickerDialog))
-            semanticTime.setStart(calendar);
-        else
-            semanticTime.setEnd(calendar);
+        if (view.equals(startTimePickerDialog)) {
+            semanticTime.setStartHour(hourOfDay);
+            semanticTime.setStartMinute(minute);
+        }
+        else {
+            semanticTime.setEndHour(hourOfDay);
+            semanticTime.setEndMinute(minute);
+        }
     }
 }

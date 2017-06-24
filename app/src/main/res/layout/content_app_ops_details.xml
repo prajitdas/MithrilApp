@@ -7,11 +7,13 @@
     app:layout_behavior="@string/appbar_scrolling_view_behavior"
     tools:context=".ui.activities.AppOpsDetailsActivity"
     tools:showIn="@layout/activity_app_ops_details">
+
     <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:clipToPadding="false"
         android:scrollbarStyle="@integer/preference_scrollbar_style">
+
         <LinearLayout
             android:id="@+id/all_details"
             android:layout_width="match_parent"

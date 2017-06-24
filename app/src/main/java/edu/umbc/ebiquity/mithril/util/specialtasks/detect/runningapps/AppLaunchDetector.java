@@ -10,8 +10,6 @@ import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageManager;
 import android.content.pm.PermissionGroupInfo;
 import android.content.pm.PermissionInfo;
-import android.database.sqlite.SQLiteDatabase;
-import android.graphics.drawable.Drawable;
 import android.util.Log;
 import android.util.Pair;
 
@@ -23,8 +21,6 @@ import java.util.SortedMap;
 import java.util.TreeMap;
 
 import edu.umbc.ebiquity.mithril.MithrilAC;
-import edu.umbc.ebiquity.mithril.data.dbhelpers.MithrilDBHelper;
-import edu.umbc.ebiquity.mithril.data.model.rules.AppUsageStats;
 import edu.umbc.ebiquity.mithril.data.model.rules.Resource;
 import edu.umbc.ebiquity.mithril.util.specialtasks.appops.AppOpsState;
 

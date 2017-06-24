@@ -34,48 +34,48 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_alignParentTop="true"
-            android:textSize="20sp"
+            android:text="@string/first_occurrence"
             android:textAlignment="textStart"
-            android:theme="@style/AppTheme.Button"
-            android:text="@string/first_occurrence"/>
+            android:textSize="20sp"
+            android:theme="@style/AppTheme.Button" />
 
         <Button
             android:id="@+id/startTimeBtn"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_below="@+id/daysOfWeekBtn"
-            android:textSize="20sp"
+            android:text="@string/starting_time"
             android:textAlignment="textStart"
-            android:theme="@style/AppTheme.Button"
-            android:text="@string/starting_time"/>
+            android:textSize="20sp"
+            android:theme="@style/AppTheme.Button" />
 
         <Button
             android:id="@+id/endTimeBtn"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_below="@+id/startTimeBtn"
-            android:textSize="20sp"
+            android:text="@string/ending_time"
             android:textAlignment="textStart"
-            android:theme="@style/AppTheme.Button"
-            android:text="@string/ending_time"/>
+            android:textSize="20sp"
+            android:theme="@style/AppTheme.Button" />
 
         <Button
             android:id="@+id/enabledBtn"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_below="@+id/endTimeBtn"
-            android:textSize="20sp"
+            android:text="@string/enabled_time"
             android:textAlignment="textStart"
-            android:theme="@style/AppTheme.Button"
-            android:text="@string/enabled_time"/>
+            android:textSize="20sp"
+            android:theme="@style/AppTheme.Button" />
 
         <Button
             android:id="@+id/doneLabelBtn"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:textSize="20sp"
             android:layout_alignParentBottom="true"
-            android:theme="@style/AppTheme.Button"
-            android:text="@string/done_with_instances_settings"/>
+            android:text="@string/done_with_instances_settings"
+            android:textSize="20sp"
+            android:theme="@style/AppTheme.Button" />
     </RelativeLayout>
 </android.support.design.widget.CoordinatorLayout>
