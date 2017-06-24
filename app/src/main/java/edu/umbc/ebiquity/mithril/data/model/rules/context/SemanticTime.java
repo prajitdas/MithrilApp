@@ -90,27 +90,31 @@ public class SemanticTime extends SemanticUserContext implements Parcelable {
         List<DayOfWeek> week = new ArrayList<>();
         week.add(DayOfWeek.Saturday);
         week.add(DayOfWeek.Sunday);
-
-        if(dayOfWeek.containsAll(week))
-            return MithrilAC.getWeekend();
-
         week.add(DayOfWeek.Monday);
         week.add(DayOfWeek.Tuesday);
         week.add(DayOfWeek.Wednesday);
         week.add(DayOfWeek.Thursday);
         week.add(DayOfWeek.Friday);
 
-        if(dayOfWeek.containsAll(week))
+        if(dayOfWeek.size() == 7 && dayOfWeek.containsAll(week))
             return MithrilAC.getDaily();
 
         week.remove(DayOfWeek.Saturday);
         week.remove(DayOfWeek.Sunday);
 
-        if(dayOfWeek.containsAll(week))
+        if(dayOfWeek.size() == 5 && dayOfWeek.containsAll(week))
             return MithrilAC.getWeekday();
 
-        StringBuffer stringBufferDayOfWeek = new StringBuffer();
+        week.remove(DayOfWeek.Monday);
+        week.remove(DayOfWeek.Tuesday);
+        week.remove(DayOfWeek.Wednesday);
+        week.remove(DayOfWeek.Thursday);
+        week.remove(DayOfWeek.Friday);
 
+        if(dayOfWeek.size() == 2 && dayOfWeek.containsAll(week))
+            return MithrilAC.getWeekend();
+
+        StringBuffer stringBufferDayOfWeek = new StringBuffer();
         for (DayOfWeek aDay : dayOfWeek) {
             if (aDay.equals(DayOfWeek.Monday))
                 stringBufferDayOfWeek.append(MithrilAC.getMonday());
@@ -133,12 +137,22 @@ public class SemanticTime extends SemanticUserContext implements Parcelable {
 
     @Override
     public String toString() {
-        return "\"" + inferredTime + "\" time context repeats every " + getDayOfWeekString();
+        return "\"" + inferredTime + "\" time context repeats " + getDayOfWeekString();
     }
 
     @Override
     public String getType() {
         return type;
+    }
+
+    @Override
+    public String getLabel() {
+        return inferredTime;
+    }
+
+    @Override
+    public void setLabel(String label) {
+        inferredTime = label;
     }
 
     public List<DayOfWeek> getDayOfWeek() {

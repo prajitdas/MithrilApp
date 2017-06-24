@@ -452,6 +452,7 @@ public class InstanceCreationActivity extends AppCompatActivity
         semanticTimes.put(MithrilAC.getPrefKeyContextTypeTemporal() + semanticTime.getLabel(), semanticTime);
 
         /**********************************************************************************************************************/
+
         dayOfWeek.add(DayOfWeek.Monday);
         dayOfWeek.add(DayOfWeek.Tuesday);
         dayOfWeek.add(DayOfWeek.Wednesday);
