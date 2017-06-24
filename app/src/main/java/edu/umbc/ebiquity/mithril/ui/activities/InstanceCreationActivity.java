@@ -177,7 +177,7 @@ public class InstanceCreationActivity extends AppCompatActivity
 
     private void initViews() {
         editor = getSharedPreferences(MithrilAC.getSharedPreferencesName(), Context.MODE_PRIVATE).edit();
-        activityBaseTitle = getApplicationContext().getResources().getString(R.string.title_activity_instance_creation);
+        activityBaseTitle = getResources().getString(R.string.title_activity_instance_creation);
 
         mAddressResultReceiver = new AddressResultReceiver(new Handler(), this);
         // Set defaults, then update using values stored in the Bundle.
@@ -320,43 +320,21 @@ public class InstanceCreationActivity extends AppCompatActivity
             mOtherCtxtBtn.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    openTemporalDataEntryActivity(TIME_REQUEST_CODE_MORE, chooseATemporalLabel());
+                    chooseATemporalLabel();
                 }
             });
 
             mFirstMajorCtxtBtn.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    SemanticTime semanticTime = new SemanticTime(
-                            RepeatFrequency.WEEKDAYS,
-                            new Timestamp(1497862800),
-                            /**
-                             * 1497862800 Is equivalent to: 06/19/2017 @ 9:00am (UTC)
-                             */
-                            8,
-                            "Work",
-                            true);
-                    semanticTimes.put(MithrilAC.getPrefKeyContextTypeTemporal()+semanticTime.getLabel(), semanticTime);
-                    isThereTemporalContextToSave = true;
-//                    openTemporalDataEntryActivity(TIME_REQUEST_CODE_WORK, MithrilAC.getPrefTimeIntervalWorkTemporalKey());
+                    openTemporalDataEntryActivity(TIME_REQUEST_CODE_WORK, MithrilAC.getPrefTimeIntervalWorkTemporalKey());
                 }
             });
 
             mSecondMajorCtxtBtn.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    SemanticTime semanticTime = new SemanticTime(
-                            RepeatFrequency.DAILY,
-                            new Timestamp(1497823200),
-                            /**
-                             * 1497823200 Is equivalent to: 06/18/2017 @ 10:00pm (UTC)
-                             */
-                            10,
-                            "DND",
-                            true);
-                    semanticTimes.put(MithrilAC.getPrefKeyContextTypeTemporal()+semanticTime.getLabel(), semanticTime);
-                    isThereTemporalContextToSave = true;
-//                    openTemporalDataEntryActivity(TIME_REQUEST_CODE_DND, MithrilAC.getPrefTimeIntervalDndTemporalKey());
+                    openTemporalDataEntryActivity(TIME_REQUEST_CODE_DND, MithrilAC.getPrefTimeIntervalDndTemporalKey());
                 }
             });
         } else if (currentFragment.equals(FRAGMENT_PRESENCE)) {
@@ -424,7 +402,7 @@ public class InstanceCreationActivity extends AppCompatActivity
         semanticTimeFragment.setArguments(data);
 
         FragmentManager fragmentManager = getFragmentManager();
-        fragmentManager.beginTransaction().replace(R.id.container_instances, new SemanticTimeFragment())
+        fragmentManager.beginTransaction().replace(R.id.container_instances, semanticTimeFragment)
                 .commit();
     }
 
@@ -436,7 +414,7 @@ public class InstanceCreationActivity extends AppCompatActivity
         semanticNearActorFragment.setArguments(data);
 
         FragmentManager fragmentManager = getFragmentManager();
-        fragmentManager.beginTransaction().replace(R.id.container_instances, new SemanticNearActorFragment())
+        fragmentManager.beginTransaction().replace(R.id.container_instances, semanticNearActorFragment)
                 .commit();
     }
 
@@ -448,33 +426,43 @@ public class InstanceCreationActivity extends AppCompatActivity
         semanticActivityFragment.setArguments(data);
 
         FragmentManager fragmentManager = getFragmentManager();
-        fragmentManager.beginTransaction().replace(R.id.container_instances, new SemanticActivityFragment())
+        fragmentManager.beginTransaction().replace(R.id.container_instances, semanticActivityFragment)
                 .commit();
     }
 
     private void createSemanticTimes() {
         SemanticTime semanticTime = new SemanticTime(
                 RepeatFrequency.DAILY,
-                new Timestamp(System.currentTimeMillis()),
-                4,
+                new Timestamp(1497895200),
+                /**
+                 * 1497895200 Is equivalent to: 06/19/2017 @ 6:00pm (UTC)
+                 */
+                1,
                 "Family",
                 true);
         semanticTimes.put(MithrilAC.getPrefKeyContextTypeTemporal()+semanticTime.getLabel(), semanticTime);
         semanticTime = new SemanticTime(
                 RepeatFrequency.WEEKENDS,
-                new Timestamp(System.currentTimeMillis()),
+                new Timestamp(1498262400),
+                /**
+                 * 1498262400 Is equivalent to: 06/24/2017 @ 12:00am (UTC)
+                 */
                 48,
                 "Weekend",
                 true);
         semanticTimes.put(MithrilAC.getPrefKeyContextTypeTemporal()+semanticTime.getLabel(), semanticTime);
         semanticTime = new SemanticTime(
                 RepeatFrequency.WEEKLY,
-                new Timestamp(System.currentTimeMillis()),
+                new Timestamp(1497862800),
+                /**
+                 * 1497862800 Is equivalent to: 06/19/2017 @ 9:00am (UTC)
+                 */
                 1,
                 "Team_Meeting",
                 true);
         semanticTimes.put(MithrilAC.getPrefKeyContextTypeTemporal()+semanticTime.getLabel(), semanticTime);
         isThereTemporalContextToSave = true;
+        saveContext();
     }
 
     private void setSaveBtnOnClickListener() {
@@ -615,8 +603,42 @@ public class InstanceCreationActivity extends AppCompatActivity
     }
 
     private void openTemporalDataEntryActivity(int requestCode, String label) {
+        SemanticTime semanticTime;
+        if(label == MithrilAC.getPrefTimeIntervalWorkTemporalKey()) {
+            semanticTime = new SemanticTime(
+                    RepeatFrequency.WEEKDAYS,
+                    new Timestamp(1497862800),
+                    /**
+                     * 1497862800 Is equivalent to: 06/19/2017 @ 9:00am (UTC)
+                     */
+                    8,
+                    label,
+                    true);
+        } else if (label == MithrilAC.getPrefTimeIntervalDndTemporalKey()) {
+            semanticTime = new SemanticTime(
+                    RepeatFrequency.DAILY,
+                    new Timestamp(1497823200),
+                    /**
+                     * 1497823200 Is equivalent to: 06/18/2017 @ 10:00pm (UTC)
+                     */
+                    10,
+                    "DND",
+                    true);
+            semanticTimes.put(MithrilAC.getPrefKeyContextTypeTemporal()+semanticTime.getLabel(), semanticTime);
+        } else {
+            semanticTime = new SemanticTime(
+                    RepeatFrequency.DAILY,
+                    new Timestamp(1497895200),
+                    /**
+                     * 1497895200 Is equivalent to: 06/19/2017 @ 6:00pm (UTC)
+                     */
+                    1,
+                    "Family",
+                    true);
+        }
         Intent intent = new Intent(this, TemporalDataEntryActivity.class);
-        intent.putExtra("label", label);
+        intent.putExtra(MithrilAC.getTemporalLabel(), label);
+        intent.putExtra(MithrilAC.getPrefKeyContextTypeTemporal()+label, semanticTime);
         startActivityForResult(intent, requestCode);
     }
 
@@ -703,7 +725,7 @@ public class InstanceCreationActivity extends AppCompatActivity
             case TIME_REQUEST_CODE_WORK: {
                 if (resultCode == Activity.RESULT_OK) {
                     isThereTemporalContextToSave = true;
-                    setWorkSemanticTemporal(data);
+                    setSemanticTemporal(data);
                 } else if (resultCode == Activity.RESULT_CANCELED) {
                     // Indicates that the activity closed before a selection was made. For example if the user pressed the back button.
                 }
@@ -712,7 +734,7 @@ public class InstanceCreationActivity extends AppCompatActivity
             case TIME_REQUEST_CODE_DND: {
                 if (resultCode == Activity.RESULT_OK) {
                     isThereTemporalContextToSave = true;
-                    setDNDSemanticTemporal(data);
+                    setSemanticTemporal(data);
                 } else if (resultCode == Activity.RESULT_CANCELED) {
                     // Indicates that the activity closed before a selection was made. For example if the user pressed the back button.
                 }
@@ -721,7 +743,7 @@ public class InstanceCreationActivity extends AppCompatActivity
             case TIME_REQUEST_CODE_MORE: {
                 if (resultCode == Activity.RESULT_OK) {
                     isThereTemporalContextToSave = true;
-                    setMoreSemanticTemporal(data);
+                    setSemanticTemporal(data);
                 } else if (resultCode == Activity.RESULT_CANCELED) {
                     // Indicates that the activity closed before a selection was made. For example if the user pressed the back button.
                 }
@@ -738,16 +760,15 @@ public class InstanceCreationActivity extends AppCompatActivity
         }
     }
 
-    private void setWorkSemanticTemporal(Intent data) {
-
-    }
-
-    private void setDNDSemanticTemporal(Intent data) {
-
-    }
-
-    private void setMoreSemanticTemporal(Intent data) {
-
+    private void setSemanticTemporal(Intent data) {
+        Bundle bundle = data.getExtras();
+        if(bundle != null) {
+            String label = bundle.getString(MithrilAC.getTemporalLabel());
+            SemanticTime semanticTime = bundle.getParcelable(
+                    MithrilAC.getPrefKeyContextTypeTemporal()+
+                            label);
+            semanticTimes.put(label, semanticTime);
+        }
     }
 
     private void setHomeSemanticLocation(Place place) {
@@ -820,24 +841,22 @@ public class InstanceCreationActivity extends AppCompatActivity
         dialog.show();
     }
 
-    private String chooseATemporalLabel() {
-        final String[] temporalLabel = {null};
+    private void chooseATemporalLabel() {
         final ArrayAdapter<String> arrayAdapter = new ArrayAdapter<>(this, android.R.layout.select_dialog_singlechoice);
         final String[] listOfTimeContextPiecesFromTheOntology = MithrilAC.getContextArrayTime();
         for (int index = 0; index < listOfTimeContextPiecesFromTheOntology.length; index++)
             arrayAdapter.add(listOfTimeContextPiecesFromTheOntology[index]);
 
         AlertDialog.Builder dialog = new AlertDialog.Builder(this);
-        dialog.setIcon(R.drawable.map_marker);
+        dialog.setIcon(R.drawable.calendar_clock);
         dialog.setTitle("What time based context are you adding?");
         dialog.setAdapter(arrayAdapter, new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
-                temporalLabel[0] = arrayAdapter.getItem(which);
+                openTemporalDataEntryActivity(TIME_REQUEST_CODE_MORE, arrayAdapter.getItem(which));
             }
         });
         dialog.show();
-        return temporalLabel[0];
     }
 
     /**

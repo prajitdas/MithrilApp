@@ -142,6 +142,8 @@ public class MithrilAC extends Application {
     private static final String PREF_HOME_LOCATION_KEY = "Home";
     private static final String PREF_WORK_LOCATION_KEY = "Work";
 
+    private static final String PREF_KEY_TEMPORAL_LABEL = "temporalLabel";
+
     private static final String PREF_TIME_INSTANT_SUNRISE_TEMPORAL_KEY = "Sunrise"; //Sunrise in a locale
     private static final String PREF_TIME_INSTANT_SUNSET_TEMPORAL_KEY = "Sunset"; // Sunset in a locale
     private static final String PREF_TIME_INTERVAL_WEEKEND_TEMPORAL_KEY = "Weekend"; //Saturday - Sunday
@@ -1192,6 +1194,10 @@ public class MithrilAC extends Application {
 
     public static String getPrefKeyUserContinueClicked() {
         return PREF_KEY_USER_CONTINUE_CLICKED;
+    }
+
+    public static String getTemporalLabel() {
+        return PREF_KEY_TEMPORAL_LABEL;
     }
 
     public static String getPrefKeyContextInstanceUnknown() {

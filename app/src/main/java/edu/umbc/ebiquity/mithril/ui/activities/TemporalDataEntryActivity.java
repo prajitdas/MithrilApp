@@ -67,13 +67,12 @@ public class TemporalDataEntryActivity extends AppCompatActivity implements
 
         Bundle extras = getIntent().getExtras();
         if (extras != null)
-            inferredTime = extras.getString("label");
+            inferredTime = extras.getString(MithrilAC.getTemporalLabel());
         else
             failed();
 
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar_view_temporal_data_entry);
-        toolbar.setTitle(toolbar.getTitle() + inferredTime);
-        setSupportActionBar(toolbar);
+        String activityBaseTitle = getResources().getString(R.string.title_activity_temporal_data_entry);
+        setTitle(activityBaseTitle + inferredTime);
 
         isStartClicked = false;
 
@@ -162,6 +161,7 @@ public class TemporalDataEntryActivity extends AppCompatActivity implements
                     end.set(Calendar.MINUTE, endMinute);
 
                     Intent resultIntent = new Intent();
+                    resultIntent.putExtra(MithrilAC.getTemporalLabel(), inferredTime);
                     resultIntent.putExtra(getType() + inferredTime,
                             new SemanticTime(
                                     getRepeatFrequency(),
