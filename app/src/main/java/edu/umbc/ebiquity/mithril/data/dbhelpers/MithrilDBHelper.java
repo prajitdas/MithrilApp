@@ -296,7 +296,7 @@ public class MithrilDBHelper extends SQLiteOpenHelper {
     private final static String VIOLATIONAPPSTR = "appstr"; // App string
     private final static String VIOLATIONOPSTR = "opstr"; // operation string
     private final static String VIOLATIONASKED = "asked";
-    private final static String VIOLATIONTRUEFALSE = "tvfv";
+    private final static String VIOLATIONTRUEFALSE = "testedTFV";
     private final static String VIOLATIONDETECTTIME = "detecttime";
     private final static String VIOLATIONFEEDBACKTTIME = "feedbacktime";
     private final static String CREATE_VIOLATIONS_LOG_TABLE = "CREATE TABLE " + getViolationsLogTableName() + " (" +
@@ -311,6 +311,7 @@ public class MithrilDBHelper extends SQLiteOpenHelper {
             VIOLATIONASKED + " INTEGER NOT NULL DEFAULT 0, " +
             //violations are by default true
             VIOLATIONTRUEFALSE + " INTEGER NOT NULL DEFAULT 1, " +
+            // We consider everything to be a potential violation unless explicitly stated otherwise
             VIOLATIONDETECTTIME + " timestamp NOT NULL DEFAULT strftime('%s', 'now'), " +
             VIOLATIONFEEDBACKTTIME + " timestamp, " +
             "PRIMARY KEY(" + VIOLATIONPOLICYID + ", " + VIOLATIONAPPID + ", " + VIOLATIONOPERATION + "), " +
