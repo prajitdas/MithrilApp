@@ -66,7 +66,7 @@
                 android:textSize="15sp" />
 
             <!--<CheckBox-->
-            <!--android:id="@+id/app_selected"-->
+            <!--andridd:idid@+id/app_selected"-->
             <!--android:layout_width="wrap_content"-->
             <!--android:layout_height="wrap_content"-->
             <!--android:layout_alignParentEnd="true"-->

@@ -1,15 +1,38 @@
 package edu.umbc.ebiquity.mithril.data.model;
 
+import android.content.pm.PackageManager;
+import android.os.Parcel;
+import android.os.Parcelable;
+
 import java.util.ArrayList;
+import java.util.List;
 
 import edu.umbc.ebiquity.mithril.data.model.rules.PolicyRule;
 
-public class Policy {
-    private ArrayList<PolicyRule> policyRules;
+public class Policy implements Parcelable {
+    private List<PolicyRule> policyRules;
+    private int id;
 
     public Policy() {
-        policyRules = new ArrayList<PolicyRule>();
+        policyRules = new ArrayList<>();
     }
+
+    protected Policy(Parcel in) {
+        policyRules = in.createTypedArrayList(PolicyRule.CREATOR);
+        id = in.readInt();
+    }
+
+    public static final Creator<Policy> CREATOR = new Creator<Policy>() {
+        @Override
+        public Policy createFromParcel(Parcel in) {
+            return new Policy(in);
+        }
+
+        @Override
+        public Policy[] newArray(int size) {
+            return new Policy[size];
+        }
+    };
 
     public void addActionToPolicy(PolicyRule aUserAction) {
         policyRules.add(aUserAction);
@@ -43,7 +66,7 @@ public class Policy {
     /**
      * @return the policyRules
      */
-    public ArrayList<PolicyRule> getPolicyRules() {
+    public List<PolicyRule> getPolicyRules() {
         return policyRules;
     }
 
@@ -54,11 +77,18 @@ public class Policy {
         this.policyRules = policyRules;
     }
 
-    public ArrayList<String> getStringOfRules() {
-        ArrayList<String> tempRulesStringList = new ArrayList<String>();
-        for (PolicyRule aPolicyRule : policyRules)
-            tempRulesStringList.add(aPolicyRule.toString());
-        return tempRulesStringList;
+    public String getPolicyString() {
+        StringBuffer policyString = new StringBuffer();
+        policyString.append("For ");
+        policyString.append(policyRules.get(0).getAppStr());
+        policyString.append(" access to ");
+        policyString.append(policyRules.get(0).getOpStr());
+        policyString.append(" allowed when context is ");
+        for (PolicyRule aPolicyRule : policyRules) {
+            policyString.append(aPolicyRule.getCtxStr());
+            policyString.append(", ");
+        }
+        return policyString.toString();
     }
 
     /* (non-Javadoc)
@@ -79,5 +109,16 @@ public class Policy {
     @Override
     public String toString() {
         return "Policy [policyRules=" + policyRules + "]";
+    }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeTypedList(policyRules);
+        dest.writeInt(id);
     }
 }

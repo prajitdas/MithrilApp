@@ -1493,7 +1493,7 @@ public class AppOpsManager {
      * as an early reject of some work.  This does not modify the detectedAtTime stamp or other data
      * about the operation.
      * @param op The operation to check.  One of the OPSTR_* constants.
-     * @param uid The user id of the application attempting to perform the operation.
+     * @param uid The user policyId of the application attempting to perform the operation.
      * @param packageName The name of the application attempting to perform the operation.
      * @return Returns {@link #MODE_ALLOWED} if the operation is allowed, or
      * {@link #MODE_IGNORED} if it is not allowed and should be silently ignored (without
@@ -1519,7 +1519,7 @@ public class AppOpsManager {
      * succeeds, the last execution detectedAtTime of the operation for this app will be updated to
      * the current detectedAtTime.
      * @param op The operation to note.  One of the OPSTR_* constants.
-     * @param uid The user id of the application attempting to perform the operation.
+     * @param uid The user policyId of the application attempting to perform the operation.
      * @param packageName The name of the application attempting to perform the operation.
      * @return Returns {@link #MODE_ALLOWED} if the operation is allowed, or
      * {@link #MODE_IGNORED} if it is not allowed and should be silently ignored (without
@@ -1574,7 +1574,7 @@ public class AppOpsManager {
      * later call {@link #finishOp(String, int, String)} to report when the application is no
      * longer performing the operation.
      * @param op The operation to start.  One of the OPSTR_* constants.
-     * @param uid The user id of the application attempting to perform the operation.
+     * @param uid The user policyId of the application attempting to perform the operation.
      * @param packageName The name of the application attempting to perform the operation.
      * @return Returns {@link #MODE_ALLOWED} if the operation is allowed, or
      * {@link #MODE_IGNORED} if it is not allowed and should be silently ignored (without
@@ -1612,7 +1612,7 @@ public class AppOpsManager {
      * as an early reject of some work.  This does not modify the detectedAtTime stamp or other data
      * about the operation.
      * @param op The operation to check.  One of the OP_* constants.
-     * @param uid The user id of the application attempting to perform the operation.
+     * @param uid The user policyId of the application attempting to perform the operation.
      * @param packageName The name of the application attempting to perform the operation.
      * @return Returns {@link #MODE_ALLOWED} if the operation is allowed, or
      * {@link #MODE_IGNORED} if it is not allowed and should be silently ignored (without
@@ -1698,7 +1698,7 @@ public class AppOpsManager {
      * succeeds, the last execution detectedAtTime of the operation for this app will be updated to
      * the current detectedAtTime.
      * @param op The operation to note.  One of the OP_* constants.
-     * @param uid The user id of the application attempting to perform the operation.
+     * @param uid The user policyId of the application attempting to perform the operation.
      * @param packageName The name of the application attempting to perform the operation.
      * @return Returns {@link #MODE_ALLOWED} if the operation is allowed, or
      * {@link #MODE_IGNORED} if it is not allowed and should be silently ignored (without
@@ -1803,7 +1803,7 @@ public class AppOpsManager {
      * later call {@link #finishOp(int, int, String)} to report when the application is no
      * longer performing the operation.
      * @param op The operation to start.  One of the OP_* constants.
-     * @param uid The user id of the application attempting to perform the operation.
+     * @param uid The user policyId of the application attempting to perform the operation.
      * @param packageName The name of the application attempting to perform the operation.
      * @return Returns {@link #MODE_ALLOWED} if the operation is allowed, or
      * {@link #MODE_IGNORED} if it is not allowed and should be silently ignored (without

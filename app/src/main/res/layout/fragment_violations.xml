@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="wrap_content"
+    android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:orientation="horizontal">
 
     <android.support.v7.widget.CardView xmlns:card_view="http://schemas.android.com/apk/res-auto"
         android:id="@+id/violation_card_view"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="match_parent"
         android:layout_marginBottom="@dimen/card_view_margin"
         android:layout_marginEnd="@dimen/card_view_margin"
         android:layout_marginStart="@dimen/card_view_margin"
@@ -45,7 +45,22 @@
                 android:paddingStart="5dp"
                 android:text="@string/placeholder_text_violation_info"
                 android:textColor="@color/colorPrimaryText"
-                android:textSize="22dp" />
+                android:textSize="18dp" />
+
+            <TextView
+                android:id="@+id/violationDetail"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_toRightOf="@+id/violatingAppIcon"
+                android:layout_below="@+id/violationText"
+                android:fontFamily="josephine-sans"
+                android:paddingEnd="5dp"
+                android:paddingLeft="5dp"
+                android:paddingRight="5dp"
+                android:paddingStart="5dp"
+                android:text="@string/placeholder_text_violation_info"
+                android:textColor="@color/colorPrimaryText"
+                android:textSize="14dp" />
         </RelativeLayout>
     </android.support.v7.widget.CardView>
 </LinearLayout>

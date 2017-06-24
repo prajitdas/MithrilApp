@@ -296,9 +296,10 @@ public class MithrilDBHelper extends SQLiteOpenHelper {
     private final static String VIOLATIONAPPSTR = "appstr"; // App string
     private final static String VIOLATIONOPSTR = "opstr"; // operation string
     private final static String VIOLATIONASKED = "asked";
-    private final static String VIOLATIONTRUEFALSE = "testedTFV";
+    private final static String VIOLATIONTRUEFALSE = "tvfv";
     private final static String VIOLATIONDETECTTIME = "detecttime";
     private final static String VIOLATIONFEEDBACKTTIME = "feedbacktime";
+    private final static String VIOLATIONCTXTIDS = "ctxtids";
     private final static String CREATE_VIOLATIONS_LOG_TABLE = "CREATE TABLE " + getViolationsLogTableName() + " (" +
             VIOLATIONPOLICYID + " INTEGER NOT NULL, " +
             VIOLATIONAPPID + " INTEGER NOT NULL, " +
@@ -314,6 +315,7 @@ public class MithrilDBHelper extends SQLiteOpenHelper {
             // We consider everything to be a potential violation unless explicitly stated otherwise
             VIOLATIONDETECTTIME + " timestamp NOT NULL DEFAULT strftime('%s', 'now'), " +
             VIOLATIONFEEDBACKTTIME + " timestamp, " +
+            VIOLATIONCTXTIDS + " TEXT NOT NULL, " +
             "PRIMARY KEY(" + VIOLATIONPOLICYID + ", " + VIOLATIONAPPID + ", " + VIOLATIONOPERATION + "), " +
             "FOREIGN KEY(" + VIOLATIONAPPID + ") REFERENCES " + getAppsTableName() + "(" + APPID + ") ON DELETE CASCADE);";
     /**
@@ -978,7 +980,7 @@ public class MithrilDBHelper extends SQLiteOpenHelper {
      */
     public long addPolicyRule(SQLiteDatabase db, PolicyRule aPolicyRule) throws SQLiteConstraintException, SemanticInconsistencyException {
         if (aPolicyRule != null) {
-            List<PolicyRule> rules = findAllPoliciesById(db, aPolicyRule.getId());
+            List<PolicyRule> rules = findAllPoliciesById(db, aPolicyRule.getPolicyId());
             //Policy in table, check if we are conflicting
             if (rules.size() > 0) {
                 if (aPolicyRule.getAction() == rules.get(0).getAction()) {
@@ -1005,7 +1007,7 @@ public class MithrilDBHelper extends SQLiteOpenHelper {
 
     private ContentValues insertPolicy(PolicyRule aPolicyRule) {
         ContentValues values = new ContentValues();
-        values.put(POLRULID, aPolicyRule.getId());
+        values.put(POLRULID, aPolicyRule.getPolicyId());
         values.put(POLRULAPPID, aPolicyRule.getAppId());
         values.put(POLRULCTXID, aPolicyRule.getCtxId());
         values.put(POLRULOPID, aPolicyRule.getOp());
@@ -1054,6 +1056,7 @@ public class MithrilDBHelper extends SQLiteOpenHelper {
             values.put(VIOLATIONTRUEFALSE, 1);
         else
             values.put(VIOLATIONTRUEFALSE, 0);
+        values.put(VIOLATIONCTXTIDS, aViolation.getContextsString());
         try {
             insertedRowId = db.insertOrThrow(getViolationsLogTableName(), null, values);
         } catch (SQLException e) {
@@ -1484,7 +1487,8 @@ public class MithrilDBHelper extends SQLiteOpenHelper {
                 getViolationsLogTableName() + "." + VIOLATIONOPSTR + ", " +
                 getViolationsLogTableName() + "." + VIOLATIONASKED + ", " +
                 getViolationsLogTableName() + "." + VIOLATIONTRUEFALSE + ", " +
-                getViolationsLogTableName() + "." + VIOLATIONDETECTTIME +
+                getViolationsLogTableName() + "." + VIOLATIONDETECTTIME + ", " +
+                getViolationsLogTableName() + "." + VIOLATIONCTXTIDS +
                 " FROM " + getViolationsLogTableName() + ";";
 
         List<Violation> violations = new ArrayList<>();
@@ -1500,7 +1504,8 @@ public class MithrilDBHelper extends SQLiteOpenHelper {
                             cursor.getString(4),
                             cursor.getInt(5) == 1,
                             cursor.getInt(6) == 1,
-                            new Timestamp(cursor.getLong(7))
+                            new Timestamp(cursor.getLong(7)),
+                            getCtxtIds(cursor.getString(8))
                     );
                     violations.add(tempViolation);
                 } while (cursor.moveToNext());
@@ -1511,6 +1516,14 @@ public class MithrilDBHelper extends SQLiteOpenHelper {
             cursor.close();
         }
         return violations;
+    }
+
+    private List<Long> getCtxtIds(String input) {
+        String[] ctxtIdStrings = input.split(",");
+        List<Long> ctxtIds = new ArrayList<>();
+        for (int i = 0; i < ctxtIdStrings.length; i++)
+            ctxtIds.add(Long.getLong(ctxtIdStrings[i]));
+        return ctxtIds;
     }
 
     /**
@@ -1529,7 +1542,8 @@ public class MithrilDBHelper extends SQLiteOpenHelper {
                 getViolationsLogTableName() + "." + VIOLATIONOPSTR + ", " +
                 getViolationsLogTableName() + "." + VIOLATIONASKED + ", " +
                 getViolationsLogTableName() + "." + VIOLATIONTRUEFALSE + ", " +
-                getViolationsLogTableName() + "." + VIOLATIONDETECTTIME +
+                getViolationsLogTableName() + "." + VIOLATIONDETECTTIME + ", " +
+                getViolationsLogTableName() + "." + VIOLATIONCTXTIDS +
                 " FROM " + getViolationsLogTableName() +
                 " WHERE " + getViolationsLogTableName() + "." + VIOLATIONASKED + " = 0;";
 
@@ -1546,7 +1560,8 @@ public class MithrilDBHelper extends SQLiteOpenHelper {
                             cursor.getString(4),
                             cursor.getInt(5) == 1,
                             cursor.getInt(6) == 1,
-                            new Timestamp(cursor.getLong(7))
+                            new Timestamp(cursor.getLong(7)),
+                            getCtxtIds(cursor.getString(8))
                     );
                     violations.add(tempViolation);
                 } while (cursor.moveToNext());
@@ -1710,7 +1725,7 @@ public class MithrilDBHelper extends SQLiteOpenHelper {
      * @param db database instance
      * @return all policies
      */
-    public List<PolicyRule> findAllPoliciesForAppWhenPerformingOp(SQLiteDatabase db, String appPkgName, int operation) {
+    public List<PolicyRule> findAllPoliciesForAppWhenPerformingOp(SQLiteDatabase db, String appPkgName, long operation) {
         List<PolicyRule> policyRules = new ArrayList<>();
         // Select Policy Query
         String selectQuery = "SELECT " +
@@ -1931,6 +1946,7 @@ public class MithrilDBHelper extends SQLiteOpenHelper {
             values.put(VIOLATIONTRUEFALSE, 1);
         else
             values.put(VIOLATIONTRUEFALSE, 0);
+        values.put(VIOLATIONCTXTIDS, aViolation.getContextsString());
         String[] args = new String[]{
                 String.valueOf(aViolation.getAppId()),
                 String.valueOf(aViolation.getPolicyId()),
@@ -1955,7 +1971,7 @@ public class MithrilDBHelper extends SQLiteOpenHelper {
      */
     public int updatePolicyRule(SQLiteDatabase db, PolicyRule aPolicyRule) {
         ContentValues values = new ContentValues();
-        values.put(POLRULID, aPolicyRule.getId());
+        values.put(POLRULID, aPolicyRule.getPolicyId());
         values.put(POLRULAPPID, aPolicyRule.getAppId());
         values.put(POLRULAPPSTR, aPolicyRule.getAppStr());
         values.put(POLRULCTXID, aPolicyRule.getCtxId());
@@ -1986,7 +2002,7 @@ public class MithrilDBHelper extends SQLiteOpenHelper {
                             POLRULOPID + " = ? ",
                     args);
         } catch (SQLException e) {
-            throw new SQLException("Exception " + e + " error updating Context: " + aPolicyRule.getId());
+            throw new SQLException("Exception " + e + " error updating Context: " + aPolicyRule.getPolicyId());
         }
     }
 
@@ -2096,7 +2112,7 @@ public class MithrilDBHelper extends SQLiteOpenHelper {
     public void deletePolicyRuleByName(SQLiteDatabase db, PolicyRule aPolicyRule) {
         try {
             db.delete(getPolicyRulesTableName(), POLRULID + " = ?",
-                    new String[]{String.valueOf(aPolicyRule.getId())});
+                    new String[]{String.valueOf(aPolicyRule.getPolicyId())});
         } catch (SQLException e) {
             throw new SQLException("Could not find " + e);
         }

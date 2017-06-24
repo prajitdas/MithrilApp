@@ -111,11 +111,11 @@ public class PrefsFragment extends PreferenceFragment implements GoogleApiClient
     /**
      * Helper method to format information about a place nicely.
      */
-    private static Spanned formatPlaceDetails(Resources res, CharSequence name, String id,
+    private static Spanned formatPlaceDetails(Resources res, CharSequence name, String policyId,
                                               CharSequence address, CharSequence phoneNumber, Uri websiteUri) {
-        Log.e(MithrilAC.getDebugTag(), res.getString(R.string.place_details, name, id, address, phoneNumber,
+        Log.e(MithrilAC.getDebugTag(), res.getString(R.string.place_details, name, policyId, address, phoneNumber,
                 websiteUri));
-        return Html.fromHtml(res.getString(R.string.place_details, name, id, address, phoneNumber,
+        return Html.fromHtml(res.getString(R.string.place_details, name, policyId, address, phoneNumber,
                 websiteUri));
     }
 

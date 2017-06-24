@@ -170,10 +170,10 @@ pre {
         </li>
     </ol>
 </div>
-<div id="tablesDiv">
-    <h2 id="tables">
+<div policyId="tablesDiv">
+    <h2 policyId="tables">
         1. Tables </h2>
-    <h3 id="tableContextlog">
+    <h3 policyId="tableContextlog">
         1.1. Table contextlog </h3>
     <p class="infoField">
         <strong>
@@ -201,7 +201,7 @@ pre {
         <tbody>
         <tr>
             <td>
-                id
+                policyId
             </td>
             <td>
                 int
@@ -237,7 +237,7 @@ pre {
         </tr>
         </tbody>
     </table>
-    <h3 id="tableApps">
+    <h3 policyId="tableApps">
         1.2. Table apps </h3>
     <p class="infoField">
         <strong>
@@ -265,7 +265,7 @@ pre {
         <tbody>
         <tr>
             <td>
-                id
+                policyId
             </td>
             <td>
                 int
@@ -440,7 +440,7 @@ pre {
         </tr>
         </tbody>
     </table>
-    <h3 id="tableActionlog">
+    <h3 policyId="tableActionlog">
         1.3. Table actionlog </h3>
     <p class="infoField">
         <strong>
@@ -468,7 +468,7 @@ pre {
         <tbody>
         <tr>
             <td>
-                id
+                policyId
             </td>
             <td>
                 int
@@ -528,7 +528,7 @@ pre {
         </tr>
         </tbody>
     </table>
-    <h3 id="tablePolicyrules">
+    <h3 policyId="tablePolicyrules">
         1.4. Table policyrules </h3>
     <p class="infoField">
         <strong>
@@ -556,7 +556,7 @@ pre {
         <tbody>
         <tr>
             <td>
-                id
+                policyId
             </td>
             <td>
                 int
@@ -628,7 +628,7 @@ pre {
         </tr>
         </tbody>
     </table>
-    <h3 id="tablePermissions">
+    <h3 policyId="tablePermissions">
         1.5. Table permissions </h3>
     <p class="infoField">
         <strong>
@@ -656,7 +656,7 @@ pre {
         <tbody>
         <tr>
             <td>
-                id
+                policyId
             </td>
             <td>
                 int
@@ -796,7 +796,7 @@ pre {
         </tr>
         </tbody>
     </table>
-    <h3 id="tableViolationlog">
+    <h3 policyId="tableViolationlog">
         1.6. Table violationlog </h3>
     <p class="infoField">
         <strong>
@@ -824,7 +824,7 @@ pre {
         <tbody>
         <tr>
             <td>
-                id
+                policyId
             </td>
             <td>
                 int
@@ -897,7 +897,7 @@ pre {
         </tr>
         </tbody>
     </table>
-    <h3 id="tableAppperm">
+    <h3 policyId="tableAppperm">
         1.7. Table appperm </h3>
     <p class="infoField">
         <strong>
@@ -925,7 +925,7 @@ pre {
         <tbody>
         <tr>
             <td>
-                id
+                policyId
             </td>
             <td>
                 int
@@ -973,7 +973,7 @@ pre {
         </tr>
         </tbody>
     </table>
-    <h3 id="tableContext">
+    <h3 policyId="tableContext">
         1.8. Table context </h3>
     <p class="infoField">
         <strong>
@@ -1001,7 +1001,7 @@ pre {
         <tbody>
         <tr>
             <td>
-                id
+                policyId
             </td>
             <td>
                 int
@@ -1038,10 +1038,10 @@ pre {
         </tbody>
     </table>
 </div>
-<div id="viewsDiv">
-    <h2 id="views">
+<div policyId="viewsDiv">
+    <h2 policyId="views">
         2. Views </h2>
-    <h3 id="viewApppermview">
+    <h3 policyId="viewApppermview">
         2.1. View apppermview </h3>
     <p class="infoField">
         <strong>
@@ -1062,9 +1062,9 @@ apps a,
 permissions p, 
 appperm ap
 WHERE
-ap.apps_id = a.id
+ap.apps_id = a.policyId
 AND
-ap.permissions_id = p.id                </pre>
+ap.permissions_id = p.policyId                </pre>
     </p>
     <h4>
         2.1.1. Columns </h4>
@@ -1149,10 +1149,10 @@ ap.permissions_id = p.id                </pre>
         </tbody>
     </table>
 </div>
-<div id="referencesDiv">
-    <h2 id="references">
+<div policyId="referencesDiv">
+    <h2 policyId="references">
         3. Reference </h2>
-    <h3 id="referenceApppermApps">
+    <h3 policyId="referenceApppermApps">
         3.1. Reference appperm_apps </h3>
     <h4>
         3.1.1. Columns </h4>
@@ -1172,7 +1172,7 @@ ap.permissions_id = p.id                </pre>
         </tr>
         <tr>
             <td>
-                id
+                policyId
             </td>
             <td>
                 <->
@@ -1182,7 +1182,7 @@ ap.permissions_id = p.id                </pre>
             </td>
         </tr>
     </table>
-    <h3 id="referenceApppermPermissions">
+    <h3 policyId="referenceApppermPermissions">
         3.2. Reference appperm_permissions </h3>
     <h4>
         3.2.1. Columns </h4>
@@ -1202,7 +1202,7 @@ ap.permissions_id = p.id                </pre>
         </tr>
         <tr>
             <td>
-                id
+                policyId
             </td>
             <td>
                 <->
@@ -1212,7 +1212,7 @@ ap.permissions_id = p.id                </pre>
             </td>
         </tr>
     </table>
-    <h3 id="referenceActionlogApps">
+    <h3 policyId="referenceActionlogApps">
         3.3. Reference actionlog_apps </h3>
     <h4>
         3.3.1. Columns </h4>
@@ -1232,7 +1232,7 @@ ap.permissions_id = p.id                </pre>
         </tr>
         <tr>
             <td>
-                id
+                policyId
             </td>
             <td>
                 <->
@@ -1242,7 +1242,7 @@ ap.permissions_id = p.id                </pre>
             </td>
         </tr>
     </table>
-    <h3 id="referencePolicyrulesApps">
+    <h3 policyId="referencePolicyrulesApps">
         3.4. Reference policyrules_apps </h3>
     <h4>
         3.4.1. Columns </h4>
@@ -1262,7 +1262,7 @@ ap.permissions_id = p.id                </pre>
         </tr>
         <tr>
             <td>
-                id
+                policyId
             </td>
             <td>
                 <->
@@ -1272,7 +1272,7 @@ ap.permissions_id = p.id                </pre>
             </td>
         </tr>
     </table>
-    <h3 id="referencePolicyrulesContext">
+    <h3 policyId="referencePolicyrulesContext">
         3.5. Reference policyrules_context </h3>
     <h4>
         3.5.1. Columns </h4>
@@ -1292,7 +1292,7 @@ ap.permissions_id = p.id                </pre>
         </tr>
         <tr>
             <td>
-                id
+                policyId
             </td>
             <td>
                 <->
@@ -1302,7 +1302,7 @@ ap.permissions_id = p.id                </pre>
             </td>
         </tr>
     </table>
-    <h3 id="referenceContextlogContext">
+    <h3 policyId="referenceContextlogContext">
         3.6. Reference contextlog_context </h3>
     <h4>
         3.6.1. Columns </h4>
@@ -1322,7 +1322,7 @@ ap.permissions_id = p.id                </pre>
         </tr>
         <tr>
             <td>
-                id
+                policyId
             </td>
             <td>
                 <->
@@ -1332,7 +1332,7 @@ ap.permissions_id = p.id                </pre>
             </td>
         </tr>
     </table>
-    <h3 id="referenceViolationlogApps">
+    <h3 policyId="referenceViolationlogApps">
         3.7. Reference violationlog_apps </h3>
     <h4>
         3.7.1. Columns </h4>
@@ -1352,7 +1352,7 @@ ap.permissions_id = p.id                </pre>
         </tr>
         <tr>
             <td>
-                id
+                policyId
             </td>
             <td>
                 <->
@@ -1362,7 +1362,7 @@ ap.permissions_id = p.id                </pre>
             </td>
         </tr>
     </table>
-    <h3 id="referenceActionlogContext">
+    <h3 policyId="referenceActionlogContext">
         3.8. Reference actionlog_context </h3>
     <h4>
         3.8.1. Columns </h4>
@@ -1382,7 +1382,7 @@ ap.permissions_id = p.id                </pre>
         </tr>
         <tr>
             <td>
-                id
+                policyId
             </td>
             <td>
                 <->
@@ -1392,7 +1392,7 @@ ap.permissions_id = p.id                </pre>
             </td>
         </tr>
     </table>
-    <h3 id="referenceViolationlogContext">
+    <h3 policyId="referenceViolationlogContext">
         3.9. Reference violationlog_context </h3>
     <h4>
         3.9.1. Columns </h4>
@@ -1412,7 +1412,7 @@ ap.permissions_id = p.id                </pre>
         </tr>
         <tr>
             <td>
-                id
+                policyId
             </td>
             <td>
                 <->
@@ -1423,10 +1423,10 @@ ap.permissions_id = p.id                </pre>
         </tr>
     </table>
 </div>
-<div id="areasDiv">
-    <h2 id="areas">
+<div policyId="areasDiv">
+    <h2 policyId="areas">
         4. Subject areas </h2>
-    <h3 id="areaRequest">
+    <h3 policyId="areaRequest">
         4.1. Subject area Request </h3>
     <h4>
         4.1.1. Tables </h4>
@@ -1476,7 +1476,7 @@ ap.permissions_id = p.id                </pre>
                 violationlog_context </a>
         </li>
     </ul>
-    <h3 id="areaResource">
+    <h3 policyId="areaResource">
         4.2. Subject area Resource </h3>
     <h4>
         4.2.1. Tables </h4>
@@ -1526,7 +1526,7 @@ ap.permissions_id = p.id                </pre>
                 violationlog_context </a>
         </li>
     </ul>
-    <h3 id="areaLogs">
+    <h3 policyId="areaLogs">
         4.3. Subject area Logs </h3>
     <h4>
         4.3.1. Tables </h4>

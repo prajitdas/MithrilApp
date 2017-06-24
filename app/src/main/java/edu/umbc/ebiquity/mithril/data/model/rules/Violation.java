@@ -4,40 +4,31 @@ import android.os.Parcel;
 import android.os.Parcelable;
 
 import java.sql.Timestamp;
+import java.util.List;
 
 public class Violation implements Parcelable {
-    public static final Creator<Violation> CREATOR = new Creator<Violation>() {
-        @Override
-        public Violation createFromParcel(Parcel in) {
-            return new Violation(in);
-        }
-
-        @Override
-        public Violation[] newArray(int size) {
-            return new Violation[size];
-        }
-    };
-    private int policyId;
+    private long policyId;
     private long appId;
-    private int oprId;
+    private long oprId;
     private String appStr; // App string
     private String opStr; // operation string
     private boolean asked; // user was asked about this violation
     private boolean tvfv; //marked as true or false violation
     private Timestamp detectedAtTime;
     private Timestamp feedbackTime;
+    private List<Long> ctxtIds;
 
     protected Violation(Parcel in) {
-        policyId = in.readInt();
+        policyId = in.readLong();
         appId = in.readLong();
-        oprId = in.readInt();
+        oprId = in.readLong();
         appStr = in.readString();
         opStr = in.readString();
         asked = in.readByte() != 0;
         tvfv = in.readByte() != 0;
     }
 
-    public Violation(int policyId, long appId, int oprId, String appStr, String opStr, boolean asked, boolean tvfv, Timestamp detectedAtTime) {
+    public Violation(long policyId, long appId, long oprId, String appStr, String opStr, boolean asked, boolean tvfv, Timestamp detectedAtTime, List<Long> ctxtIds) {
         this.policyId = policyId;
         this.appId = appId;
         this.oprId = oprId;
@@ -46,13 +37,15 @@ public class Violation implements Parcelable {
         this.asked = asked;
         this.tvfv = tvfv;
         this.detectedAtTime = detectedAtTime;
+        this.feedbackTime = feedbackTime;
+        this.ctxtIds = ctxtIds;
     }
 
     @Override
     public void writeToParcel(Parcel dest, int flags) {
-        dest.writeInt(policyId);
+        dest.writeLong(policyId);
         dest.writeLong(appId);
-        dest.writeInt(oprId);
+        dest.writeLong(oprId);
         dest.writeString(appStr);
         dest.writeString(opStr);
         dest.writeByte((byte) (asked ? 1 : 0));
@@ -64,11 +57,37 @@ public class Violation implements Parcelable {
         return 0;
     }
 
-    public int getPolicyId() {
+    public static final Creator<Violation> CREATOR = new Creator<Violation>() {
+        @Override
+        public Violation createFromParcel(Parcel in) {
+            return new Violation(in);
+        }
+
+        @Override
+        public Violation[] newArray(int size) {
+            return new Violation[size];
+        }
+    };
+
+    @Override
+    public String toString() {
+        return "Policy: " + policyId + " for app: " + appStr + " with access: " + opStr + " violated at: " + detectedAtTime;
+    }
+
+    public String getContextsString() {
+        StringBuffer ctxtIdString = new StringBuffer();
+        for(Long context : ctxtIds) {
+            ctxtIdString.append(String.valueOf(context));
+            ctxtIdString.append(",");
+        }
+        return ctxtIdString.toString();
+    }
+
+    public long getPolicyId() {
         return policyId;
     }
 
-    public void setPolicyId(int policyId) {
+    public void setPolicyId(long policyId) {
         this.policyId = policyId;
     }
 
@@ -80,11 +99,11 @@ public class Violation implements Parcelable {
         this.appId = appId;
     }
 
-    public int getOprId() {
+    public long getOprId() {
         return oprId;
     }
 
-    public void setOprId(int oprId) {
+    public void setOprId(long oprId) {
         this.oprId = oprId;
     }
 
@@ -136,8 +155,11 @@ public class Violation implements Parcelable {
         this.feedbackTime = feedbackTime;
     }
 
-    @Override
-    public String toString() {
-        return "Policy: " + policyId + " for app: " + appStr + " with access: " + opStr + " violated at: " + detectedAtTime;
+    public List<Long> getCtxtIds() {
+        return ctxtIds;
+    }
+
+    public void setCtxtIds(List<Long> ctxtIds) {
+        this.ctxtIds = ctxtIds;
     }
 }

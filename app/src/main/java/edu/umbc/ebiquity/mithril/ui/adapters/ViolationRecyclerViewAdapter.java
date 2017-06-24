@@ -46,7 +46,7 @@ public class ViolationRecyclerViewAdapter extends RecyclerView.Adapter<Violation
 
         holder.mItem = mValues.get(position);
         holder.mViolatingAppIcon.setImageBitmap(violatingApp.getIcon());
-        holder.mViolationText.setText(violatingApp.getAppName() + " " + mValues.get(position).toString());
+        holder.mViolationText.setText(violatingApp.getAppName() + " used launched at " + mValues.get(position).getDetectedAtTime());
 //        holder.mResponseYesButton.setOnClickListener(new View.OnClickListener() {
 //            @Override
 //            public void onClick(View v) {

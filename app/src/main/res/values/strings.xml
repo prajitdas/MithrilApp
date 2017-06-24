@@ -348,7 +348,7 @@
     <string name="action_settings">Settings</string>
 
     <!-- Manage applications, version string displayed in app snippet -->
-    <string name="version_text">version <xliff:g id="version_num">%1$s</xliff:g></string>
+    <string name="version_text">version <xliff:g policyId="version_num">%1$s</xliff:g></string>
 
     <string name="place_details">
     <![CDATA[

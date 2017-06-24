@@ -113,7 +113,7 @@ public class RuleChangeFragment extends Fragment {
                         violation.getAppId()).getPackageName(),
                 violation.getOprId());
         for (PolicyRule policyRule : policyRules) {
-            Pair<String, String> contextPiece = MithrilDBHelper.getHelper(getActivity()).findContextByID(mithrilDB, policyRule.getId());
+            Pair<String, String> contextPiece = MithrilDBHelper.getHelper(getActivity()).findContextByID(mithrilDB, policyRule.getPolicyId());
             sharedPreferences = getActivity().getSharedPreferences(MithrilAC.getSharedPreferencesName(), Context.MODE_PRIVATE);
             retrieveDataJson = sharedPreferences.getString(contextPiece.first + contextPiece.second, "");
             if (contextPiece.first.equals(MithrilAC.getPrefKeyContextTypeLocation()))

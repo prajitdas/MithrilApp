@@ -15,19 +15,19 @@ public class PolicyRule implements Parcelable {
             return new PolicyRule[size];
         }
     };
-    private int id; // ID of policy defined; this will be used to determine if multiple rows belong to the same policy
-    private long appId; // App id that sent the request
-    private long ctxId; // context id in which requested
+    private int policyId; // ID of policy defined; this will be used to determine if multiple rows belong to the same policy
+    private long appId; // App policyId that sent the request
     private int op; // operation
+    private String appStr; // App string
+    private String opStr; // operation string
+    private long ctxId; // context policyId in which requested
+    private String ctxStr; // context string
     private Action action; // Action will be denoted as: 0 for to deny, 1 for allow
     private String actStr; // Action string
-    private String appStr; // App string
-    private String ctxStr; // context string
-    private String opStr; // operation string
     private boolean enabled; // policy enabled or not
 
     protected PolicyRule(Parcel in) {
-        id = in.readInt();
+        policyId = in.readInt();
         appId = in.readInt();
         ctxId = in.readInt();
         op = in.readInt();
@@ -38,8 +38,8 @@ public class PolicyRule implements Parcelable {
         enabled = in.readByte() != 0;
     }
 
-    public PolicyRule(int id, long appId, long ctxId, int op, Action action, String actStr, String appStr, String ctxStr, String opStr, boolean enabled) {
-        this.id = id;
+    public PolicyRule(int policyId, long appId, long ctxId, int op, Action action, String actStr, String appStr, String ctxStr, String opStr, boolean enabled) {
+        this.policyId = policyId;
         this.appId = appId;
         this.ctxId = ctxId;
         this.op = op;
@@ -53,7 +53,7 @@ public class PolicyRule implements Parcelable {
 
     @Override
     public void writeToParcel(Parcel dest, int flags) {
-        dest.writeInt(id);
+        dest.writeInt(policyId);
         dest.writeLong(appId);
         dest.writeLong(ctxId);
         dest.writeInt(op);
@@ -69,12 +69,12 @@ public class PolicyRule implements Parcelable {
         return 0;
     }
 
-    public int getId() {
-        return id;
+    public int getPolicyId() {
+        return policyId;
     }
 
-    public void setId(int id) {
-        this.id = id;
+    public void setPolicyId(int policyId) {
+        this.policyId = policyId;
     }
 
     public Action getAction() {
@@ -151,7 +151,7 @@ public class PolicyRule implements Parcelable {
 
     @Override
     public String toString() {
-        return "Policy: " + Integer.toString(getId()) + " for app: " + getAppStr() + " with access to: " + getOpStr() + " in context: " + getCtxStr() + " is " + getActStr();
+        return "Policy: " + Integer.toString(getPolicyId()) + " for app: " + getAppStr() + " with access to: " + getOpStr() + " in context: " + getCtxStr() + " is " + getActStr();
     }
 
     @Override
@@ -161,7 +161,7 @@ public class PolicyRule implements Parcelable {
 
         PolicyRule that = (PolicyRule) o;
 
-        if (getId() != that.getId()) return false;
+        if (getPolicyId() != that.getPolicyId()) return false;
         if (getAppId() != that.getAppId()) return false;
         if (getCtxId() != that.getCtxId()) return false;
         if (getOp() != that.getOp()) return false;
@@ -175,7 +175,7 @@ public class PolicyRule implements Parcelable {
 
     @Override
     public int hashCode() {
-        int result = getId();
+        int result = getPolicyId();
         result = 31 * result + (int) (getAppId() ^ (getAppId() >>> 32));
         result = 31 * result + (int) (getCtxId() ^ (getCtxId() >>> 32));
         result = 31 * result + getOp();
