@@ -175,8 +175,7 @@ public class TemporalDataEntryActivity extends AppCompatActivity implements
         if (view.equals(startTimePickerDialog)) {
             semanticTime.setStartHour(hourOfDay);
             semanticTime.setStartMinute(minute);
-        }
-        else {
+        } else {
             semanticTime.setEndHour(hourOfDay);
             semanticTime.setEndMinute(minute);
         }
