@@ -6,6 +6,7 @@ import android.os.Build;
 import android.os.Parcel;
 import android.os.Parcelable;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import edu.umbc.ebiquity.mithril.MithrilAC;
@@ -83,9 +84,33 @@ public class SemanticTime extends SemanticUserContext implements Parcelable {
     }
 
     public String getDayOfWeekString() {
-        StringBuffer stringBufferDayOfWeek = new StringBuffer();
         if (dayOfWeek == null)
-            return stringBufferDayOfWeek.toString();
+            return new String();
+
+        List<DayOfWeek> week = new ArrayList<>();
+        week.add(DayOfWeek.Saturday);
+        week.add(DayOfWeek.Sunday);
+
+        if(dayOfWeek.containsAll(week))
+            return MithrilAC.getWeekend();
+
+        week.add(DayOfWeek.Monday);
+        week.add(DayOfWeek.Tuesday);
+        week.add(DayOfWeek.Wednesday);
+        week.add(DayOfWeek.Thursday);
+        week.add(DayOfWeek.Friday);
+
+        if(dayOfWeek.containsAll(week))
+            return MithrilAC.getDaily();
+
+        week.remove(DayOfWeek.Saturday);
+        week.remove(DayOfWeek.Sunday);
+
+        if(dayOfWeek.containsAll(week))
+            return MithrilAC.getWeekday();
+
+        StringBuffer stringBufferDayOfWeek = new StringBuffer();
+
         for (DayOfWeek aDay : dayOfWeek) {
             if (aDay.equals(DayOfWeek.Monday))
                 stringBufferDayOfWeek.append(MithrilAC.getMonday());
@@ -101,6 +126,7 @@ public class SemanticTime extends SemanticUserContext implements Parcelable {
                 stringBufferDayOfWeek.append(MithrilAC.getSaturday());
             else if (aDay.equals(DayOfWeek.Sunday))
                 stringBufferDayOfWeek.append(MithrilAC.getSunday());
+            stringBufferDayOfWeek.append(", ");
         }
         return stringBufferDayOfWeek.toString();
     }

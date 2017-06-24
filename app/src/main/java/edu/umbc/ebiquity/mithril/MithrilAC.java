@@ -626,6 +626,7 @@ public class MithrilAC extends Application {
     private static final String SUNDAY = "Sunday";
     private static final String WEEKDAY = "Weekday";
     private static final String WEEKEND = "Weekend";
+    private static final String DAILY = "Daily";
     private static final String MONTH = "Month";
     private static final String QUARTER = "Quarter";
     private static final String YEAR = "Year";
@@ -1186,6 +1187,10 @@ public class MithrilAC extends Application {
 
     public static String getPrefTimeIntervalPersonalTemporalKey() {
         return PREF_TIME_INTERVAL_PERSONAL_TEMPORAL_KEY;
+    }
+
+    public static String getDaily() {
+        return DAILY;
     }
 
     public static String getCmdRootPrivilege() {
