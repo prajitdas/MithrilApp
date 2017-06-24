@@ -71,6 +71,8 @@ public class SemanticTime extends SemanticUserContext implements Parcelable {
 
     public String getDayOfWeekString() {
         StringBuffer stringBufferDayOfWeek = new StringBuffer();
+        if(dayOfWeek == null)
+            return stringBufferDayOfWeek.toString();
         for(DayOfWeek aDay : dayOfWeek) {
             if (aDay.equals(DayOfWeek.Monday))
                 stringBufferDayOfWeek.append(MithrilAC.getMonday());
