@@ -96,13 +96,13 @@ public class SemanticTime extends SemanticUserContext implements Parcelable {
         week.add(DayOfWeek.Thursday);
         week.add(DayOfWeek.Friday);
 
-        if(dayOfWeek.size() == 7 && dayOfWeek.containsAll(week))
+        if (dayOfWeek.size() == 7 && dayOfWeek.containsAll(week))
             return MithrilAC.getDaily();
 
         week.remove(DayOfWeek.Saturday);
         week.remove(DayOfWeek.Sunday);
 
-        if(dayOfWeek.size() == 5 && dayOfWeek.containsAll(week))
+        if (dayOfWeek.size() == 5 && dayOfWeek.containsAll(week))
             return MithrilAC.getWeekday();
 
         week.remove(DayOfWeek.Monday);
@@ -111,7 +111,7 @@ public class SemanticTime extends SemanticUserContext implements Parcelable {
         week.remove(DayOfWeek.Thursday);
         week.remove(DayOfWeek.Friday);
 
-        if(dayOfWeek.size() == 2 && dayOfWeek.containsAll(week))
+        if (dayOfWeek.size() == 2 && dayOfWeek.containsAll(week))
             return MithrilAC.getWeekend();
 
         StringBuffer stringBufferDayOfWeek = new StringBuffer();

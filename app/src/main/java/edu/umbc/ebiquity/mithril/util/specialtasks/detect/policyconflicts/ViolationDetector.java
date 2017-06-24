@@ -93,7 +93,7 @@ public class ViolationDetector {
         Set<Long> currentContext = populateCurrentContext(mithrilDB, context, semanticUserContexts);
 
 //        try {
-        for(Resource currentOperation : operationsPerformed) {
+        for (Resource currentOperation : operationsPerformed) {
             int lastOperationPerformed = currentOperation.getOp();
             List<PolicyRule> policyRules = MithrilDBHelper.getHelper(context).findAllPoliciesForAppWhenPerformingOp(mithrilDB, currentPackageName, lastOperationPerformed);
             Set<Long> policyContext = new HashSet<>();

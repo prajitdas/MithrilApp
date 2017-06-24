@@ -7,6 +7,17 @@ import java.sql.Timestamp;
 import java.util.List;
 
 public class Violation implements Parcelable {
+    public static final Creator<Violation> CREATOR = new Creator<Violation>() {
+        @Override
+        public Violation createFromParcel(Parcel in) {
+            return new Violation(in);
+        }
+
+        @Override
+        public Violation[] newArray(int size) {
+            return new Violation[size];
+        }
+    };
     private long policyId;
     private long appId;
     private long oprId;
@@ -57,18 +68,6 @@ public class Violation implements Parcelable {
         return 0;
     }
 
-    public static final Creator<Violation> CREATOR = new Creator<Violation>() {
-        @Override
-        public Violation createFromParcel(Parcel in) {
-            return new Violation(in);
-        }
-
-        @Override
-        public Violation[] newArray(int size) {
-            return new Violation[size];
-        }
-    };
-
     @Override
     public String toString() {
         return "Policy: " + policyId + " for app: " + appStr + " with access: " + opStr + " violated at: " + detectedAtTime;
@@ -76,7 +75,7 @@ public class Violation implements Parcelable {
 
     public String getContextsString() {
         StringBuffer ctxtIdString = new StringBuffer();
-        for(Long context : ctxtIds) {
+        for (Long context : ctxtIds) {
             ctxtIdString.append(String.valueOf(context));
             ctxtIdString.append(",");
         }

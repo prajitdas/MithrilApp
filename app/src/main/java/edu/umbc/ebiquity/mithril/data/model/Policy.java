@@ -1,6 +1,5 @@
 package edu.umbc.ebiquity.mithril.data.model;
 
-import android.content.pm.PackageManager;
 import android.os.Parcel;
 import android.os.Parcelable;
 
@@ -10,18 +9,6 @@ import java.util.List;
 import edu.umbc.ebiquity.mithril.data.model.rules.PolicyRule;
 
 public class Policy implements Parcelable {
-    private List<PolicyRule> policyRules;
-    private int id;
-
-    public Policy() {
-        policyRules = new ArrayList<>();
-    }
-
-    protected Policy(Parcel in) {
-        policyRules = in.createTypedArrayList(PolicyRule.CREATOR);
-        id = in.readInt();
-    }
-
     public static final Creator<Policy> CREATOR = new Creator<Policy>() {
         @Override
         public Policy createFromParcel(Parcel in) {
@@ -33,6 +20,17 @@ public class Policy implements Parcelable {
             return new Policy[size];
         }
     };
+    private List<PolicyRule> policyRules;
+    private int id;
+
+    public Policy() {
+        policyRules = new ArrayList<>();
+    }
+
+    protected Policy(Parcel in) {
+        policyRules = in.createTypedArrayList(PolicyRule.CREATOR);
+        id = in.readInt();
+    }
 
     public void addActionToPolicy(PolicyRule aUserAction) {
         policyRules.add(aUserAction);
