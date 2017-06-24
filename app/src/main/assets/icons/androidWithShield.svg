@@ -18,7 +18,7 @@
         </rdf:RDF>
     </metadata>
     <sodipodi:namedview bordercolor="#666666" borderopacity="1" gridtolerance="10"
-        guidetolerance="10" policyId="namedview94" objecttolerance="10" pagecolor="#ffffff"
+        guidetolerance="10" objecttolerance="10" pagecolor="#ffffff" policyId="namedview94"
         showgrid="false" inkscape:current-layer="g3402" inkscape:cx="-54.418726"
         inkscape:cy="436.17482" inkscape:pageopacity="0" inkscape:pageshadow="2"
         inkscape:window-height="1148" inkscape:window-maximized="1" inkscape:window-width="1920"
@@ -26,49 +26,49 @@
     <defs policyId="defs4">
         <linearGradient gradientUnits="userSpaceOnUse" policyId="linearGradient4705" x1="92.31677"
             x2="529.14828" y1="285.99187" y2="288.42394">
-            <stop policyId="stop7" offset="0" stop-color="#fffdd2" stop-opacity=".7544" />
-            <stop policyId="stop9" offset=".1135" stop-color="#ffdd71" stop-opacity=".8246" />
-            <stop policyId="stop11" offset=".5439" stop-color="#ffef6e" stop-opacity=".8333" />
-            <stop policyId="stop13" offset=".8192" stop-color="#ffc255" stop-opacity=".8246" />
-            <stop policyId="stop15" offset="1" stop-color="#ffdb48" stop-opacity=".8158" />
+            <stop offset="0" policyId="stop7" stop-color="#fffdd2" stop-opacity=".7544" />
+            <stop offset=".1135" policyId="stop9" stop-color="#ffdd71" stop-opacity=".8246" />
+            <stop offset=".5439" policyId="stop11" stop-color="#ffef6e" stop-opacity=".8333" />
+            <stop offset=".8192" policyId="stop13" stop-color="#ffc255" stop-opacity=".8246" />
+            <stop offset="1" policyId="stop15" stop-color="#ffdb48" stop-opacity=".8158" />
         </linearGradient>
         <linearGradient policyId="linearGradient3182-5-4">
-            <stop policyId="stop18" offset="0" stop-color="#a6a6a6" />
-            <stop policyId="stop20" offset=".5" stop-color="#f4f4f4" />
-            <stop policyId="stop22" offset=".7827" stop-color="#dbdbdb" />
-            <stop policyId="stop24" offset="1" stop-color="#b5b5b5" />
+            <stop offset="0" policyId="stop18" stop-color="#a6a6a6" />
+            <stop offset=".5" policyId="stop20" stop-color="#f4f4f4" />
+            <stop offset=".7827" policyId="stop22" stop-color="#dbdbdb" />
+            <stop offset="1" policyId="stop24" stop-color="#b5b5b5" />
         </linearGradient>
         <linearGradient gradientUnits="userSpaceOnUse" policyId="linearGradient4823" x1="676.18506"
             x2="220.55359">
-            <stop policyId="stop27" offset="0" stop-color="#acacac" />
-            <stop policyId="stop29" offset="1" stop-color="#b3b3b3" stop-opacity="0" />
+            <stop offset="0" policyId="stop27" stop-color="#acacac" />
+            <stop offset="1" policyId="stop29" stop-color="#b3b3b3" stop-opacity="0" />
         </linearGradient>
-        <linearGradient gradientUnits="userSpaceOnUse" policyId="linearGradient4431-7" x1="676.18506"
-            x2="220.55359" xlink:href="#linearGradient3182-5-4" />
+        <linearGradient gradientUnits="userSpaceOnUse" policyId="linearGradient4431-7"
+            x1="676.18506" x2="220.55359" xlink:href="#linearGradient3182-5-4" />
         <linearGradient gradientUnits="userSpaceOnUse" policyId="linearGradient4760" x1="252.62628"
             x2="641.6803" xlink:href="#linearGradient3182-5-4" />
         <radialGradient cx="502.86703" cy="28.43939"
             gradientTransform="matrix(1,0,0,1.36579,0,-105.50237)" gradientUnits="userSpaceOnUse"
             policyId="radialGradient4893" r="194.02699">
-            <stop policyId="stop34" offset="0" stop-color="#fff" />
-            <stop policyId="stop36" offset="1" stop-color="#fff" stop-opacity="0" />
+            <stop offset="0" policyId="stop34" stop-color="#fff" />
+            <stop offset="1" policyId="stop36" stop-color="#fff" stop-opacity="0" />
         </radialGradient>
         <radialGradient cx="221.06311" cy="147.11755" gradientUnits="userSpaceOnUse"
             policyId="radialGradient5039" r="2.69732">
-            <stop policyId="stop39" offset="0" stop-color="#fffdd2" />
-            <stop policyId="stop41" offset=".3859" stop-color="#ffdd71" />
-            <stop policyId="stop43" offset=".605" stop-color="#ffef6e" />
-            <stop policyId="stop45" offset=".8367" stop-color="#ffdb48" />
-            <stop policyId="stop47" offset="1" stop-color="#482e00" />
+            <stop offset="0" policyId="stop39" stop-color="#fffdd2" />
+            <stop offset=".3859" policyId="stop41" stop-color="#ffdd71" />
+            <stop offset=".605" policyId="stop43" stop-color="#ffef6e" />
+            <stop offset=".8367" policyId="stop45" stop-color="#ffdb48" />
+            <stop offset="1" policyId="stop47" stop-color="#482e00" />
         </radialGradient>
         <radialGradient cx="344.92496" cy="405.23672"
             gradientTransform="matrix(1.22832,-0.03611,0.04646,1.58009,-97.57758,-217.58941)"
             gradientUnits="userSpaceOnUse" policyId="radialGradient7264" r="115.75166">
-            <stop policyId="stop50" offset="0" stop-color="#fffdd2" />
-            <stop policyId="stop52" offset=".4735" stop-color="#ffdd71" />
-            <stop policyId="stop54" offset=".6952" stop-color="#ffef6e" />
-            <stop policyId="stop56" offset=".8469" stop-color="#ffdb48" />
-            <stop policyId="stop58" offset="1" stop-color="#482e00" />
+            <stop offset="0" policyId="stop50" stop-color="#fffdd2" />
+            <stop offset=".4735" policyId="stop52" stop-color="#ffdd71" />
+            <stop offset=".6952" policyId="stop54" stop-color="#ffef6e" />
+            <stop offset=".8469" policyId="stop56" stop-color="#ffdb48" />
+            <stop offset="1" policyId="stop58" stop-color="#482e00" />
         </radialGradient>
         <radialGradient cx="221.06311" cy="147.11755" gradientUnits="userSpaceOnUse"
             policyId="radialGradient3084" r="2.69732" inkscape:collect="always"
