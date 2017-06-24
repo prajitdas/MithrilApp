@@ -3,7 +3,7 @@ package edu.umbc.ebiquity.mithril.data.model.rules;
 import edu.umbc.ebiquity.mithril.MithrilAC;
 
 public enum RepeatFrequency {
-    NEVER_REPEATS(-1), SECOND(0), MINUTE(1), HOURLY(2), DAILY(3), MONDAY(4), TUESDAY(5), WEDNESDAY(6), THURSDAY(7), FRIDAY(8), SATURDAY(9), SUNDAY(10), WEEKDAYS(11), WEEKENDS(12), MONTHLY(13), QUARTERLY(14), YEARLY(15);
+    NEVER_REPEATS(-1), SECOND(0), MINUTE(1), HOURLY(2), DAILY(3), MONDAY(4), TUESDAY(5), WEDNESDAY(6), THURSDAY(7), FRIDAY(8), SATURDAY(9), SUNDAY(10), WEEKDAYS(11), WEEKEND(12), MONTH(13), QUARTER(14), YEAR(15);
 
     private int repFreqCode;
     private CharSequence repFreqCharSeq;
@@ -58,27 +58,27 @@ public enum RepeatFrequency {
         else if (input.equals(MithrilAC.getEveryMonday()))
             return RepeatFrequency.MONDAY;
         else if (input.equals(MithrilAC.getEveryTuesday()))
-            return RepeatFrequency.MONDAY;
+            return RepeatFrequency.TUESDAY;
         else if (input.equals(MithrilAC.getEveryWednesday()))
-            return RepeatFrequency.MONDAY;
+            return RepeatFrequency.WEDNESDAY;
         else if (input.equals(MithrilAC.getEveryThursday()))
-            return RepeatFrequency.MONDAY;
+            return RepeatFrequency.THURSDAY;
         else if (input.equals(MithrilAC.getEveryFriday()))
-            return RepeatFrequency.MONDAY;
+            return RepeatFrequency.FRIDAY;
         else if (input.equals(MithrilAC.getEverySaturday()))
-            return RepeatFrequency.MONDAY;
+            return RepeatFrequency.SATURDAY;
         else if (input.equals(MithrilAC.getEverySunday()))
-            return RepeatFrequency.MONDAY;
+            return RepeatFrequency.SUNDAY;
         else if (input.equals(MithrilAC.getEveryWeekday()))
             return RepeatFrequency.WEEKDAYS;
         else if (input.equals(MithrilAC.getEveryWeekend()))
-            return RepeatFrequency.WEEKENDS;
+            return RepeatFrequency.WEEKEND;
         else if (input.equals(MithrilAC.getEveryMonth()))
-            return RepeatFrequency.MONTHLY;
+            return RepeatFrequency.MONTH;
         else if (input.equals(MithrilAC.getEveryQuarter()))
-            return RepeatFrequency.QUARTERLY;
+            return RepeatFrequency.QUARTER;
         else if (input.equals(MithrilAC.getEveryYear()))
-            return RepeatFrequency.YEARLY;
+            return RepeatFrequency.YEAR;
         return RepeatFrequency.NEVER_REPEATS;
     }
 

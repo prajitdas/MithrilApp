@@ -116,13 +116,19 @@ public class SemanticTime extends SemanticUserContext implements Parcelable {
 
     @Override
     public String toString() {
-        String firstString = MithrilAC.getTimeText(true, first).toString();
-        if (firstString.equals(MithrilAC.getNotYet()))
-            return "Has not occurred yet!";
-        else {
-            return "This is a \"" + inferredTime + "\" event that first occurred on " + MithrilAC.getTimeText(true, first).toString() +
-                    ", that repeats " + repeatFrequency.getRepFreqCharSeq().toString() +
-                    " and the duration is set at " + String.valueOf(period) + " hours";
-            }
+        if(repeatFrequency == null)
+            return "Not ready to display yet";
+        if (period == 1) {
+            if (repeatFrequency.getRepFreqCharSeq().toString().equals(MithrilAC.getNeverRepeats()))
+                return "\"" + inferredTime + "\" time context " + repeatFrequency.getRepFreqCharSeq().toString() +
+                        " and duration is " + String.valueOf(period) + " hour";
+            return "\"" + inferredTime + "\" time context repeats " + repeatFrequency.getRepFreqCharSeq().toString() +
+                    " and the duration is " + String.valueOf(period) + " hour";
         }
+        if (repeatFrequency.getRepFreqCharSeq().toString().equals(MithrilAC.getNeverRepeats()))
+            return "\"" + inferredTime + "\" time context " + repeatFrequency.getRepFreqCharSeq().toString() +
+                    " and duration is " + String.valueOf(period) + " hours";
+        return "\"" + inferredTime + "\" time context repeats " + repeatFrequency.getRepFreqCharSeq().toString() +
+                " and the duration is " + String.valueOf(period) + " hours";
+    }
 }

@@ -32,6 +32,7 @@ import edu.umbc.ebiquity.mithril.data.model.rules.RepeatFrequency;
 import edu.umbc.ebiquity.mithril.data.model.rules.context.SemanticTime;
 import edu.umbc.ebiquity.mithril.util.specialtasks.permissions.PermissionHelper;
 
+@TargetApi(Build.VERSION_CODES.N)
 public class TemporalDataEntryActivity extends AppCompatActivity implements
         AdapterView.OnItemSelectedListener,
         DatePickerDialog.OnDateSetListener,
@@ -54,13 +55,9 @@ public class TemporalDataEntryActivity extends AppCompatActivity implements
     private int endHour = -1;
     private int endMinute = -1;
 
-    private final String type = MithrilAC.getPrefKeyContextTypeTemporal();
-    private RepeatFrequency repeatFrequency;
-    private Timestamp first;
-    private String inferredTime;
+    String label;
     private SemanticTime semanticTime;
 
-    @TargetApi(Build.VERSION_CODES.N)
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -68,14 +65,14 @@ public class TemporalDataEntryActivity extends AppCompatActivity implements
 
         Bundle extras = getIntent().getExtras();
         if (extras != null) {
-            inferredTime = extras.getString(MithrilAC.getPrefKeyTemporalLabel());
-            semanticTime = extras.getParcelable(type);
+            label = extras.getString(MithrilAC.getPrefKeyTemporalLabel());
+            semanticTime = extras.getParcelable(MithrilAC.getPrefKeyContextTypeTemporal());
         }
         else
             failed();
 
         String activityBaseTitle = getResources().getString(R.string.title_activity_temporal_data_entry);
-        setTitle(activityBaseTitle + inferredTime);
+        setTitle(activityBaseTitle + semanticTime.getLabel());
 
         isStartClicked = false;
 
@@ -151,7 +148,6 @@ public class TemporalDataEntryActivity extends AppCompatActivity implements
         });
 
         mDoneBtn.setOnClickListener(new View.OnClickListener() {
-            @TargetApi(Build.VERSION_CODES.N)
             @Override
             public void onClick(View v) {
                 if(startHour > -1 && endHour > -1) {
@@ -170,13 +166,13 @@ public class TemporalDataEntryActivity extends AppCompatActivity implements
                         period = (int) (end.getTimeInMillis() - start.getTimeInMillis());
 
                     Intent resultIntent = new Intent();
-                    resultIntent.putExtra(MithrilAC.getPrefKeyTemporalLabel(), inferredTime);
+                    resultIntent.putExtra(MithrilAC.getPrefKeyTemporalLabel(), label);
                     resultIntent.putExtra(getType(),
                             new SemanticTime(
                                     getRepeatFrequency(),
                                     getFirst(),
                                     period,
-                                    inferredTime,
+                                    label,
                                     false));
                     setResult(Activity.RESULT_OK, resultIntent);
                     finish();
@@ -186,7 +182,6 @@ public class TemporalDataEntryActivity extends AppCompatActivity implements
         });
     }
 
-    @TargetApi(Build.VERSION_CODES.N)
     private int manageNextDayEnding(Calendar start, Calendar end) {
         int period = 0;
         final Calendar dayEnd = Calendar.getInstance();
@@ -206,36 +201,21 @@ public class TemporalDataEntryActivity extends AppCompatActivity implements
         finish();
     }
 
-    private CharSequence getTimeText() {
-        return DateUtils.getRelativeTimeSpanString(getFirst().getTime(),
-                System.currentTimeMillis(),
-                DateUtils.MINUTE_IN_MILLIS,
-                DateUtils.FORMAT_ABBREV_RELATIVE);
-    }
-
     public String getType() {
-        return type;
+        return semanticTime.getType();
     }
 
     public RepeatFrequency getRepeatFrequency() {
-        return repeatFrequency;
-    }
-
-    public void setRepeatFrequency(RepeatFrequency repeatFrequency) {
-        this.repeatFrequency = repeatFrequency;
+        return semanticTime.getRepeatFrequency();
     }
 
     public Timestamp getFirst() {
-        return first;
-    }
-
-    public void setFirst(Timestamp first) {
-        this.first = first;
+        return semanticTime.getFirst();
     }
 
     @Override
     public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-        setRepeatFrequency(RepeatFrequency.charSeqToRepeatFrequency((CharSequence) parent.getItemAtPosition(position)));
+        semanticTime.setRepeatFrequency(RepeatFrequency.charSeqToRepeatFrequency((CharSequence) parent.getItemAtPosition(position)));
     }
 
     @Override
@@ -243,15 +223,15 @@ public class TemporalDataEntryActivity extends AppCompatActivity implements
         PermissionHelper.toast(this, "Choose NEVER_REPEAT if this does not repeat...");
     }
 
-    @TargetApi(Build.VERSION_CODES.N)
+
     @Override
     public void onDateSet(DatePicker view, int year, int monthOfYear, int dayOfMonth) {
         Calendar cal = new GregorianCalendar(year, monthOfYear, dayOfMonth);
         mYear = year;
         mMonth = monthOfYear;
         mDay = dayOfMonth;
-        setFirst(new Timestamp(cal.getTimeInMillis()));
-        mTemporalFirstBtn.setText(getResources().getString(R.string.first_occurrence) + getTimeText().toString());
+        semanticTime.setFirst(new Timestamp(cal.getTimeInMillis()));
+        mTemporalFirstBtn.setText(getResources().getString(R.string.first_occurrence) + semanticTime.toString());
     }
 
     private boolean isStartClicked;
@@ -266,17 +246,5 @@ public class TemporalDataEntryActivity extends AppCompatActivity implements
             endHour = hourOfDay;
             endMinute = minute;
         }
-//        if(startHour > -1 && endHour > -1) {
-//            final Calendar start = Calendar.getInstance();
-//            start.set(Calendar.HOUR, startHour);
-//            start.set(Calendar.MINUTE, startMinute);
-//
-//            final Calendar end = Calendar.getInstance();
-//            end.set(Calendar.HOUR, endHour);
-//            end.set(Calendar.MINUTE, endMinute);
-//
-//            if((end.getTimeInMillis() - start.getTimeInMillis()) < 0)
-//                PermissionHelper.toast(this, "Did you mean ");
-//        }
     }
 }

@@ -443,13 +443,23 @@ public class InstanceCreationActivity extends AppCompatActivity
                 false);
         semanticTimes.put(MithrilAC.getPrefKeyContextTypeTemporal()+semanticTime.getLabel(), semanticTime);
         semanticTime = new SemanticTime(
-                RepeatFrequency.WEEKENDS,
+                RepeatFrequency.WEEKEND,
                 new Timestamp(1498262400),
                 /**
                  * 1498262400 Is equivalent to: 06/24/2017 @ 12:00am (UTC)
                  */
                 48,
                 "Weekend",
+                false);
+        semanticTimes.put(MithrilAC.getPrefKeyContextTypeTemporal()+semanticTime.getLabel(), semanticTime);
+        semanticTime = new SemanticTime(
+                RepeatFrequency.WEEKDAYS,
+                new Timestamp(1497862800),
+                /**
+                 * 1497862800 Is equivalent to: 06/19/2017 @ 9:00am (UTC)
+                 */
+                1,
+                "Team_Meeting",
                 false);
         semanticTimes.put(MithrilAC.getPrefKeyContextTypeTemporal()+semanticTime.getLabel(), semanticTime);
         semanticTime = new SemanticTime(
