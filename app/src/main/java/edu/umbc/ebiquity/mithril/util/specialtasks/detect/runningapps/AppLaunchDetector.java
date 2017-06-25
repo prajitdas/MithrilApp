@@ -7,6 +7,7 @@ import android.app.usage.UsageStats;
 import android.app.usage.UsageStatsManager;
 import android.content.Context;
 import android.content.pm.ApplicationInfo;
+import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.content.pm.PermissionGroupInfo;
 import android.content.pm.PermissionInfo;
@@ -99,6 +100,7 @@ public class AppLaunchDetector {
                 currentPackageName = currentUsageStats.getPackageName();
 
                 if (currentPackageName != null &&
+                        !isSystemApp(currentPackageName) &&
                         !currentPackageName.equals(MithrilAC.getLauncherName(context)) &&
                         !currentPackageName.equals(context.getPackageName()))
                     return new Pair<>(currentPackageName, getOp());
@@ -107,6 +109,17 @@ public class AppLaunchDetector {
             Log.d(MithrilAC.getDebugTag(), "Probably a security exception because we don't have the right permissions " + e.getMessage());
         }
         return null;
+    }
+
+    private boolean isSystemApp(String packageName) {
+        PackageManager pm = context.getPackageManager();
+        try {
+            ApplicationInfo ai = pm.getApplicationInfo(packageName, 0);
+            if ((ai.flags & ApplicationInfo.FLAG_SYSTEM) != 0)
+                return true;
+        } catch (PackageManager.NameNotFoundException e) {
+        }
+        return false;
     }
 
     private List<Resource> getOp() {

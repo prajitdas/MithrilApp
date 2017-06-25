@@ -1,5 +1,6 @@
 package edu.umbc.ebiquity.mithril.ui.adapters;
 
+import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -15,6 +16,7 @@ import edu.umbc.ebiquity.mithril.R;
 import edu.umbc.ebiquity.mithril.data.dbhelpers.MithrilDBHelper;
 import edu.umbc.ebiquity.mithril.data.model.components.AppData;
 import edu.umbc.ebiquity.mithril.data.model.rules.Violation;
+import edu.umbc.ebiquity.mithril.ui.activities.TemporalDataEntryActivity;
 import edu.umbc.ebiquity.mithril.ui.fragments.coreactivityfragments.ViolationFragment.OnListFragmentInteractionListener;
 import edu.umbc.ebiquity.mithril.util.specialtasks.collections.MithrilCollections;
 
@@ -28,6 +30,7 @@ public class ViolationRecyclerViewAdapter extends RecyclerView.Adapter<Violation
     private final List<Violation> mValues;
     private final OnListFragmentInteractionListener mListener;
     private View view;
+    private Context context;
 
     public ViolationRecyclerViewAdapter(List<Violation> items, OnListFragmentInteractionListener listener) {
         mValues = items;
@@ -38,6 +41,7 @@ public class ViolationRecyclerViewAdapter extends RecyclerView.Adapter<Violation
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         view = LayoutInflater.from(parent.getContext())
                 .inflate(R.layout.fragment_violations, parent, false);
+        context = view.getContext();
         return new ViewHolder(view);
     }
 
@@ -49,10 +53,11 @@ public class ViolationRecyclerViewAdapter extends RecyclerView.Adapter<Violation
         holder.mItem = mValues.get(position);
         holder.mViolatingAppIcon.setImageBitmap(violatingApp.getIcon());
         holder.mViolationText.setText(violatingApp.getAppName() +
-                " launched at " +
+                " launch time " +
                 MithrilAC.getTimeText(
                         true,
                         mValues.get(position).getDetectedAtTime()));
+        holder.mViolationDetail.setText(mValues.get(position).getContextsString(context));
 //        holder.mResponseYesButton.setOnClickListener(new View.OnClickListener() {
 //            @Override
 //            public void onClick(View v) {
@@ -87,6 +92,7 @@ public class ViolationRecyclerViewAdapter extends RecyclerView.Adapter<Violation
         private final View mView;
         private final ImageView mViolatingAppIcon;
         private final TextView mViolationText;
+        private final TextView mViolationDetail;
 //        private final ImageButton mResponseYesButton;
 //        private final ImageButton mResponseNoButton;
 
@@ -97,6 +103,7 @@ public class ViolationRecyclerViewAdapter extends RecyclerView.Adapter<Violation
             mView = view;
             mViolatingAppIcon = (ImageView) view.findViewById(R.id.violatingAppIcon);
             mViolationText = (TextView) view.findViewById(R.id.violationText);
+            mViolationDetail = (TextView) view.findViewById(R.id.violationDetail);
 //            mResponseYesButton = (ImageButton) view.findViewById(R.id.mResponseYesButton);
 //            mResponseNoButton = (ImageButton) view.findViewById(R.id.responseNoButton);
         }

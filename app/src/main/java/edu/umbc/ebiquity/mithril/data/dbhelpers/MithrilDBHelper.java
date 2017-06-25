@@ -1056,7 +1056,7 @@ public class MithrilDBHelper extends SQLiteOpenHelper {
             values.put(VIOLATIONTRUEFALSE, 1);
         else
             values.put(VIOLATIONTRUEFALSE, 0);
-        values.put(VIOLATIONCTXTIDS, aViolation.getContextsString());
+        values.put(VIOLATIONCTXTIDS, aViolation.getContextsString(context));
         try {
             insertedRowId = db.insertOrThrow(getViolationsLogTableName(), null, values);
         } catch (SQLException e) {
@@ -1946,7 +1946,7 @@ public class MithrilDBHelper extends SQLiteOpenHelper {
             values.put(VIOLATIONTRUEFALSE, 1);
         else
             values.put(VIOLATIONTRUEFALSE, 0);
-        values.put(VIOLATIONCTXTIDS, aViolation.getContextsString());
+        values.put(VIOLATIONCTXTIDS, aViolation.getContextsString(context));
         String[] args = new String[]{
                 String.valueOf(aViolation.getAppId()),
                 String.valueOf(aViolation.getPolicyId()),

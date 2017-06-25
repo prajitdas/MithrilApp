@@ -1,10 +1,14 @@
 package edu.umbc.ebiquity.mithril.data.model.rules;
 
+import android.content.Context;
+import android.database.sqlite.SQLiteDatabase;
 import android.os.Parcel;
 import android.os.Parcelable;
 
 import java.sql.Timestamp;
 import java.util.List;
+
+import edu.umbc.ebiquity.mithril.data.dbhelpers.MithrilDBHelper;
 
 public class Violation implements Parcelable {
     public static final Creator<Violation> CREATOR = new Creator<Violation>() {
@@ -73,13 +77,17 @@ public class Violation implements Parcelable {
         return "Policy: " + policyId + " for app: " + appStr + " with access: " + opStr + " violated at: " + detectedAtTime;
     }
 
-    public String getContextsString() {
-        StringBuffer ctxtIdString = new StringBuffer();
-        for (Long context : ctxtIds) {
-            ctxtIdString.append(String.valueOf(context));
-            ctxtIdString.append(",");
+    public String getContextsString(Context context) {
+        if(ctxtIds != null || ctxtIds.size() <= 0) {
+            SQLiteDatabase mithrilDB = MithrilDBHelper.getHelper(context).getWritableDatabase();
+            StringBuffer ctxtIdString = new StringBuffer();
+            for (Long ctxt : ctxtIds) {
+                ctxtIdString.append(MithrilDBHelper.getHelper(context).findContextByID(mithrilDB, ctxt).second);
+                ctxtIdString.append(",");
+            }
+            return ctxtIdString.toString();
         }
-        return ctxtIdString.toString();
+        return "empty context?!";
     }
 
     public long getPolicyId() {
