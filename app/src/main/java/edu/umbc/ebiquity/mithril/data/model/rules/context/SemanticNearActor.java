@@ -6,6 +6,36 @@ import android.os.Parcelable;
 import edu.umbc.ebiquity.mithril.MithrilAC;
 
 public class SemanticNearActor extends SemanticUserContext implements Parcelable {
+    private final String type = MithrilAC.getPrefKeyContextTypePresence();
+    private String inferredRelationship;
+
+    public SemanticNearActor(String inferredRelationship, boolean enabled, int level) {
+        this.inferredRelationship = inferredRelationship;
+        this.enabled = enabled;
+        this.level = level;
+    }
+
+    private boolean enabled = false;
+    private int level;
+
+    protected SemanticNearActor(Parcel in) {
+        inferredRelationship = in.readString();
+        enabled = in.readByte() != 0;
+        level = in.readInt();
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeString(inferredRelationship);
+        dest.writeByte((byte) (enabled ? 1 : 0));
+        dest.writeInt(level);
+    }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
     public static final Creator<SemanticNearActor> CREATOR = new Creator<SemanticNearActor>() {
         @Override
         public SemanticNearActor createFromParcel(Parcel in) {
@@ -17,27 +47,6 @@ public class SemanticNearActor extends SemanticUserContext implements Parcelable
             return new SemanticNearActor[size];
         }
     };
-    private final String type = MithrilAC.getPrefKeyContextTypePresence();
-    private String inferredRelationship;
-    private boolean enabled = false;
-
-    protected SemanticNearActor(Parcel in) {
-        inferredRelationship = in.readString();
-        enabled = in.readByte() != 0;
-    }
-
-    public String getInferredRelationship() {
-        return inferredRelationship;
-    }
-
-    public void setInferredRelationship(String inferredRelationship) {
-        this.inferredRelationship = inferredRelationship;
-    }
-
-    @Override
-    public String getType() {
-        return type;
-    }
 
     @Override
     public String getLabel() {
@@ -50,6 +59,19 @@ public class SemanticNearActor extends SemanticUserContext implements Parcelable
     }
 
     @Override
+    public String getType() {
+        return type;
+    }
+
+    public String getInferredRelationship() {
+        return inferredRelationship;
+    }
+
+    public void setInferredRelationship(String inferredRelationship) {
+        this.inferredRelationship = inferredRelationship;
+    }
+
+    @Override
     public boolean isEnabled() {
         return enabled;
     }
@@ -59,14 +81,11 @@ public class SemanticNearActor extends SemanticUserContext implements Parcelable
         this.enabled = enabled;
     }
 
-    @Override
-    public int describeContents() {
-        return 0;
+    public int getLevel() {
+        return level;
     }
 
-    @Override
-    public void writeToParcel(Parcel dest, int flags) {
-        dest.writeString(inferredRelationship);
-        dest.writeByte((byte) (enabled ? 1 : 0));
+    public void setLevel(int level) {
+        this.level = level;
     }
 }

@@ -14,6 +14,53 @@ import edu.umbc.ebiquity.mithril.util.specialtasks.contextinstances.DayOfWeek;
 
 @TargetApi(Build.VERSION_CODES.N)
 public class SemanticTime extends SemanticUserContext implements Parcelable {
+    private final String type = MithrilAC.getPrefKeyContextTypeTemporal();
+    private List<DayOfWeek> dayOfWeek;
+    private int startHour;
+    private int startMinute;
+    private int endHour;
+    private int endMinute;
+    private String inferredTime;
+    private boolean enabled;
+    private int level;
+
+    protected SemanticTime(Parcel in) {
+        startHour = in.readInt();
+        startMinute = in.readInt();
+        endHour = in.readInt();
+        endMinute = in.readInt();
+        inferredTime = in.readString();
+        enabled = in.readByte() != 0;
+        level = in.readInt();
+    }
+
+    public SemanticTime(List<DayOfWeek> dayOfWeek, int startHour, int startMinute, int endHour, int endMinute, String inferredTime, boolean enabled, int level) {
+        this.dayOfWeek = dayOfWeek;
+        this.startHour = startHour;
+        this.startMinute = startMinute;
+        this.endHour = endHour;
+        this.endMinute = endMinute;
+        this.inferredTime = inferredTime;
+        this.enabled = enabled;
+        this.level = level;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeInt(startHour);
+        dest.writeInt(startMinute);
+        dest.writeInt(endHour);
+        dest.writeInt(endMinute);
+        dest.writeString(inferredTime);
+        dest.writeByte((byte) (enabled ? 1 : 0));
+        dest.writeInt(level);
+    }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
     public static final Creator<SemanticTime> CREATOR = new Creator<SemanticTime>() {
         @Override
         public SemanticTime createFromParcel(Parcel in) {
@@ -25,63 +72,6 @@ public class SemanticTime extends SemanticUserContext implements Parcelable {
             return new SemanticTime[size];
         }
     };
-    private final String type = MithrilAC.getPrefKeyContextTypeTemporal();
-    private List<DayOfWeek> dayOfWeek;
-    private int startHour;
-    private int startMinute;
-    private int endHour;
-    private int endMinute;
-    private String inferredTime;
-    private boolean enabled;
-
-    public SemanticTime(List<DayOfWeek> dayOfWeek, int startHour, int startMinute, int endHour, int endMinute, String inferredTime, boolean enabled) {
-        this.dayOfWeek = dayOfWeek;
-        this.startHour = startHour;
-        this.startMinute = startMinute;
-        this.endHour = endHour;
-        this.endMinute = endMinute;
-        this.inferredTime = inferredTime;
-        this.enabled = enabled;
-        this.dayOfWeek = dayOfWeek;
-    }
-
-    protected SemanticTime(Parcel in) {
-        startHour = in.readInt();
-        startMinute = in.readInt();
-        endHour = in.readInt();
-        endMinute = in.readInt();
-        inferredTime = in.readString();
-        enabled = in.readByte() != 0;
-    }
-
-    @Override
-    public void writeToParcel(Parcel dest, int flags) {
-        dest.writeInt(startHour);
-        dest.writeInt(startMinute);
-        dest.writeInt(endHour);
-        dest.writeInt(endMinute);
-        dest.writeString(inferredTime);
-        dest.writeByte((byte) (enabled ? 1 : 0));
-    }
-
-    @Override
-    public int describeContents() {
-        return 0;
-    }
-
-    public Calendar getStartTime() {
-        Calendar calendar = Calendar.getInstance();
-        calendar.set(Calendar.HOUR_OF_DAY, startHour);
-        calendar.set(Calendar.MINUTE, startMinute);
-        return calendar;
-    }
-
-    public Calendar getEndTime() {
-        Calendar calendar = Calendar.getInstance();
-        calendar.set(Calendar.HOUR_OF_DAY, endHour);
-        calendar.set(Calendar.MINUTE, endMinute);
-        return calendar;
-    }
 
     public String getDayOfWeekString() {
         if (dayOfWeek == null)
@@ -211,5 +201,13 @@ public class SemanticTime extends SemanticUserContext implements Parcelable {
     @Override
     public void setEnabled(boolean enabled) {
         this.enabled = enabled;
+    }
+
+    public int getLevel() {
+        return level;
+    }
+
+    public void setLevel(int level) {
+        this.level = level;
     }
 }
