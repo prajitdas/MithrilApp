@@ -248,8 +248,9 @@ public class AppLaunchDetectorService extends Service implements
         // Create an intent for passing to the intent service responsible for fetching the address.
         Intent intent = new Intent(this, FetchAddressIntentService.class);
 
+        mAddressRequested = true;
         intent.putExtra(MithrilAC.getAddressRequestedExtra(), mAddressRequested);
-        intent.putExtra(MithrilAC.getCurrAddressKey(), MithrilAC.getCurrAddressKey());
+        intent.putExtra(MithrilAC.getCurrAddressKey(), "curr_sem_loc");
 
         // Pass the result receiver as an extra to the service.
         intent.putExtra(MithrilAC.getAppReceiver(), mAddressResultReceiver);
@@ -292,7 +293,7 @@ public class AppLaunchDetectorService extends Service implements
         SemanticLocation semanticLocation = null;
         Gson retrieveDataGson = new Gson();
         String retrieveDataJson;
-        float shortestDistanceToKnownLocation = Float.MAX_VALUE;
+//        float shortestDistanceToKnownLocation = Float.MAX_VALUE;
         Map<String, ?> allPrefs;
         try {
             allPrefs = sharedPrefs.getAll();
@@ -304,17 +305,20 @@ public class AppLaunchDetectorService extends Service implements
                      * We are parsing all known locations and we know the current location's distance to them.
                      * Let's determine if we are at a certain known location and at what is that location.
                      */
-                    float distanceTo = knownSemanticLocation.getLocation().distanceTo(currentLocation);
-                    if (distanceTo < MithrilAC.getGeofenceRadiusInMeters() && shortestDistanceToKnownLocation > distanceTo) {
-                        shortestDistanceToKnownLocation = distanceTo;
-                        semanticLocation = knownSemanticLocation;
-                        Log.d(MithrilAC.getDebugTag(), "Passed location found: "
-                                + String.valueOf(currentLocation.getLatitude())
-                                + String.valueOf(currentLocation.getLongitude())
-                                + String.valueOf(distanceTo)
-                                + aPref.getKey()
-                        );
-                    }
+                    for(SemanticLocation currSemLoc : currentSemanticLocations.values())
+                        if(knownSemanticLocation.equals(currSemLoc))
+                            semanticLocation = currSemLoc;
+//                    float distanceTo = knownSemanticLocation.getLocation().distanceTo(currentLocation);
+//                    if (distanceTo < MithrilAC.getGeofenceRadiusInMeters() && shortestDistanceToKnownLocation > distanceTo) {
+//                        shortestDistanceToKnownLocation = distanceTo;
+//                        semanticLocation = knownSemanticLocation;
+//                        Log.d(MithrilAC.getDebugTag(), "Passed location found: "
+//                                + String.valueOf(currentLocation.getLatitude())
+//                                + String.valueOf(currentLocation.getLongitude())
+//                                + String.valueOf(distanceTo)
+//                                + aPref.getKey()
+//                        );
+//                    }
                 }
             }
         } catch (NullPointerException e) {
@@ -322,28 +326,28 @@ public class AppLaunchDetectorService extends Service implements
         } catch (Exception e) {
             Log.d(MithrilAC.getDebugTag(), "came here");
         }
-        if (semanticLocation == null) {
-            semanticLocation = new SemanticLocation(
-                    MithrilAC.getPrefKeyContextInstanceUnknown() + Long.toString(System.currentTimeMillis()),
-                    currentLocation,
-                    0);
-//            if (mGooglePlacesApiClient.isConnected()) {
-//                guessCurrentPlace();
-            if (mCurrentPlace != null) {
-                Log.d(MithrilAC.getDebugTag(), "We are at a new location: " + mCurrentPlace.getAddress());
-                semanticLocation.setName(mCurrentPlace.getName().toString());
-                semanticLocation.setPlaceId(mCurrentPlace.getId());
-                semanticLocation.setPlaceTypes(mCurrentPlace.getPlaceTypes());
-            }
-//            }
-            Gson contextDataStoreGson = new Gson();
-            addContext(
-                    MithrilAC.getPrefKeyContextTypeLocation(),
-                    MithrilAC.getPrefKeyContextInstanceUnknown() + String.valueOf(System.currentTimeMillis()),
-                    contextDataStoreGson.toJson(semanticLocation)
-            );
-        }
+        if (semanticLocation == null)
+            semanticLocation = handleUnknownLocation(currentLocation);
         Log.d(MithrilAC.getDebugTag(), "This is a test for location: " + semanticLocation.getLabel());
+        return semanticLocation;
+    }
+
+    private SemanticLocation handleUnknownLocation(Location currentLocation) {
+        Log.d(MithrilAC.getDebugTag(), "We are at a new location: " + mCurrentPlace.getAddress());
+        Gson contextDataStoreGson = new Gson();
+        SemanticLocation semanticLocation = new SemanticLocation(
+                MithrilAC.getPrefKeyContextInstanceUnknown() + Long.toString(System.currentTimeMillis()),
+                currentLocation,
+                mCurrentPlace.getName().toString(),
+                mCurrentPlace.getId(),
+                mCurrentPlace.getPlaceTypes(),
+                0
+        );
+        addContext(
+                MithrilAC.getPrefKeyContextTypeLocation(),
+                mCurrentPlace.getName().toString() + String.valueOf(System.currentTimeMillis()),
+                contextDataStoreGson.toJson(semanticLocation)
+        );
         return semanticLocation;
     }
 
@@ -494,10 +498,10 @@ public class AppLaunchDetectorService extends Service implements
             Log.d(MithrilAC.getDebugTag(), "Prefs address " + resultData.getString(MithrilAC.getCurrAddressKey()) + mAddressRequested + key + json);
             // Show a toast message if an address was found.
             if (resultCode == MithrilAC.SUCCESS_RESULT) {
-                SemanticLocation tempSemanticLocation = null;
-                for (Map.Entry<String, SemanticLocation> semanticLocation : currentSemanticLocations.entrySet())
-                    if (semanticLocation.getKey().equals(key))
-                        tempSemanticLocation = semanticLocation.getValue();
+                SemanticLocation tempSemanticLocation = new SemanticLocation(key, mCurrentLocation, 0);
+                tempSemanticLocation.setName(mCurrentPlace.getName().toString());
+                tempSemanticLocation.setPlaceId(mCurrentPlace.getId());
+                tempSemanticLocation.setPlaceTypes(mCurrentPlace.getPlaceTypes());
                 tempSemanticLocation.setAddress(mAddressOutput);
                 currentSemanticLocations.put(key, tempSemanticLocation);
 

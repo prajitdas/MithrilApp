@@ -4,13 +4,14 @@ import android.location.Address;
 import android.location.Location;
 import android.os.Parcel;
 import android.os.Parcelable;
+import android.support.annotation.NonNull;
 
 import java.util.List;
 import java.util.Locale;
 
 import edu.umbc.ebiquity.mithril.MithrilAC;
 
-public class SemanticLocation extends SemanticUserContext implements Parcelable {
+public class SemanticLocation extends SemanticUserContext implements Parcelable, Comparable<SemanticLocation> {
     private final String type = MithrilAC.getPrefKeyContextTypeLocation();
     private Location location;
     private Address address = new Address(Locale.getDefault());
@@ -48,6 +49,15 @@ public class SemanticLocation extends SemanticUserContext implements Parcelable 
     public SemanticLocation(String inferredLocation, Location location, int level) {
         this.location = location;
         this.inferredLocation = inferredLocation;
+        this.level = level;
+    }
+
+    public SemanticLocation(String inferredLocation, Location location, String name, String placeId, List<Integer> placeTypes, int level) {
+        this.location = location;
+        this.inferredLocation = inferredLocation;
+        this.name = name;
+        this.placeId = placeId;
+        this.placeTypes = placeTypes;
         this.level = level;
     }
 
@@ -167,5 +177,10 @@ public class SemanticLocation extends SemanticUserContext implements Parcelable 
 
     public void setLevel(int level) {
         this.level = level;
+    }
+
+    @Override
+    public int compareTo(@NonNull SemanticLocation o) {
+        return this.getName().compareTo(o.getName());
     }
 }
