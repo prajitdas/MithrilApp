@@ -141,8 +141,8 @@ public class DataGenerator {
         long appId, ctxtId;
         appId = MithrilDBHelper.getHelper(context).findAppIdByAppPkgName(mithrilDB, appPkgName);
         ctxtId = MithrilDBHelper.getHelper(context).findContextIdByLabelAndType(mithrilDB, contextLabel, contextType);
-//        Log.d(MithrilAC.getDebugTag(), "OpCode: " + permString);
-//        Log.d(MithrilAC.getDebugTag(), "AppOps: " + AppOpsManager.opToPermission(AppOpsManager.permissionToOpCode(permString)));
+        Log.d(MithrilAC.getDebugTag(), "OpCode: " + permString);
+        Log.d(MithrilAC.getDebugTag(), "AppOps: " + AppOpsManager.opToPermission(AppOpsManager.permissionToOpCode(permString)));
         if (appId == -1 || ctxtId == -1)
             return null;
         return new PolicyRule(
