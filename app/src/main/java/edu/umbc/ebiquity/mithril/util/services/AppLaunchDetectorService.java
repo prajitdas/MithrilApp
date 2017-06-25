@@ -321,13 +321,12 @@ public class AppLaunchDetectorService extends Service implements
                             if (level > knownSemanticLocation.getLevel()) {
                                 level = knownSemanticLocation.getLevel();
                                 semanticLocation = knownSemanticLocation;
-                                Log.d(MithrilAC.getDebugTag(), "Eureka we got a match to a location" + currSemLoc.getName() + currSemLoc.getLabel());
                             }
                         }
                         Log.d(MithrilAC.getDebugTag(), "Did not match but at least we got a location"+currSemLoc.getLabel()+currSemLoc.getName());
                     }
                     if(semanticLocation != null)
-                        Log.d(MithrilAC.getDebugTag(), semanticLocation.getName());
+                        Log.d(MithrilAC.getDebugTag(), "Eureka we got a match to a location" + knownSemanticLocation.getName() + knownSemanticLocation.getLabel());
                     else
                         Log.d(MithrilAC.getDebugTag(), "still null");
 //                    float distanceTo = knownSemanticLocation.getLocation().distanceTo(currentLocation);
