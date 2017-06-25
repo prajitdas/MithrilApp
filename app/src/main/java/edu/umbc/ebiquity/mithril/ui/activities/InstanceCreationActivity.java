@@ -1138,14 +1138,22 @@ public class InstanceCreationActivity extends AppCompatActivity
                 semanticLocations.put(key, tempSemanticLocation);
 
                 Address address = tempSemanticLocation.getAddress();
-                String street = address.getThoroughfare();
-                semanticLocations.put(key, new SemanticLocation(key+"_Street", false, street, 1));
-                String city = address.getLocality();
-                semanticLocations.put(key, new SemanticLocation(key+"_City", false, city, 1));
-                String state = address.getAdminArea();
-                semanticLocations.put(key, new SemanticLocation(key+"_State", false, state, 1));
-                String country = address.getCountryName();
-                semanticLocations.put(key, new SemanticLocation(key+"_Country", false, country, 1));
+                Location location = tempSemanticLocation.getLocation();
+                String placeId = tempSemanticLocation.getPlaceId();
+                List<Integer> placeTypes = tempSemanticLocation.getPlaceTypes();
+
+                semanticLocations.put(key+"_Street", new SemanticLocation(location, address,
+                        key+"_Street",
+                        false, address.getThoroughfare(), placeId, placeTypes, false, 0));
+                semanticLocations.put(key+"_City", new SemanticLocation(location, address,
+                        key+"_City",
+                        false, address.getThoroughfare(), placeId, placeTypes, false, 0));
+                semanticLocations.put(key+"_State", new SemanticLocation(location, address,
+                        key+"_State",
+                        false, address.getThoroughfare(), placeId, placeTypes, false, 0));
+                semanticLocations.put(key+"_Country", new SemanticLocation(location, address,
+                        key+"_Country",
+                        false, address.getThoroughfare(), placeId, placeTypes, false, 0));
 
                 refreshVisibleFragment();
             }
