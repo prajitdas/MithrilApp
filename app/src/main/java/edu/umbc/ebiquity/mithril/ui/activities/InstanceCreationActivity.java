@@ -1136,6 +1136,15 @@ public class InstanceCreationActivity extends AppCompatActivity
                         tempSemanticLocation = semanticLocation.getValue();
                 tempSemanticLocation.setAddress(mAddressOutput);
                 semanticLocations.put(key, tempSemanticLocation);
+
+                Address address = tempSemanticLocation.getAddress();
+                String building = address.getFeatureName();
+                tempSemanticLocation = new SemanticLocation(inferredLocation, enabled, String name, int level)
+                String street = address.getThoroughfare();
+                String city = address.getLocality();
+                String state = address.getAdminArea();
+                String country = address.getCountryName();
+
                 refreshVisibleFragment();
             }
             // Reset. Enable the Fetch Address button and stop showing the progress bar.

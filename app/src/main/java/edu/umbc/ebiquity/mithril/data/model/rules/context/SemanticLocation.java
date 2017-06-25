@@ -22,6 +22,13 @@ public class SemanticLocation extends SemanticUserContext implements Parcelable 
     private boolean geofenced = false;
     private int level;
 
+    public SemanticLocation(String inferredLocation, boolean enabled, String name, int level) {
+        this.inferredLocation = inferredLocation;
+        this.enabled = enabled;
+        this.name = name;
+        this.level = level;
+    }
+
     protected SemanticLocation(Parcel in) {
         location = in.readParcelable(Location.class.getClassLoader());
         address = in.readParcelable(Address.class.getClassLoader());
