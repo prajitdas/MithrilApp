@@ -10,11 +10,13 @@ import android.widget.TextView;
 
 import java.util.List;
 
+import edu.umbc.ebiquity.mithril.MithrilAC;
 import edu.umbc.ebiquity.mithril.R;
 import edu.umbc.ebiquity.mithril.data.dbhelpers.MithrilDBHelper;
 import edu.umbc.ebiquity.mithril.data.model.components.AppData;
 import edu.umbc.ebiquity.mithril.data.model.rules.Violation;
 import edu.umbc.ebiquity.mithril.ui.fragments.coreactivityfragments.ViolationFragment.OnListFragmentInteractionListener;
+import edu.umbc.ebiquity.mithril.util.specialtasks.collections.MithrilCollections;
 
 /**
  * {@link RecyclerView.Adapter} that can display a {@link Violation} and makes a call to the
@@ -46,7 +48,11 @@ public class ViolationRecyclerViewAdapter extends RecyclerView.Adapter<Violation
 
         holder.mItem = mValues.get(position);
         holder.mViolatingAppIcon.setImageBitmap(violatingApp.getIcon());
-        holder.mViolationText.setText(violatingApp.getAppName() + " used launched at " + mValues.get(position).getDetectedAtTime());
+        holder.mViolationText.setText(violatingApp.getAppName() +
+                " launched at " +
+                MithrilAC.getTimeText(
+                        true,
+                        mValues.get(position).getDetectedAtTime()));
 //        holder.mResponseYesButton.setOnClickListener(new View.OnClickListener() {
 //            @Override
 //            public void onClick(View v) {
