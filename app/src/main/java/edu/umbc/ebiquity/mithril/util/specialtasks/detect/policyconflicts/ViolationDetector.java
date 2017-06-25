@@ -217,6 +217,13 @@ public class ViolationDetector {
                     int newPolicyId = MithrilDBHelper.getHelper(context).findMaxPolicyId(mithrilDB) + 1;
                     AppData app = MithrilDBHelper.getHelper(context).findAppByAppPkgName(mithrilDB, currentPackageName);
                     long appId = MithrilDBHelper.getHelper(context).findAppIdByAppPkgName(mithrilDB, currentPackageName);
+                    Log.d(MithrilAC.getDebugTag(),
+                            Integer.toString(newPolicyId) +
+                                    currentPackageName +
+                                    app.getAppName() +
+                                    AppOpsManager.opToName(lastOperationPerformed) +
+                                    ctxtTypeLabel.second +
+                                    ctxtTypeLabel.first);
                     DataGenerator.createPolicyRule(
                             newPolicyId,
                             currentPackageName,
