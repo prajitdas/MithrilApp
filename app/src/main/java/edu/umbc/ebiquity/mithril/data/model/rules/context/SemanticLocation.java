@@ -183,4 +183,22 @@ public class SemanticLocation extends SemanticUserContext implements Parcelable,
     public int compareTo(@NonNull SemanticLocation o) {
         return this.getName().compareTo(o.getName());
     }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof SemanticLocation)) return false;
+
+        SemanticLocation that = (SemanticLocation) o;
+
+        if (!getName().equals(that.getName())) return false;
+        return getPlaceId().equals(that.getPlaceId());
+    }
+
+    @Override
+    public int hashCode() {
+        int result = getName().hashCode();
+        result = 31 * result + getPlaceId().hashCode();
+        return result;
+    }
 }

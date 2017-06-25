@@ -308,11 +308,11 @@ public class AppLaunchDetectorService extends Service implements
                      * Let's determine if we are at a certain known location and at what is that location.
                      */
                     for (SemanticLocation currSemLoc : currentSemanticLocations.values()) {
-                        if (knownSemanticLocation.equals(currSemLoc)) {
+                        if (knownSemanticLocation.compareTo(currSemLoc) == 0) {
                             semanticLocation = currSemLoc;
                             Log.d(MithrilAC.getDebugTag(), "Eureka we got a match to a location" + currSemLoc.getName());
                         }
-                        Log.d(MithrilAC.getDebugTag(), "Did not match but at least we got a location"+currSemLoc.getName());
+                        Log.d(MithrilAC.getDebugTag(), "Did not match but at least we got a location"+currSemLoc.getLabel()+currSemLoc.getName());
                     }
                     if(semanticLocation != null)
                         Log.d(MithrilAC.getDebugTag(), semanticLocation.getName());
