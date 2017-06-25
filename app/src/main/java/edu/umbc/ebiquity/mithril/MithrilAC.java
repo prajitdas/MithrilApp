@@ -36,7 +36,7 @@ public class MithrilAC extends Application {
     private static final String ADDRESS_REQUESTED_EXTRA = "ADDRESS_REQUESTED_EXTRA";
     private static final String LOCATION_DATA_EXTRA = MITHRIL_APP_PACKAGE_NAME + ".LOCATION_DATA_EXTRA";
     private static final String GEOFENCES_ADDED_KEY = MITHRIL_APP_PACKAGE_NAME + ".GEOFENCES_ADDED_KEY";
-    private static final String ADDRESS_KEY = "ADDRESS_KEY";
+    private static final String CURR_ADDRESS_KEY = "curr_address_key";
     private static final String NO_FLAGS = "no-flags";
     private static final String NORMAL_PROTECTION_LEVEL = "normal";
     private static final float GEOFENCE_RADIUS_IN_METERS = 200; // 200 meters
@@ -745,8 +745,8 @@ public class MithrilAC extends Application {
         return ADDRESS_REQUESTED_EXTRA;
     }
 
-    public static String getAddressKey() {
-        return ADDRESS_KEY;
+    public static String getCurrAddressKey() {
+        return CURR_ADDRESS_KEY;
     }
 
     public static String getPrefKeyContextTypeLocation() {

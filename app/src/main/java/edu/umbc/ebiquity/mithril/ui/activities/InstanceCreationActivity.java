@@ -895,6 +895,7 @@ public class InstanceCreationActivity extends AppCompatActivity
 
         SemanticLocation semanticLocation = new SemanticLocation(MithrilAC.getPrefHomeLocationKey(), userInputLocation, 0);
         semanticLocation.setName(place.getName().toString());
+        Log.d(MithrilAC.getDebugTag(), place.getName().toString());
         semanticLocation.setPlaceId(place.getId());
         semanticLocation.setPlaceTypes(place.getPlaceTypes());
 
@@ -985,7 +986,7 @@ public class InstanceCreationActivity extends AppCompatActivity
         Intent intent = new Intent(this, FetchAddressIntentService.class);
 
         intent.putExtra(MithrilAC.getAddressRequestedExtra(), mAddressRequested);
-        intent.putExtra(MithrilAC.getAddressKey(), key);
+        intent.putExtra(MithrilAC.getCurrAddressKey(), key);
 
         // Pass the result receiver as an extra to the service.
         intent.putExtra(MithrilAC.getAppReceiver(), mAddressResultReceiver);
@@ -1078,7 +1079,7 @@ public class InstanceCreationActivity extends AppCompatActivity
 
     }
 
-    class AddressResultReceiver extends ResultReceiver {
+    private class AddressResultReceiver extends ResultReceiver {
         private Context context;
         /**
          * The formatted location address.
@@ -1109,7 +1110,7 @@ public class InstanceCreationActivity extends AppCompatActivity
         @Override
         protected void onReceiveResult(int resultCode, Bundle resultData) {
             mAddressRequested = resultData.getBoolean(MithrilAC.getAddressRequestedExtra(), false);
-            String key = resultData.getString(MithrilAC.getAddressKey(), null);
+            String key = resultData.getString(MithrilAC.getCurrAddressKey(), null);
             if (key.equals(null))
                 throw new AddressKeyMissingError();
             else
@@ -1127,7 +1128,7 @@ public class InstanceCreationActivity extends AppCompatActivity
                 Log.d(MithrilAC.getDebugTag(), e.getMessage());
             }
 
-            Log.d(MithrilAC.getDebugTag(), "Prefs address " + resultData.getString(MithrilAC.getAddressKey()) + mAddressRequested + key + json);
+            Log.d(MithrilAC.getDebugTag(), "Prefs address " + resultData.getString(MithrilAC.getCurrAddressKey()) + mAddressRequested + key + json);
             // Show a toast message if an address was found.
             if (resultCode == MithrilAC.SUCCESS_RESULT) {
                 SemanticLocation tempSemanticLocation = null;
@@ -1135,13 +1136,15 @@ public class InstanceCreationActivity extends AppCompatActivity
                     if (semanticLocation.getKey().equals(key))
                         tempSemanticLocation = semanticLocation.getValue();
                 tempSemanticLocation.setAddress(mAddressOutput);
-                semanticLocations.put(key, tempSemanticLocation);
 
                 Address address = tempSemanticLocation.getAddress();
                 Location location = tempSemanticLocation.getLocation();
                 String placeId = tempSemanticLocation.getPlaceId();
                 List<Integer> placeTypes = tempSemanticLocation.getPlaceTypes();
 
+                semanticLocations.put(key, new SemanticLocation(location, address,
+                        key,
+                        false, tempSemanticLocation.getName(), placeId, placeTypes, false, 1));
                 semanticLocations.put(key+"_Street", new SemanticLocation(location, address,
                         key+"_Street",
                         false, address.getThoroughfare(), placeId, placeTypes, false, 1));

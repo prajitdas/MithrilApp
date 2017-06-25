@@ -50,7 +50,7 @@ public class FetchAddressIntentService extends IntentService {
      */
     @Override
     protected void onHandleIntent(Intent intent) {
-        addressKey = intent.getStringExtra(MithrilAC.getAddressKey());
+        addressKey = intent.getStringExtra(MithrilAC.getCurrAddressKey());
         String errorMessage = "";
 
         mReceiver = intent.getParcelableExtra(MithrilAC.getAppReceiver());
@@ -149,7 +149,7 @@ public class FetchAddressIntentService extends IntentService {
     private void deliverResultToReceiver(int resultCode, String message) {
         Bundle bundle = new Bundle();
         bundle.putString(MithrilAC.getResultDataKey(), message);
-        bundle.putString(MithrilAC.getAddressKey(), addressKey);
+        bundle.putString(MithrilAC.getCurrAddressKey(), addressKey);
 
         mReceiver.send(resultCode, bundle);
     }

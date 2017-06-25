@@ -5,10 +5,13 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.database.sqlite.SQLiteDatabase;
+import android.location.Address;
 import android.location.Location;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.IBinder;
+import android.os.ResultReceiver;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.util.Log;
@@ -28,8 +31,10 @@ import com.google.android.gms.location.places.PlaceLikelihood;
 import com.google.android.gms.location.places.PlaceLikelihoodBuffer;
 import com.google.android.gms.location.places.Places;
 import com.google.gson.Gson;
+import com.google.gson.JsonSyntaxException;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Timer;
@@ -45,6 +50,7 @@ import edu.umbc.ebiquity.mithril.data.model.rules.context.SemanticTime;
 import edu.umbc.ebiquity.mithril.data.model.rules.context.SemanticUserContext;
 import edu.umbc.ebiquity.mithril.util.specialtasks.detect.policyconflicts.ViolationDetector;
 import edu.umbc.ebiquity.mithril.util.specialtasks.detect.runningapps.AppLaunchDetector;
+import edu.umbc.ebiquity.mithril.util.specialtasks.errorsnexceptions.AddressKeyMissingError;
 import edu.umbc.ebiquity.mithril.util.specialtasks.errorsnexceptions.SemanticInconsistencyException;
 import edu.umbc.ebiquity.mithril.util.specialtasks.permissions.PermissionHelper;
 
@@ -65,9 +71,21 @@ public class AppLaunchDetectorService extends Service implements
     private GoogleApiClient mGooglePlacesApiClient;
     private Location mCurrentLocation;
     private Place mCurrentPlace;
+    private List<String> currentPlaceNames = new ArrayList<>();
     private boolean servicesAvailable;
     private boolean mInProgress;
     private boolean mPlacesInProcgress;
+    private List<SemanticUserContext> semanticUserContextList = new ArrayList<>();
+    /**
+     * Tracks whether the user has requested an address. Becomes true when the user requests an
+     * address and false when the address (or an error message) is delivered.
+     * The user requests an address by pressing the Fetch Address button. This may happen
+     * before GoogleApiClient connects. This activity uses this boolean to keep track of the
+     * user's intent. If the value is true, the activity tries to fetch the address as soon as
+     * GoogleApiClient connects.
+     */
+    private boolean mAddressRequested;
+    private AddressResultReceiver mAddressResultReceiver;
 
     @Override
     public IBinder onBind(Intent intent) {
@@ -82,6 +100,8 @@ public class AppLaunchDetectorService extends Service implements
         servicesAvailable = servicesConnected();
         sharedPrefs = getSharedPreferences(MithrilAC.getSharedPreferencesName(), Context.MODE_PRIVATE);
         editor = getSharedPreferences(MithrilAC.getSharedPreferencesName(), Context.MODE_PRIVATE).edit();
+        // Set defaults, then update using values stored in the Bundle.
+        mAddressRequested = false;
         initDB(context);
         /* Create a new location client, using the enclosing class to
          * handle callbacks.
@@ -198,12 +218,10 @@ public class AppLaunchDetectorService extends Service implements
     }
 
     private List<SemanticUserContext> getSemanticContexts() {
-        List<SemanticUserContext> semanticUserContextList = new ArrayList<>();
-
         //We are always at some location... where are we now? Also we are only in one place at a time
         if (mGoogleApiClient.isConnected()) {
             requestLastLocation();
-            semanticUserContextList.add(getSemanticLocation(mCurrentLocation));
+            startSearchAddressIntentService(mCurrentLocation);
 
             //Do we know the semantic temporal contexts?
             for (SemanticTime semanticTime : getSemanticTimes())
@@ -220,6 +238,29 @@ public class AppLaunchDetectorService extends Service implements
             return semanticUserContextList;
         }
         return new ArrayList<>();
+    }
+
+    /**
+     * Creates an intent, adds location data to it as an extra, and starts the intent service for
+     * fetching an address.
+     */
+    protected void startSearchAddressIntentService(Location location) {
+        // Create an intent for passing to the intent service responsible for fetching the address.
+        Intent intent = new Intent(this, FetchAddressIntentService.class);
+
+        intent.putExtra(MithrilAC.getAddressRequestedExtra(), mAddressRequested);
+        intent.putExtra(MithrilAC.getCurrAddressKey(), MithrilAC.getCurrAddressKey());
+
+        // Pass the result receiver as an extra to the service.
+        intent.putExtra(MithrilAC.getAppReceiver(), mAddressResultReceiver);
+
+        // Pass the location data as an extra to the service.
+        intent.putExtra(MithrilAC.getLocationDataExtra(), location);
+
+        // Start the service. If the service isn't already running, it is instantiated and started
+        // (creating a process for it if needed); if it is running then it remains running. The
+        // service kills itself automatically once all intents are processed.
+        startService(intent);
     }
 
     private List<SemanticActivity> getSemanticActivities() {
@@ -247,7 +288,7 @@ public class AppLaunchDetectorService extends Service implements
         }
     }
 
-    private SemanticLocation getSemanticLocation(Location location) {
+    private SemanticLocation getSemanticLocation(Location currentLocation) {
         SemanticLocation semanticLocation = null;
         Gson retrieveDataGson = new Gson();
         String retrieveDataJson;
@@ -258,18 +299,18 @@ public class AppLaunchDetectorService extends Service implements
             for (Map.Entry<String, ?> aPref : allPrefs.entrySet()) {
                 if (aPref.getKey().startsWith(MithrilAC.getPrefKeyContextTypeLocation())) {
                     retrieveDataJson = sharedPrefs.getString(aPref.getKey(), "");
-                    SemanticLocation tempSemanticLocation = retrieveDataGson.fromJson(retrieveDataJson, SemanticLocation.class);
+                    SemanticLocation knownSemanticLocation = retrieveDataGson.fromJson(retrieveDataJson, SemanticLocation.class);
                     /**
                      * We are parsing all known locations and we know the current location's distance to them.
                      * Let's determine if we are at a certain known location and at what is that location.
                      */
-                    float distanceTo = tempSemanticLocation.getLocation().distanceTo(location);
+                    float distanceTo = knownSemanticLocation.getLocation().distanceTo(currentLocation);
                     if (distanceTo < MithrilAC.getGeofenceRadiusInMeters() && shortestDistanceToKnownLocation > distanceTo) {
                         shortestDistanceToKnownLocation = distanceTo;
-                        semanticLocation = tempSemanticLocation;
+                        semanticLocation = knownSemanticLocation;
                         Log.d(MithrilAC.getDebugTag(), "Passed location found: "
-                                + String.valueOf(location.getLatitude())
-                                + String.valueOf(location.getLongitude())
+                                + String.valueOf(currentLocation.getLatitude())
+                                + String.valueOf(currentLocation.getLongitude())
                                 + String.valueOf(distanceTo)
                                 + aPref.getKey()
                         );
@@ -284,7 +325,7 @@ public class AppLaunchDetectorService extends Service implements
         if (semanticLocation == null) {
             semanticLocation = new SemanticLocation(
                     MithrilAC.getPrefKeyContextInstanceUnknown() + Long.toString(System.currentTimeMillis()),
-                    location,
+                    currentLocation,
                     0);
 //            if (mGooglePlacesApiClient.isConnected()) {
 //                guessCurrentPlace();
@@ -396,6 +437,90 @@ public class AppLaunchDetectorService extends Service implements
                     }
                 }
             });
+        }
+    }
+
+    private Map<String, SemanticLocation> currentSemanticLocations = new HashMap<>();
+
+    private class AddressResultReceiver extends ResultReceiver {
+        private Context context;
+        /**
+         * The formatted location address.
+         */
+        private Address mAddressOutput;
+        /**
+         * Tracks whether the user has requested an address. Becomes true when the user requests an
+         * address and false when the address (or an error message) is delivered.
+         * The user requests an address by pressing the Fetch Address button. This may happen
+         * before GoogleApiClient connects. This activity uses this boolean to keep track of the
+         * user's intent. If the value is true, the activity tries to fetch the address as soon as
+         * GoogleApiClient connects.
+         */
+        private boolean mAddressRequested;
+
+        public AddressResultReceiver(Handler handler, Context aContext) {
+            super(handler);
+
+            context = aContext;
+            // Set defaults, then update using values stored in the Bundle.
+            mAddressRequested = false;
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N)
+                mAddressOutput = new Address(context.getResources().getConfiguration().getLocales().get(0));
+            else
+                mAddressOutput = new Address(context.getResources().getConfiguration().locale);
+        }
+
+        @Override
+        protected void onReceiveResult(int resultCode, Bundle resultData) {
+            mAddressRequested = resultData.getBoolean(MithrilAC.getAddressRequestedExtra(), false);
+            String key = resultData.getString(MithrilAC.getCurrAddressKey(), null);
+            if (key.equals(null))
+                throw new AddressKeyMissingError();
+            else
+                storeAddressInSharedPreferences(key, resultCode, resultData);
+        }
+
+        protected void storeAddressInSharedPreferences(String key, int resultCode, Bundle resultData) {
+            // Display the address string
+            // or an error message sent from the intent service.
+            Gson gson = new Gson();
+            String json = resultData.getString(MithrilAC.getResultDataKey(), "");
+            try {
+                mAddressOutput = gson.fromJson(json, Address.class);
+            } catch (JsonSyntaxException e) {
+                Log.d(MithrilAC.getDebugTag(), e.getMessage());
+            }
+
+            Log.d(MithrilAC.getDebugTag(), "Prefs address " + resultData.getString(MithrilAC.getCurrAddressKey()) + mAddressRequested + key + json);
+            // Show a toast message if an address was found.
+            if (resultCode == MithrilAC.SUCCESS_RESULT) {
+                SemanticLocation tempSemanticLocation = null;
+                for (Map.Entry<String, SemanticLocation> semanticLocation : currentSemanticLocations.entrySet())
+                    if (semanticLocation.getKey().equals(key))
+                        tempSemanticLocation = semanticLocation.getValue();
+                tempSemanticLocation.setAddress(mAddressOutput);
+                currentSemanticLocations.put(key, tempSemanticLocation);
+
+                Address address = tempSemanticLocation.getAddress();
+                Location location = tempSemanticLocation.getLocation();
+                String placeId = tempSemanticLocation.getPlaceId();
+                List<Integer> placeTypes = tempSemanticLocation.getPlaceTypes();
+
+                currentSemanticLocations.put(key+"_Street", new SemanticLocation(location, address,
+                        key+"_Street",
+                        false, address.getThoroughfare(), placeId, placeTypes, false, 1));
+                currentSemanticLocations.put(key+"_City", new SemanticLocation(location, address,
+                        key+"_City",
+                        false, address.getLocality(), placeId, placeTypes, false, 2));
+                currentSemanticLocations.put(key+"_State", new SemanticLocation(location, address,
+                        key+"_State",
+                        false, address.getAdminArea(), placeId, placeTypes, false, 3));
+                currentSemanticLocations.put(key+"_Country", new SemanticLocation(location, address,
+                        key+"_Country",
+                        false, address.getCountryName(), placeId, placeTypes, false, 4));
+            }
+            // Reset. Enable the Fetch Address button and stop showing the progress bar.
+            mAddressRequested = false;
         }
     }
 }
