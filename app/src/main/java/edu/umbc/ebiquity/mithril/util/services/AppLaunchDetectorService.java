@@ -220,9 +220,7 @@ public class AppLaunchDetectorService extends Service implements
     private List<SemanticUserContext> getSemanticContexts() {
         //We are always at some location... where are we now? Also we are only in one place at a time
         if (mGoogleApiClient.isConnected()) {
-            requestLastLocation();
-            startSearchAddressIntentService(mCurrentLocation);
-
+            semanticUserContextList.add(getSemanticLocation(mCurrentLocation));
             //Do we know the semantic temporal contexts?
             for (SemanticTime semanticTime : getSemanticTimes())
                 semanticUserContextList.add(semanticTime);
@@ -412,6 +410,9 @@ public class AppLaunchDetectorService extends Service implements
                                 editor.apply();
                                 Log.d(MithrilAC.getDebugTag(), pkgOpPair.first);
 
+                                requestLastLocation();
+                                startSearchAddressIntentService(mCurrentLocation);
+
                                 try {
                                     ViolationDetector.detectViolation(
                                             context,
@@ -431,6 +432,9 @@ public class AppLaunchDetectorService extends Service implements
                             editor.putString(MithrilAC.getPrefKeyLastRunningApp(), pkgOpPair.first);
                             editor.apply();
                             Log.d(MithrilAC.getDebugTag(), pkgOpPair.first);
+
+                            requestLastLocation();
+                            startSearchAddressIntentService(mCurrentLocation);
 
                             try {
                                 ViolationDetector.detectViolation(
