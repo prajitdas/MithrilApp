@@ -22,19 +22,15 @@ public class MithrilAC extends Application {
     /**
      * Public stuff! Make them private if you can...
      */
-    public static final int ALL_PERMISSIONS_MITHRIL_REQUEST_CODE = 100;
-    public static final int USAGE_STATS_PERMISSION_REQUEST_CODE = 200;
+    public static final int ALL_PERMISSIONS_MITHRIL_REQUEST_CODE = 1;
+    public static final int USAGE_STATS_PERMISSION_REQUEST_CODE = 2;
 
-    public static final int SUCCESS_RESULT = 0;
-    public static final int FAILURE_RESULT = 1;
+    public static final int SUCCESS_RESULT = 3;
+    public static final int FAILURE_RESULT = 4;
 
     public static final String MITHRIL_APP_PACKAGE_NAME = "edu.umbc.ebiquity.mithril";
 
     public static final String MITHRIL_BYE_BYE_MESSAGE = "Bye! Thanks for helping with our survey...";
-    /**
-     * Map for storing information about airports in the San Francisco bay area.
-     */
-    public static final HashMap<String, LatLng> BALTIMORE_COUNTY_LANDMARKS = new HashMap<String, LatLng>();
     private static final String APP_RECEIVER = MITHRIL_APP_PACKAGE_NAME + ".APP_RECEIVER";
     private static final String RESULT_DATA_KEY = MITHRIL_APP_PACKAGE_NAME + ".RESULT_DATA_KEY";
     private static final String ADDRESS_REQUESTED_EXTRA = "ADDRESS_REQUESTED_EXTRA";

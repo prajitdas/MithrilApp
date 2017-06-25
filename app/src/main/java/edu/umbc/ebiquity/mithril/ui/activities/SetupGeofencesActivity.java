@@ -287,6 +287,7 @@ public class SetupGeofencesActivity extends AppCompatActivity implements
             // geofences enables the Add Geofences button.
 //            setButtonsEnabledState();
 
+            Log.d(MithrilAC.getDebugTag(), getString(mGeofencesAdded ? R.string.geofences_added : R.string.geofences_removed));
             PermissionHelper.toast(this,
                     getString(mGeofencesAdded ? R.string.geofences_added : R.string.geofences_removed));
         } else {

@@ -251,7 +251,7 @@ public class AppLaunchDetectorService extends Service implements
         SemanticLocation semanticLocation = null;
         Gson retrieveDataGson = new Gson();
         String retrieveDataJson;
-        float distanceToKnownLocation = Float.MAX_VALUE;
+        float shortestDistanceToKnownLocation = Float.MAX_VALUE;
         Map<String, ?> allPrefs;
         try {
             allPrefs = sharedPrefs.getAll();
@@ -263,14 +263,14 @@ public class AppLaunchDetectorService extends Service implements
                      * We are parsing all known locations and we know the current location's distance to them.
                      * Let's determine if we are at a certain known location and at what is that location.
                      */
-                    float dist = tempSemanticLocation.getLocation().distanceTo(location);
-                    if (dist < 200 && distanceToKnownLocation > dist) {
-                        distanceToKnownLocation = dist;
+                    float distanceTo = tempSemanticLocation.getLocation().distanceTo(location);
+                    if (distanceTo < MithrilAC.getGeofenceRadiusInMeters() && shortestDistanceToKnownLocation > distanceTo) {
+                        shortestDistanceToKnownLocation = distanceTo;
                         semanticLocation = tempSemanticLocation;
                         Log.d(MithrilAC.getDebugTag(), "Passed location found: "
                                 + String.valueOf(location.getLatitude())
                                 + String.valueOf(location.getLongitude())
-                                + String.valueOf(dist)
+                                + String.valueOf(distanceTo)
                                 + aPref.getKey()
                         );
                     }
@@ -285,15 +285,15 @@ public class AppLaunchDetectorService extends Service implements
             semanticLocation = new SemanticLocation(
                     MithrilAC.getPrefKeyContextInstanceUnknown() + Long.toString(System.currentTimeMillis()),
                     location);
-            if (mGooglePlacesApiClient.isConnected()) {
+//            if (mGooglePlacesApiClient.isConnected()) {
 //                guessCurrentPlace();
-                if (mCurrentPlace != null) {
-                    Log.d(MithrilAC.getDebugTag(), "We at: " + mCurrentPlace.getAddress());
-                    semanticLocation.setName(mCurrentPlace.getName().toString());
-                    semanticLocation.setPlaceId(mCurrentPlace.getId());
-                    semanticLocation.setPlaceTypes(mCurrentPlace.getPlaceTypes());
-                }
+            if (mCurrentPlace != null) {
+                Log.d(MithrilAC.getDebugTag(), "We are at a new location: " + mCurrentPlace.getAddress());
+                semanticLocation.setName(mCurrentPlace.getName().toString());
+                semanticLocation.setPlaceId(mCurrentPlace.getId());
+                semanticLocation.setPlaceTypes(mCurrentPlace.getPlaceTypes());
             }
+//            }
             Gson contextDataStoreGson = new Gson();
             addContext(
                     MithrilAC.getPrefKeyContextTypeLocation(),
