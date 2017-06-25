@@ -284,7 +284,8 @@ public class AppLaunchDetectorService extends Service implements
         if (semanticLocation == null) {
             semanticLocation = new SemanticLocation(
                     MithrilAC.getPrefKeyContextInstanceUnknown() + Long.toString(System.currentTimeMillis()),
-                    location);
+                    location,
+                    0);
 //            if (mGooglePlacesApiClient.isConnected()) {
 //                guessCurrentPlace();
             if (mCurrentPlace != null) {

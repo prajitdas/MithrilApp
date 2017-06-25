@@ -1138,12 +1138,14 @@ public class InstanceCreationActivity extends AppCompatActivity
                 semanticLocations.put(key, tempSemanticLocation);
 
                 Address address = tempSemanticLocation.getAddress();
-                String building = address.getFeatureName();
-                tempSemanticLocation = new SemanticLocation(inferredLocation, enabled, String name, int level)
                 String street = address.getThoroughfare();
+                semanticLocations.put(key, new SemanticLocation(key+"_Street", false, street, 1));
                 String city = address.getLocality();
+                semanticLocations.put(key, new SemanticLocation(key+"_City", false, city, 1));
                 String state = address.getAdminArea();
+                semanticLocations.put(key, new SemanticLocation(key+"_State", false, state, 1));
                 String country = address.getCountryName();
+                semanticLocations.put(key, new SemanticLocation(key+"_Country", false, country, 1));
 
                 refreshVisibleFragment();
             }

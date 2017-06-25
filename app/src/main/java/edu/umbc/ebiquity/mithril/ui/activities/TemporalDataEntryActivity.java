@@ -60,13 +60,20 @@ public class TemporalDataEntryActivity extends AppCompatActivity implements
         mStartTimeBtn.setText(
                 getResources().getString(
                         R.string.starting_time) +
-                        semanticTime.getStartTime());
+                        semanticTime.getStartHour() +
+                        ":" +
+                        semanticTime.getStartMinute()
+        );
 
         mEndTimeBtn = (Button) findViewById(R.id.endTimeBtn);
         mEndTimeBtn.setText(
                 getResources().getString(
                         R.string.ending_time) +
-                        semanticTime.getEndTime());
+                        semanticTime.getEndHour() +
+                        ":" +
+                        semanticTime.getEndMinute()
+        );
+
         mEnabledBtn = (Button) findViewById(R.id.enabledBtn);
         mDoneBtn = (Button) findViewById(R.id.doneLabelBtn);
 
@@ -131,7 +138,10 @@ public class TemporalDataEntryActivity extends AppCompatActivity implements
                                 getEndHour(),
                                 getEndMinute(),
                                 label,
-                                false));
+                                false,
+                                0
+                        )
+                );
                 setResult(Activity.RESULT_OK, resultIntent);
                 finish();
             }
