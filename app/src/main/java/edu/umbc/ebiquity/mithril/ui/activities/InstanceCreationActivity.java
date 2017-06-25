@@ -448,7 +448,9 @@ public class InstanceCreationActivity extends AppCompatActivity
                 0,
                 0,
                 MithrilAC.getWeekend(),
-                false);
+                false,
+                0
+        );
         semanticTimes.put(MithrilAC.getPrefKeyContextTypeTemporal() + semanticTime.getLabel(), semanticTime);
 
         /**********************************************************************************************************************/
@@ -469,7 +471,9 @@ public class InstanceCreationActivity extends AppCompatActivity
                 8,
                 30,
                 MithrilAC.getPrefTimeIntervalBreakfastTemporalKey(),
-                false);
+                false,
+                0
+        );
         semanticTimes.put(MithrilAC.getPrefKeyContextTypeTemporal() + semanticTime.getLabel(), semanticTime);
 
         /**********************************************************************************************************************/
@@ -487,7 +491,9 @@ public class InstanceCreationActivity extends AppCompatActivity
                 12,
                 0,
                 MithrilAC.getPrefTimeIntervalWorkMorningTemporalKey(),
-                false);
+                false,
+                0
+        );
         semanticTimes.put(MithrilAC.getPrefKeyContextTypeTemporal() + semanticTime.getLabel(), semanticTime);
 
         /**********************************************************************************************************************/
@@ -505,7 +511,9 @@ public class InstanceCreationActivity extends AppCompatActivity
                 12,
                 30,
                 MithrilAC.getPrefTimeIntervalLunchTemporalKey(),
-                false);
+                false,
+                0
+        );
         semanticTimes.put(MithrilAC.getPrefKeyContextTypeTemporal() + semanticTime.getLabel(), semanticTime);
 
         /**********************************************************************************************************************/
@@ -523,7 +531,9 @@ public class InstanceCreationActivity extends AppCompatActivity
                 16,
                 0,
                 MithrilAC.getPrefTimeIntervalWorkAfternoonTemporalKey(),
-                false);
+                false,
+                0
+        );
         semanticTimes.put(MithrilAC.getPrefKeyContextTypeTemporal() + semanticTime.getLabel(), semanticTime);
 
         /**********************************************************************************************************************/
@@ -541,7 +551,9 @@ public class InstanceCreationActivity extends AppCompatActivity
                 19,
                 0,
                 MithrilAC.getPrefTimeIntervalFamilyTemporalKey(),
-                false);
+                false,
+                0
+        );
         semanticTimes.put(MithrilAC.getPrefKeyContextTypeTemporal() + semanticTime.getLabel(), semanticTime);
 
         /**
@@ -554,7 +566,9 @@ public class InstanceCreationActivity extends AppCompatActivity
                 19,
                 30,
                 MithrilAC.getPrefTimeIntervalDinnerTemporalKey(),
-                false);
+                false,
+                0
+        );
         semanticTimes.put(MithrilAC.getPrefKeyContextTypeTemporal() + semanticTime.getLabel(), semanticTime);
 
         /**
@@ -567,7 +581,9 @@ public class InstanceCreationActivity extends AppCompatActivity
                 21,
                 0,
                 MithrilAC.getPrefTimeIntervalPersonalTemporalKey(),
-                false);
+                false,
+                0
+        );
         semanticTimes.put(MithrilAC.getPrefKeyContextTypeTemporal() + semanticTime.getLabel(), semanticTime);
 
         /**
@@ -580,7 +596,9 @@ public class InstanceCreationActivity extends AppCompatActivity
                 8,
                 0,
                 MithrilAC.getPrefTimeIntervalDndTemporalKey(),
-                false);
+                false,
+                0
+        );
         semanticTimes.put(MithrilAC.getPrefKeyContextTypeTemporal() + semanticTime.getLabel(), semanticTime);
 
         isThereTemporalContextToSave = true;
@@ -734,7 +752,7 @@ public class InstanceCreationActivity extends AppCompatActivity
         dayOfWeek.add(DayOfWeek.Friday);
         dayOfWeek.add(DayOfWeek.Saturday);
 
-        SemanticTime semanticTime = new SemanticTime(dayOfWeek, 0, 0, 0, 0, label, false);
+        SemanticTime semanticTime = new SemanticTime(dayOfWeek, 0, 0, 0, 0, label, false, 0);
 
         Intent intent = new Intent(this, TemporalDataEntryActivity.class);
         intent.putExtra(MithrilAC.getPrefKeyTemporalLabel(), label);
@@ -875,7 +893,7 @@ public class InstanceCreationActivity extends AppCompatActivity
         userInputLocation.setLatitude(place.getLatLng().latitude);
         userInputLocation.setLongitude(place.getLatLng().longitude);
 
-        SemanticLocation semanticLocation = new SemanticLocation(MithrilAC.getPrefHomeLocationKey(), userInputLocation);
+        SemanticLocation semanticLocation = new SemanticLocation(MithrilAC.getPrefHomeLocationKey(), userInputLocation, 0);
         semanticLocation.setName(place.getName().toString());
         semanticLocation.setPlaceId(place.getId());
         semanticLocation.setPlaceTypes(place.getPlaceTypes());
@@ -893,7 +911,7 @@ public class InstanceCreationActivity extends AppCompatActivity
         userInputLocation.setLatitude(place.getLatLng().latitude);
         userInputLocation.setLongitude(place.getLatLng().longitude);
 
-        SemanticLocation semanticLocation = new SemanticLocation(MithrilAC.getPrefWorkLocationKey(), userInputLocation);
+        SemanticLocation semanticLocation = new SemanticLocation(MithrilAC.getPrefWorkLocationKey(), userInputLocation, 0);
         semanticLocation.setName(place.getName().toString());
         semanticLocation.setPlaceId(place.getId());
         semanticLocation.setPlaceTypes(place.getPlaceTypes());
@@ -924,7 +942,7 @@ public class InstanceCreationActivity extends AppCompatActivity
                 userInputLocation.setLatitude(place.getLatLng().latitude);
                 userInputLocation.setLongitude(place.getLatLng().longitude);
 
-                SemanticLocation semanticLocation = new SemanticLocation(semanticLocationLabel, userInputLocation);
+                SemanticLocation semanticLocation = new SemanticLocation(semanticLocationLabel, userInputLocation, 0);
                 semanticLocation.setName(place.getName().toString());
                 semanticLocation.setPlaceId(place.getId());
                 semanticLocation.setPlaceTypes(place.getPlaceTypes());

@@ -45,6 +45,12 @@ public class SemanticLocation extends SemanticUserContext implements Parcelable 
         this.level = level;
     }
 
+    public SemanticLocation(String inferredLocation, Location location, int level) {
+        this.location = location;
+        this.inferredLocation = inferredLocation;
+        this.level = level;
+    }
+
     @Override
     public void writeToParcel(Parcel dest, int flags) {
         dest.writeParcelable(location, flags);
