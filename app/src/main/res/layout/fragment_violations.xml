@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
+    android:layout_width="wrap_content"
     android:layout_height="wrap_content"
     android:orientation="horizontal">
 
     <android.support.v7.widget.CardView xmlns:card_view="http://schemas.android.com/apk/res-auto"
         android:id="@+id/violation_card_view"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         android:layout_marginBottom="@dimen/card_view_margin"
         android:layout_marginEnd="@dimen/card_view_margin"
         android:layout_marginStart="@dimen/card_view_margin"
@@ -21,8 +21,8 @@
 
             <ImageView
                 android:id="@+id/violatingAppIcon"
-                android:layout_width="55dp"
-                android:layout_height="50dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
                 android:layout_alignParentLeft="true"
                 android:layout_alignParentStart="true"
                 android:src="@drawable/ic_launcher"
@@ -34,7 +34,7 @@
                 android:scaleType="centerCrop" />
 
             <TextView
-                android:id="@+id/violationText"
+                android:id="@+id/violationAppLaunch"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_toRightOf="@+id/violatingAppIcon"
@@ -48,10 +48,10 @@
                 android:textSize="18dp" />
 
             <TextView
-                android:id="@+id/violationDetail"
+                android:id="@+id/violationOpDetail"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_below="@+id/violationText"
+                android:layout_below="@+id/violationAppLaunch"
                 android:layout_toRightOf="@+id/violatingAppIcon"
                 android:fontFamily="josephine-sans"
                 android:paddingEnd="5dp"
@@ -61,6 +61,47 @@
                 android:text="@string/placeholder_text_violation_info"
                 android:textColor="@color/colorPrimaryText"
                 android:textSize="14dp" />
+
+            <ImageButton
+                android:id="@+id/violationResponseYesButton"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentStart="true"
+                android:layout_below="@+id/violatingAppIcon"
+                android:backgroundTint="@color/green"
+                android:layout_marginEnd="@dimen/fab_margin"
+                android:layout_marginStart="@dimen/fab_margin"
+                android:layout_marginBottom="@dimen/fab_margin"
+                android:layout_marginTop="@dimen/fab_margin"
+                android:background="@drawable/thumb_up"/>
+
+            <TextView
+                android:id="@+id/violationContext"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/violatingAppIcon"
+                android:layout_toRightOf="@+id/mResponseYesButton"
+                android:fontFamily="josephine-sans"
+                android:paddingEnd="5dp"
+                android:paddingLeft="5dp"
+                android:paddingRight="5dp"
+                android:paddingStart="5dp"
+                android:text="@string/placeholder_text_violation_info"
+                android:textColor="@color/colorPrimaryText"
+                android:textSize="14dp" />
+
+            <ImageButton
+                android:id="@+id/responseNoButton"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentEnd="true"
+                android:layout_below="@+id/violatingAppIcon"
+                android:backgroundTint="@color/red"
+                android:layout_marginEnd="@dimen/fab_margin"
+                android:layout_marginStart="@dimen/fab_margin"
+                android:layout_marginBottom="@dimen/fab_margin"
+                android:layout_marginTop="@dimen/fab_margin"
+                android:background="@drawable/thumb_down" />
         </RelativeLayout>
     </android.support.v7.widget.CardView>
 </LinearLayout>
