@@ -1056,7 +1056,7 @@ public class MithrilDBHelper extends SQLiteOpenHelper {
             values.put(VIOLATIONTRUEFALSE, 1);
         else
             values.put(VIOLATIONTRUEFALSE, 0);
-        values.put(VIOLATIONCTXTIDS, aViolation.getContextsString(context));
+        values.put(VIOLATIONCTXTIDS, aViolation.getCtxtIdString());
         try {
             insertedRowId = db.insertOrThrow(getViolationsLogTableName(), null, values);
         } catch (SQLException e) {
@@ -1505,7 +1505,7 @@ public class MithrilDBHelper extends SQLiteOpenHelper {
                             cursor.getInt(5) == 1,
                             cursor.getInt(6) == 1,
                             new Timestamp(cursor.getLong(7)),
-                            getCtxtIds(cursor.getString(8))
+                            setCtxtIds(cursor.getString(8))
                     );
                     violations.add(tempViolation);
                 } while (cursor.moveToNext());
@@ -1518,11 +1518,11 @@ public class MithrilDBHelper extends SQLiteOpenHelper {
         return violations;
     }
 
-    private List<Long> getCtxtIds(String input) {
+    private List<Long> setCtxtIds(String input) {
         String[] ctxtIdStrings = input.split(",");
         List<Long> ctxtIds = new ArrayList<>();
         for (int i = 0; i < ctxtIdStrings.length; i++)
-            ctxtIds.add(Long.getLong(ctxtIdStrings[i]));
+            ctxtIds.add(Long.parseLong(ctxtIdStrings[i]));
         return ctxtIds;
     }
 
@@ -1561,7 +1561,7 @@ public class MithrilDBHelper extends SQLiteOpenHelper {
                             cursor.getInt(5) == 1,
                             cursor.getInt(6) == 1,
                             new Timestamp(cursor.getLong(7)),
-                            getCtxtIds(cursor.getString(8))
+                            setCtxtIds(cursor.getString(8))
                     );
                     violations.add(tempViolation);
                 } while (cursor.moveToNext());
@@ -1946,7 +1946,7 @@ public class MithrilDBHelper extends SQLiteOpenHelper {
             values.put(VIOLATIONTRUEFALSE, 1);
         else
             values.put(VIOLATIONTRUEFALSE, 0);
-        values.put(VIOLATIONCTXTIDS, aViolation.getContextsString(context));
+        values.put(VIOLATIONCTXTIDS, aViolation.getCtxtIdString());
         String[] args = new String[]{
                 String.valueOf(aViolation.getAppId()),
                 String.valueOf(aViolation.getPolicyId()),

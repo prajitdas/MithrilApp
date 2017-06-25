@@ -53,11 +53,12 @@ public class ViolationRecyclerViewAdapter extends RecyclerView.Adapter<Violation
         holder.mItem = mValues.get(position);
         holder.mViolatingAppIcon.setImageBitmap(violatingApp.getIcon());
         holder.mViolationText.setText(violatingApp.getAppName() +
-                " launch time " +
+                " launched " +
                 MithrilAC.getTimeText(
                         true,
                         mValues.get(position).getDetectedAtTime()));
-        holder.mViolationDetail.setText(mValues.get(position).getContextsString(context));
+        holder.mViolationDetail.setText("Context - " +
+                mValues.get(position).getContextsString(context));
 //        holder.mResponseYesButton.setOnClickListener(new View.OnClickListener() {
 //            @Override
 //            public void onClick(View v) {

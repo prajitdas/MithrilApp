@@ -4,10 +4,13 @@ import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Parcel;
 import android.os.Parcelable;
+import android.util.Log;
 
 import java.sql.Timestamp;
+import java.util.ArrayList;
 import java.util.List;
 
+import edu.umbc.ebiquity.mithril.MithrilAC;
 import edu.umbc.ebiquity.mithril.data.dbhelpers.MithrilDBHelper;
 
 public class Violation implements Parcelable {
@@ -78,16 +81,19 @@ public class Violation implements Parcelable {
     }
 
     public String getContextsString(Context context) {
-        if(ctxtIds != null || ctxtIds.size() <= 0) {
-            SQLiteDatabase mithrilDB = MithrilDBHelper.getHelper(context).getWritableDatabase();
-            StringBuffer ctxtIdString = new StringBuffer();
-            for (Long ctxt : ctxtIds) {
-                ctxtIdString.append(MithrilDBHelper.getHelper(context).findContextByID(mithrilDB, ctxt).second);
-                ctxtIdString.append(",");
-            }
-            return ctxtIdString.toString();
+        if(ctxtIds == null || ctxtIds.size() == 0)
+            return "empty context?!";
+        Log.d(MithrilAC.getDebugTag(), "Size found: "+Long.toString(ctxtIds.size()));
+        Log.d(MithrilAC.getDebugTag(), "Long value found: "+Long.toString(ctxtIds.get(0)));
+        SQLiteDatabase mithrilDB = MithrilDBHelper.getHelper(context).getWritableDatabase();
+        StringBuffer ctxtIdString = new StringBuffer();
+        for (Long ctxt : ctxtIds) {
+            Log.d(MithrilAC.getDebugTag(), "Long value found: "+Long.toString(ctxt));
+            ctxtIdString.append(MithrilDBHelper.getHelper(context).findContextByID(mithrilDB, ctxt).second);
+            ctxtIdString.append(",");
         }
-        return "empty context?!";
+        ctxtIdString.deleteCharAt(ctxtIdString.length()-1);
+        return ctxtIdString.toString();
     }
 
     public long getPolicyId() {
@@ -164,6 +170,17 @@ public class Violation implements Parcelable {
 
     public List<Long> getCtxtIds() {
         return ctxtIds;
+    }
+
+    public String getCtxtIdString() {
+        if(ctxtIds == null || ctxtIds.size() == 0)
+            return "";
+        StringBuffer ctxtIdString = new StringBuffer();
+        for (Long ctxt : ctxtIds) {
+            ctxtIdString.append(ctxt);
+            ctxtIdString.append(",");
+        }
+        return ctxtIdString.toString();
     }
 
     public void setCtxtIds(List<Long> ctxtIds) {
