@@ -91,20 +91,17 @@ public class ViolationDetector {
             Log.e(MithrilAC.getDebugTag(), "Houston, we have another problem! We couldn't figure out the operation for " + currentPackageName);
             return;
         }
+
         SQLiteDatabase mithrilDB = MithrilDBHelper.getHelper(context).getWritableDatabase();
-//                MithrilDBHelper.getHelper(context).findCurrentContextFromLogs(mithrilDB);
         Set<Long> currentContext = populateCurrentContext(mithrilDB, context, semanticUserContexts);
 
-//        try {
+        // Let's test the rules we found
         for (Resource currentOperation : operationsPerformed) {
             int lastOperationPerformed = currentOperation.getOp();
             List<PolicyRule> policyRules = MithrilDBHelper.getHelper(context).findAllPoliciesForAppWhenPerformingOp(mithrilDB, currentPackageName, lastOperationPerformed);
             Set<Long> policyContext = new HashSet<>();
             for (PolicyRule policyRule : policyRules)
                 policyContext.add(policyRule.getCtxId());
-//        int policyId = policyRules.get(0).getPolicyId();
-//        List<PolicyRule> listOfPoliciesForCurrentAppAndOperation = MithrilDBHelper.getHelper(context).findAllPoliciesById(mithrilDB, policyId);
-            // Let's test the rules we found
             if (policyContext.size() > 0) {
                 /**
                  * If current context is a subset of policy context or they are equal then we get true for the following test
@@ -143,11 +140,11 @@ public class ViolationDetector {
                              */
                             MithrilDBHelper.getHelper(context).addViolation(mithrilDB,
                                     new Violation(
-                                            policyRules.get(0).getPolicyId(),
-                                            policyRules.get(0).getAppId(),
-                                            policyRules.get(0).getOp(),
-                                            policyRules.get(0).getAppStr(),
-                                            policyRules.get(0).getOpStr(),
+                                            rule.getPolicyId(),
+                                            rule.getAppId(),
+                                            rule.getOp(),
+                                            rule.getAppStr(),
+                                            rule.getOpStr(),
                                             false,
                                             true,
                                             new Timestamp(System.currentTimeMillis()),
@@ -182,10 +179,8 @@ public class ViolationDetector {
                         DataGenerator.createPolicyRule(
                                 newPolicyId,
                                 currentPackageName,
-                                app.getAppName(),
-                                // the name returned is not correct we have find the method that fixes that
-                                //AppOpsManager.opToName(operationPerformed),
-                                Manifest.permission.ACCESS_FINE_LOCATION,
+                                app.getAppName(), // the name returned is not correct we have find the method that fixes that
+                                AppOpsManager.opToName(lastOperationPerformed), // Manifest.permission.ACCESS_FINE_LOCATION,
                                 ctxtTypeLabel.second,
                                 ctxtTypeLabel.first,
                                 Action.ALLOW,
@@ -195,10 +190,8 @@ public class ViolationDetector {
                                         newPolicyId,
                                         appId,
                                         lastOperationPerformed,
-                                        app.getAppName(),
-                                        // the name returned is not correct we have find the method that fixes that
-                                        //AppOpsManager.opToName(operationPerformed),
-                                        Manifest.permission.ACCESS_FINE_LOCATION,
+                                        app.getAppName(), // the name returned is not correct we have find the method that fixes that
+                                        AppOpsManager.opToName(lastOperationPerformed),
                                         false,
                                         true,
                                         new Timestamp(System.currentTimeMillis()),
@@ -227,10 +220,8 @@ public class ViolationDetector {
                     DataGenerator.createPolicyRule(
                             newPolicyId,
                             currentPackageName,
-                            app.getAppName(),
-                            // the name returned is not correct we have find the method that fixes that
-                            //AppOpsManager.opToName(operationPerformed),
-                            Manifest.permission.ACCESS_FINE_LOCATION,
+                            app.getAppName(), // the name returned is not correct we have find the method that fixes that
+                            AppOpsManager.opToName(lastOperationPerformed), // Manifest.permission.ACCESS_FINE_LOCATION,
                             ctxtTypeLabel.second,
                             ctxtTypeLabel.first,
                             Action.ALLOW,
@@ -240,10 +231,8 @@ public class ViolationDetector {
                                     newPolicyId,
                                     appId,
                                     lastOperationPerformed,
-                                    app.getAppName(),
-                                    // the name returned is not correct we have find the method that fixes that
-                                    //AppOpsManager.opToName(operationPerformed),
-                                    Manifest.permission.ACCESS_FINE_LOCATION,
+                                    app.getAppName(), // the name returned is not correct we have find the method that fixes that
+                                    AppOpsManager.opToName(lastOperationPerformed), // Manifest.permission.ACCESS_FINE_LOCATION,
                                     false,
                                     true,
                                     new Timestamp(System.currentTimeMillis()),
