@@ -62,6 +62,21 @@
                 android:textColor="@color/colorPrimaryText"
                 android:textSize="14dp" />
 
+            <TextView
+                android:id="@+id/violationContext"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/violationOpDetail"
+                android:layout_toRightOf="@+id/violatingAppIcon"
+                android:fontFamily="josephine-sans"
+                android:paddingEnd="5dp"
+                android:paddingLeft="5dp"
+                android:paddingRight="5dp"
+                android:paddingStart="5dp"
+                android:text="@string/placeholder_text_violation_info"
+                android:textColor="@color/colorPrimaryText"
+                android:textSize="14dp" />
+
             <ImageButton
                 android:id="@+id/violationResponseYesButton"
                 android:layout_width="wrap_content"
@@ -75,23 +90,8 @@
                 android:layout_marginTop="@dimen/fab_margin"
                 android:background="@drawable/thumb_up"/>
 
-            <TextView
-                android:id="@+id/violationContext"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_below="@+id/violatingAppIcon"
-                android:layout_toRightOf="@+id/mResponseYesButton"
-                android:fontFamily="josephine-sans"
-                android:paddingEnd="5dp"
-                android:paddingLeft="5dp"
-                android:paddingRight="5dp"
-                android:paddingStart="5dp"
-                android:text="@string/placeholder_text_violation_info"
-                android:textColor="@color/colorPrimaryText"
-                android:textSize="14dp" />
-
             <ImageButton
-                android:id="@+id/responseNoButton"
+                android:id="@+id/violationResponseNoButton"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_alignParentEnd="true"
@@ -102,6 +102,7 @@
                 android:layout_marginBottom="@dimen/fab_margin"
                 android:layout_marginTop="@dimen/fab_margin"
                 android:background="@drawable/thumb_down" />
+
         </RelativeLayout>
     </android.support.v7.widget.CardView>
 </LinearLayout>

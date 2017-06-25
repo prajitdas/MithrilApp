@@ -108,8 +108,8 @@ public class ViolationRecyclerViewAdapter extends RecyclerView.Adapter<Violation
             mViolationAppLaunch = (TextView) view.findViewById(R.id.violationAppLaunch);
             mViolationOpDetaill = (TextView) view.findViewById(R.id.violationOpDetail);
             mViolationContext = (TextView) view.findViewById(R.id.violationContext);
-            mViolationResponseYesButton = (ImageButton) view.findViewById(R.id.mResponseYesButton);
-            mViolationResponseNoButton = (ImageButton) view.findViewById(R.id.responseNoButton);
+            mViolationResponseYesButton = (ImageButton) view.findViewById(R.id.violationResponseYesButton);
+            mViolationResponseNoButton = (ImageButton) view.findViewById(R.id.violationResponseNoButton);
         }
 
         @Override
