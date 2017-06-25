@@ -8,12 +8,12 @@
         android:id="@+id/violation_card_view"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="@dimen/card_view_margin"
-        android:layout_marginEnd="@dimen/card_view_margin"
-        android:layout_marginStart="@dimen/card_view_margin"
-        android:layout_marginTop="@dimen/card_view_margin"
+        android:layout_marginEnd="@dimen/card_view_corner_radius"
+        android:layout_marginStart="@dimen/card_view_corner_radius"
+        android:layout_marginBottom="@dimen/card_view_corner_radius"
+        android:layout_marginTop="@dimen/card_view_corner_radius"
         android:elevation="@dimen/card_view_elevation"
-        card_view:cardCornerRadius="@dimen/card_view_corner_radius">
+        card_view:cardCornerRadius="@dimen/card_view_corner_radius" >
 
         <RelativeLayout
             android:layout_width="match_parent"
@@ -25,12 +25,12 @@
                 android:layout_height="wrap_content"
                 android:layout_alignParentLeft="true"
                 android:layout_alignParentStart="true"
+                android:layout_marginEnd="@dimen/card_view_corner_radius"
+                android:layout_marginStart="@dimen/card_view_corner_radius"
+                android:layout_marginBottom="@dimen/card_view_corner_radius"
+                android:layout_marginTop="@dimen/card_view_corner_radius"
                 android:src="@drawable/ic_launcher"
                 android:contentDescription="@null"
-                android:paddingEnd="5dp"
-                android:paddingLeft="5dp"
-                android:paddingRight="5dp"
-                android:paddingStart="5dp"
                 android:scaleType="centerCrop" />
 
             <TextView
@@ -39,10 +39,6 @@
                 android:layout_height="wrap_content"
                 android:layout_toRightOf="@+id/violatingAppIcon"
                 android:fontFamily="josephine-sans"
-                android:paddingEnd="5dp"
-                android:paddingLeft="5dp"
-                android:paddingRight="5dp"
-                android:paddingStart="5dp"
                 android:text="@string/placeholder_text_violation_info"
                 android:textColor="@color/colorPrimaryText"
                 android:textSize="18dp" />
@@ -54,10 +50,6 @@
                 android:layout_below="@+id/violationAppLaunch"
                 android:layout_toRightOf="@+id/violatingAppIcon"
                 android:fontFamily="josephine-sans"
-                android:paddingEnd="5dp"
-                android:paddingLeft="5dp"
-                android:paddingRight="5dp"
-                android:paddingStart="5dp"
                 android:text="@string/placeholder_text_violation_info"
                 android:textColor="@color/colorPrimaryText"
                 android:textSize="14dp" />
@@ -69,38 +61,34 @@
                 android:layout_below="@+id/violationOpDetail"
                 android:layout_toRightOf="@+id/violatingAppIcon"
                 android:fontFamily="josephine-sans"
-                android:paddingEnd="5dp"
-                android:paddingLeft="5dp"
-                android:paddingRight="5dp"
-                android:paddingStart="5dp"
                 android:text="@string/placeholder_text_violation_info"
                 android:textColor="@color/colorPrimaryText"
                 android:textSize="14dp" />
 
             <ImageButton
                 android:id="@+id/violationResponseYesButton"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_width="30sp"
+                android:layout_height="30sp"
                 android:layout_alignParentStart="true"
                 android:layout_below="@+id/violatingAppIcon"
                 android:backgroundTint="@color/green"
-                android:layout_marginEnd="@dimen/fab_margin"
-                android:layout_marginStart="@dimen/fab_margin"
-                android:layout_marginBottom="@dimen/fab_margin"
-                android:layout_marginTop="@dimen/fab_margin"
+                android:layout_marginEnd="@dimen/card_view_corner_radius"
+                android:layout_marginStart="@dimen/card_view_corner_radius"
+                android:layout_marginBottom="@dimen/card_view_corner_radius"
+                android:layout_marginTop="@dimen/card_view_corner_radius"
                 android:background="@drawable/thumb_up"/>
 
             <ImageButton
                 android:id="@+id/violationResponseNoButton"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_width="30sp"
+                android:layout_height="30sp"
                 android:layout_alignParentEnd="true"
                 android:layout_below="@+id/violatingAppIcon"
                 android:backgroundTint="@color/red"
-                android:layout_marginEnd="@dimen/fab_margin"
-                android:layout_marginStart="@dimen/fab_margin"
-                android:layout_marginBottom="@dimen/fab_margin"
-                android:layout_marginTop="@dimen/fab_margin"
+                android:layout_marginEnd="@dimen/card_view_corner_radius"
+                android:layout_marginStart="@dimen/card_view_corner_radius"
+                android:layout_marginBottom="@dimen/card_view_corner_radius"
+                android:layout_marginTop="@dimen/card_view_corner_radius"
                 android:background="@drawable/thumb_down" />
 
         </RelativeLayout>
