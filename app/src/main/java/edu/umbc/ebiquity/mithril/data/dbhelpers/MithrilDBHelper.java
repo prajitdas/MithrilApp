@@ -76,7 +76,7 @@ public class MithrilDBHelper extends SQLiteOpenHelper {
      * verinfo text NOT NULL,
      * installed bool NOT NULL DEFAULT true,
      * type int NOT NULL,
-     * installdate timestamp NOT NULL ON UPDATE strftime('%s', CURRENT_TIMESTAMP),
+     * installdate timestamp NOT NULL ON UPDATE " + Long.toString(System.currentTimeMillis()) + ",
      * UNIQUE INDEX apps_unique_key (name),
      * CONSTRAINT apps_pk PRIMARY KEY (id)
      * ) COMMENT 'Table showing metadata for apps';
@@ -105,7 +105,7 @@ public class MithrilDBHelper extends SQLiteOpenHelper {
             APPVERSIONINFO + " TEXT NOT NULL, " +
             APPINSTALLED + " BOOL NOT NULL DEFAULT 1, " +
             APPTYPE + " TEXT NOT NULL," +
-            APPINSTALLTIME + " timestamp NOT NULL DEFAULT strftime('%s', CURRENT_TIMESTAMP)," +
+            APPINSTALLTIME + " timestamp NOT NULL DEFAULT " + Long.toString(System.currentTimeMillis()) + "," +
             "CONSTRAINT apps_unique_key UNIQUE(" + APPPACKAGENAME + ") ON CONFLICT REPLACE);";
     /**
      * -- Table 2: permissions
@@ -245,7 +245,7 @@ public class MithrilDBHelper extends SQLiteOpenHelper {
      * -- Table 6: contextlog
      * CREATE TABLE contextlog (
      * id int NOT NULL AUTO_INCREMENT,
-     * time timestamp NOT NULL ON UPDATE strftime('%s', CURRENT_TIMESTAMP),
+     * time timestamp NOT NULL ON UPDATE " + Long.toString(System.currentTimeMillis()) + ",
      * context_id int NOT NULL,
      * CONSTRAINT contextlog_pk PRIMARY KEY (id)
      * ) COMMENT 'Table showing log of current user context';
@@ -264,7 +264,7 @@ public class MithrilDBHelper extends SQLiteOpenHelper {
             CTXTLOGID + " INTEGER PRIMARY KEY AUTOINCREMENT," +
             CTXTID + " INTEGER NOT NULL, " +
             CTXTTRANSITION + " TEXT NOT NULL, " +
-            CTXTTIME + " timestamp NOT NULL DEFAULT strftime('%s', CURRENT_TIMESTAMP), " +
+            CTXTTIME + " timestamp NOT NULL DEFAULT " + Long.toString(System.currentTimeMillis()) + ", " +
             "FOREIGN KEY(" + CTXTID + ") REFERENCES " + getContextLogTableName() + "(" + CONTEXTID + "));";
     /**
      * -- Table 7: violationlog
@@ -272,7 +272,7 @@ public class MithrilDBHelper extends SQLiteOpenHelper {
      * id int NOT NULL AUTO_INCREMENT,
      * description text NOT NULL,
      * marker bool NULL,
-     * time timestamp NOT NULL ON UPDATE strftime('%s', CURRENT_TIMESTAMP),
+     * time timestamp NOT NULL ON UPDATE " + Long.toString(System.currentTimeMillis()) + ",
      * apps_id int NOT NULL,
      * context_id int NOT NULL,
      * CONSTRAINT violationlog_pk PRIMARY KEY (id)
@@ -313,7 +313,7 @@ public class MithrilDBHelper extends SQLiteOpenHelper {
             //violations are by default true
             VIOLATIONTRUEFALSE + " INTEGER NOT NULL DEFAULT 1, " +
             // We consider everything to be a potential violation unless explicitly stated otherwise
-            VIOLATIONDETECTTIME + " timestamp NOT NULL DEFAULT strftime('%s', CURRENT_TIMESTAMP), " +
+            VIOLATIONDETECTTIME + " timestamp NOT NULL DEFAULT " + Long.toString(System.currentTimeMillis()) + ", " +
             VIOLATIONFEEDBACKTTIME + " timestamp, " +
             VIOLATIONCTXTIDS + " TEXT NOT NULL, " +
             "PRIMARY KEY(" + VIOLATIONPOLICYID + ", " + VIOLATIONAPPID + ", " + VIOLATIONOPERATION + "), " +
@@ -322,7 +322,7 @@ public class MithrilDBHelper extends SQLiteOpenHelper {
      * -- Table 8: actionlog
      * CREATE TABLE actionlog (
      * id int NOT NULL AUTO_INCREMENT,
-     * time timestamp NOT NULL ON UPDATE strftime('%s', CURRENT_TIMESTAMP),
+     * time timestamp NOT NULL ON UPDATE " + Long.toString(System.currentTimeMillis()) + ",
      * action int NOT NULL,
      * apps_id int NOT NULL,
      * context_id int NOT NULL,
@@ -348,7 +348,7 @@ public class MithrilDBHelper extends SQLiteOpenHelper {
             ACTIONID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
             ACTIONAPPID + " INTEGER NOT NULL, " +
             ACTIONCTXID + " INTEGER NOT NULL, " +
-            ACTIONTIME + " INTEGER NOT NULL  DEFAULT strftime('%s', CURRENT_TIMESTAMP), " +
+            ACTIONTIME + " INTEGER NOT NULL  DEFAULT " + Long.toString(System.currentTimeMillis()) + ", " +
             ACTION + " INTEGER NOT NULL, " +
             "FOREIGN KEY(" + ACTIONAPPID + ") REFERENCES " + getAppsTableName() + "(" + APPID + ") ON DELETE CASCADE, " +
             "FOREIGN KEY(" + ACTIONCTXID + ") REFERENCES " + getContextTableName() + "(" + CONTEXTID + "));";
@@ -1037,7 +1037,7 @@ public class MithrilDBHelper extends SQLiteOpenHelper {
      * VIOLATIONOPERATION + " INTEGER NOT NULL, " +
      * VIOLATIONDESC + " TEXT, " +
      * VIOLATIONTFMARKER + " INTEGER NOT NULL DEFAULT 0, " +
-     * VIOLATIONDETECTTIME + " timestamp NOT NULL DEFAULT strftime('%s', CURRENT_TIMESTAMP), " +
+     * VIOLATIONDETECTTIME + " timestamp NOT NULL DEFAULT " + Long.toString(System.currentTimeMillis()) + ", " +
      */
     public long addViolation(SQLiteDatabase db, Violation aViolation) {
         long insertedRowId;
@@ -1902,11 +1902,11 @@ public class MithrilDBHelper extends SQLiteOpenHelper {
                 " FROM " +
                 getContextLogTableName() +
                 " WHERE " +
-                getContextLogTableName() + "." + CTXTTIME + " < strftime('%s', CURRENT_TIMESTAMP) " +
+                getContextLogTableName() + "." + CTXTTIME + " < " + Long.toString(System.currentTimeMillis()) + " " +
                 " AND " +
                 getContextLogTableName() + "." + CTXTTRANSITION + " = '" + MithrilAC.getPrefStartKey() + "' " +
                 " OR " +
-                getContextLogTableName() + "." + CTXTTIME + " > strftime('%s', CURRENT_TIMESTAMP) " +
+                getContextLogTableName() + "." + CTXTTIME + " > " + Long.toString(System.currentTimeMillis()) + " " +
                 " AND " +
                 getContextLogTableName() + "." + CTXTTRANSITION + " = '" + MithrilAC.getPrefEndKey() + "';";
 
