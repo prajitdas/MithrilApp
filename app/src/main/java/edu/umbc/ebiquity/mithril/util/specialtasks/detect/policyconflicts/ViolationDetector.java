@@ -75,7 +75,10 @@ public class ViolationDetector {
      * For example, if A={1,3,5} then B={1,5} is a proper subset of A. The set C={1,3,5} is a subset of A, but it is an improper subset of A
      * since C=A. The set D={1,4} is not even a subset of A, since 4 is not an element of A.
      */
-    public static void detectViolation(Context context, String currentPackageName, List<Resource> operationsPerformed, List<SemanticUserContext> semanticUserContexts) throws SemanticInconsistencyException {
+    public static void detectViolation(Context context,
+                                       String currentPackageName,
+                                       List<Resource> operationsPerformed,
+                                       List<SemanticUserContext> semanticUserContexts) throws SemanticInconsistencyException {
         if (semanticUserContexts.size() == 0) {
             Log.e(MithrilAC.getDebugTag(), "Houston, we have a problem! We can't detect current context");
             return;
