@@ -25,7 +25,7 @@
                 android:layout_height="50dp"
                 android:layout_alignParentLeft="true"
                 android:layout_alignParentStart="true"
-                android:background="@drawable/ic_launcher"
+                android:src="@drawable/ic_launcher"
                 android:contentDescription="@null"
                 android:paddingEnd="5dp"
                 android:paddingLeft="5dp"
