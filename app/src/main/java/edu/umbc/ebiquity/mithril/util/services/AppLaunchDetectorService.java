@@ -48,6 +48,7 @@ import edu.umbc.ebiquity.mithril.data.model.rules.context.SemanticLocation;
 import edu.umbc.ebiquity.mithril.data.model.rules.context.SemanticNearActor;
 import edu.umbc.ebiquity.mithril.data.model.rules.context.SemanticTime;
 import edu.umbc.ebiquity.mithril.data.model.rules.context.SemanticUserContext;
+import edu.umbc.ebiquity.mithril.ui.activities.InstanceCreationActivity;
 import edu.umbc.ebiquity.mithril.util.specialtasks.detect.policyconflicts.ViolationDetector;
 import edu.umbc.ebiquity.mithril.util.specialtasks.detect.runningapps.AppLaunchDetector;
 import edu.umbc.ebiquity.mithril.util.specialtasks.errorsnexceptions.AddressKeyMissingError;
@@ -72,6 +73,7 @@ public class AppLaunchDetectorService extends Service implements
     private Location mCurrentLocation;
     private Place mCurrentPlace;
     private List<String> currentPlaceNames = new ArrayList<>();
+    private Pair<String, List<Resource>> pkgOpPair;
     private boolean servicesAvailable;
     private boolean mInProgress;
     private boolean mPlacesInProcgress;
@@ -102,6 +104,7 @@ public class AppLaunchDetectorService extends Service implements
         editor = getSharedPreferences(MithrilAC.getSharedPreferencesName(), Context.MODE_PRIVATE).edit();
         // Set defaults, then update using values stored in the Bundle.
         mAddressRequested = false;
+        mAddressResultReceiver = new AddressResultReceiver(new Handler(), this);
         initDB(context);
         /* Create a new location client, using the enclosing class to
          * handle callbacks.
@@ -221,6 +224,7 @@ public class AppLaunchDetectorService extends Service implements
         //We are always at some location... where are we now? Also we are only in one place at a time
         if (mGoogleApiClient.isConnected()) {
             semanticUserContextList.add(getSemanticLocation(mCurrentLocation));
+
             //Do we know the semantic temporal contexts?
             for (SemanticTime semanticTime : getSemanticTimes())
                 semanticUserContextList.add(semanticTime);
@@ -303,11 +307,13 @@ public class AppLaunchDetectorService extends Service implements
                      * We are parsing all known locations and we know the current location's distance to them.
                      * Let's determine if we are at a certain known location and at what is that location.
                      */
-                    for(SemanticLocation currSemLoc : currentSemanticLocations.values())
-                        if(knownSemanticLocation.equals(currSemLoc)) {
+                    for (SemanticLocation currSemLoc : currentSemanticLocations.values()) {
+                        if (knownSemanticLocation.equals(currSemLoc)) {
                             semanticLocation = currSemLoc;
-                            Log.d(MithrilAC.getDebugTag(), "Eureka we got a match to a location"+currSemLoc.getName());
+                            Log.d(MithrilAC.getDebugTag(), "Eureka we got a match to a location" + currSemLoc.getName());
                         }
+                        Log.d(MithrilAC.getDebugTag(), "Did not match but at least we got a location"+currSemLoc.getName());
+                    }
                     if(semanticLocation != null)
                         Log.d(MithrilAC.getDebugTag(), semanticLocation.getName());
                     else
@@ -399,7 +405,7 @@ public class AppLaunchDetectorService extends Service implements
             mHandler.post(new Runnable() {
                 @Override
                 public void run() {
-                    Pair<String, List<Resource>> pkgOpPair = appLaunchDetector.getForegroundApp(context);
+                    pkgOpPair = appLaunchDetector.getForegroundApp(context);
                     if (pkgOpPair != null) {
                         if (sharedPrefs.contains(MithrilAC.getPrefKeyLastRunningApp())) {
                             if (!sharedPrefs.getString(MithrilAC.getPrefKeyLastRunningApp(), "").equals(pkgOpPair.first)) {
@@ -412,16 +418,9 @@ public class AppLaunchDetectorService extends Service implements
 
                                 requestLastLocation();
                                 startSearchAddressIntentService(mCurrentLocation);
-
-                                try {
-                                    ViolationDetector.detectViolation(
-                                            context,
-                                            pkgOpPair.first,
-                                            pkgOpPair.second,
-                                            getSemanticContexts());
-                                } catch (SemanticInconsistencyException e) {
-                                    Log.e(MithrilAC.getDebugTag(), e.getMessage());
-                                }
+                                /**
+                                 * Once we receive the result of the address search, we can detect violation
+                                 */
                             } else {
                                 //currently running app is same as previously detected app
                                 //nothing to do
@@ -435,16 +434,6 @@ public class AppLaunchDetectorService extends Service implements
 
                             requestLastLocation();
                             startSearchAddressIntentService(mCurrentLocation);
-
-                            try {
-                                ViolationDetector.detectViolation(
-                                        context,
-                                        pkgOpPair.first,
-                                        pkgOpPair.second,
-                                        getSemanticContexts());
-                            } catch (SemanticInconsistencyException e) {
-                                Log.e(MithrilAC.getDebugTag(), e.getMessage());
-                            }
                         }
                     } else {
                         //null! nothing to do
@@ -532,6 +521,25 @@ public class AppLaunchDetectorService extends Service implements
                 currentSemanticLocations.put(key+"_Country", new SemanticLocation(location, address,
                         key+"_Country",
                         false, address.getCountryName(), placeId, placeTypes, false, 4));
+
+                try {
+                    ViolationDetector.detectViolation(
+                            context,
+                            pkgOpPair.first,
+                            pkgOpPair.second,
+                            getSemanticContexts());
+                } catch (SemanticInconsistencyException e) {
+                    Log.e(MithrilAC.getDebugTag(), e.getMessage());
+                }
+                try {
+                    ViolationDetector.detectViolation(
+                            context,
+                            pkgOpPair.first,
+                            pkgOpPair.second,
+                            getSemanticContexts());
+                } catch (SemanticInconsistencyException e) {
+                    Log.e(MithrilAC.getDebugTag(), e.getMessage());
+                }
             }
             // Reset. Enable the Fetch Address button and stop showing the progress bar.
             mAddressRequested = false;
