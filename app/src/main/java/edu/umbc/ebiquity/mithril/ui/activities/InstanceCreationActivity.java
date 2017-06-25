@@ -1147,13 +1147,13 @@ public class InstanceCreationActivity extends AppCompatActivity
                         false, address.getThoroughfare(), placeId, placeTypes, false, 1));
                 semanticLocations.put(key+"_City", new SemanticLocation(location, address,
                         key+"_City",
-                        false, address.getThoroughfare(), placeId, placeTypes, false, 2));
+                        false, address.getLocality(), placeId, placeTypes, false, 2));
                 semanticLocations.put(key+"_State", new SemanticLocation(location, address,
                         key+"_State",
-                        false, address.getThoroughfare(), placeId, placeTypes, false, 3));
+                        false, address.getAdminArea(), placeId, placeTypes, false, 3));
                 semanticLocations.put(key+"_Country", new SemanticLocation(location, address,
                         key+"_Country",
-                        false, address.getThoroughfare(), placeId, placeTypes, false, 4));
+                        false, address.getCountryName(), placeId, placeTypes, false, 4));
 
                 refreshVisibleFragment();
             }
