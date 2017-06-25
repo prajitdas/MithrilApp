@@ -1144,7 +1144,7 @@ public class InstanceCreationActivity extends AppCompatActivity
 
                 semanticLocations.put(key, new SemanticLocation(location, address,
                         key,
-                        false, tempSemanticLocation.getName(), placeId, placeTypes, false, 1));
+                        false, tempSemanticLocation.getName(), placeId, placeTypes, false, 0));
                 semanticLocations.put(key+"_Street", new SemanticLocation(location, address,
                         key+"_Street",
                         false, address.getThoroughfare(), placeId, placeTypes, false, 1));
