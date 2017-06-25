@@ -325,6 +325,9 @@
 
     <string name="geofence_transition_notification_text">Click notification to return to app</string>
 
+    <string name="we_are_at_a_new_location">Found new place:&#160;</string>
+    <string name="is_this_location_important">Come here often? Save it now&#8230;</string>
+
     <string name="project_details_txt_for_About">This is the MithrilAC app. It is capable of handling access control on Android devices.</string>
     <string name="project_details_txt_for_fullscreen">MithrilAC: Mobile access control app</string>
 

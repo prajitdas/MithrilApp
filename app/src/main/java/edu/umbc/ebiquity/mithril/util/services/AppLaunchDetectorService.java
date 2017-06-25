@@ -1,10 +1,14 @@
 package edu.umbc.ebiquity.mithril.util.services;
 
+import android.app.NotificationManager;
+import android.app.PendingIntent;
 import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.database.sqlite.SQLiteDatabase;
+import android.graphics.BitmapFactory;
+import android.graphics.Color;
 import android.location.Address;
 import android.location.Location;
 import android.os.Build;
@@ -15,6 +19,8 @@ import android.os.ResultReceiver;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.util.Log;
+import android.support.v4.app.NotificationCompat;
+import android.support.v4.app.TaskStackBuilder;
 import android.util.Pair;
 
 import com.google.android.gms.common.ConnectionResult;
@@ -41,6 +47,7 @@ import java.util.Timer;
 import java.util.TimerTask;
 
 import edu.umbc.ebiquity.mithril.MithrilAC;
+import edu.umbc.ebiquity.mithril.R;
 import edu.umbc.ebiquity.mithril.data.dbhelpers.MithrilDBHelper;
 import edu.umbc.ebiquity.mithril.data.model.rules.Resource;
 import edu.umbc.ebiquity.mithril.data.model.rules.context.SemanticActivity;
@@ -48,6 +55,7 @@ import edu.umbc.ebiquity.mithril.data.model.rules.context.SemanticLocation;
 import edu.umbc.ebiquity.mithril.data.model.rules.context.SemanticNearActor;
 import edu.umbc.ebiquity.mithril.data.model.rules.context.SemanticTime;
 import edu.umbc.ebiquity.mithril.data.model.rules.context.SemanticUserContext;
+import edu.umbc.ebiquity.mithril.ui.activities.CoreActivity;
 import edu.umbc.ebiquity.mithril.ui.activities.InstanceCreationActivity;
 import edu.umbc.ebiquity.mithril.util.specialtasks.detect.policyconflicts.ViolationDetector;
 import edu.umbc.ebiquity.mithril.util.specialtasks.detect.runningapps.AppLaunchDetector;
@@ -295,7 +303,7 @@ public class AppLaunchDetectorService extends Service implements
         SemanticLocation semanticLocation = null;
         Gson retrieveDataGson = new Gson();
         String retrieveDataJson;
-        float shortestDistanceToKnownLocation = Float.MAX_VALUE;
+//        float shortestDistanceToKnownLocation = Float.MAX_VALUE;
         Map<String, ?> allPrefs;
         try {
             allPrefs = sharedPrefs.getAll();
@@ -307,10 +315,14 @@ public class AppLaunchDetectorService extends Service implements
                      * We are parsing all known locations and we know the current location's distance to them.
                      * Let's determine if we are at a certain known location and at what is that location.
                      */
+                    int level = Integer.MAX_VALUE;
                     for (SemanticLocation currSemLoc : currentSemanticLocations.values()) {
                         if (knownSemanticLocation.compareTo(currSemLoc) == 0) {
-                            semanticLocation = currSemLoc;
-                            Log.d(MithrilAC.getDebugTag(), "Eureka we got a match to a location" + currSemLoc.getName());
+                            if (level > knownSemanticLocation.getLevel()) {
+                                level = knownSemanticLocation.getLevel();
+                                semanticLocation = knownSemanticLocation;
+                                Log.d(MithrilAC.getDebugTag(), "Eureka we got a match to a location" + currSemLoc.getName() + currSemLoc.getLabel());
+                            }
                         }
                         Log.d(MithrilAC.getDebugTag(), "Did not match but at least we got a location"+currSemLoc.getLabel()+currSemLoc.getName());
                     }
@@ -318,17 +330,17 @@ public class AppLaunchDetectorService extends Service implements
                         Log.d(MithrilAC.getDebugTag(), semanticLocation.getName());
                     else
                         Log.d(MithrilAC.getDebugTag(), "still null");
-                    float distanceTo = knownSemanticLocation.getLocation().distanceTo(currentLocation);
-                    if (distanceTo < MithrilAC.getGeofenceRadiusInMeters() && shortestDistanceToKnownLocation > distanceTo) {
-                        shortestDistanceToKnownLocation = distanceTo;
-                        semanticLocation = knownSemanticLocation;
-                        Log.d(MithrilAC.getDebugTag(), "Passed location found: "
-                                + String.valueOf(currentLocation.getLatitude())
-                                + String.valueOf(currentLocation.getLongitude())
-                                + String.valueOf(distanceTo)
-                                + aPref.getKey()
-                        );
-                    }
+//                    float distanceTo = knownSemanticLocation.getLocation().distanceTo(currentLocation);
+//                    if (distanceTo < MithrilAC.getGeofenceRadiusInMeters() && shortestDistanceToKnownLocation > distanceTo) {
+//                        shortestDistanceToKnownLocation = distanceTo;
+//                        semanticLocation = knownSemanticLocation;
+//                        Log.d(MithrilAC.getDebugTag(), "Passed location found: "
+//                                + String.valueOf(currentLocation.getLatitude())
+//                                + String.valueOf(currentLocation.getLongitude())
+//                                + String.valueOf(distanceTo)
+//                                + aPref.getKey()
+//                        );
+//                    }
                 }
             }
         } catch (NullPointerException e) {
@@ -353,6 +365,8 @@ public class AppLaunchDetectorService extends Service implements
                 mCurrentPlace.getPlaceTypes(),
                 0
         );
+        // Send notification and log the transition details.
+        sendNotification(semanticLocation);
         addContext(
                 MithrilAC.getPrefKeyContextTypeLocation(),
                 mCurrentPlace.getName().toString() + String.valueOf(System.currentTimeMillis()),
@@ -441,6 +455,61 @@ public class AppLaunchDetectorService extends Service implements
                 }
             });
         }
+    }
+
+    /**
+     * Posts a notification in the notification bar when a transition is detected.
+     * If the user clicks the notification, control goes to the MainActivity.
+     */
+    private void sendNotification(SemanticLocation semanticLocation) {
+        // Create an explicit content Intent that starts the main Activity.
+        Intent notificationIntent = new Intent(this, InstanceCreationActivity.class);
+
+        // Construct a task stack.
+        TaskStackBuilder stackBuilder = TaskStackBuilder.create(this);
+
+        // Add the main Activity to the task stack as the parent.
+        stackBuilder.addParentStack(CoreActivity.class);
+
+        // Push the content Intent onto the stack.
+        stackBuilder.addNextIntent(notificationIntent);
+
+        // Get a PendingIntent containing the entire back stack.
+        PendingIntent notificationPendingIntent =
+                stackBuilder.getPendingIntent(0, PendingIntent.FLAG_UPDATE_CURRENT);
+
+        // Get a notification builder that's compatible with platform versions >= 4
+        NotificationCompat.Builder builder = new NotificationCompat.Builder(this);
+
+        // Define the notification settings.
+        builder.setSmallIcon(R.drawable.map_marker)
+                // In a real app, you may want to use a library like Volley to decode the Bitmap.
+                .setLargeIcon(BitmapFactory.decodeResource(getResources(), R.drawable.map_marker))
+                .setColor(Color.RED)
+                .setContentTitle(getString(R.string.we_are_at_a_new_location) + semanticLocation.getName())
+                .setContentText(getString(R.string.is_this_location_important))
+                .setContentIntent(notificationPendingIntent)
+                .addAction(R.drawable.content_save_all, "Save", notificationPendingIntent);
+
+        // Dismiss notification once the user touches it.
+        builder.setAutoCancel(true);
+
+        // Get an instance of the Notification manager
+        NotificationManager mNotificationManager =
+                (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+
+        // Issue the notification
+        mNotificationManager.notify(0, builder.build());
+    }
+
+    private void addContextLogToDB(String label, String startOrEnd) {
+        MithrilDBHelper.getHelper(this).addContextLog(
+                mithrilDB,
+                MithrilDBHelper.getHelper(this).findContextIdByLabelAndType(
+                        mithrilDB,
+                        label,
+                        MithrilAC.getPrefKeyContextTypeLocation()),
+                startOrEnd);
     }
 
     private Map<String, SemanticLocation> currentSemanticLocations = new HashMap<>();
