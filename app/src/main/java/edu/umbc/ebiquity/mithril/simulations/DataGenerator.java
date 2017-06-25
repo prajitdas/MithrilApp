@@ -23,12 +23,12 @@ public class DataGenerator {
             throws SemanticInconsistencyException {
         MithrilDBHelper.getHelper(context).addPolicyRule(mithrilDB, DataGenerator.createPolicyRule(1,
                 "com.twitter.android", "Twitter",
-                Manifest.permission.CAMERA,
+                AppOpsManager.permissionToOpCode(Manifest.permission.CAMERA),
                 MithrilAC.getPrefHomeLocationKey(), MithrilAC.getPrefKeyContextTypeLocation(),
                 actionAllow, mithrilDB, context));
         MithrilDBHelper.getHelper(context).addPolicyRule(mithrilDB, DataGenerator.createPolicyRule(1,
                 "com.twitter.android", "Twitter",
-                Manifest.permission.CAMERA,
+                AppOpsManager.permissionToOpCode(Manifest.permission.CAMERA),
                 MithrilAC.getPrefTimeIntervalWeekendTemporalKey(), MithrilAC.getPrefKeyContextTypeTemporal(),
                 actionAllow, mithrilDB, context));
     }
@@ -38,17 +38,17 @@ public class DataGenerator {
             throws SemanticInconsistencyException {
         MithrilDBHelper.getHelper(context).addPolicyRule(mithrilDB, DataGenerator.createPolicyRule(2,
                 "com.twitter.android", "Twitter",
-                Manifest.permission.CAMERA,
+                AppOpsManager.permissionToOpCode(Manifest.permission.CAMERA),
                 MithrilAC.getPrefWorkLocationKey(), MithrilAC.getPrefKeyContextTypeLocation(),
                 actionAllow, mithrilDB, context));
         MithrilDBHelper.getHelper(context).addPolicyRule(mithrilDB, DataGenerator.createPolicyRule(2,
                 "com.twitter.android", "Twitter",
-                Manifest.permission.CAMERA,
+                AppOpsManager.permissionToOpCode(Manifest.permission.CAMERA),
                 MithrilAC.getPrefTimeIntervalWeekdayTemporalKey(), MithrilAC.getPrefKeyContextTypeTemporal(),
                 actionAllow, mithrilDB, context));
         MithrilDBHelper.getHelper(context).addPolicyRule(mithrilDB, DataGenerator.createPolicyRule(2,
                 "com.twitter.android", "Twitter",
-                Manifest.permission.CAMERA,
+                AppOpsManager.permissionToOpCode(Manifest.permission.CAMERA),
                 MithrilAC.getPrefTimeIntervalLunchTemporalKey(), MithrilAC.getPrefKeyContextTypeTemporal(),
                 actionAllow, mithrilDB, context));
     }
@@ -58,17 +58,17 @@ public class DataGenerator {
             throws SemanticInconsistencyException {
         MithrilDBHelper.getHelper(context).addPolicyRule(mithrilDB, DataGenerator.createPolicyRule(3,
                 "com.twitter.android", "Twitter",
-                Manifest.permission.ACCESS_FINE_LOCATION,
+                AppOpsManager.permissionToOpCode(Manifest.permission.ACCESS_FINE_LOCATION),
                 MithrilAC.getPrefWorkLocationKey(), MithrilAC.getPrefKeyContextTypeLocation(),
                 actionAllow, mithrilDB, context));
         MithrilDBHelper.getHelper(context).addPolicyRule(mithrilDB, DataGenerator.createPolicyRule(3,
                 "com.twitter.android", "Twitter",
-                Manifest.permission.ACCESS_FINE_LOCATION,
+                AppOpsManager.permissionToOpCode(Manifest.permission.ACCESS_FINE_LOCATION),
                 MithrilAC.getPrefTimeIntervalWeekdayTemporalKey(), MithrilAC.getPrefKeyContextTypeTemporal(),
                 actionAllow, mithrilDB, context));
         MithrilDBHelper.getHelper(context).addPolicyRule(mithrilDB, DataGenerator.createPolicyRule(3,
                 "com.twitter.android", "Twitter",
-                Manifest.permission.ACCESS_FINE_LOCATION,
+                AppOpsManager.permissionToOpCode(Manifest.permission.ACCESS_FINE_LOCATION),
                 MithrilAC.getPrefTimeIntervalPersonalTemporalKey(), MithrilAC.getPrefKeyContextTypeTemporal(),
                 actionAllow, mithrilDB, context));
     }
@@ -78,7 +78,7 @@ public class DataGenerator {
             throws SemanticInconsistencyException {
         MithrilDBHelper.getHelper(context).addPolicyRule(mithrilDB, DataGenerator.createPolicyRule(4,
                 "com.google.android.talk", "Hangouts",
-                Manifest.permission.READ_SMS,
+                AppOpsManager.permissionToOpCode(Manifest.permission.READ_SMS),
                 MithrilAC.getPrefWorkLocationKey(), MithrilAC.getPrefKeyContextTypeLocation(),
                 actionAllow, mithrilDB, context));
     }
@@ -87,7 +87,7 @@ public class DataGenerator {
             throws SemanticInconsistencyException {
         MithrilDBHelper.getHelper(context).addPolicyRule(mithrilDB, DataGenerator.createPolicyRule(5,
                 "com.google.android.talk", "Hangouts",
-                Manifest.permission.RECEIVE_SMS,
+                AppOpsManager.permissionToOpCode(Manifest.permission.RECEIVE_SMS),
                 MithrilAC.getPrefWorkLocationKey(), MithrilAC.getPrefKeyContextTypeLocation(),
                 actionAllow, mithrilDB, context));
     }
@@ -96,7 +96,7 @@ public class DataGenerator {
             throws SemanticInconsistencyException {
         MithrilDBHelper.getHelper(context).addPolicyRule(mithrilDB, DataGenerator.createPolicyRule(6,
                 "com.google.android.talk", "Hangouts",
-                Manifest.permission.SEND_SMS,
+                AppOpsManager.permissionToOpCode(Manifest.permission.SEND_SMS),
                 MithrilAC.getPrefWorkLocationKey(), MithrilAC.getPrefKeyContextTypeLocation(),
                 actionAllow, mithrilDB, context));
     }
@@ -106,12 +106,12 @@ public class DataGenerator {
             throws SemanticInconsistencyException {
         MithrilDBHelper.getHelper(context).addPolicyRule(mithrilDB, DataGenerator.createPolicyRule(7,
                 "com.google.android.gm", "Gmail",
-                Manifest.permission.READ_CALENDAR,
+                AppOpsManager.permissionToOpCode(Manifest.permission.READ_CALENDAR),
                 MithrilAC.getPrefWorkLocationKey(), MithrilAC.getPrefKeyContextTypeLocation(),
                 actionAllow, mithrilDB, context));
         MithrilDBHelper.getHelper(context).addPolicyRule(mithrilDB, DataGenerator.createPolicyRule(7,
                 "com.google.android.gm", "Gmail",
-                Manifest.permission.READ_CALENDAR,
+                AppOpsManager.permissionToOpCode(Manifest.permission.READ_CALENDAR),
                 MithrilAC.getPrefTimeIntervalWeekdayTemporalKey(), MithrilAC.getPrefKeyContextTypeTemporal(),
                 actionAllow, mithrilDB, context));
     }
@@ -120,12 +120,12 @@ public class DataGenerator {
             throws SemanticInconsistencyException {
         MithrilDBHelper.getHelper(context).addPolicyRule(mithrilDB, DataGenerator.createPolicyRule(8,
                 "com.google.android.gm", "Gmail",
-                Manifest.permission.WRITE_CALENDAR,
+                AppOpsManager.permissionToOpCode(Manifest.permission.WRITE_CALENDAR),
                 MithrilAC.getPrefWorkLocationKey(), MithrilAC.getPrefKeyContextTypeLocation(),
                 actionAllow, mithrilDB, context));
         MithrilDBHelper.getHelper(context).addPolicyRule(mithrilDB, DataGenerator.createPolicyRule(8,
                 "com.google.android.gm", "Gmail",
-                Manifest.permission.WRITE_CALENDAR,
+                AppOpsManager.permissionToOpCode(Manifest.permission.WRITE_CALENDAR),
                 MithrilAC.getPrefTimeIntervalWeekdayTemporalKey(), MithrilAC.getPrefKeyContextTypeTemporal(),
                 actionAllow, mithrilDB, context));
     }
@@ -133,7 +133,7 @@ public class DataGenerator {
     public static PolicyRule createPolicyRule(int policyId,
                                               String appPkgName,
                                               String appName,
-                                              String permString,
+                                              int op,
                                               String contextLabel,
                                               String contextType,
                                               Action action,
@@ -141,20 +141,20 @@ public class DataGenerator {
         long appId, ctxtId;
         appId = MithrilDBHelper.getHelper(context).findAppIdByAppPkgName(mithrilDB, appPkgName);
         ctxtId = MithrilDBHelper.getHelper(context).findContextIdByLabelAndType(mithrilDB, contextLabel, contextType);
-        Log.d(MithrilAC.getDebugTag(), "OpCode: " + permString);
-        Log.d(MithrilAC.getDebugTag(), "AppOps: " + AppOpsManager.opToPermission(AppOpsManager.permissionToOpCode(permString)));
+        Log.d(MithrilAC.getDebugTag(), "OpCode: " + String.valueOf(op));
+        Log.d(MithrilAC.getDebugTag(), "AppOps: " + AppOpsManager.opToPermission(op));
         if (appId == -1 || ctxtId == -1)
             return null;
         return new PolicyRule(
                 policyId,
                 appId,
                 ctxtId,
-                AppOpsManager.permissionToOpCode(permString),
+                op,
                 action,
                 action.getActionString(),
                 appName,
                 contextLabel,
-                AppOpsManager.opToPermission(AppOpsManager.permissionToOpCode(permString)),
+                AppOpsManager.opToPermission(op),
                 false
         );
     }

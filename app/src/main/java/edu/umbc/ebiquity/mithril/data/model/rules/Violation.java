@@ -51,11 +51,10 @@ public class Violation implements Parcelable {
         this.appId = appId;
         this.oprId = oprId;
         this.appStr = appStr;
-        this.opStr = opStr;
+        this.opStr = opStr.toLowerCase();
         this.asked = asked;
         this.tvfv = tvfv;
         this.detectedAtTime = detectedAtTime;
-        this.feedbackTime = feedbackTime;
         this.ctxtIds = ctxtIds;
     }
 

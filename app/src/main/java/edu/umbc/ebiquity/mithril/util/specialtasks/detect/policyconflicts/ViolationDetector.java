@@ -180,7 +180,7 @@ public class ViolationDetector {
                                 newPolicyId,
                                 currentPackageName,
                                 app.getAppName(), // the name returned is not correct we have find the method that fixes that
-                                AppOpsManager.opToName(lastOperationPerformed), // Manifest.permission.ACCESS_FINE_LOCATION,
+                                lastOperationPerformed, // Manifest.permission.ACCESS_FINE_LOCATION,
                                 ctxtTypeLabel.second,
                                 ctxtTypeLabel.first,
                                 Action.ALLOW,
@@ -221,14 +221,14 @@ public class ViolationDetector {
                             Integer.toString(newPolicyId) +
                                     currentPackageName +
                                     app.getAppName() +
-                                    AppOpsManager.opToName(lastOperationPerformed) +
+                                    lastOperationPerformed +
                                     ctxtTypeLabel.second +
                                     ctxtTypeLabel.first);
                     DataGenerator.createPolicyRule(
                             newPolicyId,
                             currentPackageName,
                             app.getAppName(), // the name returned is not correct we have find the method that fixes that
-                            AppOpsManager.opToName(lastOperationPerformed), // Manifest.permission.ACCESS_FINE_LOCATION,
+                            lastOperationPerformed, // Manifest.permission.ACCESS_FINE_LOCATION,
                             ctxtTypeLabel.second,
                             ctxtTypeLabel.first,
                             Action.ALLOW,
