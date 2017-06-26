@@ -1516,6 +1516,7 @@ public class MithrilDBHelper extends SQLiteOpenHelper {
                 getViolationsLogTableName() + "." + VIOLATIONCOUNT +
                 " FROM " + getViolationsLogTableName() +
                 " WHERE " + getViolationsLogTableName() + "." + VIOLATIONASKED + " = 0 " +
+                " ORDER BY " + getViolationsLogTableName() + "." + VIOLATIONDETECTTIME + " DESC " +
                 ";";
 
         List<Violation> violations = new ArrayList<>();
