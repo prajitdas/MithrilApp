@@ -50,8 +50,8 @@
 
     <string name="place_holder_for_data_to_be_displayed">Some placeholder for data to be displayed</string>
 
-    <string name="button_true_violation">"Violation"</string>
-    <string name="button_false_violation">"Not a violation"</string>
+    <string name="button_true_violation">"True violation"</string>
+    <string name="button_false_violation">"False violation"</string>
 
     <string name="action_delete_rule">Delete Rule</string>
     <string name="action_rule_ok">Rule is @android:string/OK</string>

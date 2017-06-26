@@ -7,7 +7,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -18,9 +17,7 @@ import edu.umbc.ebiquity.mithril.R;
 import edu.umbc.ebiquity.mithril.data.dbhelpers.MithrilDBHelper;
 import edu.umbc.ebiquity.mithril.data.model.components.AppData;
 import edu.umbc.ebiquity.mithril.data.model.rules.Violation;
-import edu.umbc.ebiquity.mithril.ui.activities.TemporalDataEntryActivity;
 import edu.umbc.ebiquity.mithril.ui.fragments.coreactivityfragments.ViolationFragment.OnListFragmentInteractionListener;
-import edu.umbc.ebiquity.mithril.util.specialtasks.collections.MithrilCollections;
 import edu.umbc.ebiquity.mithril.util.specialtasks.permissions.PermissionHelper;
 
 /**
@@ -49,27 +46,30 @@ public class ViolationRecyclerViewAdapter extends RecyclerView.Adapter<Violation
     }
 
     @Override
-    public void onBindViewHolder(final ViewHolder holder, int position) {
-        SQLiteDatabase mithrilDB = MithrilDBHelper.getHelper(view.getContext()).getWritableDatabase();
-        AppData violatingApp = MithrilDBHelper.getHelper(view.getContext()).findAppById(mithrilDB, mValues.get(position).getAppId());
+    public void onBindViewHolder(final ViewHolder holder, final int position) {
+        final SQLiteDatabase mithrilDB = MithrilDBHelper.getHelper(view.getContext()).getWritableDatabase();
+        final AppData violatingApp = MithrilDBHelper.getHelper(view.getContext()).findAppById(mithrilDB, mValues.get(position).getAppId());
+        final long rowid = MithrilDBHelper.getHelper(view.getContext()).findViolationRowIdByPolicyAppOpId(mithrilDB, mValues.get(position));
 
         holder.mItem = mValues.get(position);
         holder.mViolatingAppIcon.setImageBitmap(violatingApp.getIcon());
         holder.mViolationAppLaunch.setText(violatingApp.getAppName());
-        holder.mViolationOpDetaill.setText("Used: " + mValues.get(position).getOpStr() + " " +
+        holder.mViolationOpDetail.setText("Used: " + mValues.get(position).getOpStr() + " " +
                 MithrilAC.getTimeText(true, mValues.get(position).getDetectedAtTime()));
         holder.mViolationContext.setText("Context - " +
                 mValues.get(position).getContextsString(context));
         holder.mViolationResponseYesButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                PermissionHelper.toast(view.getContext(), "Good! Will treat this as a TRUE violation in the future...");
+                PermissionHelper.toast(view.getContext(), "Good! Will block this in the future...");
+                mValues.get(position).setTvfv();
+                MithrilDBHelper.getHelper(view.getContext()).updateViolationForRowId(mithrilDB, mValues.get(position), rowid);
             }
         });
         holder.mViolationResponseNoButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                PermissionHelper.toast(view.getContext(), "False violation...");
+                PermissionHelper.toast(view.getContext(), "Sure... let's change some rules");
             }
         });
 
@@ -94,7 +94,7 @@ public class ViolationRecyclerViewAdapter extends RecyclerView.Adapter<Violation
         private final View mView;
         private final ImageView mViolatingAppIcon;
         private final TextView mViolationAppLaunch;
-        private final TextView mViolationOpDetaill;
+        private final TextView mViolationOpDetail;
         private final TextView mViolationContext;
         private final Button mViolationResponseYesButton;
         private final Button mViolationResponseNoButton;
@@ -106,7 +106,7 @@ public class ViolationRecyclerViewAdapter extends RecyclerView.Adapter<Violation
             mView = view;
             mViolatingAppIcon = (ImageView) view.findViewById(R.id.violatingAppIcon);
             mViolationAppLaunch = (TextView) view.findViewById(R.id.violationAppLaunch);
-            mViolationOpDetaill = (TextView) view.findViewById(R.id.violationOpDetail);
+            mViolationOpDetail = (TextView) view.findViewById(R.id.violationOpDetail);
             mViolationContext = (TextView) view.findViewById(R.id.violationContext);
             mViolationResponseYesButton = (Button) view.findViewById(R.id.violationResponseYesButton);
             mViolationResponseNoButton = (Button) view.findViewById(R.id.violationResponseNoButton);
