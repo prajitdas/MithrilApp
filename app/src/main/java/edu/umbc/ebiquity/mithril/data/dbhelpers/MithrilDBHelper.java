@@ -319,7 +319,7 @@ public class MithrilDBHelper extends SQLiteOpenHelper {
             VIOLATIONFEEDBACKTTIME + " timestamp, " +
             VIOLATIONCTXTIDS + " TEXT NOT NULL, " +
             VIOLATIONCOUNT + " INTEGER NOT NULL DEFAULT 1, " +
-            "PRIMARY KEY(" + VIOLATIONPOLICYID + ", " + VIOLATIONAPPID + ", " + VIOLATIONOPERATION + ", " + VIOLATIONDETECTTIME + "), " +
+            "PRIMARY KEY(" + VIOLATIONPOLICYID + ", " + VIOLATIONAPPID + ", " + VIOLATIONOPERATION + "), " +
             "FOREIGN KEY(" + VIOLATIONAPPID + ") REFERENCES " + getAppsTableName() + "(" + APPID + ") ON DELETE CASCADE);";
     /**
      * -- Table 8: actionlog
