@@ -23,6 +23,7 @@ import android.util.Log;
 import android.util.Pair;
 
 import java.io.ByteArrayOutputStream;
+import java.sql.RowId;
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -290,7 +291,7 @@ public class MithrilDBHelper extends SQLiteOpenHelper {
 //    private final static String VIOLATIONACTSTR = "actstr"; // Action string
 //    private final static String VIOLATIONCTXSTR = "ctxstr"; // context string
 //    private final static String VIOLATIONCTXID = "contextid";
-    private final static String VIOLATIONPOLICYID = "policyId"; // ID of policy for which violation captured
+    private final static String VIOLATIONPOLICYID = "policyid"; // ID of policy for which violation captured
     private final static String VIOLATIONAPPID = "appid";
     private final static String VIOLATIONOPERATION = "operation";
     private final static String VIOLATIONAPPSTR = "appstr"; // App string
@@ -1470,47 +1471,28 @@ public class MithrilDBHelper extends SQLiteOpenHelper {
         return risk;
     }
 
-    public int findViolationByPolicyAppOpId(SQLiteDatabase db, Violation violation) {
+    public int findViolationRowIdByPolicyAppOpId(SQLiteDatabase db, Violation violation) {
         // Select Violation Query
-        String selectQuery = "SELECT " +
-                getViolationsLogTableName() + "." + VIOLATIONPOLICYID + ", " +
-                getViolationsLogTableName() + "." + VIOLATIONAPPID + ", " +
-                getViolationsLogTableName() + "." + VIOLATIONOPERATION + ", " +
-                getViolationsLogTableName() + "." + VIOLATIONAPPSTR + ", " +
-                getViolationsLogTableName() + "." + VIOLATIONOPSTR + ", " +
-                getViolationsLogTableName() + "." + VIOLATIONASKED + ", " +
-                getViolationsLogTableName() + "." + VIOLATIONTRUEFALSE + ", " +
-                getViolationsLogTableName() + "." + VIOLATIONDETECTTIME + ", " +
-                getViolationsLogTableName() + "." + VIOLATIONCTXTIDS + ", " +
-                getViolationsLogTableName() + "." + VIOLATIONCOUNT +
-                " FROM " + getViolationsLogTableName() + ";";
+        String selectQuery = "SELECT ROWID FROM " + getViolationsLogTableName() +
+                " WHERE " +
+                getViolationsLogTableName() + "." + VIOLATIONPOLICYID + " = " + violation.getPolicyId() +
+                " AND " +
+                getViolationsLogTableName() + "." + VIOLATIONAPPID + " = " + violation.getAppId() +
+                " AND " +
+                getViolationsLogTableName() + "." + VIOLATIONOPERATION + " = " + violation.getOprId() +
+                ";";
 
-        List<Violation> violations = new ArrayList<>();
         Cursor cursor = db.rawQuery(selectQuery, null);
         try {
             if (cursor.moveToFirst()) {
-                do {
-                    Violation tempViolation = new Violation(
-                            cursor.getInt(0),
-                            cursor.getInt(1),
-                            cursor.getInt(2),
-                            cursor.getString(3),
-                            cursor.getString(4),
-                            cursor.getInt(5) == 1,
-                            cursor.getInt(6) == 1,
-                            new Timestamp(cursor.getLong(7)),
-                            setCtxtIds(cursor.getString(8)),
-                            cursor.getInt(0)
-                    );
-                    violations.add(tempViolation);
-                } while (cursor.moveToNext());
+                return cursor.getInt(0);
             }
         } catch (SQLException e) {
             throw new SQLException("Could not find " + e);
         } finally {
             cursor.close();
         }
-        return violations;
+        return -1;
     }
 
     /**
@@ -2006,6 +1988,38 @@ public class MithrilDBHelper extends SQLiteOpenHelper {
                             VIOLATIONPOLICYID + " = ? AND " +
                             VIOLATIONOPERATION + " = ? ",
                     args);
+        } catch (SQLException e) {
+            throw new SQLException("Exception " + e + " error updating violation: " + aViolation.getPolicyId());
+        }
+    }
+
+    /**
+     * method to update single violation
+     */
+    public int updateViolationForRowId(SQLiteDatabase db, Violation aViolation, long rowid) {
+        ContentValues values = new ContentValues();
+        values.put(VIOLATIONPOLICYID, aViolation.getPolicyId());
+        values.put(VIOLATIONAPPID, aViolation.getAppId());
+        values.put(VIOLATIONOPERATION, aViolation.getOprId());
+        values.put(VIOLATIONAPPSTR, aViolation.getAppStr());
+        values.put(VIOLATIONOPSTR, aViolation.getOpStr());
+        values.put(VIOLATIONDETECTTIME, new Long(aViolation.getDetectedAtTime().getTime()));
+        values.put(VIOLATIONFEEDBACKTTIME, new Long(aViolation.getFeedbackTime().getTime()));
+        if (aViolation.isAsked())
+            values.put(VIOLATIONASKED, 1);
+        else
+            values.put(VIOLATIONASKED, 0);
+        if (aViolation.isTvfv())
+            values.put(VIOLATIONTRUEFALSE, 1);
+        else
+            values.put(VIOLATIONTRUEFALSE, 0);
+        values.put(VIOLATIONCTXTIDS, aViolation.getCtxtIdString());
+
+        try {
+            return db.update(getViolationsLogTableName(),
+                    values,
+                    " ROWID = ? ",
+                    new String[]{String.valueOf(rowid)});
         } catch (SQLException e) {
             throw new SQLException("Exception " + e + " error updating violation: " + aViolation.getPolicyId());
         }
