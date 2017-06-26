@@ -435,9 +435,19 @@ public class AppLaunchDetectorService extends Service implements
                                 editor.apply();
                                 Log.d(MithrilAC.getDebugTag(), pkgOpPair.first);
 
-                                requestLastLocation();
+//                                requestLastLocation();
 //                                guessCurrentPlace();
                                 startSearchAddressIntentService(mCurrentLocation);
+
+                                try {
+                                    ViolationDetector.detectViolation(
+                                            context,
+                                            pkgOpPair.first,
+                                            pkgOpPair.second,
+                                            getSemanticContexts());
+                                } catch (SemanticInconsistencyException e) {
+                                    Log.e(MithrilAC.getDebugTag(), e.getMessage());
+                                }
                                 /**
                                  * Once we receive the result of the address search, we can detect violation
                                  */
@@ -452,9 +462,19 @@ public class AppLaunchDetectorService extends Service implements
                             editor.apply();
                             Log.d(MithrilAC.getDebugTag(), pkgOpPair.first);
 
-                            requestLastLocation();
+//                            requestLastLocation();
 //                            guessCurrentPlace();
                             startSearchAddressIntentService(mCurrentLocation);
+
+                            try {
+                                ViolationDetector.detectViolation(
+                                        context,
+                                        pkgOpPair.first,
+                                        pkgOpPair.second,
+                                        getSemanticContexts());
+                            } catch (SemanticInconsistencyException e) {
+                                Log.e(MithrilAC.getDebugTag(), e.getMessage());
+                            }
                         }
                     } else {
                         //null! nothing to do
@@ -597,16 +617,6 @@ public class AppLaunchDetectorService extends Service implements
                 currentSemanticLocations.put(key+"_Country", new SemanticLocation(location, address,
                         key+"_Country",
                         false, address.getCountryName(), placeId, placeTypes, false, 4));
-
-                try {
-                    ViolationDetector.detectViolation(
-                            context,
-                            pkgOpPair.first,
-                            pkgOpPair.second,
-                            getSemanticContexts());
-                } catch (SemanticInconsistencyException e) {
-                    Log.e(MithrilAC.getDebugTag(), e.getMessage());
-                }
             }
             // Reset. Enable the Fetch Address button and stop showing the progress bar.
             mAddressRequested = false;
