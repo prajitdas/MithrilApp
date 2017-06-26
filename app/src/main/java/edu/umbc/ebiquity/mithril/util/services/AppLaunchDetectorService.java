@@ -294,6 +294,12 @@ public class AppLaunchDetectorService extends Service implements
             Log.d(MithrilAC.getDebugTag(), "Location found: "
                     + String.valueOf(mCurrentLocation.getLatitude())
                     + String.valueOf(mCurrentLocation.getLongitude()));
+            if(mGooglePlacesApiClient.isConnected())
+                guessCurrentPlace();
+            else if (!mGooglePlacesApiClient.isConnected() || !mGooglePlacesApiClient.isConnecting() && !mPlacesInProcgress) {
+                mPlacesInProcgress = true;
+                mGooglePlacesApiClient.connect();
+            }
         } catch (SecurityException e) {
             Log.d(MithrilAC.getDebugTag(), e.getMessage());
         }
@@ -394,6 +400,7 @@ public class AppLaunchDetectorService extends Service implements
                                             placeLikelihood.getLikelihood());
                         }
 //                    likelyPlaces.release();
+                    startSearchAddressIntentService(mCurrentLocation);
                 }
             });
         } catch (SecurityException e) {
@@ -430,8 +437,8 @@ public class AppLaunchDetectorService extends Service implements
                                 Log.d(MithrilAC.getDebugTag(), pkgOpPair.first);
 
                                 requestLastLocation();
-                                guessCurrentPlace();
-                                startSearchAddressIntentService(mCurrentLocation);
+//                                guessCurrentPlace();
+//                                startSearchAddressIntentService(mCurrentLocation);
                                 /**
                                  * Once we receive the result of the address search, we can detect violation
                                  */
@@ -447,8 +454,8 @@ public class AppLaunchDetectorService extends Service implements
                             Log.d(MithrilAC.getDebugTag(), pkgOpPair.first);
 
                             requestLastLocation();
-                            guessCurrentPlace();
-                            startSearchAddressIntentService(mCurrentLocation);
+//                            guessCurrentPlace();
+//                            startSearchAddressIntentService(mCurrentLocation);
                         }
                     } else {
                         //null! nothing to do
@@ -566,7 +573,7 @@ public class AppLaunchDetectorService extends Service implements
 
             Log.d(MithrilAC.getDebugTag(), "Prefs address " + resultData.getString(MithrilAC.getCurrAddressKey()) + mAddressRequested + key + json);
             // Show a toast message if an address was found.
-            if (resultCode == MithrilAC.SUCCESS_RESULT) {
+            if (resultCode == MithrilAC.SUCCESS_RESULT && mCurrentPlace != null && mCurrentLocation != null) {
                 SemanticLocation tempSemanticLocation = new SemanticLocation(key, mCurrentLocation, 0);
                 tempSemanticLocation.setName(mCurrentPlace.getName().toString());
                 tempSemanticLocation.setPlaceId(mCurrentPlace.getId());

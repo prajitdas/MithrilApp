@@ -275,6 +275,7 @@ public class ViolationDetector {
         try {
             MithrilDBHelper.getHelper(context).addViolation(mithrilDB, violation);
         } catch (SQLException e) {
+            Log.d(MithrilAC.getDebugTag(), violation.toString());
             long rowid = MithrilDBHelper.getHelper(context).findViolationRowIdByPolicyAppOpId(mithrilDB, violation);
             violation.setCount(violation.getCount() + 1);
             MithrilDBHelper.getHelper(context).updateViolationForRowId(mithrilDB, violation, rowid);
