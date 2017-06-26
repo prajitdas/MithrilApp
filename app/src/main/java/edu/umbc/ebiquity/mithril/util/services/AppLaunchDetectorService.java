@@ -85,7 +85,6 @@ public class AppLaunchDetectorService extends Service implements
     private boolean servicesAvailable;
     private boolean mInProgress;
     private boolean mPlacesInProcgress;
-    private List<SemanticUserContext> semanticUserContextList = new ArrayList<>();
     /**
      * Tracks whether the user has requested an address. Becomes true when the user requests an
      * address and false when the address (or an error message) is delivered.
@@ -229,6 +228,8 @@ public class AppLaunchDetectorService extends Service implements
     }
 
     private List<SemanticUserContext> getSemanticContexts() {
+        List<SemanticUserContext> semanticUserContextList = new ArrayList<>();
+
         //We are always at some location... where are we now? Also we are only in one place at a time
         if (mGoogleApiClient.isConnected()) {
             semanticUserContextList.add(getSemanticLocation(mCurrentLocation));
