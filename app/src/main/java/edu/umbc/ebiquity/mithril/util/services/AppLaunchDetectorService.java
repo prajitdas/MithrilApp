@@ -364,7 +364,7 @@ public class AppLaunchDetectorService extends Service implements
         Log.d(MithrilAC.getDebugTag(), "We are at a new location: " + mCurrentPlace.getAddress());
         Gson contextDataStoreGson = new Gson();
         SemanticLocation semanticLocation = new SemanticLocation(
-                mCurrentPlace.getName().toString() + String.valueOf(System.currentTimeMillis()),
+                mCurrentPlace.getName().toString(),// + String.valueOf(System.currentTimeMillis()),
                 currentLocation,
                 mCurrentPlace.getName().toString(),
                 mCurrentPlace.getId(),
@@ -375,7 +375,7 @@ public class AppLaunchDetectorService extends Service implements
         sendNotification(semanticLocation);
         addContext(
                 MithrilAC.getPrefKeyContextTypeLocation(),
-                mCurrentPlace.getName().toString() + String.valueOf(System.currentTimeMillis()),
+                mCurrentPlace.getName().toString(),// + String.valueOf(System.currentTimeMillis()),
                 contextDataStoreGson.toJson(semanticLocation)
         );
         return semanticLocation;
