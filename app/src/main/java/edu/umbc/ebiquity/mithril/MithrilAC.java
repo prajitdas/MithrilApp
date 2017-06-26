@@ -10,10 +10,7 @@ import android.text.TextUtils;
 import android.text.format.DateUtils;
 import android.util.Pair;
 
-import com.google.android.gms.maps.model.LatLng;
-
 import java.sql.Timestamp;
-import java.util.HashMap;
 
 /**
  * Created by Prajit Kumar Das on 5/1/2016.
@@ -39,7 +36,7 @@ public class MithrilAC extends Application {
     private static final String CURR_ADDRESS_KEY = "curr_address_key";
     private static final String NO_FLAGS = "no-flags";
     private static final String NORMAL_PROTECTION_LEVEL = "normal";
-    private static final float GEOFENCE_RADIUS_IN_METERS = 200; // 200 meters
+    private static final float RADIUS_OF_200_METERS = 200; // 200 meters
     private static final String CALENDAR_PERMISSION_GROUP_DESC = "Calendar permission group";
     public static final Pair<String, String> CALENDAR_PERMISSION_GROUP = new Pair<>("android.permission-group.CALENDAR", CALENDAR_PERMISSION_GROUP_DESC);
     private static final String CAMERA_PERMISSION_GROUP_DESC = "Camera permission group";
@@ -736,8 +733,8 @@ public class MithrilAC extends Application {
         return NORMAL_PROTECTION_LEVEL;
     }
 
-    public static float getGeofenceRadiusInMeters() {
-        return GEOFENCE_RADIUS_IN_METERS;
+    public static float getRadiusOf200Meters() {
+        return RADIUS_OF_200_METERS;
     }
 
     public static String getAddressRequestedExtra() {

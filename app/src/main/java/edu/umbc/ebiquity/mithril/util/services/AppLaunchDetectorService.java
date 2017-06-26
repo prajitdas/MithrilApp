@@ -9,7 +9,6 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.database.sqlite.SQLiteDatabase;
 import android.graphics.BitmapFactory;
-import android.graphics.Color;
 import android.location.Address;
 import android.location.Location;
 import android.os.Build;
@@ -310,7 +309,7 @@ public class AppLaunchDetectorService extends Service implements
         SemanticLocation semanticLocation = null;
         Gson retrieveDataGson = new Gson();
         String retrieveDataJson;
-//        float shortestDistanceToKnownLocation = Float.MAX_VALUE;
+        float shortestDistanceToKnownLocation = Float.MAX_VALUE;
         Map<String, ?> allPrefs;
         try {
             allPrefs = sharedPrefs.getAll();
@@ -322,31 +321,33 @@ public class AppLaunchDetectorService extends Service implements
                      * We are parsing all known locations and we know the current location's distance to them.
                      * Let's determine if we are at a certain known location and at what is that location.
                      */
-                    int level = Integer.MAX_VALUE;
-                    for (SemanticLocation currSemLoc : currentSemanticLocations.values()) {
-                        if (knownSemanticLocation.compareTo(currSemLoc) == 0) {
-                            if (level > knownSemanticLocation.getLevel()) {
-                                level = knownSemanticLocation.getLevel();
-                                semanticLocation = knownSemanticLocation;
-                            }
-                        }
-                        Log.d(MithrilAC.getDebugTag(), "Did not match but at least we got a location"+currSemLoc.getLabel()+currSemLoc.getName());
+                    float distanceTo = knownSemanticLocation.getLocation().distanceTo(currentLocation);
+                    if (distanceTo < MithrilAC.getRadiusOf200Meters() && shortestDistanceToKnownLocation > distanceTo) {
+                        shortestDistanceToKnownLocation = distanceTo;
+                        semanticLocation = knownSemanticLocation;
+                        Log.d(MithrilAC.getDebugTag(), "Passed location found: "
+                                + String.valueOf(currentLocation.getLatitude())
+                                + String.valueOf(currentLocation.getLongitude())
+                                + String.valueOf(distanceTo)
+                                + aPref.getKey()
+                        );
                     }
-                    if(semanticLocation != null)
-                        Log.d(MithrilAC.getDebugTag(), "Eureka we got a match to a location" + knownSemanticLocation.getName() + knownSemanticLocation.getLabel());
+                    if(semanticLocation == null) {
+                        int level = Integer.MAX_VALUE;
+                        for (SemanticLocation currSemLoc : currentSemanticLocations.values()) {
+                            if (knownSemanticLocation.compareTo(currSemLoc) == 0) {
+                                if (level > knownSemanticLocation.getLevel()) {
+                                    level = knownSemanticLocation.getLevel();
+                                    semanticLocation = knownSemanticLocation;
+                                }
+                            }
+                            Log.d(MithrilAC.getDebugTag(), "Did not match but at least we got a location" + currSemLoc.getLabel() + currSemLoc.getName());
+                        }
+                    }
+                    if (semanticLocation != null)
+                        Log.d(MithrilAC.getDebugTag(), "Eureka we got a match to a location" + semanticLocation.getName() + semanticLocation.getLabel());
                     else
                         Log.d(MithrilAC.getDebugTag(), "still null");
-//                    float distanceTo = knownSemanticLocation.getLocation().distanceTo(currentLocation);
-//                    if (distanceTo < MithrilAC.getGeofenceRadiusInMeters() && shortestDistanceToKnownLocation > distanceTo) {
-//                        shortestDistanceToKnownLocation = distanceTo;
-//                        semanticLocation = knownSemanticLocation;
-//                        Log.d(MithrilAC.getDebugTag(), "Passed location found: "
-//                                + String.valueOf(currentLocation.getLatitude())
-//                                + String.valueOf(currentLocation.getLongitude())
-//                                + String.valueOf(distanceTo)
-//                                + aPref.getKey()
-//                        );
-//                    }
                 }
             }
         } catch (NullPointerException e) {
@@ -356,13 +357,17 @@ public class AppLaunchDetectorService extends Service implements
         }
         if (semanticLocation == null)
             semanticLocation = handleUnknownLocation(currentLocation);
+        else
+            knownLocation = true;
         Log.d(MithrilAC.getDebugTag(), "This is a test for location: " + semanticLocation.getLabel());
         return semanticLocation;
     }
 
+    private boolean knownLocation;
+
     private SemanticLocation handleUnknownLocation(Location currentLocation) {
+        knownLocation = false;
         Log.d(MithrilAC.getDebugTag(), "We are at a new location: " + mCurrentPlace.getAddress());
-        Gson contextDataStoreGson = new Gson();
         SemanticLocation semanticLocation = new SemanticLocation(
                 mCurrentPlace.getName().toString(),
                 currentLocation,
@@ -436,14 +441,16 @@ public class AppLaunchDetectorService extends Service implements
 //                                guessCurrentPlace();
                                 startSearchAddressIntentService(mCurrentLocation);
 
-                                try {
-                                    ViolationDetector.detectViolation(
-                                            context,
-                                            pkgOpPair.first,
-                                            pkgOpPair.second,
-                                            getSemanticContexts());
-                                } catch (SemanticInconsistencyException e) {
-                                    Log.e(MithrilAC.getDebugTag(), e.getMessage());
+                                if(knownLocation) {
+                                    try {
+                                        ViolationDetector.detectViolation(
+                                                context,
+                                                pkgOpPair.first,
+                                                pkgOpPair.second,
+                                                getSemanticContexts());
+                                    } catch (SemanticInconsistencyException e) {
+                                        Log.e(MithrilAC.getDebugTag(), e.getMessage());
+                                    }
                                 }
                                 /**
                                  * Once we receive the result of the address search, we can detect violation
@@ -463,14 +470,16 @@ public class AppLaunchDetectorService extends Service implements
 //                            guessCurrentPlace();
                             startSearchAddressIntentService(mCurrentLocation);
 
-                            try {
-                                ViolationDetector.detectViolation(
-                                        context,
-                                        pkgOpPair.first,
-                                        pkgOpPair.second,
-                                        getSemanticContexts());
-                            } catch (SemanticInconsistencyException e) {
-                                Log.e(MithrilAC.getDebugTag(), e.getMessage());
+                            if(knownLocation) {
+                                try {
+                                    ViolationDetector.detectViolation(
+                                            context,
+                                            pkgOpPair.first,
+                                            pkgOpPair.second,
+                                            getSemanticContexts());
+                                } catch (SemanticInconsistencyException e) {
+                                    Log.e(MithrilAC.getDebugTag(), e.getMessage());
+                                }
                             }
                         }
                     } else {
@@ -515,7 +524,7 @@ public class AppLaunchDetectorService extends Service implements
                 .setContentText(getString(R.string.is_this_location_important))
                 .setContentIntent(notificationPendingIntent)
                 .addAction(R.drawable.content_save_all, "Save", notificationPendingIntent)
-                .addAction(R.drawable.delete_circle, "Cancel", notificationPendingIntent);
+                .addAction(R.drawable.delete_circle, "Don't save", notificationPendingIntent);
 
         // Dismiss notification once the user touches it.
         builder.setAutoCancel(true);

@@ -341,7 +341,7 @@ public class SetupGeofencesActivity extends AppCompatActivity implements
                 .setCircularRegion(
                         latitude,
                         longitude,
-                        MithrilAC.getGeofenceRadiusInMeters()
+                        MithrilAC.getRadiusOf200Meters()
                 )
 
                 // Set the expiration duration of the geofence. This geofence gets automatically
