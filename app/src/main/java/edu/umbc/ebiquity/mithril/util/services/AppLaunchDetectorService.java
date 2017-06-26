@@ -1,5 +1,6 @@
 package edu.umbc.ebiquity.mithril.util.services;
 
+import android.annotation.TargetApi;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.app.Service;
@@ -363,7 +364,7 @@ public class AppLaunchDetectorService extends Service implements
         Log.d(MithrilAC.getDebugTag(), "We are at a new location: " + mCurrentPlace.getAddress());
         Gson contextDataStoreGson = new Gson();
         SemanticLocation semanticLocation = new SemanticLocation(
-                MithrilAC.getPrefKeyContextInstanceUnknown() + Long.toString(System.currentTimeMillis()),
+                mCurrentPlace.getName().toString() + String.valueOf(System.currentTimeMillis()),
                 currentLocation,
                 mCurrentPlace.getName().toString(),
                 mCurrentPlace.getId(),
@@ -488,6 +489,7 @@ public class AppLaunchDetectorService extends Service implements
      * Posts a notification in the notification bar when a transition is detected.
      * If the user clicks the notification, control goes to the MainActivity.
      */
+    @TargetApi(Build.VERSION_CODES.M)
     private void sendNotification(SemanticLocation semanticLocation) {
         // Create an explicit content Intent that starts the main Activity.
         Intent notificationIntent = new Intent(this, InstanceCreationActivity.class);
@@ -512,11 +514,12 @@ public class AppLaunchDetectorService extends Service implements
         builder.setSmallIcon(R.drawable.map_marker)
                 // In a real app, you may want to use a library like Volley to decode the Bitmap.
                 .setLargeIcon(BitmapFactory.decodeResource(getResources(), R.drawable.map_marker))
-                .setColor(Color.RED)
+                .setColor(getResources().getColor(R.color.colorPrimary, getTheme()))
                 .setContentTitle(getString(R.string.we_are_at_a_new_location) + semanticLocation.getName())
                 .setContentText(getString(R.string.is_this_location_important))
                 .setContentIntent(notificationPendingIntent)
-                .addAction(R.drawable.content_save_all, "Save", notificationPendingIntent);
+                .addAction(R.drawable.content_save_all, "Save", notificationPendingIntent)
+                .addAction(R.drawable.delete_circle, "Cancel", notificationPendingIntent);
 
         // Dismiss notification once the user touches it.
         builder.setAutoCancel(true);
