@@ -42,6 +42,7 @@ import com.google.gson.JsonSyntaxException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 
 import edu.umbc.ebiquity.mithril.MithrilAC;
@@ -1145,6 +1146,9 @@ public class InstanceCreationActivity extends AppCompatActivity
                 semanticLocations.put(key, new SemanticLocation(location, address,
                         key,
                         false, tempSemanticLocation.getName(), placeId, placeTypes, false, 0));
+                //Let's go to null island!!!
+                location.setLatitude(0);
+                location.setLongitude(0);
                 semanticLocations.put(key+"_Street", new SemanticLocation(location, address,
                         key+"_Street",
                         false, address.getThoroughfare(), placeId, placeTypes, false, 1));

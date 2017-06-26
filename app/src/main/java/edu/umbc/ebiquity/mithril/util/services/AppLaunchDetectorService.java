@@ -358,16 +358,11 @@ public class AppLaunchDetectorService extends Service implements
         }
         if (semanticLocation == null)
             semanticLocation = handleUnknownLocation(currentLocation);
-        else
-            knownLocation = true;
         Log.d(MithrilAC.getDebugTag(), "This is a test for location: " + semanticLocation.getLabel());
         return semanticLocation;
     }
 
-    private boolean knownLocation;
-
     private SemanticLocation handleUnknownLocation(Location currentLocation) {
-        knownLocation = false;
         Log.d(MithrilAC.getDebugTag(), "We are at a new location: " + mCurrentPlace.getAddress());
         SemanticLocation semanticLocation = new SemanticLocation(
                 mCurrentPlace.getName().toString(),
@@ -403,6 +398,7 @@ public class AppLaunchDetectorService extends Service implements
                                             placeLikelihood.getLikelihood());
                         }
 //                    likelyPlaces.release();
+                    startSearchAddressIntentService(mCurrentLocation);
                 }
             });
         } catch (SecurityException e) {
@@ -440,18 +436,16 @@ public class AppLaunchDetectorService extends Service implements
 
 //                                requestLastLocation();
 //                                guessCurrentPlace();
-                                startSearchAddressIntentService(mCurrentLocation);
+//                                startSearchAddressIntentService(mCurrentLocation);
 
-                                if(knownLocation) {
-                                    try {
-                                        ViolationDetector.detectViolation(
-                                                context,
-                                                pkgOpPair.first,
-                                                pkgOpPair.second,
-                                                getSemanticContexts());
-                                    } catch (SemanticInconsistencyException e) {
-                                        Log.e(MithrilAC.getDebugTag(), e.getMessage());
-                                    }
+                                try {
+                                    ViolationDetector.detectViolation(
+                                            context,
+                                            pkgOpPair.first,
+                                            pkgOpPair.second,
+                                            getSemanticContexts());
+                                } catch (SemanticInconsistencyException e) {
+                                    Log.e(MithrilAC.getDebugTag(), e.getMessage());
                                 }
                                 /**
                                  * Once we receive the result of the address search, we can detect violation
@@ -469,18 +463,16 @@ public class AppLaunchDetectorService extends Service implements
 
 //                            requestLastLocation();
 //                            guessCurrentPlace();
-                            startSearchAddressIntentService(mCurrentLocation);
+//                            startSearchAddressIntentService(mCurrentLocation);
 
-                            if(knownLocation) {
-                                try {
-                                    ViolationDetector.detectViolation(
-                                            context,
-                                            pkgOpPair.first,
-                                            pkgOpPair.second,
-                                            getSemanticContexts());
-                                } catch (SemanticInconsistencyException e) {
-                                    Log.e(MithrilAC.getDebugTag(), e.getMessage());
-                                }
+                            try {
+                                ViolationDetector.detectViolation(
+                                        context,
+                                        pkgOpPair.first,
+                                        pkgOpPair.second,
+                                        getSemanticContexts());
+                            } catch (SemanticInconsistencyException e) {
+                                Log.e(MithrilAC.getDebugTag(), e.getMessage());
                             }
                         }
                     } else {
@@ -538,16 +530,6 @@ public class AppLaunchDetectorService extends Service implements
         mNotificationManager.notify(0, builder.build());
     }
 
-    private void addContextLogToDB(String label, String startOrEnd) {
-        MithrilDBHelper.getHelper(this).addContextLog(
-                mithrilDB,
-                MithrilDBHelper.getHelper(this).findContextIdByLabelAndType(
-                        mithrilDB,
-                        label,
-                        MithrilAC.getPrefKeyContextTypeLocation()),
-                startOrEnd);
-    }
-
     private Map<String, SemanticLocation> currentSemanticLocations = new HashMap<>();
 
     private class AddressResultReceiver extends ResultReceiver {
@@ -603,13 +585,18 @@ public class AppLaunchDetectorService extends Service implements
                     tempSemanticLocation.setPlaceId(mCurrentPlace.getId());
                     tempSemanticLocation.setPlaceTypes(mCurrentPlace.getPlaceTypes());
                     tempSemanticLocation.setAddress(mAddressOutput);
-                    currentSemanticLocations.put(key, tempSemanticLocation);
 
                     Address address = tempSemanticLocation.getAddress();
                     Location location = tempSemanticLocation.getLocation();
                     String placeId = tempSemanticLocation.getPlaceId();
                     List<Integer> placeTypes = tempSemanticLocation.getPlaceTypes();
 
+                    currentSemanticLocations.put(key, new SemanticLocation(location, address,
+                            key,
+                            false, tempSemanticLocation.getName(), placeId, placeTypes, false, 0));
+                    //Let's go to null island!!!
+                    location.setLatitude(0);
+                    location.setLongitude(0);
                     currentSemanticLocations.put(key + "_Street", new SemanticLocation(location, address,
                             key + "_Street",
                             false, address.getThoroughfare(), placeId, placeTypes, false, 1));
