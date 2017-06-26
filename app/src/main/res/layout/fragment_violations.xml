@@ -4,12 +4,11 @@
     android:layout_height="wrap_content"
     android:orientation="horizontal">
 
-    <android.support.v7.widget.CardView xmlns:card_view="http://schemas.android.com/apk/res-auto"
+    <android.support.v7.widget.CardView
+        xmlns:card_view="http://schemas.android.com/apk/res-auto"
         android:id="@+id/violation_card_view"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginEnd="@dimen/card_view_corner_radius"
-        android:layout_marginStart="@dimen/card_view_corner_radius"
         android:layout_marginBottom="@dimen/card_view_margin"
         android:layout_marginTop="@dimen/card_view_margin"
         android:elevation="@dimen/card_view_elevation"
@@ -27,8 +26,6 @@
                 android:layout_alignParentStart="true"
                 android:layout_marginEnd="@dimen/card_view_corner_radius"
                 android:layout_marginStart="@dimen/card_view_corner_radius"
-                android:layout_marginBottom="@dimen/card_view_margin"
-                android:layout_marginTop="@dimen/card_view_margin"
                 android:src="@drawable/ic_launcher"
                 android:contentDescription="@null"
                 android:scaleType="centerCrop" />
@@ -70,30 +67,26 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_alignParentStart="true"
-                android:layout_below="@+id/violatingAppIcon"
+                android:layout_below="@+id/violationContext"
                 android:theme="@style/AppTheme.Button"
-                android:layout_marginEnd="@dimen/card_view_corner_radius"
-                android:layout_marginStart="@dimen/card_view_corner_radius"
-                android:layout_marginBottom="@dimen/card_view_margin"
-                android:layout_marginTop="@dimen/card_view_margin"
+                android:layout_marginEnd="@dimen/activity_vertical_margin"
+                android:layout_marginStart="@dimen/activity_vertical_margin"
                 android:text="@string/button_true_violation"
                 android:textSize="12sp"
-                android:textColor="@color/colorPrimary"/>
+                android:textColor="@color/red"/>
 
             <Button
                 android:id="@+id/violationResponseNoButton"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_alignParentEnd="true"
-                android:layout_below="@+id/violatingAppIcon"
+                android:layout_below="@+id/violationContext"
                 android:theme="@style/AppTheme.Button"
-                android:layout_marginEnd="@dimen/card_view_corner_radius"
-                android:layout_marginStart="@dimen/card_view_corner_radius"
-                android:layout_marginBottom="@dimen/card_view_margin"
-                android:layout_marginTop="@dimen/card_view_margin"
+                android:layout_marginEnd="@dimen/activity_vertical_margin"
+                android:layout_marginStart="@dimen/activity_vertical_margin"
                 android:text="@string/button_false_violation"
                 android:textSize="12sp"
-                android:textColor="@color/red"/>
+                android:textColor="@color/colorPrimaryDark"/>
         </RelativeLayout>
     </android.support.v7.widget.CardView>
 </LinearLayout>
