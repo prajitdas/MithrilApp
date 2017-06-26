@@ -430,6 +430,7 @@ public class AppLaunchDetectorService extends Service implements
                                 Log.d(MithrilAC.getDebugTag(), pkgOpPair.first);
 
                                 requestLastLocation();
+                                guessCurrentPlace();
                                 startSearchAddressIntentService(mCurrentLocation);
                                 /**
                                  * Once we receive the result of the address search, we can detect violation
@@ -446,6 +447,7 @@ public class AppLaunchDetectorService extends Service implements
                             Log.d(MithrilAC.getDebugTag(), pkgOpPair.first);
 
                             requestLastLocation();
+                            guessCurrentPlace();
                             startSearchAddressIntentService(mCurrentLocation);
                         }
                     } else {
