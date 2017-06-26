@@ -301,9 +301,7 @@ public class AppLaunchDetectorService extends Service implements
         SemanticLocation semanticLocation = null;
         Gson retrieveDataGson = new Gson();
         String retrieveDataJson;
-        float shortestDistanceToKnownLocation = Float.MAX_VALUE;
         List<SemanticLocation> knownSemanticLocations = new ArrayList<>();
-        String placeIdOfNote = null;
         Map<String, ?> allPrefs;
         try {
             allPrefs = sharedPrefs.getAll();
@@ -311,6 +309,8 @@ public class AppLaunchDetectorService extends Service implements
                 if (aPref.getKey().startsWith(MithrilAC.getPrefKeyContextTypeLocation())) {
                     retrieveDataJson = sharedPrefs.getString(aPref.getKey(), "");
                     SemanticLocation knownSemanticLocation = retrieveDataGson.fromJson(retrieveDataJson, SemanticLocation.class);
+                    knownSemanticLocations.add(knownSemanticLocation);
+
                     /**
                      * We are parsing all known locations and we know the current location's distance to them.
                      * Let's determine if we are at a certain known location and at what is that location.
@@ -321,13 +321,10 @@ public class AppLaunchDetectorService extends Service implements
                             if (level > knownSemanticLocation.getLevel()) {
                                 level = knownSemanticLocation.getLevel();
                                 semanticLocation = knownSemanticLocation;
-                                placeIdOfNote = knownSemanticLocation.getPlaceId();
                             }
                         }
                         Log.d(MithrilAC.getDebugTag(), "Did not match but at least we got a location" + currSemLoc.getLabel() + currSemLoc.getName());
                     }
-                    if(placeIdOfNote != null && knownSemanticLocation.getPlaceId().equals(placeIdOfNote))
-                        knownSemanticLocations.add(knownSemanticLocation);
                 }
             }
         } catch (NullPointerException e) {
@@ -336,19 +333,32 @@ public class AppLaunchDetectorService extends Service implements
             Log.d(MithrilAC.getDebugTag(), "came here");
         }
         if (semanticLocation != null) {
+            int level = Integer.MAX_VALUE;
             for(SemanticLocation knownSemanticLocation : knownSemanticLocations) {
-                Log.d(MithrilAC.getDebugTag(), "Eureka we got a match to a location" + knownSemanticLocation.getName() + knownSemanticLocation.getLabel());
-                float distanceTo = knownSemanticLocation.getLocation().distanceTo(currentLocation);
-                if (distanceTo < MithrilAC.getRadiusOf200Meters() && shortestDistanceToKnownLocation > distanceTo) {
-                    shortestDistanceToKnownLocation = distanceTo;
-                    semanticLocation = knownSemanticLocation;
-                    Log.d(MithrilAC.getDebugTag(), "Passed location found: "
-                            + String.valueOf(currentLocation.getLatitude())
-                            + String.valueOf(knownSemanticLocation.getLocation().getLatitude())
-                            + String.valueOf(distanceTo)
-                    );
+                if(knownSemanticLocation.getPlaceId().equals(semanticLocation.getPlaceId())) {
+                    if (level > knownSemanticLocation.getLevel()) {
+                        level = knownSemanticLocation.getLevel();
+                        semanticLocation = knownSemanticLocation;
+                        Log.d(MithrilAC.getDebugTag(), "Eureka we got a match to a location" + semanticLocation.getName() + semanticLocation.getLabel());
+                    }
                 }
             }
+//            float shortestDistanceToKnownLocation = Float.MAX_VALUE;
+//            Log.d(MithrilAC.getDebugTag(), "1st Eureka we got a match to a location" +
+//                    String.valueOf(knownSemanticLocations.size()));
+//            for(SemanticLocation knownSemanticLocation : knownSemanticLocations) {
+//                float distanceTo = currentLocation.distanceTo(knownSemanticLocation.getLocation());
+//                if (distanceTo < MithrilAC.getRadiusOf200Meters() && shortestDistanceToKnownLocation > distanceTo) {
+//                    Log.d(MithrilAC.getDebugTag(), "3rd Eureka we got a match to a location" + knownSemanticLocation.getName() + knownSemanticLocation.getLabel());
+//                    shortestDistanceToKnownLocation = distanceTo;
+//                    semanticLocation = knownSemanticLocation;
+//                    Log.d(MithrilAC.getDebugTag(), "Passed location found: "
+//                            + String.valueOf(currentLocation.getLatitude())
+//                            + String.valueOf(knownSemanticLocation.getLocation().getLatitude())
+//                            + String.valueOf(distanceTo)
+//                    );
+//                }
+//            }
         } else
             semanticLocation = handleUnknownLocation(currentLocation);
         Log.d(MithrilAC.getDebugTag(), "This is a test for location: " + semanticLocation.getLabel());
