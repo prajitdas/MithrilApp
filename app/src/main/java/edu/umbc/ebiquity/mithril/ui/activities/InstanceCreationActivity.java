@@ -452,7 +452,7 @@ public class InstanceCreationActivity extends AppCompatActivity
                 false,
                 0
         );
-        semanticTimes.put(MithrilAC.getPrefKeyContextTypeTemporal() + semanticTime.getLabel(), semanticTime);
+        semanticTimes.put(semanticTime.getLabel(), semanticTime);
 
         /**********************************************************************************************************************/
 
@@ -475,7 +475,7 @@ public class InstanceCreationActivity extends AppCompatActivity
                 false,
                 0
         );
-        semanticTimes.put(MithrilAC.getPrefKeyContextTypeTemporal() + semanticTime.getLabel(), semanticTime);
+        semanticTimes.put(semanticTime.getLabel(), semanticTime);
 
         /**********************************************************************************************************************/
 
@@ -495,7 +495,7 @@ public class InstanceCreationActivity extends AppCompatActivity
                 false,
                 0
         );
-        semanticTimes.put(MithrilAC.getPrefKeyContextTypeTemporal() + semanticTime.getLabel(), semanticTime);
+        semanticTimes.put(semanticTime.getLabel(), semanticTime);
 
         /**********************************************************************************************************************/
 
@@ -515,7 +515,7 @@ public class InstanceCreationActivity extends AppCompatActivity
                 false,
                 0
         );
-        semanticTimes.put(MithrilAC.getPrefKeyContextTypeTemporal() + semanticTime.getLabel(), semanticTime);
+        semanticTimes.put(semanticTime.getLabel(), semanticTime);
 
         /**********************************************************************************************************************/
 
@@ -535,7 +535,7 @@ public class InstanceCreationActivity extends AppCompatActivity
                 false,
                 0
         );
-        semanticTimes.put(MithrilAC.getPrefKeyContextTypeTemporal() + semanticTime.getLabel(), semanticTime);
+        semanticTimes.put(semanticTime.getLabel(), semanticTime);
 
         /**********************************************************************************************************************/
 
@@ -555,7 +555,7 @@ public class InstanceCreationActivity extends AppCompatActivity
                 false,
                 0
         );
-        semanticTimes.put(MithrilAC.getPrefKeyContextTypeTemporal() + semanticTime.getLabel(), semanticTime);
+        semanticTimes.put(semanticTime.getLabel(), semanticTime);
 
         /**
          * Dinner hours context
@@ -570,7 +570,7 @@ public class InstanceCreationActivity extends AppCompatActivity
                 false,
                 0
         );
-        semanticTimes.put(MithrilAC.getPrefKeyContextTypeTemporal() + semanticTime.getLabel(), semanticTime);
+        semanticTimes.put(semanticTime.getLabel(), semanticTime);
 
         /**
          * Personal hours context
@@ -585,7 +585,7 @@ public class InstanceCreationActivity extends AppCompatActivity
                 false,
                 0
         );
-        semanticTimes.put(MithrilAC.getPrefKeyContextTypeTemporal() + semanticTime.getLabel(), semanticTime);
+        semanticTimes.put(semanticTime.getLabel(), semanticTime);
 
         /**
          * DND hours context
@@ -600,7 +600,7 @@ public class InstanceCreationActivity extends AppCompatActivity
                 false,
                 0
         );
-        semanticTimes.put(MithrilAC.getPrefKeyContextTypeTemporal() + semanticTime.getLabel(), semanticTime);
+        semanticTimes.put(semanticTime.getLabel(), semanticTime);
 
         isThereTemporalContextToSave = true;
     }
