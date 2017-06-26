@@ -6,6 +6,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -95,8 +96,8 @@ public class ViolationRecyclerViewAdapter extends RecyclerView.Adapter<Violation
         private final TextView mViolationAppLaunch;
         private final TextView mViolationOpDetaill;
         private final TextView mViolationContext;
-        private final ImageButton mViolationResponseYesButton;
-        private final ImageButton mViolationResponseNoButton;
+        private final Button mViolationResponseYesButton;
+        private final Button mViolationResponseNoButton;
 
         private Violation mItem;
 
@@ -107,8 +108,8 @@ public class ViolationRecyclerViewAdapter extends RecyclerView.Adapter<Violation
             mViolationAppLaunch = (TextView) view.findViewById(R.id.violationAppLaunch);
             mViolationOpDetaill = (TextView) view.findViewById(R.id.violationOpDetail);
             mViolationContext = (TextView) view.findViewById(R.id.violationContext);
-            mViolationResponseYesButton = (ImageButton) view.findViewById(R.id.violationResponseYesButton);
-            mViolationResponseNoButton = (ImageButton) view.findViewById(R.id.violationResponseNoButton);
+            mViolationResponseYesButton = (Button) view.findViewById(R.id.violationResponseYesButton);
+            mViolationResponseNoButton = (Button) view.findViewById(R.id.violationResponseNoButton);
         }
 
         @Override

@@ -65,7 +65,7 @@
                 android:textColor="@color/colorPrimaryText"
                 android:textSize="14dp" />
 
-            <ImageButton
+            <Button
                 android:id="@+id/violationResponseYesButton"
                 android:layout_width="30sp"
                 android:layout_height="30sp"
@@ -78,7 +78,7 @@
                 android:layout_marginTop="@dimen/card_view_margin"
                 android:background="@drawable/thumb_up"/>
 
-            <ImageButton
+            <Button
                 android:id="@+id/violationResponseNoButton"
                 android:layout_width="30sp"
                 android:layout_height="30sp"
