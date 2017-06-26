@@ -3,6 +3,7 @@ package edu.umbc.ebiquity.mithril.util.specialtasks.detect.policyconflicts;
 import android.Manifest;
 import android.app.AppOpsManager;
 import android.content.Context;
+import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
 import android.util.Log;
 import android.util.Pair;
@@ -138,7 +139,8 @@ public class ViolationDetector {
                              * deemed true by user feedback. They may also be explicitly defined as false.
                              * In which case we need to change the policy... We ask for more feedback.
                              */
-                            MithrilDBHelper.getHelper(context).addViolation(mithrilDB,
+                            handleViolation(context,
+                                    mithrilDB,
                                     new Violation(
                                             rule.getPolicyId(),
                                             rule.getAppId(),
@@ -148,7 +150,8 @@ public class ViolationDetector {
                                             false,
                                             true,
                                             new Timestamp(System.currentTimeMillis()),
-                                            new ArrayList<>(policyContext)
+                                            new ArrayList<>(policyContext),
+                                            1
                                     )
                             );
                         }
@@ -185,7 +188,8 @@ public class ViolationDetector {
                                 ctxtTypeLabel.first,
                                 Action.ALLOW,
                                 mithrilDB, context);
-                        MithrilDBHelper.getHelper(context).addViolation(mithrilDB,
+                        handleViolation(context,
+                                mithrilDB,
                                 new Violation(
                                         newPolicyId,
                                         appId,
@@ -195,7 +199,8 @@ public class ViolationDetector {
                                         false,
                                         true,
                                         new Timestamp(System.currentTimeMillis()),
-                                        new ArrayList<>(currentContext)
+                                        new ArrayList<>(currentContext),
+                                        1
                                 )
                         );
                     }
@@ -233,7 +238,8 @@ public class ViolationDetector {
                             ctxtTypeLabel.first,
                             Action.ALLOW,
                             mithrilDB, context);
-                    MithrilDBHelper.getHelper(context).addViolation(mithrilDB,
+                    handleViolation(context,
+                            mithrilDB,
                             new Violation(
                                     newPolicyId,
                                     appId,
@@ -243,7 +249,8 @@ public class ViolationDetector {
                                     false,
                                     true,
                                     new Timestamp(System.currentTimeMillis()),
-                                    new ArrayList<>(currentContext)
+                                    new ArrayList<>(currentContext),
+                                    1
                             )
                     );
                 }
@@ -262,6 +269,14 @@ public class ViolationDetector {
          * change policy to allowed in
          */
         mithrilDB.close();
+    }
+
+    private static void handleViolation(Context context, SQLiteDatabase mithrilDB, Violation violation) {
+        try {
+            MithrilDBHelper.getHelper(context).addViolation(mithrilDB, violation);
+        } catch (SQLException e) {
+            MithrilDBHelper.getHelper(context).findViolationByPolicyAppOpId(mithrilDB, violation);
+        }
     }
 
     private static Set<Long> populateCurrentContext(SQLiteDatabase mithrilDB, Context context, List<SemanticUserContext> semanticUserContexts) {

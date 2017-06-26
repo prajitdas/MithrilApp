@@ -14,17 +14,6 @@ import edu.umbc.ebiquity.mithril.MithrilAC;
 import edu.umbc.ebiquity.mithril.data.dbhelpers.MithrilDBHelper;
 
 public class Violation implements Parcelable {
-    public static final Creator<Violation> CREATOR = new Creator<Violation>() {
-        @Override
-        public Violation createFromParcel(Parcel in) {
-            return new Violation(in);
-        }
-
-        @Override
-        public Violation[] newArray(int size) {
-            return new Violation[size];
-        }
-    };
     private long policyId;
     private long appId;
     private long oprId;
@@ -35,18 +24,9 @@ public class Violation implements Parcelable {
     private Timestamp detectedAtTime;
     private Timestamp feedbackTime;
     private List<Long> ctxtIds;
+    private int count;
 
-    protected Violation(Parcel in) {
-        policyId = in.readLong();
-        appId = in.readLong();
-        oprId = in.readLong();
-        appStr = in.readString();
-        opStr = in.readString();
-        asked = in.readByte() != 0;
-        tvfv = in.readByte() != 0;
-    }
-
-    public Violation(long policyId, long appId, long oprId, String appStr, String opStr, boolean asked, boolean tvfv, Timestamp detectedAtTime, List<Long> ctxtIds) {
+    public Violation(long policyId, long appId, long oprId, String appStr, String opStr, boolean asked, boolean tvfv, Timestamp detectedAtTime, List<Long> ctxtIds, int count) {
         this.policyId = policyId;
         this.appId = appId;
         this.oprId = oprId;
@@ -56,6 +36,18 @@ public class Violation implements Parcelable {
         this.tvfv = tvfv;
         this.detectedAtTime = detectedAtTime;
         this.ctxtIds = ctxtIds;
+        this.count = count;
+    }
+
+    protected Violation(Parcel in) {
+        policyId = in.readLong();
+        appId = in.readLong();
+        oprId = in.readLong();
+        appStr = in.readString();
+        opStr = in.readString();
+        asked = in.readByte() != 0;
+        tvfv = in.readByte() != 0;
+        count = in.readInt();
     }
 
     @Override
@@ -67,12 +59,25 @@ public class Violation implements Parcelable {
         dest.writeString(opStr);
         dest.writeByte((byte) (asked ? 1 : 0));
         dest.writeByte((byte) (tvfv ? 1 : 0));
+        dest.writeInt(count);
     }
 
     @Override
     public int describeContents() {
         return 0;
     }
+
+    public static final Creator<Violation> CREATOR = new Creator<Violation>() {
+        @Override
+        public Violation createFromParcel(Parcel in) {
+            return new Violation(in);
+        }
+
+        @Override
+        public Violation[] newArray(int size) {
+            return new Violation[size];
+        }
+    };
 
     @Override
     public String toString() {
@@ -92,6 +97,17 @@ public class Violation implements Parcelable {
             ctxtIdString.append(",");
         }
         ctxtIdString.deleteCharAt(ctxtIdString.length()-1);
+        return ctxtIdString.toString();
+    }
+
+    public String getCtxtIdString() {
+        if(ctxtIds == null || ctxtIds.size() == 0)
+            return "";
+        StringBuffer ctxtIdString = new StringBuffer();
+        for (Long ctxt : ctxtIds) {
+            ctxtIdString.append(ctxt);
+            ctxtIdString.append(",");
+        }
         return ctxtIdString.toString();
     }
 
@@ -171,18 +187,15 @@ public class Violation implements Parcelable {
         return ctxtIds;
     }
 
-    public String getCtxtIdString() {
-        if(ctxtIds == null || ctxtIds.size() == 0)
-            return "";
-        StringBuffer ctxtIdString = new StringBuffer();
-        for (Long ctxt : ctxtIds) {
-            ctxtIdString.append(ctxt);
-            ctxtIdString.append(",");
-        }
-        return ctxtIdString.toString();
-    }
-
     public void setCtxtIds(List<Long> ctxtIds) {
         this.ctxtIds = ctxtIds;
+    }
+
+    public int getCount() {
+        return count;
+    }
+
+    public void setCount(int count) {
+        this.count = count;
     }
 }
