@@ -196,8 +196,8 @@ public class AppLaunchDetectorService extends Service implements
                 .Builder(this)
                 .addApi(Places.GEO_DATA_API)
                 .addApi(Places.PLACE_DETECTION_API)
-                .addConnectionCallbacks(this)
-                .addOnConnectionFailedListener(this)
+                .addConnectionCallbacks(AppLaunchDetectorService.this)
+                .addOnConnectionFailedListener(AppLaunchDetectorService.this)
                 .build();
     }
 
@@ -400,7 +400,6 @@ public class AppLaunchDetectorService extends Service implements
                                             placeLikelihood.getLikelihood());
                         }
 //                    likelyPlaces.release();
-                    startSearchAddressIntentService(mCurrentLocation);
                 }
             });
         } catch (SecurityException e) {
@@ -438,7 +437,7 @@ public class AppLaunchDetectorService extends Service implements
 
                                 requestLastLocation();
 //                                guessCurrentPlace();
-//                                startSearchAddressIntentService(mCurrentLocation);
+                                startSearchAddressIntentService(mCurrentLocation);
                                 /**
                                  * Once we receive the result of the address search, we can detect violation
                                  */
@@ -455,7 +454,7 @@ public class AppLaunchDetectorService extends Service implements
 
                             requestLastLocation();
 //                            guessCurrentPlace();
-//                            startSearchAddressIntentService(mCurrentLocation);
+                            startSearchAddressIntentService(mCurrentLocation);
                         }
                     } else {
                         //null! nothing to do
@@ -599,15 +598,6 @@ public class AppLaunchDetectorService extends Service implements
                         key+"_Country",
                         false, address.getCountryName(), placeId, placeTypes, false, 4));
 
-                try {
-                    ViolationDetector.detectViolation(
-                            context,
-                            pkgOpPair.first,
-                            pkgOpPair.second,
-                            getSemanticContexts());
-                } catch (SemanticInconsistencyException e) {
-                    Log.e(MithrilAC.getDebugTag(), e.getMessage());
-                }
                 try {
                     ViolationDetector.detectViolation(
                             context,
