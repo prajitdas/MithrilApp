@@ -7,7 +7,6 @@ import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.database.sqlite.SQLiteDatabase;
 import android.graphics.BitmapFactory;
 import android.location.Address;
 import android.location.Location;
@@ -48,7 +47,6 @@ import java.util.TimerTask;
 
 import edu.umbc.ebiquity.mithril.MithrilAC;
 import edu.umbc.ebiquity.mithril.R;
-import edu.umbc.ebiquity.mithril.data.dbhelpers.MithrilDBHelper;
 import edu.umbc.ebiquity.mithril.data.model.rules.Resource;
 import edu.umbc.ebiquity.mithril.data.model.rules.context.SemanticActivity;
 import edu.umbc.ebiquity.mithril.data.model.rules.context.SemanticLocation;
@@ -67,7 +65,6 @@ public class AppLaunchDetectorService extends Service implements
         ConnectionCallbacks,
         OnConnectionFailedListener,
         LocationListener {
-    private SQLiteDatabase mithrilDB;
     private AppLaunchDetector appLaunchDetector;
     // run on another Thread to avoid crash
     private Handler mHandler = new Handler();
@@ -80,7 +77,6 @@ public class AppLaunchDetectorService extends Service implements
     private GoogleApiClient mGooglePlacesApiClient;
     private Location mCurrentLocation;
     private Place mCurrentPlace;
-    private List<String> currentPlaceNames = new ArrayList<>();
     private Pair<String, List<Resource>> pkgOpPair;
     private boolean servicesAvailable;
     private boolean mInProgress;
@@ -112,7 +108,7 @@ public class AppLaunchDetectorService extends Service implements
         // Set defaults, then update using values stored in the Bundle.
         mAddressRequested = false;
         mAddressResultReceiver = new AddressResultReceiver(new Handler(), this);
-        initDB(context);
+//        initDB(context);
         /* Create a new location client, using the enclosing class to
          * handle callbacks.
          */
@@ -127,11 +123,6 @@ public class AppLaunchDetectorService extends Service implements
         } catch (NullPointerException e) {
             Log.d(MithrilAC.getDebugTag(), "Check if we have the right permissions, we probably could not instantiate the detector");
         }
-    }
-
-    private void initDB(Context context) {
-        // Let's get the DB instances loaded too
-        mithrilDB = MithrilDBHelper.getHelper(context).getWritableDatabase();
     }
 
     @Override
@@ -406,16 +397,6 @@ public class AppLaunchDetectorService extends Service implements
         } catch (SecurityException e) {
             Log.e(MithrilAC.getDebugTag(), "security exception happened");
         }
-    }
-
-    private void addContextToDB(String contextType, String contextLabel) {
-        MithrilDBHelper.getHelper(this).addContext(mithrilDB, contextType, contextLabel, true);
-    }
-
-    private void addContext(String contextType, String contextLabel, String serializedJsonContext) {
-        editor.putString(contextType + contextLabel, serializedJsonContext);
-        editor.apply();
-        addContextToDB(contextType, contextLabel);
     }
 
     private class LaunchedAppDetectTimerTask extends TimerTask {
