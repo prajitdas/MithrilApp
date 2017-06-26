@@ -373,11 +373,6 @@ public class AppLaunchDetectorService extends Service implements
         );
         // Send notification and log the transition details.
         sendNotification(semanticLocation);
-        addContext(
-                MithrilAC.getPrefKeyContextTypeLocation(),
-                mCurrentPlace.getName().toString(),// + String.valueOf(System.currentTimeMillis()),
-                contextDataStoreGson.toJson(semanticLocation)
-        );
         return semanticLocation;
     }
 
@@ -393,6 +388,7 @@ public class AppLaunchDetectorService extends Service implements
                     float mostLikelihood = Float.MIN_VALUE;
                     for (PlaceLikelihood placeLikelihood : likelyPlaces)
                         if (placeLikelihood.getLikelihood() > mostLikelihood) {
+                            mostLikelihood = placeLikelihood.getLikelihood();
                             mCurrentPlace = placeLikelihood.getPlace();
                             Log.d(MithrilAC.getDebugTag(),
                                     "Place found: " +
@@ -578,51 +574,48 @@ public class AppLaunchDetectorService extends Service implements
             String key = resultData.getString(MithrilAC.getCurrAddressKey(), null);
             if (key.equals(null))
                 throw new AddressKeyMissingError();
-            else
-                storeAddressInSharedPreferences(key, resultCode, resultData);
-        }
+            else {
+                // Display the address string
+                // or an error message sent from the intent service.
+                Gson gson = new Gson();
+                String json = resultData.getString(MithrilAC.getResultDataKey(), "");
+                try {
+                    mAddressOutput = gson.fromJson(json, Address.class);
+                } catch (JsonSyntaxException e) {
+                    Log.d(MithrilAC.getDebugTag(), e.getMessage());
+                }
 
-        protected void storeAddressInSharedPreferences(String key, int resultCode, Bundle resultData) {
-            // Display the address string
-            // or an error message sent from the intent service.
-            Gson gson = new Gson();
-            String json = resultData.getString(MithrilAC.getResultDataKey(), "");
-            try {
-                mAddressOutput = gson.fromJson(json, Address.class);
-            } catch (JsonSyntaxException e) {
-                Log.d(MithrilAC.getDebugTag(), e.getMessage());
+                Log.d(MithrilAC.getDebugTag(), "Prefs address " + resultData.getString(MithrilAC.getCurrAddressKey()) + mAddressRequested + key + json);
+                // Show a toast message if an address was found.
+                if (resultCode == MithrilAC.SUCCESS_RESULT && mCurrentPlace != null && mCurrentLocation != null) {
+                    SemanticLocation tempSemanticLocation = new SemanticLocation(key, mCurrentLocation, 0);
+                    tempSemanticLocation.setName(mCurrentPlace.getName().toString());
+                    tempSemanticLocation.setPlaceId(mCurrentPlace.getId());
+                    tempSemanticLocation.setPlaceTypes(mCurrentPlace.getPlaceTypes());
+                    tempSemanticLocation.setAddress(mAddressOutput);
+                    currentSemanticLocations.put(key, tempSemanticLocation);
+
+                    Address address = tempSemanticLocation.getAddress();
+                    Location location = tempSemanticLocation.getLocation();
+                    String placeId = tempSemanticLocation.getPlaceId();
+                    List<Integer> placeTypes = tempSemanticLocation.getPlaceTypes();
+
+                    currentSemanticLocations.put(key + "_Street", new SemanticLocation(location, address,
+                            key + "_Street",
+                            false, address.getThoroughfare(), placeId, placeTypes, false, 1));
+                    currentSemanticLocations.put(key + "_City", new SemanticLocation(location, address,
+                            key + "_City",
+                            false, address.getLocality(), placeId, placeTypes, false, 2));
+                    currentSemanticLocations.put(key + "_State", new SemanticLocation(location, address,
+                            key + "_State",
+                            false, address.getAdminArea(), placeId, placeTypes, false, 3));
+                    currentSemanticLocations.put(key + "_Country", new SemanticLocation(location, address,
+                            key + "_Country",
+                            false, address.getCountryName(), placeId, placeTypes, false, 4));
+                }
+                // Reset. Enable the Fetch Address button and stop showing the progress bar.
+                mAddressRequested = false;
             }
-
-            Log.d(MithrilAC.getDebugTag(), "Prefs address " + resultData.getString(MithrilAC.getCurrAddressKey()) + mAddressRequested + key + json);
-            // Show a toast message if an address was found.
-            if (resultCode == MithrilAC.SUCCESS_RESULT && mCurrentPlace != null && mCurrentLocation != null) {
-                SemanticLocation tempSemanticLocation = new SemanticLocation(key, mCurrentLocation, 0);
-                tempSemanticLocation.setName(mCurrentPlace.getName().toString());
-                tempSemanticLocation.setPlaceId(mCurrentPlace.getId());
-                tempSemanticLocation.setPlaceTypes(mCurrentPlace.getPlaceTypes());
-                tempSemanticLocation.setAddress(mAddressOutput);
-                currentSemanticLocations.put(key, tempSemanticLocation);
-
-                Address address = tempSemanticLocation.getAddress();
-                Location location = tempSemanticLocation.getLocation();
-                String placeId = tempSemanticLocation.getPlaceId();
-                List<Integer> placeTypes = tempSemanticLocation.getPlaceTypes();
-
-                currentSemanticLocations.put(key+"_Street", new SemanticLocation(location, address,
-                        key+"_Street",
-                        false, address.getThoroughfare(), placeId, placeTypes, false, 1));
-                currentSemanticLocations.put(key+"_City", new SemanticLocation(location, address,
-                        key+"_City",
-                        false, address.getLocality(), placeId, placeTypes, false, 2));
-                currentSemanticLocations.put(key+"_State", new SemanticLocation(location, address,
-                        key+"_State",
-                        false, address.getAdminArea(), placeId, placeTypes, false, 3));
-                currentSemanticLocations.put(key+"_Country", new SemanticLocation(location, address,
-                        key+"_Country",
-                        false, address.getCountryName(), placeId, placeTypes, false, 4));
-            }
-            // Reset. Enable the Fetch Address button and stop showing the progress bar.
-            mAddressRequested = false;
         }
     }
 }

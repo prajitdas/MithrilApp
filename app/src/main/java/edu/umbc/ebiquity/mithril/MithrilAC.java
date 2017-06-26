@@ -128,7 +128,6 @@ public class MithrilAC extends Application {
     private static final String PREF_KEY_POLICIES_DOWNLOADED = "policiesDownloaded";
     private static final String PREF_KEY_LAST_RUNNING_APP = "lastRunningApp";
 
-    private static final String PREF_KEY_CONTEXT_INSTANCE_UNKNOWN = "Unknown";
     private static final String PREF_KEY_CONTEXT_TYPE_LOCATION = "Location";
     private static final String PREF_KEY_CONTEXT_TYPE_ACTIVITY = "Activity";
     private static final String PREF_KEY_CONTEXT_TYPE_TEMPORAL = "Temporal";
@@ -1207,10 +1206,6 @@ public class MithrilAC extends Application {
 
     public static String getPrefKeyUserContinueClicked() {
         return PREF_KEY_USER_CONTINUE_CLICKED;
-    }
-
-    public static String getPrefKeyContextInstanceUnknown() {
-        return PREF_KEY_CONTEXT_INSTANCE_UNKNOWN;
     }
 
     public static String getLauncherName(Context context) {

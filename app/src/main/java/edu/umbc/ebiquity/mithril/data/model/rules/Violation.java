@@ -35,6 +35,7 @@ public class Violation implements Parcelable {
         this.asked = asked;
         this.tvfv = tvfv;
         this.detectedAtTime = detectedAtTime;
+        this.feedbackTime = new Timestamp(0);
         this.ctxtIds = ctxtIds;
         this.count = count;
     }
@@ -48,6 +49,8 @@ public class Violation implements Parcelable {
         asked = in.readByte() != 0;
         tvfv = in.readByte() != 0;
         count = in.readInt();
+        detectedAtTime = new Timestamp(in.readLong());
+        feedbackTime = new Timestamp(in.readLong());
     }
 
     @Override
@@ -60,6 +63,8 @@ public class Violation implements Parcelable {
         dest.writeByte((byte) (asked ? 1 : 0));
         dest.writeByte((byte) (tvfv ? 1 : 0));
         dest.writeInt(count);
+        dest.writeLong(detectedAtTime.getTime());
+        dest.writeLong(feedbackTime.getTime());
     }
 
     @Override
