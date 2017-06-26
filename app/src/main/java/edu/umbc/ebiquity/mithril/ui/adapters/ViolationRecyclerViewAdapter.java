@@ -10,6 +10,7 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import java.sql.Timestamp;
 import java.util.List;
 
 import edu.umbc.ebiquity.mithril.MithrilAC;
@@ -54,22 +55,32 @@ public class ViolationRecyclerViewAdapter extends RecyclerView.Adapter<Violation
         holder.mItem = mValues.get(position);
         holder.mViolatingAppIcon.setImageBitmap(violatingApp.getIcon());
         holder.mViolationAppLaunch.setText(violatingApp.getAppName());
+
         holder.mViolationOpDetail.setText("Used: " + mValues.get(position).getOpStr() + " " +
                 MithrilAC.getTimeText(true, mValues.get(position).getDetectedAtTime()));
+
         holder.mViolationContext.setText("Context - " +
                 mValues.get(position).getContextsString(context));
+
         holder.mViolationResponseYesButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 PermissionHelper.toast(view.getContext(), "Good! Will block this in the future...");
-                mValues.get(position).setTvfv();
+                mValues.get(position).setAsked(true);
+                mValues.get(position).setFeedbackTime(new Timestamp(System.currentTimeMillis()));
                 MithrilDBHelper.getHelper(view.getContext()).updateViolationForRowId(mithrilDB, mValues.get(position), rowid);
             }
         });
+
         holder.mViolationResponseNoButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 PermissionHelper.toast(view.getContext(), "Sure... let's change some rules");
+                if (null != mListener) {
+                    // Notify the active callbacks interface (the activity, if the
+                    // fragment is attached to one) that an item has been selected.
+                    mListener.onListFragmentInteraction(holder.mItem);
+                }
             }
         });
 
