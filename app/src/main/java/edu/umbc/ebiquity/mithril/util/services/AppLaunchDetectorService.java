@@ -320,8 +320,6 @@ public class AppLaunchDetectorService extends Service implements
                 if (aPref.getKey().startsWith(MithrilAC.getPrefKeyContextTypeLocation())) {
                     retrieveDataJson = sharedPrefs.getString(aPref.getKey(), "");
                     SemanticLocation knownSemanticLocation = retrieveDataGson.fromJson(retrieveDataJson, SemanticLocation.class);
-                    if(placeIdOfNote != null && placeIdOfNote == knownSemanticLocation.getPlaceId())
-                        knownSemanticLocations.add(knownSemanticLocation);
                     /**
                      * We are parsing all known locations and we know the current location's distance to them.
                      * Let's determine if we are at a certain known location and at what is that location.
@@ -337,6 +335,8 @@ public class AppLaunchDetectorService extends Service implements
                         }
                         Log.d(MithrilAC.getDebugTag(), "Did not match but at least we got a location" + currSemLoc.getLabel() + currSemLoc.getName());
                     }
+                    if(placeIdOfNote != null && knownSemanticLocation.getPlaceId().equals(placeIdOfNote))
+                        knownSemanticLocations.add(knownSemanticLocation);
                 }
             }
         } catch (NullPointerException e) {
@@ -345,8 +345,8 @@ public class AppLaunchDetectorService extends Service implements
             Log.d(MithrilAC.getDebugTag(), "came here");
         }
         if (semanticLocation != null) {
-            Log.d(MithrilAC.getDebugTag(), "Eureka we got a match to a location" + semanticLocation.getName() + semanticLocation.getLabel());
             for(SemanticLocation knownSemanticLocation : knownSemanticLocations) {
+                Log.d(MithrilAC.getDebugTag(), "Eureka we got a match to a location" + knownSemanticLocation.getName() + knownSemanticLocation.getLabel());
                 float distanceTo = knownSemanticLocation.getLocation().distanceTo(currentLocation);
                 if (distanceTo < MithrilAC.getRadiusOf200Meters() && shortestDistanceToKnownLocation > distanceTo) {
                     shortestDistanceToKnownLocation = distanceTo;
