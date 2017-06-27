@@ -111,6 +111,14 @@ public class PermissionHelper {
                 PermissionHelper.isPermissionGranted(
                         context,
                         "android.permission.GET_APP_OPS_STATS"
+                ) == PackageManager.PERMISSION_GRANTED &&
+                PermissionHelper.isPermissionGranted(
+                        context,
+                        "android.permission.MANAGE_APP_OPS_RESTRICTIONS"
+                ) == PackageManager.PERMISSION_GRANTED &&
+                PermissionHelper.isPermissionGranted(
+                        context,
+                        "android.permission.UPDATE_APP_OPS_STATS"
                 ) == PackageManager.PERMISSION_GRANTED)
             return false;
         return true;

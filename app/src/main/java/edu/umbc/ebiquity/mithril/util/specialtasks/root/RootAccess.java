@@ -14,7 +14,7 @@ import edu.umbc.ebiquity.mithril.util.specialtasks.errorsnexceptions.PhoneNotRoo
  * Original source: http://www.stealthcopter.com/blog/2010/01/android-requesting-root-access-in-your-app/
  */
 
-public class RootAccess {
+public class RootAccess implements Runnable {
     private Process rootProcess;
     private boolean rooted;
 
@@ -156,5 +156,10 @@ public class RootAccess {
         }
 
         return executedSuccessfully;
+    }
+
+    @Override
+    public void run() {
+
     }
 }

@@ -6,16 +6,20 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.net.Uri;
+import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.Handler;
 import android.provider.Settings;
 import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.CompoundButton;
 import android.widget.ToggleButton;
 
 import java.util.List;
+import java.util.TimerTask;
 
 import edu.umbc.ebiquity.mithril.MithrilAC;
 import edu.umbc.ebiquity.mithril.R;
@@ -84,9 +88,9 @@ public class PermissionAcquisitionActivity extends AppCompatActivity {
         if (!PermissionHelper.needsUsageStatsPermission(this))
             mSpecialPermToggleButton.setChecked(true);
         if (!PermissionHelper.needsWriteSettingsPermission(this))
-            mSpecialPermToggleButton.setChecked(true);
+            mSettingsPermToggleButton.setChecked(true);
         if (!PermissionHelper.needsRootPrivileges(this, rootAccess))
-            mSpecialPermToggleButton.setChecked(true);
+            mRootAccessToggleButton.setChecked(true);
 
         setOnClickListeners();
         setOnCheckedChangeListener();
@@ -99,6 +103,21 @@ public class PermissionAcquisitionActivity extends AppCompatActivity {
                 PermissionHelper.quitMithril(v.getContext(), MithrilAC.MITHRIL_BYE_BYE_MESSAGE);
             }
         });
+    }
+
+    private class RootTask implements Runnable {
+        @Override
+        public void run() {
+            try {
+                rootAccess.runScript(new String[] {
+                        MithrilAC.getCmdGrantGetAppOpsStats(),
+                        MithrilAC.getCmdGrantManageAppOpsRestrictions(),
+                        MithrilAC.getCmdGrantUpdateAppOpsStats()
+                });
+            } catch (PhoneNotRootedException e) {
+                Log.d(MithrilAC.getDebugTag(), "Phone is not rooted... full functionality unavailable but can perform first phase of the MithrilAC study!");
+            }
+        }
     }
 
     private void setOnCheckedChangeListener() {
@@ -153,26 +172,19 @@ public class PermissionAcquisitionActivity extends AppCompatActivity {
                 else
                     buttonView.setChecked(false);
                 if (PermissionHelper.needsRootPrivileges(buttonView.getContext(), rootAccess)) {
-                    try {
-                        rootAccess.runScript(new String[] {
-                                MithrilAC.getCmdGrantGetAppOpsStats(),
-                                MithrilAC.getCmdGrantManageAppOpsRestrictions(),
-                                MithrilAC.getCmdGrantUpdateAppOpsStats()
-                        });
-                    } catch (PhoneNotRootedException e) {
-                        PermissionHelper.toast(buttonView.getContext(), "Phone is not rooted... full functionality unavailable but can perform first phase of the MithrilAC study!");
-                    }
-//                    if(PermissionHelper.needsRootPrivileges(buttonView.getContext(), rootAccess))
-//                        buttonView.setChecked(true);
-//                        Log.d(MithrilAC.getDebugTag(),
-//                                "GET_APP_OPS_STATS: " +
-//                                        (
-//                                                PermissionHelper.isPermissionGranted(
-//                                                        buttonView.getContext(),
-//                                                        "android.permission.GET_APP_OPS_STATS"
-//                                                ) == PackageManager.PERMISSION_GRANTED ? "Granted" : "Denied"
-//                                        )
-//                        );
+                    AsyncTask.execute(new RootTask());
+                }
+                else
+                    PermissionHelper.toast(buttonView.getContext(), "Thanks we have ROOT!");
+//                Log.d(MithrilAC.getDebugTag(),
+//                        "GET_APP_OPS_STATS: " +
+//                                (
+//                                        PermissionHelper.isPermissionGranted(
+//                                                buttonView.getContext(),
+//                                                "android.permission.GET_APP_OPS_STATS"
+//                                        ) == PackageManager.PERMISSION_GRANTED ? "Granted" : "Denied"
+//                                )
+//                );
 //                        Log.d(MithrilAC.getDebugTag(),
 //                                "MANAGE_APP_OPS_RESTRICTIONS: " +
 //                                        (
@@ -191,9 +203,6 @@ public class PermissionAcquisitionActivity extends AppCompatActivity {
 //                                                ) == PackageManager.PERMISSION_GRANTED ? "Granted" : "Denied"
 //                                        )
 //                        );
-                }
-                else
-                    PermissionHelper.toast(buttonView.getContext(), "Thanks we have ROOT!");
             }
         });
     }
