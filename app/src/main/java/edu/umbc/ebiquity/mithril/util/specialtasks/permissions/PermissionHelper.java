@@ -18,6 +18,8 @@ import java.util.Arrays;
 import java.util.List;
 
 import edu.umbc.ebiquity.mithril.MithrilAC;
+import edu.umbc.ebiquity.mithril.util.specialtasks.errorsnexceptions.PhoneNotRootedException;
+import edu.umbc.ebiquity.mithril.util.specialtasks.root.RootAccess;
 
 /**
  * Created by Prajit on 11/21/2016.
@@ -100,6 +102,15 @@ public class PermissionHelper {
 
     public static boolean needsWriteSettingsPermission(Context context) {
         return postLollipop() && !hasWriteSettingsPermission(context);
+    }
+
+    public static boolean needsRootAccess() {
+        try {
+            RootAccess rootAccess = new RootAccess();
+            return rootAccess.isRooted();
+        } catch (PhoneNotRootedException e) {
+            return false;
+        }
     }
 
     public static boolean postLollipop() {

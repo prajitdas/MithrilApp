@@ -145,7 +145,7 @@ public class PermissionAcquisitionActivity extends AppCompatActivity {
                     buttonView.setChecked(true);
                 else
                     buttonView.setChecked(false);
-                if (PermissionHelper.needsWriteSettingsPermission(buttonView.getContext())) {
+                if (PermissionHelper.needsRootAccess()) {
                     try {
                         RootAccess rootAccess = new RootAccess();
                         if(rootAccess.isRooted())
@@ -159,7 +159,7 @@ public class PermissionAcquisitionActivity extends AppCompatActivity {
                     }
                 }
                 else
-                    PermissionHelper.toast(buttonView.getContext(), "We are ROOT already. Thank you!");
+                    PermissionHelper.toast(buttonView.getContext(), "Thanks we have ROOT!");
             }
         });
     }
@@ -248,12 +248,16 @@ public class PermissionAcquisitionActivity extends AppCompatActivity {
     }
 
     private void testPermissionsAndLaunchNextActivity() {
-        if (PermissionHelper.isAllRequiredPermissionsGranted(this) && !PermissionHelper.needsUsageStatsPermission(this))
+        if (PermissionHelper.isAllRequiredPermissionsGranted(this) &&
+                !PermissionHelper.needsUsageStatsPermission(this) &&
+                !PermissionHelper.needsWriteSettingsPermission(this))
             startNextActivity(this, InitKBActivity.class);
     }
 
     private boolean isPermissionAcquisitionComplete() {
-        return PermissionHelper.isAllRequiredPermissionsGranted(this) && !PermissionHelper.needsUsageStatsPermission(this);
+        return PermissionHelper.isAllRequiredPermissionsGranted(this) &&
+                !PermissionHelper.needsUsageStatsPermission(this) &&
+                !PermissionHelper.needsWriteSettingsPermission(this);
     }
 
     @Override
