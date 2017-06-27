@@ -169,17 +169,17 @@ public class DayOfWeekPreference extends DialogPreference {
         daysOfWeek.clear();
         if (!string.equals(empty)) {
             for (String day : string.split(delimiter)) {
-                if (day.equals(MithrilAC.getPrefMonday()))
+                if (day.equals(MithrilAC.getPrefMondayTemporalKey()))
                     daysOfWeek.add(DayOfWeek.Monday);
-                else if (day.equals(MithrilAC.getPrefTuesday()))
+                else if (day.equals(MithrilAC.getPrefTuesdayTemporalKey()))
                     daysOfWeek.add(DayOfWeek.Tuesday);
-                else if (day.equals(MithrilAC.getPrefWednesday()))
+                else if (day.equals(MithrilAC.getPrefWednesdayTemporalKey()))
                     daysOfWeek.add(DayOfWeek.Wednesday);
-                else if (day.equals(MithrilAC.getPrefThursday()))
+                else if (day.equals(MithrilAC.getPrefThursdayTemporalKey()))
                     daysOfWeek.add(DayOfWeek.Thursday);
-                else if (day.equals(MithrilAC.getPrefFriday()))
+                else if (day.equals(MithrilAC.getPrefFridayTemporalKey()))
                     daysOfWeek.add(DayOfWeek.Friday);
-                else if (day.equals(MithrilAC.getPrefSaturday()))
+                else if (day.equals(MithrilAC.getPrefSaturdayTemporalKey()))
                     daysOfWeek.add(DayOfWeek.Saturday);
                 else
                     daysOfWeek.add(DayOfWeek.Sunday);
@@ -192,7 +192,7 @@ public class DayOfWeekPreference extends DialogPreference {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                 if (isChecked) {
-                    if (!daysOfWeek.contains(MithrilAC.getPrefMonday()))
+                    if (!daysOfWeek.contains(MithrilAC.getPrefMondayTemporalKey()))
                         daysOfWeek.add(DayOfWeek.Monday);
                 } else
                     daysOfWeek.remove(DayOfWeek.Monday);
@@ -203,7 +203,7 @@ public class DayOfWeekPreference extends DialogPreference {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                 if (isChecked) {
-                    if (!daysOfWeek.contains(MithrilAC.getPrefTuesday()))
+                    if (!daysOfWeek.contains(MithrilAC.getPrefTuesdayTemporalKey()))
                         daysOfWeek.add(DayOfWeek.Tuesday);
                 } else
                     daysOfWeek.remove(DayOfWeek.Tuesday);
@@ -214,7 +214,7 @@ public class DayOfWeekPreference extends DialogPreference {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                 if (isChecked) {
-                    if (!daysOfWeek.contains(MithrilAC.getPrefWednesday()))
+                    if (!daysOfWeek.contains(MithrilAC.getPrefWednesdayTemporalKey()))
                         daysOfWeek.add(DayOfWeek.Wednesday);
                 } else
                     daysOfWeek.remove(DayOfWeek.Wednesday);
@@ -225,7 +225,7 @@ public class DayOfWeekPreference extends DialogPreference {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                 if (isChecked) {
-                    if (!daysOfWeek.contains(MithrilAC.getPrefThursday()))
+                    if (!daysOfWeek.contains(MithrilAC.getPrefThursdayTemporalKey()))
                         daysOfWeek.add(DayOfWeek.Thursday);
                 } else
                     daysOfWeek.remove(DayOfWeek.Thursday);
@@ -236,7 +236,7 @@ public class DayOfWeekPreference extends DialogPreference {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                 if (isChecked) {
-                    if (!daysOfWeek.contains(MithrilAC.getPrefFriday()))
+                    if (!daysOfWeek.contains(MithrilAC.getPrefFridayTemporalKey()))
                         daysOfWeek.add(DayOfWeek.Friday);
                 } else
                     daysOfWeek.remove(DayOfWeek.Friday);
@@ -247,7 +247,7 @@ public class DayOfWeekPreference extends DialogPreference {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                 if (isChecked) {
-                    if (!daysOfWeek.contains(MithrilAC.getPrefSaturday()))
+                    if (!daysOfWeek.contains(MithrilAC.getPrefSaturdayTemporalKey()))
                         daysOfWeek.add(DayOfWeek.Saturday);
                 } else
                     daysOfWeek.remove(DayOfWeek.Saturday);
@@ -258,7 +258,7 @@ public class DayOfWeekPreference extends DialogPreference {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                 if (isChecked) {
-                    if (!daysOfWeek.contains(MithrilAC.getPrefSunday()))
+                    if (!daysOfWeek.contains(MithrilAC.getPrefSundayTemporalKey()))
                         daysOfWeek.add(DayOfWeek.Sunday);
                 } else
                     daysOfWeek.remove(DayOfWeek.Sunday);

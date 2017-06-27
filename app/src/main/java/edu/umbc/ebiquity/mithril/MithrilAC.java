@@ -138,34 +138,29 @@ public class MithrilAC extends Application {
 
     private static final String PREF_KEY_TEMPORAL_LABEL = "temporalLabel";
 
-    private static final String PREF_TIME_INTERVAL_WEEKEND_TEMPORAL_KEY = "Weekend"; //Saturday - Sunday
-    private static final String PREF_TIME_INTERVAL_WEEKDAY_TEMPORAL_KEY = "Weekday"; //Monday - Friday
-    private static final String PREF_TIME_INTERVAL_BREAKFAST_TEMPORAL_KEY = "Breakfast"; //0800 - 0830
-    private static final String PREF_TIME_INTERVAL_WORK_MORNING_TEMPORAL_KEY = "Work_Morning"; //0830 - 1200 only Monday - Friday
-    private static final String PREF_TIME_INTERVAL_LUNCH_TEMPORAL_KEY = "Lunch"; //1200 - 1230
-    private static final String PREF_TIME_INTERVAL_WORK_AFTERNOON_TEMPORAL_KEY = "Work_Afternoon"; //1230 - 1600 only Monday - Friday
-    private static final String PREF_TIME_INTERVAL_FAMILY_TEMPORAL_KEY = "Family_Time"; //1600 - 1900
-    private static final String PREF_TIME_INTERVAL_DINNER_TEMPORAL_KEY = "Dinner"; //1900 - 1930
-    private static final String PREF_TIME_INTERVAL_PERSONAL_TEMPORAL_KEY = "Personal_Time"; //1930 - 2100
-    private static final String PREF_TIME_INTERVAL_DND_TEMPORAL_KEY = "DND"; //2100 - 0800
-//    private static final String PREF_TIME_INSTANT_SUNRISE_TEMPORAL_KEY = "Sunrise"; //Sunrise in a locale
-//    private static final String PREF_TIME_INSTANT_SUNSET_TEMPORAL_KEY = "Sunset"; // Sunset in a locale
-//    private static final String PREF_TIME_INTERVAL_MORNING_TEMPORAL_KEY = "Morning"; //0800 - 1200
-//    private static final String PREF_TIME_INTERVAL_AFTERNOON_TEMPORAL_KEY = "Afternoon"; //1200 - 1600
-//    private static final String PREF_TIME_INTERVAL_EVENING_TEMPORAL_KEY = "Evening"; //1600 - 2100
-//    private static final String PREF_TIME_INTERVAL_DINNER_TEMPORAL_KEY = "Dinner"; //1900 - 1930
-//    private static final String PREF_TIME_INTERVAL_NIGHT_TEMPORAL_KEY = "Night"; //2100 - 0800
-//    private static final String PREF_TIME_INTERVAL_HOLIDAY_TEMPORAL_KEY = "Holiday"; //Official holiday
-
-    private static final String PREF_MONDAY = "Monday";
-    private static final String PREF_TUESDAY = "Tuesday";
-    private static final String PREF_WEDNESDAY = "Wednesday";
-    private static final String PREF_THURSDAY = "Thursday";
-    private static final String PREF_FRIDAY = "Friday";
-    private static final String PREF_SATURDAY = "Saturday";
-    private static final String PREF_SUNDAY = "Sunday";
-    //End of preferences.xml
-
+    private static final String PREF_BREAKFAST_TEMPORAL_KEY = "Breakfast"; //0800 - 0830
+    private static final String PREF_WORK_MORNING_TEMPORAL_KEY = "Work_Morning"; //0830 - 1200 only Monday - Friday
+    private static final String PREF_LUNCH_TEMPORAL_KEY = "Lunch"; //1200 - 1230
+    private static final String PREF_WORK_AFTERNOON_TEMPORAL_KEY = "Work_Afternoon"; //1230 - 1600 only Monday - Friday
+    private static final String PREF_FAMILY_TEMPORAL_KEY = "Family_Time"; //1600 - 1900
+    private static final String PREF_DINNER_TEMPORAL_KEY = "Dinner"; //1900 - 1930
+    private static final String PREF_ALONE_TEMPORAL_KEY = "Alone_Time"; //1930 - 2100
+    private static final String PREF_DND_TEMPORAL_KEY = "DND"; //2100 - 0800
+    private static final String PREF_MONDAY_TEMPORAL_KEY = "Monday";
+    private static final String PREF_TUESDAY_TEMPORAL_KEY = "Tuesday";
+    private static final String PREF_WEDNESDAY_TEMPORAL_KEY = "Wednesday";
+    private static final String PREF_THURSDAY_TEMPORAL_KEY = "Thursday";
+    private static final String PREF_FRIDAY_TEMPORAL_KEY = "Friday";
+    private static final String PREF_SATURDAY_TEMPORAL_KEY = "Saturday";
+    private static final String PREF_SUNDAY_TEMPORAL_KEY = "Sunday";
+    private static final String PREF_WEEKDAY_TEMPORAL_KEY = "Weekday";
+    private static final String PREF_ANYDAY_TEMPORAL_KEY = "Anyday";
+    private static final String PREF_WEEKEND_TEMPORAL_KEY = "Weekend";
+    private static final String PREF_PERSONAL_TEMPORAL_KEY = "Personal_Time";
+    private static final String PREF_PROFESSIONAL_TEMPORAL_KEY = "Professional_Time";
+    private static final String PREF_ANYTIME_TEMPORAL_KEY = "Anytime";
+    private static final String NEVER_REPEATS = "never repeats";
+    private static final String NOT_YET = "Not yet";
     private static final String PREF_KEY_LOCATION_INSTANCES_HAVE_BEEN_SET = "locationInstancesHaveBeenSet";
     private static final String PREF_KEY_ACTIVITY_INSTANCES_HAVE_BEEN_SET = "activityInstancesHaveBeenSet";
     private static final String PREF_KEY_PRESENCE_INSTANCES_HAVE_BEEN_SET = "presenceInstancesHaveBeenSet";
@@ -178,9 +173,9 @@ public class MithrilAC extends Application {
     private static final String PREF_KEY_TIME_INSTANCES_CREATED = "timeInstancesCreated";
     private static final String PREF_KEY_PRES_INSTANCES_CREATED = "presInstancesCreated";
     private static final String PREF_KEY_ACTI_INSTANCES_CREATED = "actiInstancesCreated";
-
     private static final String PREF_KEY_USER_DENIED_USAGE_STATS_PERMISSIONS = "userDeniedUsageStatsPermissions";
     private static final String PREF_KEY_USER_DENIED_PERMISSIONS = "userDeniedPermissions";
+    //End of preferences.xml
     private static final String PREF_KEY_SHOULD_SHOW_AGREEMENT_SNACKBAR = "shouldShowAgreementSnackbar";
     private static final String PREF_KEY_APP_LAUNCH_MONITORING_SERVICE_STATE = "appLaunchMonitoringServiceState";
     private static final String PREF_KEY_LOCATION_UPDATE_SERVICE_STATE = "locationUpdateServiceState";
@@ -189,6 +184,14 @@ public class MithrilAC extends Application {
     private static final String PREF_KEY_USER_APPS_DISPLAY = "userApps";
     private static final String PREF_KEY_APP_DISPLAY_TYPE = "AppDisplayTypeTag";
     private static final String PREF_KEY_APP_PKG_NAME = "AppPkgNameTag";
+//    private static final String PREF_TIME_INSTANT_SUNRISE_TEMPORAL_KEY = "Sunrise"; //Sunrise in a locale
+//    private static final String PREF_TIME_INSTANT_SUNSET_TEMPORAL_KEY = "Sunset"; // Sunset in a locale
+//    private static final String PREF_MORNING_TEMPORAL_KEY = "Morning"; //0800 - 1200
+//    private static final String PREF_AFTERNOON_TEMPORAL_KEY = "Afternoon"; //1200 - 1600
+//    private static final String PREF_EVENING_TEMPORAL_KEY = "Evening"; //1600 - 2100
+//    private static final String PREF_DINNER_TEMPORAL_KEY = "Dinner"; //1900 - 1930
+//    private static final String PREF_NIGHT_TEMPORAL_KEY = "Night"; //2100 - 0800
+//    private static final String PREF_HOLIDAY_TEMPORAL_KEY = "Holiday"; //Official holiday
     private static final String PREF_KEY_PERM_GROUP_NAME = "PermGroupNameTag";
     private static final String PREF_KEY_PERM_GROUP_LABEL = "PermGroupLabelTag";
     private static final String PREF_KEY_APP_COUNT = "AppCount";
@@ -198,11 +201,8 @@ public class MithrilAC extends Application {
     private static final String PREF_KEY_USER_CONTINUE_CLICKED = "ContinueButtonClicked";
     private static final String PREF_KEY_GEOFENCE_LIST = "geofenceList";
     private static final String PREF_KEY_TIMEFENCE_LIST = "timefenceList";
-    //End of preference keys
-
     private static final String DATABASE_NAME = "mithril.db";
     private static final String DEBUG_TAG = "MithrilDebugTag";
-
     /**
      * Context constants
      * TODO Change the constants as per the ontology and ensure that you generate some rules to be modified by the automated script
@@ -239,6 +239,7 @@ public class MithrilAC extends Application {
     private static final String CONTEXT_DEFAULT_IDENTITY = "John Doe";
     private static final String CONTEXT_DEFAULT_RELATIONSHIP = "Boss";
     private static final String POL_RUL_NAME_SOCIAL_MEDIA_CAMERA_ACCESS_RULE = "Social_Media_Camera_Access_Rule";
+    //End of preference keys
     private static final String POL_RUL_DEFAULT_RULE = "Default deny policy";
     private static final String DEFAULT_DESCRIPTION = "Default description";
     private static final String KEY_POLICY_RULE_ID = "PolicyRuleId";
@@ -253,7 +254,6 @@ public class MithrilAC extends Application {
     private static final String TOAST_MESSAGE_TRUE_VIOLATION_NOTED = " the \"true violation\" has been noted. User will not be asked again "
             + "about the same violation";
     private static final String TOAST_MESSAGE_DATABASE_NOT_RELOADED = "Data was not reloaded!";
-
     private static final String INSERT_STATEMENT_GOOGLE_PERMISSIONS = "INSERT INTO permissions (name, protectionlvl, permgrp, flags) VALUES\n" +
             "('android.permission.READ_CONTACTS', 'dangerous', 'android.permission-group.CONTACTS', '" + PERMISSION_FLAG_NONE + "'),\n" +
             "('android.permission.WRITE_CONTACTS', 'dangerous', 'android.permission-group.CONTACTS', '" + PERMISSION_FLAG_NONE + "'),\n" +
@@ -605,25 +605,94 @@ public class MithrilAC extends Application {
             "('android.permission.ACCESS_VR_MANAGER', 'signature', '" + NO_PERMISSION_GROUP.first + "', '" + PERMISSION_FLAG_NONE + "'),\n" +
             "('android.permission.UPDATE_LOCK_TASK_PACKAGES', 'signature|setup', '" + NO_PERMISSION_GROUP.first + "', '" + PERMISSION_FLAG_NONE + "'),\n" +
             "('android.permission.SUBSTITUTE_NOTIFICATION_APP_NAME', 'signature|privileged', '" + NO_PERMISSION_GROUP.first + "', '" + PERMISSION_FLAG_NONE + "');\n";
-    private static final String SECOND = "Second";
-    private static final String MINUTE = "Minute";
-    private static final String HOUR = "Hour";
-    private static final String DAY = "Day";
-    private static final String MONDAY = "Monday";
-    private static final String TUESDAY = "Tuesday";
-    private static final String WEDNESDAY = "Wednesday";
-    private static final String THURSDAY = "Thursday";
-    private static final String FRIDAY = "Friday";
-    private static final String SATURDAY = "Saturday";
-    private static final String SUNDAY = "Sunday";
-    private static final String WEEKDAY = "Weekday";
-    private static final String WEEKEND = "Weekend";
-    private static final String DAILY = "Daily";
-    private static final String MONTH = "Month";
-    private static final String QUARTER = "Quarter";
-    private static final String YEAR = "Year";
-    private static final String NEVER_REPEATS = "never repeats";
-    private static final String NOT_YET = "Not yet";
+
+    public static String getPrefBreakfastTemporalKey() {
+        return PREF_BREAKFAST_TEMPORAL_KEY;
+    }
+
+    public static String getPrefWorkMorningTemporalKey() {
+        return PREF_WORK_MORNING_TEMPORAL_KEY;
+    }
+
+    public static String getPrefLunchTemporalKey() {
+        return PREF_LUNCH_TEMPORAL_KEY;
+    }
+
+    public static String getPrefWorkAfternoonTemporalKey() {
+        return PREF_WORK_AFTERNOON_TEMPORAL_KEY;
+    }
+
+    public static String getPrefFamilyTemporalKey() {
+        return PREF_FAMILY_TEMPORAL_KEY;
+    }
+
+    public static String getPrefDinnerTemporalKey() {
+        return PREF_DINNER_TEMPORAL_KEY;
+    }
+
+    public static String getPrefAloneTemporalKey() {
+        return PREF_ALONE_TEMPORAL_KEY;
+    }
+
+    public static String getPrefDndTemporalKey() {
+        return PREF_DND_TEMPORAL_KEY;
+    }
+
+    public static String getPrefTimeIntervalAloneTemporalKey() {
+        return PREF_ALONE_TEMPORAL_KEY;
+    }
+
+    public static String getPrefMondayTemporalKey() {
+        return PREF_MONDAY_TEMPORAL_KEY;
+    }
+
+    public static String getPrefTuesdayTemporalKey() {
+        return PREF_TUESDAY_TEMPORAL_KEY;
+    }
+
+    public static String getPrefWednesdayTemporalKey() {
+        return PREF_WEDNESDAY_TEMPORAL_KEY;
+    }
+
+    public static String getPrefThursdayTemporalKey() {
+        return PREF_THURSDAY_TEMPORAL_KEY;
+    }
+
+    public static String getPrefFridayTemporalKey() {
+        return PREF_FRIDAY_TEMPORAL_KEY;
+    }
+
+    public static String getPrefSaturdayTemporalKey() {
+        return PREF_SATURDAY_TEMPORAL_KEY;
+    }
+
+    public static String getPrefSundayTemporalKey() {
+        return PREF_SUNDAY_TEMPORAL_KEY;
+    }
+
+    public static String getPrefWeekdayTemporalKey() {
+        return PREF_WEEKDAY_TEMPORAL_KEY;
+    }
+
+    public static String getPrefAnydayTemporalKey() {
+        return PREF_ANYDAY_TEMPORAL_KEY;
+    }
+
+    public static String getPrefWeekendTemporalKey() {
+        return PREF_WEEKEND_TEMPORAL_KEY;
+    }
+
+    public static String getPrefPersonalTemporalKey() {
+        return PREF_PERSONAL_TEMPORAL_KEY;
+    }
+
+    public static String getPrefProfessionalTemporalKey() {
+        return PREF_PROFESSIONAL_TEMPORAL_KEY;
+    }
+
+    public static String getPrefAnytimeTemporalKey() {
+        return PREF_ANYTIME_TEMPORAL_KEY;
+    }
 
     public static double getRiskForPerm(String appOpName) {
         return 1.0;
@@ -759,10 +828,6 @@ public class MithrilAC extends Application {
 
     public static String getPrefKeyContextTypePresence() {
         return PREF_KEY_CONTEXT_TYPE_PRESENCE;
-    }
-
-    public static String getPrefTimeIntervalDndTemporalKey() {
-        return PREF_TIME_INTERVAL_DND_TEMPORAL_KEY;
     }
 
     public static long getDefaultTimeSlot() {
@@ -1013,34 +1078,6 @@ public class MithrilAC extends Application {
         return PREF_KEY_LAST_RUNNING_APP;
     }
 
-    public static String getPrefMonday() {
-        return PREF_MONDAY;
-    }
-
-    public static String getPrefTuesday() {
-        return PREF_TUESDAY;
-    }
-
-    public static String getPrefWednesday() {
-        return PREF_WEDNESDAY;
-    }
-
-    public static String getPrefThursday() {
-        return PREF_THURSDAY;
-    }
-
-    public static String getPrefFriday() {
-        return PREF_FRIDAY;
-    }
-
-    public static String getPrefSaturday() {
-        return PREF_SATURDAY;
-    }
-
-    public static String getPrefSunday() {
-        return PREF_SUNDAY;
-    }
-
     public static String getPrefKeyShouldShowAgreementSnackbar() {
         return PREF_KEY_SHOULD_SHOW_AGREEMENT_SNACKBAR;
     }
@@ -1145,46 +1182,6 @@ public class MithrilAC extends Application {
         return NO_PERMISSION_GROUP_DESC;
     }
 
-    public static String getPrefTimeIntervalWeekendTemporalKey() {
-        return PREF_TIME_INTERVAL_WEEKEND_TEMPORAL_KEY;
-    }
-
-    public static String getPrefTimeIntervalWeekdayTemporalKey() {
-        return PREF_TIME_INTERVAL_WEEKDAY_TEMPORAL_KEY;
-    }
-
-    public static String getPrefTimeIntervalBreakfastTemporalKey() {
-        return PREF_TIME_INTERVAL_BREAKFAST_TEMPORAL_KEY;
-    }
-
-    public static String getPrefTimeIntervalLunchTemporalKey() {
-        return PREF_TIME_INTERVAL_LUNCH_TEMPORAL_KEY;
-    }
-
-    public static String getPrefTimeIntervalDinnerTemporalKey() {
-        return PREF_TIME_INTERVAL_DINNER_TEMPORAL_KEY;
-    }
-
-    public static String getPrefTimeIntervalWorkMorningTemporalKey() {
-        return PREF_TIME_INTERVAL_WORK_MORNING_TEMPORAL_KEY;
-    }
-
-    public static String getPrefTimeIntervalWorkAfternoonTemporalKey() {
-        return PREF_TIME_INTERVAL_WORK_AFTERNOON_TEMPORAL_KEY;
-    }
-
-    public static String getPrefTimeIntervalFamilyTemporalKey() {
-        return PREF_TIME_INTERVAL_FAMILY_TEMPORAL_KEY;
-    }
-
-    public static String getPrefTimeIntervalPersonalTemporalKey() {
-        return PREF_TIME_INTERVAL_PERSONAL_TEMPORAL_KEY;
-    }
-
-    public static String getDaily() {
-        return DAILY;
-    }
-
     public static String getCmdRootPrivilege() {
         return CMD_ROOT_PRIVILEGE;
     }
@@ -1251,70 +1248,6 @@ public class MithrilAC extends Application {
 
     public static String getPrefKeyTemporalLabel() {
         return PREF_KEY_TEMPORAL_LABEL;
-    }
-
-    public static String getSecond() {
-        return SECOND;
-    }
-
-    public static String getMinute() {
-        return MINUTE;
-    }
-
-    public static String getHour() {
-        return HOUR;
-    }
-
-    public static String getDay() {
-        return DAY;
-    }
-
-    public static String getMonday() {
-        return MONDAY;
-    }
-
-    public static String getTuesday() {
-        return TUESDAY;
-    }
-
-    public static String getWednesday() {
-        return WEDNESDAY;
-    }
-
-    public static String getThursday() {
-        return THURSDAY;
-    }
-
-    public static String getFriday() {
-        return FRIDAY;
-    }
-
-    public static String getSaturday() {
-        return SATURDAY;
-    }
-
-    public static String getSunday() {
-        return SUNDAY;
-    }
-
-    public static String getWeekday() {
-        return WEEKDAY;
-    }
-
-    public static String getWeekend() {
-        return WEEKEND;
-    }
-
-    public static String getMonth() {
-        return MONTH;
-    }
-
-    public static String getQuarter() {
-        return QUARTER;
-    }
-
-    public static String getYear() {
-        return YEAR;
     }
 
     public static String getNeverRepeats() {

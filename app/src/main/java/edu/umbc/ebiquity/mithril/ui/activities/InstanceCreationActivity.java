@@ -463,6 +463,21 @@ public class InstanceCreationActivity extends AppCompatActivity
         dayOfWeek.add(DayOfWeek.Friday);
 
         /**
+         * Anyday of week context creation
+         */
+        semanticTime = new SemanticTime(
+                dayOfWeek,
+                0,
+                0,
+                0,
+                0,
+                MithrilAC.getAnyday(),
+                false,
+                0
+        );
+        semanticTimes.put(semanticTime.getLabel(), semanticTime);
+
+        /**
          * Breakfast hours context
          */
         semanticTime = new SemanticTime(
@@ -477,10 +492,100 @@ public class InstanceCreationActivity extends AppCompatActivity
         );
         semanticTimes.put(semanticTime.getLabel(), semanticTime);
 
+        /**
+         * Lunch hours context
+         */
+        semanticTime = new SemanticTime(
+                dayOfWeek,
+                12,
+                0,
+                12,
+                30,
+                MithrilAC.getPrefTimeIntervalLunchTemporalKey(),
+                false,
+                0
+        );
+        semanticTimes.put(semanticTime.getLabel(), semanticTime);
+
+        /**
+         * Dinner hours context
+         */
+        semanticTime = new SemanticTime(
+                dayOfWeek,
+                19,
+                0,
+                19,
+                30,
+                MithrilAC.getPrefTimeIntervalDinnerTemporalKey(),
+                false,
+                0
+        );
+        semanticTimes.put(semanticTime.getLabel(), semanticTime);
+
+        /**
+         * DND hours context
+         */
+        semanticTime = new SemanticTime(
+                dayOfWeek,
+                21,
+                0,
+                8,
+                0,
+                MithrilAC.getPrefTimeIntervalDndTemporalKey(),
+                false,
+                0
+        );
+        semanticTimes.put(semanticTime.getLabel(), semanticTime);
+
+        /**
+         * Family_Time hours context
+         */
+        semanticTime = new SemanticTime(
+                dayOfWeek,
+                16,
+                0,
+                19,
+                0,
+                MithrilAC.getPrefTimeIntervalFamilyTemporalKey(),
+                false,
+                0
+        );
+        semanticTimes.put(semanticTime.getLabel(), semanticTime);
+
+        /**
+         * Alone_Time hours context
+         */
+        semanticTime = new SemanticTime(
+                dayOfWeek,
+                16,
+                0,
+                19,
+                0,
+                MithrilAC.getPrefTimeIntervalFamilyTemporalKey(),
+                false,
+                0
+        );
+        semanticTimes.put(semanticTime.getLabel(), semanticTime);
+
         /**********************************************************************************************************************/
 
         dayOfWeek.remove(DayOfWeek.Sunday);
         dayOfWeek.remove(DayOfWeek.Saturday);
+
+        /**
+         * Weekday context creation
+         */
+        semanticTime = new SemanticTime(
+                dayOfWeek,
+                0,
+                0,
+                0,
+                0,
+                MithrilAC.getWeekday(),
+                false,
+                0
+        );
+        semanticTimes.put(semanticTime.getLabel(), semanticTime);
 
         /**
          * Work_Morning hours context
@@ -501,21 +606,6 @@ public class InstanceCreationActivity extends AppCompatActivity
 
         dayOfWeek.add(DayOfWeek.Saturday);
         dayOfWeek.add(DayOfWeek.Sunday);
-
-        /**
-         * Lunch hours context
-         */
-        semanticTime = new SemanticTime(
-                dayOfWeek,
-                12,
-                0,
-                12,
-                30,
-                MithrilAC.getPrefTimeIntervalLunchTemporalKey(),
-                false,
-                0
-        );
-        semanticTimes.put(semanticTime.getLabel(), semanticTime);
 
         /**********************************************************************************************************************/
 
@@ -543,36 +633,6 @@ public class InstanceCreationActivity extends AppCompatActivity
         dayOfWeek.add(DayOfWeek.Sunday);
 
         /**
-         * Family_Time hours context
-         */
-        semanticTime = new SemanticTime(
-                dayOfWeek,
-                16,
-                0,
-                19,
-                0,
-                MithrilAC.getPrefTimeIntervalFamilyTemporalKey(),
-                false,
-                0
-        );
-        semanticTimes.put(semanticTime.getLabel(), semanticTime);
-
-        /**
-         * Dinner hours context
-         */
-        semanticTime = new SemanticTime(
-                dayOfWeek,
-                19,
-                0,
-                19,
-                30,
-                MithrilAC.getPrefTimeIntervalDinnerTemporalKey(),
-                false,
-                0
-        );
-        semanticTimes.put(semanticTime.getLabel(), semanticTime);
-
-        /**
          * Personal hours context
          */
         semanticTime = new SemanticTime(
@@ -582,21 +642,6 @@ public class InstanceCreationActivity extends AppCompatActivity
                 21,
                 0,
                 MithrilAC.getPrefTimeIntervalPersonalTemporalKey(),
-                false,
-                0
-        );
-        semanticTimes.put(semanticTime.getLabel(), semanticTime);
-
-        /**
-         * DND hours context
-         */
-        semanticTime = new SemanticTime(
-                dayOfWeek,
-                21,
-                0,
-                8,
-                0,
-                MithrilAC.getPrefTimeIntervalDndTemporalKey(),
                 false,
                 0
         );

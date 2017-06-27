@@ -87,13 +87,13 @@ public class SemanticTime extends SemanticUserContext implements Parcelable {
         week.add(DayOfWeek.Friday);
 
         if (dayOfWeek.size() == 7 && dayOfWeek.containsAll(week))
-            return MithrilAC.getDaily();
+            return MithrilAC.getPrefAnydayTemporalKey();
 
         week.remove(DayOfWeek.Saturday);
         week.remove(DayOfWeek.Sunday);
 
         if (dayOfWeek.size() == 5 && dayOfWeek.containsAll(week))
-            return MithrilAC.getWeekday();
+            return MithrilAC.getweekd();
 
         week.remove(DayOfWeek.Monday);
         week.remove(DayOfWeek.Tuesday);
