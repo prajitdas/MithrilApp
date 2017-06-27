@@ -7,12 +7,12 @@ import android.os.Parcel;
 import android.os.Parcelable;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import edu.umbc.ebiquity.mithril.MithrilAC;
 import edu.umbc.ebiquity.mithril.util.specialtasks.contextinstances.DayOfWeek;
 
-@TargetApi(Build.VERSION_CODES.N)
 public class SemanticTime extends SemanticUserContext implements Parcelable {
     private final String type = MithrilAC.getPrefKeyContextTypeTemporal();
     private List<DayOfWeek> dayOfWeek;
@@ -87,7 +87,7 @@ public class SemanticTime extends SemanticUserContext implements Parcelable {
         week.add(DayOfWeek.Friday);
 
         if (dayOfWeek.size() == 7 && dayOfWeek.containsAll(week))
-            return MithrilAC.getPrefAnydayTemporalKey();
+            return MithrilAC.getPrefAnydaytimeTemporalKey();
 
         week.remove(DayOfWeek.Saturday);
         week.remove(DayOfWeek.Sunday);

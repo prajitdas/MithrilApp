@@ -11,7 +11,7 @@ public enum RepeatFrequency {
     RepeatFrequency(int repFreqCode) {
         this.repFreqCode = repFreqCode;
         if (repFreqCode == 0)
-            repFreqCharSeq = MithrilAC.getPrefAnydayTemporalKey();
+            repFreqCharSeq = MithrilAC.getPrefAnydaytimeTemporalKey();
         else if (repFreqCode == 1)
             repFreqCharSeq = MithrilAC.getPrefMondayTemporalKey();
         else if (repFreqCode == 2)
@@ -35,7 +35,7 @@ public enum RepeatFrequency {
     }
 
     public static RepeatFrequency charSeqToRepeatFrequency(CharSequence input) {
-        if (input.equals(MithrilAC.getPrefAnydayTemporalKey()))
+        if (input.equals(MithrilAC.getPrefAnydaytimeTemporalKey()))
             return RepeatFrequency.ANYDAY;
         else if (input.equals(MithrilAC.getPrefMondayTemporalKey()))
             return RepeatFrequency.MONDAY;

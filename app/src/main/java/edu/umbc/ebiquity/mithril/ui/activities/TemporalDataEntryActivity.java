@@ -20,7 +20,6 @@ import edu.umbc.ebiquity.mithril.R;
 import edu.umbc.ebiquity.mithril.data.model.rules.context.SemanticTime;
 import edu.umbc.ebiquity.mithril.util.specialtasks.contextinstances.DayOfWeek;
 
-@TargetApi(Build.VERSION_CODES.N)
 public class TemporalDataEntryActivity extends AppCompatActivity implements
         TimePickerDialog.OnTimeSetListener {
     private Button mDaysOfWeekBtn;

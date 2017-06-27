@@ -277,7 +277,7 @@ public class AppLaunchDetectorService extends Service implements
 
     private List<SemanticTime> getSemanticTimes() {
         List<SemanticTime> semanticTimes = new ArrayList<>();
-        
+
         return semanticTimes;
     }
 
@@ -440,7 +440,7 @@ public class AppLaunchDetectorService extends Service implements
         mNotificationManager.notify(0, builder.build());
     }
 
-    private void doNothing() {
+    private void doNothingOldCode() {
         /**
          List<SemanticLocation> tempLocations = new ArrayList<>(currentSemanticLocations.values());
          Collections.sort(tempLocations, SemanticLocation.Comparators.LEVEL);

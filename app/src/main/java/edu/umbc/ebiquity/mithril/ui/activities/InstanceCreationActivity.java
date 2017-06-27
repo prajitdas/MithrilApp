@@ -42,7 +42,6 @@ import com.google.gson.JsonSyntaxException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Locale;
 import java.util.Map;
 
 import edu.umbc.ebiquity.mithril.MithrilAC;
@@ -450,7 +449,7 @@ public class InstanceCreationActivity extends AppCompatActivity
                 0,
                 MithrilAC.getPrefWeekendTemporalKey(),
                 false,
-                0
+                1
         );
         semanticTimes.put(semanticTime.getLabel(), semanticTime);
 
@@ -463,7 +462,7 @@ public class InstanceCreationActivity extends AppCompatActivity
         dayOfWeek.add(DayOfWeek.Friday);
 
         /**
-         * Anyday of week context creation
+         * AnydayOrAnytime context creation
          */
         semanticTime = new SemanticTime(
                 dayOfWeek,
@@ -471,9 +470,9 @@ public class InstanceCreationActivity extends AppCompatActivity
                 0,
                 0,
                 0,
-                MithrilAC.getPrefAnydayTemporalKey(),
+                MithrilAC.getPrefAnydaytimeTemporalKey(),
                 false,
-                0
+                2
         );
         semanticTimes.put(semanticTime.getLabel(), semanticTime);
 
@@ -567,6 +566,36 @@ public class InstanceCreationActivity extends AppCompatActivity
         );
         semanticTimes.put(semanticTime.getLabel(), semanticTime);
 
+        /**
+         * Personal hours context
+         */
+        semanticTime = new SemanticTime(
+                dayOfWeek,
+                16,
+                0,
+                8,
+                0,
+                MithrilAC.getPrefPersonalTemporalKey(),
+                false,
+                1
+        );
+        semanticTimes.put(semanticTime.getLabel(), semanticTime);
+
+        /**
+         * Professional hours context
+         */
+        semanticTime = new SemanticTime(
+                dayOfWeek,
+                8,
+                0,
+                16,
+                0,
+                MithrilAC.getPrefPersonalTemporalKey(),
+                false,
+                1
+        );
+        semanticTimes.put(semanticTime.getLabel(), semanticTime);
+
         /**********************************************************************************************************************/
 
         dayOfWeek.remove(DayOfWeek.Sunday);
@@ -583,7 +612,7 @@ public class InstanceCreationActivity extends AppCompatActivity
                 0,
                 MithrilAC.getPrefWeekdayTemporalKey(),
                 false,
-                0
+                1
         );
         semanticTimes.put(semanticTime.getLabel(), semanticTime);
 
@@ -602,16 +631,6 @@ public class InstanceCreationActivity extends AppCompatActivity
         );
         semanticTimes.put(semanticTime.getLabel(), semanticTime);
 
-        /**********************************************************************************************************************/
-
-        dayOfWeek.add(DayOfWeek.Saturday);
-        dayOfWeek.add(DayOfWeek.Sunday);
-
-        /**********************************************************************************************************************/
-
-        dayOfWeek.remove(DayOfWeek.Sunday);
-        dayOfWeek.remove(DayOfWeek.Saturday);
-
         /**
          * Work_Afternoon hours context
          */
@@ -622,26 +641,6 @@ public class InstanceCreationActivity extends AppCompatActivity
                 16,
                 0,
                 MithrilAC.getPrefWorkAfternoonTemporalKey(),
-                false,
-                0
-        );
-        semanticTimes.put(semanticTime.getLabel(), semanticTime);
-
-        /**********************************************************************************************************************/
-
-        dayOfWeek.add(DayOfWeek.Saturday);
-        dayOfWeek.add(DayOfWeek.Sunday);
-
-        /**
-         * Personal hours context
-         */
-        semanticTime = new SemanticTime(
-                dayOfWeek,
-                19,
-                30,
-                21,
-                0,
-                MithrilAC.getPrefPersonalTemporalKey(),
                 false,
                 0
         );
