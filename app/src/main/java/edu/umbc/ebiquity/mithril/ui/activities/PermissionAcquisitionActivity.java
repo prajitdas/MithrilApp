@@ -10,6 +10,7 @@ import android.os.Bundle;
 import android.provider.Settings;
 import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.CompoundButton;
@@ -17,6 +18,7 @@ import android.widget.ToggleButton;
 
 import java.util.List;
 
+import edu.umbc.ebiquity.mithril.Manifest;
 import edu.umbc.ebiquity.mithril.MithrilAC;
 import edu.umbc.ebiquity.mithril.R;
 import edu.umbc.ebiquity.mithril.util.specialtasks.errorsnexceptions.PhoneNotRootedException;
@@ -154,6 +156,33 @@ public class PermissionAcquisitionActivity extends AppCompatActivity {
                                     MithrilAC.getCmdGrantManageAppOpsRestrictions(),
                                     MithrilAC.getCmdGrantUpdateAppOpsStats()
                             });
+                        Log.d(MithrilAC.getDebugTag(),
+                                "GET_APP_OPS_STATS: " +
+                                        (
+                                                PermissionHelper.isPermissionGranted(
+                                                        buttonView.getContext(),
+                                                        "android.permission.GET_APP_OPS_STATS"
+                                                ) == PackageManager.PERMISSION_GRANTED ? "Granted" : "Denied"
+                                        )
+                        );
+                        Log.d(MithrilAC.getDebugTag(),
+                                "MANAGE_APP_OPS_RESTRICTIONS: " +
+                                        (
+                                                PermissionHelper.isPermissionGranted(
+                                                        buttonView.getContext(),
+                                                        "android.permission.MANAGE_APP_OPS_RESTRICTIONS"
+                                                ) == PackageManager.PERMISSION_GRANTED ? "Granted" : "Denied"
+                                        )
+                        );
+                        Log.d(MithrilAC.getDebugTag(),
+                                "UPDATE_APP_OPS_STATS: " +
+                                        (
+                                                PermissionHelper.isPermissionGranted(
+                                                        buttonView.getContext(),
+                                                        "android.permission.UPDATE_APP_OPS_STATS"
+                                                ) == PackageManager.PERMISSION_GRANTED ? "Granted" : "Denied"
+                                        )
+                        );
                     } catch (PhoneNotRootedException e) {
                         PermissionHelper.toast(buttonView.getContext(), "Phone is not rooted... full functionality unavailable but can perform first phase of the MithrilAC study!");
                     }
