@@ -1,6 +1,7 @@
 package edu.umbc.ebiquity.mithril.ui.adapters;
 
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -10,9 +11,11 @@ import android.widget.TextView;
 
 import java.util.List;
 
+import edu.umbc.ebiquity.mithril.MithrilAC;
 import edu.umbc.ebiquity.mithril.R;
 import edu.umbc.ebiquity.mithril.data.model.rules.context.SemanticUserContext;
 import edu.umbc.ebiquity.mithril.ui.fragments.rulechangeactivityfragments.RuleChangeFragment.OnListFragmentInteractionListener;
+import edu.umbc.ebiquity.mithril.util.specialtasks.errorsnexceptions.ContextImplementationMissingException;
 
 /**
  * {@link RecyclerView.Adapter} that can display a {@link SemanticUserContext} and makes a call to the
@@ -39,11 +42,16 @@ public class SemanticUserContextRecyclerViewAdapter extends RecyclerView.Adapter
     @Override
     public void onBindViewHolder(final ViewHolder holder, int position) {
         holder.mItem = semanticUserContexts.get(position);
-        holder.mLabel.setText(semanticUserContexts.get(position).getType());
-        if (semanticUserContexts.get(position).isEnabled())
-            holder.mDetail.setText(semanticUserContexts.get(position).getLabel());
-        else
-            holder.mDetail.setText(R.string.click_save_button_to_enable_context);
+        try {
+
+            holder.mLabel.setText(semanticUserContexts.get(position).getType());
+            if (semanticUserContexts.get(position).isEnabled())
+                holder.mDetail.setText(semanticUserContexts.get(position).getLabel());
+            else
+                holder.mDetail.setText(R.string.click_save_button_to_enable_context);
+        } catch (ContextImplementationMissingException e) {
+            Log.e(MithrilAC.getDebugTag(), e.getMessage());
+        }
         holder.mImageBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

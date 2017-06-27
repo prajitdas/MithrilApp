@@ -191,12 +191,14 @@ public class MithrilDBHelper extends SQLiteOpenHelper {
     private final static String CONTEXTTYPE = "type"; // Context type; i.e. location, time, activity, presence
     private final static String CONTEXTSEMLBL = "label"; // Semantic context label
     private final static String CONTEXTENABLED = "enabled"; // Context maybe disabled by the user
+    private final static String CONTEXTLEVEL = "level"; // Context level
     private final static String CREATE_CONTEXT_TABLE = "CREATE TABLE " + getContextTableName() + " (" +
             CONTEXTID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
             CONTEXTTYPE + " TEXT NOT NULL, " +
             CONTEXTSEMLBL + " TEXT NOT NULL, " +
             //context are by default enabled
             CONTEXTENABLED + " INTEGER NOT NULL DEFAULT 1, " +
+            CONTEXTLEVEL + " INTEGER NOT NULL DEFAULT 0, " +
             "CONSTRAINT context_unique_name UNIQUE(" + CONTEXTTYPE + ", " + CONTEXTSEMLBL + ") ON CONFLICT REPLACE);";
     /**
      * -- Table 5: policyrules
@@ -918,7 +920,7 @@ public class MithrilDBHelper extends SQLiteOpenHelper {
         return insertedRowId;
     }
 
-    public long addContext(SQLiteDatabase db, String type, String label, boolean enabled) {
+    public long addContext(SQLiteDatabase db, String type, String label, boolean enabled, int level) {
         long insertedRowId;
         ContentValues values = new ContentValues();
         values.put(CONTEXTTYPE, type);
@@ -927,6 +929,7 @@ public class MithrilDBHelper extends SQLiteOpenHelper {
             values.put(CONTEXTENABLED, 1);
         else
             values.put(CONTEXTENABLED, 0);
+        values.put(CONTEXTLEVEL, level);
         try {
             insertedRowId = db.insertWithOnConflict(getContextTableName(), null, values, SQLiteDatabase.CONFLICT_REPLACE);
         } catch (SQLException e) {

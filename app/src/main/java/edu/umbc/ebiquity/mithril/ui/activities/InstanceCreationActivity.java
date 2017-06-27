@@ -630,7 +630,8 @@ public class InstanceCreationActivity extends AppCompatActivity
             contextEntry.getValue().setEnabled(true);
             addContext(contextEntry.getValue().getType(),
                     contextEntry.getKey(),
-                    InstanceCreationActivity.contextDataStoreGson.toJson(contextEntry.getValue()));
+                    InstanceCreationActivity.contextDataStoreGson.toJson(contextEntry.getValue()),
+                    contextEntry.getValue().getLevel());
             semanticLocations.put(contextEntry.getKey(), contextEntry.getValue());
         }
         isThereLocationContextToSave = false;
@@ -643,7 +644,8 @@ public class InstanceCreationActivity extends AppCompatActivity
             contextEntry.getValue().setEnabled(true);
             addContext(contextEntry.getValue().getType(),
                     contextEntry.getKey(),
-                    InstanceCreationActivity.contextDataStoreGson.toJson(contextEntry.getValue()));
+                    InstanceCreationActivity.contextDataStoreGson.toJson(contextEntry.getValue()),
+                    contextEntry.getValue().getLevel());
             semanticTimes.put(contextEntry.getKey(), contextEntry.getValue());
         }
         isThereTemporalContextToSave = false;
@@ -656,7 +658,8 @@ public class InstanceCreationActivity extends AppCompatActivity
             contextEntry.getValue().setEnabled(true);
             addContext(contextEntry.getValue().getType(),
                     contextEntry.getKey(),
-                    InstanceCreationActivity.contextDataStoreGson.toJson(contextEntry.getValue()));
+                    InstanceCreationActivity.contextDataStoreGson.toJson(contextEntry.getValue()),
+                    contextEntry.getValue().getLevel());
             semanticNearActors.put(contextEntry.getKey(), contextEntry.getValue());
         }
         isTherePresenceContextToSave = false;
@@ -668,7 +671,8 @@ public class InstanceCreationActivity extends AppCompatActivity
             contextEntry.getValue().setEnabled(true);
             addContext(contextEntry.getValue().getType(),
                     contextEntry.getKey(),
-                    InstanceCreationActivity.contextDataStoreGson.toJson(contextEntry.getValue()));
+                    InstanceCreationActivity.contextDataStoreGson.toJson(contextEntry.getValue()),
+                    contextEntry.getValue().getLevel());
             semanticActivities.put(contextEntry.getKey(), contextEntry.getValue());
         }
         isThereActivityContextToSave = false;
@@ -1050,14 +1054,14 @@ public class InstanceCreationActivity extends AppCompatActivity
         // onConnected() will be called again automatically when the service reconnects
     }
 
-    private void addContextToDB(String contextType, String contextLabel) {
-        MithrilDBHelper.getHelper(this).addContext(mithrilDB, contextType, contextLabel, true);
+    private void addContextToDB(String contextType, String contextLabel, int level) {
+        MithrilDBHelper.getHelper(this).addContext(mithrilDB, contextType, contextLabel, true, level);
     }
 
-    private void addContext(String contextType, String contextLabel, String serializedJsonContext) {
+    private void addContext(String contextType, String contextLabel, String serializedJsonContext, int level) {
         editor.putString(contextType + contextLabel, serializedJsonContext);
         editor.apply();
-        addContextToDB(contextType, contextLabel);
+        addContextToDB(contextType, contextLabel, level);
     }
 
     @Override

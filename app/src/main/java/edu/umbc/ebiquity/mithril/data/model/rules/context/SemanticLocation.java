@@ -174,10 +174,12 @@ public class SemanticLocation extends SemanticUserContext implements
         this.geofenced = geofenced;
     }
 
+    @Override
     public int getLevel() {
         return level;
     }
 
+    @Override
     public void setLevel(int level) {
         this.level = level;
     }

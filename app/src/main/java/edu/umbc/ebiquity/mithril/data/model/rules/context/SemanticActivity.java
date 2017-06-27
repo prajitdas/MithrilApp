@@ -80,10 +80,12 @@ public class SemanticActivity extends SemanticUserContext implements Parcelable 
         this.enabled = enabled;
     }
 
+    @Override
     public int getLevel() {
         return level;
     }
 
+    @Override
     public void setLevel(int level) {
         this.level = level;
     }

@@ -24,6 +24,7 @@ import edu.umbc.ebiquity.mithril.data.model.rules.Violation;
 import edu.umbc.ebiquity.mithril.data.model.rules.context.SemanticUserContext;
 import edu.umbc.ebiquity.mithril.simulations.DataGenerator;
 import edu.umbc.ebiquity.mithril.util.specialtasks.collections.MithrilCollections;
+import edu.umbc.ebiquity.mithril.util.specialtasks.errorsnexceptions.ContextImplementationMissingException;
 import edu.umbc.ebiquity.mithril.util.specialtasks.errorsnexceptions.SemanticInconsistencyException;
 
 /**
@@ -284,16 +285,21 @@ public class ViolationDetector {
 
     private static Set<Long> populateCurrentContext(SQLiteDatabase mithrilDB, Context context, List<SemanticUserContext> semanticUserContexts) {
         Set<Long> currentContextIds = new HashSet<>();
-        for (SemanticUserContext semanticUserContext : semanticUserContexts) {
-            long contextId = MithrilDBHelper.getHelper(context).findContextIdByLabelAndType(mithrilDB, semanticUserContext.getLabel(), semanticUserContext.getType());
-            //We found an unknown context, let's add that to the KB.
-            if (contextId == -1)
-                contextId = MithrilDBHelper.getHelper(context).addContext(
-                        mithrilDB,
-                        semanticUserContext.getType(),
-                        semanticUserContext.getLabel(),
-                        true);
-            currentContextIds.add(contextId);
+        try {
+            for (SemanticUserContext semanticUserContext : semanticUserContexts) {
+                long contextId = MithrilDBHelper.getHelper(context).findContextIdByLabelAndType(mithrilDB, semanticUserContext.getLabel(), semanticUserContext.getType());
+                //We found an unknown context, let's add that to the KB.
+                if (contextId == -1)
+                    contextId = MithrilDBHelper.getHelper(context).addContext(
+                            mithrilDB,
+                            semanticUserContext.getType(),
+                            semanticUserContext.getLabel(),
+                            true,
+                            semanticUserContext.getLevel());
+                currentContextIds.add(contextId);
+            }
+        } catch (ContextImplementationMissingException e) {
+            Log.e(MithrilAC.getDebugTag(), e.getMessage());
         }
         return currentContextIds;
     }
