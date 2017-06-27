@@ -93,7 +93,7 @@ public class SemanticTime extends SemanticUserContext implements Parcelable {
         week.remove(DayOfWeek.Sunday);
 
         if (dayOfWeek.size() == 5 && dayOfWeek.containsAll(week))
-            return MithrilAC.getweekd();
+            return MithrilAC.getPrefWeekdayTemporalKey();
 
         week.remove(DayOfWeek.Monday);
         week.remove(DayOfWeek.Tuesday);
@@ -102,24 +102,24 @@ public class SemanticTime extends SemanticUserContext implements Parcelable {
         week.remove(DayOfWeek.Friday);
 
         if (dayOfWeek.size() == 2 && dayOfWeek.containsAll(week))
-            return MithrilAC.getWeekend();
+            return MithrilAC.getPrefWeekendTemporalKey();
 
         StringBuffer stringBufferDayOfWeek = new StringBuffer();
         for (DayOfWeek aDay : dayOfWeek) {
             if (aDay.equals(DayOfWeek.Monday))
-                stringBufferDayOfWeek.append(MithrilAC.getMonday());
+                stringBufferDayOfWeek.append(MithrilAC.getPrefMondayTemporalKey());
             else if (aDay.equals(DayOfWeek.Tuesday))
-                stringBufferDayOfWeek.append(MithrilAC.getTuesday());
+                stringBufferDayOfWeek.append(MithrilAC.getPrefTuesdayTemporalKey());
             else if (aDay.equals(DayOfWeek.Wednesday))
-                stringBufferDayOfWeek.append(MithrilAC.getWednesday());
+                stringBufferDayOfWeek.append(MithrilAC.getPrefWednesdayTemporalKey());
             else if (aDay.equals(DayOfWeek.Thursday))
-                stringBufferDayOfWeek.append(MithrilAC.getThursday());
+                stringBufferDayOfWeek.append(MithrilAC.getPrefThursdayTemporalKey());
             else if (aDay.equals(DayOfWeek.Friday))
-                stringBufferDayOfWeek.append(MithrilAC.getFriday());
+                stringBufferDayOfWeek.append(MithrilAC.getPrefFridayTemporalKey());
             else if (aDay.equals(DayOfWeek.Saturday))
-                stringBufferDayOfWeek.append(MithrilAC.getSaturday());
+                stringBufferDayOfWeek.append(MithrilAC.getPrefSaturdayTemporalKey());
             else if (aDay.equals(DayOfWeek.Sunday))
-                stringBufferDayOfWeek.append(MithrilAC.getSunday());
+                stringBufferDayOfWeek.append(MithrilAC.getPrefSundayTemporalKey());
             stringBufferDayOfWeek.append(", ");
         }
         return stringBufferDayOfWeek.toString();

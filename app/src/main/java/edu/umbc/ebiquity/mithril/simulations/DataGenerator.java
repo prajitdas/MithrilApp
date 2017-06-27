@@ -29,7 +29,7 @@ public class DataGenerator {
         MithrilDBHelper.getHelper(context).addPolicyRule(mithrilDB, DataGenerator.createPolicyRule(1,
                 "com.twitter.android", "Twitter",
                 AppOpsManager.permissionToOpCode(Manifest.permission.CAMERA),
-                MithrilAC.getPrefTimeIntervalWeekendTemporalKey(), MithrilAC.getPrefKeyContextTypeTemporal(),
+                MithrilAC.getPrefWeekendTemporalKey(), MithrilAC.getPrefKeyContextTypeTemporal(),
                 actionAllow, mithrilDB, context));
     }
 
@@ -44,12 +44,12 @@ public class DataGenerator {
         MithrilDBHelper.getHelper(context).addPolicyRule(mithrilDB, DataGenerator.createPolicyRule(2,
                 "com.twitter.android", "Twitter",
                 AppOpsManager.permissionToOpCode(Manifest.permission.CAMERA),
-                MithrilAC.getPrefTimeIntervalWeekdayTemporalKey(), MithrilAC.getPrefKeyContextTypeTemporal(),
+                MithrilAC.getPrefWeekdayTemporalKey(), MithrilAC.getPrefKeyContextTypeTemporal(),
                 actionAllow, mithrilDB, context));
         MithrilDBHelper.getHelper(context).addPolicyRule(mithrilDB, DataGenerator.createPolicyRule(2,
                 "com.twitter.android", "Twitter",
                 AppOpsManager.permissionToOpCode(Manifest.permission.CAMERA),
-                MithrilAC.getPrefTimeIntervalLunchTemporalKey(), MithrilAC.getPrefKeyContextTypeTemporal(),
+                MithrilAC.getPrefLunchTemporalKey(), MithrilAC.getPrefKeyContextTypeTemporal(),
                 actionAllow, mithrilDB, context));
     }
 
@@ -64,12 +64,12 @@ public class DataGenerator {
         MithrilDBHelper.getHelper(context).addPolicyRule(mithrilDB, DataGenerator.createPolicyRule(3,
                 "com.twitter.android", "Twitter",
                 AppOpsManager.permissionToOpCode(Manifest.permission.ACCESS_FINE_LOCATION),
-                MithrilAC.getPrefTimeIntervalWeekdayTemporalKey(), MithrilAC.getPrefKeyContextTypeTemporal(),
+                MithrilAC.getPrefWeekdayTemporalKey(), MithrilAC.getPrefKeyContextTypeTemporal(),
                 actionAllow, mithrilDB, context));
         MithrilDBHelper.getHelper(context).addPolicyRule(mithrilDB, DataGenerator.createPolicyRule(3,
                 "com.twitter.android", "Twitter",
                 AppOpsManager.permissionToOpCode(Manifest.permission.ACCESS_FINE_LOCATION),
-                MithrilAC.getPrefTimeIntervalPersonalTemporalKey(), MithrilAC.getPrefKeyContextTypeTemporal(),
+                MithrilAC.getPrefAloneTemporalKey(), MithrilAC.getPrefKeyContextTypeTemporal(),
                 actionAllow, mithrilDB, context));
     }
 
@@ -112,7 +112,7 @@ public class DataGenerator {
         MithrilDBHelper.getHelper(context).addPolicyRule(mithrilDB, DataGenerator.createPolicyRule(7,
                 "com.google.android.gm", "Gmail",
                 AppOpsManager.permissionToOpCode(Manifest.permission.READ_CALENDAR),
-                MithrilAC.getPrefTimeIntervalWeekdayTemporalKey(), MithrilAC.getPrefKeyContextTypeTemporal(),
+                MithrilAC.getPrefWeekdayTemporalKey(), MithrilAC.getPrefKeyContextTypeTemporal(),
                 actionAllow, mithrilDB, context));
     }
 
@@ -126,7 +126,7 @@ public class DataGenerator {
         MithrilDBHelper.getHelper(context).addPolicyRule(mithrilDB, DataGenerator.createPolicyRule(8,
                 "com.google.android.gm", "Gmail",
                 AppOpsManager.permissionToOpCode(Manifest.permission.WRITE_CALENDAR),
-                MithrilAC.getPrefTimeIntervalWeekdayTemporalKey(), MithrilAC.getPrefKeyContextTypeTemporal(),
+                MithrilAC.getPrefWeekdayTemporalKey(), MithrilAC.getPrefKeyContextTypeTemporal(),
                 actionAllow, mithrilDB, context));
     }
 

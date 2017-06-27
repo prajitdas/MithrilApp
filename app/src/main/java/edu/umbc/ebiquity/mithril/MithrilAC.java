@@ -638,10 +638,6 @@ public class MithrilAC extends Application {
         return PREF_DND_TEMPORAL_KEY;
     }
 
-    public static String getPrefTimeIntervalAloneTemporalKey() {
-        return PREF_ALONE_TEMPORAL_KEY;
-    }
-
     public static String getPrefMondayTemporalKey() {
         return PREF_MONDAY_TEMPORAL_KEY;
     }
