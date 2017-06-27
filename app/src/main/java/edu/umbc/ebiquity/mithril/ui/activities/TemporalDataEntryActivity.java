@@ -1,11 +1,9 @@
 package edu.umbc.ebiquity.mithril.ui.activities;
 
-import android.annotation.TargetApi;
 import android.app.Activity;
 import android.app.TimePickerDialog;
 import android.content.Intent;
 import android.icu.util.Calendar;
-import android.os.Build;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.text.format.DateFormat;

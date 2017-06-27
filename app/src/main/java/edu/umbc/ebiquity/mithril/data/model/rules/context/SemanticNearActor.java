@@ -6,17 +6,27 @@ import android.os.Parcelable;
 import edu.umbc.ebiquity.mithril.MithrilAC;
 
 public class SemanticNearActor extends SemanticUserContext implements Parcelable {
+    public static final Creator<SemanticNearActor> CREATOR = new Creator<SemanticNearActor>() {
+        @Override
+        public SemanticNearActor createFromParcel(Parcel in) {
+            return new SemanticNearActor(in);
+        }
+
+        @Override
+        public SemanticNearActor[] newArray(int size) {
+            return new SemanticNearActor[size];
+        }
+    };
     private final String type = MithrilAC.getPrefKeyContextTypePresence();
     private String inferredRelationship;
+    private boolean enabled = false;
+    private int level;
 
     public SemanticNearActor(String inferredRelationship, boolean enabled, int level) {
         this.inferredRelationship = inferredRelationship;
         this.enabled = enabled;
         this.level = level;
     }
-
-    private boolean enabled = false;
-    private int level;
 
     protected SemanticNearActor(Parcel in) {
         inferredRelationship = in.readString();
@@ -35,18 +45,6 @@ public class SemanticNearActor extends SemanticUserContext implements Parcelable
     public int describeContents() {
         return 0;
     }
-
-    public static final Creator<SemanticNearActor> CREATOR = new Creator<SemanticNearActor>() {
-        @Override
-        public SemanticNearActor createFromParcel(Parcel in) {
-            return new SemanticNearActor(in);
-        }
-
-        @Override
-        public SemanticNearActor[] newArray(int size) {
-            return new SemanticNearActor[size];
-        }
-    };
 
     @Override
     public String getLabel() {

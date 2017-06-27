@@ -1,19 +1,26 @@
 package edu.umbc.ebiquity.mithril.data.model.rules.context;
 
-import android.annotation.TargetApi;
-import android.icu.util.Calendar;
-import android.os.Build;
 import android.os.Parcel;
 import android.os.Parcelable;
 
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 import edu.umbc.ebiquity.mithril.MithrilAC;
 import edu.umbc.ebiquity.mithril.util.specialtasks.contextinstances.DayOfWeek;
 
 public class SemanticTime extends SemanticUserContext implements Parcelable {
+    public static final Creator<SemanticTime> CREATOR = new Creator<SemanticTime>() {
+        @Override
+        public SemanticTime createFromParcel(Parcel in) {
+            return new SemanticTime(in);
+        }
+
+        @Override
+        public SemanticTime[] newArray(int size) {
+            return new SemanticTime[size];
+        }
+    };
     private final String type = MithrilAC.getPrefKeyContextTypeTemporal();
     private List<DayOfWeek> dayOfWeek;
     private int startHour;
@@ -60,18 +67,6 @@ public class SemanticTime extends SemanticUserContext implements Parcelable {
     public int describeContents() {
         return 0;
     }
-
-    public static final Creator<SemanticTime> CREATOR = new Creator<SemanticTime>() {
-        @Override
-        public SemanticTime createFromParcel(Parcel in) {
-            return new SemanticTime(in);
-        }
-
-        @Override
-        public SemanticTime[] newArray(int size) {
-            return new SemanticTime[size];
-        }
-    };
 
     public String getDayOfWeekString() {
         if (dayOfWeek == null)

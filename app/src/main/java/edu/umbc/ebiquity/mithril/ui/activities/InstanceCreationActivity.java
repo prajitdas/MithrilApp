@@ -76,11 +76,11 @@ public class InstanceCreationActivity extends AppCompatActivity
     private final int PLACE_AUTOCOMPLETE_REQUEST_CODE_HOME = 1;
     private final int PLACE_AUTOCOMPLETE_REQUEST_CODE_WORK = 2;
     private final int PLACE_AUTOCOMPLETE_REQUEST_CODE_MORE = 3;
-    private final int TIME_REQUEST_CODE_WORK = 4;
-    private final int TIME_REQUEST_CODE_DND = 5;
-    private final int TIME_REQUEST_CODE_MORE = 6;
+//    private final int TIME_REQUEST_CODE_WORK = 4;
+//    private final int TIME_REQUEST_CODE_DND = 5;
+//    private final int TIME_REQUEST_CODE_MORE = 6;
     private final int GEOFENCE_REQUEST_CODE = 7;
-    private final int TIMEFENCE_REQUEST_CODE = 8;
+//    private final int TIMEFENCE_REQUEST_CODE = 8;
     /**
      * Provides the entry point to Google Play services: Geo fence
      */
@@ -1330,17 +1330,17 @@ public class InstanceCreationActivity extends AppCompatActivity
                 //Let's go to null island!!!
                 location.setLatitude(0);
                 location.setLongitude(0);
-                semanticLocations.put(key+"_Street", new SemanticLocation(location, address,
-                        key+"_Street",
+                semanticLocations.put(key + "_Street", new SemanticLocation(location, address,
+                        key + "_Street",
                         false, address.getThoroughfare(), placeId, placeTypes, false, 1));
-                semanticLocations.put(key+"_City", new SemanticLocation(location, address,
-                        key+"_City",
+                semanticLocations.put(key + "_City", new SemanticLocation(location, address,
+                        key + "_City",
                         false, address.getLocality(), placeId, placeTypes, false, 2));
-                semanticLocations.put(key+"_State", new SemanticLocation(location, address,
-                        key+"_State",
+                semanticLocations.put(key + "_State", new SemanticLocation(location, address,
+                        key + "_State",
                         false, address.getAdminArea(), placeId, placeTypes, false, 3));
-                semanticLocations.put(key+"_Country", new SemanticLocation(location, address,
-                        key+"_Country",
+                semanticLocations.put(key + "_Country", new SemanticLocation(location, address,
+                        key + "_Country",
                         false, address.getCountryName(), placeId, placeTypes, false, 4));
 
                 refreshVisibleFragment();

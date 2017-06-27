@@ -23,7 +23,6 @@ import android.util.Log;
 import android.util.Pair;
 
 import java.io.ByteArrayOutputStream;
-import java.sql.RowId;
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.HashMap;

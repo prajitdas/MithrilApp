@@ -15,6 +15,17 @@ import edu.umbc.ebiquity.mithril.MithrilAC;
 public class SemanticLocation extends SemanticUserContext implements
         Parcelable,
         Comparable<SemanticLocation> {
+    public static final Creator<SemanticLocation> CREATOR = new Creator<SemanticLocation>() {
+        @Override
+        public SemanticLocation createFromParcel(Parcel in) {
+            return new SemanticLocation(in);
+        }
+
+        @Override
+        public SemanticLocation[] newArray(int size) {
+            return new SemanticLocation[size];
+        }
+    };
     private final String type = MithrilAC.getPrefKeyContextTypeLocation();
     private Location location;
     private Address address = new Address(Locale.getDefault());
@@ -80,18 +91,6 @@ public class SemanticLocation extends SemanticUserContext implements
     public int describeContents() {
         return 0;
     }
-
-    public static final Creator<SemanticLocation> CREATOR = new Creator<SemanticLocation>() {
-        @Override
-        public SemanticLocation createFromParcel(Parcel in) {
-            return new SemanticLocation(in);
-        }
-
-        @Override
-        public SemanticLocation[] newArray(int size) {
-            return new SemanticLocation[size];
-        }
-    };
 
     @Override
     public String getType() {
@@ -189,6 +188,24 @@ public class SemanticLocation extends SemanticUserContext implements
         return Comparators.NAME.compare(this, o);
     }
 
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof SemanticLocation)) return false;
+
+        SemanticLocation that = (SemanticLocation) o;
+
+        if (!getName().equals(that.getName())) return false;
+        return getPlaceId().equals(that.getPlaceId());
+    }
+
+    @Override
+    public int hashCode() {
+        int result = getName().hashCode();
+        result = 31 * result + getPlaceId().hashCode();
+        return result;
+    }
+
     public static class Comparators {
 
         public static Comparator<SemanticLocation> NAME = new Comparator<SemanticLocation>() {
@@ -213,23 +230,5 @@ public class SemanticLocation extends SemanticUserContext implements
 //                return i;
 //            }
 //        };
-    }
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (!(o instanceof SemanticLocation)) return false;
-
-        SemanticLocation that = (SemanticLocation) o;
-
-        if (!getName().equals(that.getName())) return false;
-        return getPlaceId().equals(that.getPlaceId());
-    }
-
-    @Override
-    public int hashCode() {
-        int result = getName().hashCode();
-        result = 31 * result + getPlaceId().hashCode();
-        return result;
     }
 }

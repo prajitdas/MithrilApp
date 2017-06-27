@@ -1,7 +1,6 @@
 package edu.umbc.ebiquity.mithril.ui.activities;
 
 import android.Manifest;
-import android.annotation.TargetApi;
 import android.app.ActivityManager;
 import android.app.AlertDialog;
 import android.app.AppOpsManager;
@@ -15,7 +14,6 @@ import android.content.pm.PackageManager;
 import android.content.res.AssetManager;
 import android.database.sqlite.SQLiteDatabase;
 import android.net.Uri;
-import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
 import android.os.Handler;

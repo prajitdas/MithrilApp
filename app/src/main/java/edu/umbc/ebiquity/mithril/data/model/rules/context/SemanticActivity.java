@@ -6,6 +6,17 @@ import android.os.Parcelable;
 import edu.umbc.ebiquity.mithril.MithrilAC;
 
 public class SemanticActivity extends SemanticUserContext implements Parcelable {
+    public static final Creator<SemanticActivity> CREATOR = new Creator<SemanticActivity>() {
+        @Override
+        public SemanticActivity createFromParcel(Parcel in) {
+            return new SemanticActivity(in);
+        }
+
+        @Override
+        public SemanticActivity[] newArray(int size) {
+            return new SemanticActivity[size];
+        }
+    };
     private final String type = MithrilAC.getPrefKeyContextTypeActivity();
     private String inferredActivity;
     private boolean enabled = false;
@@ -34,18 +45,6 @@ public class SemanticActivity extends SemanticUserContext implements Parcelable 
     public int describeContents() {
         return 0;
     }
-
-    public static final Creator<SemanticActivity> CREATOR = new Creator<SemanticActivity>() {
-        @Override
-        public SemanticActivity createFromParcel(Parcel in) {
-            return new SemanticActivity(in);
-        }
-
-        @Override
-        public SemanticActivity[] newArray(int size) {
-            return new SemanticActivity[size];
-        }
-    };
 
     @Override
     public String getType() {

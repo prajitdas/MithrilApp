@@ -1,6 +1,5 @@
 package edu.umbc.ebiquity.mithril.util.services;
 
-import android.annotation.TargetApi;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.app.Service;

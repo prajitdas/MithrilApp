@@ -1,6 +1,5 @@
 package edu.umbc.ebiquity.mithril.util.specialtasks.detect.policyconflicts;
 
-import android.Manifest;
 import android.app.AppOpsManager;
 import android.content.Context;
 import android.database.SQLException;
