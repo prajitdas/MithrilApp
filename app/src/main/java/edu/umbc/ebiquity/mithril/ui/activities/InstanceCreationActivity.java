@@ -827,7 +827,7 @@ public class InstanceCreationActivity extends AppCompatActivity
             semanticTimes.put(contextEntry.getKey(), contextEntry.getValue());
         }
         isThereTemporalContextToSave = false;
-        setTemporalFences();
+//        setTemporalFences();
         refreshVisibleFragment();
     }
 
@@ -925,23 +925,23 @@ public class InstanceCreationActivity extends AppCompatActivity
         startActivity(launchNextActivity);
     }
 
-    private void openTemporalDataEntryActivity(int requestCode, String label) {
-        List<DayOfWeek> dayOfWeek = new ArrayList<>();
-        dayOfWeek.add(DayOfWeek.Sunday);
-        dayOfWeek.add(DayOfWeek.Monday);
-        dayOfWeek.add(DayOfWeek.Tuesday);
-        dayOfWeek.add(DayOfWeek.Wednesday);
-        dayOfWeek.add(DayOfWeek.Thursday);
-        dayOfWeek.add(DayOfWeek.Friday);
-        dayOfWeek.add(DayOfWeek.Saturday);
-
-        SemanticTime semanticTime = new SemanticTime(dayOfWeek, 0, 0, 0, 0, label, false, 0);
-
-        Intent intent = new Intent(this, TemporalDataEntryActivity.class);
-        intent.putExtra(MithrilAC.getPrefKeyTemporalLabel(), label);
-        intent.putExtra(MithrilAC.getPrefKeyContextTypeTemporal(), semanticTime);
-        startActivityForResult(intent, requestCode);
-    }
+//    private void openTemporalDataEntryActivity(int requestCode, String label) {
+//        List<DayOfWeek> dayOfWeek = new ArrayList<>();
+//        dayOfWeek.add(DayOfWeek.Sunday);
+//        dayOfWeek.add(DayOfWeek.Monday);
+//        dayOfWeek.add(DayOfWeek.Tuesday);
+//        dayOfWeek.add(DayOfWeek.Wednesday);
+//        dayOfWeek.add(DayOfWeek.Thursday);
+//        dayOfWeek.add(DayOfWeek.Friday);
+//        dayOfWeek.add(DayOfWeek.Saturday);
+//
+//        SemanticTime semanticTime = new SemanticTime(dayOfWeek, 0, 0, 0, 0, label, false, 0);
+//
+//        Intent intent = new Intent(this, TemporalDataEntryActivity.class);
+//        intent.putExtra(MithrilAC.getPrefKeyTemporalLabel(), label);
+//        intent.putExtra(MithrilAC.getPrefKeyContextTypeTemporal(), semanticTime);
+//        startActivityForResult(intent, requestCode);
+//    }
 
     private void openAutocompleteActivity(int requestCode) {
         try {
@@ -1041,15 +1041,15 @@ public class InstanceCreationActivity extends AppCompatActivity
 //                }
 //                break;
 //            }
-            case TIME_REQUEST_CODE_MORE: {
-                if (resultCode == Activity.RESULT_OK) {
-                    isThereTemporalContextToSave = true;
-                    setSemanticTemporal(data);
-                } else if (resultCode == Activity.RESULT_CANCELED) {
-                    // Indicates that the activity closed before a selection was made. For example if the user pressed the back button.
-                }
-                break;
-            }
+//            case TIME_REQUEST_CODE_MORE: {
+//                if (resultCode == Activity.RESULT_OK) {
+//                    isThereTemporalContextToSave = true;
+//                    setSemanticTemporal(data);
+//                } else if (resultCode == Activity.RESULT_CANCELED) {
+//                    // Indicates that the activity closed before a selection was made. For example if the user pressed the back button.
+//                }
+//                break;
+//            }
             case GEOFENCE_REQUEST_CODE: {
                 if (resultCode == Activity.RESULT_OK) {
                     Log.d(MithrilAC.getDebugTag(), "Geofences successfully setup! All good...");
@@ -1061,15 +1061,15 @@ public class InstanceCreationActivity extends AppCompatActivity
         }
     }
 
-    private void setSemanticTemporal(Intent data) {
-        Bundle bundle = data.getExtras();
-        if (bundle != null) {
-            String label = bundle.getString(MithrilAC.getPrefKeyTemporalLabel());
-            SemanticTime semanticTime = bundle.getParcelable(MithrilAC.getPrefKeyContextTypeTemporal());
-            semanticTimes.put(label, semanticTime);
-        }
-        bottomNavigationView.setSelectedItemId(R.id.navigation_temporal);
-    }
+//    private void setSemanticTemporal(Intent data) {
+//        Bundle bundle = data.getExtras();
+//        if (bundle != null) {
+//            String label = bundle.getString(MithrilAC.getPrefKeyTemporalLabel());
+//            SemanticTime semanticTime = bundle.getParcelable(MithrilAC.getPrefKeyContextTypeTemporal());
+//            semanticTimes.put(label, semanticTime);
+//        }
+//        bottomNavigationView.setSelectedItemId(R.id.navigation_temporal);
+//    }
 
     private void setHomeSemanticLocation(Place place) {
         Location userInputLocation = new Location("placesAPI");
@@ -1142,23 +1142,23 @@ public class InstanceCreationActivity extends AppCompatActivity
         dialog.show();
     }
 
-    private void chooseATemporalLabel() {
-        final ArrayAdapter<String> arrayAdapter = new ArrayAdapter<>(this, android.R.layout.select_dialog_singlechoice);
-        final String[] listOfTimeContextPiecesFromTheOntology = MithrilAC.getContextArrayTime();
-        for (int index = 0; index < listOfTimeContextPiecesFromTheOntology.length; index++)
-            arrayAdapter.add(listOfTimeContextPiecesFromTheOntology[index]);
-
-        AlertDialog.Builder dialog = new AlertDialog.Builder(this);
-        dialog.setIcon(R.drawable.calendar_clock);
-        dialog.setTitle("What time based context are you adding?");
-        dialog.setAdapter(arrayAdapter, new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                openTemporalDataEntryActivity(TIME_REQUEST_CODE_MORE, arrayAdapter.getItem(which));
-            }
-        });
-        dialog.show();
-    }
+//    private void chooseATemporalLabel() {
+//        final ArrayAdapter<String> arrayAdapter = new ArrayAdapter<>(this, android.R.layout.select_dialog_singlechoice);
+//        final String[] listOfTimeContextPiecesFromTheOntology = MithrilAC.getContextArrayTime();
+//        for (int index = 0; index < listOfTimeContextPiecesFromTheOntology.length; index++)
+//            arrayAdapter.add(listOfTimeContextPiecesFromTheOntology[index]);
+//
+//        AlertDialog.Builder dialog = new AlertDialog.Builder(this);
+//        dialog.setIcon(R.drawable.calendar_clock);
+//        dialog.setTitle("What time based context are you adding?");
+//        dialog.setAdapter(arrayAdapter, new DialogInterface.OnClickListener() {
+//            @Override
+//            public void onClick(DialogInterface dialog, int which) {
+//                openTemporalDataEntryActivity(TIME_REQUEST_CODE_MORE, arrayAdapter.getItem(which));
+//            }
+//        });
+//        dialog.show();
+//    }
 
     /**
      * Creates an intent, adds location data to it as an extra, and starts the intent service for
@@ -1190,13 +1190,12 @@ public class InstanceCreationActivity extends AppCompatActivity
         startActivityForResult(intent, GEOFENCE_REQUEST_CODE);
     }
 
-    private void setTemporalFences() {
-        //TODO IMPORTANT Setup the snapshot time fence thingy from:
+//    private void setTemporalFences() {
 //        Intent intent = new Intent(this, SetupTimefencesActivity.class);
 //        ArrayList<SemanticTime> tempList = new ArrayList<>(semanticTimes.values());
 //        intent.putParcelableArrayListExtra(MithrilAC.getPrefKeyTimefenceList(), tempList);
 //        startActivityForResult(intent, TIMEFENCE_REQUEST_CODE);
-    }
+//    }
 
     /**
      * Builds a GoogleApiClient. Uses the {@code #addApi} method to request the LocationServices API.

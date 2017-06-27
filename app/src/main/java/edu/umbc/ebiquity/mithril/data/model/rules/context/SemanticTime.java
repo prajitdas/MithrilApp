@@ -127,7 +127,7 @@ public class SemanticTime extends SemanticUserContext implements Parcelable {
 
     @Override
     public String toString() {
-        return "\"" + inferredTime + "\" time context repeats " + getDayOfWeekString();
+        return inferredTime;
     }
 
     @Override
