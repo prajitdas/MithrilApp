@@ -249,6 +249,7 @@ public class PermissionAcquisitionActivity extends AppCompatActivity {
         switch (requestCode) {
             case MithrilAC.USAGE_STATS_PERMISSION_REQUEST_CODE: {
                 if (resultCode == Activity.RESULT_OK) {
+                    mSettingsPermToggleButton.setChecked(true);
                     editor.putBoolean(MithrilAC.getPrefKeyUserDeniedPermissions(), false);
                     editor.apply();
                     if (isPermissionAcquisitionComplete()) {
