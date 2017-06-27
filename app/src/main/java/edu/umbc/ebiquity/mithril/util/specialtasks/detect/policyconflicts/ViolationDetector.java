@@ -9,6 +9,7 @@ import android.util.Pair;
 
 import java.sql.Timestamp;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -94,16 +95,20 @@ public class ViolationDetector {
         }
 
         SQLiteDatabase mithrilDB = MithrilDBHelper.getHelper(context).getWritableDatabase();
-        Set<Long> currentContext = populateCurrentContext(mithrilDB, context, semanticUserContexts);
+        Set<Long> currentContextSet = populateCurrentContext(mithrilDB, context, semanticUserContexts);
+        List<Long> currentContextList = new ArrayList<>(currentContextSet);
+        Collections.sort(currentContextList);
 
         // Let's test the rules we found
         for (Resource currentOperation : operationsPerformed) {
             int lastOperationPerformed = currentOperation.getOp();
             List<PolicyRule> policyRules = MithrilDBHelper.getHelper(context).findAllPoliciesForAppWhenPerformingOp(mithrilDB, currentPackageName, lastOperationPerformed);
-            Set<Long> policyContext = new HashSet<>();
+            Set<Long> policyContextSet = new HashSet<>();
+            List<Long> policyContextList = new ArrayList<>(policyContextSet);
+            Collections.sort(policyContextList);
             for (PolicyRule policyRule : policyRules)
-                policyContext.add(policyRule.getCtxId());
-            if (policyContext.size() > 0) {
+                policyContextSet.add(policyRule.getCtxId());
+            if (policyContextSet.size() > 0) {
                 /**
                  * If current context is a subset of policy context or they are equal then we get true for the following test
                  * We have assumed a closed world. Explicit access has to be defined.
@@ -122,7 +127,7 @@ public class ViolationDetector {
                  * However, a safe bet is that if there is any rule that states when every one of these contextual
                  * situations apply only then allow access then we are using a restrictive but safe access principle.
                  */
-                if (MithrilCollections.isExactMatchSet(policyContext, currentContext)) {
+                if (MithrilCollections.isExactMatchSet(policyContextSet, currentContextSet)) {
                     /**
                      * We have an exact context match! Current context is an exact match for rule context.
                      * We have to do something...
@@ -150,7 +155,7 @@ public class ViolationDetector {
                                             false,
                                             true,
                                             new Timestamp(System.currentTimeMillis()),
-                                            new ArrayList<>(policyContext),
+                                            policyContextList,
                                             1
                                     )
                             );
@@ -174,7 +179,7 @@ public class ViolationDetector {
                      * Violations are by default marked true.
                      */
 
-                    for (long currCtxtId : currentContext) {
+                    for (long currCtxtId : currentContextSet) {
                         Pair<String, String> ctxtTypeLabel = MithrilDBHelper.getHelper(context).findContextByID(mithrilDB, currCtxtId);
                         int newPolicyId = MithrilDBHelper.getHelper(context).findMaxPolicyId(mithrilDB) + 1;
                         AppData app = MithrilDBHelper.getHelper(context).findAppByAppPkgName(mithrilDB, currentPackageName);
@@ -199,7 +204,7 @@ public class ViolationDetector {
                                         false,
                                         true,
                                         new Timestamp(System.currentTimeMillis()),
-                                        new ArrayList<>(currentContext),
+                                        currentContextList,
                                         1
                                 )
                         );
@@ -217,7 +222,7 @@ public class ViolationDetector {
                  * and use user feedback as +ve or -ve reinforcement.
                  */
                 Log.d(MithrilAC.getDebugTag(), "Default violation scenario. Do something!");
-                for (long currCtxtId : currentContext) {
+                for (long currCtxtId : currentContextSet) {
                     Pair<String, String> ctxtTypeLabel = MithrilDBHelper.getHelper(context).findContextByID(mithrilDB, currCtxtId);
                     int newPolicyId = MithrilDBHelper.getHelper(context).findMaxPolicyId(mithrilDB) + 1;
                     AppData app = MithrilDBHelper.getHelper(context).findAppByAppPkgName(mithrilDB, currentPackageName);
@@ -249,7 +254,7 @@ public class ViolationDetector {
                                     false,
                                     true,
                                     new Timestamp(System.currentTimeMillis()),
-                                    new ArrayList<>(currentContext),
+                                    currentContextList,
                                     1
                             )
                     );
