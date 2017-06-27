@@ -7,8 +7,8 @@ android {
         applicationId "edu.umbc.ebiquity.mithril"
         minSdkVersion 25
         targetSdkVersion 25
-        versionCode 5
-        versionName "0.9.8"
+        versionCode 6
+        versionName "0.9.9"
         vectorDrawables.useSupportLibrary = true
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
         multiDexEnabled true

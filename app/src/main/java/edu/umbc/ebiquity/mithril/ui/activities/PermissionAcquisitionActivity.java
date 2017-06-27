@@ -80,6 +80,8 @@ public class PermissionAcquisitionActivity extends AppCompatActivity {
             mSpecialPermToggleButton.setChecked(true);
         if (!PermissionHelper.needsWriteSettingsPermission(this))
             mSpecialPermToggleButton.setChecked(true);
+        if (!PermissionHelper.needsRootAccess())
+            mSpecialPermToggleButton.setChecked(true);
 
         setOnClickListeners();
         setOnCheckedChangeListener();
@@ -197,22 +199,6 @@ public class PermissionAcquisitionActivity extends AppCompatActivity {
                 }
                 break;
             }
-            case MithrilAC.WRITE_SETTINGS_PERMISSION_REQUEST_CODE: {
-                // If request is cancelled, the result arrays are empty.
-                if (grantResults.length > 0) {
-                    for (int i = 0; i < grantResults.length; i++) {
-                        if (grantResults[i] == PackageManager.PERMISSION_DENIED) {
-                            // permission denied, boo! Disable the
-                            // functionality that depends on this permission.
-                            resultCanceled();
-                        } else {
-                            resultOkay();
-                            // permission was granted, yay! Do the
-                            // contacts-related task you need to do.
-                        }
-                    }
-                }
-            }
             // other 'case' lines to check for other
             // permissions this app might request
         }
@@ -248,9 +234,7 @@ public class PermissionAcquisitionActivity extends AppCompatActivity {
     }
 
     private void testPermissionsAndLaunchNextActivity() {
-        if (PermissionHelper.isAllRequiredPermissionsGranted(this) &&
-                !PermissionHelper.needsUsageStatsPermission(this) &&
-                !PermissionHelper.needsWriteSettingsPermission(this))
+        if (isPermissionAcquisitionComplete())
             startNextActivity(this, InitKBActivity.class);
     }
 
