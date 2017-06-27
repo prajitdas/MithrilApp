@@ -19,13 +19,17 @@ import java.util.List;
 
 import edu.umbc.ebiquity.mithril.MithrilAC;
 import edu.umbc.ebiquity.mithril.R;
+import edu.umbc.ebiquity.mithril.util.specialtasks.errorsnexceptions.PhoneNotRootedException;
 import edu.umbc.ebiquity.mithril.util.specialtasks.permissions.PermissionHelper;
+import edu.umbc.ebiquity.mithril.util.specialtasks.root.RootAccess;
 
 public class PermissionAcquisitionActivity extends AppCompatActivity {
     private SharedPreferences.Editor editor;
 
     private ToggleButton mGenericPermToggleButton;
     private ToggleButton mSpecialPermToggleButton;
+    private ToggleButton mSettingsPermToggleButton;
+    private ToggleButton mRootAccessToggleButton;
     private Button mQuitAppButton;
 
     @Override
@@ -64,6 +68,8 @@ public class PermissionAcquisitionActivity extends AppCompatActivity {
 
         mGenericPermToggleButton = (ToggleButton) findViewById(R.id.genericPermToggleButton);
         mSpecialPermToggleButton = (ToggleButton) findViewById(R.id.specialPermToggleButton);
+        mSettingsPermToggleButton = (ToggleButton) findViewById(R.id.settingsToggleButton);
+        mRootAccessToggleButton = (ToggleButton) findViewById(R.id.rootAccessToggleButton);
         mQuitAppButton = (Button) findViewById(R.id.quitAppButton);
 
         if (PermissionHelper.isAllRequiredPermissionsGranted(this))
@@ -107,14 +113,49 @@ public class PermissionAcquisitionActivity extends AppCompatActivity {
                     buttonView.setChecked(false);
                 if (PermissionHelper.needsUsageStatsPermission(buttonView.getContext())) {
                     startActivityForResult(new Intent(Settings.ACTION_USAGE_ACCESS_SETTINGS), MithrilAC.USAGE_STATS_PERMISSION_REQUEST_CODE);
-                    if (PermissionHelper.needsWriteSettingsPermission(buttonView.getContext())) {
-                        Intent goToSettings = new Intent(Settings.ACTION_MANAGE_WRITE_SETTINGS);
-                        goToSettings.setData(Uri.parse("package:" + getPackageName()));
-                        startActivityForResult(goToSettings, MithrilAC.WRITE_SETTINGS_PERMISSION_REQUEST_CODE);
-                    }
                 }
                 else
                     PermissionHelper.toast(buttonView.getContext(), "We have PACKAGE_USAGE_STATS permission already. Thank you!");
+            }
+        });
+        mSettingsPermToggleButton.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                if (!buttonView.isChecked())
+                    buttonView.setChecked(true);
+                else
+                    buttonView.setChecked(false);
+                if (PermissionHelper.needsWriteSettingsPermission(buttonView.getContext())) {
+                    try {
+                        RootAccess rootAccess = new RootAccess();
+                        if(rootAccess.isRooted())
+                            rootAccess.runScript(new String[] {
+                                    MithrilAC.getCmdGrantGetAppOpsStats(),
+                                    MithrilAC.getCmdGrantManageAppOpsRestrictions(),
+                                    MithrilAC.getCmdGrantUpdateAppOpsStats()
+                            });
+                    } catch (PhoneNotRootedException e) {
+                        PermissionHelper.toast(buttonView.getContext(), "Phone is not rooted... full functionality unavailable but can perform first phase of the MithrilAC study!");
+                    }
+                }
+                else
+                    PermissionHelper.toast(buttonView.getContext(), "We have WRITE_SETTINGS permission already. Thank you!");
+            }
+        });
+        mRootAccessToggleButton.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                if (!buttonView.isChecked())
+                    buttonView.setChecked(true);
+                else
+                    buttonView.setChecked(false);
+                if (PermissionHelper.needsWriteSettingsPermission(buttonView.getContext())) {
+                    Intent goToSettings = new Intent(Settings.ACTION_MANAGE_WRITE_SETTINGS);
+                    goToSettings.setData(Uri.parse("package:" + getPackageName()));
+                    startActivityForResult(goToSettings, MithrilAC.WRITE_SETTINGS_PERMISSION_REQUEST_CODE);
+                }
+                else
+                    PermissionHelper.toast(buttonView.getContext(), "We are ROOT already. Thank you!");
             }
         });
     }

@@ -64,10 +64,11 @@
     <string name="dialog_resp_delete">Yes</string>
     <string name="dialog_resp_NO">No</string>
 
-    <string name="allow_generic_permissions">MithrilAC requires access to device\'s Location, Storage and Calendar</string>
-    <string name="allow_special_usage_stats_permission">MithrilAC requires access to device\'s App usage stats</string>
-    <string name="allow_settings_permission">MithrilAC requires access to device\'s settings</string>
-    <string name="allow_root_access">MithrilAC requires root access</string>
+    <string name="mithrilac_requires">Mithril requires access to</string>
+    <string name="allow_generic_permissions">Location, Storage and Calendar</string>
+    <string name="allow_special_usage_stats_permission">App usage stats</string>
+    <string name="allow_settings_permission">Settings</string>
+    <string name="allow_root_access">Root privilege</string>
     <string name="allow_access_fine_location_permission">ACCESS_FINE_LOCATION permission is mandatory for app functionality</string>
     <string name="allow_write_external_storage_permission">WRITE_EXTERNAL_STORAGE permission is mandatory for app functionality</string>
     <string name="allow_read_external_storage_permission">READ_EXTERNAL_STORAGE permission is mandatory for app functionality</string>
