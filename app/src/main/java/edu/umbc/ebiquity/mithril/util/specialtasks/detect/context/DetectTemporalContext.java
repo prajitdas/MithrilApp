@@ -1,7 +1,6 @@
 package edu.umbc.ebiquity.mithril.util.specialtasks.detect.context;
 
 import android.icu.util.Calendar;
-import android.util.Log;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -49,25 +48,32 @@ public class DetectTemporalContext {
         if (isWithinTimePeriod(semanticTimes.get(MithrilAC.getPrefBreakfastTemporalKey()), currCalendar)) {
             currentSemanticTimes.add(semanticTimes.get(MithrilAC.getPrefBreakfastTemporalKey()));
             currentSemanticTimes.add(semanticTimes.get(MithrilAC.getPrefPersonalTemporalKey()));
-        } else if (isWithinTimePeriod(semanticTimes.get(MithrilAC.getPrefLunchTemporalKey()), currCalendar)) {
+        }
+        if (isWithinTimePeriod(semanticTimes.get(MithrilAC.getPrefLunchTemporalKey()), currCalendar)) {
             currentSemanticTimes.add(semanticTimes.get(MithrilAC.getPrefLunchTemporalKey()));
             currentSemanticTimes.add(semanticTimes.get(MithrilAC.getPrefPersonalTemporalKey()));
-        } else if (isWithinTimePeriod(semanticTimes.get(MithrilAC.getPrefDinnerTemporalKey()), currCalendar)) {
+        }
+        if (isWithinTimePeriod(semanticTimes.get(MithrilAC.getPrefDinnerTemporalKey()), currCalendar)) {
             currentSemanticTimes.add(semanticTimes.get(MithrilAC.getPrefDinnerTemporalKey()));
             currentSemanticTimes.add(semanticTimes.get(MithrilAC.getPrefPersonalTemporalKey()));
-        } else if (isWithinTimePeriod(semanticTimes.get(MithrilAC.getPrefDndTemporalKey()), currCalendar)) {
+        }
+        if (isWithinTimePeriod(semanticTimes.get(MithrilAC.getPrefDndTemporalKey()), currCalendar)) {
             currentSemanticTimes.add(semanticTimes.get(MithrilAC.getPrefDndTemporalKey()));
             currentSemanticTimes.add(semanticTimes.get(MithrilAC.getPrefPersonalTemporalKey()));
-        } else if (isWithinTimePeriod(semanticTimes.get(MithrilAC.getPrefFamilyTemporalKey()), currCalendar)) {
+        }
+        if (isWithinTimePeriod(semanticTimes.get(MithrilAC.getPrefFamilyTemporalKey()), currCalendar)) {
             currentSemanticTimes.add(semanticTimes.get(MithrilAC.getPrefFamilyTemporalKey()));
             currentSemanticTimes.add(semanticTimes.get(MithrilAC.getPrefPersonalTemporalKey()));
-        } else if (isWithinTimePeriod(semanticTimes.get(MithrilAC.getPrefAloneTemporalKey()), currCalendar)) {
+        }
+        if (isWithinTimePeriod(semanticTimes.get(MithrilAC.getPrefAloneTemporalKey()), currCalendar)) {
             currentSemanticTimes.add(semanticTimes.get(MithrilAC.getPrefAloneTemporalKey()));
             currentSemanticTimes.add(semanticTimes.get(MithrilAC.getPrefPersonalTemporalKey()));
-        } else if (isWithinTimePeriod(semanticTimes.get(MithrilAC.getPrefWorkMorningTemporalKey()), currCalendar)) {
+        }
+        if (isWithinTimePeriod(semanticTimes.get(MithrilAC.getPrefWorkMorningTemporalKey()), currCalendar)) {
             currentSemanticTimes.add(semanticTimes.get(MithrilAC.getPrefWorkMorningTemporalKey()));
             currentSemanticTimes.add(semanticTimes.get(MithrilAC.getPrefProfessionalTemporalKey()));
-        } else if (isWithinTimePeriod(semanticTimes.get(MithrilAC.getPrefWorkAfternoonTemporalKey()), currCalendar)) {
+        }
+        if (isWithinTimePeriod(semanticTimes.get(MithrilAC.getPrefWorkAfternoonTemporalKey()), currCalendar)) {
             currentSemanticTimes.add(semanticTimes.get(MithrilAC.getPrefWorkAfternoonTemporalKey()));
             currentSemanticTimes.add(semanticTimes.get(MithrilAC.getPrefProfessionalTemporalKey()));
         }
@@ -83,17 +89,19 @@ public class DetectTemporalContext {
         knownCalEnd.set(Calendar.HOUR_OF_DAY, semanticTime.getEndHour());
         knownCalEnd.set(Calendar.MINUTE, semanticTime.getEndMinute());
         //We have a next day end time situation
-        if(knownCalStart.compareTo(knownCalEnd) == 0)
+        if(knownCalStart.compareTo(knownCalEnd) == 0) {
             return false;
-        if(knownCalStart.compareTo(knownCalEnd) > 0) {
+        }
+        if(knownCalStart.compareTo(knownCalEnd) == 1) {
             int diffHour = 24 - knownCalStart.get(Calendar.HOUR_OF_DAY);
-            knownCalStart.set(Calendar.HOUR_OF_DAY, knownCalStart.get(Calendar.HOUR_OF_DAY)+diffHour);
+            knownCalStart.set(Calendar.HOUR_OF_DAY, 0);
             knownCalEnd.set(Calendar.HOUR_OF_DAY, knownCalEnd.get(Calendar.HOUR_OF_DAY)+diffHour);
             currCalendar.set(Calendar.HOUR_OF_DAY, currCalendar.get(Calendar.HOUR_OF_DAY)+diffHour);
-            if(currCalendar.compareTo(knownCalStart) > 0 && currCalendar.compareTo(knownCalEnd) < 0)
+            if(currCalendar.compareTo(knownCalStart) == 1 && currCalendar.compareTo(knownCalEnd) == -1)
                 return true;
+            return false;
         }
-        if(currCalendar.compareTo(knownCalStart) > 0 && currCalendar.compareTo(knownCalEnd) < 0)
+        if(currCalendar.compareTo(knownCalStart) == 1 && currCalendar.compareTo(knownCalEnd) == -1)
             return true;
         return false;
     }
