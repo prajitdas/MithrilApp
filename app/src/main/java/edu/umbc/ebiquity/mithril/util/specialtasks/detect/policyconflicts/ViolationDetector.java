@@ -1,5 +1,6 @@
 package edu.umbc.ebiquity.mithril.util.specialtasks.detect.policyconflicts;
 
+import android.Manifest;
 import android.app.AppOpsManager;
 import android.content.Context;
 import android.database.SQLException;
@@ -26,6 +27,7 @@ import edu.umbc.ebiquity.mithril.simulations.DataGenerator;
 import edu.umbc.ebiquity.mithril.util.specialtasks.collections.MithrilCollections;
 import edu.umbc.ebiquity.mithril.util.specialtasks.errorsnexceptions.ContextImplementationMissingException;
 import edu.umbc.ebiquity.mithril.util.specialtasks.errorsnexceptions.SemanticInconsistencyException;
+import edu.umbc.ebiquity.mithril.util.specialtasks.permissions.PermissionHelper;
 
 /**
  * Created by prajit on 12/13/16.
@@ -86,7 +88,8 @@ public class ViolationDetector {
             return;
         }
         if (operationsPerformed.size() == 0) {
-            Log.e(MithrilAC.getDebugTag(), "We might not have GET_APP_OPS_STATS permission!");
+            if(PermissionHelper.isPermissionGranted(context, Manifest.permission.GET_APP_OPS_STATS) != AppOpsManager.MODE_ALLOWED)
+                Log.e(MithrilAC.getDebugTag(), "We do not have GET_APP_OPS_STATS permission!");
             return;
         }
         if (operationsPerformed.get(0).getOp() == AppOpsManager.OP_NONE) {
