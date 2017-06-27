@@ -448,7 +448,7 @@ public class InstanceCreationActivity extends AppCompatActivity
                 0,
                 0,
                 0,
-                MithrilAC.getWeekend(),
+                MithrilAC.getPrefWeekendTemporalKey(),
                 false,
                 0
         );
@@ -471,7 +471,7 @@ public class InstanceCreationActivity extends AppCompatActivity
                 0,
                 0,
                 0,
-                MithrilAC.getAnyday(),
+                MithrilAC.getPrefAnydayTemporalKey(),
                 false,
                 0
         );
@@ -486,7 +486,7 @@ public class InstanceCreationActivity extends AppCompatActivity
                 0,
                 8,
                 30,
-                MithrilAC.getPrefTimeIntervalBreakfastTemporalKey(),
+                MithrilAC.getPrefBreakfastTemporalKey(),
                 false,
                 0
         );
@@ -501,7 +501,7 @@ public class InstanceCreationActivity extends AppCompatActivity
                 0,
                 12,
                 30,
-                MithrilAC.getPrefTimeIntervalLunchTemporalKey(),
+                MithrilAC.getPrefLunchTemporalKey(),
                 false,
                 0
         );
@@ -516,7 +516,7 @@ public class InstanceCreationActivity extends AppCompatActivity
                 0,
                 19,
                 30,
-                MithrilAC.getPrefTimeIntervalDinnerTemporalKey(),
+                MithrilAC.getPrefDinnerTemporalKey(),
                 false,
                 0
         );
@@ -531,7 +531,7 @@ public class InstanceCreationActivity extends AppCompatActivity
                 0,
                 8,
                 0,
-                MithrilAC.getPrefTimeIntervalDndTemporalKey(),
+                MithrilAC.getPrefDndTemporalKey(),
                 false,
                 0
         );
@@ -546,7 +546,7 @@ public class InstanceCreationActivity extends AppCompatActivity
                 0,
                 19,
                 0,
-                MithrilAC.getPrefTimeIntervalFamilyTemporalKey(),
+                MithrilAC.getPrefFamilyTemporalKey(),
                 false,
                 0
         );
@@ -561,7 +561,7 @@ public class InstanceCreationActivity extends AppCompatActivity
                 0,
                 19,
                 0,
-                MithrilAC.getPrefTimeIntervalFamilyTemporalKey(),
+                MithrilAC.getPrefAloneTemporalKey(),
                 false,
                 0
         );
@@ -581,7 +581,7 @@ public class InstanceCreationActivity extends AppCompatActivity
                 0,
                 0,
                 0,
-                MithrilAC.getWeekday(),
+                MithrilAC.getPrefWeekdayTemporalKey(),
                 false,
                 0
         );
@@ -596,7 +596,7 @@ public class InstanceCreationActivity extends AppCompatActivity
                 30,
                 12,
                 0,
-                MithrilAC.getPrefTimeIntervalWorkMorningTemporalKey(),
+                MithrilAC.getPrefWorkMorningTemporalKey(),
                 false,
                 0
         );
@@ -621,7 +621,7 @@ public class InstanceCreationActivity extends AppCompatActivity
                 30,
                 16,
                 0,
-                MithrilAC.getPrefTimeIntervalWorkAfternoonTemporalKey(),
+                MithrilAC.getPrefWorkAfternoonTemporalKey(),
                 false,
                 0
         );
@@ -641,7 +641,7 @@ public class InstanceCreationActivity extends AppCompatActivity
                 30,
                 21,
                 0,
-                MithrilAC.getPrefTimeIntervalPersonalTemporalKey(),
+                MithrilAC.getPrefPersonalTemporalKey(),
                 false,
                 0
         );
