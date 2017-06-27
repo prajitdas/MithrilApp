@@ -128,6 +128,10 @@ public class PermissionHelper {
         AppOpsManager appOpsManager = (AppOpsManager) context.getSystemService(Context.APP_OPS_SERVICE);
         int mode = appOpsManager.checkOpNoThrow(AppOpsManager.OPSTR_WRITE_SETTINGS, android.os.Process.myUid(), context.getPackageName());
         Log.d(MithrilAC.getDebugTag(), "hasWriteSettingsPermission: " + Integer.toString(mode));
-        return mode == AppOpsManager.MODE_ALLOWED;
+        if(mode == AppOpsManager.MODE_DEFAULT)
+            return false;
+        if(mode == AppOpsManager.MODE_ALLOWED)
+            return true;
+        return false;
     }
 }

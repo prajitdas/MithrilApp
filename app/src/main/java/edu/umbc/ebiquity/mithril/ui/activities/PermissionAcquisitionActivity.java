@@ -78,8 +78,6 @@ public class PermissionAcquisitionActivity extends AppCompatActivity {
             mSpecialPermToggleButton.setChecked(true);
         if (!PermissionHelper.needsWriteSettingsPermission(this))
             mSpecialPermToggleButton.setChecked(true);
-        if (!PermissionHelper.needsWriteSettingsPermission(this))
-            mSpecialPermToggleButton.setChecked(true);
         if (!PermissionHelper.needsRootAccess())
             mSpecialPermToggleButton.setChecked(true);
 
@@ -219,16 +217,32 @@ public class PermissionAcquisitionActivity extends AppCompatActivity {
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        if (requestCode == MithrilAC.USAGE_STATS_PERMISSION_REQUEST_CODE) {
-            if (resultCode == Activity.RESULT_OK) {
-                editor.putBoolean(MithrilAC.getPrefKeyUserDeniedPermissions(), false);
-                editor.apply();
-                if (isPermissionAcquisitionComplete()) {
-                    startNextActivity(this, InstanceCreationActivity.class);
+        switch (requestCode) {
+            case MithrilAC.USAGE_STATS_PERMISSION_REQUEST_CODE: {
+                if (resultCode == Activity.RESULT_OK) {
+                    editor.putBoolean(MithrilAC.getPrefKeyUserDeniedPermissions(), false);
+                    editor.apply();
+                    if (isPermissionAcquisitionComplete()) {
+                        startNextActivity(this, InstanceCreationActivity.class);
+                    }
+                } else {
+                    editor.putBoolean(MithrilAC.getPrefKeyUserDeniedPermissions(), true);
+                    editor.apply();
                 }
-            } else {
-                editor.putBoolean(MithrilAC.getPrefKeyUserDeniedPermissions(), true);
-                editor.apply();
+                break;
+            }
+            case MithrilAC.WRITE_SETTINGS_PERMISSION_REQUEST_CODE: {
+                if (resultCode == Activity.RESULT_OK) {
+                    editor.putBoolean(MithrilAC.getPrefKeyUserDeniedPermissions(), false);
+                    editor.apply();
+                    if (isPermissionAcquisitionComplete()) {
+                        startNextActivity(this, InstanceCreationActivity.class);
+                    }
+                } else {
+                    editor.putBoolean(MithrilAC.getPrefKeyUserDeniedPermissions(), true);
+                    editor.apply();
+                }
+                break;
             }
         }
     }
