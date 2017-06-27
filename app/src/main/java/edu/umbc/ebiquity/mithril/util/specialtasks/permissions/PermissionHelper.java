@@ -107,9 +107,9 @@ public class PermissionHelper {
     public static boolean needsRootAccess() {
         try {
             RootAccess rootAccess = new RootAccess();
-            return rootAccess.isRooted();
+            return !rootAccess.isRooted();
         } catch (PhoneNotRootedException e) {
-            return false;
+            return true;
         }
     }
 
