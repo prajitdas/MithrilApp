@@ -4,15 +4,14 @@
     android:layout_height="wrap_content"
     android:orientation="horizontal">
 
-    <android.support.v7.widget.CardView
-        xmlns:card_view="http://schemas.android.com/apk/res-auto"
+    <android.support.v7.widget.CardView xmlns:card_view="http://schemas.android.com/apk/res-auto"
         android:id="@+id/violation_card_view"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginBottom="@dimen/card_view_margin"
         android:layout_marginTop="@dimen/card_view_margin"
         android:elevation="@dimen/card_view_elevation"
-        card_view:cardCornerRadius="@dimen/card_view_corner_radius" >
+        card_view:cardCornerRadius="@dimen/card_view_corner_radius">
 
         <RelativeLayout
             android:layout_width="match_parent"
@@ -26,9 +25,9 @@
                 android:layout_alignParentStart="true"
                 android:layout_marginEnd="@dimen/card_view_corner_radius"
                 android:layout_marginStart="@dimen/card_view_corner_radius"
-                android:src="@drawable/ic_launcher"
                 android:contentDescription="@null"
-                android:scaleType="centerCrop" />
+                android:scaleType="centerCrop"
+                android:src="@drawable/ic_launcher" />
 
             <TextView
                 android:id="@+id/violationAppLaunch"
@@ -68,12 +67,12 @@
                 android:layout_height="wrap_content"
                 android:layout_alignParentStart="true"
                 android:layout_below="@+id/violationContext"
-                android:theme="@style/AppTheme.Button"
                 android:layout_marginEnd="@dimen/activity_vertical_margin"
                 android:layout_marginStart="@dimen/activity_vertical_margin"
                 android:text="@string/button_true_violation"
+                android:textColor="@color/red"
                 android:textSize="12sp"
-                android:textColor="@color/red"/>
+                android:theme="@style/AppTheme.Button" />
 
             <Button
                 android:id="@+id/violationResponseNoButton"
@@ -81,12 +80,12 @@
                 android:layout_height="wrap_content"
                 android:layout_alignParentEnd="true"
                 android:layout_below="@+id/violationContext"
-                android:theme="@style/AppTheme.Button"
                 android:layout_marginEnd="@dimen/activity_vertical_margin"
                 android:layout_marginStart="@dimen/activity_vertical_margin"
                 android:text="@string/button_false_violation"
+                android:textColor="@color/colorPrimaryDark"
                 android:textSize="12sp"
-                android:textColor="@color/colorPrimaryDark"/>
+                android:theme="@style/AppTheme.Button" />
         </RelativeLayout>
     </android.support.v7.widget.CardView>
 </LinearLayout>
