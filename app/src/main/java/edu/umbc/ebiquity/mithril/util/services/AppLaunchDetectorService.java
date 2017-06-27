@@ -39,7 +39,11 @@ import com.google.gson.Gson;
 import com.google.gson.JsonSyntaxException;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Timer;
@@ -47,6 +51,7 @@ import java.util.TimerTask;
 
 import edu.umbc.ebiquity.mithril.MithrilAC;
 import edu.umbc.ebiquity.mithril.R;
+import edu.umbc.ebiquity.mithril.data.dbhelpers.MithrilDBHelper;
 import edu.umbc.ebiquity.mithril.data.model.rules.Resource;
 import edu.umbc.ebiquity.mithril.data.model.rules.context.SemanticActivity;
 import edu.umbc.ebiquity.mithril.data.model.rules.context.SemanticLocation;
@@ -223,7 +228,8 @@ public class AppLaunchDetectorService extends Service implements
 
         //We are always at some location... where are we now? Also we are only in one place at a time
         if (mGoogleApiClient.isConnected()) {
-            semanticUserContextList.add(getSemanticLocation(mCurrentLocation));
+            for(SemanticLocation semanticLocation : getSemanticLocations())
+                semanticUserContextList.add(semanticLocation);
 
             //Do we know the semantic temporal contexts?
             for (SemanticTime semanticTime : getSemanticTimes())
@@ -297,8 +303,8 @@ public class AppLaunchDetectorService extends Service implements
         }
     }
 
-    private SemanticLocation getSemanticLocation(Location currentLocation) {
-        SemanticLocation semanticLocation = null;
+    private List<SemanticLocation> getSemanticLocations() {
+        List<SemanticLocation> semanticLocations = new ArrayList<>();
         Gson retrieveDataGson = new Gson();
         String retrieveDataJson;
         List<SemanticLocation> knownSemanticLocations = new ArrayList<>();
@@ -309,22 +315,8 @@ public class AppLaunchDetectorService extends Service implements
                 if (aPref.getKey().startsWith(MithrilAC.getPrefKeyContextTypeLocation())) {
                     retrieveDataJson = sharedPrefs.getString(aPref.getKey(), "");
                     SemanticLocation knownSemanticLocation = retrieveDataGson.fromJson(retrieveDataJson, SemanticLocation.class);
+                    //Get all known semantic locations
                     knownSemanticLocations.add(knownSemanticLocation);
-
-                    /**
-                     * We are parsing all known locations and we know the current location's distance to them.
-                     * Let's determine if we are at a certain known location and at what is that location.
-                     */
-                    int level = Integer.MAX_VALUE;
-                    for (SemanticLocation currSemLoc : currentSemanticLocations.values()) {
-                        if (knownSemanticLocation.compareTo(currSemLoc) == 0) {
-                            if (level > knownSemanticLocation.getLevel()) {
-                                level = knownSemanticLocation.getLevel();
-                                semanticLocation = knownSemanticLocation;
-                            }
-                        }
-                        Log.d(MithrilAC.getDebugTag(), "Did not match but at least we got a location" + currSemLoc.getLabel() + currSemLoc.getName());
-                    }
                 }
             }
         } catch (NullPointerException e) {
@@ -332,17 +324,54 @@ public class AppLaunchDetectorService extends Service implements
         } catch (Exception e) {
             Log.d(MithrilAC.getDebugTag(), "came here");
         }
-        if (semanticLocation != null) {
-            int level = Integer.MAX_VALUE;
-            for(SemanticLocation knownSemanticLocation : knownSemanticLocations) {
-                if(knownSemanticLocation.getPlaceId().equals(semanticLocation.getPlaceId())) {
-                    if (level > knownSemanticLocation.getLevel()) {
-                        level = knownSemanticLocation.getLevel();
-                        semanticLocation = knownSemanticLocation;
-                        Log.d(MithrilAC.getDebugTag(), "Eureka we got a match to a location" + semanticLocation.getName() + semanticLocation.getLabel());
-                    }
+
+        String placeToRetrieve = new String();
+
+//        Collections.sort(knownSemanticLocations, SemanticLocation.Comparators.LEVEL);
+
+        /**
+         * We are parsing all known locations and we know the current location's distance to them.
+         * Let's determine if we are at a certain known location and at what is that location.
+         */
+//        int level = Integer.MAX_VALUE;
+        boolean isFound = false;
+        for (SemanticLocation currSemLoc : currentSemanticLocations.values()) {
+            for (SemanticLocation knownSemanticLocation : knownSemanticLocations) {
+                if (knownSemanticLocation.compareTo(currSemLoc) == 0) {
+                    placeToRetrieve = knownSemanticLocation.getPlaceId();
+                    isFound = true;
+                    break;
                 }
             }
+            if(isFound)
+                break;
+        }
+        for (SemanticLocation knownSemanticLocation : knownSemanticLocations)
+            if(knownSemanticLocation.getPlaceId().equals(placeToRetrieve)) {
+                semanticLocations.add(knownSemanticLocation);
+                Log.d(MithrilAC.getDebugTag(), "value: " + knownSemanticLocation.getName());
+            }
+//                    if (level > knownSemanticLocation.getLevel()) {
+//                        level = knownSemanticLocation.getLevel();
+//                        semanticLocation = knownSemanticLocation;
+//                    }
+//                }
+//            }
+//        }
+//            Log.d(MithrilAC.getDebugTag(), "Did not match but at least we got a location" + currSemLoc.getLabel() + currSemLoc.getName());
+//        }
+//        if (semanticLocation != null) {
+//            Log.d(MithrilAC.getDebugTag(), "This is what we matched " + semanticLocation.getLabel() + semanticLocation.getName());
+//            int level = Integer.MAX_VALUE;
+//            for(SemanticLocation knownSemanticLocation : knownSemanticLocations) {
+//                if(knownSemanticLocation.getPlaceId().equals(semanticLocation.getPlaceId())) {
+//                    if (level > knownSemanticLocation.getLevel()) {
+//                        level = knownSemanticLocation.getLevel();
+//                        semanticLocation = knownSemanticLocation;
+//                        Log.d(MithrilAC.getDebugTag(), "Eureka we got a match to a location" + semanticLocation.getName() + semanticLocation.getLabel());
+//                    }
+//                }
+//            }
 //            float shortestDistanceToKnownLocation = Float.MAX_VALUE;
 //            Log.d(MithrilAC.getDebugTag(), "1st Eureka we got a match to a location" +
 //                    String.valueOf(knownSemanticLocations.size()));
@@ -359,10 +388,11 @@ public class AppLaunchDetectorService extends Service implements
 //                    );
 //                }
 //            }
-        } else
-            semanticLocation = handleUnknownLocation(currentLocation);
-        Log.d(MithrilAC.getDebugTag(), "This is a test for location: " + semanticLocation.getLabel());
-        return semanticLocation;
+        if (semanticLocations.size() == 0) {
+            semanticLocations.add(handleUnknownLocation(mCurrentLocation));
+        }
+        Log.d(MithrilAC.getDebugTag(), "This is what we matched " + semanticLocations.get(0).getLabel() + semanticLocations.get(0).getName());
+        return semanticLocations;
     }
 
     private SemanticLocation handleUnknownLocation(Location currentLocation) {
@@ -373,8 +403,7 @@ public class AppLaunchDetectorService extends Service implements
                 mCurrentPlace.getName().toString(),
                 mCurrentPlace.getId(),
                 mCurrentPlace.getPlaceTypes(),
-                0
-        );
+                0        );
         // Send notification and log the transition details.
         sendNotification(semanticLocation);
         return semanticLocation;
@@ -599,6 +628,12 @@ public class AppLaunchDetectorService extends Service implements
                     currentSemanticLocations.put(key + "_Country", new SemanticLocation(location, address,
                             key + "_Country",
                             false, address.getCountryName(), placeId, placeTypes, false, 4));
+
+//                    List<SemanticLocation> tempLocations = new ArrayList<>(currentSemanticLocations.values());
+//                    Collections.sort(tempLocations, SemanticLocation.Comparators.LEVEL);
+//                    currentSemanticLocations.clear();
+//                    for(SemanticLocation semanticLocation : tempLocations)
+//                        currentSemanticLocations.put(semanticLocation.getLabel(), semanticLocation);
                 }
                 // Reset. Enable the Fetch Address button and stop showing the progress bar.
                 mAddressRequested = false;

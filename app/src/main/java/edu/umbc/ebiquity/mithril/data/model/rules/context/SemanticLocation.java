@@ -6,12 +6,15 @@ import android.os.Parcel;
 import android.os.Parcelable;
 import android.support.annotation.NonNull;
 
+import java.util.Comparator;
 import java.util.List;
 import java.util.Locale;
 
 import edu.umbc.ebiquity.mithril.MithrilAC;
 
-public class SemanticLocation extends SemanticUserContext implements Parcelable, Comparable<SemanticLocation> {
+public class SemanticLocation extends SemanticUserContext implements
+        Parcelable,
+        Comparable<SemanticLocation> {
     private final String type = MithrilAC.getPrefKeyContextTypeLocation();
     private Location location;
     private Address address = new Address(Locale.getDefault());
@@ -181,7 +184,33 @@ public class SemanticLocation extends SemanticUserContext implements Parcelable,
 
     @Override
     public int compareTo(@NonNull SemanticLocation o) {
-        return this.getName().compareTo(o.getName());
+        return Comparators.NAME.compare(this, o);
+    }
+
+    public static class Comparators {
+
+        public static Comparator<SemanticLocation> NAME = new Comparator<SemanticLocation>() {
+            @Override
+            public int compare(SemanticLocation o1, SemanticLocation o2) {
+                return o1.name.compareTo(o2.name);
+            }
+        };
+        public static Comparator<SemanticLocation> LEVEL = new Comparator<SemanticLocation>() {
+            @Override
+            public int compare(SemanticLocation o1, SemanticLocation o2) {
+                return o1.level - o2.level;
+            }
+        };
+//        public static Comparator<SemanticLocation> NAMEANDAGE = new Comparator<SemanticLocation>() {
+//            @Override
+//            public int compare(SemanticLocation o1, SemanticLocation o2) {
+//                int i = o1.name.compareTo(o2.name);
+//                if (i == 0) {
+//                    i = o1.age - o2.age;
+//                }
+//                return i;
+//            }
+//        };
     }
 
     @Override

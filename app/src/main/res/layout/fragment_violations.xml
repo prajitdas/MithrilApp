@@ -47,7 +47,7 @@
                 android:layout_below="@+id/violationAppLaunch"
                 android:layout_toRightOf="@+id/violatingAppIcon"
                 android:fontFamily="josephine-sans"
-                android:text="@string/placeholder_text_violation_info"
+                android:text="@string/placeholder_text_violation_when"
                 android:textColor="@color/colorPrimaryText"
                 android:textSize="14dp" />
 
@@ -58,7 +58,7 @@
                 android:layout_below="@+id/violationOpDetail"
                 android:layout_toRightOf="@+id/violatingAppIcon"
                 android:fontFamily="josephine-sans"
-                android:text="@string/placeholder_text_violation_info"
+                android:text="@string/placeholder_text_violation_where"
                 android:textColor="@color/colorPrimaryText"
                 android:textSize="14dp" />
 
