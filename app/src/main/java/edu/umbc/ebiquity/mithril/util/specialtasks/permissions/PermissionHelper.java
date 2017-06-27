@@ -18,6 +18,7 @@ import java.util.Arrays;
 import java.util.List;
 
 import edu.umbc.ebiquity.mithril.MithrilAC;
+import edu.umbc.ebiquity.mithril.util.specialtasks.errorsnexceptions.ContextImplementationMissingException;
 import edu.umbc.ebiquity.mithril.util.specialtasks.errorsnexceptions.PhoneNotRootedException;
 import edu.umbc.ebiquity.mithril.util.specialtasks.root.RootAccess;
 
@@ -32,7 +33,8 @@ public class PermissionHelper {
             Manifest.permission.WRITE_EXTERNAL_STORAGE,
             Manifest.permission.READ_EXTERNAL_STORAGE,
             Manifest.permission.READ_CALENDAR,
-            Manifest.permission.WRITE_CALENDAR
+            Manifest.permission.WRITE_CALENDAR,
+            Manifest.permission.KILL_BACKGROUND_PROCESSES
     );
 
     public static void quitMithril(Context context) {
@@ -104,13 +106,14 @@ public class PermissionHelper {
         return postLollipop() && !hasWriteSettingsPermission(context);
     }
 
-    public static boolean needsRootAccess() {
-        try {
-            RootAccess rootAccess = new RootAccess();
-            return !rootAccess.isRooted();
-        } catch (PhoneNotRootedException e) {
-            return true;
-        }
+    public static boolean needsRootPrivileges(Context context, RootAccess rootAccess) {
+        if(rootAccess.isRooted() &&
+                PermissionHelper.isPermissionGranted(
+                        context,
+                        "android.permission.GET_APP_OPS_STATS"
+                ) == PackageManager.PERMISSION_GRANTED)
+            return false;
+        return true;
     }
 
     public static boolean postLollipop() {
