@@ -55,6 +55,7 @@ import edu.umbc.ebiquity.mithril.data.model.rules.context.SemanticTime;
 import edu.umbc.ebiquity.mithril.data.model.rules.context.SemanticUserContext;
 import edu.umbc.ebiquity.mithril.ui.activities.CoreActivity;
 import edu.umbc.ebiquity.mithril.ui.activities.InstanceCreationActivity;
+import edu.umbc.ebiquity.mithril.util.specialtasks.detect.context.DetectTemporalContext;
 import edu.umbc.ebiquity.mithril.util.specialtasks.detect.policyconflicts.ViolationDetector;
 import edu.umbc.ebiquity.mithril.util.specialtasks.detect.runningapps.AppLaunchDetector;
 import edu.umbc.ebiquity.mithril.util.specialtasks.errorsnexceptions.AddressKeyMissingError;
@@ -276,9 +277,26 @@ public class AppLaunchDetectorService extends Service implements
     }
 
     private List<SemanticTime> getSemanticTimes() {
-        List<SemanticTime> semanticTimes = new ArrayList<>();
-
-        return semanticTimes;
+        Gson retrieveDataGson = new Gson();
+        String retrieveDataJson;
+        Map<String, SemanticTime> knownSemanticTimesMap = new HashMap<>();
+        Map<String, ?> allPrefs;
+        try {
+            allPrefs = sharedPrefs.getAll();
+            for (Map.Entry<String, ?> aPref : allPrefs.entrySet()) {
+                if (aPref.getKey().startsWith(MithrilAC.getPrefKeyContextTypeTemporal())) {
+                    retrieveDataJson = sharedPrefs.getString(aPref.getKey(), "");
+                    SemanticTime semanticTime = retrieveDataGson.fromJson(retrieveDataJson, SemanticTime.class);
+                    //Get all known semantic locations
+                    knownSemanticTimesMap.put(semanticTime.getLabel(), semanticTime);
+                }
+            }
+        } catch (NullPointerException e) {
+            Log.d(MithrilAC.getDebugTag(), "Prefs empty somehow?!");
+        } catch (Exception e) {
+            Log.d(MithrilAC.getDebugTag(), "came here");
+        }
+        return DetectTemporalContext.whatTimeIsItNow(knownSemanticTimesMap);
     }
 
     private void requestLastLocation() {

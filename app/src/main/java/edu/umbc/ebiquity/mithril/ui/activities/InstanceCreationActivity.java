@@ -433,13 +433,149 @@ public class InstanceCreationActivity extends AppCompatActivity
 
     private void createSemanticTimes() {
         List<DayOfWeek> dayOfWeek = new ArrayList<>();
+
+        /**********************************************************************************************************************/
+
+        dayOfWeek.add(DayOfWeek.Monday);
+        /**
+         * Monday context creation
+         */
+        SemanticTime semanticTime = new SemanticTime(
+                dayOfWeek,
+                0,
+                0,
+                0,
+                0,
+                MithrilAC.getPrefMondayTemporalKey(),
+                false,
+                0
+        );
+        semanticTimes.put(semanticTime.getLabel(), semanticTime);
+        dayOfWeek.clear();
+
+        /**********************************************************************************************************************/
+
+        dayOfWeek.add(DayOfWeek.Tuesday);
+        /**
+         * Tuesday context creation
+         */
+        semanticTime = new SemanticTime(
+                dayOfWeek,
+                0,
+                0,
+                0,
+                0,
+                MithrilAC.getPrefTuesdayTemporalKey(),
+                false,
+                0
+        );
+        semanticTimes.put(semanticTime.getLabel(), semanticTime);
+        dayOfWeek.clear();
+
+        /**********************************************************************************************************************/
+
+        dayOfWeek.add(DayOfWeek.Wednesday);
+        /**
+         * Wednesday context creation
+         */
+        semanticTime = new SemanticTime(
+                dayOfWeek,
+                0,
+                0,
+                0,
+                0,
+                MithrilAC.getPrefWednesdayTemporalKey(),
+                false,
+                0
+        );
+        semanticTimes.put(semanticTime.getLabel(), semanticTime);
+        dayOfWeek.clear();
+
+        /**********************************************************************************************************************/
+
+        dayOfWeek.add(DayOfWeek.Thursday);
+        /**
+         * Thursday context creation
+         */
+        semanticTime = new SemanticTime(
+                dayOfWeek,
+                0,
+                0,
+                0,
+                0,
+                MithrilAC.getPrefThursdayTemporalKey(),
+                false,
+                0
+        );
+        semanticTimes.put(semanticTime.getLabel(), semanticTime);
+        dayOfWeek.clear();
+
+        /**********************************************************************************************************************/
+
+        dayOfWeek.add(DayOfWeek.Friday);
+        /**
+         * Friday context creation
+         */
+        semanticTime = new SemanticTime(
+                dayOfWeek,
+                0,
+                0,
+                0,
+                0,
+                MithrilAC.getPrefFridayTemporalKey(),
+                false,
+                0
+        );
+        semanticTimes.put(semanticTime.getLabel(), semanticTime);
+        dayOfWeek.clear();
+
+        /**********************************************************************************************************************/
+
+        dayOfWeek.add(DayOfWeek.Saturday);
+        /**
+         * Saturday context creation
+         */
+        semanticTime = new SemanticTime(
+                dayOfWeek,
+                0,
+                0,
+                0,
+                0,
+                MithrilAC.getPrefSaturdayTemporalKey(),
+                false,
+                0
+        );
+        semanticTimes.put(semanticTime.getLabel(), semanticTime);
+        dayOfWeek.clear();
+
+        /**********************************************************************************************************************/
+
+        dayOfWeek.add(DayOfWeek.Sunday);
+        /**
+         * Sunday context creation
+         */
+        semanticTime = new SemanticTime(
+                dayOfWeek,
+                0,
+                0,
+                0,
+                0,
+                MithrilAC.getPrefSundayTemporalKey(),
+                false,
+                0
+        );
+        semanticTimes.put(semanticTime.getLabel(), semanticTime);
+        dayOfWeek.clear();
+
+        /**********************************************************************************************************************/
+
         dayOfWeek.add(DayOfWeek.Saturday);
         dayOfWeek.add(DayOfWeek.Sunday);
 
         /**
          * Weekend context creation
          */
-        SemanticTime semanticTime = new SemanticTime(
+        semanticTime = new SemanticTime(
                 dayOfWeek,
                 0,
                 0,
