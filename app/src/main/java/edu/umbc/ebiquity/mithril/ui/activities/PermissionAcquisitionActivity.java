@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
+import android.net.Uri;
 import android.os.Bundle;
 import android.provider.Settings;
 import android.support.v4.app.ActivityCompat;
@@ -104,8 +105,14 @@ public class PermissionAcquisitionActivity extends AppCompatActivity {
                     buttonView.setChecked(true);
                 else
                     buttonView.setChecked(false);
-                if (PermissionHelper.needsUsageStatsPermission(buttonView.getContext()))
+                if (PermissionHelper.needsUsageStatsPermission(buttonView.getContext())) {
                     startActivityForResult(new Intent(Settings.ACTION_USAGE_ACCESS_SETTINGS), MithrilAC.USAGE_STATS_PERMISSION_REQUEST_CODE);
+                    if (PermissionHelper.needsWriteSettingsPermission(buttonView.getContext())) {
+                        Intent goToSettings = new Intent(Settings.ACTION_MANAGE_WRITE_SETTINGS);
+                        goToSettings.setData(Uri.parse("package:" + getPackageName()));
+                        startActivityForResult(goToSettings, MithrilAC.WRITE_SETTINGS_PERMISSION_REQUEST_CODE);
+                    }
+                }
                 else
                     PermissionHelper.toast(buttonView.getContext(), "We have PACKAGE_USAGE_STATS permission already. Thank you!");
             }
@@ -129,6 +136,23 @@ public class PermissionAcquisitionActivity extends AppCompatActivity {
     public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
         switch (requestCode) {
             case MithrilAC.ALL_PERMISSIONS_MITHRIL_REQUEST_CODE: {
+                // If request is cancelled, the result arrays are empty.
+                if (grantResults.length > 0) {
+                    for (int i = 0; i < grantResults.length; i++) {
+                        if (grantResults[i] == PackageManager.PERMISSION_DENIED) {
+                            // permission denied, boo! Disable the
+                            // functionality that depends on this permission.
+                            resultCanceled();
+                        } else {
+                            resultOkay();
+                            // permission was granted, yay! Do the
+                            // contacts-related task you need to do.
+                        }
+                    }
+                }
+                break;
+            }
+            case MithrilAC.WRITE_SETTINGS_PERMISSION_REQUEST_CODE: {
                 // If request is cancelled, the result arrays are empty.
                 if (grantResults.length > 0) {
                     for (int i = 0; i < grantResults.length; i++) {

@@ -98,6 +98,10 @@ public class PermissionHelper {
         return postLollipop() && !hasUsageStatsPermission(context);
     }
 
+    public static boolean needsWriteSettingsPermission(Context context) {
+        return postLollipop() && !hasWriteSettingsPermission(context);
+    }
+
     public static boolean postLollipop() {
         return android.os.Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP;
     }
@@ -106,6 +110,13 @@ public class PermissionHelper {
         AppOpsManager appOpsManager = (AppOpsManager) context.getSystemService(Context.APP_OPS_SERVICE);
         int mode = appOpsManager.checkOpNoThrow(AppOpsManager.OPSTR_GET_USAGE_STATS, android.os.Process.myUid(), context.getPackageName());
         Log.d(MithrilAC.getDebugTag(), "hasUsageStatsPermission: " + Integer.toString(mode));
+        return mode == AppOpsManager.MODE_ALLOWED;
+    }
+
+    private static boolean hasWriteSettingsPermission(Context context) {
+        AppOpsManager appOpsManager = (AppOpsManager) context.getSystemService(Context.APP_OPS_SERVICE);
+        int mode = appOpsManager.checkOpNoThrow(AppOpsManager.OPSTR_WRITE_SETTINGS, android.os.Process.myUid(), context.getPackageName());
+        Log.d(MithrilAC.getDebugTag(), "hasWriteSettingsPermission: " + Integer.toString(mode));
         return mode == AppOpsManager.MODE_ALLOWED;
     }
 }
