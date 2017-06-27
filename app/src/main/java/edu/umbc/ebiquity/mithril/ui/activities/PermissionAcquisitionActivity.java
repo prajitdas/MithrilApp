@@ -76,6 +76,10 @@ public class PermissionAcquisitionActivity extends AppCompatActivity {
             mGenericPermToggleButton.setChecked(true);
         if (!PermissionHelper.needsUsageStatsPermission(this))
             mSpecialPermToggleButton.setChecked(true);
+        if (!PermissionHelper.needsWriteSettingsPermission(this))
+            mSpecialPermToggleButton.setChecked(true);
+        if (!PermissionHelper.needsWriteSettingsPermission(this))
+            mSpecialPermToggleButton.setChecked(true);
 
         setOnClickListeners();
         setOnCheckedChangeListener();
@@ -126,17 +130,9 @@ public class PermissionAcquisitionActivity extends AppCompatActivity {
                 else
                     buttonView.setChecked(false);
                 if (PermissionHelper.needsWriteSettingsPermission(buttonView.getContext())) {
-                    try {
-                        RootAccess rootAccess = new RootAccess();
-                        if(rootAccess.isRooted())
-                            rootAccess.runScript(new String[] {
-                                    MithrilAC.getCmdGrantGetAppOpsStats(),
-                                    MithrilAC.getCmdGrantManageAppOpsRestrictions(),
-                                    MithrilAC.getCmdGrantUpdateAppOpsStats()
-                            });
-                    } catch (PhoneNotRootedException e) {
-                        PermissionHelper.toast(buttonView.getContext(), "Phone is not rooted... full functionality unavailable but can perform first phase of the MithrilAC study!");
-                    }
+                    Intent goToSettings = new Intent(Settings.ACTION_MANAGE_WRITE_SETTINGS);
+                    goToSettings.setData(Uri.parse("package:" + getPackageName()));
+                    startActivityForResult(goToSettings, MithrilAC.WRITE_SETTINGS_PERMISSION_REQUEST_CODE);
                 }
                 else
                     PermissionHelper.toast(buttonView.getContext(), "We have WRITE_SETTINGS permission already. Thank you!");
@@ -150,9 +146,17 @@ public class PermissionAcquisitionActivity extends AppCompatActivity {
                 else
                     buttonView.setChecked(false);
                 if (PermissionHelper.needsWriteSettingsPermission(buttonView.getContext())) {
-                    Intent goToSettings = new Intent(Settings.ACTION_MANAGE_WRITE_SETTINGS);
-                    goToSettings.setData(Uri.parse("package:" + getPackageName()));
-                    startActivityForResult(goToSettings, MithrilAC.WRITE_SETTINGS_PERMISSION_REQUEST_CODE);
+                    try {
+                        RootAccess rootAccess = new RootAccess();
+                        if(rootAccess.isRooted())
+                            rootAccess.runScript(new String[] {
+                                    MithrilAC.getCmdGrantGetAppOpsStats(),
+                                    MithrilAC.getCmdGrantManageAppOpsRestrictions(),
+                                    MithrilAC.getCmdGrantUpdateAppOpsStats()
+                            });
+                    } catch (PhoneNotRootedException e) {
+                        PermissionHelper.toast(buttonView.getContext(), "Phone is not rooted... full functionality unavailable but can perform first phase of the MithrilAC study!");
+                    }
                 }
                 else
                     PermissionHelper.toast(buttonView.getContext(), "We are ROOT already. Thank you!");
