@@ -3,6 +3,7 @@ package edu.umbc.ebiquity.mithril.util.specialtasks.detect.policyconflicts;
 import android.Manifest;
 import android.app.AppOpsManager;
 import android.content.Context;
+import android.content.pm.PackageManager;
 import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
 import android.util.Log;
@@ -88,7 +89,7 @@ public class ViolationDetector {
             return;
         }
         if (operationsPerformed.size() == 0) {
-            if(PermissionHelper.isPermissionGranted(context, Manifest.permission.GET_APP_OPS_STATS) != AppOpsManager.MODE_ALLOWED)
+            if(PermissionHelper.isPermissionGranted(context, Manifest.permission.GET_APP_OPS_STATS) != PackageManager.PERMISSION_GRANTED)
                 Log.e(MithrilAC.getDebugTag(), "We do not have GET_APP_OPS_STATS permission!");
             return;
         }

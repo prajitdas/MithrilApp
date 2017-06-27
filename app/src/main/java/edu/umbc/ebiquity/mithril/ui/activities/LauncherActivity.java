@@ -48,7 +48,9 @@ public class LauncherActivity extends AppCompatActivity {
 
     private void testUserAgreementAndLaunchNextActivity() {
         sharedPreferences = getSharedPreferences(MithrilAC.getSharedPreferencesName(), Context.MODE_PRIVATE);
-        if (PermissionHelper.isAllRequiredPermissionsGranted(this) && !PermissionHelper.needsUsageStatsPermission(this)) {
+        if (PermissionHelper.isAllRequiredPermissionsGranted(this) &&
+                !PermissionHelper.needsUsageStatsPermission(this) &&
+                !PermissionHelper.needsWriteSettingsPermission(this)) {
             if (sharedPreferences.contains(MithrilAC.getPrefKeyLocaInstancesCreated()) &&
                     sharedPreferences.contains(MithrilAC.getPrefKeyPresInstancesCreated()) &&
                     sharedPreferences.contains(MithrilAC.getPrefKeyActiInstancesCreated()) &&
