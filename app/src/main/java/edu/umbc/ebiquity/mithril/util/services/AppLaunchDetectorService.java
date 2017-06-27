@@ -397,7 +397,6 @@ public class AppLaunchDetectorService extends Service implements
      * Posts a notification in the notification bar when a transition is detected.
      * If the user clicks the notification, control goes to the MainActivity.
      */
-    @TargetApi(Build.VERSION_CODES.M)
     private void sendNotification(SemanticLocation semanticLocation) {
         // Create an explicit content Intent that starts the main Activity.
         Intent notificationIntent = new Intent(this, InstanceCreationActivity.class);

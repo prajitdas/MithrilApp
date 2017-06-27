@@ -1,6 +1,5 @@
 package edu.umbc.ebiquity.mithril.ui.activities;
 
-import android.annotation.TargetApi;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.FragmentManager;
@@ -60,7 +59,6 @@ import edu.umbc.ebiquity.mithril.util.specialtasks.contextinstances.DayOfWeek;
 import edu.umbc.ebiquity.mithril.util.specialtasks.errorsnexceptions.AddressKeyMissingError;
 import edu.umbc.ebiquity.mithril.util.specialtasks.permissions.PermissionHelper;
 
-@TargetApi(Build.VERSION_CODES.N)
 public class InstanceCreationActivity extends AppCompatActivity
         implements SemanticTimeFragment.OnListFragmentInteractionListener,
         SemanticLocationFragment.OnListFragmentInteractionListener,

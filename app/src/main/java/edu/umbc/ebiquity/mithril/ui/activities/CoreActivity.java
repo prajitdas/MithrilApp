@@ -385,7 +385,7 @@ public class CoreActivity extends AppCompatActivity
             }
         }
     }
-    
+
     private void showSnackbar(View view, String message) {
         Snackbar snackbar = Snackbar.make(view,
                 message,
