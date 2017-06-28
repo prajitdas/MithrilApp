@@ -41,7 +41,7 @@
             android:text="@string/allow_root_access"
             android:textAppearance="@android:style/TextAppearance.Holo.Medium"
             android:textColor="@color/colorPrimaryText"
-            android:textSize="16sp" />
+            android:textSize="15sp" />
 
         <ToggleButton
             android:id="@+id/rootAccessToggleButton"
@@ -70,7 +70,7 @@
             android:text="@string/allow_generic_permissions"
             android:textAppearance="@android:style/TextAppearance.Holo.Medium"
             android:textColor="@color/colorPrimaryText"
-            android:textSize="16sp" />
+            android:textSize="15sp" />
 
         <ToggleButton
             android:id="@+id/genericPermToggleButton"
@@ -99,7 +99,7 @@
             android:text="@string/allow_special_usage_stats_permission"
             android:textAppearance="@android:style/TextAppearance.Holo.Medium"
             android:textColor="@color/colorPrimaryText"
-            android:textSize="16sp" />
+            android:textSize="15sp" />
 
         <ToggleButton
             android:id="@+id/specialPermToggleButton"
@@ -128,7 +128,7 @@
             android:text="@string/allow_settings_permission"
             android:textAppearance="@android:style/TextAppearance.Holo.Medium"
             android:textColor="@color/colorPrimaryText"
-            android:textSize="16sp" />
+            android:textSize="15sp" />
 
         <ToggleButton
             android:id="@+id/settingsToggleButton"
@@ -157,7 +157,7 @@
             android:text="@string/draw_over_apps_permission"
             android:textAppearance="@android:style/TextAppearance.Holo.Medium"
             android:textColor="@color/colorPrimaryText"
-            android:textSize="16sp" />
+            android:textSize="15sp" />
 
         <ToggleButton
             android:id="@+id/systemAlertWindowToggleButton"

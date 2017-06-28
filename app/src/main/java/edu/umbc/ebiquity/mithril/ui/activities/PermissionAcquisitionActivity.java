@@ -175,33 +175,6 @@ public class PermissionAcquisitionActivity extends AppCompatActivity {
                     AsyncTask.execute(new RootTask());
                 } else
                     PermissionHelper.toast(buttonView.getContext(), "Thanks we have ROOT!");
-//                Log.d(MithrilAC.getDebugTag(),
-//                        "GET_APP_OPS_STATS: " +
-//                                (
-//                                        PermissionHelper.isPermissionGranted(
-//                                                buttonView.getContext(),
-//                                                "android.permission.GET_APP_OPS_STATS"
-//                                        ) == PackageManager.PERMISSION_GRANTED ? "Granted" : "Denied"
-//                                )
-//                );
-//                        Log.d(MithrilAC.getDebugTag(),
-//                                "MANAGE_APP_OPS_RESTRICTIONS: " +
-//                                        (
-//                                                PermissionHelper.isPermissionGranted(
-//                                                        buttonView.getContext(),
-//                                                        "android.permission.MANAGE_APP_OPS_RESTRICTIONS"
-//                                                ) == PackageManager.PERMISSION_GRANTED ? "Granted" : "Denied"
-//                                        )
-//                        );
-//                        Log.d(MithrilAC.getDebugTag(),
-//                                "UPDATE_APP_OPS_STATS: " +
-//                                        (
-//                                                PermissionHelper.isPermissionGranted(
-//                                                        buttonView.getContext(),
-//                                                        "android.permission.UPDATE_APP_OPS_STATS"
-//                                                ) == PackageManager.PERMISSION_GRANTED ? "Granted" : "Denied"
-//                                        )
-//                        );
             }
         });
     }
