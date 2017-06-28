@@ -48,7 +48,7 @@
                 android:fontFamily="josephine-sans"
                 android:text="@string/placeholder_text_violation_when"
                 android:textColor="@color/colorPrimaryText"
-                android:textSize="14dp" />
+                android:textSize="15dp" />
 
             <TextView
                 android:id="@+id/violationContext"
@@ -59,7 +59,7 @@
                 android:fontFamily="josephine-sans"
                 android:text="@string/placeholder_text_violation_where"
                 android:textColor="@color/colorPrimaryText"
-                android:textSize="14dp" />
+                android:textSize="15dp" />
 
             <Button
                 android:id="@+id/trueViolationButton"
@@ -71,7 +71,7 @@
                 android:layout_marginStart="@dimen/activity_vertical_margin"
                 android:text="@string/button_true_violation"
                 android:textColor="@color/red"
-                android:textSize="12sp"
+                android:textSize="15dp"
                 android:theme="@style/AppTheme.Button" />
 
             <Button
@@ -84,7 +84,7 @@
                 android:layout_marginStart="@dimen/activity_vertical_margin"
                 android:text="@string/button_false_violation"
                 android:textColor="@color/green"
-                android:textSize="12sp"
+                android:textSize="15dp"
                 android:theme="@style/AppTheme.Button" />
 
             <Button
@@ -97,8 +97,8 @@
                 android:layout_marginStart="@dimen/activity_vertical_margin"
                 android:text="@string/partial_button_false_violation"
                 android:textColor="@color/colorPrimaryDark"
-                android:textSize="12sp"
-                android:theme="@style/AppTheme.Button" />
+                android:textSize="15dp"
+                android:theme="@style/AppTheme.Button"/>
         </RelativeLayout>
     </android.support.v7.widget.CardView>
 </LinearLayout>
