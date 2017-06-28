@@ -19,6 +19,7 @@ import java.util.Arrays;
 import java.util.List;
 
 import edu.umbc.ebiquity.mithril.MithrilAC;
+import edu.umbc.ebiquity.mithril.util.specialtasks.errorsnexceptions.PhoneNotRootedException;
 import edu.umbc.ebiquity.mithril.util.specialtasks.root.RootAccess;
 
 /**
@@ -130,34 +131,35 @@ public class PermissionHelper {
                                 "android.permission.UPDATE_APP_OPS_STATS"
                         )
                 )
-        );        Log.d(MithrilAC.getDebugTag(),
+        );
+        Log.d(MithrilAC.getDebugTag(),
                 "MANAGE_APP_OPS_RESTRICTIONS: " + String.valueOf(
                         PermissionHelper.isPermissionGranted(context,
                                 "android.permission.MANAGE_APP_OPS_RESTRICTIONS"
                         )
                 )
-        );        Log.d(MithrilAC.getDebugTag(),
+        );
+        Log.d(MithrilAC.getDebugTag(),
                 "GET_APP_OPS_STATS: " + String.valueOf(
                         PermissionHelper.isPermissionGranted(context,
                                 "android.permission.GET_APP_OPS_STATS"
                         )
                 )
         );
-        if (rootAccess != null &&
-                rootAccess.isRooted() &&
-                PermissionHelper.isPermissionGranted(
-                        context,
-                        "android.permission.GET_APP_OPS_STATS") ==
-                        PackageManager.PERMISSION_GRANTED)// &&
-//                PermissionHelper.isPermissionGranted(
-//                        context,
-//                        "android.permission.MANAGE_APP_OPS_RESTRICTIONS"
-//                ) == PackageManager.PERMISSION_GRANTED &&
-//                PermissionHelper.isPermissionGranted(
-//                        context,
-//                        "android.permission.UPDATE_APP_OPS_STATS"
-//                ) == PackageManager.PERMISSION_GRANTED)
+        try {
+            if (rootAccess.isRooted() &&
+                    PermissionHelper.isPermissionGranted(
+                            context,
+                            "android.permission.GET_APP_OPS_STATS") ==
+                            PackageManager.PERMISSION_GRANTED &&
+                    PermissionHelper.isPermissionGranted(
+                            context,
+                            "android.permission.WRITE_SECURE_SETTINGS") ==
+                            PackageManager.PERMISSION_GRANTED)
+                return false;
+        } catch (PhoneNotRootedException e) {
             return false;
+        }
         return true;
     }
 
