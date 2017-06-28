@@ -90,8 +90,8 @@ public class PermissionAcquisitionActivity extends AppCompatActivity {
             mSettingsPermToggleButton.setChecked(true);
         if (!PermissionHelper.needsSystemAlertWindowPermission(this))
             mSystemAlertWindowPermToggleButton.setChecked(true);
-//        if (!PermissionHelper.needsRootPrivileges(this, rootAccess))
-        mRootAccessToggleButton.setChecked(false);
+        if (!PermissionHelper.needsRootPrivileges(this, rootAccess))
+            mRootAccessToggleButton.setChecked(true);
 
         setOnClickListeners();
         setOnCheckedChangeListener();
