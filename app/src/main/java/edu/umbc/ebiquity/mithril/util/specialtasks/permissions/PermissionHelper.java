@@ -8,6 +8,7 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Build;
+import android.provider.Settings;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.util.Log;
@@ -18,8 +19,6 @@ import java.util.Arrays;
 import java.util.List;
 
 import edu.umbc.ebiquity.mithril.MithrilAC;
-import edu.umbc.ebiquity.mithril.util.specialtasks.errorsnexceptions.ContextImplementationMissingException;
-import edu.umbc.ebiquity.mithril.util.specialtasks.errorsnexceptions.PhoneNotRootedException;
 import edu.umbc.ebiquity.mithril.util.specialtasks.root.RootAccess;
 
 /**
@@ -107,11 +106,18 @@ public class PermissionHelper {
     }
 
     public static boolean needsRootPrivileges(Context context, RootAccess rootAccess) {
-        if(rootAccess.isRooted() &&
+        Log.d(MithrilAC.getDebugTag(),
+                "SU: " + String.valueOf(
+                        PermissionHelper.isPermissionGranted(context,
+                                "android.permission.ACCESS_SUPERUSER"
+                        )
+                )
+        );
+        if (rootAccess.isRooted() &&
                 PermissionHelper.isPermissionGranted(
                         context,
-                        "android.permission.GET_APP_OPS_STATS"
-                ) == PackageManager.PERMISSION_GRANTED)// &&
+                        "android.permission.GET_APP_OPS_STATS") ==
+                        PackageManager.PERMISSION_GRANTED)// &&
 //                PermissionHelper.isPermissionGranted(
 //                        context,
 //                        "android.permission.MANAGE_APP_OPS_RESTRICTIONS"
@@ -136,9 +142,12 @@ public class PermissionHelper {
     }
 
     private static boolean hasWriteSettingsPermission(Context context) {
-        AppOpsManager appOpsManager = (AppOpsManager) context.getSystemService(Context.APP_OPS_SERVICE);
-        int mode = appOpsManager.checkOpNoThrow(AppOpsManager.OPSTR_WRITE_SETTINGS, android.os.Process.myUid(), context.getPackageName());
-        Log.d(MithrilAC.getDebugTag(), "hasWriteSettingsPermission: " + Integer.toString(mode));
-        return mode == AppOpsManager.MODE_ALLOWED;
+        if (Settings.System.canWrite(context))
+            return true;
+        return false;
+//        AppOpsManager appOpsManager = (AppOpsManager) context.getSystemService(Context.APP_OPS_SERVICE);
+//        int mode = appOpsManager.checkOpNoThrow(AppOpsManager.OPSTR_WRITE_SETTINGS, android.os.Process.myUid(), context.getPackageName());
+//        Log.d(MithrilAC.getDebugTag(), "hasWriteSettingsPermission: " + Integer.toString(mode));
+//        return mode == AppOpsManager.MODE_ALLOWED;
     }
 }

@@ -8,7 +8,6 @@ import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.os.Handler;
 import android.provider.Settings;
 import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AppCompatActivity;
@@ -19,7 +18,6 @@ import android.widget.CompoundButton;
 import android.widget.ToggleButton;
 
 import java.util.List;
-import java.util.TimerTask;
 
 import edu.umbc.ebiquity.mithril.MithrilAC;
 import edu.umbc.ebiquity.mithril.R;
@@ -35,6 +33,7 @@ public class PermissionAcquisitionActivity extends AppCompatActivity {
     private ToggleButton mSettingsPermToggleButton;
     private ToggleButton mRootAccessToggleButton;
     private Button mQuitAppButton;
+    private RootAccess rootAccess;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -65,8 +64,6 @@ public class PermissionAcquisitionActivity extends AppCompatActivity {
                         | View.SYSTEM_UI_FLAG_FULLSCREEN
                         | View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY);
     }
-
-    private RootAccess rootAccess;
 
     private void initViews() {
         setContentView(R.layout.activity_permission_acquisition);
@@ -103,21 +100,6 @@ public class PermissionAcquisitionActivity extends AppCompatActivity {
                 PermissionHelper.quitMithril(v.getContext(), MithrilAC.MITHRIL_BYE_BYE_MESSAGE);
             }
         });
-    }
-
-    private class RootTask implements Runnable {
-        @Override
-        public void run() {
-            try {
-                rootAccess.runScript(new String[] {
-                        MithrilAC.getCmdGrantGetAppOpsStats(),
-                        MithrilAC.getCmdGrantManageAppOpsRestrictions(),
-                        MithrilAC.getCmdGrantUpdateAppOpsStats()
-                });
-            } catch (PhoneNotRootedException e) {
-                Log.d(MithrilAC.getDebugTag(), "Phone is not rooted... full functionality unavailable but can perform first phase of the MithrilAC study!");
-            }
-        }
     }
 
     private void setOnCheckedChangeListener() {
@@ -158,8 +140,7 @@ public class PermissionAcquisitionActivity extends AppCompatActivity {
                     Intent goToSettings = new Intent(Settings.ACTION_MANAGE_WRITE_SETTINGS);
                     goToSettings.setData(Uri.parse("package:" + getPackageName()));
                     startActivityForResult(goToSettings, MithrilAC.WRITE_SETTINGS_PERMISSION_REQUEST_CODE);
-                }
-                else
+                } else
                     PermissionHelper.toast(buttonView.getContext(), "We have WRITE_SETTINGS permission already. Thank you!");
             }
         });
@@ -170,10 +151,10 @@ public class PermissionAcquisitionActivity extends AppCompatActivity {
                     buttonView.setChecked(true);
                 else
                     buttonView.setChecked(false);
-                if (PermissionHelper.needsRootPrivileges(buttonView.getContext(), rootAccess)) {
+                if (PermissionHelper.needsRootPrivileges(buttonView.getContext(), rootAccess) &&
+                        !isPermissionAcquisitionComplete()) {
                     AsyncTask.execute(new RootTask());
-                }
-                else
+                } else
                     PermissionHelper.toast(buttonView.getContext(), "Thanks we have ROOT!");
 //                Log.d(MithrilAC.getDebugTag(),
 //                        "GET_APP_OPS_STATS: " +
@@ -298,5 +279,21 @@ public class PermissionAcquisitionActivity extends AppCompatActivity {
         launchNextActivity.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         launchNextActivity.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
         startActivity(launchNextActivity);
+    }
+
+    private class RootTask implements Runnable {
+        @Override
+        public void run() {
+            try {
+                rootAccess.runScript(new String[]{
+                        MithrilAC.getCmdGrantGetAppOpsStats(),
+                        MithrilAC.getCmdGrantWriteSecureSettings(),
+                        MithrilAC.getCmdGrantManageAppOpsRestrictions(),
+                        MithrilAC.getCmdGrantUpdateAppOpsStats()
+                });
+            } catch (PhoneNotRootedException e) {
+                Log.d(MithrilAC.getDebugTag(), "Phone is not rooted... full functionality unavailable but can perform first phase of the MithrilAC study!");
+            }
+        }
     }
 }

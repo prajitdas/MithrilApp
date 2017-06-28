@@ -4,12 +4,10 @@ import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Parcel;
 import android.os.Parcelable;
-import android.util.Log;
 
 import java.sql.Timestamp;
 import java.util.List;
 
-import edu.umbc.ebiquity.mithril.MithrilAC;
 import edu.umbc.ebiquity.mithril.data.dbhelpers.MithrilDBHelper;
 
 public class Violation implements Parcelable {

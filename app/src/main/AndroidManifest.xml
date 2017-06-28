@@ -26,8 +26,6 @@
     <uses-permission
         android:name="android.permission.WRITE_SETTINGS"
         tools:ignore="ProtectedPermissions" />
-    -->
-    <uses-permission android:name="android.permission.ACCESS_SUPERUSER" />
     <!--
      New version of GET_TASKS that apps can request, since GET_TASKS doesn't really
      give access to task information.  We need this new one because there are
@@ -41,10 +39,6 @@
     -->
     <uses-permission
         android:name="android.permission.REAL_GET_TASKS"
-        tools:ignore="ProtectedPermissions" />
-    <!-- @SystemApi Allows an application to read the low-level system log files. -->
-    <uses-permission
-        android:name="android.permission.READ_LOGS"
         tools:ignore="ProtectedPermissions" />
 
     <!-- dangerous permission type; request to be made explicitly; protectionLevel: PROTECTION_DANGEROUS; list as follows -->

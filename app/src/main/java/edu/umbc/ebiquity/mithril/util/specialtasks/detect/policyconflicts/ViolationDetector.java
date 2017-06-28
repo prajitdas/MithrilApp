@@ -89,7 +89,7 @@ public class ViolationDetector {
             return;
         }
         if (operationsPerformed.size() == 0) {
-            if(PermissionHelper.isPermissionGranted(context, Manifest.permission.GET_APP_OPS_STATS) != PackageManager.PERMISSION_GRANTED)
+            if (PermissionHelper.isPermissionGranted(context, Manifest.permission.GET_APP_OPS_STATS) != PackageManager.PERMISSION_GRANTED)
                 Log.e(MithrilAC.getDebugTag(), "We do not have GET_APP_OPS_STATS permission!");
             return;
         }

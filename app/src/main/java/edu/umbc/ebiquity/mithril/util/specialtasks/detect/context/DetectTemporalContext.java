@@ -89,19 +89,19 @@ public class DetectTemporalContext {
         knownCalEnd.set(Calendar.HOUR_OF_DAY, semanticTime.getEndHour());
         knownCalEnd.set(Calendar.MINUTE, semanticTime.getEndMinute());
         //We have a next day end time situation
-        if(knownCalStart.compareTo(knownCalEnd) == 0) {
+        if (knownCalStart.compareTo(knownCalEnd) == 0) {
             return false;
         }
-        if(knownCalStart.compareTo(knownCalEnd) == 1) {
+        if (knownCalStart.compareTo(knownCalEnd) == 1) {
             int diffHour = 24 - knownCalStart.get(Calendar.HOUR_OF_DAY);
             knownCalStart.set(Calendar.HOUR_OF_DAY, 0);
-            knownCalEnd.set(Calendar.HOUR_OF_DAY, knownCalEnd.get(Calendar.HOUR_OF_DAY)+diffHour);
-            currCalendar.set(Calendar.HOUR_OF_DAY, currCalendar.get(Calendar.HOUR_OF_DAY)+diffHour);
-            if(currCalendar.compareTo(knownCalStart) == 1 && currCalendar.compareTo(knownCalEnd) == -1)
+            knownCalEnd.set(Calendar.HOUR_OF_DAY, knownCalEnd.get(Calendar.HOUR_OF_DAY) + diffHour);
+            currCalendar.set(Calendar.HOUR_OF_DAY, currCalendar.get(Calendar.HOUR_OF_DAY) + diffHour);
+            if (currCalendar.compareTo(knownCalStart) == 1 && currCalendar.compareTo(knownCalEnd) == -1)
                 return true;
             return false;
         }
-        if(currCalendar.compareTo(knownCalStart) == 1 && currCalendar.compareTo(knownCalEnd) == -1)
+        if (currCalendar.compareTo(knownCalStart) == 1 && currCalendar.compareTo(knownCalEnd) == -1)
             return true;
         return false;
     }

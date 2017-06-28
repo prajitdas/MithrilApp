@@ -10,16 +10,16 @@
         android:id="@+id/genericAppTextView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_alignParentTop="true"
-        android:layout_alignParentStart="true"
         android:layout_alignParentEnd="true"
-        android:layout_marginTop="@dimen/fab_margin"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentTop="true"
         android:layout_marginBottom="@dimen/fab_margin"
+        android:layout_marginTop="@dimen/fab_margin"
         android:text="@string/mithrilac_requires"
+        android:textAlignment="center"
         android:textAppearance="@android:style/TextAppearance.Holo.Medium"
         android:textColor="@color/colorPrimaryDark"
         android:textSize="24sp"
-        android:textAlignment="center"
         android:textStyle="italic" />
 
     <LinearLayout
@@ -27,11 +27,11 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@+id/genericAppTextView"
-        android:orientation="horizontal"
         android:layout_marginBottom="@dimen/fab_margin"
-        android:layout_marginStart="@dimen/fab_margin"
         android:layout_marginEnd="@dimen/fab_margin"
-        android:layout_marginTop="@dimen/fab_margin">
+        android:layout_marginStart="@dimen/fab_margin"
+        android:layout_marginTop="@dimen/fab_margin"
+        android:orientation="horizontal">
 
         <TextView
             android:id="@+id/genericPermTextView"
@@ -56,11 +56,11 @@
         android:layout_width="match_parent"
         android:layout_height="50dp"
         android:layout_below="@+id/genericPerm"
-        android:orientation="horizontal"
         android:layout_marginBottom="@dimen/fab_margin"
-        android:layout_marginStart="@dimen/fab_margin"
         android:layout_marginEnd="@dimen/fab_margin"
-        android:layout_marginTop="@dimen/fab_margin">
+        android:layout_marginStart="@dimen/fab_margin"
+        android:layout_marginTop="@dimen/fab_margin"
+        android:orientation="horizontal">
 
         <TextView
             android:id="@+id/specialPermTextView"
@@ -85,11 +85,11 @@
         android:layout_width="match_parent"
         android:layout_height="50dp"
         android:layout_below="@+id/specialPerm"
-        android:orientation="horizontal"
         android:layout_marginBottom="@dimen/fab_margin"
-        android:layout_marginStart="@dimen/fab_margin"
         android:layout_marginEnd="@dimen/fab_margin"
-        android:layout_marginTop="@dimen/fab_margin">
+        android:layout_marginStart="@dimen/fab_margin"
+        android:layout_marginTop="@dimen/fab_margin"
+        android:orientation="horizontal">
 
         <TextView
             android:id="@+id/settingsTextView"
@@ -114,11 +114,11 @@
         android:layout_width="match_parent"
         android:layout_height="50dp"
         android:layout_below="@+id/settingsPerm"
-        android:orientation="horizontal"
         android:layout_marginBottom="@dimen/fab_margin"
-        android:layout_marginStart="@dimen/fab_margin"
         android:layout_marginEnd="@dimen/fab_margin"
-        android:layout_marginTop="@dimen/fab_margin">
+        android:layout_marginStart="@dimen/fab_margin"
+        android:layout_marginTop="@dimen/fab_margin"
+        android:orientation="horizontal">
 
         <TextView
             android:id="@+id/rootAccessTextView"
@@ -137,7 +137,7 @@
             android:layout_weight="0.25"
             android:theme="@style/AppTheme.Button" />
     </LinearLayout>
-    
+
     <Button
         android:id="@+id/quitAppButton"
         android:layout_width="match_parent"

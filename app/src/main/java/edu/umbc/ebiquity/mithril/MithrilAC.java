@@ -103,42 +103,36 @@ public class MithrilAC extends Application {
     private static final String CMD_GRANT_UPDATE_APP_OPS_STATS = "pm grant " + MITHRIL_APP_PACKAGE_NAME + " android.permission.UPDATE_APP_OPS_STATS";
     private static final String CMD_REVOKE_UPDATE_APP_OPS_STATS = "pm revoke " + MITHRIL_APP_PACKAGE_NAME + " android.permission.UPDATE_APP_OPS_STATS";
 
+    private static final String CMD_GRANT_WRITE_SECURE_SETTINGS = "pm grant " + MITHRIL_APP_PACKAGE_NAME + " android.permission.WRITE_SECURE_SETTINGS";
+    private static final String CMD_REVOKE_WRITE_SECURE_SETTINGS = "pm revoke " + MITHRIL_APP_PACKAGE_NAME + " android.permission.WRITE_SECURE_SETTINGS";
+
     private static final String CMD_GRANT_GET_APP_OPS_STATS = "pm grant " + MITHRIL_APP_PACKAGE_NAME + " android.permission.GET_APP_OPS_STATS";
     private static final String CMD_REVOKE_GET_APP_OPS_STATS = "pm revoke " + MITHRIL_APP_PACKAGE_NAME + " android.permission.GET_APP_OPS_STATS";
-
+    private static final String CMD_GRANT_REAL_GET_TASKS = "pm grant " + MITHRIL_APP_PACKAGE_NAME + " android.permission.REAL_GET_TASKS";
+    private static final String CMD_REVOKE_REAL_GET_TASKS = "pm revoke " + MITHRIL_APP_PACKAGE_NAME + " android.permission.REAL_GET_TASKS";
     private static final String CMD_GRANT_MANAGE_APP_OPS_RESTRICTIONS = "pm grant " + MITHRIL_APP_PACKAGE_NAME + " android.permission.MANAGE_APP_OPS_RESTRICTIONS";
     private static final String CMD_REVOKE_MANAGE_APP_OPS_RESTRICTIONS = "pm revoke " + MITHRIL_APP_PACKAGE_NAME + " android.permission.MANAGE_APP_OPS_RESTRICTIONS";
-
     private static final String CMD_ROOT_PRIVILEGE = "su -c";
-
     private static final String CMD_DETECT_APP_LAUNCH = "logcat -d ActivityManager:I *:S | grep 'LAUNCHER'";
     //    private static final String CMD_DETECT_APP_LAUNCH = "logcat -d ActivityManager:I *:S | grep 'LAUNCHER' | cut -f5 -d'=' | cut -f1 -d'/'";
     private static final String CMD_DETECT_APP_LAUNCH_DATE = "logcat -d ActivityManager:I *:S | grep 'LAUNCHER' | cut -f1 -d' '";
     private static final String CMD_DETECT_APP_LAUNCH_TIME = "logcat -d ActivityManager:I *:S | grep 'LAUNCHER' | cut -f2 -d' '";
-
     private static final String LOG_INTENT = "android.intent.category.LAUNCHER";
     private static final String BROADCAST_INTENT_COMMAND_APP = "edu.umbc.ebiquity.mithril.command.intent.action.DATA_REQUEST";
     private static final String SHARED_PREFERENCES_NAME = MITHRIL_APP_PACKAGE_NAME + ".sharedprefs";
-
     private static final String BACK_PRESSED_USER_AGREEMENT_SCREEN = "backPressed";
-
     //Preference keys
     private static final String PREF_KEY_POLICIES_DOWNLOADED = "policiesDownloaded";
     private static final String PREF_KEY_LAST_RUNNING_APP = "lastRunningApp";
-
     private static final String PREF_KEY_CONTEXT_TYPE_LOCATION = "Location";
     private static final String PREF_KEY_CONTEXT_TYPE_ACTIVITY = "Activity";
     private static final String PREF_KEY_CONTEXT_TYPE_TEMPORAL = "Temporal";
     private static final String PREF_KEY_CONTEXT_TYPE_PRESENCE = "Presence";
-
     private static final String PREF_START_KEY = "startOfContext";
     private static final String PREF_END_KEY = "endOfContext";
-
     private static final String PREF_HOME_LOCATION_KEY = "Home";
     private static final String PREF_WORK_LOCATION_KEY = "Work";
-
     private static final String PREF_KEY_TEMPORAL_LABEL = "temporalLabel";
-
     private static final String PREF_BREAKFAST_TEMPORAL_KEY = "Breakfast"; //0800 - 0830
     private static final String PREF_WORK_MORNING_TEMPORAL_KEY = "Work_Morning"; //0830 - 1200 only Monday - Friday
     private static final String PREF_LUNCH_TEMPORAL_KEY = "Lunch"; //1200 - 1230
@@ -606,6 +600,22 @@ public class MithrilAC extends Application {
             "('android.permission.ACCESS_VR_MANAGER', 'signature', '" + NO_PERMISSION_GROUP.first + "', '" + PERMISSION_FLAG_NONE + "'),\n" +
             "('android.permission.UPDATE_LOCK_TASK_PACKAGES', 'signature|setup', '" + NO_PERMISSION_GROUP.first + "', '" + PERMISSION_FLAG_NONE + "'),\n" +
             "('android.permission.SUBSTITUTE_NOTIFICATION_APP_NAME', 'signature|privileged', '" + NO_PERMISSION_GROUP.first + "', '" + PERMISSION_FLAG_NONE + "');\n";
+
+    public static String getCmdGrantRealGetTasks() {
+        return CMD_GRANT_REAL_GET_TASKS;
+    }
+
+    public static String getCmdRevokeRealGetTasks() {
+        return CMD_REVOKE_REAL_GET_TASKS;
+    }
+
+    public static String getCmdGrantWriteSecureSettings() {
+        return CMD_GRANT_WRITE_SECURE_SETTINGS;
+    }
+
+    public static String getCmdRevokeWriteSecureSettings() {
+        return CMD_REVOKE_WRITE_SECURE_SETTINGS;
+    }
 
     public static String getPrefBreakfastTemporalKey() {
         return PREF_BREAKFAST_TEMPORAL_KEY;

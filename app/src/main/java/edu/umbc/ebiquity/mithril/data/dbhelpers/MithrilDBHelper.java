@@ -1851,7 +1851,7 @@ public class MithrilDBHelper extends SQLiteOpenHelper {
     public List<String> findMostSpecificContextByID(SQLiteDatabase db, List<Long> ctxtIds) {
         List<String> contextStrings = new ArrayList<>();
         StringBuffer idString = new StringBuffer();
-        for(Long id : ctxtIds) {
+        for (Long id : ctxtIds) {
             idString.append(String.valueOf(id));
             idString.append(",");
         }
@@ -1876,7 +1876,7 @@ public class MithrilDBHelper extends SQLiteOpenHelper {
             if (cursor.moveToFirst()) {
                 int lowestLevel = cursor.getInt(1);
                 do {
-                    if(cursor.getInt(1) == lowestLevel)
+                    if (cursor.getInt(1) == lowestLevel)
                         contextStrings.add(cursor.getString(0));
                 } while (cursor.moveToNext());
             }
@@ -1905,7 +1905,7 @@ public class MithrilDBHelper extends SQLiteOpenHelper {
             if (cursor.moveToFirst()) {
                 int lowestLevel = cursor.getInt(1);
                 do {
-                    if(cursor.getInt(1) == lowestLevel)
+                    if (cursor.getInt(1) == lowestLevel)
                         contextStrings.add(cursor.getString(0));
                 } while (cursor.moveToNext());
             }
