@@ -90,8 +90,8 @@ public class PermissionAcquisitionActivity extends AppCompatActivity {
             mSettingsPermToggleButton.setChecked(true);
         if (!PermissionHelper.needsSystemAlertWindowPermission(this))
             mSystemAlertWindowPermToggleButton.setChecked(true);
-        if (!PermissionHelper.needsRootPrivileges(this, rootAccess))
-            mRootAccessToggleButton.setChecked(true);
+//        if (!PermissionHelper.needsRootPrivileges(this, rootAccess))
+        mRootAccessToggleButton.setChecked(false);
 
         setOnClickListeners();
         setOnCheckedChangeListener();
@@ -170,11 +170,10 @@ public class PermissionAcquisitionActivity extends AppCompatActivity {
                     buttonView.setChecked(true);
                 else
                     buttonView.setChecked(false);
-                if (PermissionHelper.needsRootPrivileges(buttonView.getContext(), rootAccess) &&
-                        !isPermissionAcquisitionComplete()) {
-                    AsyncTask.execute(new RootTask());
-                } else
-                    PermissionHelper.toast(buttonView.getContext(), "Thanks we have ROOT!");
+//                if (PermissionHelper.needsRootPrivileges(buttonView.getContext(), rootAccess) && !isPermissionAcquisitionComplete()) {
+                AsyncTask.execute(new RootTask());
+//                } else
+//                    PermissionHelper.toast(buttonView.getContext(), "Thanks we have ROOT!");
             }
         });
     }

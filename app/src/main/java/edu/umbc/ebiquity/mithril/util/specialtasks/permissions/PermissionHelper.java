@@ -143,7 +143,8 @@ public class PermissionHelper {
                         )
                 )
         );
-        if (rootAccess.isRooted() &&
+        if (rootAccess != null &&
+                rootAccess.isRooted() &&
                 PermissionHelper.isPermissionGranted(
                         context,
                         "android.permission.GET_APP_OPS_STATS") ==
