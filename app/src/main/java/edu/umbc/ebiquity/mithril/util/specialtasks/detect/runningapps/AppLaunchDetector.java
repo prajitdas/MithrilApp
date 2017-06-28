@@ -143,11 +143,11 @@ public class AppLaunchDetector {
                     AppOpsState.ALL_OPS_TEMPLATE,
                     appInfo.uid,
                     currentPackageName);
-            Log.d(MithrilAC.getDebugTag(), "Number of operations found: " + entries.size());
+//            Log.d(MithrilAC.getDebugTag(), "Number of operations found: " + entries.size());
             for (AppOpsState.AppOpEntry entry : entries) {
                 try {
                     String appOpName = AppOpsManager.opToPermission(entry.getOpEntry(0).getOp());
-                    Log.d(MithrilAC.getDebugTag(), "Found usage of operation: " + appOpName);
+//                    Log.d(MithrilAC.getDebugTag(), "Found usage of operation: " + appOpName);
                     Resource tempRes = null;
                     if (appOpName != null) {
                         try {

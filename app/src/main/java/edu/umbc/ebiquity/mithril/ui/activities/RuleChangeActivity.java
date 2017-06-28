@@ -28,6 +28,7 @@ public class RuleChangeActivity extends AppCompatActivity implements RuleChangeF
     private void loadRuleChangeFragment() {
         Bundle data = new Bundle();
         data.putParcelable("rule", currentViolation);
+        currentViolation.toString();
 
         RuleChangeFragment aRuleChangeFragment = new RuleChangeFragment();
         aRuleChangeFragment.setArguments(data);

@@ -301,9 +301,9 @@ public class AppLaunchDetectorService extends Service implements
     private void requestLastLocation() {
         try {
             mCurrentLocation = LocationServices.FusedLocationApi.getLastLocation(mGoogleApiClient);
-            Log.d(MithrilAC.getDebugTag(), "Location found: "
-                    + String.valueOf(mCurrentLocation.getLatitude())
-                    + String.valueOf(mCurrentLocation.getLongitude()));
+//            Log.d(MithrilAC.getDebugTag(), "Location found: "
+//                    + String.valueOf(mCurrentLocation.getLatitude())
+//                    + String.valueOf(mCurrentLocation.getLongitude()));
             if (mGooglePlacesApiClient.isConnected())
                 guessCurrentPlace();
             else if (!mGooglePlacesApiClient.isConnected() || !mGooglePlacesApiClient.isConnecting() && !mPlacesInProcgress) {
@@ -382,7 +382,6 @@ public class AppLaunchDetectorService extends Service implements
     }
 
     private void guessCurrentPlace() {
-        Log.d(MithrilAC.getDebugTag(), "in get current place");
         PendingResult<PlaceLikelihoodBuffer> result;
         try {
             result = Places.PlaceDetectionApi
@@ -391,16 +390,17 @@ public class AppLaunchDetectorService extends Service implements
                 @Override
                 public void onResult(PlaceLikelihoodBuffer likelyPlaces) {
                     float mostLikelihood = Float.MIN_VALUE;
-                    for (PlaceLikelihood placeLikelihood : likelyPlaces)
+                    for (PlaceLikelihood placeLikelihood : likelyPlaces) {
                         if (placeLikelihood.getLikelihood() > mostLikelihood) {
                             mostLikelihood = placeLikelihood.getLikelihood();
                             mCurrentPlace = placeLikelihood.getPlace();
-                            Log.d(MithrilAC.getDebugTag(),
-                                    "Place found: " +
-                                            placeLikelihood.getPlace().getAddress() +
-                                            " with likelihood: " +
-                                            placeLikelihood.getLikelihood());
+//                            Log.d(MithrilAC.getDebugTag(),
+//                                    "Place found: " +
+//                                            placeLikelihood.getPlace().getAddress() +
+//                                            " with likelihood: " +
+//                                            placeLikelihood.getLikelihood());
                         }
+                    }
 //                    likelyPlaces.release();
                     startSearchAddressIntentService(mCurrentLocation);
                 }
@@ -612,7 +612,7 @@ public class AppLaunchDetectorService extends Service implements
                     Log.d(MithrilAC.getDebugTag(), e.getMessage());
                 }
 
-                Log.d(MithrilAC.getDebugTag(), "Prefs address " + resultData.getString(MithrilAC.getCurrAddressKey()) + mAddressRequested + key + json);
+//                Log.d(MithrilAC.getDebugTag(), "Prefs address " + resultData.getString(MithrilAC.getCurrAddressKey()) + mAddressRequested + key + json);
                 // Show a toast message if an address was found.
                 if (resultCode == MithrilAC.SUCCESS_RESULT && mCurrentPlace != null && mCurrentLocation != null) {
                     SemanticLocation tempSemanticLocation = new SemanticLocation(key, mCurrentLocation, 0);
