@@ -36,6 +36,7 @@ import edu.umbc.ebiquity.mithril.data.model.components.AppData;
 import edu.umbc.ebiquity.mithril.data.model.components.PermData;
 import edu.umbc.ebiquity.mithril.data.model.rules.Action;
 import edu.umbc.ebiquity.mithril.data.model.rules.PolicyRule;
+import edu.umbc.ebiquity.mithril.data.model.rules.Resource;
 import edu.umbc.ebiquity.mithril.data.model.rules.Violation;
 import edu.umbc.ebiquity.mithril.simulations.DataGenerator;
 import edu.umbc.ebiquity.mithril.util.specialtasks.errorsnexceptions.PermissionWasUpdateException;
@@ -1536,7 +1537,8 @@ public class MithrilDBHelper extends SQLiteOpenHelper {
                             cursor.getInt(6) == 1,
                             new Timestamp(cursor.getLong(7)),
                             setCtxtIds(cursor.getString(8)),
-                            cursor.getInt(9)
+                            cursor.getInt(9),
+                            new Resource(cursor.getInt(2))
                     );
                     violations.add(tempViolation);
                 } while (cursor.moveToNext());

@@ -82,18 +82,18 @@ public class ViolationDetector {
      */
     public static void detectViolation(Context context,
                                        String currentPackageName,
-                                       List<Resource> operationsPerformed,
+                                       List<Resource> resources,
                                        List<SemanticUserContext> semanticUserContexts) throws SemanticInconsistencyException {
         if (semanticUserContexts.size() == 0) {
             Log.e(MithrilAC.getDebugTag(), "Houston, we have a problem! We can't detect current context");
             return;
         }
-        if (operationsPerformed.size() == 0) {
+        if (resources.size() == 0) {
             if (PermissionHelper.isPermissionGranted(context, Manifest.permission.GET_APP_OPS_STATS) != PackageManager.PERMISSION_GRANTED)
                 Log.e(MithrilAC.getDebugTag(), "We do not have GET_APP_OPS_STATS permission!");
             return;
         }
-        if (operationsPerformed.get(0).getOp() == AppOpsManager.OP_NONE) {
+        if (resources.get(0).getOp() == AppOpsManager.OP_NONE) {
             Log.e(MithrilAC.getDebugTag(), "Houston, we have another problem! We couldn't figure out the operation for " + currentPackageName);
             return;
         }
@@ -104,9 +104,9 @@ public class ViolationDetector {
         Collections.sort(currentContextList);
 
         // Let's test the rules we found
-        for (Resource currentOperation : operationsPerformed) {
+        for (Resource currentResource : resources) {
             Action actionForCurrentOperationAndApp = Action.DENY;
-            int lastOperationPerformed = currentOperation.getOp();
+            int lastOperationPerformed = currentResource.getOp();
             List<PolicyRule> policyRules = MithrilDBHelper.getHelper(context).findAllPoliciesForAppWhenPerformingOp(mithrilDB, currentPackageName, lastOperationPerformed);
             Set<Long> policyContextSet = new HashSet<>();
             List<Long> policyContextList = new ArrayList<>(policyContextSet);
@@ -166,7 +166,8 @@ public class ViolationDetector {
                                             true,
                                             new Timestamp(System.currentTimeMillis()),
                                             policyContextList,
-                                            1
+                                            1,
+                                            currentResource
                                     )
                             );
                         } else {
@@ -210,7 +211,8 @@ public class ViolationDetector {
                                             true,
                                             new Timestamp(System.currentTimeMillis()),
                                             policyContextList,
-                                            1
+                                            1,
+                                            currentResource
                                     )
                             );
                         } else {
@@ -265,7 +267,8 @@ public class ViolationDetector {
                                         true,
                                         new Timestamp(System.currentTimeMillis()),
                                         currentContextList,
-                                        1
+                                        1,
+                                        currentResource
                                 )
                         );
                     }
@@ -316,7 +319,8 @@ public class ViolationDetector {
                                     true,
                                     new Timestamp(System.currentTimeMillis()),
                                     currentContextList,
-                                    1
+                                    1,
+                                    currentResource
                             )
                     );
                 }
