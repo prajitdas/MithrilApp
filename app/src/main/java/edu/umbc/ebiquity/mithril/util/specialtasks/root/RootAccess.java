@@ -1,7 +1,6 @@
 package edu.umbc.ebiquity.mithril.util.specialtasks.root;
 
 import android.util.Log;
-import android.widget.ProgressBar;
 
 import java.io.DataOutputStream;
 import java.io.File;

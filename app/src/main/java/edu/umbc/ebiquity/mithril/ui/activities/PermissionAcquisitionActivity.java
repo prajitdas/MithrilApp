@@ -259,7 +259,7 @@ public class PermissionAcquisitionActivity extends AppCompatActivity {
                         }
                     }
                 } else {
-                    if(PermissionHelper.needsWriteSettingsPermission(this)) {
+                    if (PermissionHelper.needsWriteSettingsPermission(this)) {
                         editor.putBoolean(MithrilAC.getPrefKeyUserDeniedPermissions(), true);
                         editor.apply();
                     }
