@@ -238,12 +238,12 @@ public class ViolationDetector {
                      * Violations are by default marked true.
                      */
                     Log.d(MithrilAC.getDebugTag(), "Perhaps it's a superset.. we don't know what to do, ask user");
+                    int newPolicyId = MithrilDBHelper.getHelper(context).findMaxPolicyId(mithrilDB) + 1;
                     for (long currCtxtId : currentContextSet) {
                         Pair<String, String> ctxtTypeLabel = MithrilDBHelper.getHelper(context).findContextByID(mithrilDB, currCtxtId);
-                        int newPolicyId = MithrilDBHelper.getHelper(context).findMaxPolicyId(mithrilDB) + 1;
                         AppData app = MithrilDBHelper.getHelper(context).findAppByAppPkgName(mithrilDB, currentPackageName);
                         long appId = MithrilDBHelper.getHelper(context).findAppIdByAppPkgName(mithrilDB, currentPackageName);
-                        DataGenerator.createPolicyRule(
+                        MithrilDBHelper.getHelper(context).addPolicyRule(mithrilDB, DataGenerator.createPolicyRule(
                                 newPolicyId,
                                 currentPackageName,
                                 app.getAppName(), // the name returned is not correct we have find the method that fixes that
@@ -251,7 +251,8 @@ public class ViolationDetector {
                                 ctxtTypeLabel.second,
                                 ctxtTypeLabel.first,
                                 Action.ALLOW,
-                                mithrilDB, context);
+                                mithrilDB, context)
+                        );
                         handleViolation(context,
                                 mithrilDB,
                                 new Violation(
@@ -281,9 +282,9 @@ public class ViolationDetector {
                  * and use user feedback as +ve or -ve reinforcement.
                  */
                 Log.d(MithrilAC.getDebugTag(), "Default violation scenario. Do something!");
+                int newPolicyId = MithrilDBHelper.getHelper(context).findMaxPolicyId(mithrilDB) + 1;
                 for (long currCtxtId : currentContextSet) {
                     Pair<String, String> ctxtTypeLabel = MithrilDBHelper.getHelper(context).findContextByID(mithrilDB, currCtxtId);
-                    int newPolicyId = MithrilDBHelper.getHelper(context).findMaxPolicyId(mithrilDB) + 1;
                     AppData app = MithrilDBHelper.getHelper(context).findAppByAppPkgName(mithrilDB, currentPackageName);
                     long appId = MithrilDBHelper.getHelper(context).findAppIdByAppPkgName(mithrilDB, currentPackageName);
                     Log.d(MithrilAC.getDebugTag(),
@@ -293,7 +294,7 @@ public class ViolationDetector {
                                     lastOperationPerformed +
                                     ctxtTypeLabel.second +
                                     ctxtTypeLabel.first);
-                    DataGenerator.createPolicyRule(
+                    MithrilDBHelper.getHelper(context).addPolicyRule(mithrilDB, DataGenerator.createPolicyRule(
                             newPolicyId,
                             currentPackageName,
                             app.getAppName(), // the name returned is not correct we have find the method that fixes that
@@ -301,7 +302,8 @@ public class ViolationDetector {
                             ctxtTypeLabel.second,
                             ctxtTypeLabel.first,
                             Action.ALLOW,
-                            mithrilDB, context);
+                            mithrilDB, context)
+                    );
                     handleViolation(context,
                             mithrilDB,
                             new Violation(
@@ -350,6 +352,9 @@ public class ViolationDetector {
         Set<Long> currentContextIds = new HashSet<>();
         try {
             for (SemanticUserContext semanticUserContext : semanticUserContexts) {
+                if(semanticUserContext == null)
+                    Log.d(MithrilAC.getDebugTag(), "got null");
+                Log.d(MithrilAC.getDebugTag(), semanticUserContext.getLabel()+semanticUserContext.getType());
                 long contextId = MithrilDBHelper.getHelper(context).findContextIdByLabelAndType(mithrilDB, semanticUserContext.getLabel(), semanticUserContext.getType());
                 //We found an unknown context, let's add that to the KB.
                 if (contextId == -1)
