@@ -16,7 +16,9 @@ import java.util.List;
 import edu.umbc.ebiquity.mithril.MithrilAC;
 import edu.umbc.ebiquity.mithril.R;
 import edu.umbc.ebiquity.mithril.data.dbhelpers.MithrilDBHelper;
+import edu.umbc.ebiquity.mithril.data.model.Policy;
 import edu.umbc.ebiquity.mithril.data.model.components.AppData;
+import edu.umbc.ebiquity.mithril.data.model.rules.PolicyRule;
 import edu.umbc.ebiquity.mithril.data.model.rules.Violation;
 import edu.umbc.ebiquity.mithril.ui.fragments.coreactivityfragments.ViolationFragment.OnListFragmentInteractionListener;
 import edu.umbc.ebiquity.mithril.util.specialtasks.permissions.PermissionHelper;
@@ -59,7 +61,8 @@ public class ViolationRecyclerViewAdapter extends RecyclerView.Adapter<Violation
         holder.mViolationOpDetail.setText("Used: " +
                 mValues.get(position).getOpStr().replace("_", " ") +
                 " " +
-                MithrilAC.getTimeText(true, mValues.get(position).getDetectedAtTime()));// +
+                MithrilAC.getTimeText(true, mValues.get(position).getDetectedAtTime()));
+//                +
 //                " has been allowed: " +
 //                mValues.get(position).getResource().getAllowedCount() +
 //                " times and ignored: " +
@@ -76,6 +79,11 @@ public class ViolationRecyclerViewAdapter extends RecyclerView.Adapter<Violation
                 PermissionHelper.toast(view.getContext(), "Will do...");
                 mValues.get(position).setAsked(true);
                 mValues.get(position).setFeedbackTime(new Timestamp(System.currentTimeMillis()));
+                List<PolicyRule> policies = MithrilDBHelper.getHelper(view.getContext()).findAllPoliciesById(mithrilDB, mValues.get(position).getPolicyId());
+                for(PolicyRule policyRule: policies){
+                    policyRule.setEnabled(false);
+                    MithrilDBHelper.getHelper(view.getContext()).updatePolicyRule(mithrilDB, policyRule);
+                }
                 MithrilDBHelper.getHelper(view.getContext()).updateViolationForRowId(mithrilDB, mValues.get(position), rowid);
                 if (null != mListener) {
                     // Notify the active callbacks interface (the activity, if the

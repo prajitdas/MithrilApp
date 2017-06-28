@@ -1649,7 +1649,7 @@ public class MithrilDBHelper extends SQLiteOpenHelper {
      * @param db database instance
      * @return all policies
      */
-    public List<PolicyRule> findAllPoliciesById(SQLiteDatabase db, int id) {
+    public List<PolicyRule> findAllPoliciesById(SQLiteDatabase db, long id) {
         List<PolicyRule> policyRules = new ArrayList<>();
         // Select Policy Query
         String selectQuery = "SELECT " +

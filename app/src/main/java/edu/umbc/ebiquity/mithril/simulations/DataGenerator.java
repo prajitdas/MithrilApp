@@ -155,7 +155,7 @@ public class DataGenerator {
                 appName,
                 contextLabel,
                 AppOpsManager.opToPermission(op),
-                false
+                true
         );
     }
 }
