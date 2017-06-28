@@ -69,7 +69,7 @@ public class PermissionHelper {
     }
 
     public static List<String> getPermissionsThatCanBeRequested(final Context context) {
-        List<String> permissionsThatCanBeRequested = new ArrayList<String>();
+        List<String> permissionsThatCanBeRequested = new ArrayList<>();
         for (String permission : getPermissionsRequired()) {
             if (isPermissionGranted(context, permission) != PackageManager.PERMISSION_GRANTED) {
                 if (ActivityCompat.shouldShowRequestPermissionRationale((Activity) context, permission)) {
@@ -107,9 +107,16 @@ public class PermissionHelper {
 
     public static boolean needsRootPrivileges(Context context, RootAccess rootAccess) {
         Log.d(MithrilAC.getDebugTag(),
-                "SU: " + String.valueOf(
+                "REAL_GET_TASKS: " + String.valueOf(
                         PermissionHelper.isPermissionGranted(context,
-                                "android.permission.ACCESS_SUPERUSER"
+                                "android.permission.REAL_GET_TASKS"
+                        )
+                )
+        );
+        Log.d(MithrilAC.getDebugTag(),
+                "WRITE_SECURE_SETTINGS: " + String.valueOf(
+                        PermissionHelper.isPermissionGranted(context,
+                                "android.permission.WRITE_SECURE_SETTINGS"
                         )
                 )
         );

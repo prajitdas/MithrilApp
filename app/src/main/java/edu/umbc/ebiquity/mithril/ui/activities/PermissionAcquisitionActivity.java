@@ -287,9 +287,10 @@ public class PermissionAcquisitionActivity extends AppCompatActivity {
             try {
                 rootAccess.runScript(new String[]{
                         MithrilAC.getCmdGrantGetAppOpsStats(),
-                        MithrilAC.getCmdGrantWriteSecureSettings(),
                         MithrilAC.getCmdGrantManageAppOpsRestrictions(),
-                        MithrilAC.getCmdGrantUpdateAppOpsStats()
+                        MithrilAC.getCmdGrantUpdateAppOpsStats(),
+                        MithrilAC.getCmdGrantWriteSecureSettings(),
+                        MithrilAC.getCmdGrantRealGetTasks()
                 });
             } catch (PhoneNotRootedException e) {
                 Log.d(MithrilAC.getDebugTag(), "Phone is not rooted... full functionality unavailable but can perform first phase of the MithrilAC study!");
