@@ -1848,6 +1848,76 @@ public class MithrilDBHelper extends SQLiteOpenHelper {
         return Action.DENY;
     }
 
+    public List<String> findMostSpecificContextByID(SQLiteDatabase db, List<Long> ctxtIds) {
+        List<String> contextStrings = new ArrayList<>();
+        StringBuffer idString = new StringBuffer();
+        for(Long id : ctxtIds) {
+            idString.append(String.valueOf(id));
+            idString.append(",");
+        }
+        idString.deleteCharAt(idString.length() - 1);
+        // Select Query
+        String selectQuery = "SELECT " +
+                getContextTableName() + "." + CONTEXTSEMLBL + ", " +
+                getContextTableName() + "." + CONTEXTLEVEL +
+                " FROM " +
+                getContextTableName() +
+                " WHERE " +
+                getContextTableName() + "." + CONTEXTID + " in (" + idString + ") " +
+                " AND " +
+                getContextTableName() + "." + CONTEXTTYPE + " = 'Location' " +
+                " AND " +
+                getContextTableName() + "." + CONTEXTENABLED + " = 1" +
+                " ORDER BY " + getContextTableName() + "." + CONTEXTLEVEL +
+                ";";
+
+        Cursor cursor = db.rawQuery(selectQuery, null);
+        try {
+            if (cursor.moveToFirst()) {
+                int lowestLevel = cursor.getInt(1);
+                do {
+                    if(cursor.getInt(1) == lowestLevel)
+                        contextStrings.add(cursor.getString(0));
+                } while (cursor.moveToNext());
+            }
+        } catch (SQLException e) {
+            throw new SQLException("Could not find " + e);
+        } finally {
+            cursor.close();
+        }
+
+        selectQuery = "SELECT " +
+                getContextTableName() + "." + CONTEXTTYPE + ", " +
+                getContextTableName() + "." + CONTEXTSEMLBL + ", " +
+                getContextTableName() + "." + CONTEXTLEVEL +
+                " FROM " +
+                getContextTableName() +
+                " WHERE " +
+                getContextTableName() + "." + CONTEXTID + " in (" + idString + ") " +
+                " AND " +
+                getContextTableName() + "." + CONTEXTTYPE + " = 'Temporal' " +
+                " AND " +
+                getContextTableName() + "." + CONTEXTENABLED + " = 1" +
+                " ORDER BY " + getContextTableName() + "." + CONTEXTLEVEL +
+                ";";
+
+        cursor = db.rawQuery(selectQuery, null);
+        try {
+            if (cursor.moveToFirst()) {
+                int lowestLevel = cursor.getInt(1);
+                do {
+                    if(cursor.getInt(1) == lowestLevel)
+                        contextStrings.add(cursor.getString(0));
+                } while (cursor.moveToNext());
+            }
+        } catch (SQLException e) {
+            throw new SQLException("Could not find " + e);
+        } finally {
+            cursor.close();
+        }
+        return contextStrings;
+    }
+
     public Pair<String, String> findContextByID(SQLiteDatabase db, long id) {
         Pair<String, String> userContext = null;
         // Select Query

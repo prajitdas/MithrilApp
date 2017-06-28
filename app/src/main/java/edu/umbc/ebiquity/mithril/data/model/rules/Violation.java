@@ -90,13 +90,11 @@ public class Violation implements Parcelable {
     public String getContextsString(Context context) {
         if (ctxtIds == null || ctxtIds.size() == 0)
             return "empty context?!";
-        Log.d(MithrilAC.getDebugTag(), "Size found: " + Long.toString(ctxtIds.size()));
-        Log.d(MithrilAC.getDebugTag(), "Long value found: " + Long.toString(ctxtIds.get(0)));
         SQLiteDatabase mithrilDB = MithrilDBHelper.getHelper(context).getWritableDatabase();
         StringBuffer ctxtIdString = new StringBuffer();
-        for (Long ctxt : ctxtIds) {
-            Log.d(MithrilAC.getDebugTag(), "Long value found: " + Long.toString(ctxt));
-            ctxtIdString.append(MithrilDBHelper.getHelper(context).findContextByID(mithrilDB, ctxt).second);
+        List<String> contextStrings = MithrilDBHelper.getHelper(context).findMostSpecificContextByID(mithrilDB, ctxtIds);
+        for (String ctxtStr : contextStrings) {
+            ctxtIdString.append(ctxtStr);
             ctxtIdString.append(",");
         }
         ctxtIdString.deleteCharAt(ctxtIdString.length() - 1);
