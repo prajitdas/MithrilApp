@@ -120,6 +120,25 @@ public class PermissionHelper {
                         )
                 )
         );
+        Log.d(MithrilAC.getDebugTag(),
+                "UPDATE_APP_OPS_STATS: " + String.valueOf(
+                        PermissionHelper.isPermissionGranted(context,
+                                "android.permission.UPDATE_APP_OPS_STATS"
+                        )
+                )
+        );        Log.d(MithrilAC.getDebugTag(),
+                "MANAGE_APP_OPS_RESTRICTIONS: " + String.valueOf(
+                        PermissionHelper.isPermissionGranted(context,
+                                "android.permission.MANAGE_APP_OPS_RESTRICTIONS"
+                        )
+                )
+        );        Log.d(MithrilAC.getDebugTag(),
+                "GET_APP_OPS_STATS: " + String.valueOf(
+                        PermissionHelper.isPermissionGranted(context,
+                                "android.permission.GET_APP_OPS_STATS"
+                        )
+                )
+        );
         if (rootAccess.isRooted() &&
                 PermissionHelper.isPermissionGranted(
                         context,
