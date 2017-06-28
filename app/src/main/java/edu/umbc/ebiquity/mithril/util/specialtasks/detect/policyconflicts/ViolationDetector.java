@@ -141,7 +141,7 @@ public class ViolationDetector {
                     for (PolicyRule rule : policyRules) {
                         //Rule has an deny action, we have a violation to ask questions about
                         if (rule.getAction().equals(Action.DENY)) {
-                            if(actionForCurrentOperationAndApp.equals(Action.ALLOW))
+                            if (actionForCurrentOperationAndApp.equals(Action.ALLOW))
                                 throw new SemanticInconsistencyException("Same policy has conflicting actions for different context");
                             else
                                 actionForCurrentOperationAndApp = Action.DENY;
@@ -171,13 +171,13 @@ public class ViolationDetector {
                                     )
                             );
                         } else {
-                            if(actionForCurrentOperationAndApp.equals(Action.DENY))
+                            if (actionForCurrentOperationAndApp.equals(Action.DENY))
                                 throw new SemanticInconsistencyException("Same policy has conflicting actions for different context");
                             else
                                 actionForCurrentOperationAndApp = Action.ALLOW;
                         }
                     }
-                } else if(MithrilCollections.isSubset(policyContextSet, currentContextSet)) {
+                } else if (MithrilCollections.isSubset(policyContextSet, currentContextSet)) {
                     /**
                      * We have a subset context match! Current context is an subset match for rule context.
                      * We have to do something...
@@ -186,7 +186,7 @@ public class ViolationDetector {
                     for (PolicyRule rule : policyRules) {
                         //Rule has an deny action, we have a violation to ask questions about
                         if (rule.getAction().equals(Action.DENY)) {
-                            if(actionForCurrentOperationAndApp.equals(Action.ALLOW))
+                            if (actionForCurrentOperationAndApp.equals(Action.ALLOW))
                                 throw new SemanticInconsistencyException("Same policy has conflicting actions for different context");
                             else
                                 actionForCurrentOperationAndApp = Action.DENY;
@@ -216,7 +216,7 @@ public class ViolationDetector {
                                     )
                             );
                         } else {
-                            if(actionForCurrentOperationAndApp.equals(Action.DENY))
+                            if (actionForCurrentOperationAndApp.equals(Action.DENY))
                                 throw new SemanticInconsistencyException("Same policy has conflicting actions for different context");
                             else
                                 actionForCurrentOperationAndApp = Action.ALLOW;
@@ -356,9 +356,9 @@ public class ViolationDetector {
         Set<Long> currentContextIds = new HashSet<>();
         try {
             for (SemanticUserContext semanticUserContext : semanticUserContexts) {
-                if(semanticUserContext == null)
+                if (semanticUserContext == null)
                     Log.d(MithrilAC.getDebugTag(), "got null");
-                Log.d(MithrilAC.getDebugTag(), semanticUserContext.getLabel()+semanticUserContext.getType());
+                Log.d(MithrilAC.getDebugTag(), semanticUserContext.getLabel() + semanticUserContext.getType());
                 long contextId = MithrilDBHelper.getHelper(context).findContextIdByLabelAndType(mithrilDB, semanticUserContext.getLabel(), semanticUserContext.getType());
                 //We found an unknown context, let's add that to the KB.
                 if (contextId == -1)

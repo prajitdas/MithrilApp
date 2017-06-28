@@ -20,7 +20,6 @@ import edu.umbc.ebiquity.mithril.data.model.components.AppData;
 import edu.umbc.ebiquity.mithril.data.model.rules.PolicyRule;
 import edu.umbc.ebiquity.mithril.data.model.rules.Violation;
 import edu.umbc.ebiquity.mithril.ui.fragments.coreactivityfragments.ViolationFragment.OnListFragmentInteractionListener;
-import edu.umbc.ebiquity.mithril.util.specialtasks.permissions.PermissionHelper;
 
 /**
  * {@link RecyclerView.Adapter} that can display a {@link Violation} and makes a call to the
@@ -79,7 +78,7 @@ public class ViolationRecyclerViewAdapter extends RecyclerView.Adapter<Violation
 //                PermissionHelper.toast(view.getContext(), "Will block...");
                 mValues.get(position).setAsked(true);
                 mValues.get(position).setFeedbackTime(new Timestamp(System.currentTimeMillis()));
-                for(PolicyRule policyRule: policies){
+                for (PolicyRule policyRule : policies) {
                     policyRule.setEnabled(false);
                     MithrilDBHelper.getHelper(view.getContext()).updatePolicyRule(mithrilDB, policyRule);
                 }

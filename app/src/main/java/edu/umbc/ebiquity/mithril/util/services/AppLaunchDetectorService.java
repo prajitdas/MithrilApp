@@ -238,8 +238,8 @@ public class AppLaunchDetectorService extends Service implements
             for (SemanticActivity semanticActivity : getSemanticActivities())
                 semanticUserContextList.add(semanticActivity);
 
-            Log.d(MithrilAC.getDebugTag(), "Size"+semanticUserContextList.size());
-            for(SemanticUserContext semanticUserContext : semanticUserContextList)
+            Log.d(MithrilAC.getDebugTag(), "Size" + semanticUserContextList.size());
+            for (SemanticUserContext semanticUserContext : semanticUserContextList)
                 Log.d(MithrilAC.getDebugTag(), semanticUserContext.getClass().getName());
             return semanticUserContextList;
         }

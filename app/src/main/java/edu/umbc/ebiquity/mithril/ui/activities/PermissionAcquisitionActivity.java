@@ -18,8 +18,6 @@ import android.widget.CompoundButton;
 import android.widget.TextView;
 import android.widget.ToggleButton;
 
-import org.w3c.dom.Text;
-
 import java.util.List;
 
 import edu.umbc.ebiquity.mithril.MithrilAC;
