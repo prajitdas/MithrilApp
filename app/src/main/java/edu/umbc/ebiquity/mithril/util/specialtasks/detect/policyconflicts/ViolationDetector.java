@@ -136,6 +136,42 @@ public class ViolationDetector {
                      * We have an exact context match! Current context is an exact match for rule context.
                      * We have to do something...
                      */
+                    Log.d(MithrilAC.getDebugTag(), "Exact match. Do something!");
+                    for (PolicyRule rule : policyRules) {
+                        //Rule has an deny action, we have a violation to ask questions about
+                        if (rule.getAction().equals(Action.DENY)) {
+                            //Rule has a deny action, we have a violation
+                            Log.d(MithrilAC.getDebugTag(),
+                                    "This is a scenario where we have deny rules in the KB. " +
+                                            "We were not supposed to have this Something is wrong!");
+                            /**
+                             * We have a violation! All violations start as a false violation and they are
+                             * deemed true by user feedback. They may also be explicitly defined as false.
+                             * In which case we need to change the policy... We ask for more feedback.
+                             */
+                            handleViolation(context,
+                                    mithrilDB,
+                                    new Violation(
+                                            rule.getPolicyId(),
+                                            rule.getAppId(),
+                                            rule.getOp(),
+                                            rule.getAppStr(),
+                                            rule.getOpStr(),
+                                            false,
+                                            true,
+                                            new Timestamp(System.currentTimeMillis()),
+                                            policyContextList,
+                                            1
+                                    )
+                            );
+                        }
+                    }
+                } else if(MithrilCollections.isSubset(policyContextSet, currentContextSet)) {
+                    /**
+                     * We have a subset context match! Current context is an subset match for rule context.
+                     * We have to do something...
+                     */
+                    Log.d(MithrilAC.getDebugTag(), "Subset match. Do something!");
                     for (PolicyRule rule : policyRules) {
                         //Rule has an deny action, we have a violation to ask questions about
                         if (rule.getAction().equals(Action.DENY)) {
@@ -182,7 +218,7 @@ public class ViolationDetector {
                      * PolicyRules are by default disabled.
                      * Violations are by default marked true.
                      */
-
+                    Log.d(MithrilAC.getDebugTag(), "Perhaps it's a superset.. Do something!");
                     for (long currCtxtId : currentContextSet) {
                         Pair<String, String> ctxtTypeLabel = MithrilDBHelper.getHelper(context).findContextByID(mithrilDB, currCtxtId);
                         int newPolicyId = MithrilDBHelper.getHelper(context).findMaxPolicyId(mithrilDB) + 1;
