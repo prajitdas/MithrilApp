@@ -12,11 +12,11 @@
     <uses-permission
         android:name="android.permission.GET_APP_OPS_STATS"
         tools:ignore="ProtectedPermissions" />
-    <!-- @SystemApi Allows an application to update application operation statistics. Not for use by third party apps. - ->
+    <!-- @SystemApi Allows an application to update application operation statistics. Not for use by third party apps. -->
     <uses-permission
         android:name="android.permission.UPDATE_APP_OPS_STATS"
         tools:ignore="ProtectedPermissions" />
-    <!- - @SystemApi Allows an application to update the user app op restrictions. Not for use by third party apps. - ->
+    <!-- @SystemApi Allows an application to update the user app op restrictions. Not for use by third party apps. -->
     <uses-permission
         android:name="android.permission.MANAGE_APP_OPS_RESTRICTIONS"
         tools:ignore="ProtectedPermissions" />

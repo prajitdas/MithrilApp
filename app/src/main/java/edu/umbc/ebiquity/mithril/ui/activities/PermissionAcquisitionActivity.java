@@ -32,7 +32,7 @@ public class PermissionAcquisitionActivity extends AppCompatActivity {
 
     private ToggleButton mGenericPermToggleButton;
     private ToggleButton mSpecialPermToggleButton;
-//    private ToggleButton mSettingsPermToggleButton;
+    private ToggleButton mSettingsPermToggleButton;
     private ToggleButton mRootAccessToggleButton;
     private Button mQuitAppButton;
 
@@ -74,10 +74,8 @@ public class PermissionAcquisitionActivity extends AppCompatActivity {
 
         mGenericPermToggleButton = (ToggleButton) findViewById(R.id.genericPermToggleButton);
         mSpecialPermToggleButton = (ToggleButton) findViewById(R.id.specialPermToggleButton);
-//        mSettingsPermToggleButton = (ToggleButton) findViewById(R.id.settingsToggleButton);
-//        mSettingsPermToggleButton.setVisibility(View.GONE);
+        mSettingsPermToggleButton = (ToggleButton) findViewById(R.id.settingsToggleButton);
         mRootAccessToggleButton = (ToggleButton) findViewById(R.id.rootAccessToggleButton);
-//        mRootAccessToggleButton.setVisibility(View.GONE);
         mQuitAppButton = (Button) findViewById(R.id.quitAppButton);
         try {
             rootAccess = new RootAccess();
@@ -89,8 +87,8 @@ public class PermissionAcquisitionActivity extends AppCompatActivity {
             mGenericPermToggleButton.setChecked(true);
         if (!PermissionHelper.needsUsageStatsPermission(this))
             mSpecialPermToggleButton.setChecked(true);
-//        if (!PermissionHelper.needsWriteSettingsPermission(this))
-//            mSettingsPermToggleButton.setChecked(true);
+        if (!PermissionHelper.needsWriteSettingsPermission(this))
+            mSettingsPermToggleButton.setChecked(true);
         if (!PermissionHelper.needsRootPrivileges(this, rootAccess))
             mRootAccessToggleButton.setChecked(true);
 
@@ -149,7 +147,7 @@ public class PermissionAcquisitionActivity extends AppCompatActivity {
                     PermissionHelper.toast(buttonView.getContext(), "We have PACKAGE_USAGE_STATS permission already. Thank you!");
             }
         });
-        /* mSettingsPermToggleButton.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+        mSettingsPermToggleButton.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                 if (!buttonView.isChecked())
@@ -164,7 +162,7 @@ public class PermissionAcquisitionActivity extends AppCompatActivity {
                 else
                     PermissionHelper.toast(buttonView.getContext(), "We have WRITE_SETTINGS permission already. Thank you!");
             }
-        });*/
+        });
         mRootAccessToggleButton.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
@@ -285,8 +283,8 @@ public class PermissionAcquisitionActivity extends AppCompatActivity {
 
     private boolean isPermissionAcquisitionComplete() {
         return PermissionHelper.isAllRequiredPermissionsGranted(this) &&
-                !PermissionHelper.needsUsageStatsPermission(this);// &&
-//                !PermissionHelper.needsWriteSettingsPermission(this);
+                !PermissionHelper.needsUsageStatsPermission(this) &&
+                !PermissionHelper.needsWriteSettingsPermission(this);
     }
 
     @Override
