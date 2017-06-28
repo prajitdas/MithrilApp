@@ -6,5 +6,5 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     app:layoutManager="LinearLayoutManager"
-    tools:context="edu.umbc.ebiquity.mithril.ui.fragments.coreactivityfragments.UsageStatsFragment"
+    tools:context=".ui.fragments.coreactivityfragments.UsageStatsFragment"
     tools:listitem="@layout/fragment_usagestats" />
