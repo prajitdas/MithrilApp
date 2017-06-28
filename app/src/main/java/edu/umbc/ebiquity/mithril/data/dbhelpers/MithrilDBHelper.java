@@ -1887,7 +1887,6 @@ public class MithrilDBHelper extends SQLiteOpenHelper {
         }
 
         selectQuery = "SELECT " +
-                getContextTableName() + "." + CONTEXTTYPE + ", " +
                 getContextTableName() + "." + CONTEXTSEMLBL + ", " +
                 getContextTableName() + "." + CONTEXTLEVEL +
                 " FROM " +
