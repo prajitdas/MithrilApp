@@ -143,11 +143,10 @@ public class AppLaunchDetector {
                     AppOpsState.ALL_OPS_TEMPLATE,
                     appInfo.uid,
                     currentPackageName);
-            int position = 0;
+            Log.d(MithrilAC.getDebugTag(), "Number of operations found: " + entries.size());
             for (AppOpsState.AppOpEntry entry : entries) {
                 try {
-                    AppOpsManager.OpEntry currEntry = entry.getOpEntry(position);
-                    String appOpName = AppOpsManager.opToPermission(currEntry.getOp());
+                    String appOpName = AppOpsManager.opToPermission(entry.getOpEntry(0).getOp());
                     Log.d(MithrilAC.getDebugTag(), "Found usage of operation: " + appOpName);
                     Resource tempRes = null;
                     if (appOpName != null) {
@@ -160,33 +159,48 @@ public class AppLaunchDetector {
                                 if (pgi != null)
                                     tempRes = new Resource(
                                             pi.name, // Resource name
-                                            currEntry.getDuration(), // duration
-                                            currEntry.getOp(), // application operation
-                                            currEntry.getTime(), // time, most probably last time used
+                                            entry.getOpEntry(0).getDuration(), // duration
+                                            entry.getOpEntry(0).getOp(), // application operation
+                                            entry.getOpEntry(0).getTime(), // time, most probably last time used
                                             entry.getTimeText(context, true).toString(), // text version of when last used
                                             pgi.name, // resource group, in this case we are using the permission's group
                                             MithrilAC.getRiskForPerm(appOpName), // permission's risk level
 //                                        MithrilDBHelper.getHelper(context).findRiskLevelByPerm(mithrilDB, appOpName),
-                                            currEntry.getMode(), // mode of operation
-                                            currEntry.getRejectTime(), // when was this rejected the last time?
-                                            currEntry.getAllowedCount(), // how many times has this been allowed?
-                                            currEntry.getIgnoredCount() // how many times has this been ignored?
+                                            entry.getOpEntry(0).getMode(), // mode of operation
+                                            entry.getOpEntry(0).getRejectTime(), // when was this rejected the last time?
+                                            entry.getOpEntry(0).getAllowedCount(), // how many times has this been allowed?
+                                            entry.getOpEntry(0).getIgnoredCount() // how many times has this been ignored?
                                     );
                                 else
                                     tempRes = new Resource(
                                             pi.name, // Resource name
-                                            currEntry.getDuration(), // duration
-                                            currEntry.getOp(), // application operation
-                                            currEntry.getTime(), // time, most probably last time used
+                                            entry.getOpEntry(0).getDuration(), // duration
+                                            entry.getOpEntry(0).getOp(), // application operation
+                                            entry.getOpEntry(0).getTime(), // time, most probably last time used
                                             entry.getTimeText(context, true).toString(), // text version of when last used
                                             pgi.name, // resource group, in this case we are using the permission's group
                                             MithrilAC.getRiskForPerm(appOpName), // permission's risk level
 //                                        MithrilDBHelper.getHelper(context).findRiskLevelByPerm(mithrilDB, appOpName),
-                                            currEntry.getMode(), // mode of operation
-                                            currEntry.getRejectTime(), // when was this rejected the last time?
-                                            currEntry.getAllowedCount(), // how many times has this been allowed?
-                                            currEntry.getIgnoredCount() // how many times has this been ignored?
+                                            entry.getOpEntry(0).getMode(), // mode of operation
+                                            entry.getOpEntry(0).getRejectTime(), // when was this rejected the last time?
+                                            entry.getOpEntry(0).getAllowedCount(), // how many times has this been allowed?
+                                            entry.getOpEntry(0).getIgnoredCount() // how many times has this been ignored?
                                     );
+                            } else {
+                                tempRes = new Resource(
+                                        pi.name, // Resource name
+                                        entry.getOpEntry(0).getDuration(), // duration
+                                        entry.getOpEntry(0).getOp(), // application operation
+                                        entry.getOpEntry(0).getTime(), // time, most probably last time used
+                                        entry.getTimeText(context, true).toString(), // text version of when last used
+                                        MithrilAC.getNoPermissionGroupDesc(), // resource group, no group
+                                        MithrilAC.getRiskForPerm(appOpName), // permission's risk level
+//                                        MithrilDBHelper.getHelper(context).findRiskLevelByPerm(mithrilDB, appOpName),
+                                        entry.getOpEntry(0).getMode(), // mode of operation
+                                        entry.getOpEntry(0).getRejectTime(), // when was this rejected the last time?
+                                        entry.getOpEntry(0).getAllowedCount(), // how many times has this been allowed?
+                                        entry.getOpEntry(0).getIgnoredCount() // how many times has this been ignored?
+                                );
                             }
                         } catch (PackageManager.NameNotFoundException e) {
                             Log.e(MithrilAC.getDebugTag(), e.getMessage());
@@ -194,7 +208,6 @@ public class AppLaunchDetector {
                     }
                     if (tempRes != null)
                         resources.add(tempRes);
-                    position++;
                 } catch (IndexOutOfBoundsException e) {
                     Log.e(MithrilAC.getDebugTag(), "Operations were empty!");
                 }

@@ -80,7 +80,7 @@
             android:theme="@style/AppTheme.Button" />
     </LinearLayout>
 
-    <LinearLayout
+    <!--LinearLayout
         android:id="@+id/settingsPerm"
         android:layout_width="match_parent"
         android:layout_height="50dp"
@@ -107,13 +107,13 @@
             android:layout_height="wrap_content"
             android:layout_weight="0.25"
             android:theme="@style/AppTheme.Button" />
-    </LinearLayout>
+    </LinearLayout-->
 
     <LinearLayout
         android:id="@+id/rootAccess"
         android:layout_width="match_parent"
         android:layout_height="50dp"
-        android:layout_below="@+id/settingsPerm"
+        android:layout_below="@+id/specialPerm"
         android:orientation="horizontal"
         android:layout_marginBottom="@dimen/fab_margin"
         android:layout_marginStart="@dimen/fab_margin"

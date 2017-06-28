@@ -32,7 +32,7 @@ public class PermissionAcquisitionActivity extends AppCompatActivity {
 
     private ToggleButton mGenericPermToggleButton;
     private ToggleButton mSpecialPermToggleButton;
-    private ToggleButton mSettingsPermToggleButton;
+//    private ToggleButton mSettingsPermToggleButton;
     private ToggleButton mRootAccessToggleButton;
     private Button mQuitAppButton;
 
@@ -66,7 +66,7 @@ public class PermissionAcquisitionActivity extends AppCompatActivity {
                         | View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY);
     }
 
-//    private RootAccess rootAccess;
+    private RootAccess rootAccess;
 
     private void initViews() {
         setContentView(R.layout.activity_permission_acquisition);
@@ -74,25 +74,25 @@ public class PermissionAcquisitionActivity extends AppCompatActivity {
 
         mGenericPermToggleButton = (ToggleButton) findViewById(R.id.genericPermToggleButton);
         mSpecialPermToggleButton = (ToggleButton) findViewById(R.id.specialPermToggleButton);
-        mSettingsPermToggleButton = (ToggleButton) findViewById(R.id.settingsToggleButton);
-        mSettingsPermToggleButton.setVisibility(View.GONE);
+//        mSettingsPermToggleButton = (ToggleButton) findViewById(R.id.settingsToggleButton);
+//        mSettingsPermToggleButton.setVisibility(View.GONE);
         mRootAccessToggleButton = (ToggleButton) findViewById(R.id.rootAccessToggleButton);
-        mRootAccessToggleButton.setVisibility(View.GONE);
+//        mRootAccessToggleButton.setVisibility(View.GONE);
         mQuitAppButton = (Button) findViewById(R.id.quitAppButton);
-//        try {
-//            rootAccess = new RootAccess();
-//        } catch (PhoneNotRootedException e) {
-//            mRootAccessToggleButton.setVisibility(View.GONE);
-//        }
+        try {
+            rootAccess = new RootAccess();
+        } catch (PhoneNotRootedException e) {
+            mRootAccessToggleButton.setVisibility(View.GONE);
+        }
 
         if (PermissionHelper.isAllRequiredPermissionsGranted(this))
             mGenericPermToggleButton.setChecked(true);
         if (!PermissionHelper.needsUsageStatsPermission(this))
             mSpecialPermToggleButton.setChecked(true);
-        if (!PermissionHelper.needsWriteSettingsPermission(this))
-            mSettingsPermToggleButton.setChecked(true);
-//        if (!PermissionHelper.needsRootPrivileges(this, rootAccess))
-//            mRootAccessToggleButton.setChecked(true);
+//        if (!PermissionHelper.needsWriteSettingsPermission(this))
+//            mSettingsPermToggleButton.setChecked(true);
+        if (!PermissionHelper.needsRootPrivileges(this, rootAccess))
+            mRootAccessToggleButton.setChecked(true);
 
         setOnClickListeners();
         setOnCheckedChangeListener();
@@ -107,20 +107,20 @@ public class PermissionAcquisitionActivity extends AppCompatActivity {
         });
     }
 
-//    private class RootTask implements Runnable {
-//        @Override
-//        public void run() {
-//            try {
-//                rootAccess.runScript(new String[] {
-//                        MithrilAC.getCmdGrantGetAppOpsStats(),
-//                        MithrilAC.getCmdGrantManageAppOpsRestrictions(),
-//                        MithrilAC.getCmdGrantUpdateAppOpsStats()
-//                });
-//            } catch (PhoneNotRootedException e) {
-//                Log.d(MithrilAC.getDebugTag(), "Phone is not rooted... full functionality unavailable but can perform first phase of the MithrilAC study!");
-//            }
-//        }
-//    }
+    private class RootTask implements Runnable {
+        @Override
+        public void run() {
+            try {
+                rootAccess.runScript(new String[] {
+                        MithrilAC.getCmdGrantGetAppOpsStats(),
+                        MithrilAC.getCmdGrantManageAppOpsRestrictions(),
+                        MithrilAC.getCmdGrantUpdateAppOpsStats()
+                });
+            } catch (PhoneNotRootedException e) {
+                Log.d(MithrilAC.getDebugTag(), "Phone is not rooted... full functionality unavailable but can perform first phase of the MithrilAC study!");
+            }
+        }
+    }
 
     private void setOnCheckedChangeListener() {
         mGenericPermToggleButton.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
@@ -149,8 +149,7 @@ public class PermissionAcquisitionActivity extends AppCompatActivity {
                     PermissionHelper.toast(buttonView.getContext(), "We have PACKAGE_USAGE_STATS permission already. Thank you!");
             }
         });
-    }/*
-        mSettingsPermToggleButton.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+        /* mSettingsPermToggleButton.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                 if (!buttonView.isChecked())
@@ -165,7 +164,7 @@ public class PermissionAcquisitionActivity extends AppCompatActivity {
                 else
                     PermissionHelper.toast(buttonView.getContext(), "We have WRITE_SETTINGS permission already. Thank you!");
             }
-        });
+        });*/
         mRootAccessToggleButton.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
@@ -207,7 +206,7 @@ public class PermissionAcquisitionActivity extends AppCompatActivity {
 //                        );
             }
         });
-    }*/
+    }
 
     public void requestAllNecessaryPermissions() {
         List<String> permissionsThatCanBeRequested = PermissionHelper.getPermissionsThatCanBeRequested(this);
@@ -265,20 +264,6 @@ public class PermissionAcquisitionActivity extends AppCompatActivity {
         switch (requestCode) {
             case MithrilAC.USAGE_STATS_PERMISSION_REQUEST_CODE: {
                 if (resultCode == Activity.RESULT_OK) {
-                    mSettingsPermToggleButton.setChecked(true);
-                    editor.putBoolean(MithrilAC.getPrefKeyUserDeniedPermissions(), false);
-                    editor.apply();
-                    if (isPermissionAcquisitionComplete()) {
-                        startNextActivity(this, InstanceCreationActivity.class);
-                    }
-                } else {
-                    editor.putBoolean(MithrilAC.getPrefKeyUserDeniedPermissions(), true);
-                    editor.apply();
-                }
-                break;
-            }
-            case MithrilAC.WRITE_SETTINGS_PERMISSION_REQUEST_CODE: {
-                if (resultCode == Activity.RESULT_OK) {
                     editor.putBoolean(MithrilAC.getPrefKeyUserDeniedPermissions(), false);
                     editor.apply();
                     if (isPermissionAcquisitionComplete()) {
@@ -300,8 +285,8 @@ public class PermissionAcquisitionActivity extends AppCompatActivity {
 
     private boolean isPermissionAcquisitionComplete() {
         return PermissionHelper.isAllRequiredPermissionsGranted(this) &&
-                !PermissionHelper.needsUsageStatsPermission(this) &&
-                !PermissionHelper.needsWriteSettingsPermission(this);
+                !PermissionHelper.needsUsageStatsPermission(this);// &&
+//                !PermissionHelper.needsWriteSettingsPermission(this);
     }
 
     @Override
