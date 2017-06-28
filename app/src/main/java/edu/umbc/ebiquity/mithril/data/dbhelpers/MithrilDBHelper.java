@@ -240,7 +240,7 @@ public class MithrilDBHelper extends SQLiteOpenHelper {
             POLRULAPPSTR + " TEXT NOT NULL, " +
             POLRULCTXSTR + " TEXT NOT NULL, " +
             POLRULOPSTR + " TEXT NOT NULL, " +
-            "PRIMARY KEY(" + POLRULAPPID + ", " + POLRULCTXID + ", " + POLRULOPID + "), " +
+            "PRIMARY KEY(" + POLRULID + ", " + POLRULAPPID + ", " + POLRULCTXID + ", " + POLRULOPID + "), " +
             "FOREIGN KEY(" + POLRULAPPID + ") REFERENCES " + getAppsTableName() + "(" + APPID + ") ON DELETE CASCADE, " +
             "FOREIGN KEY(" + POLRULCTXID + ") REFERENCES " + getContextTableName() + "(" + CONTEXTID + ")" +
             ");";
