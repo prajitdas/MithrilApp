@@ -31,6 +31,7 @@ public class PermissionAcquisitionActivity extends AppCompatActivity {
     private ToggleButton mGenericPermToggleButton;
     private ToggleButton mSpecialPermToggleButton;
     private ToggleButton mSettingsPermToggleButton;
+    private ToggleButton mSystemAlertWindowPermToggleButton;
     private ToggleButton mRootAccessToggleButton;
     private Button mQuitAppButton;
     private RootAccess rootAccess;
@@ -72,6 +73,7 @@ public class PermissionAcquisitionActivity extends AppCompatActivity {
         mGenericPermToggleButton = (ToggleButton) findViewById(R.id.genericPermToggleButton);
         mSpecialPermToggleButton = (ToggleButton) findViewById(R.id.specialPermToggleButton);
         mSettingsPermToggleButton = (ToggleButton) findViewById(R.id.settingsToggleButton);
+        mSystemAlertWindowPermToggleButton = (ToggleButton) findViewById(R.id.systemAlertWindowToggleButton);
         mRootAccessToggleButton = (ToggleButton) findViewById(R.id.rootAccessToggleButton);
         mQuitAppButton = (Button) findViewById(R.id.quitAppButton);
         try {
@@ -142,6 +144,21 @@ public class PermissionAcquisitionActivity extends AppCompatActivity {
                     startActivityForResult(goToSettings, MithrilAC.WRITE_SETTINGS_PERMISSION_REQUEST_CODE);
                 } else
                     PermissionHelper.toast(buttonView.getContext(), "We have WRITE_SETTINGS permission already. Thank you!");
+            }
+        });
+        mSystemAlertWindowPermToggleButton.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                if (!buttonView.isChecked())
+                    buttonView.setChecked(true);
+                else
+                    buttonView.setChecked(false);
+                if (PermissionHelper.needsWriteSettingsPermission(buttonView.getContext())) {
+                    Intent goToSettings = new Intent(Settings.ACTION_MANAGE_OVERLAY_PERMISSION);
+                    goToSettings.setData(Uri.parse("package:" + getPackageName()));
+                    startActivityForResult(goToSettings, MithrilAC.SYSTEM_ALERT_WINDOW_PERMISSION_REQUEST_CODE);
+                } else
+                    PermissionHelper.toast(buttonView.getContext(), "We have SYSTEM_ALERT_WINDOW permission already. Thank you!");
             }
         });
         mRootAccessToggleButton.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
@@ -243,14 +260,52 @@ public class PermissionAcquisitionActivity extends AppCompatActivity {
         switch (requestCode) {
             case MithrilAC.USAGE_STATS_PERMISSION_REQUEST_CODE: {
                 if (resultCode == Activity.RESULT_OK) {
-                    editor.putBoolean(MithrilAC.getPrefKeyUserDeniedPermissions(), false);
-                    editor.apply();
-                    if (isPermissionAcquisitionComplete()) {
-                        startNextActivity(this, InstanceCreationActivity.class);
+                    if (!PermissionHelper.needsUsageStatsPermission(this)) {
+                        editor.putBoolean(MithrilAC.getPrefKeyUserDeniedPermissions(), false);
+                        editor.apply();
+                        if (isPermissionAcquisitionComplete()) {
+                            startNextActivity(this, InstanceCreationActivity.class);
+                        }
                     }
                 } else {
-                    editor.putBoolean(MithrilAC.getPrefKeyUserDeniedPermissions(), true);
-                    editor.apply();
+                    if (!PermissionHelper.needsUsageStatsPermission(this)) {
+                        editor.putBoolean(MithrilAC.getPrefKeyUserDeniedPermissions(), true);
+                        editor.apply();
+                    }
+                }
+                break;
+            }
+            case MithrilAC.WRITE_SETTINGS_PERMISSION_REQUEST_CODE: {
+                if (resultCode == Activity.RESULT_OK) {
+                    if (!PermissionHelper.needsWriteSettingsPermission(this)) {
+                        editor.putBoolean(MithrilAC.getPrefKeyUserDeniedPermissions(), false);
+                        editor.apply();
+                        if (isPermissionAcquisitionComplete()) {
+                            startNextActivity(this, InstanceCreationActivity.class);
+                        }
+                    }
+                } else {
+                    if(PermissionHelper.needsWriteSettingsPermission(this)) {
+                        editor.putBoolean(MithrilAC.getPrefKeyUserDeniedPermissions(), true);
+                        editor.apply();
+                    }
+                }
+                break;
+            }
+            case MithrilAC.SYSTEM_ALERT_WINDOW_PERMISSION_REQUEST_CODE: {
+                if (resultCode == Activity.RESULT_OK) {
+                    if (!PermissionHelper.needsSystemAlertWindowPermission(this)) {
+                        editor.putBoolean(MithrilAC.getPrefKeyUserDeniedPermissions(), false);
+                        editor.apply();
+                        if (isPermissionAcquisitionComplete()) {
+                            startNextActivity(this, InstanceCreationActivity.class);
+                        }
+                    }
+                } else {
+                    if (PermissionHelper.needsSystemAlertWindowPermission(this)) {
+                        editor.putBoolean(MithrilAC.getPrefKeyUserDeniedPermissions(), true);
+                        editor.apply();
+                    }
                 }
                 break;
             }
@@ -265,7 +320,8 @@ public class PermissionAcquisitionActivity extends AppCompatActivity {
     private boolean isPermissionAcquisitionComplete() {
         return PermissionHelper.isAllRequiredPermissionsGranted(this) &&
                 !PermissionHelper.needsUsageStatsPermission(this) &&
-                !PermissionHelper.needsWriteSettingsPermission(this);
+                !PermissionHelper.needsWriteSettingsPermission(this) &&
+                !PermissionHelper.needsSystemAlertWindowPermission(this);
     }
 
     @Override

@@ -68,6 +68,7 @@
     <string name="allow_generic_permissions">Location, Storage and Calendar</string>
     <string name="allow_special_usage_stats_permission">App usage stats</string>
     <string name="allow_settings_permission">System settings</string>
+    <string name="draw_over_apps_permission">Permission for drawing over other apps</string>
     <string name="allow_root_access">AppOps through root</string>
     <string name="allow_access_fine_location_permission">ACCESS_FINE_LOCATION permission is mandatory for app functionality</string>
     <string name="allow_write_external_storage_permission">WRITE_EXTERNAL_STORAGE permission is mandatory for app functionality</string>

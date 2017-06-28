@@ -105,6 +105,10 @@ public class PermissionHelper {
         return postLollipop() && !hasWriteSettingsPermission(context);
     }
 
+    public static boolean needsSystemAlertWindowPermission(Context context) {
+        return postLollipop() && !hasSystemAlertWindowPermission(context);
+    }
+
     public static boolean needsRootPrivileges(Context context, RootAccess rootAccess) {
         Log.d(MithrilAC.getDebugTag(),
                 "REAL_GET_TASKS: " + String.valueOf(
@@ -171,9 +175,11 @@ public class PermissionHelper {
         if (Settings.System.canWrite(context))
             return true;
         return false;
-//        AppOpsManager appOpsManager = (AppOpsManager) context.getSystemService(Context.APP_OPS_SERVICE);
-//        int mode = appOpsManager.checkOpNoThrow(AppOpsManager.OPSTR_WRITE_SETTINGS, android.os.Process.myUid(), context.getPackageName());
-//        Log.d(MithrilAC.getDebugTag(), "hasWriteSettingsPermission: " + Integer.toString(mode));
-//        return mode == AppOpsManager.MODE_ALLOWED;
+    }
+
+    private static boolean hasSystemAlertWindowPermission(Context context) {
+        if (Settings.canDrawOverlays(context))
+            return true;
+        return false;
     }
 }
