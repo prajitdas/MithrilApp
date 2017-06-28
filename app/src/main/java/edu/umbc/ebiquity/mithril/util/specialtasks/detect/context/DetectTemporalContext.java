@@ -90,18 +90,12 @@ public class DetectTemporalContext {
         if (isWithinTimePeriod(semanticTimes.get(MithrilAC.getPrefWorkMorningTemporalKey()))) {
             currentSemanticTimes.add(semanticTimes.get(MithrilAC.getPrefWorkMorningTemporalKey()));
             currentSemanticTimes.add(semanticTimes.get(MithrilAC.getPrefProfessionalTemporalKey()));
-            Log.d(MithrilAC.getDebugTag(), "times 14size"+currCalendar.get(Calendar.HOUR_OF_DAY));
-            Log.d(MithrilAC.getDebugTag(), "times 14size"+currCalendar.get(Calendar.MINUTE));
-            Log.d(MithrilAC.getDebugTag(), "times 14size"+semanticTimes.get(MithrilAC.getPrefWorkMorningTemporalKey()).getStartHour());
-            Log.d(MithrilAC.getDebugTag(), "times 14size"+semanticTimes.get(MithrilAC.getPrefWorkMorningTemporalKey()).getEndHour());
+            Log.d(MithrilAC.getDebugTag(), "times 14size"+currentSemanticTimes.size());
         }
         if (isWithinTimePeriod(semanticTimes.get(MithrilAC.getPrefWorkAfternoonTemporalKey()))) {
             currentSemanticTimes.add(semanticTimes.get(MithrilAC.getPrefWorkAfternoonTemporalKey()));
             currentSemanticTimes.add(semanticTimes.get(MithrilAC.getPrefProfessionalTemporalKey()));
-            Log.d(MithrilAC.getDebugTag(), "times 15size"+currCalendar.get(Calendar.HOUR_OF_DAY));
-            Log.d(MithrilAC.getDebugTag(), "times 15size"+currCalendar.get(Calendar.MINUTE));
-            Log.d(MithrilAC.getDebugTag(), "times 15size"+semanticTimes.get(MithrilAC.getPrefWorkMorningTemporalKey()).getStartHour());
-            Log.d(MithrilAC.getDebugTag(), "times 15size"+semanticTimes.get(MithrilAC.getPrefWorkMorningTemporalKey()).getEndHour());
+            Log.d(MithrilAC.getDebugTag(), "times 15size"+currentSemanticTimes.size());
         }
         currentSemanticTimes.add(semanticTimes.get(MithrilAC.getPrefAnydaytimeTemporalKey()));
         Log.d(MithrilAC.getDebugTag(), "times 16size"+currentSemanticTimes.size());
