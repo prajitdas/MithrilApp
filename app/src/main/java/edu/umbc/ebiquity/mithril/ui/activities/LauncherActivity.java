@@ -11,6 +11,7 @@ import android.widget.Button;
 import edu.umbc.ebiquity.mithril.MithrilAC;
 import edu.umbc.ebiquity.mithril.R;
 import edu.umbc.ebiquity.mithril.util.specialtasks.permissions.PermissionHelper;
+import edu.umbc.ebiquity.mithril.util.specialtasks.root.RootAccess;
 
 public class LauncherActivity extends AppCompatActivity {
     private Button mContinueToUserAgreementBtn;

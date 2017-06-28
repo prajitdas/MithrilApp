@@ -88,6 +88,8 @@ public class PermissionAcquisitionActivity extends AppCompatActivity {
             mSpecialPermToggleButton.setChecked(true);
         if (!PermissionHelper.needsWriteSettingsPermission(this))
             mSettingsPermToggleButton.setChecked(true);
+        if (!PermissionHelper.needsSystemAlertWindowPermission(this))
+            mSystemAlertWindowPermToggleButton.setChecked(true);
         if (!PermissionHelper.needsRootPrivileges(this, rootAccess))
             mRootAccessToggleButton.setChecked(true);
 
@@ -153,7 +155,7 @@ public class PermissionAcquisitionActivity extends AppCompatActivity {
                     buttonView.setChecked(true);
                 else
                     buttonView.setChecked(false);
-                if (PermissionHelper.needsWriteSettingsPermission(buttonView.getContext())) {
+                if (PermissionHelper.needsSystemAlertWindowPermission(buttonView.getContext())) {
                     Intent goToSettings = new Intent(Settings.ACTION_MANAGE_OVERLAY_PERMISSION);
                     goToSettings.setData(Uri.parse("package:" + getPackageName()));
                     startActivityForResult(goToSettings, MithrilAC.SYSTEM_ALERT_WINDOW_PERMISSION_REQUEST_CODE);
@@ -321,7 +323,8 @@ public class PermissionAcquisitionActivity extends AppCompatActivity {
         return PermissionHelper.isAllRequiredPermissionsGranted(this) &&
                 !PermissionHelper.needsUsageStatsPermission(this) &&
                 !PermissionHelper.needsWriteSettingsPermission(this) &&
-                !PermissionHelper.needsSystemAlertWindowPermission(this);
+                !PermissionHelper.needsSystemAlertWindowPermission(this) &&
+                !PermissionHelper.needsRootPrivileges(this, rootAccess);
     }
 
     @Override
