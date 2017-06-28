@@ -105,6 +105,7 @@ public class ViolationDetector {
 
         // Let's test the rules we found
         for (Resource currentOperation : operationsPerformed) {
+            Action actionForCurrentOperationAndApp = Action.DENY;
             int lastOperationPerformed = currentOperation.getOp();
             List<PolicyRule> policyRules = MithrilDBHelper.getHelper(context).findAllPoliciesForAppWhenPerformingOp(mithrilDB, currentPackageName, lastOperationPerformed);
             Set<Long> policyContextSet = new HashSet<>();
@@ -140,6 +141,10 @@ public class ViolationDetector {
                     for (PolicyRule rule : policyRules) {
                         //Rule has an deny action, we have a violation to ask questions about
                         if (rule.getAction().equals(Action.DENY)) {
+                            if(actionForCurrentOperationAndApp.equals(Action.ALLOW))
+                                throw new SemanticInconsistencyException("Same policy has conflicting actions for different context");
+                            else
+                                actionForCurrentOperationAndApp = Action.DENY;
                             //Rule has a deny action, we have a violation
                             Log.d(MithrilAC.getDebugTag(),
                                     "This is a scenario where we have deny rules in the KB. " +
@@ -164,6 +169,11 @@ public class ViolationDetector {
                                             1
                                     )
                             );
+                        } else {
+                            if(actionForCurrentOperationAndApp.equals(Action.DENY))
+                                throw new SemanticInconsistencyException("Same policy has conflicting actions for different context");
+                            else
+                                actionForCurrentOperationAndApp = Action.ALLOW;
                         }
                     }
                 } else if(MithrilCollections.isSubset(policyContextSet, currentContextSet)) {
@@ -175,6 +185,10 @@ public class ViolationDetector {
                     for (PolicyRule rule : policyRules) {
                         //Rule has an deny action, we have a violation to ask questions about
                         if (rule.getAction().equals(Action.DENY)) {
+                            if(actionForCurrentOperationAndApp.equals(Action.ALLOW))
+                                throw new SemanticInconsistencyException("Same policy has conflicting actions for different context");
+                            else
+                                actionForCurrentOperationAndApp = Action.DENY;
                             //Rule has a deny action, we have a violation
                             Log.d(MithrilAC.getDebugTag(),
                                     "This is a scenario where we have deny rules in the KB. " +
@@ -199,6 +213,11 @@ public class ViolationDetector {
                                             1
                                     )
                             );
+                        } else {
+                            if(actionForCurrentOperationAndApp.equals(Action.DENY))
+                                throw new SemanticInconsistencyException("Same policy has conflicting actions for different context");
+                            else
+                                actionForCurrentOperationAndApp = Action.ALLOW;
                         }
                     }
                 } else {
@@ -218,7 +237,7 @@ public class ViolationDetector {
                      * PolicyRules are by default disabled.
                      * Violations are by default marked true.
                      */
-                    Log.d(MithrilAC.getDebugTag(), "Perhaps it's a superset.. Do something!");
+                    Log.d(MithrilAC.getDebugTag(), "Perhaps it's a superset.. we don't know what to do, ask user");
                     for (long currCtxtId : currentContextSet) {
                         Pair<String, String> ctxtTypeLabel = MithrilDBHelper.getHelper(context).findContextByID(mithrilDB, currCtxtId);
                         int newPolicyId = MithrilDBHelper.getHelper(context).findMaxPolicyId(mithrilDB) + 1;
