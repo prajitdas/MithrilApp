@@ -96,10 +96,13 @@ public class ViolationRecyclerViewAdapter extends RecyclerView.Adapter<Violation
             @Override
             public void onClick(View v) {
 //                PermissionHelper.toast(view.getContext(), "Will allow...");
+                mValues.get(position).setAsked(true);
+                mValues.get(position).setFeedbackTime(new Timestamp(System.currentTimeMillis()));
+                MithrilDBHelper.getHelper(view.getContext()).updateViolationForRowId(mithrilDB, mValues.get(position), rowid);
                 if (null != mListener) {
                     // Notify the active callbacks interface (the activity, if the
                     // fragment is attached to one) that an item has been selected.
-                    mListener.onListFragmentInteraction(holder.mItem, false);
+                    mListener.onListFragmentInteraction(holder.mItem, true);
                 }
             }
         });
@@ -108,9 +111,6 @@ public class ViolationRecyclerViewAdapter extends RecyclerView.Adapter<Violation
             @Override
             public void onClick(View v) {
 //                PermissionHelper.toast(view.getContext(), "Let's add/modify rules");
-                mValues.get(position).setAsked(true);
-                mValues.get(position).setFeedbackTime(new Timestamp(System.currentTimeMillis()));
-                MithrilDBHelper.getHelper(view.getContext()).updateViolationForRowId(mithrilDB, mValues.get(position), rowid);
                 if (null != mListener) {
                     // Notify the active callbacks interface (the activity, if the
                     // fragment is attached to one) that an item has been selected.
@@ -123,11 +123,11 @@ public class ViolationRecyclerViewAdapter extends RecyclerView.Adapter<Violation
             @Override
             public void onClick(View v) {
 //                PermissionHelper.toast(view.getContext(), "Let's add/modify rules");
-                if (null != mListener) {
-                    // Notify the active callbacks interface (the activity, if the
-                    // fragment is attached to one) that an item has been selected.
-                    mListener.onListFragmentInteraction(holder.mItem, false);
-                }
+//                if (null != mListener) {
+//                    // Notify the active callbacks interface (the activity, if the
+//                    // fragment is attached to one) that an item has been selected.
+//                    mListener.onListFragmentInteraction(holder.mItem, false);
+//                }
             }
         });
     }
