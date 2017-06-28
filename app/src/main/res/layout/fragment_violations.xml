@@ -75,6 +75,19 @@
                 android:theme="@style/AppTheme.Button" />
 
             <Button
+                android:id="@+id/falsePartialViolationButton"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerHorizontal="true"
+                android:layout_below="@+id/violationContext"
+                android:layout_marginEnd="@dimen/activity_vertical_margin"
+                android:layout_marginStart="@dimen/activity_vertical_margin"
+                android:text="@string/button_false_violation"
+                android:textColor="@color/green"
+                android:textSize="12sp"
+                android:theme="@style/AppTheme.Button" />
+
+            <Button
                 android:id="@+id/falseViolationButton"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -82,7 +95,7 @@
                 android:layout_below="@+id/violationContext"
                 android:layout_marginEnd="@dimen/activity_vertical_margin"
                 android:layout_marginStart="@dimen/activity_vertical_margin"
-                android:text="@string/button_false_violation"
+                android:text="@string/partial_button_false_violation"
                 android:textColor="@color/colorPrimaryDark"
                 android:textSize="12sp"
                 android:theme="@style/AppTheme.Button" />

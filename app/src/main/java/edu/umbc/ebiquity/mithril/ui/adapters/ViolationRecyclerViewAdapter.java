@@ -16,7 +16,6 @@ import java.util.List;
 import edu.umbc.ebiquity.mithril.MithrilAC;
 import edu.umbc.ebiquity.mithril.R;
 import edu.umbc.ebiquity.mithril.data.dbhelpers.MithrilDBHelper;
-import edu.umbc.ebiquity.mithril.data.model.Policy;
 import edu.umbc.ebiquity.mithril.data.model.components.AppData;
 import edu.umbc.ebiquity.mithril.data.model.rules.PolicyRule;
 import edu.umbc.ebiquity.mithril.data.model.rules.Violation;
@@ -53,6 +52,7 @@ public class ViolationRecyclerViewAdapter extends RecyclerView.Adapter<Violation
         final SQLiteDatabase mithrilDB = MithrilDBHelper.getHelper(view.getContext()).getWritableDatabase();
         final AppData violatingApp = MithrilDBHelper.getHelper(view.getContext()).findAppById(mithrilDB, mValues.get(position).getAppId());
         final long rowid = MithrilDBHelper.getHelper(view.getContext()).findViolationRowIdByPolicyAppOpId(mithrilDB, mValues.get(position));
+        final List<PolicyRule> policies = MithrilDBHelper.getHelper(view.getContext()).findAllPoliciesById(mithrilDB, mValues.get(position).getPolicyId());
 
         holder.mItem = mValues.get(position);
         holder.mViolatingAppIcon.setImageBitmap(violatingApp.getIcon());
@@ -73,13 +73,12 @@ public class ViolationRecyclerViewAdapter extends RecyclerView.Adapter<Violation
         holder.mViolationContext.setText("In context: " +
                 mValues.get(position).getContextsString(context));
 
-        holder.mViolationResponseYesButton.setOnClickListener(new View.OnClickListener() {
+        holder.mTrueViolationButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                PermissionHelper.toast(view.getContext(), "Will do...");
+//                PermissionHelper.toast(view.getContext(), "Will block...");
                 mValues.get(position).setAsked(true);
                 mValues.get(position).setFeedbackTime(new Timestamp(System.currentTimeMillis()));
-                List<PolicyRule> policies = MithrilDBHelper.getHelper(view.getContext()).findAllPoliciesById(mithrilDB, mValues.get(position).getPolicyId());
                 for(PolicyRule policyRule: policies){
                     policyRule.setEnabled(false);
                     MithrilDBHelper.getHelper(view.getContext()).updatePolicyRule(mithrilDB, policyRule);
@@ -93,10 +92,25 @@ public class ViolationRecyclerViewAdapter extends RecyclerView.Adapter<Violation
             }
         });
 
-        holder.mViolationResponseNoButton.setOnClickListener(new View.OnClickListener() {
+        holder.mFalseViolationButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                PermissionHelper.toast(view.getContext(), "Let's add/modify rules");
+//                PermissionHelper.toast(view.getContext(), "Will allow...");
+                if (null != mListener) {
+                    // Notify the active callbacks interface (the activity, if the
+                    // fragment is attached to one) that an item has been selected.
+                    mListener.onListFragmentInteraction(holder.mItem, false);
+                }
+            }
+        });
+
+        holder.mFalsePartialViolationButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+//                PermissionHelper.toast(view.getContext(), "Let's add/modify rules");
+                mValues.get(position).setAsked(true);
+                mValues.get(position).setFeedbackTime(new Timestamp(System.currentTimeMillis()));
+                MithrilDBHelper.getHelper(view.getContext()).updateViolationForRowId(mithrilDB, mValues.get(position), rowid);
                 if (null != mListener) {
                     // Notify the active callbacks interface (the activity, if the
                     // fragment is attached to one) that an item has been selected.
@@ -108,7 +122,7 @@ public class ViolationRecyclerViewAdapter extends RecyclerView.Adapter<Violation
         holder.mView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                PermissionHelper.toast(view.getContext(), "Let's add/modify rules");
+//                PermissionHelper.toast(view.getContext(), "Let's add/modify rules");
                 if (null != mListener) {
                     // Notify the active callbacks interface (the activity, if the
                     // fragment is attached to one) that an item has been selected.
@@ -129,8 +143,9 @@ public class ViolationRecyclerViewAdapter extends RecyclerView.Adapter<Violation
         private final TextView mViolationAppLaunch;
         private final TextView mViolationOpDetail;
         private final TextView mViolationContext;
-        private final Button mViolationResponseYesButton;
-        private final Button mViolationResponseNoButton;
+        private final Button mTrueViolationButton;
+        private final Button mFalseViolationButton;
+        private final Button mFalsePartialViolationButton;
 
         private Violation mItem;
 
@@ -141,8 +156,9 @@ public class ViolationRecyclerViewAdapter extends RecyclerView.Adapter<Violation
             mViolationAppLaunch = (TextView) view.findViewById(R.id.violationAppLaunch);
             mViolationOpDetail = (TextView) view.findViewById(R.id.violationOpDetail);
             mViolationContext = (TextView) view.findViewById(R.id.violationContext);
-            mViolationResponseYesButton = (Button) view.findViewById(R.id.trueViolationButton);
-            mViolationResponseNoButton = (Button) view.findViewById(R.id.falseViolationButton);
+            mTrueViolationButton = (Button) view.findViewById(R.id.trueViolationButton);
+            mFalseViolationButton = (Button) view.findViewById(R.id.falseViolationButton);
+            mFalsePartialViolationButton = (Button) view.findViewById(R.id.falsePartialViolationButton);
         }
 
         @Override
