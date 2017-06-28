@@ -196,7 +196,7 @@ public class AppLaunchDetector {
                         resources.add(tempRes);
                     position++;
                 } catch (IndexOutOfBoundsException e) {
-                    Log.e(MithrilAC.getDebugTag(), "We might not have GET_APP_OPS_STATS permission!");
+                    Log.e(MithrilAC.getDebugTag(), "Operations were empty!");
                 }
             }
             Collections.sort(resources, mLastTimeUsedComparator);

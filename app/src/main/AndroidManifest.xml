@@ -8,15 +8,15 @@
     <uses-permission
         android:name="android.permission.PACKAGE_USAGE_STATS"
         tools:ignore="ProtectedPermissions" />
-    <!-- @SystemApi @hide Allows an application to collect battery statistics -->
+    <!-- @SystemApi @hide Allows an application to collect battery statistics - ->
     <uses-permission
         android:name="android.permission.GET_APP_OPS_STATS"
         tools:ignore="ProtectedPermissions" />
-    <!-- @SystemApi Allows an application to update application operation statistics. Not for use by third party apps. -->
+    <!- - @SystemApi Allows an application to update application operation statistics. Not for use by third party apps. - ->
     <uses-permission
         android:name="android.permission.UPDATE_APP_OPS_STATS"
         tools:ignore="ProtectedPermissions" />
-    <!-- @SystemApi Allows an application to update the user app op restrictions. Not for use by third party apps. -->
+    <!- - @SystemApi Allows an application to update the user app op restrictions. Not for use by third party apps. - ->
     <uses-permission
         android:name="android.permission.MANAGE_APP_OPS_RESTRICTIONS"
         tools:ignore="ProtectedPermissions" />
@@ -27,6 +27,7 @@
         android:name="android.permission.WRITE_SETTINGS"
         tools:ignore="ProtectedPermissions" />
     <uses-permission android:name="android.permission.ACCESS_SUPERUSER" />
+    -->
     <!--
      New version of GET_TASKS that apps can request, since GET_TASKS doesn't really
      give access to task information.  We need this new one because there are
