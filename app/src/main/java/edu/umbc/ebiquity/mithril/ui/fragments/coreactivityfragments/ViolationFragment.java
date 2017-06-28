@@ -135,6 +135,6 @@ public class ViolationFragment extends Fragment {
      */
     public interface OnListFragmentInteractionListener {
         // TODO: Update argument type and name
-        void onListFragmentInteraction(Violation item);
+        void onListFragmentInteraction(Violation item, boolean blocked);
     }
 }

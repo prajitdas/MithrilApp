@@ -62,7 +62,7 @@
                 android:textSize="14dp" />
 
             <Button
-                android:id="@+id/violationResponseYesButton"
+                android:id="@+id/trueViolationButton"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_alignParentStart="true"
@@ -75,7 +75,7 @@
                 android:theme="@style/AppTheme.Button" />
 
             <Button
-                android:id="@+id/violationResponseNoButton"
+                android:id="@+id/falseViolationButton"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_alignParentEnd="true"

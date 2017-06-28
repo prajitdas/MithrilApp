@@ -65,21 +65,26 @@ public class ViolationRecyclerViewAdapter extends RecyclerView.Adapter<Violation
         holder.mViolationResponseYesButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                PermissionHelper.toast(view.getContext(), "Good! Will block this in the future...");
+                PermissionHelper.toast(view.getContext(), "Will do...");
                 mValues.get(position).setAsked(true);
                 mValues.get(position).setFeedbackTime(new Timestamp(System.currentTimeMillis()));
                 MithrilDBHelper.getHelper(view.getContext()).updateViolationForRowId(mithrilDB, mValues.get(position), rowid);
+                if (null != mListener) {
+                    // Notify the active callbacks interface (the activity, if the
+                    // fragment is attached to one) that an item has been selected.
+                    mListener.onListFragmentInteraction(holder.mItem, true);
+                }
             }
         });
 
         holder.mViolationResponseNoButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                PermissionHelper.toast(view.getContext(), "Sure... let's change some rules");
+                PermissionHelper.toast(view.getContext(), "Let's add/modify rules");
                 if (null != mListener) {
                     // Notify the active callbacks interface (the activity, if the
                     // fragment is attached to one) that an item has been selected.
-                    mListener.onListFragmentInteraction(holder.mItem);
+                    mListener.onListFragmentInteraction(holder.mItem, false);
                 }
             }
         });
@@ -87,10 +92,11 @@ public class ViolationRecyclerViewAdapter extends RecyclerView.Adapter<Violation
         holder.mView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                PermissionHelper.toast(view.getContext(), "Let's add/modify rules");
                 if (null != mListener) {
                     // Notify the active callbacks interface (the activity, if the
                     // fragment is attached to one) that an item has been selected.
-                    mListener.onListFragmentInteraction(holder.mItem);
+                    mListener.onListFragmentInteraction(holder.mItem, false);
                 }
             }
         });
@@ -119,8 +125,8 @@ public class ViolationRecyclerViewAdapter extends RecyclerView.Adapter<Violation
             mViolationAppLaunch = (TextView) view.findViewById(R.id.violationAppLaunch);
             mViolationOpDetail = (TextView) view.findViewById(R.id.violationOpDetail);
             mViolationContext = (TextView) view.findViewById(R.id.violationContext);
-            mViolationResponseYesButton = (Button) view.findViewById(R.id.violationResponseYesButton);
-            mViolationResponseNoButton = (Button) view.findViewById(R.id.violationResponseNoButton);
+            mViolationResponseYesButton = (Button) view.findViewById(R.id.trueViolationButton);
+            mViolationResponseNoButton = (Button) view.findViewById(R.id.falseViolationButton);
         }
 
         @Override

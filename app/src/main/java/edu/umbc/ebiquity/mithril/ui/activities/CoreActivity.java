@@ -641,11 +641,13 @@ public class CoreActivity extends AppCompatActivity
     }
 
     @Override
-    public void onListFragmentInteraction(Violation item) {
-        //TODO Do something with the Violation selected
-        Intent intent = new Intent(this, RuleChangeActivity.class);
-        intent.putExtra("rule", item);
-        startActivity(intent);
+    public void onListFragmentInteraction(Violation item, boolean blocked) {
+        if(!blocked) {
+            Intent intent = new Intent(this, RuleChangeActivity.class);
+            intent.putExtra("rule", item);
+            startActivity(intent);
+        } else
+            loadViolationsFragment();
     }
 
     @Override

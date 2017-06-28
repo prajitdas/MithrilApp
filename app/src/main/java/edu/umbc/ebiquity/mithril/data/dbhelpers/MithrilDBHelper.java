@@ -1558,56 +1558,6 @@ public class MithrilDBHelper extends SQLiteOpenHelper {
     }
 
     /**
-     * Finds all violations
-     *
-     * @param db database instance
-     * @return all violations
-     */
-    public List<Violation> findAllViolationsWithMarkerUnset(SQLiteDatabase db) {
-        // Select Violation Query
-        String selectQuery = "SELECT " +
-                getViolationsLogTableName() + "." + VIOLATIONPOLICYID + ", " +
-                getViolationsLogTableName() + "." + VIOLATIONAPPID + ", " +
-                getViolationsLogTableName() + "." + VIOLATIONOPERATION + ", " +
-                getViolationsLogTableName() + "." + VIOLATIONAPPSTR + ", " +
-                getViolationsLogTableName() + "." + VIOLATIONOPSTR + ", " +
-                getViolationsLogTableName() + "." + VIOLATIONASKED + ", " +
-                getViolationsLogTableName() + "." + VIOLATIONTRUEFALSE + ", " +
-                getViolationsLogTableName() + "." + VIOLATIONDETECTTIME + ", " +
-                getViolationsLogTableName() + "." + VIOLATIONCTXTIDS + ", " +
-                getViolationsLogTableName() + "." + VIOLATIONCOUNT +
-                " FROM " + getViolationsLogTableName() +
-                " WHERE " + getViolationsLogTableName() + "." + VIOLATIONASKED + " = 0;";
-
-        List<Violation> violations = new ArrayList<>();
-        Cursor cursor = db.rawQuery(selectQuery, null);
-        try {
-            if (cursor.moveToFirst()) {
-                do {
-                    Violation tempViolation = new Violation(
-                            cursor.getInt(0),
-                            cursor.getInt(1),
-                            cursor.getInt(2),
-                            cursor.getString(3),
-                            cursor.getString(4),
-                            cursor.getInt(5) == 1,
-                            cursor.getInt(6) == 1,
-                            new Timestamp(cursor.getLong(7)),
-                            setCtxtIds(cursor.getString(8)),
-                            cursor.getInt(9)
-                    );
-                    violations.add(tempViolation);
-                } while (cursor.moveToNext());
-            }
-        } catch (SQLException e) {
-            throw new SQLException("Could not find " + e);
-        } finally {
-            cursor.close();
-        }
-        return violations;
-    }
-
-    /**
      * Getting all policies
      *
      * @param db database instance
