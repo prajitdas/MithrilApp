@@ -56,10 +56,10 @@ public class ViolationRecyclerViewAdapter extends RecyclerView.Adapter<Violation
         holder.mViolatingAppIcon.setImageBitmap(violatingApp.getIcon());
         holder.mViolationAppLaunch.setText(violatingApp.getAppName());
 
-        holder.mViolationOpDetail.setText("Used: " + mValues.get(position).getOpStr() + " " +
+        holder.mViolationOpDetail.setText("Used: " + mValues.get(position).getOpStr().replace("_", " ") + " " +
                 MithrilAC.getTimeText(true, mValues.get(position).getDetectedAtTime()));
 
-        holder.mViolationContext.setText("Context - " +
+        holder.mViolationContext.setText("In context: " +
                 mValues.get(position).getContextsString(context));
 
         holder.mViolationResponseYesButton.setOnClickListener(new View.OnClickListener() {
