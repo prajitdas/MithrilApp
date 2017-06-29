@@ -2,12 +2,13 @@
     <string name="short_app_name">MithrilAC</string>
     <string name="mithril_app_icon_description">This is Mithril\'s icon</string>
 
-    <string name="violationsMenu">Policy violation list</string>
-    <string name="usage_stats">Usage stats</string>
+    <string name="violationsMenu">Violations</string>
+    <string name="policyMenu">Policies</string>
+    <string name="usage_stats">App usage stats</string>
     <string name="usage_list">App usage list</string>
-    <string name="permissions">Permission info</string>
+    <string name="permissions">Permissions</string>
     <string name="permissions_list">Permissions list</string>
-    <string name="components">Component info</string>
+    <string name="components">Apps</string>
     <string name="userApps">User apps</string>
     <string name="systemApps">System apps</string>
     <string name="allApps">All apps</string>
@@ -45,7 +46,7 @@
     <string name="exit_this_survey">Exit this survey</string>
     <string name="cancel">@android:string/cancel</string>
     <string name="dialog_exit_app">Do you want to uninstall this app?</string>
-    <string name="more_options">More options</string>
+    <string name="more_options">Extra</string>
     <string name="functionality_not_active_yet">Functionality not active yet&#8230;</string>
 
     <string name="place_holder_for_data_to_be_displayed">Some placeholder for data to be displayed</string>
