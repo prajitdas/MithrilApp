@@ -105,16 +105,20 @@ public class CoreActivity extends AppCompatActivity
         return false;
     }
 
-    private boolean isSystemAppsListEmpty() {
-        return false;
-    }
-
-    private boolean isAllAppsListEmpty() {
+    private boolean isPolicyListEmpty() {
         return false;
     }
 
     private boolean isPermissionsListEmpty() {
         return false;
+    }
+
+    private boolean isSystemAppsListEmpty() {
+        return true;
+    }
+
+    private boolean isAllAppsListEmpty() {
+        return true;
     }
 
     private boolean isServicesListEmpty() {
@@ -144,7 +148,10 @@ public class CoreActivity extends AppCompatActivity
             else
                 loadViolationsFragment();
         } else if (id == R.id.nav_policies) {
-            loadPolicyRuleFragment();
+            if (isPolicyListEmpty())
+                loadNothingHereFragment("policies");
+            else
+                loadPolicyRuleFragment();
         } else if (id == R.id.nav_apps) {
             if (isUserAppsListEmpty())
                 loadNothingHereFragment("user apps");
