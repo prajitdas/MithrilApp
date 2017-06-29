@@ -167,6 +167,8 @@
     <string name="ending_time">End time:&#160;</string>
     <string name="enabled_time">Context enabled</string>
     <string name="what_time_is_this">Choose label</string>
+    <string name="timepicker_dialog_start_time">Choose start time</string>
+    <string name="timepicker_dialog_end_time">Choose end time</string>
 
     <!-- Work temporal context -->
     <string name="pref_work_hours_context_summary">Work</string>
@@ -270,7 +272,7 @@
     <string name="title_activity_instance_creation">Add&#160;</string>
     <string name="title_activity_download_policies">Downloading policies&#8230;</string>
     <string name="title_activity_setup_geofences">Geofences setup&#8230;</string>
-    <string name="title_activity_temporal_data_entry">Time context entry</string>
+    <string name="title_activity_temporal_data_entry">Temporal context:&#160;</string>
     <string name="title_activity_setup_timefences">Timefences setup&#8230;</string>
 
     <string-array name="freq_array">

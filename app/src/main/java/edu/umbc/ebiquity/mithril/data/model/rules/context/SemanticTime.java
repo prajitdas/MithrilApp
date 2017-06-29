@@ -142,7 +142,7 @@ public class SemanticTime extends SemanticUserContext implements Parcelable, Com
         return "From: "+getTimeString(startHour)+getTimeString(startMinute)+"hrs to "+getTimeString(endHour)+getTimeString(endMinute)+"hrs on "+getDayOfWeekString();
     }
 
-    private String getTimeString(int time) {
+    public static String getTimeString(int time) {
         if(time < 10)
             return "0"+String.valueOf(time);
         return String.valueOf(time);

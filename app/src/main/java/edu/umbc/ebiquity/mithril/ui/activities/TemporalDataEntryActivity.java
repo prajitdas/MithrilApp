@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.icu.util.Calendar;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
 import android.text.format.DateFormat;
 import android.view.View;
 import android.widget.Button;
@@ -47,8 +48,10 @@ public class TemporalDataEntryActivity extends AppCompatActivity implements
         } else
             failed();
 
+        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar_view_temporal_data_entry);
         String activityBaseTitle = getResources().getString(R.string.title_activity_temporal_data_entry);
-        setTitle(activityBaseTitle + semanticTime.getLabel());
+        toolbar.setTitle(activityBaseTitle + semanticTime.getLabel());
+        setSupportActionBar(toolbar);
 
         mDaysOfWeekBtn = (Button) findViewById(R.id.daysOfWeekBtn);
         mDaysOfWeekBtn.setText(
@@ -59,28 +62,18 @@ public class TemporalDataEntryActivity extends AppCompatActivity implements
         mAllDayToggleBtn = (ToggleButton) findViewById(R.id.allDayBtn);
         mAllDayToggleBtn.setChecked(semanticTime.isAllDay());
 
-        mStartTimeBtn = (Button) findViewById(R.id.startTimeBtn);
-        mStartTimeBtn.setText(
-                getResources().getString(
-                        R.string.starting_time) +
-                        semanticTime.getStartHour() +
-                        ":" +
-                        semanticTime.getStartMinute()
-        );
-
-        mEndTimeBtn = (Button) findViewById(R.id.endTimeBtn);
-        mEndTimeBtn.setText(
-                getResources().getString(
-                        R.string.ending_time) +
-                        semanticTime.getEndHour() +
-                        ":" +
-                        semanticTime.getEndMinute()
-        );
-
         mEnabledToggleBtn = (ToggleButton) findViewById(R.id.enabledBtn);
         mEnabledToggleBtn.setChecked(semanticTime.isEnabled());
 
         mDoneBtn = (Button) findViewById(R.id.doneLabelBtn);
+
+        mStartTimeBtn = (Button) findViewById(R.id.startTimeBtn);
+        mStartTimeBtn.setText(getResources().getString(
+                R.string.starting_time) + getTimeString(semanticTime.getStartHour(), semanticTime.getStartMinute()));
+
+        mEndTimeBtn = (Button) findViewById(R.id.endTimeBtn);
+        mEndTimeBtn.setText(getResources().getString(
+                R.string.ending_time) + getTimeString(semanticTime.getEndHour(), semanticTime.getEndMinute()));
 
         // Create a new instance of TimePickerDialog
         startTimePickerDialog = new TimePickerDialog(
@@ -89,7 +82,7 @@ public class TemporalDataEntryActivity extends AppCompatActivity implements
                 semanticTime.getStartHour(),
                 semanticTime.getStartMinute(),
                 DateFormat.is24HourFormat(this));
-
+        startTimePickerDialog.setTitle(R.string.timepicker_dialog_start_time);
         // Create a new instance of TimePickerDialog
         endTimePickerDialog = new TimePickerDialog(
                 this,
@@ -97,8 +90,21 @@ public class TemporalDataEntryActivity extends AppCompatActivity implements
                 semanticTime.getEndHour(),
                 semanticTime.getEndMinute(),
                 DateFormat.is24HourFormat(this));
+        endTimePickerDialog.setTitle(R.string.timepicker_dialog_end_time);
+
+        if(!semanticTime.isAllDay()) {
+            mStartTimeBtn.setVisibility(View.VISIBLE);
+            mEndTimeBtn.setVisibility(View.VISIBLE);
+        } else{
+            mStartTimeBtn.setVisibility(View.GONE);
+            mEndTimeBtn.setVisibility(View.GONE);
+        }
 
         setOnclickListeners();
+    }
+
+    private String getTimeString(int hour, int minute) {
+        return SemanticTime.getTimeString(hour) + SemanticTime.getTimeString(minute) + "hrs";
     }
 
     private void setOnclickListeners() {
@@ -108,14 +114,22 @@ public class TemporalDataEntryActivity extends AppCompatActivity implements
 
             }
         });
+
         mAllDayToggleBtn.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                if(isChecked)
-                    buttonView.setChecked(false);
-                else
-                    buttonView.setChecked(true);
-                semanticTime.setAllDay(buttonView.isChecked());
+                if (isChecked) {
+                    mStartTimeBtn.setVisibility(View.GONE);
+                    mEndTimeBtn.setVisibility(View.GONE);
+                    semanticTime.setAllDay(false);
+                }
+                else {
+                    mStartTimeBtn.setVisibility(View.VISIBLE);
+                    mEndTimeBtn.setVisibility(View.VISIBLE);
+                    semanticTime.setAllDay(true);
+                }
+                mAllDayToggleBtn.toggle();
+                buttonView.toggle();
             }
         });
 
@@ -136,11 +150,14 @@ public class TemporalDataEntryActivity extends AppCompatActivity implements
         mEnabledToggleBtn.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                if(isChecked)
-                    buttonView.setChecked(false);
-                else
-                    buttonView.setChecked(true);
-                semanticTime.setEnabled(buttonView.isChecked());
+                if(isChecked) {
+                    semanticTime.setEnabled(false);
+                }
+                else {
+                    semanticTime.setEnabled(true);
+                }
+                mEnabledToggleBtn.toggle();
+                buttonView.toggle();
             }
         });
 
@@ -221,9 +238,13 @@ public class TemporalDataEntryActivity extends AppCompatActivity implements
         if (view.equals(startTimePickerDialog)) {
             semanticTime.setStartHour(hourOfDay);
             semanticTime.setStartMinute(minute);
+            mStartTimeBtn.setText(getResources().getString(
+                    R.string.starting_time) + getTimeString(semanticTime.getStartHour(), semanticTime.getStartMinute()));
         } else {
             semanticTime.setEndHour(hourOfDay);
             semanticTime.setEndMinute(minute);
+            mEndTimeBtn.setText(getResources().getString(
+                    R.string.ending_time) + getTimeString(semanticTime.getEndHour(), semanticTime.getEndMinute()));
         }
     }
 }
