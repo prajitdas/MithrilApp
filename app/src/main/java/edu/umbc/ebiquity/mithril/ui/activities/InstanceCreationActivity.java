@@ -26,6 +26,7 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.Toast;
 
+import com.google.android.gms.awareness.fence.TimeFence;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GoogleApiAvailability;
 import com.google.android.gms.common.GooglePlayServicesNotAvailableException;
@@ -432,16 +433,15 @@ public class InstanceCreationActivity extends AppCompatActivity
     }
 
     private void createSemanticTimes() {
-        List<DayOfWeek> dayOfWeek = new ArrayList<>();
-
         /**********************************************************************************************************************/
 
-        dayOfWeek.add(DayOfWeek.Monday);
+        List<Integer> monday = new ArrayList<>();
+        monday.add(TimeFence.DAY_OF_WEEK_MONDAY);
         /**
          * Monday context creation
          */
         SemanticTime semanticTime = new SemanticTime(
-                dayOfWeek,
+                monday,
                 0,
                 0,
                 0,
@@ -452,16 +452,16 @@ public class InstanceCreationActivity extends AppCompatActivity
                 true
         );
         semanticTimes.put(semanticTime.getLabel(), semanticTime);
-        dayOfWeek.clear();
 
         /**********************************************************************************************************************/
 
-        dayOfWeek.add(DayOfWeek.Tuesday);
+        List<Integer> tuesday = new ArrayList<>();
+        tuesday.add(TimeFence.DAY_OF_WEEK_TUESDAY);
         /**
          * Tuesday context creation
          */
         semanticTime = new SemanticTime(
-                dayOfWeek,
+                tuesday,
                 0,
                 0,
                 0,
@@ -472,16 +472,16 @@ public class InstanceCreationActivity extends AppCompatActivity
                 true
         );
         semanticTimes.put(semanticTime.getLabel(), semanticTime);
-        dayOfWeek.clear();
 
         /**********************************************************************************************************************/
 
-        dayOfWeek.add(DayOfWeek.Wednesday);
+        List<Integer> wednesday = new ArrayList<>();
+        wednesday.add(TimeFence.DAY_OF_WEEK_WEDNESDAY);
         /**
          * Wednesday context creation
          */
         semanticTime = new SemanticTime(
-                dayOfWeek,
+                wednesday,
                 0,
                 0,
                 0,
@@ -492,16 +492,16 @@ public class InstanceCreationActivity extends AppCompatActivity
                 true
         );
         semanticTimes.put(semanticTime.getLabel(), semanticTime);
-        dayOfWeek.clear();
 
         /**********************************************************************************************************************/
 
-        dayOfWeek.add(DayOfWeek.Thursday);
+        List<Integer> thursday = new ArrayList<>();
+        thursday.add(TimeFence.DAY_OF_WEEK_THURSDAY);
         /**
          * Thursday context creation
          */
         semanticTime = new SemanticTime(
-                dayOfWeek,
+                thursday,
                 0,
                 0,
                 0,
@@ -512,16 +512,16 @@ public class InstanceCreationActivity extends AppCompatActivity
                 true
         );
         semanticTimes.put(semanticTime.getLabel(), semanticTime);
-        dayOfWeek.clear();
 
         /**********************************************************************************************************************/
 
-        dayOfWeek.add(DayOfWeek.Friday);
+        List<Integer> friday = new ArrayList<>();
+        friday.add(TimeFence.DAY_OF_WEEK_FRIDAY);
         /**
          * Friday context creation
          */
         semanticTime = new SemanticTime(
-                dayOfWeek,
+                friday,
                 0,
                 0,
                 0,
@@ -532,16 +532,16 @@ public class InstanceCreationActivity extends AppCompatActivity
                 true
         );
         semanticTimes.put(semanticTime.getLabel(), semanticTime);
-        dayOfWeek.clear();
 
         /**********************************************************************************************************************/
 
-        dayOfWeek.add(DayOfWeek.Saturday);
+        List<Integer> saturday = new ArrayList<>();
+        saturday.add(TimeFence.DAY_OF_WEEK_SATURDAY);
         /**
          * Saturday context creation
          */
         semanticTime = new SemanticTime(
-                dayOfWeek,
+                saturday,
                 0,
                 0,
                 0,
@@ -552,16 +552,16 @@ public class InstanceCreationActivity extends AppCompatActivity
                 true
         );
         semanticTimes.put(semanticTime.getLabel(), semanticTime);
-        dayOfWeek.clear();
 
         /**********************************************************************************************************************/
 
-        dayOfWeek.add(DayOfWeek.Sunday);
+        List<Integer> sunday = new ArrayList<>();
+        sunday.add(TimeFence.DAY_OF_WEEK_SUNDAY);
         /**
          * Sunday context creation
          */
         semanticTime = new SemanticTime(
-                dayOfWeek,
+                sunday,
                 0,
                 0,
                 0,
@@ -572,18 +572,18 @@ public class InstanceCreationActivity extends AppCompatActivity
                 true
         );
         semanticTimes.put(semanticTime.getLabel(), semanticTime);
-        dayOfWeek.clear();
 
         /**********************************************************************************************************************/
 
-        dayOfWeek.add(DayOfWeek.Saturday);
-        dayOfWeek.add(DayOfWeek.Sunday);
+        List<Integer> weekend = new ArrayList<>();
+        weekend.add(TimeFence.DAY_OF_WEEK_SATURDAY);
+        weekend.add(TimeFence.DAY_OF_WEEK_SUNDAY);
 
         /**
          * Weekend context creation
          */
         semanticTime = new SemanticTime(
-                dayOfWeek,
+                weekend,
                 0,
                 0,
                 0,
@@ -594,23 +594,23 @@ public class InstanceCreationActivity extends AppCompatActivity
                 true
         );
         semanticTimes.put(semanticTime.getLabel(), semanticTime);
-        dayOfWeek.clear();
 
         /**********************************************************************************************************************/
 
-        dayOfWeek.add(DayOfWeek.Monday);
-        dayOfWeek.add(DayOfWeek.Tuesday);
-        dayOfWeek.add(DayOfWeek.Wednesday);
-        dayOfWeek.add(DayOfWeek.Thursday);
-        dayOfWeek.add(DayOfWeek.Friday);
-        dayOfWeek.add(DayOfWeek.Saturday);
-        dayOfWeek.add(DayOfWeek.Sunday);
+        List<Integer> allWeek = new ArrayList<>();
+        allWeek.add(TimeFence.DAY_OF_WEEK_MONDAY);
+        allWeek.add(TimeFence.DAY_OF_WEEK_MONDAY);
+        allWeek.add(TimeFence.DAY_OF_WEEK_WEDNESDAY);
+        allWeek.add(TimeFence.DAY_OF_WEEK_THURSDAY);
+        allWeek.add(TimeFence.DAY_OF_WEEK_FRIDAY);
+        allWeek.add(TimeFence.DAY_OF_WEEK_SATURDAY);
+        allWeek.add(TimeFence.DAY_OF_WEEK_SUNDAY);
 
         /**
          * AnydayOrAnytime context creation
          */
         semanticTime = new SemanticTime(
-                dayOfWeek,
+                allWeek,
                 0,
                 0,
                 0,
@@ -621,23 +621,14 @@ public class InstanceCreationActivity extends AppCompatActivity
                 true
         );
         semanticTimes.put(semanticTime.getLabel(), semanticTime);
-        dayOfWeek.clear();
 
         /**********************************************************************************************************************/
-
-        dayOfWeek.add(DayOfWeek.Monday);
-        dayOfWeek.add(DayOfWeek.Tuesday);
-        dayOfWeek.add(DayOfWeek.Wednesday);
-        dayOfWeek.add(DayOfWeek.Thursday);
-        dayOfWeek.add(DayOfWeek.Friday);
-        dayOfWeek.add(DayOfWeek.Saturday);
-        dayOfWeek.add(DayOfWeek.Sunday);
 
         /**
          * Breakfast hours context
          */
         semanticTime = new SemanticTime(
-                dayOfWeek,
+                allWeek,
                 8,
                 0,
                 8,
@@ -648,23 +639,14 @@ public class InstanceCreationActivity extends AppCompatActivity
                 false
         );
         semanticTimes.put(semanticTime.getLabel(), semanticTime);
-        dayOfWeek.clear();
 
         /**********************************************************************************************************************/
-
-        dayOfWeek.add(DayOfWeek.Monday);
-        dayOfWeek.add(DayOfWeek.Tuesday);
-        dayOfWeek.add(DayOfWeek.Wednesday);
-        dayOfWeek.add(DayOfWeek.Thursday);
-        dayOfWeek.add(DayOfWeek.Friday);
-        dayOfWeek.add(DayOfWeek.Saturday);
-        dayOfWeek.add(DayOfWeek.Sunday);
 
         /**
          * Lunch hours context
          */
         semanticTime = new SemanticTime(
-                dayOfWeek,
+                allWeek,
                 12,
                 0,
                 12,
@@ -675,23 +657,14 @@ public class InstanceCreationActivity extends AppCompatActivity
                 false
         );
         semanticTimes.put(semanticTime.getLabel(), semanticTime);
-        dayOfWeek.clear();
 
         /**********************************************************************************************************************/
-
-        dayOfWeek.add(DayOfWeek.Monday);
-        dayOfWeek.add(DayOfWeek.Tuesday);
-        dayOfWeek.add(DayOfWeek.Wednesday);
-        dayOfWeek.add(DayOfWeek.Thursday);
-        dayOfWeek.add(DayOfWeek.Friday);
-        dayOfWeek.add(DayOfWeek.Saturday);
-        dayOfWeek.add(DayOfWeek.Sunday);
 
         /**
          * Dinner hours context
          */
         semanticTime = new SemanticTime(
-                dayOfWeek,
+                allWeek,
                 19,
                 0,
                 19,
@@ -702,23 +675,14 @@ public class InstanceCreationActivity extends AppCompatActivity
                 false
         );
         semanticTimes.put(semanticTime.getLabel(), semanticTime);
-        dayOfWeek.clear();
 
         /**********************************************************************************************************************/
-
-        dayOfWeek.add(DayOfWeek.Monday);
-        dayOfWeek.add(DayOfWeek.Tuesday);
-        dayOfWeek.add(DayOfWeek.Wednesday);
-        dayOfWeek.add(DayOfWeek.Thursday);
-        dayOfWeek.add(DayOfWeek.Friday);
-        dayOfWeek.add(DayOfWeek.Saturday);
-        dayOfWeek.add(DayOfWeek.Sunday);
 
         /**
          * DND hours context
          */
         semanticTime = new SemanticTime(
-                dayOfWeek,
+                allWeek,
                 21,
                 0,
                 8,
@@ -729,23 +693,14 @@ public class InstanceCreationActivity extends AppCompatActivity
                 false
         );
         semanticTimes.put(semanticTime.getLabel(), semanticTime);
-        dayOfWeek.clear();
 
         /**********************************************************************************************************************/
-
-        dayOfWeek.add(DayOfWeek.Monday);
-        dayOfWeek.add(DayOfWeek.Tuesday);
-        dayOfWeek.add(DayOfWeek.Wednesday);
-        dayOfWeek.add(DayOfWeek.Thursday);
-        dayOfWeek.add(DayOfWeek.Friday);
-        dayOfWeek.add(DayOfWeek.Saturday);
-        dayOfWeek.add(DayOfWeek.Sunday);
 
         /**
          * Family_Time hours context
          */
         semanticTime = new SemanticTime(
-                dayOfWeek,
+                allWeek,
                 16,
                 0,
                 19,
@@ -756,23 +711,14 @@ public class InstanceCreationActivity extends AppCompatActivity
                 false
         );
         semanticTimes.put(semanticTime.getLabel(), semanticTime);
-        dayOfWeek.clear();
 
         /**********************************************************************************************************************/
-
-        dayOfWeek.add(DayOfWeek.Monday);
-        dayOfWeek.add(DayOfWeek.Tuesday);
-        dayOfWeek.add(DayOfWeek.Wednesday);
-        dayOfWeek.add(DayOfWeek.Thursday);
-        dayOfWeek.add(DayOfWeek.Friday);
-        dayOfWeek.add(DayOfWeek.Saturday);
-        dayOfWeek.add(DayOfWeek.Sunday);
 
         /**
          * Alone_Time hours context
          */
         semanticTime = new SemanticTime(
-                dayOfWeek,
+                allWeek,
                 19,
                 30,
                 21,
@@ -783,23 +729,14 @@ public class InstanceCreationActivity extends AppCompatActivity
                 false
         );
         semanticTimes.put(semanticTime.getLabel(), semanticTime);
-        dayOfWeek.clear();
 
         /**********************************************************************************************************************/
-
-        dayOfWeek.add(DayOfWeek.Monday);
-        dayOfWeek.add(DayOfWeek.Tuesday);
-        dayOfWeek.add(DayOfWeek.Wednesday);
-        dayOfWeek.add(DayOfWeek.Thursday);
-        dayOfWeek.add(DayOfWeek.Friday);
-        dayOfWeek.add(DayOfWeek.Saturday);
-        dayOfWeek.add(DayOfWeek.Sunday);
 
         /**
          * Personal hours context
          */
         semanticTime = new SemanticTime(
-                dayOfWeek,
+                allWeek,
                 16,
                 0,
                 8,
@@ -810,46 +747,39 @@ public class InstanceCreationActivity extends AppCompatActivity
                 false
         );
         semanticTimes.put(semanticTime.getLabel(), semanticTime);
-        dayOfWeek.clear();
 
         /**********************************************************************************************************************/
 
-        dayOfWeek.add(DayOfWeek.Monday);
-        dayOfWeek.add(DayOfWeek.Tuesday);
-        dayOfWeek.add(DayOfWeek.Wednesday);
-        dayOfWeek.add(DayOfWeek.Thursday);
-        dayOfWeek.add(DayOfWeek.Friday);
+        List<Integer> workweek = new ArrayList<>();
+        workweek.add(TimeFence.DAY_OF_WEEK_MONDAY);
+        workweek.add(TimeFence.DAY_OF_WEEK_MONDAY);
+        workweek.add(TimeFence.DAY_OF_WEEK_WEDNESDAY);
+        workweek.add(TimeFence.DAY_OF_WEEK_THURSDAY);
+        workweek.add(TimeFence.DAY_OF_WEEK_FRIDAY);
 
         /**
          * Professional hours context
          */
         semanticTime = new SemanticTime(
-                dayOfWeek,
+                workweek,
                 8,
                 0,
                 16,
                 0,
-                MithrilAC.getPrefPersonalTemporalKey(),
+                MithrilAC.getPrefProfessionalTemporalKey(),
                 false,
                 1,
                 false
         );
         semanticTimes.put(semanticTime.getLabel(), semanticTime);
-        dayOfWeek.clear();
 
         /**********************************************************************************************************************/
-
-        dayOfWeek.add(DayOfWeek.Monday);
-        dayOfWeek.add(DayOfWeek.Tuesday);
-        dayOfWeek.add(DayOfWeek.Wednesday);
-        dayOfWeek.add(DayOfWeek.Thursday);
-        dayOfWeek.add(DayOfWeek.Friday);
 
         /**
          * Weekday context creation
          */
         semanticTime = new SemanticTime(
-                dayOfWeek,
+                workweek,
                 0,
                 0,
                 0,
@@ -860,21 +790,14 @@ public class InstanceCreationActivity extends AppCompatActivity
                 true
         );
         semanticTimes.put(semanticTime.getLabel(), semanticTime);
-        dayOfWeek.clear();
 
         /**********************************************************************************************************************/
-
-        dayOfWeek.add(DayOfWeek.Monday);
-        dayOfWeek.add(DayOfWeek.Tuesday);
-        dayOfWeek.add(DayOfWeek.Wednesday);
-        dayOfWeek.add(DayOfWeek.Thursday);
-        dayOfWeek.add(DayOfWeek.Friday);
 
         /**
          * Work_Morning hours context
          */
         semanticTime = new SemanticTime(
-                dayOfWeek,
+                workweek,
                 8,
                 30,
                 12,
@@ -885,21 +808,14 @@ public class InstanceCreationActivity extends AppCompatActivity
                 false
         );
         semanticTimes.put(semanticTime.getLabel(), semanticTime);
-        dayOfWeek.clear();
 
         /**********************************************************************************************************************/
-
-        dayOfWeek.add(DayOfWeek.Monday);
-        dayOfWeek.add(DayOfWeek.Tuesday);
-        dayOfWeek.add(DayOfWeek.Wednesday);
-        dayOfWeek.add(DayOfWeek.Thursday);
-        dayOfWeek.add(DayOfWeek.Friday);
 
         /**
          * Work_Afternoon hours context
          */
         semanticTime = new SemanticTime(
-                dayOfWeek,
+                workweek,
                 12,
                 30,
                 16,
@@ -910,8 +826,7 @@ public class InstanceCreationActivity extends AppCompatActivity
                 false
         );
         semanticTimes.put(semanticTime.getLabel(), semanticTime);
-        dayOfWeek.clear();
-
+        
         isThereTemporalContextToSave = true;
     }
 
@@ -1058,14 +973,14 @@ public class InstanceCreationActivity extends AppCompatActivity
     }
 
 //    private void openTemporalDataEntryActivity(int requestCode, String label) {
-//        List<DayOfWeek> dayOfWeek = new ArrayList<>();
-//        dayOfWeek.add(DayOfWeek.Sunday);
-//        dayOfWeek.add(DayOfWeek.Monday);
-//        dayOfWeek.add(DayOfWeek.Tuesday);
-//        dayOfWeek.add(DayOfWeek.Wednesday);
-//        dayOfWeek.add(DayOfWeek.Thursday);
-//        dayOfWeek.add(DayOfWeek.Friday);
-//        dayOfWeek.add(DayOfWeek.Saturday);
+//        List<Integer> dayOfWeek = new ArrayList<>();
+//        dayOfWeek.add(TimeFence.DAY_OF_WEEK_SUNDAY);
+//        dayOfWeek.add(TimeFence.DAY_OF_WEEK_MONDAY);
+//        dayOfWeek.add(TimeFence.DAY_OF_WEEK_TUESDAY);
+//        dayOfWeek.add(TimeFence.DAY_OF_WEEK_WEDNESDAY);
+//        dayOfWeek.add(TimeFence.DAY_OF_WEEK_THURSDAY);
+//        dayOfWeek.add(TimeFence.DAY_OF_WEEK_FRIDAY);
+//        dayOfWeek.add(TimeFence.DAY_OF_WEEK_SATURDAY);
 //
 //        SemanticTime semanticTime = new SemanticTime(dayOfWeek, 0, 0, 0, 0, label, false, 0);
 //

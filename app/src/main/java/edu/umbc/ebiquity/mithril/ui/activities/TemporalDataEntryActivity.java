@@ -200,7 +200,7 @@ public class TemporalDataEntryActivity extends AppCompatActivity implements
         return semanticTime.getEndMinute();
     }
 
-    private List<DayOfWeek> getDayOfWeek() {
+    private List<Integer> getDayOfWeek() {
         return semanticTime.getDayOfWeek();
     }
 
