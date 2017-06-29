@@ -28,14 +28,36 @@
         android:layout_height="match_parent"
         app:layout_behavior="@string/appbar_scrolling_view_behavior"
         tools:showIn="@layout/activity_temporal_data_entry">
-
         <Button
             android:id="@+id/daysOfWeekBtn"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_alignParentTop="true"
-            android:text="@string/first_occurrence"
+            android:textSize="20sp"
+            android:layout_alignParentEnd="true"
+            android:text="@string/days_of_week"
             android:textAlignment="textStart"
+            android:theme="@style/AppTheme.Button" />
+
+        <TextView
+            android:id="@+id/allDayTextView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/daysOfWeekBtn"
+            android:layout_marginStart="15dp"
+            android:layout_marginTop="10dp"
+            android:fontFamily="josephine-sans"
+            android:text="@string/pref_temporal_context_all_day_event"
+            android:textColor="@color/colorPrimaryText"
+            android:textSize="20sp"
+            android:textAllCaps="true"/>
+
+        <ToggleButton
+            android:id="@+id/allDayBtn"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/daysOfWeekBtn"
+            android:layout_alignParentEnd="true"
+            android:text="@string/ending_time"
             android:textSize="20sp"
             android:theme="@style/AppTheme.Button" />
 
@@ -43,19 +65,9 @@
             android:id="@+id/startTimeBtn"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_below="@+id/daysOfWeekBtn"
+            android:layout_below="@+id/allDayBtn"
+            android:layout_alignParentEnd="true"
             android:text="@string/starting_time"
-            android:textAlignment="textStart"
-            android:textSize="20sp"
-            android:theme="@style/AppTheme.Button" />
-
-
-        <ToggleButton
-            android:id="@+id/allDayBtn"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_below="@+id/startTimeBtn"
-            android:text="@string/ending_time"
             android:textAlignment="textStart"
             android:textSize="20sp"
             android:theme="@style/AppTheme.Button" />
@@ -70,14 +82,26 @@
             android:textSize="20sp"
             android:theme="@style/AppTheme.Button" />
 
-        <Button
-            android:id="@+id/enabledBtn"
-            android:layout_width="match_parent"
+        <TextView
+            android:id="@+id/enabledTextView"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_below="@+id/endTimeBtn"
+            android:layout_marginStart="15dp"
+            android:layout_marginTop="10dp"
+            android:fontFamily="josephine-sans"
             android:text="@string/enabled_time"
-            android:textAlignment="textStart"
+            android:textColor="@color/colorPrimaryText"
             android:textSize="20sp"
+            android:textAllCaps="true"/>
+
+        <ToggleButton
+            android:id="@+id/enabledBtn"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/endTimeBtn"
+            android:textSize="20sp"
+            android:layout_alignParentEnd="true"
             android:theme="@style/AppTheme.Button" />
 
         <Button

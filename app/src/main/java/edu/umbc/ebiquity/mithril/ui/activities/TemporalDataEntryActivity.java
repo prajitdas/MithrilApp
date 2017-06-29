@@ -25,9 +25,9 @@ public class TemporalDataEntryActivity extends AppCompatActivity implements
     private Button mDaysOfWeekBtn;
     private Button mStartTimeBtn;
     private Button mEndTimeBtn;
-    private Button mEnabledBtn;
+    private ToggleButton mEnabledToggleBtn;
     private Button mDoneBtn;
-    private ToggleButton mAllDayBtn;
+    private ToggleButton mAllDayToggleBtn;
 
     private TimePickerDialog startTimePickerDialog;
     private TimePickerDialog endTimePickerDialog;
@@ -53,10 +53,11 @@ public class TemporalDataEntryActivity extends AppCompatActivity implements
         mDaysOfWeekBtn = (Button) findViewById(R.id.daysOfWeekBtn);
         mDaysOfWeekBtn.setText(
                 getResources().getString(
-                        R.string.first_occurrence) +
+                        R.string.days_of_week) +
                         semanticTime.getDayOfWeekString());
 
-        mAllDayBtn = (ToggleButton) findViewById(R.id.allDayBtn);
+        mAllDayToggleBtn = (ToggleButton) findViewById(R.id.allDayBtn);
+        mAllDayToggleBtn.setChecked(semanticTime.isAllDay());
 
         mStartTimeBtn = (Button) findViewById(R.id.startTimeBtn);
         mStartTimeBtn.setText(
@@ -76,7 +77,9 @@ public class TemporalDataEntryActivity extends AppCompatActivity implements
                         semanticTime.getEndMinute()
         );
 
-        mEnabledBtn = (Button) findViewById(R.id.enabledBtn);
+        mEnabledToggleBtn = (ToggleButton) findViewById(R.id.enabledBtn);
+        mEnabledToggleBtn.setChecked(semanticTime.isEnabled());
+
         mDoneBtn = (Button) findViewById(R.id.doneLabelBtn);
 
         // Create a new instance of TimePickerDialog
@@ -98,8 +101,6 @@ public class TemporalDataEntryActivity extends AppCompatActivity implements
         setOnclickListeners();
     }
 
-    private boolean allDay = false;
-
     private void setOnclickListeners() {
         mDaysOfWeekBtn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -107,14 +108,14 @@ public class TemporalDataEntryActivity extends AppCompatActivity implements
 
             }
         });
-        mAllDayBtn.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+        mAllDayToggleBtn.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                 if(isChecked)
                     buttonView.setChecked(false);
                 else
                     buttonView.setChecked(true);
-                allDay = buttonView.isChecked();
+                semanticTime.setAllDay(buttonView.isChecked());
             }
         });
 
@@ -132,10 +133,14 @@ public class TemporalDataEntryActivity extends AppCompatActivity implements
             }
         });
 
-        mEnabledBtn.setOnClickListener(new View.OnClickListener() {
+        mEnabledToggleBtn.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
-            public void onClick(View v) {
-
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                if(isChecked)
+                    buttonView.setChecked(false);
+                else
+                    buttonView.setChecked(true);
+                semanticTime.setEnabled(buttonView.isChecked());
             }
         });
 
@@ -151,16 +156,32 @@ public class TemporalDataEntryActivity extends AppCompatActivity implements
                                 getStartMinute(),
                                 getEndHour(),
                                 getEndMinute(),
-                                label,
-                                false,
-                                0,
-                                allDay
+                                getLabel(),
+                                isEnabled(),
+                                getLevel(),
+                                isAllDay()
                         )
                 );
                 setResult(Activity.RESULT_OK, resultIntent);
                 finish();
             }
         });
+    }
+
+    private String getLabel() {
+        return semanticTime.getLabel();
+    }
+
+    private boolean isEnabled() {
+        return semanticTime.isEnabled();
+    }
+
+    private int getLevel() {
+        return semanticTime.getLevel();
+    }
+
+    private boolean isAllDay() {
+        return semanticTime.isAllDay();
     }
 
     private int getStartHour() {

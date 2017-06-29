@@ -76,9 +76,9 @@ public class InstanceCreationActivity extends AppCompatActivity
     private final int PLACE_AUTOCOMPLETE_REQUEST_CODE_HOME = 1;
     private final int PLACE_AUTOCOMPLETE_REQUEST_CODE_WORK = 2;
     private final int PLACE_AUTOCOMPLETE_REQUEST_CODE_MORE = 3;
-    //    private final int TIME_REQUEST_CODE_WORK = 4;
+//    private final int TIME_REQUEST_CODE_WORK = 4;
 //    private final int TIME_REQUEST_CODE_DND = 5;
-//    private final int TIME_REQUEST_CODE_MORE = 6;
+    private final int TIME_REQUEST_CODE_MORE = 6;
     private final int GEOFENCE_REQUEST_CODE = 7;
 //    private final int TIMEFENCE_REQUEST_CODE = 8;
     /**
@@ -594,6 +594,7 @@ public class InstanceCreationActivity extends AppCompatActivity
                 true
         );
         semanticTimes.put(semanticTime.getLabel(), semanticTime);
+        dayOfWeek.clear();
 
         /**********************************************************************************************************************/
 
@@ -602,6 +603,8 @@ public class InstanceCreationActivity extends AppCompatActivity
         dayOfWeek.add(DayOfWeek.Wednesday);
         dayOfWeek.add(DayOfWeek.Thursday);
         dayOfWeek.add(DayOfWeek.Friday);
+        dayOfWeek.add(DayOfWeek.Saturday);
+        dayOfWeek.add(DayOfWeek.Sunday);
 
         /**
          * AnydayOrAnytime context creation
@@ -618,6 +621,17 @@ public class InstanceCreationActivity extends AppCompatActivity
                 true
         );
         semanticTimes.put(semanticTime.getLabel(), semanticTime);
+        dayOfWeek.clear();
+
+        /**********************************************************************************************************************/
+
+        dayOfWeek.add(DayOfWeek.Monday);
+        dayOfWeek.add(DayOfWeek.Tuesday);
+        dayOfWeek.add(DayOfWeek.Wednesday);
+        dayOfWeek.add(DayOfWeek.Thursday);
+        dayOfWeek.add(DayOfWeek.Friday);
+        dayOfWeek.add(DayOfWeek.Saturday);
+        dayOfWeek.add(DayOfWeek.Sunday);
 
         /**
          * Breakfast hours context
@@ -634,6 +648,17 @@ public class InstanceCreationActivity extends AppCompatActivity
                 false
         );
         semanticTimes.put(semanticTime.getLabel(), semanticTime);
+        dayOfWeek.clear();
+
+        /**********************************************************************************************************************/
+
+        dayOfWeek.add(DayOfWeek.Monday);
+        dayOfWeek.add(DayOfWeek.Tuesday);
+        dayOfWeek.add(DayOfWeek.Wednesday);
+        dayOfWeek.add(DayOfWeek.Thursday);
+        dayOfWeek.add(DayOfWeek.Friday);
+        dayOfWeek.add(DayOfWeek.Saturday);
+        dayOfWeek.add(DayOfWeek.Sunday);
 
         /**
          * Lunch hours context
@@ -650,6 +675,17 @@ public class InstanceCreationActivity extends AppCompatActivity
                 false
         );
         semanticTimes.put(semanticTime.getLabel(), semanticTime);
+        dayOfWeek.clear();
+
+        /**********************************************************************************************************************/
+
+        dayOfWeek.add(DayOfWeek.Monday);
+        dayOfWeek.add(DayOfWeek.Tuesday);
+        dayOfWeek.add(DayOfWeek.Wednesday);
+        dayOfWeek.add(DayOfWeek.Thursday);
+        dayOfWeek.add(DayOfWeek.Friday);
+        dayOfWeek.add(DayOfWeek.Saturday);
+        dayOfWeek.add(DayOfWeek.Sunday);
 
         /**
          * Dinner hours context
@@ -666,6 +702,17 @@ public class InstanceCreationActivity extends AppCompatActivity
                 false
         );
         semanticTimes.put(semanticTime.getLabel(), semanticTime);
+        dayOfWeek.clear();
+
+        /**********************************************************************************************************************/
+
+        dayOfWeek.add(DayOfWeek.Monday);
+        dayOfWeek.add(DayOfWeek.Tuesday);
+        dayOfWeek.add(DayOfWeek.Wednesday);
+        dayOfWeek.add(DayOfWeek.Thursday);
+        dayOfWeek.add(DayOfWeek.Friday);
+        dayOfWeek.add(DayOfWeek.Saturday);
+        dayOfWeek.add(DayOfWeek.Sunday);
 
         /**
          * DND hours context
@@ -682,6 +729,17 @@ public class InstanceCreationActivity extends AppCompatActivity
                 false
         );
         semanticTimes.put(semanticTime.getLabel(), semanticTime);
+        dayOfWeek.clear();
+
+        /**********************************************************************************************************************/
+
+        dayOfWeek.add(DayOfWeek.Monday);
+        dayOfWeek.add(DayOfWeek.Tuesday);
+        dayOfWeek.add(DayOfWeek.Wednesday);
+        dayOfWeek.add(DayOfWeek.Thursday);
+        dayOfWeek.add(DayOfWeek.Friday);
+        dayOfWeek.add(DayOfWeek.Saturday);
+        dayOfWeek.add(DayOfWeek.Sunday);
 
         /**
          * Family_Time hours context
@@ -698,6 +756,17 @@ public class InstanceCreationActivity extends AppCompatActivity
                 false
         );
         semanticTimes.put(semanticTime.getLabel(), semanticTime);
+        dayOfWeek.clear();
+
+        /**********************************************************************************************************************/
+
+        dayOfWeek.add(DayOfWeek.Monday);
+        dayOfWeek.add(DayOfWeek.Tuesday);
+        dayOfWeek.add(DayOfWeek.Wednesday);
+        dayOfWeek.add(DayOfWeek.Thursday);
+        dayOfWeek.add(DayOfWeek.Friday);
+        dayOfWeek.add(DayOfWeek.Saturday);
+        dayOfWeek.add(DayOfWeek.Sunday);
 
         /**
          * Alone_Time hours context
@@ -714,6 +783,17 @@ public class InstanceCreationActivity extends AppCompatActivity
                 false
         );
         semanticTimes.put(semanticTime.getLabel(), semanticTime);
+        dayOfWeek.clear();
+
+        /**********************************************************************************************************************/
+
+        dayOfWeek.add(DayOfWeek.Monday);
+        dayOfWeek.add(DayOfWeek.Tuesday);
+        dayOfWeek.add(DayOfWeek.Wednesday);
+        dayOfWeek.add(DayOfWeek.Thursday);
+        dayOfWeek.add(DayOfWeek.Friday);
+        dayOfWeek.add(DayOfWeek.Saturday);
+        dayOfWeek.add(DayOfWeek.Sunday);
 
         /**
          * Personal hours context
@@ -730,6 +810,15 @@ public class InstanceCreationActivity extends AppCompatActivity
                 false
         );
         semanticTimes.put(semanticTime.getLabel(), semanticTime);
+        dayOfWeek.clear();
+
+        /**********************************************************************************************************************/
+
+        dayOfWeek.add(DayOfWeek.Monday);
+        dayOfWeek.add(DayOfWeek.Tuesday);
+        dayOfWeek.add(DayOfWeek.Wednesday);
+        dayOfWeek.add(DayOfWeek.Thursday);
+        dayOfWeek.add(DayOfWeek.Friday);
 
         /**
          * Professional hours context
@@ -746,11 +835,15 @@ public class InstanceCreationActivity extends AppCompatActivity
                 false
         );
         semanticTimes.put(semanticTime.getLabel(), semanticTime);
+        dayOfWeek.clear();
 
         /**********************************************************************************************************************/
 
-        dayOfWeek.remove(DayOfWeek.Sunday);
-        dayOfWeek.remove(DayOfWeek.Saturday);
+        dayOfWeek.add(DayOfWeek.Monday);
+        dayOfWeek.add(DayOfWeek.Tuesday);
+        dayOfWeek.add(DayOfWeek.Wednesday);
+        dayOfWeek.add(DayOfWeek.Thursday);
+        dayOfWeek.add(DayOfWeek.Friday);
 
         /**
          * Weekday context creation
@@ -767,6 +860,15 @@ public class InstanceCreationActivity extends AppCompatActivity
                 true
         );
         semanticTimes.put(semanticTime.getLabel(), semanticTime);
+        dayOfWeek.clear();
+
+        /**********************************************************************************************************************/
+
+        dayOfWeek.add(DayOfWeek.Monday);
+        dayOfWeek.add(DayOfWeek.Tuesday);
+        dayOfWeek.add(DayOfWeek.Wednesday);
+        dayOfWeek.add(DayOfWeek.Thursday);
+        dayOfWeek.add(DayOfWeek.Friday);
 
         /**
          * Work_Morning hours context
@@ -783,6 +885,15 @@ public class InstanceCreationActivity extends AppCompatActivity
                 false
         );
         semanticTimes.put(semanticTime.getLabel(), semanticTime);
+        dayOfWeek.clear();
+
+        /**********************************************************************************************************************/
+
+        dayOfWeek.add(DayOfWeek.Monday);
+        dayOfWeek.add(DayOfWeek.Tuesday);
+        dayOfWeek.add(DayOfWeek.Wednesday);
+        dayOfWeek.add(DayOfWeek.Thursday);
+        dayOfWeek.add(DayOfWeek.Friday);
 
         /**
          * Work_Afternoon hours context
@@ -799,6 +910,7 @@ public class InstanceCreationActivity extends AppCompatActivity
                 false
         );
         semanticTimes.put(semanticTime.getLabel(), semanticTime);
+        dayOfWeek.clear();
 
         isThereTemporalContextToSave = true;
     }
@@ -1263,7 +1375,10 @@ public class InstanceCreationActivity extends AppCompatActivity
 
     @Override
     public void onListFragmentInteraction(SemanticTime item) {
-
+        Intent intent = new Intent(this, TemporalDataEntryActivity.class);
+        intent.putExtra(MithrilAC.getPrefKeyTemporalLabel(), item.getLabel());
+        intent.putExtra(MithrilAC.getPrefKeyContextTypeTemporal(), item);
+        startActivityForResult(intent, TIME_REQUEST_CODE_MORE);
     }
 
     @Override

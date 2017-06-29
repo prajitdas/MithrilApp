@@ -43,6 +43,7 @@ public class SemanticTime extends SemanticUserContext implements Parcelable {
         enabled = in.readByte() != 0;
         level = in.readInt();
         allDay = in.readByte() != 0;
+        in.readList(dayOfWeek, DayOfWeek.class.getClassLoader());
     }
 
     @Override
@@ -55,6 +56,7 @@ public class SemanticTime extends SemanticUserContext implements Parcelable {
         dest.writeByte((byte) (enabled ? 1 : 0));
         dest.writeInt(level);
         dest.writeByte((byte) (allDay ? 1 : 0));
+        dest.writeList(dayOfWeek);
     }
 
     @Override
