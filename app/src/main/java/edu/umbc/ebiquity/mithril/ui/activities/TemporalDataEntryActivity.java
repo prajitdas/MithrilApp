@@ -9,7 +9,9 @@ import android.support.v7.app.AppCompatActivity;
 import android.text.format.DateFormat;
 import android.view.View;
 import android.widget.Button;
+import android.widget.CompoundButton;
 import android.widget.TimePicker;
+import android.widget.ToggleButton;
 
 import java.util.List;
 
@@ -25,6 +27,7 @@ public class TemporalDataEntryActivity extends AppCompatActivity implements
     private Button mEndTimeBtn;
     private Button mEnabledBtn;
     private Button mDoneBtn;
+    private ToggleButton mAllDayBtn;
 
     private TimePickerDialog startTimePickerDialog;
     private TimePickerDialog endTimePickerDialog;
@@ -52,6 +55,8 @@ public class TemporalDataEntryActivity extends AppCompatActivity implements
                 getResources().getString(
                         R.string.first_occurrence) +
                         semanticTime.getDayOfWeekString());
+
+        mAllDayBtn = (ToggleButton) findViewById(R.id.allDayBtn);
 
         mStartTimeBtn = (Button) findViewById(R.id.startTimeBtn);
         mStartTimeBtn.setText(
@@ -93,11 +98,23 @@ public class TemporalDataEntryActivity extends AppCompatActivity implements
         setOnclickListeners();
     }
 
+    private boolean allDay = false;
+
     private void setOnclickListeners() {
         mDaysOfWeekBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
 
+            }
+        });
+        mAllDayBtn.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                if(isChecked)
+                    buttonView.setChecked(false);
+                else
+                    buttonView.setChecked(true);
+                allDay = buttonView.isChecked();
             }
         });
 
@@ -136,7 +153,8 @@ public class TemporalDataEntryActivity extends AppCompatActivity implements
                                 getEndMinute(),
                                 label,
                                 false,
-                                0
+                                0,
+                                allDay
                         )
                 );
                 setResult(Activity.RESULT_OK, resultIntent);

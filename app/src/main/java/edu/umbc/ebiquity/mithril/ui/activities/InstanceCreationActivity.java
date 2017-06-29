@@ -448,7 +448,8 @@ public class InstanceCreationActivity extends AppCompatActivity
                 0,
                 MithrilAC.getPrefMondayTemporalKey(),
                 false,
-                0
+                0,
+                true
         );
         semanticTimes.put(semanticTime.getLabel(), semanticTime);
         dayOfWeek.clear();
@@ -467,7 +468,8 @@ public class InstanceCreationActivity extends AppCompatActivity
                 0,
                 MithrilAC.getPrefTuesdayTemporalKey(),
                 false,
-                0
+                0,
+                true
         );
         semanticTimes.put(semanticTime.getLabel(), semanticTime);
         dayOfWeek.clear();
@@ -486,7 +488,8 @@ public class InstanceCreationActivity extends AppCompatActivity
                 0,
                 MithrilAC.getPrefWednesdayTemporalKey(),
                 false,
-                0
+                0,
+                true
         );
         semanticTimes.put(semanticTime.getLabel(), semanticTime);
         dayOfWeek.clear();
@@ -505,7 +508,8 @@ public class InstanceCreationActivity extends AppCompatActivity
                 0,
                 MithrilAC.getPrefThursdayTemporalKey(),
                 false,
-                0
+                0,
+                true
         );
         semanticTimes.put(semanticTime.getLabel(), semanticTime);
         dayOfWeek.clear();
@@ -524,7 +528,8 @@ public class InstanceCreationActivity extends AppCompatActivity
                 0,
                 MithrilAC.getPrefFridayTemporalKey(),
                 false,
-                0
+                0,
+                true
         );
         semanticTimes.put(semanticTime.getLabel(), semanticTime);
         dayOfWeek.clear();
@@ -543,7 +548,8 @@ public class InstanceCreationActivity extends AppCompatActivity
                 0,
                 MithrilAC.getPrefSaturdayTemporalKey(),
                 false,
-                0
+                0,
+                true
         );
         semanticTimes.put(semanticTime.getLabel(), semanticTime);
         dayOfWeek.clear();
@@ -562,7 +568,8 @@ public class InstanceCreationActivity extends AppCompatActivity
                 0,
                 MithrilAC.getPrefSundayTemporalKey(),
                 false,
-                0
+                0,
+                true
         );
         semanticTimes.put(semanticTime.getLabel(), semanticTime);
         dayOfWeek.clear();
@@ -583,7 +590,8 @@ public class InstanceCreationActivity extends AppCompatActivity
                 0,
                 MithrilAC.getPrefWeekendTemporalKey(),
                 false,
-                1
+                1,
+                true
         );
         semanticTimes.put(semanticTime.getLabel(), semanticTime);
 
@@ -606,7 +614,8 @@ public class InstanceCreationActivity extends AppCompatActivity
                 0,
                 MithrilAC.getPrefAnydaytimeTemporalKey(),
                 false,
-                2
+                2,
+                true
         );
         semanticTimes.put(semanticTime.getLabel(), semanticTime);
 
@@ -621,7 +630,8 @@ public class InstanceCreationActivity extends AppCompatActivity
                 30,
                 MithrilAC.getPrefBreakfastTemporalKey(),
                 false,
-                0
+                0,
+                false
         );
         semanticTimes.put(semanticTime.getLabel(), semanticTime);
 
@@ -636,7 +646,8 @@ public class InstanceCreationActivity extends AppCompatActivity
                 30,
                 MithrilAC.getPrefLunchTemporalKey(),
                 false,
-                0
+                0,
+                false
         );
         semanticTimes.put(semanticTime.getLabel(), semanticTime);
 
@@ -651,7 +662,8 @@ public class InstanceCreationActivity extends AppCompatActivity
                 30,
                 MithrilAC.getPrefDinnerTemporalKey(),
                 false,
-                0
+                0,
+                false
         );
         semanticTimes.put(semanticTime.getLabel(), semanticTime);
 
@@ -666,7 +678,8 @@ public class InstanceCreationActivity extends AppCompatActivity
                 0,
                 MithrilAC.getPrefDndTemporalKey(),
                 false,
-                0
+                0,
+                false
         );
         semanticTimes.put(semanticTime.getLabel(), semanticTime);
 
@@ -681,7 +694,8 @@ public class InstanceCreationActivity extends AppCompatActivity
                 0,
                 MithrilAC.getPrefFamilyTemporalKey(),
                 false,
-                0
+                0,
+                false
         );
         semanticTimes.put(semanticTime.getLabel(), semanticTime);
 
@@ -690,13 +704,14 @@ public class InstanceCreationActivity extends AppCompatActivity
          */
         semanticTime = new SemanticTime(
                 dayOfWeek,
-                16,
-                0,
                 19,
+                30,
+                21,
                 0,
                 MithrilAC.getPrefAloneTemporalKey(),
                 false,
-                0
+                0,
+                false
         );
         semanticTimes.put(semanticTime.getLabel(), semanticTime);
 
@@ -711,7 +726,8 @@ public class InstanceCreationActivity extends AppCompatActivity
                 0,
                 MithrilAC.getPrefPersonalTemporalKey(),
                 false,
-                1
+                1,
+                false
         );
         semanticTimes.put(semanticTime.getLabel(), semanticTime);
 
@@ -726,7 +742,8 @@ public class InstanceCreationActivity extends AppCompatActivity
                 0,
                 MithrilAC.getPrefPersonalTemporalKey(),
                 false,
-                1
+                1,
+                false
         );
         semanticTimes.put(semanticTime.getLabel(), semanticTime);
 
@@ -746,7 +763,8 @@ public class InstanceCreationActivity extends AppCompatActivity
                 0,
                 MithrilAC.getPrefWeekdayTemporalKey(),
                 false,
-                1
+                1,
+                true
         );
         semanticTimes.put(semanticTime.getLabel(), semanticTime);
 
@@ -761,7 +779,8 @@ public class InstanceCreationActivity extends AppCompatActivity
                 0,
                 MithrilAC.getPrefWorkMorningTemporalKey(),
                 false,
-                0
+                0,
+                false
         );
         semanticTimes.put(semanticTime.getLabel(), semanticTime);
 
@@ -776,7 +795,8 @@ public class InstanceCreationActivity extends AppCompatActivity
                 0,
                 MithrilAC.getPrefWorkAfternoonTemporalKey(),
                 false,
-                0
+                0,
+                false
         );
         semanticTimes.put(semanticTime.getLabel(), semanticTime);
 

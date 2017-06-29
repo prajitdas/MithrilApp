@@ -49,6 +49,17 @@
             android:textSize="20sp"
             android:theme="@style/AppTheme.Button" />
 
+
+        <ToggleButton
+            android:id="@+id/allDayBtn"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/startTimeBtn"
+            android:text="@string/ending_time"
+            android:textAlignment="textStart"
+            android:textSize="20sp"
+            android:theme="@style/AppTheme.Button" />
+
         <Button
             android:id="@+id/endTimeBtn"
             android:layout_width="match_parent"

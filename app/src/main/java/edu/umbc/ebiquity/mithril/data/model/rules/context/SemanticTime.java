@@ -7,20 +7,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 import edu.umbc.ebiquity.mithril.MithrilAC;
+import edu.umbc.ebiquity.mithril.util.specialtasks.collections.MithrilCollections;
 import edu.umbc.ebiquity.mithril.util.specialtasks.contextinstances.DayOfWeek;
 
 public class SemanticTime extends SemanticUserContext implements Parcelable {
-    public static final Creator<SemanticTime> CREATOR = new Creator<SemanticTime>() {
-        @Override
-        public SemanticTime createFromParcel(Parcel in) {
-            return new SemanticTime(in);
-        }
-
-        @Override
-        public SemanticTime[] newArray(int size) {
-            return new SemanticTime[size];
-        }
-    };
     private final String type = MithrilAC.getPrefKeyContextTypeTemporal();
     private List<DayOfWeek> dayOfWeek;
     private int startHour;
@@ -30,6 +20,19 @@ public class SemanticTime extends SemanticUserContext implements Parcelable {
     private String inferredTime;
     private boolean enabled;
     private int level;
+    private boolean allDay = false;
+
+    public SemanticTime(List<DayOfWeek> dayOfWeek, int startHour, int startMinute, int endHour, int endMinute, String inferredTime, boolean enabled, int level, boolean allDay) {
+        this.dayOfWeek = dayOfWeek;
+        this.startHour = startHour;
+        this.startMinute = startMinute;
+        this.endHour = endHour;
+        this.endMinute = endMinute;
+        this.inferredTime = inferredTime;
+        this.enabled = enabled;
+        this.level = level;
+        this.allDay = true;
+    }
 
     protected SemanticTime(Parcel in) {
         startHour = in.readInt();
@@ -39,17 +42,7 @@ public class SemanticTime extends SemanticUserContext implements Parcelable {
         inferredTime = in.readString();
         enabled = in.readByte() != 0;
         level = in.readInt();
-    }
-
-    public SemanticTime(List<DayOfWeek> dayOfWeek, int startHour, int startMinute, int endHour, int endMinute, String inferredTime, boolean enabled, int level) {
-        this.dayOfWeek = dayOfWeek;
-        this.startHour = startHour;
-        this.startMinute = startMinute;
-        this.endHour = endHour;
-        this.endMinute = endMinute;
-        this.inferredTime = inferredTime;
-        this.enabled = enabled;
-        this.level = level;
+        allDay = in.readByte() != 0;
     }
 
     @Override
@@ -61,12 +54,25 @@ public class SemanticTime extends SemanticUserContext implements Parcelable {
         dest.writeString(inferredTime);
         dest.writeByte((byte) (enabled ? 1 : 0));
         dest.writeInt(level);
+        dest.writeByte((byte) (allDay ? 1 : 0));
     }
 
     @Override
     public int describeContents() {
         return 0;
     }
+
+    public static final Creator<SemanticTime> CREATOR = new Creator<SemanticTime>() {
+        @Override
+        public SemanticTime createFromParcel(Parcel in) {
+            return new SemanticTime(in);
+        }
+
+        @Override
+        public SemanticTime[] newArray(int size) {
+            return new SemanticTime[size];
+        }
+    };
 
     public String getDayOfWeekString() {
         if (dayOfWeek == null)
@@ -81,13 +87,13 @@ public class SemanticTime extends SemanticUserContext implements Parcelable {
         week.add(DayOfWeek.Thursday);
         week.add(DayOfWeek.Friday);
 
-        if (dayOfWeek.size() == 7 && dayOfWeek.containsAll(week))
+        if (dayOfWeek.size() == 7 && MithrilCollections.isExactMatchList(dayOfWeek, week))
             return MithrilAC.getPrefAnydaytimeTemporalKey();
 
         week.remove(DayOfWeek.Saturday);
         week.remove(DayOfWeek.Sunday);
 
-        if (dayOfWeek.size() == 5 && dayOfWeek.containsAll(week))
+        if (dayOfWeek.size() == 5 && MithrilCollections.isExactMatchList(dayOfWeek, week))
             return MithrilAC.getPrefWeekdayTemporalKey();
 
         week.remove(DayOfWeek.Monday);
@@ -96,7 +102,7 @@ public class SemanticTime extends SemanticUserContext implements Parcelable {
         week.remove(DayOfWeek.Thursday);
         week.remove(DayOfWeek.Friday);
 
-        if (dayOfWeek.size() == 2 && dayOfWeek.containsAll(week))
+        if (dayOfWeek.size() == 2 && MithrilCollections.isExactMatchList(dayOfWeek, week))
             return MithrilAC.getPrefWeekendTemporalKey();
 
         StringBuffer stringBufferDayOfWeek = new StringBuffer();
@@ -122,7 +128,11 @@ public class SemanticTime extends SemanticUserContext implements Parcelable {
 
     @Override
     public String toString() {
-        return inferredTime;
+        if(getLabel().equals(MithrilAC.getPrefAnydaytimeTemporalKey()))
+            return "Always";
+        if(allDay)
+            return "Occurs on: "+getDayOfWeekString();
+        return "From:"+startHour+":"+startMinute+" to "+endHour+":"+endMinute+" on "+getDayOfWeekString();
     }
 
     @Override
@@ -206,5 +216,13 @@ public class SemanticTime extends SemanticUserContext implements Parcelable {
     @Override
     public void setLevel(int level) {
         this.level = level;
+    }
+
+    public boolean isAllDay() {
+        return allDay;
+    }
+
+    public void setAllDay(boolean allDay) {
+        this.allDay = allDay;
     }
 }
