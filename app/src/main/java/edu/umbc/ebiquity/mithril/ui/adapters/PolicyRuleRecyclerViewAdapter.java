@@ -1,4 +1,4 @@
-package edu.umbc.ebiquity.mithril.ui.fragments.coreactivityfragments;
+package edu.umbc.ebiquity.mithril.ui.adapters;
 
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -37,8 +37,8 @@ public class PolicyRuleRecyclerViewAdapter extends RecyclerView.Adapter<PolicyRu
     @Override
     public void onBindViewHolder(final ViewHolder holder, int position) {
         holder.mItem = mValues.get(position);
-        holder.mIdView.setText(mValues.get(position).id);
-        holder.mContentView.setText(mValues.get(position).content);
+        holder.mIdView.setText(mValues.get(position).getOpStr());
+        holder.mContentView.setText(mValues.get(position).getAppStr());
 
         holder.mView.setOnClickListener(new View.OnClickListener() {
             @Override

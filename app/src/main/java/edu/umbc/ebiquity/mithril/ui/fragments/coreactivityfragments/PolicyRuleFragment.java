@@ -1,6 +1,7 @@
 package edu.umbc.ebiquity.mithril.ui.fragments.coreactivityfragments;
 
 import android.content.Context;
+import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.app.Fragment;
 import android.support.v7.widget.GridLayoutManager;
@@ -11,8 +12,11 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import edu.umbc.ebiquity.mithril.R;
+import edu.umbc.ebiquity.mithril.data.dbhelpers.MithrilDBHelper;
 import edu.umbc.ebiquity.mithril.data.model.rules.PolicyRule;
+import edu.umbc.ebiquity.mithril.ui.adapters.PolicyRuleRecyclerViewAdapter;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -29,7 +33,9 @@ public class PolicyRuleFragment extends Fragment {
     private int mColumnCount = 1;
     private OnListFragmentInteractionListener mListener;
 
-    private List<PolicyRule> policies;
+    private List<PolicyRule> policies = new ArrayList<>();
+    private SQLiteDatabase mithrilDB;
+    private View view;
 
     /**
      * Mandatory empty constructor for the fragment manager to instantiate the
@@ -60,7 +66,9 @@ public class PolicyRuleFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_policyrule_list, container, false);
+        view = inflater.inflate(R.layout.fragment_policyrule_list, container, false);
+
+        initData();
 
         // Set the adapter
         if (view instanceof RecyclerView) {
@@ -74,6 +82,11 @@ public class PolicyRuleFragment extends Fragment {
             recyclerView.setAdapter(new PolicyRuleRecyclerViewAdapter(policies, mListener));
         }
         return view;
+    }
+
+    private void initData() {
+        initDB(view.getContext());
+        policies = MithrilDBHelper.getHelper(view.getContext()).findAllPolicies(mithrilDB);
     }
 
 
@@ -92,6 +105,17 @@ public class PolicyRuleFragment extends Fragment {
     public void onDetach() {
         super.onDetach();
         mListener = null;
+        closeDB();
+    }
+
+    private void initDB(Context context) {
+        // Let's get the DB instances loaded too
+        mithrilDB = MithrilDBHelper.getHelper(context).getWritableDatabase();
+    }
+
+    private void closeDB() {
+        if (mithrilDB != null)
+            mithrilDB.close();
     }
 
     /**

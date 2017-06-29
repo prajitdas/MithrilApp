@@ -60,6 +60,7 @@ import edu.umbc.ebiquity.mithril.ui.fragments.coreactivityfragments.AppsFragment
 import edu.umbc.ebiquity.mithril.ui.fragments.coreactivityfragments.BroadcastReceiversFragment;
 import edu.umbc.ebiquity.mithril.ui.fragments.coreactivityfragments.ContentProvidersFragment;
 import edu.umbc.ebiquity.mithril.ui.fragments.coreactivityfragments.PermissionsFragment;
+import edu.umbc.ebiquity.mithril.ui.fragments.coreactivityfragments.PolicyRuleFragment;
 import edu.umbc.ebiquity.mithril.ui.fragments.coreactivityfragments.ServicesFragment;
 import edu.umbc.ebiquity.mithril.ui.fragments.coreactivityfragments.UsageStatsFragment;
 import edu.umbc.ebiquity.mithril.ui.fragments.coreactivityfragments.ViolationFragment;
@@ -141,7 +142,7 @@ public class CoreActivity extends AppCompatActivity
             else
                 loadViolationsFragment();
         } else if (id == R.id.nav_policies) {
-            loadPolicyFragment();
+            loadPolicyRuleFragment();
         } else if (id == R.id.nav_apps) {
             if (isUserAppsListEmpty())
                 loadNothingHereFragment("user apps");
@@ -489,9 +490,9 @@ public class CoreActivity extends AppCompatActivity
                 .commit();
     }
 
-    private void loadPolicyFragment() {
+    private void loadPolicyRuleFragment() {
         FragmentManager fragmentManager = getFragmentManager();
-        fragmentManager.beginTransaction().replace(R.id.container_core, new PolicyFragment())
+        fragmentManager.beginTransaction().replace(R.id.container_core, new PolicyRuleFragment())
                 .commit();
     }
 
