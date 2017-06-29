@@ -147,36 +147,36 @@ public class CoreActivity extends AppCompatActivity
                 loadNothingHereFragment("permissions");
             else
                 loadPermissionsFragment();
-        } else if (id == R.id.nav_user) {
+        } else if (id == R.id.nav_apps) {
             if (isUserAppsListEmpty())
                 loadNothingHereFragment("user apps");
             else
                 loadUserAppsFragment();
-        } else if (id == R.id.nav_system) {
-            if (isSystemAppsListEmpty())
-                loadNothingHereFragment("system apps");
-            else
-                loadSystemAppsFragment();
-        } else if (id == R.id.nav_all) {
-            if (isAllAppsListEmpty())
-                loadNothingHereFragment("apps");
-            else
-                loadAllAppsFragment();
-        } else if (id == R.id.nav_services) {
-            if (isServicesListEmpty())
-                loadNothingHereFragment("services");
-            else
-                loadServicesFragment();
-        } else if (id == R.id.nav_bcastreceivers) {
-            if (isBroadcastReceiverListEmpty())
-                loadNothingHereFragment("broadcast receivers");
-            else
-                loadBroadcastReceiversFragment();
-        } else if (id == R.id.nav_contentproviders) {
-            if (isContentProvidersListEmpty())
-                loadNothingHereFragment("content providers");
-            else
-                loadContentProvidersFragment();
+//        } else if (id == R.id.nav_system) {
+//            if (isSystemAppsListEmpty())
+//                loadNothingHereFragment("system apps");
+//            else
+//                loadSystemAppsFragment();
+//        } else if (id == R.id.nav_all) {
+//            if (isAllAppsListEmpty())
+//                loadNothingHereFragment("apps");
+//            else
+//                loadAllAppsFragment();
+//        } else if (id == R.id.nav_services) {
+//            if (isServicesListEmpty())
+//                loadNothingHereFragment("services");
+//            else
+//                loadServicesFragment();
+//        } else if (id == R.id.nav_bcastreceivers) {
+//            if (isBroadcastReceiverListEmpty())
+//                loadNothingHereFragment("broadcast receivers");
+//            else
+//                loadBroadcastReceiversFragment();
+//        } else if (id == R.id.nav_contentproviders) {
+//            if (isContentProvidersListEmpty())
+//                loadNothingHereFragment("content providers");
+//            else
+//                loadContentProvidersFragment();
         } else if (id == R.id.nav_exit) {
             PermissionHelper.quitMithril(this, MithrilAC.MITHRIL_BYE_BYE_MESSAGE);
         } else if (id == R.id.nav_settings) {
@@ -356,7 +356,7 @@ public class CoreActivity extends AppCompatActivity
 
         // do something for a debug build
         if (BuildConfig.DEBUG)
-            navigationView.getMenu().getItem(4).getSubMenu().getItem(3).setEnabled(true);
+            navigationView.getMenu().getItem(5).getSubMenu().getItem(3).setEnabled(true);
 
         applyHeaderView();
     }
