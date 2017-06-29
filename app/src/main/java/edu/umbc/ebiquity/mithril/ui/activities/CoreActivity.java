@@ -52,6 +52,7 @@ import edu.umbc.ebiquity.mithril.data.model.components.BCastRecvData;
 import edu.umbc.ebiquity.mithril.data.model.components.ContentProvData;
 import edu.umbc.ebiquity.mithril.data.model.components.ServData;
 import edu.umbc.ebiquity.mithril.data.model.rules.AppUsageStats;
+import edu.umbc.ebiquity.mithril.data.model.rules.PolicyRule;
 import edu.umbc.ebiquity.mithril.data.model.rules.Violation;
 import edu.umbc.ebiquity.mithril.ui.fragments.EmptyFragment;
 import edu.umbc.ebiquity.mithril.ui.fragments.NothingHereFragment;
@@ -79,7 +80,8 @@ public class CoreActivity extends AppCompatActivity
         ViolationFragment.OnListFragmentInteractionListener,
         EmptyFragment.OnFragmentInteractionListener,
         NothingHereFragment.OnFragmentInteractionListener,
-        UsageStatsFragment.OnListFragmentInteractionListener {
+        UsageStatsFragment.OnListFragmentInteractionListener,
+        PolicyRuleFragment.OnListFragmentInteractionListener {
     private static final String WHAT_CORE_ACTIVITY_FRAGMENT_ARE_WE_IN = "coreActivityFragment";
     private final File downloadsDirectory = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS);
     private final String agreementFile = MithrilAC.getFlierPdfFileName();
@@ -696,5 +698,10 @@ public class CoreActivity extends AppCompatActivity
     @Override
     public void onListFragmentInteraction(AppUsageStats item) {
         //TODO do something when the usage stats data is requested
+    }
+
+    @Override
+    public void onListFragmentInteraction(PolicyRule item) {
+        //TODO do something when the policies data is requested
     }
 }
