@@ -130,6 +130,7 @@ public class SemanticTime extends SemanticUserContext implements Parcelable, Com
                 stringBufferDayOfWeek.append(MithrilAC.getPrefSundayTemporalKey());
             stringBufferDayOfWeek.append(", ");
         }
+        stringBufferDayOfWeek.deleteCharAt(stringBufferDayOfWeek.length() - 1);
         return stringBufferDayOfWeek.toString();
     }
 
