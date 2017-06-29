@@ -3,23 +3,23 @@
     <group android:checkableBehavior="none">
         <item
             android:id="@+id/nav_violations"
-            android:icon="@drawable/rules"
+            android:icon="@drawable/alert"
             android:title="@string/violationsMenu" />
         <item
             android:id="@+id/nav_policies"
-            android:icon="@drawable/wrench"
+            android:icon="@drawable/account_settings"
             android:title="@string/policyMenu" />
         <item
             android:id="@+id/nav_apps"
-            android:icon="@drawable/account"
+            android:icon="@drawable/apps"
             android:title="@string/components" />
         <item
             android:id="@+id/nav_perm"
-            android:icon="@drawable/account_settings_variant"
+            android:icon="@drawable/security"
             android:title="@string/permissions" />
         <item
             android:id="@+id/nav_usage"
-            android:icon="@drawable/format_list_checks"
+            android:icon="@drawable/poll"
             android:title="@string/usage_stats" />
     </group>
     <item android:title="@string/more_options">
