@@ -14,6 +14,17 @@ import edu.umbc.ebiquity.mithril.MithrilAC;
 import edu.umbc.ebiquity.mithril.util.specialtasks.collections.MithrilCollections;
 
 public class SemanticTime extends SemanticUserContext implements Parcelable, Comparable<SemanticTime> {
+    public static final Creator<SemanticTime> CREATOR = new Creator<SemanticTime>() {
+        @Override
+        public SemanticTime createFromParcel(Parcel in) {
+            return new SemanticTime(in);
+        }
+
+        @Override
+        public SemanticTime[] newArray(int size) {
+            return new SemanticTime[size];
+        }
+    };
     private final String type = MithrilAC.getPrefKeyContextTypeTemporal();
     private List<Integer> dayOfWeek = new ArrayList<>();
     private int startHour;
@@ -49,6 +60,12 @@ public class SemanticTime extends SemanticUserContext implements Parcelable, Com
         in.readList(dayOfWeek, Integer.class.getClassLoader());
     }
 
+    public static String getTimeString(int time) {
+        if (time < 10)
+            return "0" + String.valueOf(time);
+        return String.valueOf(time);
+    }
+
     @Override
     public void writeToParcel(Parcel dest, int flags) {
         dest.writeInt(startHour);
@@ -66,18 +83,6 @@ public class SemanticTime extends SemanticUserContext implements Parcelable, Com
     public int describeContents() {
         return 0;
     }
-
-    public static final Creator<SemanticTime> CREATOR = new Creator<SemanticTime>() {
-        @Override
-        public SemanticTime createFromParcel(Parcel in) {
-            return new SemanticTime(in);
-        }
-
-        @Override
-        public SemanticTime[] newArray(int size) {
-            return new SemanticTime[size];
-        }
-    };
 
     public String getDayOfWeekString() {
         if (dayOfWeek == null)
@@ -137,17 +142,11 @@ public class SemanticTime extends SemanticUserContext implements Parcelable, Com
 
     @Override
     public String toString() {
-        if(this.getDayOfWeekString().equals(MithrilAC.getPrefAnydaytimeTemporalKey()) && isAllDay())
+        if (this.getDayOfWeekString().equals(MithrilAC.getPrefAnydaytimeTemporalKey()) && isAllDay())
             return "Always";
-        if(isAllDay())
+        if (isAllDay())
             return getDayOfWeekString();
-        return "From: "+getTimeString(startHour)+getTimeString(startMinute)+"hrs to "+getTimeString(endHour)+getTimeString(endMinute)+"hrs on "+getDayOfWeekString();
-    }
-
-    public static String getTimeString(int time) {
-        if(time < 10)
-            return "0"+String.valueOf(time);
-        return String.valueOf(time);
+        return "From: " + getTimeString(startHour) + getTimeString(startMinute) + "hrs to " + getTimeString(endHour) + getTimeString(endMinute) + "hrs on " + getDayOfWeekString();
     }
 
     @Override
@@ -244,7 +243,7 @@ public class SemanticTime extends SemanticUserContext implements Parcelable, Com
     @Override
     public int compareTo(@NonNull SemanticTime o) {
         int levelComparison = ((Integer) this.getLevel()).compareTo(o.getLevel());
-        if(levelComparison == 0) {
+        if (levelComparison == 0) {
             Calendar aCal = Calendar.getInstance();
             aCal.set(Calendar.HOUR_OF_DAY, this.getStartHour());
             aCal.set(android.icu.util.Calendar.MINUTE, this.getStartMinute());
