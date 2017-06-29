@@ -131,6 +131,7 @@ public class SemanticTime extends SemanticUserContext implements Parcelable, Com
             stringBufferDayOfWeek.append(", ");
         }
         stringBufferDayOfWeek.deleteCharAt(stringBufferDayOfWeek.length() - 1);
+        stringBufferDayOfWeek.deleteCharAt(stringBufferDayOfWeek.length() - 1);
         return stringBufferDayOfWeek.toString();
     }
 
