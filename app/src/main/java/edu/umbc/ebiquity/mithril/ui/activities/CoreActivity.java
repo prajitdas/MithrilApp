@@ -241,7 +241,6 @@ public class CoreActivity extends AppCompatActivity
 
     @Override
     public void onDestroy() {
-        closeDB();
         super.onDestroy();
     }
 
@@ -369,11 +368,6 @@ public class CoreActivity extends AppCompatActivity
     private void initDB(Context context) {
         // Let's get the DB instances loaded too
         mithrilDB = MithrilDBHelper.getHelper(context).getWritableDatabase();
-    }
-
-    private void closeDB() {
-        if (mithrilDB != null)
-            mithrilDB.close();
     }
 
     private void showAgreementDownloadedSnackbar() {

@@ -158,18 +158,11 @@ public class AppsFragment extends Fragment {
             Collections.sort(userAppDataItems);
             appMetadataMap.clear();
         }
-
-        closeDB();
     }
 
     private void initDB(Context context) {
         // Let's get the DB instances loaded too
         mithrilDB = MithrilDBHelper.getHelper(context).getWritableDatabase();
-    }
-
-    private void closeDB() {
-        if (mithrilDB != null)
-            mithrilDB.close();
     }
 
     /**

@@ -166,16 +166,10 @@ public class AppInstallBroadcastReceiver extends BroadcastReceiver {
          * Don't send data on update for now
          */
 //        }
-        closeDB();
     }
 
     private void initDB(Context context) {
         // Let's get the DB instances loaded too
         mithrilDB = MithrilDBHelper.getHelper(context).getWritableDatabase();
-    }
-
-    private void closeDB() {
-        if (mithrilDB != null)
-            mithrilDB.close();
     }
 }

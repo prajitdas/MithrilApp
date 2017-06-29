@@ -99,7 +99,6 @@ public class AppDetailFragment extends Fragment {
     private void initData() {
         initDB(view.getContext());
         appPerms = MithrilDBHelper.getHelper(view.getContext()).findAppPermissionsByAppPackageName(mithrilDB, mAppPackageName);
-        closeDB();
 
         Collections.sort(appPerms);
     }
@@ -124,11 +123,6 @@ public class AppDetailFragment extends Fragment {
     private void initDB(Context context) {
         // Let's get the DB instances loaded too
         mithrilDB = MithrilDBHelper.getHelper(context).getWritableDatabase();
-    }
-
-    private void closeDB() {
-        if (mithrilDB != null)
-            mithrilDB.close();
     }
 
     /**
