@@ -11,6 +11,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import edu.umbc.ebiquity.mithril.MithrilAC;
@@ -63,6 +64,7 @@ public class SemanticTimeFragment extends Fragment {
         if (getArguments() != null) {
             mColumnCount = getArguments().getInt(ARG_COLUMN_COUNT);
             semanticTimes = getArguments().getParcelableArrayList(MithrilAC.getPrefKeyListOfTemporalInstances());
+            Collections.sort(semanticTimes);
         }
     }
 

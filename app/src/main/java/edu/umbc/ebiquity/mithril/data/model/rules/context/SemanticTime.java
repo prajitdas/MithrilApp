@@ -1,7 +1,9 @@
 package edu.umbc.ebiquity.mithril.data.model.rules.context;
 
+import android.icu.util.Calendar;
 import android.os.Parcel;
 import android.os.Parcelable;
+import android.support.annotation.NonNull;
 
 import com.google.android.gms.awareness.fence.TimeFence;
 
@@ -10,11 +12,10 @@ import java.util.List;
 
 import edu.umbc.ebiquity.mithril.MithrilAC;
 import edu.umbc.ebiquity.mithril.util.specialtasks.collections.MithrilCollections;
-import edu.umbc.ebiquity.mithril.util.specialtasks.contextinstances.DayOfWeek;
 
-public class SemanticTime extends SemanticUserContext implements Parcelable {
+public class SemanticTime extends SemanticUserContext implements Parcelable, Comparable<SemanticTime> {
     private final String type = MithrilAC.getPrefKeyContextTypeTemporal();
-    private List<Integer> dayOfWeek;
+    private List<Integer> dayOfWeek = new ArrayList<>();
     private int startHour;
     private int startMinute;
     private int endHour;
@@ -33,7 +34,7 @@ public class SemanticTime extends SemanticUserContext implements Parcelable {
         this.inferredTime = inferredTime;
         this.enabled = enabled;
         this.level = level;
-        this.allDay = true;
+        this.allDay = allDay;
     }
 
     protected SemanticTime(Parcel in) {
@@ -82,32 +83,34 @@ public class SemanticTime extends SemanticUserContext implements Parcelable {
         if (dayOfWeek == null)
             return new String();
 
-        List<Integer> week = new ArrayList<>();
-        week.add(TimeFence.DAY_OF_WEEK_SATURDAY);
-        week.add(TimeFence.DAY_OF_WEEK_SUNDAY);
-        week.add(TimeFence.DAY_OF_WEEK_MONDAY);
-        week.add(TimeFence.DAY_OF_WEEK_TUESDAY);
-        week.add(TimeFence.DAY_OF_WEEK_WEDNESDAY);
-        week.add(TimeFence.DAY_OF_WEEK_THURSDAY);
-        week.add(TimeFence.DAY_OF_WEEK_FRIDAY);
+        List<Integer> allWeek = new ArrayList<>();
+        allWeek.add(TimeFence.DAY_OF_WEEK_SATURDAY);
+        allWeek.add(TimeFence.DAY_OF_WEEK_SUNDAY);
+        allWeek.add(TimeFence.DAY_OF_WEEK_MONDAY);
+        allWeek.add(TimeFence.DAY_OF_WEEK_TUESDAY);
+        allWeek.add(TimeFence.DAY_OF_WEEK_WEDNESDAY);
+        allWeek.add(TimeFence.DAY_OF_WEEK_THURSDAY);
+        allWeek.add(TimeFence.DAY_OF_WEEK_FRIDAY);
 
-        if (dayOfWeek.size() == 7 && MithrilCollections.isExactMatchList(dayOfWeek, week))
+        if (dayOfWeek.size() == 7 && MithrilCollections.isExactMatchList(dayOfWeek, allWeek))
             return MithrilAC.getPrefAnydaytimeTemporalKey();
 
-        week.remove(TimeFence.DAY_OF_WEEK_SATURDAY);
-        week.remove(TimeFence.DAY_OF_WEEK_SUNDAY);
+        List<Integer> weekend = new ArrayList<>();
+        weekend.add(TimeFence.DAY_OF_WEEK_SATURDAY);
+        weekend.add(TimeFence.DAY_OF_WEEK_SUNDAY);
 
-        if (dayOfWeek.size() == 5 && MithrilCollections.isExactMatchList(dayOfWeek, week))
-            return MithrilAC.getPrefWeekdayTemporalKey();
-
-        week.remove(TimeFence.DAY_OF_WEEK_MONDAY);
-        week.remove(TimeFence.DAY_OF_WEEK_TUESDAY);
-        week.remove(TimeFence.DAY_OF_WEEK_WEDNESDAY);
-        week.remove(TimeFence.DAY_OF_WEEK_THURSDAY);
-        week.remove(TimeFence.DAY_OF_WEEK_FRIDAY);
-
-        if (dayOfWeek.size() == 2 && MithrilCollections.isExactMatchList(dayOfWeek, week))
+        if (dayOfWeek.size() == 5 && MithrilCollections.isExactMatchList(dayOfWeek, weekend))
             return MithrilAC.getPrefWeekendTemporalKey();
+
+        List<Integer> workweek = new ArrayList<>();
+        workweek.add(TimeFence.DAY_OF_WEEK_MONDAY);
+        workweek.add(TimeFence.DAY_OF_WEEK_TUESDAY);
+        workweek.add(TimeFence.DAY_OF_WEEK_WEDNESDAY);
+        workweek.add(TimeFence.DAY_OF_WEEK_THURSDAY);
+        workweek.add(TimeFence.DAY_OF_WEEK_FRIDAY);
+
+        if (dayOfWeek.size() == 2 && MithrilCollections.isExactMatchList(dayOfWeek, workweek))
+            return MithrilAC.getPrefWeekdayTemporalKey();
 
         StringBuffer stringBufferDayOfWeek = new StringBuffer();
         for (Integer aDay : dayOfWeek) {
@@ -132,11 +135,17 @@ public class SemanticTime extends SemanticUserContext implements Parcelable {
 
     @Override
     public String toString() {
-        if(getLabel().equals(MithrilAC.getPrefAnydaytimeTemporalKey()))
+        if(this.getDayOfWeekString().equals(MithrilAC.getPrefAnydaytimeTemporalKey()) && isAllDay())
             return "Always";
-        if(allDay)
-            return "Occurs on: "+getDayOfWeekString();
-        return "From:"+startHour+":"+startMinute+" to "+endHour+":"+endMinute+" on "+getDayOfWeekString();
+        if(isAllDay())
+            return getDayOfWeekString();
+        return "From: "+getTimeString(startHour)+getTimeString(startMinute)+"hrs to "+getTimeString(endHour)+getTimeString(endMinute)+"hrs on "+getDayOfWeekString();
+    }
+
+    private String getTimeString(int time) {
+        if(time < 10)
+            return "0"+String.valueOf(time);
+        return String.valueOf(time);
     }
 
     @Override
@@ -228,5 +237,20 @@ public class SemanticTime extends SemanticUserContext implements Parcelable {
 
     public void setAllDay(boolean allDay) {
         this.allDay = allDay;
+    }
+
+    @Override
+    public int compareTo(@NonNull SemanticTime o) {
+        int levelComparison = ((Integer) this.getLevel()).compareTo(o.getLevel());
+        if(levelComparison == 0) {
+            Calendar aCal = Calendar.getInstance();
+            aCal.set(Calendar.HOUR_OF_DAY, this.getStartHour());
+            aCal.set(android.icu.util.Calendar.MINUTE, this.getStartMinute());
+            Calendar anotherCal = Calendar.getInstance();
+            anotherCal.set(android.icu.util.Calendar.HOUR_OF_DAY, o.getStartHour());
+            anotherCal.set(android.icu.util.Calendar.MINUTE, o.getStartMinute());
+            return aCal.compareTo(anotherCal);
+        } else
+            return levelComparison;
     }
 }

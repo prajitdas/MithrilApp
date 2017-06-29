@@ -150,7 +150,7 @@ public class MithrilAC extends Application {
     private static final String PREF_SATURDAY_TEMPORAL_KEY = "Saturday";
     private static final String PREF_SUNDAY_TEMPORAL_KEY = "Sunday";
     private static final String PREF_WEEKDAY_TEMPORAL_KEY = "Weekday";
-    private static final String PREF_ANYDAYTIME_TEMPORAL_KEY = "AnydayOrAnytime";
+    private static final String PREF_ANYDAYTIME_TEMPORAL_KEY = "Everyday";
     private static final String PREF_WEEKEND_TEMPORAL_KEY = "Weekend";
     private static final String PREF_PERSONAL_TEMPORAL_KEY = "Personal_Time";
     private static final String PREF_PROFESSIONAL_TEMPORAL_KEY = "Professional_Time";

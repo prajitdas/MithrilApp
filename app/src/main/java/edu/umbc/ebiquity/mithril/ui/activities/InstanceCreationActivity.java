@@ -40,6 +40,7 @@ import com.google.gson.Gson;
 import com.google.gson.JsonSyntaxException;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -599,7 +600,7 @@ public class InstanceCreationActivity extends AppCompatActivity
 
         List<Integer> allWeek = new ArrayList<>();
         allWeek.add(TimeFence.DAY_OF_WEEK_MONDAY);
-        allWeek.add(TimeFence.DAY_OF_WEEK_MONDAY);
+        allWeek.add(TimeFence.DAY_OF_WEEK_TUESDAY);
         allWeek.add(TimeFence.DAY_OF_WEEK_WEDNESDAY);
         allWeek.add(TimeFence.DAY_OF_WEEK_THURSDAY);
         allWeek.add(TimeFence.DAY_OF_WEEK_FRIDAY);
@@ -752,7 +753,7 @@ public class InstanceCreationActivity extends AppCompatActivity
 
         List<Integer> workweek = new ArrayList<>();
         workweek.add(TimeFence.DAY_OF_WEEK_MONDAY);
-        workweek.add(TimeFence.DAY_OF_WEEK_MONDAY);
+        workweek.add(TimeFence.DAY_OF_WEEK_TUESDAY);
         workweek.add(TimeFence.DAY_OF_WEEK_WEDNESDAY);
         workweek.add(TimeFence.DAY_OF_WEEK_THURSDAY);
         workweek.add(TimeFence.DAY_OF_WEEK_FRIDAY);
