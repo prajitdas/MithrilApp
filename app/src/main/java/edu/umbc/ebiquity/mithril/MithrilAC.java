@@ -180,7 +180,7 @@ public class MithrilAC extends Application {
     private static final String PREF_KEY_USER_APPS_DISPLAY = "userApps";
     private static final String PREF_KEY_APP_DISPLAY_TYPE = "AppDisplayTypeTag";
     private static final String PREF_KEY_APP_PKG_NAME = "AppPkgNameTag";
-//    private static final String PREF_TIME_INSTANT_SUNRISE_TEMPORAL_KEY = "Sunrise"; //Sunrise in a locale
+    //    private static final String PREF_TIME_INSTANT_SUNRISE_TEMPORAL_KEY = "Sunrise"; //Sunrise in a locale
 //    private static final String PREF_TIME_INSTANT_SUNSET_TEMPORAL_KEY = "Sunset"; // Sunset in a locale
 //    private static final String PREF_MORNING_TEMPORAL_KEY = "Morning"; //0800 - 1200
 //    private static final String PREF_AFTERNOON_TEMPORAL_KEY = "Afternoon"; //1200 - 1600

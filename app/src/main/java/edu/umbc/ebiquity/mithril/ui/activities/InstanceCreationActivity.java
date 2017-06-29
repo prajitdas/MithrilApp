@@ -40,7 +40,6 @@ import com.google.gson.Gson;
 import com.google.gson.JsonSyntaxException;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -57,7 +56,6 @@ import edu.umbc.ebiquity.mithril.ui.fragments.instancecreationactivityfragments.
 import edu.umbc.ebiquity.mithril.ui.fragments.instancecreationactivityfragments.SemanticNearActorFragment;
 import edu.umbc.ebiquity.mithril.ui.fragments.instancecreationactivityfragments.SemanticTimeFragment;
 import edu.umbc.ebiquity.mithril.util.services.FetchAddressIntentService;
-import edu.umbc.ebiquity.mithril.util.specialtasks.contextinstances.DayOfWeek;
 import edu.umbc.ebiquity.mithril.util.specialtasks.errorsnexceptions.AddressKeyMissingError;
 import edu.umbc.ebiquity.mithril.util.specialtasks.permissions.PermissionHelper;
 
@@ -78,7 +76,7 @@ public class InstanceCreationActivity extends AppCompatActivity
     private final int PLACE_AUTOCOMPLETE_REQUEST_CODE_HOME = 1;
     private final int PLACE_AUTOCOMPLETE_REQUEST_CODE_WORK = 2;
     private final int PLACE_AUTOCOMPLETE_REQUEST_CODE_MORE = 3;
-//    private final int TIME_REQUEST_CODE_WORK = 4;
+    //    private final int TIME_REQUEST_CODE_WORK = 4;
 //    private final int TIME_REQUEST_CODE_DND = 5;
     private final int TIME_REQUEST_CODE_MORE = 6;
     private final int GEOFENCE_REQUEST_CODE = 7;
@@ -827,7 +825,7 @@ public class InstanceCreationActivity extends AppCompatActivity
                 false
         );
         semanticTimes.put(semanticTime.getLabel(), semanticTime);
-        
+
         isThereTemporalContextToSave = true;
     }
 

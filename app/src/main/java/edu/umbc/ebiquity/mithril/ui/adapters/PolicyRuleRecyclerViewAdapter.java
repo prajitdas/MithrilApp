@@ -6,11 +6,11 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import java.util.List;
+
 import edu.umbc.ebiquity.mithril.R;
 import edu.umbc.ebiquity.mithril.data.model.rules.PolicyRule;
 import edu.umbc.ebiquity.mithril.ui.fragments.coreactivityfragments.PolicyRuleFragment.OnListFragmentInteractionListener;
-
-import java.util.List;
 
 /**
  * {@link RecyclerView.Adapter} that can display a {@link PolicyRule} and makes a call to the

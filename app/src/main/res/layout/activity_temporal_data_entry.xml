@@ -28,15 +28,16 @@
         android:layout_height="match_parent"
         app:layout_behavior="@string/appbar_scrolling_view_behavior"
         tools:showIn="@layout/activity_temporal_data_entry">
+
         <Button
             android:id="@+id/daysOfWeekBtn"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:textSize="20sp"
-            android:layout_marginTop="10dp"
             android:layout_marginBottom="10dp"
+            android:layout_marginTop="10dp"
             android:text="@string/days_of_week"
             android:textAlignment="textStart"
+            android:textSize="20sp"
             android:theme="@style/AppTheme.Button" />
 
         <TextView
@@ -44,23 +45,23 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_below="@+id/daysOfWeekBtn"
+            android:layout_marginBottom="10dp"
             android:layout_marginStart="15dp"
             android:layout_marginTop="20dp"
-            android:layout_marginBottom="10dp"
             android:fontFamily="josephine-sans"
             android:text="@string/pref_temporal_context_all_day_event"
+            android:textAllCaps="true"
             android:textColor="@color/colorPrimaryText"
-            android:textSize="20sp"
-            android:textAllCaps="true"/>
+            android:textSize="20sp" />
 
         <ToggleButton
             android:id="@+id/allDayBtn"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_below="@+id/daysOfWeekBtn"
             android:layout_alignParentEnd="true"
-            android:layout_marginTop="10dp"
+            android:layout_below="@+id/daysOfWeekBtn"
             android:layout_marginBottom="10dp"
+            android:layout_marginTop="10dp"
             android:text="@string/ending_time"
             android:textSize="20sp"
             android:theme="@style/AppTheme.Button" />
@@ -70,8 +71,8 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_below="@+id/allDayBtn"
-            android:layout_marginTop="10dp"
             android:layout_marginBottom="10dp"
+            android:layout_marginTop="10dp"
             android:text="@string/starting_time"
             android:textAlignment="textStart"
             android:textSize="20sp"
@@ -82,8 +83,8 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_below="@+id/startTimeBtn"
-            android:layout_marginTop="10dp"
             android:layout_marginBottom="10dp"
+            android:layout_marginTop="10dp"
             android:text="@string/ending_time"
             android:textAlignment="textStart"
             android:textSize="20sp"
@@ -94,24 +95,24 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_below="@+id/endTimeBtn"
+            android:layout_marginBottom="10dp"
             android:layout_marginStart="15dp"
             android:layout_marginTop="20dp"
-            android:layout_marginBottom="10dp"
             android:fontFamily="josephine-sans"
             android:text="@string/enabled_time"
+            android:textAllCaps="true"
             android:textColor="@color/colorPrimaryText"
-            android:textSize="20sp"
-            android:textAllCaps="true"/>
+            android:textSize="20sp" />
 
         <ToggleButton
             android:id="@+id/enabledBtn"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_below="@+id/endTimeBtn"
-            android:layout_marginTop="10dp"
-            android:layout_marginBottom="10dp"
-            android:textSize="20sp"
             android:layout_alignParentEnd="true"
+            android:layout_below="@+id/endTimeBtn"
+            android:layout_marginBottom="10dp"
+            android:layout_marginTop="10dp"
+            android:textSize="20sp"
             android:theme="@style/AppTheme.Button" />
 
         <Button

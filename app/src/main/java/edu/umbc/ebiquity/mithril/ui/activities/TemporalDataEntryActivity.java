@@ -19,7 +19,6 @@ import java.util.List;
 import edu.umbc.ebiquity.mithril.MithrilAC;
 import edu.umbc.ebiquity.mithril.R;
 import edu.umbc.ebiquity.mithril.data.model.rules.context.SemanticTime;
-import edu.umbc.ebiquity.mithril.util.specialtasks.contextinstances.DayOfWeek;
 
 public class TemporalDataEntryActivity extends AppCompatActivity implements
         TimePickerDialog.OnTimeSetListener {
@@ -92,10 +91,10 @@ public class TemporalDataEntryActivity extends AppCompatActivity implements
                 DateFormat.is24HourFormat(this));
         endTimePickerDialog.setTitle(R.string.timepicker_dialog_end_time);
 
-        if(!semanticTime.isAllDay()) {
+        if (!semanticTime.isAllDay()) {
             mStartTimeBtn.setVisibility(View.VISIBLE);
             mEndTimeBtn.setVisibility(View.VISIBLE);
-        } else{
+        } else {
             mStartTimeBtn.setVisibility(View.GONE);
             mEndTimeBtn.setVisibility(View.GONE);
         }
@@ -122,8 +121,7 @@ public class TemporalDataEntryActivity extends AppCompatActivity implements
                     mStartTimeBtn.setVisibility(View.GONE);
                     mEndTimeBtn.setVisibility(View.GONE);
                     semanticTime.setAllDay(false);
-                }
-                else {
+                } else {
                     mStartTimeBtn.setVisibility(View.VISIBLE);
                     mEndTimeBtn.setVisibility(View.VISIBLE);
                     semanticTime.setAllDay(true);
@@ -150,10 +148,9 @@ public class TemporalDataEntryActivity extends AppCompatActivity implements
         mEnabledToggleBtn.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                if(isChecked) {
+                if (isChecked) {
                     semanticTime.setEnabled(false);
-                }
-                else {
+                } else {
                     semanticTime.setEnabled(true);
                 }
                 mEnabledToggleBtn.toggle();
