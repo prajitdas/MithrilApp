@@ -140,18 +140,28 @@ public class CoreActivity extends AppCompatActivity
                 loadEmptyFragment();
             else
                 loadViolationsFragment();
-        } else if (id == R.id.nav_usage) {
-            loadUsageStatsFragment();
-        } else if (id == R.id.nav_perm) {
-            if (isPermissionsListEmpty())
-                loadNothingHereFragment("permissions");
-            else
-                loadPermissionsFragment();
+        } else if (id == R.id.nav_policies) {
+            loadPolicyFragment();
         } else if (id == R.id.nav_apps) {
             if (isUserAppsListEmpty())
                 loadNothingHereFragment("user apps");
             else
                 loadUserAppsFragment();
+        } else if (id == R.id.nav_perm) {
+            if (isPermissionsListEmpty())
+                loadNothingHereFragment("permissions");
+            else
+                loadPermissionsFragment();
+        } else if (id == R.id.nav_usage) {
+            loadUsageStatsFragment();
+        } else if (id == R.id.nav_exit) {
+            PermissionHelper.quitMithril(this, MithrilAC.MITHRIL_BYE_BYE_MESSAGE);
+        } else if (id == R.id.nav_about) {
+            loadAboutFragment();
+        } else if (id == R.id.nav_settings) {
+            launchInstanceCreationActivity();
+        } else if (id == R.id.nav_reset_app) {
+            resetApp();
 //        } else if (id == R.id.nav_system) {
 //            if (isSystemAppsListEmpty())
 //                loadNothingHereFragment("system apps");
@@ -177,14 +187,6 @@ public class CoreActivity extends AppCompatActivity
 //                loadNothingHereFragment("content providers");
 //            else
 //                loadContentProvidersFragment();
-        } else if (id == R.id.nav_exit) {
-            PermissionHelper.quitMithril(this, MithrilAC.MITHRIL_BYE_BYE_MESSAGE);
-        } else if (id == R.id.nav_settings) {
-            launchInstanceCreationActivity();
-        } else if (id == R.id.nav_about) {
-            loadAboutFragment();
-        } else if (id == R.id.nav_reset_app) {
-            resetApp();
         }
 
         drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
@@ -484,6 +486,12 @@ public class CoreActivity extends AppCompatActivity
     private void loadAboutFragment() {
         FragmentManager fragmentManager = getFragmentManager();
         fragmentManager.beginTransaction().replace(R.id.container_core, new AboutFragment())
+                .commit();
+    }
+
+    private void loadPolicyFragment() {
+        FragmentManager fragmentManager = getFragmentManager();
+        fragmentManager.beginTransaction().replace(R.id.container_core, new PolicyFragment())
                 .commit();
     }
 
