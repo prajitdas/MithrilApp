@@ -21,9 +21,9 @@
     </style>
 
     <style name="AppTheme.FAB" parent="Widget.Design.FloatingActionButton">
-        <item name="backgroundTint">@color/colorButton</item>
+        <item name="backgroundTint">@color/colorAccent</item>
         <item name="rippleColor">@color/colorPrimaryLight</item>
-        <item name="fabSize">auto</item>
+        <item name="fabSize">normal</item>
         <item name="elevation">@dimen/fab_margin</item>
     </style>
 

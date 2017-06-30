@@ -30,9 +30,7 @@
         android:layout_gravity="bottom|end"
         android:layout_margin="@dimen/fab_margin"
         android:elevation="@dimen/fab_margin"
-        app:backgroundTint="@color/colorButton"
-        app:fabSize="auto"
-        app:rippleColor="@color/colorPrimaryLight"
+        android:theme="@style/AppTheme.FAB"
         app:srcCompat="@drawable/cloud_upload" />
 
 </android.support.design.widget.CoordinatorLayout>
