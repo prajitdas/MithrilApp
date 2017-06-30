@@ -188,6 +188,14 @@ public class SemanticLocation extends SemanticUserContext implements
         return Comparators.NAME.compare(this, o);
     }
 
+    public int comparePlaceIds(@NonNull SemanticLocation o) {
+        return Comparators.PLACE.compare(this, o);
+    }
+
+    public int compareLevels(@NonNull SemanticLocation o) {
+        return Comparators.LEVEL.compare(this, o);
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -220,15 +228,11 @@ public class SemanticLocation extends SemanticUserContext implements
                 return o1.level - o2.level;
             }
         };
-//        public static Comparator<SemanticLocation> NAMEANDAGE = new Comparator<SemanticLocation>() {
-//            @Override
-//            public int compare(SemanticLocation o1, SemanticLocation o2) {
-//                int i = o1.name.compareTo(o2.name);
-//                if (i == 0) {
-//                    i = o1.age - o2.age;
-//                }
-//                return i;
-//            }
-//        };
+        public static Comparator<SemanticLocation> PLACE = new Comparator<SemanticLocation>() {
+            @Override
+            public int compare(SemanticLocation o1, SemanticLocation o2) {
+                return o1.placeId.compareTo(o2.placeId);
+            }
+        };
     }
 }

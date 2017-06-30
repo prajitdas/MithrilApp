@@ -350,7 +350,7 @@ public class AppLaunchDetectorService extends Service implements
             for (SemanticLocation knownSemanticLocation : knownSemanticLocations) {
                 Log.d(MithrilAC.getDebugTag() + "knownsemloc", knownSemanticLocation.getName() + knownSemanticLocation.getPlaceId() + knownSemanticLocation.getAddress().getAddressLine(0));
                 Log.d(MithrilAC.getDebugTag() + "currsemloc", currSemLoc.getName() + currSemLoc.getPlaceId() + currSemLoc.getAddress().getAddressLine(0));
-                if (knownSemanticLocation.compareTo(currSemLoc) == 0) {
+                if (knownSemanticLocation.compareTo(currSemLoc) == 0 && knownSemanticLocation.comparePlaceIds(currSemLoc) == 0) {
                     placeToRetrieve = knownSemanticLocation.getPlaceId();
                     isFound = true;
                     break;
