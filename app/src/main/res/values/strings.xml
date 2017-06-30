@@ -276,6 +276,8 @@
     <string name="title_activity_setup_geofences">Geofences setup&#8230;</string>
     <string name="title_activity_temporal_data_entry">Temporal context:&#160;</string>
     <string name="title_activity_setup_timefences">Timefences setup&#8230;</string>
+    <string name="title_activity_feedback">Request for feedback</string>
+
 
     <string-array name="freq_array">
         <!--<item>Second</item>-->
@@ -397,6 +399,4 @@
     <!-- [CHAR LIMIT=NONE] Time label for an operation that has never executed. -->
     <string name="app_ops_never_used">(Never used)</string>
     <string name="section_format">Hello World from section: %1$d</string>
-    <string name="title_activity_feedback">FeedbackActivity</string>
-
 </resources>

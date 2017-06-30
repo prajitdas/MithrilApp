@@ -15,7 +15,6 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.CompoundButton;
-import android.widget.TextView;
 import android.widget.ToggleButton;
 
 import java.util.List;
@@ -80,9 +79,9 @@ public class PermissionAcquisitionActivity extends AppCompatActivity {
         try {
             rootAccess = new RootAccess();
         } catch (PhoneNotRootedException e) {
-            mRootAccessToggleButton.setVisibility(View.GONE);
-            TextView rootAccessTextView = (TextView) findViewById(R.id.rootAccessTextView);
-            rootAccessTextView.setVisibility(View.GONE);
+//            mRootAccessToggleButton.setVisibility(View.GONE);
+//            TextView rootAccessTextView = (TextView) findViewById(R.id.rootAccessTextView);
+//            rootAccessTextView.setVisibility(View.GONE);
         }
 
         if (PermissionHelper.isAllRequiredPermissionsGranted(this))

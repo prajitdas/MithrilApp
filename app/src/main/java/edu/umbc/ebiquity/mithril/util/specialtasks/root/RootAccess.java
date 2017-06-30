@@ -104,6 +104,17 @@ public class RootAccess {
             setRooted(true);
             return;
         }
+
+        String[] places = {"/sbin/", "/system/bin/", "/system/xbin/", "/data/local/xbin/",
+                "/data/local/bin/", "/system/sd/xbin/", "/system/bin/failsafe/", "/data/local/", "/su/bin/su"};
+        for (String where : places) {
+            if (new File(where + "su").exists()) {
+                if (canExecuteCommand(where)) {
+                    setRooted(true);
+                    break;
+                }
+            }
+        }
         setRooted(false);
         //Phone is not rooted
         throw new PhoneNotRootedException();

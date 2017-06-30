@@ -188,7 +188,7 @@
             android:theme="@style/AppTheme.NoActionBar">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value="edu.umbc.ebiquity.mithril.ui.activities.CoreActivity" />
+                android:value=".ui.activities.CoreActivity" />
         </activity>
         <activity
             android:name=".ui.activities.ShowAppDetailsActivity"
