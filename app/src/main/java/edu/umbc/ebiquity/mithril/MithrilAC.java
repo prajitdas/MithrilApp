@@ -33,6 +33,7 @@ public class MithrilAC extends Application {
     private static final String APP_RECEIVER = MITHRIL_APP_PACKAGE_NAME + ".APP_RECEIVER";
     private static final String RESULT_DATA_KEY = MITHRIL_APP_PACKAGE_NAME + ".RESULT_DATA_KEY";
     private static final String ADDRESS_REQUESTED_EXTRA = "ADDRESS_REQUESTED_EXTRA";
+    private static final String PLACE_REQUESTED_EXTRA = "placeRequested";
     private static final String LOCATION_DATA_EXTRA = MITHRIL_APP_PACKAGE_NAME + ".LOCATION_DATA_EXTRA";
     private static final String GEOFENCES_ADDED_KEY = MITHRIL_APP_PACKAGE_NAME + ".GEOFENCES_ADDED_KEY";
     private static final String CURR_ADDRESS_KEY = "curr_address_key";
@@ -75,7 +76,6 @@ public class MithrilAC extends Application {
     private static final String PERMISSION_FLAG_COSTS_MONEY = "costs-money";
     private static final String PERMISSION_FLAG_INSTALLED = "installed";
     private static final String PERMISSION_FLAG_NONE = "no-flags";
-
     // Milliseconds per second
     private static final int MILLISECONDS_PER_SECOND = 1000;
     // Default time slot of 1 hour in milliseconds
@@ -94,19 +94,14 @@ public class MithrilAC extends Application {
     private static final long FASTEST_INTERVAL = MILLISECONDS_PER_SECOND * FASTEST_INTERVAL_IN_SECONDS;
     // Set the minimum displacement between location updates in meters. By default this is 0.
     private static final float SMALLEST_DISPLACEMENT = new Float(10.0);
-
     private static final String CMD_GRANT_READ_LOGS_PERMISSION_FOR_APP = "pm grant " + MITHRIL_APP_PACKAGE_NAME + " android.permission.READ_LOGS";
     private static final String CMD_REVOKE_READ_LOGS_PERMISSION_FOR_APP = "pm revoke " + MITHRIL_APP_PACKAGE_NAME + " android.permission.READ_LOGS";
-
     private static final String CMD_GRANT_PACKAGE_USAGE_STATS_PERMISSION_FOR_APP = "pm grant " + MITHRIL_APP_PACKAGE_NAME + " android.permission.PACKAGE_USAGE_STATS";
     private static final String CMD_REVOKE_PACKAGE_USAGE_STATS_PERMISSION_FOR_APP = "pm revoke " + MITHRIL_APP_PACKAGE_NAME + " android.permission.PACKAGE_USAGE_STATS";
-
     private static final String CMD_GRANT_UPDATE_APP_OPS_STATS = "pm grant " + MITHRIL_APP_PACKAGE_NAME + " android.permission.UPDATE_APP_OPS_STATS";
     private static final String CMD_REVOKE_UPDATE_APP_OPS_STATS = "pm revoke " + MITHRIL_APP_PACKAGE_NAME + " android.permission.UPDATE_APP_OPS_STATS";
-
     private static final String CMD_GRANT_WRITE_SECURE_SETTINGS = "pm grant " + MITHRIL_APP_PACKAGE_NAME + " android.permission.WRITE_SECURE_SETTINGS";
     private static final String CMD_REVOKE_WRITE_SECURE_SETTINGS = "pm revoke " + MITHRIL_APP_PACKAGE_NAME + " android.permission.WRITE_SECURE_SETTINGS";
-
     private static final String CMD_GRANT_GET_APP_OPS_STATS = "pm grant " + MITHRIL_APP_PACKAGE_NAME + " android.permission.GET_APP_OPS_STATS";
     private static final String CMD_REVOKE_GET_APP_OPS_STATS = "pm revoke " + MITHRIL_APP_PACKAGE_NAME + " android.permission.GET_APP_OPS_STATS";
     private static final String CMD_GRANT_REAL_GET_TASKS = "pm grant " + MITHRIL_APP_PACKAGE_NAME + " android.permission.REAL_GET_TASKS";
@@ -601,6 +596,10 @@ public class MithrilAC extends Application {
             "('android.permission.ACCESS_VR_MANAGER', 'signature', '" + NO_PERMISSION_GROUP.first + "', '" + PERMISSION_FLAG_NONE + "'),\n" +
             "('android.permission.UPDATE_LOCK_TASK_PACKAGES', 'signature|setup', '" + NO_PERMISSION_GROUP.first + "', '" + PERMISSION_FLAG_NONE + "'),\n" +
             "('android.permission.SUBSTITUTE_NOTIFICATION_APP_NAME', 'signature|privileged', '" + NO_PERMISSION_GROUP.first + "', '" + PERMISSION_FLAG_NONE + "');\n";
+
+    public static String getPlaceRequestedExtra() {
+        return PLACE_REQUESTED_EXTRA;
+    }
 
     public static String getCmdGrantRealGetTasks() {
         return CMD_GRANT_REAL_GET_TASKS;

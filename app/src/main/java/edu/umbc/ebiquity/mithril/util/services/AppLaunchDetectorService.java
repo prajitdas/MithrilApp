@@ -89,7 +89,7 @@ public class AppLaunchDetectorService extends Service implements
      * user's intent. If the value is true, the activity tries to fetch the address as soon as
      * GoogleApiClient connects.
      */
-    private boolean mAddressRequested;
+    private boolean mPlaceRequested;
     private AddressResultReceiver mAddressResultReceiver;
     private Map<String, SemanticLocation> currentSemanticLocations = new HashMap<>();
 
@@ -107,7 +107,7 @@ public class AppLaunchDetectorService extends Service implements
         sharedPrefs = getSharedPreferences(MithrilAC.getSharedPreferencesName(), Context.MODE_PRIVATE);
         editor = getSharedPreferences(MithrilAC.getSharedPreferencesName(), Context.MODE_PRIVATE).edit();
         // Set defaults, then update using values stored in the Bundle.
-        mAddressRequested = false;
+        mPlaceRequested = false;
         mAddressResultReceiver = new AddressResultReceiver(new Handler(), this);
         /* Create a new location client, using the enclosing class to
          * handle callbacks.
@@ -255,8 +255,8 @@ public class AppLaunchDetectorService extends Service implements
         // Create an intent for passing to the intent service responsible for fetching the address.
         Intent intent = new Intent(this, FetchAddressIntentService.class);
 
-        mAddressRequested = true;
-        intent.putExtra(MithrilAC.getAddressRequestedExtra(), mAddressRequested);
+        mPlaceRequested = true;
+        intent.putExtra(MithrilAC.getPlaceRequestedExtra(), mPlaceRequested);
         intent.putExtra(MithrilAC.getCurrAddressKey(), "curr_sem_loc");
 
         // Pass the result receiver as an extra to the service.
@@ -348,6 +348,8 @@ public class AppLaunchDetectorService extends Service implements
         boolean isFound = false;
         for (SemanticLocation currSemLoc : currentSemanticLocations.values()) {
             for (SemanticLocation knownSemanticLocation : knownSemanticLocations) {
+                Log.d(MithrilAC.getDebugTag() + "knownsemloc", knownSemanticLocation.getName() + knownSemanticLocation.getPlaceId() + knownSemanticLocation.getAddress().getAddressLine(0));
+                Log.d(MithrilAC.getDebugTag() + "currsemloc", currSemLoc.getName() + currSemLoc.getPlaceId() + currSemLoc.getAddress().getAddressLine(0));
                 if (knownSemanticLocation.compareTo(currSemLoc) == 0) {
                     placeToRetrieve = knownSemanticLocation.getPlaceId();
                     isFound = true;
@@ -361,7 +363,7 @@ public class AppLaunchDetectorService extends Service implements
             for (SemanticLocation knownSemanticLocation : knownSemanticLocations) {
                 if (knownSemanticLocation.getPlaceId().equals(placeToRetrieve)) {
                     semanticLocations.add(knownSemanticLocation);
-                    Log.d(MithrilAC.getDebugTag(), "value: " + knownSemanticLocation.getName());
+                    Log.d(MithrilAC.getDebugTag(), "List of locations found: " + knownSemanticLocation.getName());
                 }
             }
         } else {
@@ -399,11 +401,11 @@ public class AppLaunchDetectorService extends Service implements
                         if (placeLikelihood.getLikelihood() > mostLikelihood) {
                             mostLikelihood = placeLikelihood.getLikelihood();
                             mCurrentPlace = placeLikelihood.getPlace();
-//                            Log.d(MithrilAC.getDebugTag(),
-//                                    "Place found: " +
-//                                            placeLikelihood.getPlace().getAddress() +
-//                                            " with likelihood: " +
-//                                            placeLikelihood.getLikelihood());
+                            Log.d(MithrilAC.getDebugTag(),
+                                    "Place found: " +
+                                            placeLikelihood.getPlace().getName() +
+                                            " with likelihood: " +
+                                            placeLikelihood.getLikelihood());
                         }
                     }
 //                    likelyPlaces.release();
@@ -538,14 +540,14 @@ public class AppLaunchDetectorService extends Service implements
          * user's intent. If the value is true, the activity tries to fetch the address as soon as
          * GoogleApiClient connects.
          */
-        private boolean mAddressRequested;
+        private boolean mPlaceRequested;
 
         public AddressResultReceiver(Handler handler, Context aContext) {
             super(handler);
 
             context = aContext;
             // Set defaults, then update using values stored in the Bundle.
-            mAddressRequested = false;
+            mPlaceRequested = false;
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N)
                 mAddressOutput = new Address(context.getResources().getConfiguration().getLocales().get(0));
             else
@@ -554,7 +556,7 @@ public class AppLaunchDetectorService extends Service implements
 
         @Override
         protected void onReceiveResult(int resultCode, Bundle resultData) {
-            mAddressRequested = resultData.getBoolean(MithrilAC.getAddressRequestedExtra(), false);
+            mPlaceRequested = resultData.getBoolean(MithrilAC.getAddressRequestedExtra(), false);
             String key = resultData.getString(MithrilAC.getCurrAddressKey(), null);
             if (key.equals(null))
                 throw new AddressKeyMissingError();
@@ -569,7 +571,7 @@ public class AppLaunchDetectorService extends Service implements
                     Log.d(MithrilAC.getDebugTag(), e.getMessage());
                 }
 
-//                Log.d(MithrilAC.getDebugTag(), "Prefs address " + resultData.getString(MithrilAC.getCurrAddressKey()) + mAddressRequested + key + json);
+                Log.d(MithrilAC.getDebugTag(), "We are at address: " + resultData.getString(MithrilAC.getCurrAddressKey()) + mAddressOutput);
                 // Show a toast message if an address was found.
                 if (resultCode == MithrilAC.SUCCESS_RESULT && mCurrentPlace != null && mCurrentLocation != null) {
                     SemanticLocation tempSemanticLocation = new SemanticLocation(key, mCurrentLocation, 0);
@@ -600,7 +602,7 @@ public class AppLaunchDetectorService extends Service implements
                             false, address.getCountryName(), placeId, placeTypes, false, 4));
                 }
                 // Reset. Enable the Fetch Address button and stop showing the progress bar.
-                mAddressRequested = false;
+                mPlaceRequested = false;
             }
         }
     }
