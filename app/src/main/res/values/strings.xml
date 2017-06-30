@@ -396,5 +396,6 @@
     <!-- [CHAR LIMIT=NONE] Time label for an operation that has never executed. -->
     <string name="app_ops_never_used">(Never used)</string>
     <string name="section_format">Hello World from section: %1$d</string>
+    <string name="title_activity_feedback">FeedbackActivity</string>
 
 </resources>

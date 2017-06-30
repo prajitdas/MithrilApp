@@ -18,7 +18,6 @@ import android.os.Bundle;
 import android.os.Environment;
 import android.os.Handler;
 import android.support.annotation.NonNull;
-import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
 import android.support.design.widget.Snackbar;
 import android.support.v4.content.res.ResourcesCompat;
@@ -89,8 +88,6 @@ public class CoreActivity extends AppCompatActivity
     private SQLiteDatabase mithrilDB;
     private SharedPreferences sharedPreferences;
     private SharedPreferences.Editor editor;
-    private List<Violation> violationItems;
-    private FloatingActionButton fab;
 
     private DrawerLayout drawer;
     private ActionBarDrawerToggle toggle;
@@ -347,14 +344,6 @@ public class CoreActivity extends AppCompatActivity
         //If we are here, we have usage stats permission which means all asynchronous tasks are complete. User is on main screen and we may show the snackbar, once.
         if (!PermissionHelper.needsUsageStatsPermission(this))
             showAgreementDownloadedSnackbar();
-
-        fab = (FloatingActionButton) findViewById(R.id.fab_core);
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                showSnackbar(view, view.getContext().getResources().getString(R.string.functionality_not_active_yet));
-            }
-        });
 
         drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         toggle = new ActionBarDrawerToggle(
