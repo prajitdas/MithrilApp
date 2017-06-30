@@ -14,6 +14,7 @@ import android.content.pm.PackageManager;
 import android.content.res.AssetManager;
 import android.database.sqlite.SQLiteDatabase;
 import android.net.Uri;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Environment;
 import android.os.Handler;
@@ -65,7 +66,10 @@ import edu.umbc.ebiquity.mithril.ui.fragments.coreactivityfragments.ServicesFrag
 import edu.umbc.ebiquity.mithril.ui.fragments.coreactivityfragments.UsageStatsFragment;
 import edu.umbc.ebiquity.mithril.ui.fragments.coreactivityfragments.ViolationFragment;
 import edu.umbc.ebiquity.mithril.util.services.AppLaunchDetectorService;
+import edu.umbc.ebiquity.mithril.util.specialtasks.collections.MithrilCollections;
+import edu.umbc.ebiquity.mithril.util.specialtasks.errorsnexceptions.PhoneNotRootedException;
 import edu.umbc.ebiquity.mithril.util.specialtasks.permissions.PermissionHelper;
+import edu.umbc.ebiquity.mithril.util.specialtasks.root.RootAccess;
 
 public class CoreActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener,
@@ -440,12 +444,13 @@ public class CoreActivity extends AppCompatActivity
         builder.setMessage(R.string.dialog_reload_data)
                 .setPositiveButton(R.string.dialog_resp_delete, new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
-                        AppOpsManager appOpsManager = (AppOpsManager) getSystemService(Context.APP_OPS_SERVICE);
-                        try {
-                            appOpsManager.setMode(AppOpsManager.OP_GET_USAGE_STATS, android.os.Process.myUid(), getApplicationContext().getPackageName(), AppOpsManager.MODE_DEFAULT);
-                        } catch (Exception e) {
-                            Log.e(MithrilAC.getDebugTag(), e.getMessage());
-                        }
+//                        AppOpsManager appOpsManager = (AppOpsManager) getSystemService(Context.APP_OPS_SERVICE);
+//                        try {
+//                            appOpsManager.setMode(AppOpsManager.OP_GET_USAGE_STATS, android.os.Process.myUid(), getApplicationContext().getPackageName(), AppOpsManager.MODE_DEFAULT);
+//                        } catch (Exception e) {
+//                            Log.e(MithrilAC.getDebugTag(), e.getMessage());
+//                        }
+                        AsyncTask.execute(new RootTask());
                         ((ActivityManager) builder.getContext().getSystemService(ACTIVITY_SERVICE)).clearApplicationUserData();
                         PermissionHelper.toast(builder.getContext(), "App was reset!", Toast.LENGTH_SHORT);
                     }
@@ -461,6 +466,25 @@ public class CoreActivity extends AppCompatActivity
 
         // show it
         alertDialog.show();
+    }
+
+    private class RootTask implements Runnable {
+        @Override
+        public void run() {
+            try {
+                RootAccess rootAccess = new RootAccess(getApplicationContext());
+                rootAccess.runScript(new String[]{
+                        MithrilAC.getCmdRevokePackageUsageStatsPermissionForApp(),
+                        MithrilAC.getCmdRevokeGetAppOpsStats(),
+                        MithrilAC.getCmdRevokeManageAppOpsRestrictions(),
+                        MithrilAC.getCmdRevokeUpdateAppOpsStats(),
+                        MithrilAC.getCmdRevokeWriteSecureSettings(),
+                        MithrilAC.getCmdRevokeRealGetTasks()
+                });
+            } catch (PhoneNotRootedException e) {
+                Log.d(MithrilAC.getDebugTag(), "Phone is not rooted... full functionality unavailable but can perform first phase of the MithrilAC study!");
+            }
+        }
     }
 
     private void loadNothingHereFragment(String what) {

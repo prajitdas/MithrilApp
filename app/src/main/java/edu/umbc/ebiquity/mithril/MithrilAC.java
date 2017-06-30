@@ -104,6 +104,8 @@ public class MithrilAC extends Application {
     private static final String CMD_REVOKE_WRITE_SECURE_SETTINGS = "pm revoke " + MITHRIL_APP_PACKAGE_NAME + " android.permission.WRITE_SECURE_SETTINGS";
     private static final String CMD_GRANT_GET_APP_OPS_STATS = "pm grant " + MITHRIL_APP_PACKAGE_NAME + " android.permission.GET_APP_OPS_STATS";
     private static final String CMD_REVOKE_GET_APP_OPS_STATS = "pm revoke " + MITHRIL_APP_PACKAGE_NAME + " android.permission.GET_APP_OPS_STATS";
+    private static final String CMD_GRANT_GET_USAGE_STATS = "pm revoke " + MITHRIL_APP_PACKAGE_NAME + " android.permission.PACKAGE_USAGE_STATS";
+    private static final String CMD_REVOKE_GET_USAGE_STATS = "pm revoke " + MITHRIL_APP_PACKAGE_NAME + " android.permission.PACKAGE_USAGE_STATS";
     private static final String CMD_GRANT_REAL_GET_TASKS = "pm grant " + MITHRIL_APP_PACKAGE_NAME + " android.permission.REAL_GET_TASKS";
     private static final String CMD_REVOKE_REAL_GET_TASKS = "pm revoke " + MITHRIL_APP_PACKAGE_NAME + " android.permission.REAL_GET_TASKS";
     private static final String CMD_GRANT_MANAGE_APP_OPS_RESTRICTIONS = "pm grant " + MITHRIL_APP_PACKAGE_NAME + " android.permission.MANAGE_APP_OPS_RESTRICTIONS";
@@ -596,6 +598,14 @@ public class MithrilAC extends Application {
             "('android.permission.ACCESS_VR_MANAGER', 'signature', '" + NO_PERMISSION_GROUP.first + "', '" + PERMISSION_FLAG_NONE + "'),\n" +
             "('android.permission.UPDATE_LOCK_TASK_PACKAGES', 'signature|setup', '" + NO_PERMISSION_GROUP.first + "', '" + PERMISSION_FLAG_NONE + "'),\n" +
             "('android.permission.SUBSTITUTE_NOTIFICATION_APP_NAME', 'signature|privileged', '" + NO_PERMISSION_GROUP.first + "', '" + PERMISSION_FLAG_NONE + "');\n";
+
+    public static String getCmdGrantGetUsageStats() {
+        return CMD_GRANT_GET_USAGE_STATS;
+    }
+
+    public static String getCmdRevokeGetUsageStats() {
+        return CMD_REVOKE_GET_USAGE_STATS;
+    }
 
     public static String getPlaceRequestedExtra() {
         return PLACE_REQUESTED_EXTRA;

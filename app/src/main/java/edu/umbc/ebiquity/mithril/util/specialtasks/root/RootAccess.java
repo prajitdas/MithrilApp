@@ -114,7 +114,7 @@ public class RootAccess {
             // ignore
         }
         // try executing commands
-        if (canExecuteCommand("/system/xbin/which su | tr -d '\\n'") || canExecuteCommand("/system/bin/which su | tr -d '\\n'") || canExecuteCommand("which su | tr -d '\\n'")) {
+        if (executeCommand("/system/xbin/which su | tr -d '\\n'") || executeCommand("/system/bin/which su | tr -d '\\n'") || executeCommand("which su | tr -d '\\n'")) {
             setRooted(true);
             return;
         }
@@ -123,7 +123,7 @@ public class RootAccess {
                 "/data/local/bin/", "/system/sd/xbin/", "/system/bin/failsafe/", "/data/local/", "/su/bin/su"};
         for (String where : places) {
             if (new File(where + "su").exists()) {
-                if (canExecuteCommand(where)) {
+                if (executeCommand(where)) {
                     setRooted(true);
                     break;
                 }
@@ -135,7 +135,7 @@ public class RootAccess {
     }
 
     // executes a command on the system
-    private boolean canExecuteCommand(String command) {
+    private boolean executeCommand(String command) {
         try {
             runScript(new String[]{command});
             return true;
