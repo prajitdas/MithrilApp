@@ -77,7 +77,7 @@ public class PermissionAcquisitionActivity extends AppCompatActivity {
         mRootAccessToggleButton = (ToggleButton) findViewById(R.id.rootAccessToggleButton);
         mQuitAppButton = (Button) findViewById(R.id.quitAppButton);
         try {
-            rootAccess = new RootAccess();
+            rootAccess = new RootAccess(this);
         } catch (PhoneNotRootedException e) {
 //            mRootAccessToggleButton.setVisibility(View.GONE);
 //            TextView rootAccessTextView = (TextView) findViewById(R.id.rootAccessTextView);

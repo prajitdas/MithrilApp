@@ -1,6 +1,9 @@
 package edu.umbc.ebiquity.mithril.util.specialtasks.root;
 
+import android.content.Context;
 import android.util.Log;
+
+import com.scottyab.rootbeer.RootBeer;
 
 import java.io.DataOutputStream;
 import java.io.File;
@@ -17,10 +20,21 @@ import edu.umbc.ebiquity.mithril.util.specialtasks.errorsnexceptions.PhoneNotRoo
 public class RootAccess {
     private boolean rooted;
 
-    public RootAccess() throws PhoneNotRootedException {
-        testRooted();
+    public RootAccess(Context context) throws PhoneNotRootedException {
+        alternateRooTest(context);
         if (!isRooted())
             throw new PhoneNotRootedException();
+    }
+
+    private void alternateRooTest(Context context) {
+        RootBeer rootBeer = new RootBeer(context);
+        if (rootBeer.isRooted()) {
+            //we found indication of root
+            setRooted(true);
+        } else {
+            //we didn't find indication of root
+            setRooted(false);
+        }
     }
 
     public boolean isRooted() throws PhoneNotRootedException {
