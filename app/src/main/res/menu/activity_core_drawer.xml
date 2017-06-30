@@ -10,6 +10,10 @@
             android:icon="@drawable/account_settings"
             android:title="@string/policyMenu" />
         <item
+            android:id="@+id/nav_feedback"
+            android:icon="@drawable/poll"
+            android:title="@string/feedback" />
+        <item
             android:id="@+id/nav_apps"
             android:icon="@drawable/apps"
             android:title="@string/components" />

@@ -149,6 +149,11 @@ public class CoreActivity extends AppCompatActivity
                 loadNothingHereFragment("policies");
             else
                 loadPolicyRuleFragment();
+        } else if (id == R.id.nav_feedback) {
+            if (isPolicyListEmpty())
+                loadNothingHereFragment("feedback");
+            else
+                launchFeedbackActivity();
         } else if (id == R.id.nav_apps) {
             if (isUserAppsListEmpty())
                 loadNothingHereFragment("user apps");
@@ -356,7 +361,7 @@ public class CoreActivity extends AppCompatActivity
 
         // do something for a debug build
         if (BuildConfig.DEBUG)
-            navigationView.getMenu().getItem(5).getSubMenu().getItem(3).setEnabled(true);
+            navigationView.getMenu().getItem(6).getSubMenu().getItem(3).setEnabled(true);
 
         applyHeaderView();
     }
@@ -567,6 +572,10 @@ public class CoreActivity extends AppCompatActivity
         editor.putBoolean(MithrilAC.getPrefKeyTimeInstancesCreated(), false);
         editor.apply();
         startActivity(new Intent(this, InstanceCreationActivity.class));
+    }
+
+    private void launchFeedbackActivity() {
+        startActivity(new Intent(this, FeedbackActivity.class));
     }
 
     private boolean isViolationListEmpty() {

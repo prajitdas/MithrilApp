@@ -182,6 +182,15 @@
             android:label="@string/title_activity_core"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
+            android:name=".ui.activities.FeedbackActivity"
+            android:label="@string/title_activity_feedback"
+            android:parentActivityName=".ui.activities.CoreActivity"
+            android:theme="@style/AppTheme.NoActionBar">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="edu.umbc.ebiquity.mithril.ui.activities.CoreActivity" />
+        </activity>
+        <activity
             android:name=".ui.activities.ShowAppDetailsActivity"
             android:label="@string/title_activity_view_app_detail"
             android:parentActivityName=".ui.activities.CoreActivity"
@@ -214,11 +223,7 @@
         <!-- android:theme="@style/AppTheme.NoActionBar"> -->
         <!-- <intent-filter> -->
         <!-- <action android:name="android.nfc.action.NDEF_DISCOVERED" /> -->
-
-
         <!-- <category android:name="android.intent.category.DEFAULT" /> -->
-
-
         <!-- <data android:mimeType="text/plain" /> -->
         <!-- </intent-filter> -->
         <!-- </activity> -->
@@ -278,16 +283,5 @@
         <service
             android:name=".util.services.ExecuteRulesIntentService"
             android:exported="false" />
-
-        <activity
-            android:name=".ui.activities.FeedbackActivity"
-            android:label="@string/title_activity_feedback"
-            android:parentActivityName=".ui.activities.CoreActivity"
-            android:theme="@style/AppTheme.NoActionBar">
-            <meta-data
-                android:name="android.support.PARENT_ACTIVITY"
-                android:value="edu.umbc.ebiquity.mithril.ui.activities.CoreActivity" />
-        </activity>
     </application>
-
 </manifest>

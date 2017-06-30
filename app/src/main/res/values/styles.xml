@@ -21,7 +21,7 @@
     </style>
 
     <style name="AppTheme.FAB" parent="Widget.Design.FloatingActionButton">
-        <item name="backgroundTint">@color/colorAccent</item>
+        <item name="backgroundTint">@color/colorPrimary</item>
         <item name="rippleColor">@color/colorPrimaryLight</item>
         <item name="fabSize">normal</item>
         <item name="elevation">@dimen/fab_margin</item>
@@ -53,7 +53,7 @@
     <integer name="preference_scrollbar_style">33554432</integer>
 
     <style name="FullscreenActionBarStyle" parent="Widget.AppCompat.ActionBar">
-        <item name="android:background">@color/black_overlay</item>
+        <item name="android:background">@color/colorPrimaryLight</item>
     </style>
 
 </resources>
