@@ -66,7 +66,6 @@ import edu.umbc.ebiquity.mithril.ui.fragments.coreactivityfragments.ServicesFrag
 import edu.umbc.ebiquity.mithril.ui.fragments.coreactivityfragments.UsageStatsFragment;
 import edu.umbc.ebiquity.mithril.ui.fragments.coreactivityfragments.ViolationFragment;
 import edu.umbc.ebiquity.mithril.util.services.AppLaunchDetectorService;
-import edu.umbc.ebiquity.mithril.util.specialtasks.collections.MithrilCollections;
 import edu.umbc.ebiquity.mithril.util.specialtasks.errorsnexceptions.PhoneNotRootedException;
 import edu.umbc.ebiquity.mithril.util.specialtasks.permissions.PermissionHelper;
 import edu.umbc.ebiquity.mithril.util.specialtasks.root.RootAccess;
@@ -468,25 +467,6 @@ public class CoreActivity extends AppCompatActivity
         alertDialog.show();
     }
 
-    private class RootTask implements Runnable {
-        @Override
-        public void run() {
-            try {
-                RootAccess rootAccess = new RootAccess(getApplicationContext());
-                rootAccess.runScript(new String[]{
-                        MithrilAC.getCmdRevokePackageUsageStatsPermissionForApp(),
-                        MithrilAC.getCmdRevokeGetAppOpsStats(),
-                        MithrilAC.getCmdRevokeManageAppOpsRestrictions(),
-                        MithrilAC.getCmdRevokeUpdateAppOpsStats(),
-                        MithrilAC.getCmdRevokeWriteSecureSettings(),
-                        MithrilAC.getCmdRevokeRealGetTasks()
-                });
-            } catch (PhoneNotRootedException e) {
-                Log.d(MithrilAC.getDebugTag(), "Phone is not rooted... full functionality unavailable but can perform first phase of the MithrilAC study!");
-            }
-        }
-    }
-
     private void loadNothingHereFragment(String what) {
         Bundle data = new Bundle();
         data.putString(WHAT_CORE_ACTIVITY_FRAGMENT_ARE_WE_IN, what);
@@ -726,5 +706,24 @@ public class CoreActivity extends AppCompatActivity
     @Override
     public void onListFragmentInteraction(PolicyRule item) {
         //TODO do something when the policies data is requested
+    }
+
+    private class RootTask implements Runnable {
+        @Override
+        public void run() {
+            try {
+                RootAccess rootAccess = new RootAccess(getApplicationContext());
+                rootAccess.runScript(new String[]{
+                        MithrilAC.getCmdRevokePackageUsageStatsPermissionForApp(),
+                        MithrilAC.getCmdRevokeGetAppOpsStats(),
+                        MithrilAC.getCmdRevokeManageAppOpsRestrictions(),
+                        MithrilAC.getCmdRevokeUpdateAppOpsStats(),
+                        MithrilAC.getCmdRevokeWriteSecureSettings(),
+                        MithrilAC.getCmdRevokeRealGetTasks()
+                });
+            } catch (PhoneNotRootedException e) {
+                Log.d(MithrilAC.getDebugTag(), "Phone is not rooted... full functionality unavailable but can perform first phase of the MithrilAC study!");
+            }
+        }
     }
 }
