@@ -348,8 +348,8 @@ public class AppLaunchDetectorService extends Service implements
         boolean isFound = false;
         for (SemanticLocation currSemLoc : currentSemanticLocations.values()) {
             for (SemanticLocation knownSemanticLocation : knownSemanticLocations) {
-                Log.d(MithrilAC.getDebugTag() + "knownsemloc", knownSemanticLocation.getName() + knownSemanticLocation.getPlaceId() + knownSemanticLocation.getAddress().getAddressLine(0));
-                Log.d(MithrilAC.getDebugTag() + "currsemloc", currSemLoc.getName() + currSemLoc.getPlaceId() + currSemLoc.getAddress().getAddressLine(0));
+//                Log.d(MithrilAC.getDebugTag() + "knownsemloc", knownSemanticLocation.getName() + knownSemanticLocation.getPlaceId() + knownSemanticLocation.getAddress().getAddressLine(0));
+//                Log.d(MithrilAC.getDebugTag() + "currsemloc", currSemLoc.getName() + currSemLoc.getPlaceId() + currSemLoc.getAddress().getAddressLine(0));
                 if (knownSemanticLocation.compareTo(currSemLoc) == 0 && knownSemanticLocation.comparePlaceIds(currSemLoc) == 0) {
                     placeToRetrieve = knownSemanticLocation.getPlaceId();
                     isFound = true;
@@ -401,11 +401,7 @@ public class AppLaunchDetectorService extends Service implements
                         if (placeLikelihood.getLikelihood() > mostLikelihood) {
                             mostLikelihood = placeLikelihood.getLikelihood();
                             mCurrentPlace = placeLikelihood.getPlace();
-                            Log.d(MithrilAC.getDebugTag(),
-                                    "Place found: " +
-                                            placeLikelihood.getPlace().getName() +
-                                            " with likelihood: " +
-                                            placeLikelihood.getLikelihood());
+//                            Log.d(MithrilAC.getDebugTag(), "Place found: " + placeLikelihood.getPlace().getName() + " with likelihood: " + placeLikelihood.getLikelihood());
                         }
                     }
 //                    likelyPlaces.release();
@@ -571,7 +567,7 @@ public class AppLaunchDetectorService extends Service implements
                     Log.d(MithrilAC.getDebugTag(), e.getMessage());
                 }
 
-                Log.d(MithrilAC.getDebugTag(), "We are at address: " + resultData.getString(MithrilAC.getCurrAddressKey()) + mAddressOutput);
+//                Log.d(MithrilAC.getDebugTag(), "We are at address: " + resultData.getString(MithrilAC.getCurrAddressKey()) + mAddressOutput);
                 // Show a toast message if an address was found.
                 if (resultCode == MithrilAC.SUCCESS_RESULT && mCurrentPlace != null && mCurrentLocation != null) {
                     SemanticLocation tempSemanticLocation = new SemanticLocation(key, mCurrentLocation, 0);
