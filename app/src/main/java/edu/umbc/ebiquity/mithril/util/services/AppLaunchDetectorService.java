@@ -238,9 +238,10 @@ public class AppLaunchDetectorService extends Service implements
             for (SemanticActivity semanticActivity : getSemanticActivities())
                 semanticUserContextList.add(semanticActivity);
 
-            Log.d(MithrilAC.getDebugTag(), "Size" + semanticUserContextList.size());
             for (SemanticUserContext semanticUserContext : semanticUserContextList)
                 Log.d(MithrilAC.getDebugTag(), semanticUserContext.getClass().getName());
+
+            Log.d(MithrilAC.getDebugTag(), "Size" + semanticUserContextList.size());
             return semanticUserContextList;
         }
         return new ArrayList<>();
@@ -366,7 +367,8 @@ public class AppLaunchDetectorService extends Service implements
         } else {
             semanticLocations.add(handleUnknownLocation(mCurrentLocation));
         }
-        Log.d(MithrilAC.getDebugTag(), "This is what we matched " + semanticLocations.get(0).getLabel() + semanticLocations.get(0).getName());
+        if(semanticLocations.size() > 0)
+            Log.d(MithrilAC.getDebugTag(), "This is what we matched " + semanticLocations.get(0).getLabel() + semanticLocations.get(0).getName());
         return semanticLocations;
     }
 
@@ -459,60 +461,6 @@ public class AppLaunchDetectorService extends Service implements
         mNotificationManager.notify(0, builder.build());
     }
 
-    private void doNothingOldCode() {
-        /**
-         List<SemanticLocation> tempLocations = new ArrayList<>(currentSemanticLocations.values());
-         Collections.sort(tempLocations, SemanticLocation.Comparators.LEVEL);
-         currentSemanticLocations.clear();
-         for(SemanticLocation semanticLocation : tempLocations)
-         currentSemanticLocations.put(semanticLocation.getLabel(), semanticLocation);
-         if (level > knownSemanticLocation.getLevel()) {
-         level = knownSemanticLocation.getLevel();
-         semanticLocation = knownSemanticLocation;
-         }
-         }
-         }
-         }
-         Log.d(MithrilAC.getDebugTag(), "Did not match but at least we got a location" + currSemLoc.getLabel() + currSemLoc.getName());
-         }
-         if (semanticLocation != null) {
-         Log.d(MithrilAC.getDebugTag(), "This is what we matched " + semanticLocation.getLabel() + semanticLocation.getName());
-         int level = Integer.MAX_VALUE;
-         for(SemanticLocation knownSemanticLocation : knownSemanticLocations) {
-         if(knownSemanticLocation.getPlaceId().equals(semanticLocation.getPlaceId())) {
-         if (level > knownSemanticLocation.getLevel()) {
-         level = knownSemanticLocation.getLevel();
-         semanticLocation = knownSemanticLocation;
-         Log.d(MithrilAC.getDebugTag(), "Eureka we got a match to a location" + semanticLocation.getName() + semanticLocation.getLabel());
-         }
-         }
-         }
-         float shortestDistanceToKnownLocation = Float.MAX_VALUE;
-         Log.d(MithrilAC.getDebugTag(), "1st Eureka we got a match to a location" +
-         String.valueOf(knownSemanticLocations.size()));
-         for(SemanticLocation knownSemanticLocation : knownSemanticLocations) {
-         float distanceTo = currentLocation.distanceTo(knownSemanticLocation.getLocation());
-         if (distanceTo < MithrilAC.getRadiusOf200Meters() && shortestDistanceToKnownLocation > distanceTo) {
-         Log.d(MithrilAC.getDebugTag(), "3rd Eureka we got a match to a location" + knownSemanticLocation.getName() + knownSemanticLocation.getLabel());
-         shortestDistanceToKnownLocation = distanceTo;
-         semanticLocation = knownSemanticLocation;
-         Log.d(MithrilAC.getDebugTag(), "Passed location found: "
-         + String.valueOf(currentLocation.getLatitude())
-         + String.valueOf(knownSemanticLocation.getLocation().getLatitude())
-         + String.valueOf(distanceTo)
-         );
-         }
-         }
-         if (semanticLocations.size() == 0) {
-         semanticLocations.add(handleUnknownLocation(mCurrentLocation));
-         }
-         Log.d(MithrilAC.getDebugTag(), pkgOpPair.first);
-         requestLastLocation();
-         guessCurrentPlace();
-         startSearchAddressIntentService(mCurrentLocation);
-         */
-    }
-
     private class LaunchedAppDetectTimerTask extends TimerTask {
         @Override
         public void run() {
@@ -529,6 +477,9 @@ public class AppLaunchDetectorService extends Service implements
                                 //no need to change sharedprefs
                                 editor.putString(MithrilAC.getPrefKeyLastRunningApp(), pkgOpPair.first);
                                 editor.apply();
+
+                                requestLastLocation();
+                                guessCurrentPlace();
 
                                 try {
                                     ViolationDetector.detectViolation(
@@ -551,6 +502,9 @@ public class AppLaunchDetectorService extends Service implements
                             //add to sharedprefs currently running app and detect violation, if any
                             editor.putString(MithrilAC.getPrefKeyLastRunningApp(), pkgOpPair.first);
                             editor.apply();
+
+                            requestLastLocation();
+                            guessCurrentPlace();
 
                             try {
                                 ViolationDetector.detectViolation(
@@ -651,3 +605,55 @@ public class AppLaunchDetectorService extends Service implements
         }
     }
 }
+/**
+ private void doNothingOldCode() {
+         List<SemanticLocation> tempLocations = new ArrayList<>(currentSemanticLocations.values());
+         Collections.sort(tempLocations, SemanticLocation.Comparators.LEVEL);
+         currentSemanticLocations.clear();
+         for(SemanticLocation semanticLocation : tempLocations)
+         currentSemanticLocations.put(semanticLocation.getLabel(), semanticLocation);
+         if (level > knownSemanticLocation.getLevel()) {
+         level = knownSemanticLocation.getLevel();
+         semanticLocation = knownSemanticLocation;
+         }
+         }
+         }
+         }
+         Log.d(MithrilAC.getDebugTag(), "Did not match but at least we got a location" + currSemLoc.getLabel() + currSemLoc.getName());
+         }
+         if (semanticLocation != null) {
+         Log.d(MithrilAC.getDebugTag(), "This is what we matched " + semanticLocation.getLabel() + semanticLocation.getName());
+         int level = Integer.MAX_VALUE;
+         for(SemanticLocation knownSemanticLocation : knownSemanticLocations) {
+         if(knownSemanticLocation.getPlaceId().equals(semanticLocation.getPlaceId())) {
+         if (level > knownSemanticLocation.getLevel()) {
+         level = knownSemanticLocation.getLevel();
+         semanticLocation = knownSemanticLocation;
+         Log.d(MithrilAC.getDebugTag(), "Eureka we got a match to a location" + semanticLocation.getName() + semanticLocation.getLabel());
+         }
+         }
+         }
+         float shortestDistanceToKnownLocation = Float.MAX_VALUE;
+         Log.d(MithrilAC.getDebugTag(), "1st Eureka we got a match to a location" +
+         String.valueOf(knownSemanticLocations.size()));
+         for(SemanticLocation knownSemanticLocation : knownSemanticLocations) {
+         float distanceTo = currentLocation.distanceTo(knownSemanticLocation.getLocation());
+         if (distanceTo < MithrilAC.getRadiusOf200Meters() && shortestDistanceToKnownLocation > distanceTo) {
+         Log.d(MithrilAC.getDebugTag(), "3rd Eureka we got a match to a location" + knownSemanticLocation.getName() + knownSemanticLocation.getLabel());
+         shortestDistanceToKnownLocation = distanceTo;
+         semanticLocation = knownSemanticLocation;
+         Log.d(MithrilAC.getDebugTag(), "Passed location found: "
+         + String.valueOf(currentLocation.getLatitude())
+         + String.valueOf(knownSemanticLocation.getLocation().getLatitude())
+         + String.valueOf(distanceTo)
+         );
+         }
+         }
+         if (semanticLocations.size() == 0) {
+         semanticLocations.add(handleUnknownLocation(mCurrentLocation));
+         }
+         Log.d(MithrilAC.getDebugTag(), pkgOpPair.first);
+         requestLastLocation();
+         guessCurrentPlace();
+         startSearchAddressIntentService(mCurrentLocation);
+    }*/
