@@ -11,7 +11,7 @@
             android:title="@string/policyMenu" />
         <item
             android:id="@+id/nav_feedback"
-            android:icon="@drawable/poll"
+            android:icon="@drawable/file_chart"
             android:title="@string/feedback" />
         <item
             android:id="@+id/nav_apps"
