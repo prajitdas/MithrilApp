@@ -9,3 +9,7 @@ cd ../shamu-lineage-14.1-experimental-prajit/
 repo sync
 cd ../mako-lineage-14.1-experimental-prajit/
 repo sync
+cd ../maguro-lineage-14.1-experimental-prajit/
+repo sync
+cd ../sailfish-lineage-14.1-experimental-prajit/
+repo sync

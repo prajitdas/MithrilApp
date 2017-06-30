@@ -19,3 +19,11 @@ read -n1 -rsp "Connect mako and press space to continue..." key
 if [ "$key" = '' ]; then
 	./makePrajitOS mako
 fi
+read -n1 -rsp "Connect maguro and press space to continue..." key
+if [ "$key" = '' ]; then
+	./makePrajitOS maguro
+fi
+read -n1 -rsp "Connect sailfish and press space to continue..." key
+if [ "$key" = '' ]; then
+	./makePrajitOS sailfish
+fi

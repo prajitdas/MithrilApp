@@ -12,8 +12,12 @@ elif [[ $1 == "hammerhead" ]]; then
 	buildPath=$buildPath"hammerhead"
 elif [[ $1 == "shamu" ]]; then
 	buildPath=$buildPath"shamu"
+elif [[ $1 == "maguro" ]]; then
+	buildPath=$buildPath"maguro"
+elif [[ $1 == "sailfish" ]]; then
+	buildPath=$buildPath"sailfish"
 else
-	echo "I don't think we can build all devices at the same detectedAtTime. Specify one!"
+	echo "I don't think we can build all devices at the same time. Specify one!"
 	exit 0
 fi
 buildPath=$buildPath"-lineage-14.1-experimental-prajit/"
