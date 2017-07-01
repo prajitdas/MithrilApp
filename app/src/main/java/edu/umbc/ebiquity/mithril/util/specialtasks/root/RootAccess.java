@@ -39,7 +39,7 @@ public class RootAccess {
     public static void exec(String[] statementsToRun) {
         CommandResult result = Shell.SU.run(statementsToRun);
         if (result.isSuccessful()) {
-            System.out.println(result.getStdout());
+            Log.d(MithrilAC.getDebugTag(), result.getStdout());
             // Example output on a rooted device:
             // uid=0(root) gid=0(root) groups=0(root) context=u:r:init:s0
         }

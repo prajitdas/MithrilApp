@@ -174,12 +174,11 @@ public class PermissionAcquisitionActivity extends AppCompatActivity {
                     buttonView.setChecked(false);
                 if (PermissionHelper.needsRootPrivileges(buttonView.getContext(), rootAccess) && !isPermissionAcquisitionComplete()) {
                     RootAccess.exec(new String[] {
-                            MithrilAC.getCmdRevokePackageUsageStatsPermissionForApp(),
-                            MithrilAC.getCmdRevokeGetAppOpsStats(),
-                            MithrilAC.getCmdRevokeManageAppOpsRestrictions(),
-                            MithrilAC.getCmdRevokeUpdateAppOpsStats(),
-                            MithrilAC.getCmdRevokeWriteSecureSettings(),
-                            MithrilAC.getCmdRevokeRealGetTasks()}
+                        MithrilAC.getCmdGrantGetAppOpsStats(),
+                        MithrilAC.getCmdGrantManageAppOpsRestrictions(),
+                        MithrilAC.getCmdGrantUpdateAppOpsStats(),
+                        MithrilAC.getCmdGrantWriteSecureSettings(),
+                        MithrilAC.getCmdGrantRealGetTasks()}
                     );
                 } else
                     PermissionHelper.toast(buttonView.getContext(), "Thanks we have ROOT!");
