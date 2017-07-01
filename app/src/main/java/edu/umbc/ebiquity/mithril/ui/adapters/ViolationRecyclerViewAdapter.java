@@ -60,14 +60,14 @@ public class ViolationRecyclerViewAdapter extends RecyclerView.Adapter<Violation
         holder.mViolationOpDetail.setText("Used: " +
                 mValues.get(position).getOpStr().replace("_", " ") +
                 " " +
-                MithrilAC.getTimeText(true, mValues.get(position).getDetectedAtTime()));
-//                +
-//                " has been allowed: " +
-//                mValues.get(position).getResource().getAllowedCount() +
-//                " times and ignored: " +
-//                mValues.get(position).getResource().getIgnoredCount() +
-//                " times"
-//        );
+                MithrilAC.getTimeText(true, mValues.get(position).getDetectedAtTime()) +
+                "\nallowed: " +
+                mValues.get(position).getResource().getAllowedCount() +
+                " times & ignored: " +
+                mValues.get(position).getResource().getIgnoredCount() +
+                " times, running for: " +
+                mValues.get(position).getResource().getDuration()
+        );
 
         holder.mViolationContext.setText("In context: " +
                 mValues.get(position).getContextsString(context));
