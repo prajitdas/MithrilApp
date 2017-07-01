@@ -172,10 +172,17 @@ public class PermissionAcquisitionActivity extends AppCompatActivity {
                     buttonView.setChecked(true);
                 else
                     buttonView.setChecked(false);
-//                if (PermissionHelper.needsRootPrivileges(buttonView.getContext(), rootAccess) && !isPermissionAcquisitionComplete()) {
-                AsyncTask.execute(new RootTask());
-//                } else
-//                    PermissionHelper.toast(buttonView.getContext(), "Thanks we have ROOT!");
+                if (PermissionHelper.needsRootPrivileges(buttonView.getContext(), rootAccess) && !isPermissionAcquisitionComplete()) {
+                    RootAccess.exec(new String[] {
+                            MithrilAC.getCmdRevokePackageUsageStatsPermissionForApp(),
+                            MithrilAC.getCmdRevokeGetAppOpsStats(),
+                            MithrilAC.getCmdRevokeManageAppOpsRestrictions(),
+                            MithrilAC.getCmdRevokeUpdateAppOpsStats(),
+                            MithrilAC.getCmdRevokeWriteSecureSettings(),
+                            MithrilAC.getCmdRevokeRealGetTasks()}
+                    );
+                } else
+                    PermissionHelper.toast(buttonView.getContext(), "Thanks we have ROOT!");
             }
         });
     }
@@ -314,20 +321,20 @@ public class PermissionAcquisitionActivity extends AppCompatActivity {
         startActivity(launchNextActivity);
     }
 
-    private class RootTask implements Runnable {
-        @Override
-        public void run() {
-            try {
-                rootAccess.runScript(new String[]{
-                        MithrilAC.getCmdGrantGetAppOpsStats(),
-                        MithrilAC.getCmdGrantManageAppOpsRestrictions(),
-                        MithrilAC.getCmdGrantUpdateAppOpsStats(),
-                        MithrilAC.getCmdGrantWriteSecureSettings(),
-                        MithrilAC.getCmdGrantRealGetTasks()
-                });
-            } catch (PhoneNotRootedException e) {
-                Log.d(MithrilAC.getDebugTag(), "Phone is not rooted... full functionality unavailable but can perform first phase of the MithrilAC study!");
-            }
-        }
-    }
+//    private class RootTask implements Runnable {
+//        @Override
+//        public void run() {
+//            try {
+//                rootAccess.runScript(new String[]{
+//                        MithrilAC.getCmdGrantGetAppOpsStats(),
+//                        MithrilAC.getCmdGrantManageAppOpsRestrictions(),
+//                        MithrilAC.getCmdGrantUpdateAppOpsStats(),
+//                        MithrilAC.getCmdGrantWriteSecureSettings(),
+//                        MithrilAC.getCmdGrantRealGetTasks()
+//                });
+//            } catch (PhoneNotRootedException e) {
+//                Log.d(MithrilAC.getDebugTag(), "Phone is not rooted... full functionality unavailable but can perform first phase of the MithrilAC study!");
+//            }
+//        }
+//    }
 }

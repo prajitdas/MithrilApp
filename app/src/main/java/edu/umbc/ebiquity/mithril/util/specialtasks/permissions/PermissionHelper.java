@@ -146,21 +146,17 @@ public class PermissionHelper {
                         )
                 )
         );
-        try {
-            if (rootAccess != null &&
-                    rootAccess.isRooted() &&
-                    PermissionHelper.isPermissionGranted(
-                            context,
-                            "android.permission.GET_APP_OPS_STATS") ==
-                            PackageManager.PERMISSION_GRANTED &&
-                    PermissionHelper.isPermissionGranted(
-                            context,
-                            "android.permission.WRITE_SECURE_SETTINGS") ==
-                            PackageManager.PERMISSION_GRANTED)
-                return false;
-        } catch (PhoneNotRootedException e) {
+        if (rootAccess != null &&
+                rootAccess.isRooted(context) &&
+                PermissionHelper.isPermissionGranted(
+                        context,
+                        "android.permission.GET_APP_OPS_STATS") ==
+                        PackageManager.PERMISSION_GRANTED &&
+                PermissionHelper.isPermissionGranted(
+                        context,
+                        "android.permission.WRITE_SECURE_SETTINGS") ==
+                        PackageManager.PERMISSION_GRANTED)
             return false;
-        }
         return true;
     }
 
