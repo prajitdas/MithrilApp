@@ -12,6 +12,7 @@ import android.util.Pair;
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
@@ -108,15 +109,27 @@ public class ViolationDetector {
         for (Resource currentResource : resources) {
             Action actionForCurrentOperationAndApp = Action.DENY;
             int lastOperationPerformed = currentResource.getOp();
-            Map<Integer, List<PolicyRule>> policyRuleMap = MithrilDBHelper.getHelper(context).findAllPoliciesForAppWhenPerformingOp(mithrilDB, currentPackageName, lastOperationPerformed);
-            for (Map.Entry<Integer, List<PolicyRule>> policyRuleEntry : policyRuleMap.entrySet()) {
-                List<PolicyRule> policyRules = policyRuleEntry.getValue();
-                Set <Long> policyContextSet = new HashSet<>();
-                List<Long> policyContextList = new ArrayList<>(policyContextSet);
-                Collections.sort(policyContextList);
-                for (PolicyRule policyRule : policyRules)
-                    policyContextSet.add(policyRule.getCtxId());
-                if (policyContextSet.size() > 0) {
+            List<PolicyRule> policyRules = MithrilDBHelper.getHelper(context).findAllPoliciesForAppWhenPerformingOp(mithrilDB, currentPackageName, lastOperationPerformed);
+            if (policyRules.size() > 0) {
+                long currentPolicyId = -1;
+                List<PolicyRule> tempRules = new ArrayList<>();
+                Map<Integer, List<PolicyRule>> policyRuleMap = new HashMap<>();
+                for (PolicyRule policyRule : policyRules) {
+                    if (currentPolicyId == policyRule.getPolicyId())
+                        tempRules.add(policyRule);
+                    else {
+                        if (currentPolicyId != -1)
+                            policyRuleMap.put(policyRule.getPolicyId(), tempRules);
+                        currentPolicyId = policyRule.getPolicyId();
+                    }
+                }
+                for (Map.Entry<Integer, List<PolicyRule>> policyRuleMapEntry : policyRuleMap.entrySet()) {
+                    //Found some policies let's group them by policy Id
+                    Set<Long> policyContextSet = new HashSet<>();
+                    List<Long> policyContextList = new ArrayList<>(policyContextSet);
+                    Collections.sort(policyContextList);
+                    for (PolicyRule policyRule : policyRuleMapEntry.getValue())
+                        policyContextSet.add(policyRule.getCtxId());
                     /**
                      * If current context is a subset of policy context or they are equal then we get true for the following test
                      * We have assumed a closed world. Explicit access has to be defined.
@@ -276,72 +289,72 @@ public class ViolationDetector {
                             );
                         }
                     }
-                } else {
-                    /**
-                     * No rules were found... for the app and operation combo! We perhaps have a default violation...
-                     * Since we are using a Closed World Assumption, we are stating that explicit permissions
-                     * have to be defined. So anything that is not explicitly allowed we consider to be denied.
-                     * Perhaps we have opportunity for ML here? For example if we have seen that user allows
-                     * Social media apps access to certain things in certain context before, we may make an
-                     * assumption that user will allow a new social media app. This is an extrapolation but
-                     * this is where we could have a RL system with a goal of predicting users' preferred policy
-                     * and use user feedback as +ve or -ve reinforcement.
-                     */
-                    Log.d(MithrilAC.getDebugTag(), "Default violation match scenario. Do something!");
-                    int newPolicyId = MithrilDBHelper.getHelper(context).findMaxPolicyId(mithrilDB) + 1;
-                    for (long currCtxtId : currentContextSet) {
-                        Pair<String, String> ctxtTypeLabel = MithrilDBHelper.getHelper(context).findContextByID(mithrilDB, currCtxtId);
-                        AppData app = MithrilDBHelper.getHelper(context).findAppByAppPkgName(mithrilDB, currentPackageName);
-                        long appId = MithrilDBHelper.getHelper(context).findAppIdByAppPkgName(mithrilDB, currentPackageName);
-                        Log.d(MithrilAC.getDebugTag(),
-                                Integer.toString(newPolicyId) +
-                                        currentPackageName +
-                                        app.getAppName() +
-                                        lastOperationPerformed +
-                                        ctxtTypeLabel.second +
-                                        ctxtTypeLabel.first);
-                        MithrilDBHelper.getHelper(context).addPolicyRule(mithrilDB, DataGenerator.createPolicyRule(
-                                newPolicyId,
-                                currentPackageName,
-                                app.getAppName(), // the name returned is not correct we have find the method that fixes that
-                                lastOperationPerformed, // Manifest.permission.ACCESS_FINE_LOCATION,
-                                ctxtTypeLabel.second,
-                                ctxtTypeLabel.first,
-                                Action.ALLOW,
-                                mithrilDB, context)
-                        );
-                        handleViolation(context,
-                                mithrilDB,
-                                new Violation(
-                                        newPolicyId,
-                                        appId,
-                                        lastOperationPerformed,
-                                        app.getAppName(), // the name returned is not correct we have find the method that fixes that
-                                        AppOpsManager.opToName(lastOperationPerformed), // Manifest.permission.ACCESS_FINE_LOCATION,
-                                        false,
-                                        true,
-                                        new Timestamp(System.currentTimeMillis()),
-                                        currentContextList,
-                                        1,
-                                        currentResource
-                                )
-                        );
-                    }
+                }
+
+                /**
+                 * PolicyConflictDetector object to be created and sent the requester, resource, context combo to receive a decision!!!
+                 * TODO if an app is launched at a certain Semantic location, does the location we know match any policy?
+                 * TODO If it does then, can we determine if this is a violation?
+                 * TODO if this is a violation, then insert the information into the violation table.
+                 * TODO if it is not a violation, then what do we do? **DECIDE**
+                 * TODO !!!!DUMMY POLICY!!!!
+                 * REMOVE THIS AFTER DEMO
+                 * com.google.android.youtube launch is not allowed in US!
+                 * change policy to allowed in
+                 */
+                //            mithrilDB.close();
+            } else {
+                /**
+                 * No rules were found... for the app and operation combo! We perhaps have a default violation...
+                 * Since we are using a Closed World Assumption, we are stating that explicit permissions
+                 * have to be defined. So anything that is not explicitly allowed we consider to be denied.
+                 * Perhaps we have opportunity for ML here? For example if we have seen that user allows
+                 * Social media apps access to certain things in certain context before, we may make an
+                 * assumption that user will allow a new social media app. This is an extrapolation but
+                 * this is where we could have a RL system with a goal of predicting users' preferred policy
+                 * and use user feedback as +ve or -ve reinforcement.
+                 */
+                Log.d(MithrilAC.getDebugTag(), "Default violation match scenario. Do something!");
+                int newPolicyId = MithrilDBHelper.getHelper(context).findMaxPolicyId(mithrilDB) + 1;
+                for (long currCtxtId : currentContextSet) {
+                    Pair<String, String> ctxtTypeLabel = MithrilDBHelper.getHelper(context).findContextByID(mithrilDB, currCtxtId);
+                    AppData app = MithrilDBHelper.getHelper(context).findAppByAppPkgName(mithrilDB, currentPackageName);
+                    long appId = MithrilDBHelper.getHelper(context).findAppIdByAppPkgName(mithrilDB, currentPackageName);
+                    Log.d(MithrilAC.getDebugTag(),
+                            Integer.toString(newPolicyId) +
+                                    currentPackageName +
+                                    app.getAppName() +
+                                    lastOperationPerformed +
+                                    ctxtTypeLabel.second +
+                                    ctxtTypeLabel.first);
+                    MithrilDBHelper.getHelper(context).addPolicyRule(mithrilDB, DataGenerator.createPolicyRule(
+                            newPolicyId,
+                            currentPackageName,
+                            app.getAppName(), // the name returned is not correct we have find the method that fixes that
+                            lastOperationPerformed, // Manifest.permission.ACCESS_FINE_LOCATION,
+                            ctxtTypeLabel.second,
+                            ctxtTypeLabel.first,
+                            Action.ALLOW,
+                            mithrilDB, context)
+                    );
+                    handleViolation(context,
+                            mithrilDB,
+                            new Violation(
+                                    newPolicyId,
+                                    appId,
+                                    lastOperationPerformed,
+                                    app.getAppName(), // the name returned is not correct we have find the method that fixes that
+                                    AppOpsManager.opToName(lastOperationPerformed), // Manifest.permission.ACCESS_FINE_LOCATION,
+                                    false,
+                                    true,
+                                    new Timestamp(System.currentTimeMillis()),
+                                    currentContextList,
+                                    1,
+                                    currentResource
+                            )
+                    );
                 }
             }
-
-            /**
-             * PolicyConflictDetector object to be created and sent the requester, resource, context combo to receive a decision!!!
-             * TODO if an app is launched at a certain Semantic location, does the location we know match any policy?
-             * TODO If it does then, can we determine if this is a violation?
-             * TODO if this is a violation, then insert the information into the violation table.
-             * TODO if it is not a violation, then what do we do? **DECIDE**
-             * TODO !!!!DUMMY POLICY!!!!
-             * REMOVE THIS AFTER DEMO
-             * com.google.android.youtube launch is not allowed in US!
-             * change policy to allowed in
-             */
-//            mithrilDB.close();
         }
     }
 

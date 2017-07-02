@@ -32,7 +32,6 @@ import java.util.Map;
 import edu.umbc.ebiquity.mithril.BuildConfig;
 import edu.umbc.ebiquity.mithril.MithrilAC;
 import edu.umbc.ebiquity.mithril.R;
-import edu.umbc.ebiquity.mithril.data.model.Policy;
 import edu.umbc.ebiquity.mithril.data.model.components.AppData;
 import edu.umbc.ebiquity.mithril.data.model.components.PermData;
 import edu.umbc.ebiquity.mithril.data.model.rules.Action;
@@ -1606,7 +1605,7 @@ public class MithrilDBHelper extends SQLiteOpenHelper {
                             cursor.getString(6),
                             cursor.getString(7),
                             cursor.getString(8),
-                            cursor.getInt(9) == 1 ? true : false));
+                            cursor.getInt(9) == 1));
                 } while (cursor.moveToNext());
             }
         } catch (SQLException e) {
@@ -1693,7 +1692,7 @@ public class MithrilDBHelper extends SQLiteOpenHelper {
                             cursor.getString(6),
                             cursor.getString(7),
                             cursor.getString(8),
-                            cursor.getInt(9) == 1 ? true : false));
+                            cursor.getInt(9) == 1));
                 } while (cursor.moveToNext());
             }
         } catch (SQLException e) {
@@ -1711,8 +1710,8 @@ public class MithrilDBHelper extends SQLiteOpenHelper {
      * @param db database instance
      * @return all policies
      */
-    public Map<Integer, List<PolicyRule>> findAllPoliciesForAppWhenPerformingOp(SQLiteDatabase db, String appPkgName, long operation) {
-        Map<Integer, List<PolicyRule>> policyRuleMap = new HashMap<>();
+    public List<PolicyRule> findAllPoliciesForAppWhenPerformingOp(SQLiteDatabase db, String appPkgName, long operation) {
+        List<PolicyRule> policyRules = new ArrayList<>();
         // Select Policy Query
         String selectQuery = "SELECT " +
                 getPolicyRulesTableName() + "." + POLRULID + ", " +
@@ -1742,31 +1741,25 @@ public class MithrilDBHelper extends SQLiteOpenHelper {
                 " ORDER BY " + getPolicyRulesTableName() + "." + POLRULID +
                 ";";
 
-        int lastId = -1;
+        Log.d(MithrilAC.getDebugTag(), selectQuery);
         Cursor cursor = db.rawQuery(selectQuery, null);
         try {
             // looping through all rows and adding to list
             if (cursor.moveToFirst()) {
-                lastId = cursor.getInt(0);
-                List<PolicyRule> tempRules = new ArrayList<>();
                 do {
-                    if(lastId == cursor.getInt(0)) {
-                        // Adding policies to list
-                        tempRules.add(new PolicyRule(
-                                cursor.getInt(0),
-                                cursor.getLong(1),
-                                cursor.getLong(2),
-                                cursor.getInt(3),
-                                cursor.getInt(4) == 1 ? Action.ALLOW : Action.DENY,
-                                cursor.getString(5),
-                                cursor.getString(6),
-                                cursor.getString(7),
-                                cursor.getString(8),
-                                cursor.getInt(9) == 1 ? true : false)
-                        );
-                    } else {
-                        policyRuleMap.put(cursor.getInt(0), tempRules);
-                    }
+                    // Adding policies to list
+                    policyRules.add(new PolicyRule(
+                            cursor.getInt(0),
+                            cursor.getLong(1),
+                            cursor.getLong(2),
+                            cursor.getInt(3),
+                            cursor.getInt(4) == 1 ? Action.ALLOW : Action.DENY,
+                            cursor.getString(5),
+                            cursor.getString(6),
+                            cursor.getString(7),
+                            cursor.getString(8),
+                            cursor.getInt(9) == 1)
+                    );
                 } while (cursor.moveToNext());
             }
         } catch (SQLException e) {
@@ -1775,7 +1768,7 @@ public class MithrilDBHelper extends SQLiteOpenHelper {
             cursor.close();
         }
         // return policy rules list
-        return policyRuleMap;
+        return policyRules;
     }
 
     /**

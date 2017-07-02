@@ -17,7 +17,6 @@ import com.google.gson.Gson;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
 import edu.umbc.ebiquity.mithril.MithrilAC;
 import edu.umbc.ebiquity.mithril.R;
@@ -107,26 +106,28 @@ public class RuleChangeFragment extends Fragment {
         Gson retrieveDataGson = new Gson();
         String retrieveDataJson;
         SemanticUserContext semanticUserContext = null;
-        Map<Integer, List<PolicyRule>> policyRulesMap = MithrilDBHelper.getHelper(getActivity()).findAllPoliciesForAppWhenPerformingOp(
+        List<PolicyRule> policyRules = MithrilDBHelper.getHelper(getActivity()).findAllPoliciesForAppWhenPerformingOp(
                 mithrilDB,
                 MithrilDBHelper.getHelper(getActivity()).findAppById(
                         mithrilDB,
                         violation.getAppId()).getPackageName(),
                 violation.getOprId());
-        for (PolicyRule policyRule : policyRulesMap.get(violation.getPolicyId())) {
-            Pair<String, String> contextPiece = MithrilDBHelper.getHelper(getActivity()).findContextByID(mithrilDB, policyRule.getPolicyId());
-            sharedPreferences = getActivity().getSharedPreferences(MithrilAC.getSharedPreferencesName(), Context.MODE_PRIVATE);
-            retrieveDataJson = sharedPreferences.getString(contextPiece.first + contextPiece.second, "");
-            if (contextPiece.first.equals(MithrilAC.getPrefKeyContextTypeLocation()))
-                semanticUserContext = retrieveDataGson.fromJson(retrieveDataJson, SemanticLocation.class);
-            else if (contextPiece.first.equals(MithrilAC.getPrefKeyContextTypeActivity()))
-                semanticUserContext = retrieveDataGson.fromJson(retrieveDataJson, SemanticActivity.class);
-            else if (contextPiece.first.equals(MithrilAC.getPrefKeyContextTypePresence()))
-                semanticUserContext = retrieveDataGson.fromJson(retrieveDataJson, SemanticNearActor.class);
-            else if (contextPiece.first.equals(MithrilAC.getPrefKeyContextTypeTemporal()))
-                semanticUserContext = retrieveDataGson.fromJson(retrieveDataJson, SemanticTime.class);
+        for (PolicyRule policyRule : policyRules) {
+            if (policyRule.getPolicyId() == violation.getPolicyId()) {
+                Pair<String, String> contextPiece = MithrilDBHelper.getHelper(getActivity()).findContextByID(mithrilDB, policyRule.getPolicyId());
+                sharedPreferences = getActivity().getSharedPreferences(MithrilAC.getSharedPreferencesName(), Context.MODE_PRIVATE);
+                retrieveDataJson = sharedPreferences.getString(contextPiece.first + contextPiece.second, "");
+                if (contextPiece.first.equals(MithrilAC.getPrefKeyContextTypeLocation()))
+                    semanticUserContext = retrieveDataGson.fromJson(retrieveDataJson, SemanticLocation.class);
+                else if (contextPiece.first.equals(MithrilAC.getPrefKeyContextTypeActivity()))
+                    semanticUserContext = retrieveDataGson.fromJson(retrieveDataJson, SemanticActivity.class);
+                else if (contextPiece.first.equals(MithrilAC.getPrefKeyContextTypePresence()))
+                    semanticUserContext = retrieveDataGson.fromJson(retrieveDataJson, SemanticNearActor.class);
+                else if (contextPiece.first.equals(MithrilAC.getPrefKeyContextTypeTemporal()))
+                    semanticUserContext = retrieveDataGson.fromJson(retrieveDataJson, SemanticTime.class);
 
-            contextPieces.add(semanticUserContext);
+                contextPieces.add(semanticUserContext);
+            }
         }
     }
 
