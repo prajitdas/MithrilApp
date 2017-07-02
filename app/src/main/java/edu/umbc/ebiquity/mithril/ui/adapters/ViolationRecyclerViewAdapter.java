@@ -17,6 +17,7 @@ import edu.umbc.ebiquity.mithril.MithrilAC;
 import edu.umbc.ebiquity.mithril.R;
 import edu.umbc.ebiquity.mithril.data.dbhelpers.MithrilDBHelper;
 import edu.umbc.ebiquity.mithril.data.model.components.AppData;
+import edu.umbc.ebiquity.mithril.data.model.rules.Action;
 import edu.umbc.ebiquity.mithril.data.model.rules.PolicyRule;
 import edu.umbc.ebiquity.mithril.data.model.rules.Violation;
 import edu.umbc.ebiquity.mithril.ui.fragments.coreactivityfragments.ViolationFragment.OnListFragmentInteractionListener;
@@ -79,7 +80,8 @@ public class ViolationRecyclerViewAdapter extends RecyclerView.Adapter<Violation
                 mValues.get(position).setAsked(true);
                 mValues.get(position).setFeedbackTime(new Timestamp(System.currentTimeMillis()));
                 for (PolicyRule policyRule : policies) {
-                    policyRule.setEnabled(false);
+                    policyRule.setEnabled(true);
+                    policyRule.setAction(Action.DENY);
                     MithrilDBHelper.getHelper(view.getContext()).updatePolicyRule(mithrilDB, policyRule);
                 }
                 MithrilDBHelper.getHelper(view.getContext()).updateViolationForRowId(mithrilDB, mValues.get(position), rowid);
@@ -97,6 +99,11 @@ public class ViolationRecyclerViewAdapter extends RecyclerView.Adapter<Violation
 //                PermissionHelper.toast(view.getContext(), "Will allow...");
                 mValues.get(position).setAsked(true);
                 mValues.get(position).setFeedbackTime(new Timestamp(System.currentTimeMillis()));
+                for (PolicyRule policyRule : policies) {
+                    policyRule.setEnabled(true);
+                    policyRule.setAction(Action.ALLOW);
+                    MithrilDBHelper.getHelper(view.getContext()).updatePolicyRule(mithrilDB, policyRule);
+                }
                 MithrilDBHelper.getHelper(view.getContext()).updateViolationForRowId(mithrilDB, mValues.get(position), rowid);
                 if (null != mListener) {
                     // Notify the active callbacks interface (the activity, if the

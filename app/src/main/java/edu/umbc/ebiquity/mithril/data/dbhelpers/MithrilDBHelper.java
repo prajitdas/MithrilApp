@@ -32,6 +32,7 @@ import java.util.Map;
 import edu.umbc.ebiquity.mithril.BuildConfig;
 import edu.umbc.ebiquity.mithril.MithrilAC;
 import edu.umbc.ebiquity.mithril.R;
+import edu.umbc.ebiquity.mithril.data.model.Policy;
 import edu.umbc.ebiquity.mithril.data.model.components.AppData;
 import edu.umbc.ebiquity.mithril.data.model.components.PermData;
 import edu.umbc.ebiquity.mithril.data.model.rules.Action;
@@ -1710,8 +1711,8 @@ public class MithrilDBHelper extends SQLiteOpenHelper {
      * @param db database instance
      * @return all policies
      */
-    public List<PolicyRule> findAllPoliciesForAppWhenPerformingOp(SQLiteDatabase db, String appPkgName, long operation) {
-        List<PolicyRule> policyRules = new ArrayList<>();
+    public Map<Integer, List<PolicyRule>> findAllPoliciesForAppWhenPerformingOp(SQLiteDatabase db, String appPkgName, long operation) {
+        Map<Integer, List<PolicyRule>> policyRuleMap = new HashMap<>();
         // Select Policy Query
         String selectQuery = "SELECT " +
                 getPolicyRulesTableName() + "." + POLRULID + ", " +
@@ -1734,28 +1735,38 @@ public class MithrilDBHelper extends SQLiteOpenHelper {
                 getAppsTableName() + "." + APPPACKAGENAME + " = '" + appPkgName + "'" +
                 " AND " +
                 getPolicyRulesTableName() + "." + POLRULOPID + " = " + operation +
+//                " AND " +
+//                getPolicyRulesTableName() + "." + POLRULENABLED + " = 0 " + // if the policy has been enabled feedback was received!
                 " AND " +
-                getPolicyRulesTableName() + "." + POLRULENABLED + " = 0" +
-                " AND " +
-                getContextTableName() + "." + CONTEXTENABLED + " = 1;";
+                getContextTableName() + "." + CONTEXTENABLED + " = 1" +
+                "ORDER BY " + POLRULID +
+                ";";
 
+        int lastId = -1;
         Cursor cursor = db.rawQuery(selectQuery, null);
         try {
             // looping through all rows and adding to list
             if (cursor.moveToFirst()) {
+                lastId = cursor.getInt(0);
+                List<PolicyRule> tempRules = new ArrayList<>();
                 do {
-                    // Adding policies to list
-                    policyRules.add(new PolicyRule(
-                            cursor.getInt(0),
-                            cursor.getLong(1),
-                            cursor.getLong(2),
-                            cursor.getInt(3),
-                            cursor.getInt(4) == 1 ? Action.ALLOW : Action.DENY,
-                            cursor.getString(5),
-                            cursor.getString(6),
-                            cursor.getString(7),
-                            cursor.getString(8),
-                            cursor.getInt(9) == 1 ? true : false));
+                    if(lastId == cursor.getInt(0)) {
+                        // Adding policies to list
+                        tempRules.add(new PolicyRule(
+                                cursor.getInt(0),
+                                cursor.getLong(1),
+                                cursor.getLong(2),
+                                cursor.getInt(3),
+                                cursor.getInt(4) == 1 ? Action.ALLOW : Action.DENY,
+                                cursor.getString(5),
+                                cursor.getString(6),
+                                cursor.getString(7),
+                                cursor.getString(8),
+                                cursor.getInt(9) == 1 ? true : false)
+                        );
+                    } else {
+                        policyRuleMap.put(cursor.getInt(0), tempRules);
+                    }
                 } while (cursor.moveToNext());
             }
         } catch (SQLException e) {
@@ -1764,7 +1775,7 @@ public class MithrilDBHelper extends SQLiteOpenHelper {
             cursor.close();
         }
         // return policy rules list
-        return policyRules;
+        return policyRuleMap;
     }
 
     /**
@@ -2075,6 +2086,7 @@ public class MithrilDBHelper extends SQLiteOpenHelper {
             values.put(POLRULENABLED, 0);
 
         String[] args = new String[]{
+                String.valueOf(aPolicyRule.getPolicyId()),
                 String.valueOf(aPolicyRule.getAppId()),
                 String.valueOf(aPolicyRule.getCtxId()),
                 String.valueOf(aPolicyRule.getOp())
@@ -2083,7 +2095,8 @@ public class MithrilDBHelper extends SQLiteOpenHelper {
         try {
             return db.update(getPolicyRulesTableName(),
                     values,
-                    POLRULAPPID + " = ? AND " +
+                    POLRULID + " = ? AND " +
+                            POLRULAPPID + " = ? AND " +
                             POLRULCTXID + " = ? AND " +
                             POLRULOPID + " = ? ",
                     args);
@@ -2193,12 +2206,12 @@ public class MithrilDBHelper extends SQLiteOpenHelper {
 
     /**
      * @param db
-     * @param aPolicyRule
+     * @param id
      */
-    public void deletePolicyRuleByName(SQLiteDatabase db, PolicyRule aPolicyRule) {
+    public void deletePolicyRuleById(SQLiteDatabase db, int id) {
         try {
             db.delete(getPolicyRulesTableName(), POLRULID + " = ?",
-                    new String[]{String.valueOf(aPolicyRule.getPolicyId())});
+                    new String[]{String.valueOf(id)});
         } catch (SQLException e) {
             throw new SQLException("Could not find " + e);
         }

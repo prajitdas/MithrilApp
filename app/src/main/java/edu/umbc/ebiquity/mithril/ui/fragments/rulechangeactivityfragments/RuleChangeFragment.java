@@ -17,6 +17,7 @@ import com.google.gson.Gson;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 import edu.umbc.ebiquity.mithril.MithrilAC;
 import edu.umbc.ebiquity.mithril.R;
@@ -106,13 +107,13 @@ public class RuleChangeFragment extends Fragment {
         Gson retrieveDataGson = new Gson();
         String retrieveDataJson;
         SemanticUserContext semanticUserContext = null;
-        List<PolicyRule> policyRules = MithrilDBHelper.getHelper(getActivity()).findAllPoliciesForAppWhenPerformingOp(
+        Map<Integer, List<PolicyRule>> policyRulesMap = MithrilDBHelper.getHelper(getActivity()).findAllPoliciesForAppWhenPerformingOp(
                 mithrilDB,
                 MithrilDBHelper.getHelper(getActivity()).findAppById(
                         mithrilDB,
                         violation.getAppId()).getPackageName(),
                 violation.getOprId());
-        for (PolicyRule policyRule : policyRules) {
+        for (PolicyRule policyRule : policyRulesMap.get(violation.getPolicyId())) {
             Pair<String, String> contextPiece = MithrilDBHelper.getHelper(getActivity()).findContextByID(mithrilDB, policyRule.getPolicyId());
             sharedPreferences = getActivity().getSharedPreferences(MithrilAC.getSharedPreferencesName(), Context.MODE_PRIVATE);
             retrieveDataJson = sharedPreferences.getString(contextPiece.first + contextPiece.second, "");
