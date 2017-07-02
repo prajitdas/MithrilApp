@@ -110,7 +110,7 @@ public class PermissionHelper {
         return postLollipop() && !hasSystemAlertWindowPermission(context);
     }
 
-    public static boolean needsRootPrivileges(Context context, RootAccess rootAccess) {
+    public static boolean needsRootPrivileges(Context context) {
         Log.d(MithrilAC.getDebugTag(),
                 "REAL_GET_TASKS: " + String.valueOf(
                         PermissionHelper.isPermissionGranted(context,
@@ -146,8 +146,7 @@ public class PermissionHelper {
                         )
                 )
         );
-        if (rootAccess != null &&
-                rootAccess.isRooted(context) &&
+        if (RootAccess.isRooted(context) &&
                 PermissionHelper.isPermissionGranted(
                         context,
                         "android.permission.GET_APP_OPS_STATS") ==

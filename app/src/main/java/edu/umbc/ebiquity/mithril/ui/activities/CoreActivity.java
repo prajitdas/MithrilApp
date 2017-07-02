@@ -449,8 +449,8 @@ public class CoreActivity extends AppCompatActivity
 //                        } catch (Exception e) {
 //                            Log.e(MithrilAC.getDebugTag(), e.getMessage());
 //                        }
-                        if(RootAccess.isRooted(builder.getContext())) {
-                            RootAccess.exec(new String[] {
+                        if (RootAccess.isRooted(builder.getContext())) {
+                            RootAccess.exec(new String[]{
                                     MithrilAC.getCmdRevokePackageUsageStatsPermissionForApp(),
                                     MithrilAC.getCmdRevokeGetAppOpsStats(),
                                     MithrilAC.getCmdRevokeManageAppOpsRestrictions(),
@@ -716,23 +716,4 @@ public class CoreActivity extends AppCompatActivity
     public void onListFragmentInteraction(PolicyRule item) {
         //TODO do something when the policies data is requested
     }
-
-//    private class RootTask implements Runnable {
-//        @Override
-//        public void run() {
-//            try {
-//                RootAccess rootAccess = new RootAccess(getApplicationContext());
-//                rootAccess.runScript(new String[]{
-//                        MithrilAC.getCmdRevokePackageUsageStatsPermissionForApp(),
-//                        MithrilAC.getCmdRevokeGetAppOpsStats(),
-//                        MithrilAC.getCmdRevokeManageAppOpsRestrictions(),
-//                        MithrilAC.getCmdRevokeUpdateAppOpsStats(),
-//                        MithrilAC.getCmdRevokeWriteSecureSettings(),
-//                        MithrilAC.getCmdRevokeRealGetTasks()
-//                });
-//            } catch (PhoneNotRootedException e) {
-//                Log.d(MithrilAC.getDebugTag(), "Phone is not rooted... full functionality unavailable but can perform first phase of the MithrilAC study!");
-//            }
-//        }
-//    }
 }

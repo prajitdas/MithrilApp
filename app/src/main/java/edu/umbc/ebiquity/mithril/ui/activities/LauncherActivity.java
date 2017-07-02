@@ -51,7 +51,8 @@ public class LauncherActivity extends AppCompatActivity {
         if (PermissionHelper.isAllRequiredPermissionsGranted(this) &&
                 !PermissionHelper.needsUsageStatsPermission(this) &&
                 !PermissionHelper.needsWriteSettingsPermission(this) &&
-                !PermissionHelper.needsSystemAlertWindowPermission(this)) {
+                !PermissionHelper.needsSystemAlertWindowPermission(this) &&
+                !PermissionHelper.needsRootPrivileges(this)) {
             if (sharedPreferences.contains(MithrilAC.getPrefKeyLocaInstancesCreated()) &&
                     sharedPreferences.contains(MithrilAC.getPrefKeyPresInstancesCreated()) &&
                     sharedPreferences.contains(MithrilAC.getPrefKeyActiInstancesCreated()) &&

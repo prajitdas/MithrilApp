@@ -34,7 +34,6 @@ public class PermissionAcquisitionActivity extends AppCompatActivity {
     private ToggleButton mSystemAlertWindowPermToggleButton;
     private ToggleButton mRootAccessToggleButton;
     private Button mQuitAppButton;
-    private RootAccess rootAccess;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -76,13 +75,6 @@ public class PermissionAcquisitionActivity extends AppCompatActivity {
         mSystemAlertWindowPermToggleButton = (ToggleButton) findViewById(R.id.systemAlertWindowToggleButton);
         mRootAccessToggleButton = (ToggleButton) findViewById(R.id.rootAccessToggleButton);
         mQuitAppButton = (Button) findViewById(R.id.quitAppButton);
-        try {
-            rootAccess = new RootAccess(this);
-        } catch (PhoneNotRootedException e) {
-//            mRootAccessToggleButton.setVisibility(View.GONE);
-//            TextView rootAccessTextView = (TextView) findViewById(R.id.rootAccessTextView);
-//            rootAccessTextView.setVisibility(View.GONE);
-        }
 
         if (PermissionHelper.isAllRequiredPermissionsGranted(this))
             mGenericPermToggleButton.setChecked(true);
@@ -92,7 +84,7 @@ public class PermissionAcquisitionActivity extends AppCompatActivity {
             mSettingsPermToggleButton.setChecked(true);
         if (!PermissionHelper.needsSystemAlertWindowPermission(this))
             mSystemAlertWindowPermToggleButton.setChecked(true);
-        if (!PermissionHelper.needsRootPrivileges(this, rootAccess))
+        if (!PermissionHelper.needsRootPrivileges(this))
             mRootAccessToggleButton.setChecked(true);
 
         setOnClickListeners();
@@ -172,7 +164,7 @@ public class PermissionAcquisitionActivity extends AppCompatActivity {
                     buttonView.setChecked(true);
                 else
                     buttonView.setChecked(false);
-                if (PermissionHelper.needsRootPrivileges(buttonView.getContext(), rootAccess) && !isPermissionAcquisitionComplete()) {
+                if (PermissionHelper.needsRootPrivileges(buttonView.getContext()) && !isPermissionAcquisitionComplete()) {
                     RootAccess.exec(new String[] {
                         MithrilAC.getCmdGrantGetAppOpsStats(),
                         MithrilAC.getCmdGrantManageAppOpsRestrictions(),
@@ -304,7 +296,7 @@ public class PermissionAcquisitionActivity extends AppCompatActivity {
                 !PermissionHelper.needsUsageStatsPermission(this) &&
                 !PermissionHelper.needsWriteSettingsPermission(this) &&
                 !PermissionHelper.needsSystemAlertWindowPermission(this) &&
-                !PermissionHelper.needsRootPrivileges(this, rootAccess);
+                !PermissionHelper.needsRootPrivileges(this);
     }
 
     @Override
@@ -319,21 +311,4 @@ public class PermissionAcquisitionActivity extends AppCompatActivity {
         launchNextActivity.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
         startActivity(launchNextActivity);
     }
-
-//    private class RootTask implements Runnable {
-//        @Override
-//        public void run() {
-//            try {
-//                rootAccess.runScript(new String[]{
-//                        MithrilAC.getCmdGrantGetAppOpsStats(),
-//                        MithrilAC.getCmdGrantManageAppOpsRestrictions(),
-//                        MithrilAC.getCmdGrantUpdateAppOpsStats(),
-//                        MithrilAC.getCmdGrantWriteSecureSettings(),
-//                        MithrilAC.getCmdGrantRealGetTasks()
-//                });
-//            } catch (PhoneNotRootedException e) {
-//                Log.d(MithrilAC.getDebugTag(), "Phone is not rooted... full functionality unavailable but can perform first phase of the MithrilAC study!");
-//            }
-//        }
-//    }
 }

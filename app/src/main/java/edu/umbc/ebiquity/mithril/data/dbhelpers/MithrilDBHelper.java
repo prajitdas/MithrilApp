@@ -1738,8 +1738,8 @@ public class MithrilDBHelper extends SQLiteOpenHelper {
 //                " AND " +
 //                getPolicyRulesTableName() + "." + POLRULENABLED + " = 0 " + // if the policy has been enabled feedback was received!
                 " AND " +
-                getContextTableName() + "." + CONTEXTENABLED + " = 1" +
-                "ORDER BY " + POLRULID +
+                getContextTableName() + "." + CONTEXTENABLED + " = 1 " +
+                " ORDER BY " + getPolicyRulesTableName() + "." + POLRULID +
                 ";";
 
         int lastId = -1;
