@@ -82,6 +82,7 @@ public class ViolationRecyclerViewAdapter extends RecyclerView.Adapter<Violation
                 for (PolicyRule policyRule : policies) {
                     policyRule.setEnabled(true);
                     policyRule.setAction(Action.DENY);
+                    policyRule.setActStr("Deny");
                     MithrilDBHelper.getHelper(view.getContext()).updatePolicyRule(mithrilDB, policyRule);
                 }
                 MithrilDBHelper.getHelper(view.getContext()).updateViolationForRowId(mithrilDB, mValues.get(position), rowid);
@@ -102,6 +103,7 @@ public class ViolationRecyclerViewAdapter extends RecyclerView.Adapter<Violation
                 for (PolicyRule policyRule : policies) {
                     policyRule.setEnabled(true);
                     policyRule.setAction(Action.ALLOW);
+                    policyRule.setActStr("Allow");
                     MithrilDBHelper.getHelper(view.getContext()).updatePolicyRule(mithrilDB, policyRule);
                 }
                 MithrilDBHelper.getHelper(view.getContext()).updateViolationForRowId(mithrilDB, mValues.get(position), rowid);

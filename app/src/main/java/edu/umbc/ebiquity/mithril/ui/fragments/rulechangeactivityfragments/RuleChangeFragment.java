@@ -8,6 +8,7 @@ import android.os.Bundle;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.util.Pair;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -112,11 +113,16 @@ public class RuleChangeFragment extends Fragment {
                         mithrilDB,
                         violation.getAppId()).getPackageName(),
                 violation.getOprId());
+        Log.d(MithrilAC.getDebugTag(), "contexts: "+policyRules.size());
         for (PolicyRule policyRule : policyRules) {
             if (policyRule.getPolicyId() == violation.getPolicyId()) {
-                Pair<String, String> contextPiece = MithrilDBHelper.getHelper(getActivity()).findContextByID(mithrilDB, policyRule.getPolicyId());
+                Pair<String, String> contextPiece = MithrilDBHelper.getHelper(getActivity()).findContextByID(mithrilDB, policyRule.getCtxId());
+                Log.d(MithrilAC.getDebugTag(), "contexts: "+violation.getAppId());
+                Log.d(MithrilAC.getDebugTag(), "contexts: "+violation.getOprId());
+                Log.d(MithrilAC.getDebugTag(), "contexts: "+policyRule.getPolicyId());
                 sharedPreferences = getActivity().getSharedPreferences(MithrilAC.getSharedPreferencesName(), Context.MODE_PRIVATE);
                 retrieveDataJson = sharedPreferences.getString(contextPiece.first + contextPiece.second, "");
+                Log.d(MithrilAC.getDebugTag(),contextPiece.first + contextPiece.second);
                 if (contextPiece.first.equals(MithrilAC.getPrefKeyContextTypeLocation()))
                     semanticUserContext = retrieveDataGson.fromJson(retrieveDataJson, SemanticLocation.class);
                 else if (contextPiece.first.equals(MithrilAC.getPrefKeyContextTypeActivity()))

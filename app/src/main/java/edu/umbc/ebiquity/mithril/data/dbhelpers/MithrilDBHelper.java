@@ -1874,7 +1874,7 @@ public class MithrilDBHelper extends SQLiteOpenHelper {
     }
 
     public Pair<String, String> findContextByID(SQLiteDatabase db, long id) {
-        Pair<String, String> userContext = null;
+        Pair<String, String> userContext = new Pair<>("empty","empty");
         // Select Query
         String selectQuery = "SELECT " +
                 getContextTableName() + "." + CONTEXTTYPE + ", " +
@@ -2044,12 +2044,19 @@ public class MithrilDBHelper extends SQLiteOpenHelper {
         else
             values.put(VIOLATIONTRUEFALSE, 0);
         values.put(VIOLATIONCTXTIDS, aViolation.getCtxtIdString());
+        String[] args = new String[]{
+                String.valueOf(aViolation.getAppId()),
+                String.valueOf(aViolation.getPolicyId()),
+                String.valueOf(aViolation.getOprId())
+        };
 
         try {
             return db.update(getViolationsLogTableName(),
                     values,
-                    " ROWID = ? ",
-                    new String[]{String.valueOf(rowid)});
+                    VIOLATIONAPPID + " = ? AND " +
+                            VIOLATIONPOLICYID + " = ? AND " +
+                            VIOLATIONOPERATION + " = ? ",
+                    args);
         } catch (SQLException e) {
             throw new SQLException("Exception " + e + " error updating violation: " + aViolation.getPolicyId());
         }
