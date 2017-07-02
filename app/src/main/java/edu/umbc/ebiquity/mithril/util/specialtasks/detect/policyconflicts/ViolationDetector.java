@@ -114,15 +114,8 @@ public class ViolationDetector {
                 Set <Long> policyContextSet = new HashSet<>();
                 List<Long> policyContextList = new ArrayList<>(policyContextSet);
                 Collections.sort(policyContextList);
-                int enabledcount = 0;
-                int disabledCount = 0;
-                for (PolicyRule policyRule : policyRules) {
+                for (PolicyRule policyRule : policyRules)
                     policyContextSet.add(policyRule.getCtxId());
-                    if (policyRule.isEnabled())
-                        enabledcount++;
-                    else
-                        disabledCount++;
-                }
                 if (policyContextSet.size() > 0) {
                     /**
                      * If current context is a subset of policy context or they are equal then we get true for the following test
