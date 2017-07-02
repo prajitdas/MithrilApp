@@ -341,7 +341,7 @@ public class ViolationDetector {
              * com.google.android.youtube launch is not allowed in US!
              * change policy to allowed in
              */
-            mithrilDB.close();
+//            mithrilDB.close();
         }
     }
 
