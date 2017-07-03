@@ -1672,6 +1672,65 @@ public class MithrilDBHelper extends SQLiteOpenHelper {
      * @param db database instance
      * @return all policies
      */
+    public List<PolicyRule> findAllPoliciesByIdIncludeEnabled(SQLiteDatabase db, long id) {
+        List<PolicyRule> policyRules = new ArrayList<>();
+        // Select Policy Query
+        String selectQuery = "SELECT " +
+                getPolicyRulesTableName() + "." + POLRULID + ", " +
+                getPolicyRulesTableName() + "." + POLRULAPPID + ", " +
+                getPolicyRulesTableName() + "." + POLRULCTXID + ", " +
+                getPolicyRulesTableName() + "." + POLRULOPID + ", " +
+                getPolicyRulesTableName() + "." + POLRULACTIN + ", " +
+                getPolicyRulesTableName() + "." + POLRULACTSTR + ", " +
+                getPolicyRulesTableName() + "." + POLRULAPPSTR + ", " +
+                getPolicyRulesTableName() + "." + POLRULCTXSTR + ", " +
+                getPolicyRulesTableName() + "." + POLRULOPSTR + ", " +
+                getPolicyRulesTableName() + "." + POLRULENABLED +
+                " FROM " +
+                getPolicyRulesTableName() + ", " + getAppsTableName() + ", " + getContextTableName() +
+                " WHERE " +
+                getPolicyRulesTableName() + "." + POLRULAPPID + " = " + getAppsTableName() + "." + APPID +
+                " AND " +
+                getPolicyRulesTableName() + "." + POLRULCTXID + " = " + getContextTableName() + "." + CONTEXTID +
+                " AND " +
+                getPolicyRulesTableName() + "." + POLRULID + " = '" + id + "'" +
+                " AND " +
+                getContextTableName() + "." + CONTEXTENABLED + " = 1;";
+
+        Cursor cursor = db.rawQuery(selectQuery, null);
+        try {
+            // looping through all rows and adding to list
+            if (cursor.moveToFirst()) {
+                do {
+                    // Adding policies to list
+                    policyRules.add(new PolicyRule(
+                            cursor.getInt(0),
+                            cursor.getLong(1),
+                            cursor.getLong(2),
+                            cursor.getInt(3),
+                            cursor.getInt(4) == 1 ? Action.ALLOW : Action.DENY,
+                            cursor.getString(5),
+                            cursor.getString(6),
+                            cursor.getString(7),
+                            cursor.getString(8),
+                            cursor.getInt(9) == 1));
+                } while (cursor.moveToNext());
+            }
+        } catch (SQLException e) {
+            throw new SQLException("Could not find " + e);
+        } finally {
+            cursor.close();
+        }
+        // return policy rules list
+        return policyRules;
+    }
+
+    /**
+     * Finds a policy based on the application being accessed
+     *
+     * @param db database instance
+     * @return all policies
+     */
     public List<PolicyRule> findAllPoliciesById(SQLiteDatabase db, long id) {
         List<PolicyRule> policyRules = new ArrayList<>();
         // Select Policy Query

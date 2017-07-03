@@ -22,7 +22,7 @@
             android:orientation="vertical">
 
             <TextView
-                android:id="@+id/semanticUserContextLabel"
+                android:id="@+id/semanticUserContextType"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_alignParentTop="true"
@@ -35,25 +35,11 @@
                 android:textColor="@color/colorPrimaryText"
                 android:textSize="20sp" />
 
-            <TextView
-                android:id="@+id/semanticUserContextDetail"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_below="@id/semanticUserContextLabel"
-                android:layout_marginBottom="@dimen/card_view_margin"
-                android:layout_marginEnd="@dimen/card_view_margin"
-                android:layout_marginStart="@dimen/card_view_margin"
-                android:layout_marginTop="@dimen/card_view_margin"
-                android:text="@string/app_version_placeholder_text"
-                android:textAppearance="@android:style/TextAppearance.Holo.Small"
-                android:textColor="@color/colorSecondaryText"
-                android:textSize="15sp" />
-
             <Spinner
                 android:id="@+id/spinner_rule_change"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_below="@+id/semanticUserContextDetail"
+                android:layout_below="@+id/semanticUserContextType"
                 android:layout_centerVertical="true" />
 
             <ImageButton
