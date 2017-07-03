@@ -1289,10 +1289,10 @@ public class InstanceCreationActivity extends AppCompatActivity
 
     @Override
     public void onListFragmentInteraction(SemanticTime item) {
-        Intent intent = new Intent(this, TemporalDataEntryActivity.class);
-        intent.putExtra(MithrilAC.getPrefKeyTemporalLabel(), item.getLabel());
-        intent.putExtra(MithrilAC.getPrefKeyContextTypeTemporal(), item);
-        startActivityForResult(intent, TIME_REQUEST_CODE_MORE);
+//        Intent intent = new Intent(this, TemporalDataEntryActivity.class);
+//        intent.putExtra(MithrilAC.getPrefKeyTemporalLabel(), item.getLabel());
+//        intent.putExtra(MithrilAC.getPrefKeyContextTypeTemporal(), item);
+//        startActivityForResult(intent, TIME_REQUEST_CODE_MORE);
     }
 
     @Override
