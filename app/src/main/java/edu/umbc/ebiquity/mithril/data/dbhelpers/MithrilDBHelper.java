@@ -855,7 +855,8 @@ public class MithrilDBHelper extends SQLiteOpenHelper {
         values.put(PERMICON, getBitmapAsByteArray(aPermData.getPermissionIcon()));
         values.put(PERMOP, aPermData.getOp());
         try {
-            insertedRowId = db.insertWithOnConflict(getPermissionsTableName(), null, values, SQLiteDatabase.CONFLICT_REPLACE);
+            //The hardcoded permissions are getting replaced if we replace
+            insertedRowId = db.insertWithOnConflict(getPermissionsTableName(), null, values, SQLiteDatabase.CONFLICT_ABORT);
         } catch (SQLiteConstraintException e) {
             updateConflictedGooglePermissions(db, aPermData);
             throw new PermissionWasUpdateException("Exception occurred for " + aPermData.getPermissionName());
