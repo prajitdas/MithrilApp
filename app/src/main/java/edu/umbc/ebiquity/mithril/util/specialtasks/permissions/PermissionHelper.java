@@ -97,6 +97,10 @@ public class PermissionHelper {
         return Build.VERSION.SDK_INT >= Build.VERSION_CODES.M;
     }
 
+    public static boolean needsUpdateAppOpsPermission(Context context) {
+        return postLollipop() && !hasUpdateAppOpsPermissionA(context);
+    }
+
     public static boolean needsUsageStatsPermission(Context context) {
         return postLollipop() && !hasUsageStatsPermission(context);
     }
@@ -179,5 +183,9 @@ public class PermissionHelper {
         if (Settings.canDrawOverlays(context))
             return true;
         return false;
+    }
+
+    private static boolean hasUpdateAppOpsPermissionA(Context context) {
+        return PermissionHelper.isPermissionGranted(context,"android.permission.UPDATE_APP_OPS_STATS") == PackageManager.PERMISSION_GRANTED;
     }
 }
