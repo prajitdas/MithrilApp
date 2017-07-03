@@ -130,7 +130,7 @@ public class DataGenerator {
                 actionAllow, mithrilDB, context));
     }
 
-    public static PolicyRule createPolicyRule(int policyId,
+    public static PolicyRule createPolicyRule(long policyId,
                                               String appPkgName,
                                               String appName,
                                               int op,

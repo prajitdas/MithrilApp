@@ -113,7 +113,7 @@ public class ViolationDetector {
             if (policyRules.size() > 0) {
                 long currentPolicyId = -1;
                 List<PolicyRule> tempRules = new ArrayList<>();
-                Map<Integer, List<PolicyRule>> policyRuleMap = new HashMap<>();
+                Map<Long, List<PolicyRule>> policyRuleMap = new HashMap<>();
                 for (PolicyRule policyRule : policyRules) {
                     if (currentPolicyId == policyRule.getPolicyId())
                         tempRules.add(policyRule);
@@ -123,7 +123,7 @@ public class ViolationDetector {
                         currentPolicyId = policyRule.getPolicyId();
                     }
                 }
-                for (Map.Entry<Integer, List<PolicyRule>> policyRuleMapEntry : policyRuleMap.entrySet()) {
+                for (Map.Entry<Long, List<PolicyRule>> policyRuleMapEntry : policyRuleMap.entrySet()) {
                     //Found some policies let's group them by policy Id
                     Set<Long> policyContextSet = new HashSet<>();
                     List<Long> policyContextList = new ArrayList<>(policyContextSet);
@@ -317,10 +317,10 @@ public class ViolationDetector {
                 Log.d(MithrilAC.getDebugTag(), "Default violation match scenario. Do something!");
                 int newPolicyId = MithrilDBHelper.getHelper(context).findMaxPolicyId(mithrilDB) + 1;
                 Log.d(MithrilAC.getDebugTag(), "context set size is: "+currentContextSet.size());
-                currentContextSet = setLowestLevelCurrentContext(mithrilDB, context, semanticUserContexts, currentContextSet);
+                long[] currentContextArray = setLowestLevelCurrentContext(mithrilDB, context, semanticUserContexts, currentContextSet);
                 Log.d(MithrilAC.getDebugTag(), "context set size changed to: "+currentContextSet.size());
-                for (long currCtxtId : currentContextSet) {
-                    Pair<String, String> ctxtTypeLabel = MithrilDBHelper.getHelper(context).findContextByID(mithrilDB, currCtxtId);
+                for (int i = 0; i < currentContextArray.length; i++) {
+                    Pair<String, String> ctxtTypeLabel = MithrilDBHelper.getHelper(context).findContextByID(mithrilDB, currentContextArray[i]);
                     AppData app = MithrilDBHelper.getHelper(context).findAppByAppPkgName(mithrilDB, currentPackageName);
                     long appId = MithrilDBHelper.getHelper(context).findAppIdByAppPkgName(mithrilDB, currentPackageName);
                     Log.d(MithrilAC.getDebugTag(),
@@ -397,11 +397,11 @@ public class ViolationDetector {
         return currentContextIds;
     }
 
-    private static Set<Long> setLowestLevelCurrentContext(SQLiteDatabase mithrilDB,
+    private static long[] setLowestLevelCurrentContext(SQLiteDatabase mithrilDB,
                                                           Context context,
                                                           List<SemanticUserContext> semanticUserContexts,
                                                           Set<Long> contextIds) {
-        Set<Long> currentContextIds = new HashSet<>();
+        long[] currentContextIds = new long[4];
         int lowestTemporal = Integer.MAX_VALUE;
         int lowestLocation = Integer.MAX_VALUE;
         int lowestPresence = Integer.MAX_VALUE;
@@ -413,22 +413,22 @@ public class ViolationDetector {
                     if (labelType.first.equals(semanticUserContext.getType()) && labelType.second.equals(semanticUserContext.getLabel())) {
                         if (semanticUserContext.getType().equals(MithrilAC.getPrefKeyContextTypeTemporal())) {
                             if (semanticUserContext.getLevel() < lowestTemporal) {
-                                currentContextIds.add(contextId);
+                                currentContextIds[0] = contextId;
                                 lowestTemporal = semanticUserContext.getLevel();
                             }
                         } else if (semanticUserContext.getType().equals(MithrilAC.getPrefKeyContextTypeLocation())) {
                             if (semanticUserContext.getLevel() < lowestLocation) {
-                                currentContextIds.add(contextId);
+                                currentContextIds[1] = contextId;
                                 lowestLocation = semanticUserContext.getLevel();
                             }
                         } else if (semanticUserContext.getType().equals(MithrilAC.getPrefKeyContextTypePresence())) {
                             if (semanticUserContext.getLevel() < lowestPresence) {
-                                currentContextIds.add(contextId);
+                                currentContextIds[2] = contextId;
                                 lowestPresence = semanticUserContext.getLevel();
                             }
                         } else if (semanticUserContext.getType().equals(MithrilAC.getPrefKeyContextTypeActivity())) {
                             if (semanticUserContext.getLevel() < lowestActivity) {
-                                currentContextIds.add(contextId);
+                                currentContextIds[3] = contextId;
                                 lowestActivity = semanticUserContext.getLevel();
                             }
                         }

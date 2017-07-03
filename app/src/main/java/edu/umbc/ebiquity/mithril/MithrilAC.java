@@ -196,11 +196,17 @@ public class MithrilAC extends Application {
     private static final String PREF_KEY_TIMEFENCE_LIST = "timefenceList";
     private static final String DATABASE_NAME = "mithril.db";
     private static final String DEBUG_TAG = "MithrilDebugTag";
+
+    public static String[] getContextArrayTypes() {
+        return CONTEXT_ARRAY_TYPES;
+    }
+
     /**
      * Context constants
      * TODO Change the constants as per the ontology and ensure that you generate some rules to be modified by the automated script
      * The following constants are made up and not in sync with the ontology
      */
+    private static final String CONTEXT_ARRAY_TYPES[] = {PREF_KEY_CONTEXT_TYPE_ACTIVITY, PREF_KEY_CONTEXT_TYPE_TEMPORAL, PREF_KEY_CONTEXT_TYPE_PRESENCE, PREF_KEY_CONTEXT_TYPE_LOCATION};
     private static final String CONTEXT_ARRAY_ACTIVITY[] = {"Activity", "Personal_Activity", "Professional_Activity", "Date", "Entertainment",
             "Exercising", "Sleeping", "Partying", "Playing", "Running"};
     private static final String CONTEXT_ARRAY_LOCATION[] = {"Location", "Place", "Classroom", "Home", "Library", "Movie_Theatre", "Office",

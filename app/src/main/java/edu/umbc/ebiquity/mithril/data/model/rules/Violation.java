@@ -24,7 +24,7 @@ public class Violation implements Parcelable {
     };
     private long policyId;
     private long appId;
-    private long oprId;
+    private int oprId;
     private Resource resource;
     private String appStr; // App string
     private String opStr; // operation string
@@ -35,7 +35,7 @@ public class Violation implements Parcelable {
     private List<Long> ctxtIds;
     private int count;
 
-    public Violation(long policyId, long appId, long oprId, String appStr, String opStr, boolean asked, boolean tvfv, Timestamp detectedAtTime, List<Long> ctxtIds, int count, Resource resource) {
+    public Violation(long policyId, long appId, int oprId, String appStr, String opStr, boolean asked, boolean tvfv, Timestamp detectedAtTime, List<Long> ctxtIds, int count, Resource resource) {
         this.policyId = policyId;
         this.appId = appId;
         this.oprId = oprId;
@@ -53,7 +53,7 @@ public class Violation implements Parcelable {
     protected Violation(Parcel in) {
         policyId = in.readLong();
         appId = in.readLong();
-        oprId = in.readLong();
+        oprId = in.readInt();
         resource = in.readParcelable(Resource.class.getClassLoader());
         appStr = in.readString();
         opStr = in.readString();
@@ -66,7 +66,7 @@ public class Violation implements Parcelable {
     public void writeToParcel(Parcel dest, int flags) {
         dest.writeLong(policyId);
         dest.writeLong(appId);
-        dest.writeLong(oprId);
+        dest.writeInt(oprId);
         dest.writeParcelable(resource, flags);
         dest.writeString(appStr);
         dest.writeString(opStr);
@@ -126,11 +126,11 @@ public class Violation implements Parcelable {
         this.appId = appId;
     }
 
-    public long getOprId() {
+    public int getOprId() {
         return oprId;
     }
 
-    public void setOprId(long oprId) {
+    public void setOprId(int oprId) {
         this.oprId = oprId;
     }
 

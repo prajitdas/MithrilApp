@@ -15,7 +15,7 @@ public class PolicyRule implements Parcelable {
             return new PolicyRule[size];
         }
     };
-    private int policyId; // ID of policy defined; this will be used to determine if multiple rows belong to the same policy
+    private long policyId; // ID of policy defined; this will be used to determine if multiple rows belong to the same policy
     private long appId; // App policyId that sent the request
     private int op; // operation
     private String appStr; // App string
@@ -38,7 +38,7 @@ public class PolicyRule implements Parcelable {
         enabled = in.readByte() != 0;
     }
 
-    public PolicyRule(int policyId, long appId, long ctxId, int op, Action action, String actStr, String appStr, String ctxStr, String opStr, boolean enabled) {
+    public PolicyRule(long policyId, long appId, long ctxId, int op, Action action, String actStr, String appStr, String ctxStr, String opStr, boolean enabled) {
         this.policyId = policyId;
         this.appId = appId;
         this.ctxId = ctxId;
@@ -53,7 +53,7 @@ public class PolicyRule implements Parcelable {
 
     @Override
     public void writeToParcel(Parcel dest, int flags) {
-        dest.writeInt(policyId);
+        dest.writeLong(policyId);
         dest.writeLong(appId);
         dest.writeLong(ctxId);
         dest.writeInt(op);
@@ -69,7 +69,7 @@ public class PolicyRule implements Parcelable {
         return 0;
     }
 
-    public int getPolicyId() {
+    public long getPolicyId() {
         return policyId;
     }
 
@@ -151,7 +151,7 @@ public class PolicyRule implements Parcelable {
 
     @Override
     public String toString() {
-        return "Policy: " + Integer.toString(getPolicyId()) + " for app: " + getAppStr() + " with access to: " + getOpStr() + " in context: " + getCtxStr() + " is " + getActStr();
+        return "Policy: " + Long.toString(getPolicyId()) + " for app: " + getAppStr() + " with access to: " + getOpStr() + " in context: " + getCtxStr() + " is " + getActStr();
     }
 
     @Override
@@ -175,7 +175,7 @@ public class PolicyRule implements Parcelable {
 
     @Override
     public int hashCode() {
-        int result = getPolicyId();
+        int result = (int) (getPolicyId() ^ (getPolicyId() >>> 32));
         result = 31 * result + (int) (getAppId() ^ (getAppId() >>> 32));
         result = 31 * result + (int) (getCtxId() ^ (getCtxId() >>> 32));
         result = 31 * result + getOp();

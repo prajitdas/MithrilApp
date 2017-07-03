@@ -1160,10 +1160,10 @@ public class InstanceCreationActivity extends AppCompatActivity
         for (int index = 0; index < listOfLocationContextPiecesFromTheOntology.length; index++)
             arrayAdapter.add(listOfLocationContextPiecesFromTheOntology[index]);
 
-        AlertDialog.Builder dialog = new AlertDialog.Builder(this);
-        dialog.setIcon(R.drawable.map_marker);
-        dialog.setTitle("What location are you adding?");
-        dialog.setAdapter(arrayAdapter, new DialogInterface.OnClickListener() {
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setIcon(R.drawable.map_marker);
+        builder.setTitle("What location are you adding?");
+        builder.setAdapter(arrayAdapter, new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 String semanticLocationLabel = arrayAdapter.getItem(which);
@@ -1185,7 +1185,7 @@ public class InstanceCreationActivity extends AppCompatActivity
                 startSearchAddressIntentService(userInputLocation, semanticLocationLabel);
             }
         });
-        dialog.show();
+        builder.show();
     }
 
 //    private void chooseATemporalLabel() {

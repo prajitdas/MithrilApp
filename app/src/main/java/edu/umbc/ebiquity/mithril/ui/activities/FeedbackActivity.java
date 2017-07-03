@@ -16,6 +16,7 @@ public class FeedbackActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_feedback);
+
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
@@ -26,6 +27,7 @@ public class FeedbackActivity extends AppCompatActivity {
                 showSnackbar(view, view.getContext().getResources().getString(R.string.functionality_not_active_yet));
             }
         });
+
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
     }
 
