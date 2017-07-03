@@ -20,6 +20,7 @@ import android.widget.Button;
 
 import com.google.gson.Gson;
 
+import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -67,12 +68,14 @@ public class RuleChangeActivity extends AppCompatActivity implements RuleChangeF
         saveBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                List<PolicyRule> policyRules = MithrilDBHelper.getHelper(v.getContext()).findAllPoliciesByIdIncludeEnabled(mithrilDB, currentViolation.getPolicyId());
-                for(PolicyRule policyRule : policyRules) {
-                    policyRule.setEnabled(true);
-                    MithrilDBHelper.getHelper(v.getContext()).updatePolicyRule(mithrilDB, policyRule);
+                if(!ruleAdded) {
+                    currentViolation.setAsked(true);
+                    currentViolation.setFeedbackTime(new Timestamp(System.currentTimeMillis()));
+                    MithrilDBHelper.getHelper(v.getContext()).updateViolation(mithrilDB, currentViolation);
+                    finish();
                 }
-                finish();
+                else
+                    PermissionHelper.toast(v.getContext(), "Choose a level for the new context");
             }
         });
 
@@ -202,14 +205,18 @@ public class RuleChangeActivity extends AppCompatActivity implements RuleChangeF
             String contextType = semanticUserContext.getType();
             String oldContextLabel = semanticUserContext.getLabel();
             long ctxtId = MithrilDBHelper.getHelper(this).findContextIdByLabelAndType(mithrilDB, newContextLabel, contextType);
+            //remove old context id from violation
             List<PolicyRule> policyRules = MithrilDBHelper.getHelper(this).findAllPoliciesByIdIncludeEnabled(mithrilDB, currentViolation.getPolicyId());
             for(PolicyRule policyRule : policyRules) {
                 if(policyRule.getCtxStr().equals(oldContextLabel)) {
                     policyRule.setCtxId(ctxtId);
                     policyRule.setCtxStr(newContextLabel);
-                    MithrilDBHelper.getHelper(this).updatePolicyRule(mithrilDB, policyRule);
+                    policyRule.setEnabled(true);
+                    int retval = MithrilDBHelper.getHelper(this).updatePolicyRule(mithrilDB, policyRule);
+                    Log.d(MithrilAC.getDebugTag(), "retval"+retval);
                 }
             }
+            ruleAdded = false;
         } catch (ContextImplementationMissingException e) {
             e.printStackTrace();
         }

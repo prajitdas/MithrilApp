@@ -2176,6 +2176,7 @@ public class MithrilDBHelper extends SQLiteOpenHelper {
                 String.valueOf(aPolicyRule.getOp())
         };
 
+        Log.d(MithrilAC.getDebugTag(),"policy:"+aPolicyRule.getPolicyId()+aPolicyRule.getAppId()+aPolicyRule.getCtxId());
         try {
             return db.update(getPolicyRulesTableName(),
                     values,

@@ -6,22 +6,12 @@ import android.os.Parcel;
 import android.os.Parcelable;
 
 import java.sql.Timestamp;
+import java.util.ArrayList;
 import java.util.List;
 
 import edu.umbc.ebiquity.mithril.data.dbhelpers.MithrilDBHelper;
 
 public class Violation implements Parcelable {
-    public static final Creator<Violation> CREATOR = new Creator<Violation>() {
-        @Override
-        public Violation createFromParcel(Parcel in) {
-            return new Violation(in);
-        }
-
-        @Override
-        public Violation[] newArray(int size) {
-            return new Violation[size];
-        }
-    };
     private long policyId;
     private long appId;
     private int oprId;
@@ -32,7 +22,7 @@ public class Violation implements Parcelable {
     private boolean tvfv; //marked as true or false violation
     private Timestamp detectedAtTime;
     private Timestamp feedbackTime;
-    private List<Long> ctxtIds;
+    private List<Long> ctxtIds = new ArrayList<>();
     private int count;
 
     public Violation(long policyId, long appId, int oprId, String appStr, String opStr, boolean asked, boolean tvfv, Timestamp detectedAtTime, List<Long> ctxtIds, int count, Resource resource) {
@@ -60,6 +50,8 @@ public class Violation implements Parcelable {
         asked = in.readByte() != 0;
         tvfv = in.readByte() != 0;
         count = in.readInt();
+        detectedAtTime = new Timestamp(in.readLong());
+        in.readList(ctxtIds, Long.class.getClassLoader());
     }
 
     @Override
@@ -73,12 +65,26 @@ public class Violation implements Parcelable {
         dest.writeByte((byte) (asked ? 1 : 0));
         dest.writeByte((byte) (tvfv ? 1 : 0));
         dest.writeInt(count);
+        dest.writeLong(getDetectedAtTime().getTime());
+        dest.writeList(ctxtIds);
     }
 
     @Override
     public int describeContents() {
         return 0;
     }
+
+    public static final Creator<Violation> CREATOR = new Creator<Violation>() {
+        @Override
+        public Violation createFromParcel(Parcel in) {
+            return new Violation(in);
+        }
+
+        @Override
+        public Violation[] newArray(int size) {
+            return new Violation[size];
+        }
+    };
 
     @Override
     public String toString() {

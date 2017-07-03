@@ -105,6 +105,7 @@ public class ViolationDetector {
         List<Long> currentContextList = new ArrayList<>(currentContextSet);
         Collections.sort(currentContextList);
 
+        int newPolicyId = MithrilDBHelper.getHelper(context).findMaxPolicyId(mithrilDB) + 1;
         // Let's test the rules we found
         for (Resource currentResource : resources) {
             Action actionForCurrentOperationAndApp = Action.DENY;
@@ -256,7 +257,7 @@ public class ViolationDetector {
                          * Violations are by default marked true.
                          */
                         Log.d(MithrilAC.getDebugTag(), "No match. Perhaps it's a superset or complete mismatch.. we don't know what to do, ask user operation:" + lastOperationPerformed + " policy:" + policyContextSet + " current context:" + currentContextSet);
-                        int newPolicyId = MithrilDBHelper.getHelper(context).findMaxPolicyId(mithrilDB) + 1;
+
                         for (long currCtxtId : currentContextSet) {
                             Pair<String, String> ctxtTypeLabel = MithrilDBHelper.getHelper(context).findContextByID(mithrilDB, currCtxtId);
                             AppData app = MithrilDBHelper.getHelper(context).findAppByAppPkgName(mithrilDB, currentPackageName);
@@ -315,7 +316,7 @@ public class ViolationDetector {
                  * and use user feedback as +ve or -ve reinforcement.
                  */
                 Log.d(MithrilAC.getDebugTag(), "Default violation match scenario. Do something!");
-                int newPolicyId = MithrilDBHelper.getHelper(context).findMaxPolicyId(mithrilDB) + 1;
+//                int newPolicyId = MithrilDBHelper.getHelper(context).findMaxPolicyId(mithrilDB) + 1;
                 Log.d(MithrilAC.getDebugTag(), "context set size is: "+currentContextSet.size());
                 long[] currentContextArray = setLowestLevelCurrentContext(mithrilDB, context, semanticUserContexts, currentContextSet);
                 Log.d(MithrilAC.getDebugTag(), "context set size changed to: "+currentContextSet.size());
