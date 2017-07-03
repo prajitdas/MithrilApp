@@ -29,6 +29,7 @@ public class MithrilAC extends Application {
 
     public static final String MITHRIL_APP_PACKAGE_NAME = "edu.umbc.ebiquity.mithril";
 
+    public static final String PHONE_NOT_ROOTED_MITHRIL_BYE_BYE_MESSAGE = "Your phone is not rooted\nMithril won't work on this device\nSorry and thanks for participating in our survey";
     public static final String MITHRIL_BYE_BYE_MESSAGE = "Bye! Thanks for helping with our survey...";
     private static final String APP_RECEIVER = MITHRIL_APP_PACKAGE_NAME + ".APP_RECEIVER";
     private static final String RESULT_DATA_KEY = MITHRIL_APP_PACKAGE_NAME + ".RESULT_DATA_KEY";

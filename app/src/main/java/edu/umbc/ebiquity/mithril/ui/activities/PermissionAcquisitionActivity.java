@@ -45,8 +45,14 @@ public class PermissionAcquisitionActivity extends AppCompatActivity {
         super.onResume();
         overridePendingTransition(0, 0);
         makeFullScreen();
+        testRoot();
         testPermissionsAndLaunchNextActivity();
         initViews();
+    }
+
+    private void testRoot() {
+        if(!RootAccess.isRooted(this))
+            PermissionHelper.quitMithril(this, MithrilAC.PHONE_NOT_ROOTED_MITHRIL_BYE_BYE_MESSAGE);
     }
 
     @Override

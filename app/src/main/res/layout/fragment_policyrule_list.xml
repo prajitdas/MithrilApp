@@ -6,8 +6,6 @@
     android:name="edu.umbc.ebiquity.mithril.ui.fragments.coreactivityfragments.PolicyRuleFragment"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:layout_marginLeft="16dp"
-    android:layout_marginRight="16dp"
     app:layoutManager="LinearLayoutManager"
-    tools:context="edu.umbc.ebiquity.mithril.ui.fragments.coreactivityfragments.PolicyRuleFragment"
+    tools:context=".ui.fragments.coreactivityfragments.PolicyRuleFragment"
     tools:listitem="@layout/fragment_policyrule" />
