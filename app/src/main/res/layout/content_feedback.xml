@@ -39,36 +39,274 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_above="@+id/olderFeedbackBtn">
-
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent">
-
-            <Button
-                android:id="@+id/daysOfWeekBtn"
+            <android.support.v7.widget.CardView
+                android:id="@+id/cardViewfq1"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="10dp"
-                android:layout_marginTop="10dp"
-                android:text="@string/days_of_week"
-                android:textAlignment="textStart"
-                android:textSize="20sp"
-                android:theme="@style/AppTheme.Button" />
+                android:layout_marginTop="@dimen/activity_vertical_margin"
+                android:layout_marginBottom="@dimen/activity_vertical_margin"
+                app:cardCornerRadius="@dimen/card_view_corner_radius" >
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent">
+                    <ToggleButton
+                        android:id="@+id/fq1btn"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentEnd="true"
+                        android:layout_alignParentTop="true"
+                        android:layout_marginBottom="10dp"
+                        android:layout_marginTop="10dp"
+                        android:textOn="@string/feedback_yes"
+                        android:textOff="@string/feedback_no"
+                        android:textSize="20sp"
+                        android:theme="@style/AppTheme.Button" />
 
-            <TextView
-                android:id="@+id/allDayTextView"
-                android:layout_width="wrap_content"
+                    <TextView
+                        android:id="@+id/fq1txt"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_toLeftOf="@id/fq1btn"
+                        android:layout_marginBottom="10dp"
+                        android:layout_marginStart="15dp"
+                        android:layout_marginTop="20dp"
+                        android:fontFamily="josephine-sans"
+                        android:text="@string/feedback_q1"
+                        android:textColor="@color/colorPrimaryText"
+                        android:textSize="20sp" />
+                </RelativeLayout>
+            </android.support.v7.widget.CardView>
+            <android.support.v7.widget.CardView
+                android:id="@+id/cardViewfq2"
+                android:layout_below="@+id/cardViewfq1"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_below="@+id/daysOfWeekBtn"
-                android:layout_marginBottom="10dp"
-                android:layout_marginStart="15dp"
-                android:layout_marginTop="20dp"
-                android:fontFamily="josephine-sans"
-                android:text="@string/pref_temporal_context_all_day_event"
-                android:textAllCaps="true"
-                android:textColor="@color/colorPrimaryText"
-                android:textSize="20sp" />
+                android:layout_marginTop="@dimen/activity_vertical_margin"
+                android:layout_marginBottom="@dimen/activity_vertical_margin"
+                app:cardCornerRadius="@dimen/card_view_corner_radius" >
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent">
+                    <ToggleButton
+                        android:id="@+id/fq2btn"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentEnd="true"
+                        android:layout_alignParentTop="true"
+                        android:layout_marginBottom="10dp"
+                        android:layout_marginTop="10dp"
+                        android:textOn="@string/feedback_yes"
+                        android:textOff="@string/feedback_no"
+                        android:textSize="20sp"
+                        android:theme="@style/AppTheme.Button" />
 
+                    <TextView
+                        android:id="@+id/fq2txt"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_toLeftOf="@id/fq2btn"
+                        android:layout_marginBottom="10dp"
+                        android:layout_marginStart="15dp"
+                        android:layout_marginTop="20dp"
+                        android:fontFamily="josephine-sans"
+                        android:text="@string/feedback_q2"
+                        android:textColor="@color/colorPrimaryText"
+                        android:textSize="20sp" />
+                </RelativeLayout>
+            </android.support.v7.widget.CardView>
+            <android.support.v7.widget.CardView
+                android:id="@+id/cardViewfq3"
+                android:layout_below="@+id/cardViewfq2"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/activity_vertical_margin"
+                android:layout_marginBottom="@dimen/activity_vertical_margin"
+                app:cardCornerRadius="@dimen/card_view_corner_radius" >
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent">
+                    <ToggleButton
+                        android:id="@+id/fq3btn"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentEnd="true"
+                        android:layout_alignParentTop="true"
+                        android:layout_marginBottom="10dp"
+                        android:layout_marginTop="10dp"
+                        android:textOn="@string/feedback_yes"
+                        android:textOff="@string/feedback_no"
+                        android:textSize="20sp"
+                        android:theme="@style/AppTheme.Button" />
+
+                    <TextView
+                        android:id="@+id/fq3txt"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_toLeftOf="@id/fq3btn"
+                        android:layout_marginBottom="10dp"
+                        android:layout_marginStart="15dp"
+                        android:layout_marginTop="20dp"
+                        android:fontFamily="josephine-sans"
+                        android:text="@string/feedback_q3"
+                        android:textColor="@color/colorPrimaryText"
+                        android:textSize="20sp" />
+                </RelativeLayout>
+            </android.support.v7.widget.CardView>
+            <android.support.v7.widget.CardView
+                android:id="@+id/cardViewfq4"
+                android:layout_below="@+id/cardViewfq3"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/activity_vertical_margin"
+                android:layout_marginBottom="@dimen/activity_vertical_margin"
+                app:cardCornerRadius="@dimen/card_view_corner_radius" >
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent">
+                    <ToggleButton
+                        android:id="@+id/fq4btn"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentEnd="true"
+                        android:layout_alignParentTop="true"
+                        android:layout_marginBottom="10dp"
+                        android:layout_marginTop="10dp"
+                        android:textOn="@string/feedback_yes"
+                        android:textOff="@string/feedback_no"
+                        android:textSize="20sp"
+                        android:theme="@style/AppTheme.Button" />
+
+                    <TextView
+                        android:id="@+id/fq4txt"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_toLeftOf="@id/fq4btn"
+                        android:layout_marginBottom="10dp"
+                        android:layout_marginStart="15dp"
+                        android:layout_marginTop="20dp"
+                        android:fontFamily="josephine-sans"
+                        android:text="@string/feedback_q4"
+                        android:textColor="@color/colorPrimaryText"
+                        android:textSize="20sp" />
+                </RelativeLayout>
+            </android.support.v7.widget.CardView>
+            <android.support.v7.widget.CardView
+                android:id="@+id/cardViewfq5"
+                android:layout_below="@+id/cardViewfq4"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/activity_vertical_margin"
+                android:layout_marginBottom="@dimen/activity_vertical_margin"
+                app:cardCornerRadius="@dimen/card_view_corner_radius" >
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent">
+                    <ToggleButton
+                        android:id="@+id/fq5btn"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentEnd="true"
+                        android:layout_alignParentTop="true"
+                        android:layout_marginBottom="10dp"
+                        android:layout_marginTop="10dp"
+                        android:textOn="@string/feedback_yes"
+                        android:textOff="@string/feedback_no"
+                        android:textSize="20sp"
+                        android:theme="@style/AppTheme.Button" />
+
+                    <TextView
+                        android:id="@+id/fq5txt"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_toLeftOf="@id/fq5btn"
+                        android:layout_marginBottom="10dp"
+                        android:layout_marginStart="15dp"
+                        android:layout_marginTop="20dp"
+                        android:fontFamily="josephine-sans"
+                        android:text="@string/feedback_q5"
+                        android:textColor="@color/colorPrimaryText"
+                        android:textSize="20sp" />
+                </RelativeLayout>
+            </android.support.v7.widget.CardView>
+            <android.support.v7.widget.CardView
+                android:id="@+id/cardViewfq6"
+                android:layout_below="@+id/cardViewfq5"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/activity_vertical_margin"
+                android:layout_marginBottom="@dimen/activity_vertical_margin"
+                app:cardCornerRadius="@dimen/card_view_corner_radius" >
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent">
+                    <ToggleButton
+                        android:id="@+id/fq6btn"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentEnd="true"
+                        android:layout_alignParentTop="true"
+                        android:layout_marginBottom="10dp"
+                        android:layout_marginTop="10dp"
+                        android:textOn="@string/feedback_yes"
+                        android:textOff="@string/feedback_no"
+                        android:textSize="20sp"
+                        android:theme="@style/AppTheme.Button" />
+
+                    <TextView
+                        android:id="@+id/fq6txt"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_toLeftOf="@id/fq6btn"
+                        android:layout_marginBottom="10dp"
+                        android:layout_marginStart="15dp"
+                        android:layout_marginTop="20dp"
+                        android:fontFamily="josephine-sans"
+                        android:text="@string/feedback_q6"
+                        android:textColor="@color/colorPrimaryText"
+                        android:textSize="20sp" />
+                </RelativeLayout>
+            </android.support.v7.widget.CardView>
+            <android.support.v7.widget.CardView
+                android:id="@+id/cardViewfq7"
+                android:layout_below="@+id/cardViewfq6"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/activity_vertical_margin"
+                android:layout_marginBottom="@dimen/activity_vertical_margin"
+                app:cardCornerRadius="@dimen/card_view_corner_radius" >
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent">
+                    <ToggleButton
+                        android:id="@+id/fq7btn"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentEnd="true"
+                        android:layout_alignParentTop="true"
+                        android:layout_marginBottom="10dp"
+                        android:layout_marginTop="10dp"
+                        android:textOn="@string/feedback_yes"
+                        android:textOff="@string/feedback_no"
+                        android:textSize="20sp"
+                        android:theme="@style/AppTheme.Button" />
+
+                    <TextView
+                        android:id="@+id/fq7txt"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_toLeftOf="@id/fq7btn"
+                        android:layout_marginBottom="10dp"
+                        android:layout_marginStart="15dp"
+                        android:layout_marginTop="20dp"
+                        android:fontFamily="josephine-sans"
+                        android:text="@string/feedback_q7"
+                        android:textColor="@color/colorPrimaryText"
+                        android:textSize="20sp" />
+                </RelativeLayout>
+            </android.support.v7.widget.CardView>
         </RelativeLayout>
     </ScrollView>
 </RelativeLayout>

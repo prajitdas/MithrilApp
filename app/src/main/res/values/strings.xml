@@ -359,6 +359,16 @@
     <string name="continue_user_agreement_btn_label">Continue</string>
     <string name="agreement_copied">User agreement in downloads folder&#8230;</string>
 
+    <string name="feedback_q1">Do you feel apps take unnecessary permissions?</string>
+    <string name="feedback_q2">Do you know about dangerous permissions on Android?</string>
+    <string name="feedback_q3">How would you rate our systems\'s simplicity in helping you define your policies?</string>
+    <string name="feedback_q4">Did you feel context driven policies are better at representing your privacy and security needs?</string>
+    <string name="feedback_q5">Did the risk scale for apps help you in deciding your sharing preferences?</string>
+    <string name="feedback_q6">How can we improve this system?</string>
+    <string name="feedback_q7">Did the final policy capture your privacy and security needs?</string>
+    <string name="feedback_yes">Yes</string>
+    <string name="feedback_no">No</string>
+
     <string name="okay">@android:string/ok</string>
     <string name="next">next</string>
     <string name="previous">previous</string>
