@@ -32,6 +32,7 @@ import java.util.Map;
 import edu.umbc.ebiquity.mithril.BuildConfig;
 import edu.umbc.ebiquity.mithril.MithrilAC;
 import edu.umbc.ebiquity.mithril.R;
+import edu.umbc.ebiquity.mithril.data.model.Policy;
 import edu.umbc.ebiquity.mithril.data.model.components.AppData;
 import edu.umbc.ebiquity.mithril.data.model.components.PermData;
 import edu.umbc.ebiquity.mithril.data.model.rules.Action;
@@ -227,6 +228,7 @@ public class MithrilDBHelper extends SQLiteOpenHelper {
     private final static String POLRULCTXSTR = "ctxstr"; // context string
     private final static String POLRULOPSTR = "opstr"; // operation string
     private final static String POLRULENABLED = "enabled"; // policy enabled or not; a policy is enabled when the user verifies and approves it
+    private final static String POLRULDELETED = "deleted"; // Was this policy deleted?
     //if a user verifies a policy then that policy has preceedence for conflict resolution
     private final static String CREATE_POLICY_RULES_TABLE = "CREATE TABLE " + getPolicyRulesTableName() + " (" +
             POLRULID + " INTEGER NOT NULL, " +
@@ -240,6 +242,7 @@ public class MithrilDBHelper extends SQLiteOpenHelper {
             POLRULAPPSTR + " TEXT NOT NULL, " +
             POLRULCTXSTR + " TEXT NOT NULL, " +
             POLRULOPSTR + " TEXT NOT NULL, " +
+            POLRULDELETED + " INTEGER NOT NULL DEFAULT 0, " +
             "PRIMARY KEY(" + POLRULID + ", " + POLRULAPPID + ", " + POLRULCTXID + ", " + POLRULOPID + "), " +
             "FOREIGN KEY(" + POLRULAPPID + ") REFERENCES " + getAppsTableName() + "(" + APPID + ") ON DELETE CASCADE, " +
             "FOREIGN KEY(" + POLRULCTXID + ") REFERENCES " + getContextTableName() + "(" + CONTEXTID + ")" +
@@ -1642,6 +1645,65 @@ public class MithrilDBHelper extends SQLiteOpenHelper {
     }
 
     /**
+     * find policy by id
+     *
+     * @param db database instance
+     * @return all policies
+     */
+    public PolicyRule findPolicyByPolicyCtxId(SQLiteDatabase db, long id, long ctxId, long appId, int op) {
+        // Select All Query
+        String selectQuery = "SELECT " +
+                getPolicyRulesTableName() + "." + POLRULID + ", " +
+                getPolicyRulesTableName() + "." + POLRULAPPID + ", " +
+                getPolicyRulesTableName() + "." + POLRULCTXID + ", " +
+                getPolicyRulesTableName() + "." + POLRULOPID + ", " +
+                getPolicyRulesTableName() + "." + POLRULACTIN + ", " +
+                getPolicyRulesTableName() + "." + POLRULACTSTR + ", " +
+                getPolicyRulesTableName() + "." + POLRULAPPSTR + ", " +
+                getPolicyRulesTableName() + "." + POLRULCTXSTR + ", " +
+                getPolicyRulesTableName() + "." + POLRULOPSTR + ", " +
+                getPolicyRulesTableName() + "." + POLRULENABLED +
+                " FROM " +
+                getPolicyRulesTableName() +
+                " WHERE " +
+                getPolicyRulesTableName() + "." + POLRULCTXID + " = " + ctxId +
+                " AND " +
+                getPolicyRulesTableName() + "." + POLRULAPPID + " = " + appId +
+                " AND " +
+                getPolicyRulesTableName() + "." + POLRULOPID + " = " + op +
+                " AND " +
+                getPolicyRulesTableName() + "." + POLRULID + " = " + id +
+                " AND " +
+                getPolicyRulesTableName() + "." + POLRULDELETED + " = 0 " +
+                ";";
+
+        Cursor cursor = db.rawQuery(selectQuery, null);
+        try {
+
+            // looping through all rows and adding to list
+            if (cursor.moveToFirst()) {
+                return new PolicyRule(
+                        cursor.getInt(0),
+                        cursor.getLong(1),
+                        cursor.getLong(2),
+                        cursor.getInt(3),
+                        cursor.getInt(4) == 1 ? Action.ALLOW : Action.DENY,
+                        cursor.getString(5),
+                        cursor.getString(6),
+                        cursor.getString(7),
+                        cursor.getString(8),
+                        cursor.getInt(9) == 1));
+            }
+        } catch (SQLException e) {
+            throw new SQLException("Could not find " + e);
+        } finally {
+            cursor.close();
+        }
+        // return policy rules list
+        return null;
+    }
+
+    /**
      * Getting all policies
      *
      * @param db database instance
@@ -1696,7 +1758,10 @@ public class MithrilDBHelper extends SQLiteOpenHelper {
                 " AND " +
                 getPolicyRulesTableName() + "." + POLRULID + " = '" + id + "'" +
                 " AND " +
-                getContextTableName() + "." + CONTEXTENABLED + " = 1;";
+                getContextTableName() + "." + CONTEXTENABLED + " = 1" +
+                " AND " +
+                getPolicyRulesTableName() + "." + POLRULDELETED + " = 0 " +
+                ";";
 
         Cursor cursor = db.rawQuery(selectQuery, null);
         try {
@@ -1757,7 +1822,10 @@ public class MithrilDBHelper extends SQLiteOpenHelper {
                 " AND " +
                 getPolicyRulesTableName() + "." + POLRULENABLED + " = 0" +
                 " AND " +
-                getContextTableName() + "." + CONTEXTENABLED + " = 1;";
+                getContextTableName() + "." + CONTEXTENABLED + " = 1" +
+                " AND " +
+                getPolicyRulesTableName() + "." + POLRULDELETED + " = 0 " +
+                ";";
 
         Cursor cursor = db.rawQuery(selectQuery, null);
         try {
@@ -1817,6 +1885,8 @@ public class MithrilDBHelper extends SQLiteOpenHelper {
                 getAppsTableName() + "." + APPPACKAGENAME + " = '" + appPkgName + "'" +
                 " AND " +
                 getPolicyRulesTableName() + "." + POLRULOPID + " = " + operation +
+                " AND " +
+                getPolicyRulesTableName() + "." + POLRULDELETED + " = 0 " +
 //                " AND " +
 //                getPolicyRulesTableName() + "." + POLRULENABLED + " = 0 " + // if the policy has been enabled feedback was received!
                 " AND " +
@@ -2295,6 +2365,26 @@ public class MithrilDBHelper extends SQLiteOpenHelper {
      * @param id
      */
     public void deletePolicyRuleByAppCtxOpPolId(SQLiteDatabase db, long id, long appId, long ctxtId, int op) {
+        PolicyRule policyRule = findPolicyByPolicyCtxId(db, id, ctxtId, appId, op);
+        ContentValues values = new ContentValues();
+        values.put(POLRULID, policyRule.getPolicyId());
+        values.put(POLRULAPPID, policyRule.getAppId());
+        values.put(POLRULAPPSTR, policyRule.getAppStr());
+        values.put(POLRULCTXID, policyRule.getCtxId());
+        values.put(POLRULCTXSTR, policyRule.getCtxStr());
+        if (policyRule.getAction() == Action.ALLOW)
+            values.put(POLRULACTIN, 1);
+        else if (policyRule.getAction() == Action.DENY)
+            values.put(POLRULACTIN, 0);
+        values.put(POLRULACTSTR, policyRule.getActStr());
+        values.put(POLRULOPID, policyRule.getOp());
+        values.put(POLRULOPSTR, policyRule.getOpStr());
+        if (policyRule.isEnabled())
+            values.put(POLRULENABLED, 1);
+        else
+            values.put(POLRULENABLED, 0);
+        values.put(POLRULDELETED, 1);
+
         String[] args = new String[]{
                 String.valueOf(id),
                 String.valueOf(appId),
@@ -2303,14 +2393,15 @@ public class MithrilDBHelper extends SQLiteOpenHelper {
         };
 
         try {
-            db.delete(getPolicyRulesTableName(),
+            db.update(getPolicyRulesTableName(),
+                    values,
                     POLRULID + " = ? AND " +
                             POLRULAPPID + " = ? AND " +
                             POLRULCTXID + " = ? AND " +
                             POLRULOPID + " = ? ",
                     args);
         } catch (SQLException e) {
-            throw new SQLException("Could not find " + e);
+            throw new SQLException("Exception " + e + " error updating Context: " + policyRule.getPolicyId());
         }
     }
     //-----------------------------------------------------------------------------------------------------------------------------------------------------------------
