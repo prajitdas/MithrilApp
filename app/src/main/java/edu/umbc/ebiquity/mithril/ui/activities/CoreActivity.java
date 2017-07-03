@@ -167,8 +167,8 @@ public class CoreActivity extends AppCompatActivity
                 loadNothingHereFragment("permissions");
             else
                 loadPermissionsFragment();
-        } else if (id == R.id.nav_usage) {
-            loadUsageStatsFragment();
+//        } else if (id == R.id.nav_usage) {
+//            loadUsageStatsFragment();
         } else if (id == R.id.nav_exit) {
             PermissionHelper.quitMithril(this, MithrilAC.MITHRIL_BYE_BYE_MESSAGE);
         } else if (id == R.id.nav_about) {
@@ -363,8 +363,8 @@ public class CoreActivity extends AppCompatActivity
         navigationView.setNavigationItemSelectedListener(this);
 
         // do something for a debug build
-        if (BuildConfig.DEBUG)
-            navigationView.getMenu().getItem(6).getSubMenu().getItem(3).setEnabled(true);
+        if (!BuildConfig.DEBUG)
+            navigationView.getMenu().getItem(5).getSubMenu().getItem(3).setVisible(false);
 
         applyHeaderView();
     }

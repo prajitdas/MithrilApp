@@ -269,7 +269,7 @@
     <string name="title_activity_user_feedback">User policy control</string>
     <string name="title_activity_change_rule">Change rule</string>
     <string name="title_activity_create_new_rule">Create new rule</string>
-    <string name="title_activity_prefs">Manage context info</string>
+    <string name="title_activity_prefs">Edit context</string>
     <string name="title_activity_load_db">Loading knowledge</string>
     <string name="title_activity_app_ops_details">Application operations details</string>
     <string name="title_activity_show_permission_detail">Permission group details</string>
