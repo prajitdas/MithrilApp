@@ -2150,7 +2150,7 @@ public class MithrilDBHelper extends SQLiteOpenHelper {
      * method to update single violation
      * Update is being removed because of the foreign key constraint as this causes an SQLException during insertion
      */
-    public int updatePolicyRule(SQLiteDatabase db, PolicyRule aPolicyRule) {
+    public int updatePolicyRule(SQLiteDatabase db, long oldid, PolicyRule aPolicyRule) {
         ContentValues values = new ContentValues();
         values.put(POLRULID, aPolicyRule.getPolicyId());
         values.put(POLRULAPPID, aPolicyRule.getAppId());
@@ -2172,11 +2172,11 @@ public class MithrilDBHelper extends SQLiteOpenHelper {
         String[] args = new String[]{
                 String.valueOf(aPolicyRule.getPolicyId()),
                 String.valueOf(aPolicyRule.getAppId()),
-                String.valueOf(aPolicyRule.getCtxId()),
+                String.valueOf(oldid),
                 String.valueOf(aPolicyRule.getOp())
         };
 
-        Log.d(MithrilAC.getDebugTag(),"policy:"+aPolicyRule.getPolicyId()+aPolicyRule.getAppId()+aPolicyRule.getCtxId());
+        Log.d(MithrilAC.getDebugTag(),"policy:"+aPolicyRule.getPolicyId()+" "+aPolicyRule.getAppId()+" "+oldid+" "+aPolicyRule.getOp());
         try {
             return db.update(getPolicyRulesTableName(),
                     values,

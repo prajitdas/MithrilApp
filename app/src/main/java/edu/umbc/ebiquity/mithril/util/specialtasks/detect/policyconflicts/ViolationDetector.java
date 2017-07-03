@@ -257,9 +257,13 @@ public class ViolationDetector {
                          * Violations are by default marked true.
                          */
                         Log.d(MithrilAC.getDebugTag(), "No match. Perhaps it's a superset or complete mismatch.. we don't know what to do, ask user operation:" + lastOperationPerformed + " policy:" + policyContextSet + " current context:" + currentContextSet);
-
-                        for (long currCtxtId : currentContextSet) {
-                            Pair<String, String> ctxtTypeLabel = MithrilDBHelper.getHelper(context).findContextByID(mithrilDB, currCtxtId);
+                        long[] currentContextArray = setLowestLevelCurrentContext(mithrilDB, context, semanticUserContexts, currentContextSet);
+                        List<Long> lowestContextList = new ArrayList<>();
+                        for (int i = 0; i < currentContextArray.length; i++)
+                            if(currentContextArray[i] != 0)
+                                lowestContextList.add(currentContextArray[i]);
+                        for (int i = 0; i < currentContextArray.length; i++) {
+                            Pair<String, String> ctxtTypeLabel = MithrilDBHelper.getHelper(context).findContextByID(mithrilDB, currentContextArray[i]);
                             AppData app = MithrilDBHelper.getHelper(context).findAppByAppPkgName(mithrilDB, currentPackageName);
                             long appId = MithrilDBHelper.getHelper(context).findAppIdByAppPkgName(mithrilDB, currentPackageName);
 //                            MithrilDBHelper.getHelper(context).addPolicyRule(mithrilDB, DataGenerator.createPolicyRule(
@@ -283,7 +287,7 @@ public class ViolationDetector {
                                             false,
                                             true,
                                             new Timestamp(System.currentTimeMillis()),
-                                            currentContextList,
+                                            lowestContextList,
                                             1,
                                             currentResource
                                     )
@@ -316,10 +320,11 @@ public class ViolationDetector {
                  * and use user feedback as +ve or -ve reinforcement.
                  */
                 Log.d(MithrilAC.getDebugTag(), "Default violation match scenario. Do something!");
-//                int newPolicyId = MithrilDBHelper.getHelper(context).findMaxPolicyId(mithrilDB) + 1;
-                Log.d(MithrilAC.getDebugTag(), "context set size is: "+currentContextSet.size());
                 long[] currentContextArray = setLowestLevelCurrentContext(mithrilDB, context, semanticUserContexts, currentContextSet);
-                Log.d(MithrilAC.getDebugTag(), "context set size changed to: "+currentContextSet.size());
+                List<Long> lowestContextList = new ArrayList<>();
+                for (int i = 0; i < currentContextArray.length; i++)
+                    if(currentContextArray[i] != 0)
+                        lowestContextList.add(currentContextArray[i]);
                 for (int i = 0; i < currentContextArray.length; i++) {
                     Pair<String, String> ctxtTypeLabel = MithrilDBHelper.getHelper(context).findContextByID(mithrilDB, currentContextArray[i]);
                     AppData app = MithrilDBHelper.getHelper(context).findAppByAppPkgName(mithrilDB, currentPackageName);
@@ -352,7 +357,7 @@ public class ViolationDetector {
                                     false,
                                     true,
                                     new Timestamp(System.currentTimeMillis()),
-                                    currentContextList,
+                                    lowestContextList,
                                     1,
                                     currentResource
                             )

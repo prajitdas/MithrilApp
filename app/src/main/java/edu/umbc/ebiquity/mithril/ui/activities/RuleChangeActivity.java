@@ -209,10 +209,11 @@ public class RuleChangeActivity extends AppCompatActivity implements RuleChangeF
             List<PolicyRule> policyRules = MithrilDBHelper.getHelper(this).findAllPoliciesByIdIncludeEnabled(mithrilDB, currentViolation.getPolicyId());
             for(PolicyRule policyRule : policyRules) {
                 if(policyRule.getCtxStr().equals(oldContextLabel)) {
+                    long oldId = policyRule.getCtxId();
                     policyRule.setCtxId(ctxtId);
                     policyRule.setCtxStr(newContextLabel);
                     policyRule.setEnabled(true);
-                    int retval = MithrilDBHelper.getHelper(this).updatePolicyRule(mithrilDB, policyRule);
+                    int retval = MithrilDBHelper.getHelper(this).updatePolicyRule(mithrilDB, oldId, policyRule);
                     Log.d(MithrilAC.getDebugTag(), "retval"+retval);
                 }
             }

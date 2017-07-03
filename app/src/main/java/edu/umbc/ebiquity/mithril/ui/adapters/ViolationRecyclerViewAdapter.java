@@ -83,7 +83,8 @@ public class ViolationRecyclerViewAdapter extends RecyclerView.Adapter<Violation
                     policyRule.setEnabled(true);
                     policyRule.setAction(Action.DENY);
                     policyRule.setActStr("Deny");
-                    MithrilDBHelper.getHelper(view.getContext()).updatePolicyRule(mithrilDB, policyRule);
+                    //Context not changing using the same context
+                    MithrilDBHelper.getHelper(view.getContext()).updatePolicyRule(mithrilDB, policyRule.getCtxId(), policyRule);
                 }
                 MithrilDBHelper.getHelper(view.getContext()).updateViolation(mithrilDB, mValues.get(position));
                 if (null != mListener) {
@@ -104,7 +105,8 @@ public class ViolationRecyclerViewAdapter extends RecyclerView.Adapter<Violation
                     policyRule.setEnabled(true);
                     policyRule.setAction(Action.ALLOW);
                     policyRule.setActStr("Allow");
-                    MithrilDBHelper.getHelper(view.getContext()).updatePolicyRule(mithrilDB, policyRule);
+                    //Context not changing using the same context
+                    MithrilDBHelper.getHelper(view.getContext()).updatePolicyRule(mithrilDB, policyRule.getCtxId(), policyRule);
                 }
                 MithrilDBHelper.getHelper(view.getContext()).updateViolation(mithrilDB, mValues.get(position));
                 if (null != mListener) {

@@ -290,7 +290,7 @@ public class AppLaunchDetectorService extends Service implements
                 if (aPref.getKey().startsWith(MithrilAC.getPrefKeyContextTypeTemporal())) {
                     retrieveDataJson = sharedPrefs.getString(aPref.getKey(), "");
                     SemanticTime semanticTime = retrieveDataGson.fromJson(retrieveDataJson, SemanticTime.class);
-                    //Get all known semantic locations
+                    //Get all known semantic times
                     knownSemanticTimesMap.put(semanticTime.getLabel(), semanticTime);
                 }
             }
