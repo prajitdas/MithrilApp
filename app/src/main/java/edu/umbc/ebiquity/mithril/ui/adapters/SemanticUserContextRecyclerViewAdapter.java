@@ -59,7 +59,8 @@ public class SemanticUserContextRecyclerViewAdapter extends RecyclerView.Adapter
         try {
             final ArrayAdapter<String> arrayAdapter = new ArrayAdapter<>(
                     view.getContext(),
-                    android.R.layout.simple_spinner_item,
+//                    android.R.layout.simple_spinner_dropdown_item,
+                    R.layout.spinner_item,
                     getContexts(holder.mItem.getType())
             );
             arrayAdapter.getPosition(semanticUserContexts.get(position).getLabel());
@@ -88,7 +89,7 @@ public class SemanticUserContextRecyclerViewAdapter extends RecyclerView.Adapter
         holder.mDeleteBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
+                mListener.onListFragmentInteraction(semanticUserContexts.get(position), true);
             }
         });
 

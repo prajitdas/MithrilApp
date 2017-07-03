@@ -172,5 +172,6 @@ public class RuleChangeFragment extends Fragment {
     public interface OnListFragmentInteractionListener {
         // TODO: Update argument type and name
         void onListFragmentInteraction(SemanticUserContext semanticUserContext, String item);
+        void onListFragmentInteraction(SemanticUserContext semanticUserContext, boolean delete);
     }
 }

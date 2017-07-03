@@ -2294,10 +2294,21 @@ public class MithrilDBHelper extends SQLiteOpenHelper {
      * @param db
      * @param id
      */
-    public void deletePolicyRuleById(SQLiteDatabase db, int id) {
+    public void deletePolicyRuleByAppCtxOpPolId(SQLiteDatabase db, long id, long appId, long ctxtId, int op) {
+        String[] args = new String[]{
+                String.valueOf(id),
+                String.valueOf(appId),
+                String.valueOf(ctxtId),
+                String.valueOf(op)
+        };
+
         try {
-            db.delete(getPolicyRulesTableName(), POLRULID + " = ?",
-                    new String[]{String.valueOf(id)});
+            db.delete(getPolicyRulesTableName(),
+                    POLRULID + " = ? AND " +
+                            POLRULAPPID + " = ? AND " +
+                            POLRULCTXID + " = ? AND " +
+                            POLRULOPID + " = ? ",
+                    args);
         } catch (SQLException e) {
             throw new SQLException("Could not find " + e);
         }

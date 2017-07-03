@@ -49,6 +49,7 @@ public class RuleChangeActivity extends AppCompatActivity implements RuleChangeF
     private Violation currentViolation;
     private FloatingActionButton fab;
     private boolean ruleAdded;
+    private boolean rulesdeleted;
     private Button saveBtn;
     private SQLiteDatabase mithrilDB;
 
@@ -63,6 +64,7 @@ public class RuleChangeActivity extends AppCompatActivity implements RuleChangeF
         mithrilDB = MithrilDBHelper.getHelper(this).getWritableDatabase();
         currentViolation = getIntent().getParcelableExtra("rule");
         ruleAdded = false;
+        rulesdeleted = false;
 
         saveBtn = (Button) findViewById(R.id.ruleSaveBtn);
         saveBtn.setOnClickListener(new View.OnClickListener() {
@@ -74,8 +76,15 @@ public class RuleChangeActivity extends AppCompatActivity implements RuleChangeF
                     MithrilDBHelper.getHelper(v.getContext()).updateViolation(mithrilDB, currentViolation);
                     finish();
                 }
-                else
-                    PermissionHelper.toast(v.getContext(), "Choose a level for the new context");
+                else {
+                    if(rulesdeleted) {
+                        currentViolation.setAsked(true);
+                        currentViolation.setFeedbackTime(new Timestamp(System.currentTimeMillis()));
+                        MithrilDBHelper.getHelper(v.getContext()).updateViolation(mithrilDB, currentViolation);
+                        finish();
+                    } else
+                        PermissionHelper.toast(v.getContext(), "Choose a level for the new context");
+                }
             }
         });
 
@@ -215,6 +224,24 @@ public class RuleChangeActivity extends AppCompatActivity implements RuleChangeF
             ruleAdded = false;
         } catch (ContextImplementationMissingException e) {
             e.printStackTrace();
+        }
+    }
+    @Override
+    public void onListFragmentInteraction(SemanticUserContext semanticUserContext, boolean delete) {
+        if(delete) {
+            try {
+                String contextType = semanticUserContext.getType();
+                String contextLabel = semanticUserContext.getLabel();
+                long ctxtId = MithrilDBHelper.getHelper(this).findContextIdByLabelAndType(mithrilDB, contextLabel, contextType);
+                long appId = currentViolation.getAppId();
+                long polId = currentViolation.getPolicyId();
+                int op = currentViolation.getOprId();
+                MithrilDBHelper.getHelper(this).deletePolicyRuleByAppCtxOpPolId(mithrilDB, polId, appId, ctxtId, op);
+                rulesdeleted = true;
+                loadRuleChangeFragment();
+            } catch (ContextImplementationMissingException e) {
+                e.printStackTrace();
+            }
         }
     }
 }
