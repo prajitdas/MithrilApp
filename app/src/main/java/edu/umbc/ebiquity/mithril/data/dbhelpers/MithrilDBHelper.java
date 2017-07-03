@@ -2299,28 +2299,28 @@ public class MithrilDBHelper extends SQLiteOpenHelper {
         }
     }
 
-    /**
-     * method to delete a row from a table based on the identifier
-     *
-     * @param db database instance
-     */
-    public void deleteViolation(SQLiteDatabase db, Violation aViolation) {
-        String[] args = new String[]{
-                String.valueOf(aViolation.getAppId()),
-                String.valueOf(aViolation.getPolicyId()),
-                String.valueOf(aViolation.getOprId())
-        };
-
-        try {
-            db.delete(getViolationsLogTableName(),
-                    VIOLATIONAPPID + " = ? AND " +
-                            VIOLATIONPOLICYID + " = ? AND " +
-                            VIOLATIONOPERATION + " = ? ",
-                    args);
-        } catch (SQLException e) {
-            throw new SQLException("Could not find " + e);
-        }
-    }
+//    /**
+//     * method to delete a row from a table based on the identifier
+//     *
+//     * @param db database instance
+//     */
+//    public void deleteViolation(SQLiteDatabase db, Violation aViolation) {
+//        String[] args = new String[]{
+//                String.valueOf(aViolation.getAppId()),
+//                String.valueOf(aViolation.getPolicyId()),
+//                String.valueOf(aViolation.getOprId())
+//        };
+//
+//        try {
+//            db.delete(getViolationsLogTableName(),
+//                    VIOLATIONAPPID + " = ? AND " +
+//                            VIOLATIONPOLICYID + " = ? AND " +
+//                            VIOLATIONOPERATION + " = ? ",
+//                    args);
+//        } catch (SQLException e) {
+//            throw new SQLException("Could not find " + e);
+//        }
+//    }
 
     /**
      * Given a certain app uid deletes app from the database
@@ -2338,27 +2338,27 @@ public class MithrilDBHelper extends SQLiteOpenHelper {
         }
     }
 
-    public void deleteContext(SQLiteDatabase db, String label, String type) {
-        try {
-            db.delete(getContextTableName(), CONTEXTSEMLBL + " = ? AND " + CONTEXTTYPE + " = ? ",
-                    new String[]{label, type});
-        } catch (SQLException e) {
-            throw new SQLException("Could not find " + e);
-        }
-    }
-
-    /**
-     * @param db
-     * @param anAction
-     */
-    public void deleteRuleAction(SQLiteDatabase db, Action anAction) {
-        try {
-            db.delete(getActionLogTableName(), ACTIONID + " = ?",
-                    new String[]{String.valueOf(anAction.getActionString())});
-        } catch (SQLException e) {
-            throw new SQLException("Could not find " + e);
-        }
-    }
+//    public void deleteContext(SQLiteDatabase db, String label, String type) {
+//        try {
+//            db.delete(getContextTableName(), CONTEXTSEMLBL + " = ? AND " + CONTEXTTYPE + " = ? ",
+//                    new String[]{label, type});
+//        } catch (SQLException e) {
+//            throw new SQLException("Could not find " + e);
+//        }
+//    }
+//
+//    /**
+//     * @param db
+//     * @param anAction
+//     */
+//    public void deleteRuleAction(SQLiteDatabase db, Action anAction) {
+//        try {
+//            db.delete(getActionLogTableName(), ACTIONID + " = ?",
+//                    new String[]{String.valueOf(anAction.getActionString())});
+//        } catch (SQLException e) {
+//            throw new SQLException("Could not find " + e);
+//        }
+//    }
 
     /**
      * @param db
