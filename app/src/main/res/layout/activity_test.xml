@@ -31,7 +31,7 @@
         android:layout_margin="@dimen/fab_margin"
         android:elevation="@dimen/fab_margin"
         app:backgroundTint="@color/colorButton"
-        app:fabSize="auto"
+        app:fabSize="normal"
         app:rippleColor="@color/colorPrimaryLight"
         app:srcCompat="@drawable/email" />
 

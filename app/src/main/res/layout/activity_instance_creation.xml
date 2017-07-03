@@ -49,6 +49,7 @@
         android:layout_marginStart="@dimen/fab_margin"
         android:layout_marginTop="@dimen/fab_margin"
         android:theme="@style/AppTheme.FAB"
+        app:fabSize="normal"
         app:srcCompat="@drawable/content_save_settings" />
 
     <android.support.design.widget.BottomNavigationView
