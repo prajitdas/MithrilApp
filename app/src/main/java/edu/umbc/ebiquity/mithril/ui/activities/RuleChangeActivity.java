@@ -67,7 +67,7 @@ public class RuleChangeActivity extends AppCompatActivity implements RuleChangeF
         saveBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                List<PolicyRule> policyRules = MithrilDBHelper.getHelper(v.getContext()).findAllPoliciesById(mithrilDB, currentViolation.getPolicyId());
+                List<PolicyRule> policyRules = MithrilDBHelper.getHelper(v.getContext()).findAllPoliciesByIdIncludeEnabled(mithrilDB, currentViolation.getPolicyId());
                 for(PolicyRule policyRule : policyRules) {
                     policyRule.setEnabled(true);
                     MithrilDBHelper.getHelper(v.getContext()).updatePolicyRule(mithrilDB, policyRule);
