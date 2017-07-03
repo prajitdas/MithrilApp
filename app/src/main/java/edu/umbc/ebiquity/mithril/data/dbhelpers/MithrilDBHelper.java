@@ -1692,7 +1692,7 @@ public class MithrilDBHelper extends SQLiteOpenHelper {
                         cursor.getString(6),
                         cursor.getString(7),
                         cursor.getString(8),
-                        cursor.getInt(9) == 1));
+                        cursor.getInt(9) == 1);
             }
         } catch (SQLException e) {
             throw new SQLException("Could not find " + e);
