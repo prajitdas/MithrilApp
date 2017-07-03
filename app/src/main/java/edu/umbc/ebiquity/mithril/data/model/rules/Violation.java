@@ -12,6 +12,17 @@ import java.util.List;
 import edu.umbc.ebiquity.mithril.data.dbhelpers.MithrilDBHelper;
 
 public class Violation implements Parcelable {
+    public static final Creator<Violation> CREATOR = new Creator<Violation>() {
+        @Override
+        public Violation createFromParcel(Parcel in) {
+            return new Violation(in);
+        }
+
+        @Override
+        public Violation[] newArray(int size) {
+            return new Violation[size];
+        }
+    };
     private long policyId;
     private long appId;
     private int oprId;
@@ -73,18 +84,6 @@ public class Violation implements Parcelable {
     public int describeContents() {
         return 0;
     }
-
-    public static final Creator<Violation> CREATOR = new Creator<Violation>() {
-        @Override
-        public Violation createFromParcel(Parcel in) {
-            return new Violation(in);
-        }
-
-        @Override
-        public Violation[] newArray(int size) {
-            return new Violation[size];
-        }
-    };
 
     @Override
     public String toString() {

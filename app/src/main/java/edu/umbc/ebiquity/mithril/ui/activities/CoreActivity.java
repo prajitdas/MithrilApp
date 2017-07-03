@@ -14,7 +14,6 @@ import android.content.pm.PackageManager;
 import android.content.res.AssetManager;
 import android.database.sqlite.SQLiteDatabase;
 import android.net.Uri;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Environment;
 import android.os.Handler;
@@ -66,7 +65,6 @@ import edu.umbc.ebiquity.mithril.ui.fragments.coreactivityfragments.ServicesFrag
 import edu.umbc.ebiquity.mithril.ui.fragments.coreactivityfragments.UsageStatsFragment;
 import edu.umbc.ebiquity.mithril.ui.fragments.coreactivityfragments.ViolationFragment;
 import edu.umbc.ebiquity.mithril.util.services.AppLaunchDetectorService;
-import edu.umbc.ebiquity.mithril.util.specialtasks.errorsnexceptions.PhoneNotRootedException;
 import edu.umbc.ebiquity.mithril.util.specialtasks.permissions.PermissionHelper;
 import edu.umbc.ebiquity.mithril.util.specialtasks.root.RootAccess;
 

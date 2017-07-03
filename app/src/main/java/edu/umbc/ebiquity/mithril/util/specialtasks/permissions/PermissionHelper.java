@@ -19,7 +19,6 @@ import java.util.Arrays;
 import java.util.List;
 
 import edu.umbc.ebiquity.mithril.MithrilAC;
-import edu.umbc.ebiquity.mithril.util.specialtasks.errorsnexceptions.PhoneNotRootedException;
 import edu.umbc.ebiquity.mithril.util.specialtasks.root.RootAccess;
 
 /**

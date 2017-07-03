@@ -7,10 +7,6 @@ import com.jaredrummler.android.shell.CommandResult;
 import com.jaredrummler.android.shell.Shell;
 import com.scottyab.rootbeer.RootBeer;
 
-import java.io.DataOutputStream;
-import java.io.File;
-import java.io.IOException;
-
 import edu.umbc.ebiquity.mithril.MithrilAC;
 import edu.umbc.ebiquity.mithril.util.specialtasks.errorsnexceptions.PhoneNotRootedException;
 

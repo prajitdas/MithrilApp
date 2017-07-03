@@ -32,7 +32,6 @@ import java.util.Map;
 import edu.umbc.ebiquity.mithril.BuildConfig;
 import edu.umbc.ebiquity.mithril.MithrilAC;
 import edu.umbc.ebiquity.mithril.R;
-import edu.umbc.ebiquity.mithril.data.model.Policy;
 import edu.umbc.ebiquity.mithril.data.model.components.AppData;
 import edu.umbc.ebiquity.mithril.data.model.components.PermData;
 import edu.umbc.ebiquity.mithril.data.model.rules.Action;
@@ -1504,17 +1503,17 @@ public class MithrilDBHelper extends SQLiteOpenHelper {
         try {
             if (cursor.moveToFirst()) {
                 return new Violation(
-                            cursor.getInt(0),
-                            cursor.getInt(1),
-                            cursor.getInt(2),
-                            cursor.getString(3),
-                            cursor.getString(4),
-                            cursor.getInt(5) == 1,
-                            cursor.getInt(6) == 1,
-                            new Timestamp(cursor.getLong(7)),
-                            setCtxtIds(cursor.getString(8)),
-                            cursor.getInt(9),
-                            new Resource(cursor.getInt(2))
+                        cursor.getInt(0),
+                        cursor.getInt(1),
+                        cursor.getInt(2),
+                        cursor.getString(3),
+                        cursor.getString(4),
+                        cursor.getInt(5) == 1,
+                        cursor.getInt(6) == 1,
+                        new Timestamp(cursor.getLong(7)),
+                        setCtxtIds(cursor.getString(8)),
+                        cursor.getInt(9),
+                        new Resource(cursor.getInt(2))
                 );
             }
         } catch (SQLException e) {
@@ -2027,7 +2026,7 @@ public class MithrilDBHelper extends SQLiteOpenHelper {
     }
 
     public Pair<String, String> findContextByID(SQLiteDatabase db, long id) {
-        Pair<String, String> userContext = new Pair<>("empty","empty");
+        Pair<String, String> userContext = new Pair<>("empty", "empty");
         // Select Query
         String selectQuery = "SELECT " +
                 getContextTableName() + "." + CONTEXTTYPE + ", " +
@@ -2247,7 +2246,7 @@ public class MithrilDBHelper extends SQLiteOpenHelper {
                 String.valueOf(aPolicyRule.getOp())
         };
 
-        Log.d(MithrilAC.getDebugTag(),"policy:"+aPolicyRule.getPolicyId()+" "+aPolicyRule.getAppId()+" "+oldid+" "+aPolicyRule.getOp());
+        Log.d(MithrilAC.getDebugTag(), "policy:" + aPolicyRule.getPolicyId() + " " + aPolicyRule.getAppId() + " " + oldid + " " + aPolicyRule.getOp());
         try {
             return db.update(getPolicyRulesTableName(),
                     values,

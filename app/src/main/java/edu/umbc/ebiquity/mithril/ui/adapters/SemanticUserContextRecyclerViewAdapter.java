@@ -21,7 +21,6 @@ import java.util.Map;
 
 import edu.umbc.ebiquity.mithril.MithrilAC;
 import edu.umbc.ebiquity.mithril.R;
-import edu.umbc.ebiquity.mithril.data.dbhelpers.MithrilDBHelper;
 import edu.umbc.ebiquity.mithril.data.model.rules.context.SemanticActivity;
 import edu.umbc.ebiquity.mithril.data.model.rules.context.SemanticLocation;
 import edu.umbc.ebiquity.mithril.data.model.rules.context.SemanticNearActor;
@@ -114,16 +113,16 @@ public class SemanticUserContextRecyclerViewAdapter extends RecyclerView.Adapter
         for (Map.Entry<String, ?> aPref : allPrefs.entrySet()) {
             if (aPref.getKey().startsWith(type)) {
                 retrieveDataJson = sharedPrefs.getString(aPref.getKey(), "");
-                if (type.equals(MithrilAC.getPrefKeyContextTypeLocation())){
+                if (type.equals(MithrilAC.getPrefKeyContextTypeLocation())) {
                     SemanticLocation semanticLocation = retrieveDataGson.fromJson(retrieveDataJson, SemanticLocation.class);
                     possibleSemanticUserContexts.add(semanticLocation.getLabel());
-                } else if(type.equals(MithrilAC.getPrefKeyContextTypeTemporal())){
+                } else if (type.equals(MithrilAC.getPrefKeyContextTypeTemporal())) {
                     SemanticTime semanticTime = retrieveDataGson.fromJson(retrieveDataJson, SemanticTime.class);
                     possibleSemanticUserContexts.add(semanticTime.getLabel());
-                } else if(type.equals(MithrilAC.getPrefKeyContextTypePresence())){
+                } else if (type.equals(MithrilAC.getPrefKeyContextTypePresence())) {
                     SemanticNearActor semanticNearActor = retrieveDataGson.fromJson(retrieveDataJson, SemanticNearActor.class);
                     possibleSemanticUserContexts.add(semanticNearActor.getLabel());
-                } else if(type.equals(MithrilAC.getPrefKeyContextTypeActivity())) {
+                } else if (type.equals(MithrilAC.getPrefKeyContextTypeActivity())) {
                     SemanticActivity semanticActivity = retrieveDataGson.fromJson(retrieveDataJson, SemanticActivity.class);
                     possibleSemanticUserContexts.add(semanticActivity.getLabel());
                 }

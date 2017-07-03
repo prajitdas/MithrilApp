@@ -8,7 +8,6 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import java.sql.SQLDataException;
 import java.util.List;
 
 import edu.umbc.ebiquity.mithril.R;

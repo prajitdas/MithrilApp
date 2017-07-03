@@ -7,7 +7,6 @@ import android.content.DialogInterface;
 import android.content.SharedPreferences;
 import android.database.sqlite.SQLiteConstraintException;
 import android.database.sqlite.SQLiteDatabase;
-import android.location.Location;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
@@ -21,15 +20,12 @@ import android.widget.Button;
 import com.google.gson.Gson;
 
 import java.sql.Timestamp;
-import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 import edu.umbc.ebiquity.mithril.MithrilAC;
 import edu.umbc.ebiquity.mithril.R;
 import edu.umbc.ebiquity.mithril.data.dbhelpers.MithrilDBHelper;
-import edu.umbc.ebiquity.mithril.data.model.Policy;
 import edu.umbc.ebiquity.mithril.data.model.components.AppData;
 import edu.umbc.ebiquity.mithril.data.model.rules.Action;
 import edu.umbc.ebiquity.mithril.data.model.rules.PolicyRule;
@@ -70,14 +66,13 @@ public class RuleChangeActivity extends AppCompatActivity implements RuleChangeF
         saveBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(!ruleAdded) {
+                if (!ruleAdded) {
                     currentViolation.setAsked(true);
                     currentViolation.setFeedbackTime(new Timestamp(System.currentTimeMillis()));
                     MithrilDBHelper.getHelper(v.getContext()).updateViolation(mithrilDB, currentViolation);
                     finish();
-                }
-                else {
-                    if(rulesdeleted) {
+                } else {
+                    if (rulesdeleted) {
                         currentViolation.setAsked(true);
                         currentViolation.setFeedbackTime(new Timestamp(System.currentTimeMillis()));
                         MithrilDBHelper.getHelper(v.getContext()).updateViolation(mithrilDB, currentViolation);
@@ -115,9 +110,9 @@ public class RuleChangeActivity extends AppCompatActivity implements RuleChangeF
         for (PolicyRule policyRule : policyRules) {
             Pair<String, String> contextPiece = MithrilDBHelper.getHelper(this).findContextByID(mithrilDB, policyRule.getCtxId());
             //You cannot be at two locations at the same time
-            if(contextPiece.first.equals(MithrilAC.getPrefKeyContextTypeLocation()))
+            if (contextPiece.first.equals(MithrilAC.getPrefKeyContextTypeLocation()))
                 arrayAdapter.remove(MithrilAC.getPrefKeyContextTypeLocation());
-            if(contextPiece.first.equals(MithrilAC.getPrefKeyContextTypeTemporal()))
+            if (contextPiece.first.equals(MithrilAC.getPrefKeyContextTypeTemporal()))
                 arrayAdapter.remove(MithrilAC.getPrefKeyContextTypeTemporal());
 //            if(contextPiece.first.equals(MithrilAC.getPrefKeyContextTypePresence()))
 //                arrayAdapter.remove(MithrilAC.getPrefKeyContextTypePresence());
@@ -168,16 +163,16 @@ public class RuleChangeActivity extends AppCompatActivity implements RuleChangeF
         for (Map.Entry<String, ?> aPref : allPrefs.entrySet()) {
             if (aPref.getKey().startsWith(type)) {
                 retrieveDataJson = sharedPrefs.getString(aPref.getKey(), "");
-                if (type.equals(MithrilAC.getPrefKeyContextTypeLocation())){
+                if (type.equals(MithrilAC.getPrefKeyContextTypeLocation())) {
                     SemanticLocation semanticLocation = retrieveDataGson.fromJson(retrieveDataJson, SemanticLocation.class);
                     return semanticLocation.getLabel();
-                } else if(type.equals(MithrilAC.getPrefKeyContextTypeTemporal())){
+                } else if (type.equals(MithrilAC.getPrefKeyContextTypeTemporal())) {
                     SemanticTime semanticTime = retrieveDataGson.fromJson(retrieveDataJson, SemanticTime.class);
                     return semanticTime.getLabel();
-                } else if(type.equals(MithrilAC.getPrefKeyContextTypePresence())){
+                } else if (type.equals(MithrilAC.getPrefKeyContextTypePresence())) {
                     SemanticNearActor semanticNearActor = retrieveDataGson.fromJson(retrieveDataJson, SemanticNearActor.class);
                     return semanticNearActor.getLabel();
-                } else if(type.equals(MithrilAC.getPrefKeyContextTypeActivity())) {
+                } else if (type.equals(MithrilAC.getPrefKeyContextTypeActivity())) {
                     SemanticActivity semanticActivity = retrieveDataGson.fromJson(retrieveDataJson, SemanticActivity.class);
                     return semanticActivity.getLabel();
                 }
@@ -211,14 +206,14 @@ public class RuleChangeActivity extends AppCompatActivity implements RuleChangeF
             long ctxtId = MithrilDBHelper.getHelper(this).findContextIdByLabelAndType(mithrilDB, newContextLabel, contextType);
             //remove old context id from violation
             List<PolicyRule> policyRules = MithrilDBHelper.getHelper(this).findAllPoliciesByIdIncludeEnabled(mithrilDB, currentViolation.getPolicyId());
-            for(PolicyRule policyRule : policyRules) {
-                if(policyRule.getCtxStr().equals(oldContextLabel)) {
+            for (PolicyRule policyRule : policyRules) {
+                if (policyRule.getCtxStr().equals(oldContextLabel)) {
                     long oldId = policyRule.getCtxId();
                     policyRule.setCtxId(ctxtId);
                     policyRule.setCtxStr(newContextLabel);
                     policyRule.setEnabled(true);
                     int retval = MithrilDBHelper.getHelper(this).updatePolicyRule(mithrilDB, oldId, policyRule);
-                    Log.d(MithrilAC.getDebugTag(), "retval"+retval);
+                    Log.d(MithrilAC.getDebugTag(), "retval" + retval);
                 }
             }
             ruleAdded = false;
@@ -226,9 +221,10 @@ public class RuleChangeActivity extends AppCompatActivity implements RuleChangeF
             e.printStackTrace();
         }
     }
+
     @Override
     public void onListFragmentInteraction(SemanticUserContext semanticUserContext, boolean delete) {
-        if(delete) {
+        if (delete) {
             try {
                 String contextType = semanticUserContext.getType();
                 String contextLabel = semanticUserContext.getLabel();

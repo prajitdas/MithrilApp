@@ -6,12 +6,10 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.net.Uri;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.provider.Settings;
 import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.CompoundButton;
@@ -21,7 +19,6 @@ import java.util.List;
 
 import edu.umbc.ebiquity.mithril.MithrilAC;
 import edu.umbc.ebiquity.mithril.R;
-import edu.umbc.ebiquity.mithril.util.specialtasks.errorsnexceptions.PhoneNotRootedException;
 import edu.umbc.ebiquity.mithril.util.specialtasks.permissions.PermissionHelper;
 import edu.umbc.ebiquity.mithril.util.specialtasks.root.RootAccess;
 
@@ -51,7 +48,7 @@ public class PermissionAcquisitionActivity extends AppCompatActivity {
     }
 
     private void testRoot() {
-        if(!RootAccess.isRooted(this))
+        if (!RootAccess.isRooted(this))
             PermissionHelper.quitMithril(this, MithrilAC.PHONE_NOT_ROOTED_MITHRIL_BYE_BYE_MESSAGE);
     }
 
@@ -171,12 +168,12 @@ public class PermissionAcquisitionActivity extends AppCompatActivity {
                 else
                     buttonView.setChecked(false);
                 if (PermissionHelper.needsRootPrivileges(buttonView.getContext()) && !isPermissionAcquisitionComplete()) {
-                    RootAccess.exec(new String[] {
-                        MithrilAC.getCmdGrantGetAppOpsStats(),
-                        MithrilAC.getCmdGrantManageAppOpsRestrictions(),
-                        MithrilAC.getCmdGrantUpdateAppOpsStats(),
-                        MithrilAC.getCmdGrantWriteSecureSettings(),
-                        MithrilAC.getCmdGrantRealGetTasks()}
+                    RootAccess.exec(new String[]{
+                            MithrilAC.getCmdGrantGetAppOpsStats(),
+                            MithrilAC.getCmdGrantManageAppOpsRestrictions(),
+                            MithrilAC.getCmdGrantUpdateAppOpsStats(),
+                            MithrilAC.getCmdGrantWriteSecureSettings(),
+                            MithrilAC.getCmdGrantRealGetTasks()}
                     );
                 } else
                     PermissionHelper.toast(buttonView.getContext(), "Thanks we have ROOT!");

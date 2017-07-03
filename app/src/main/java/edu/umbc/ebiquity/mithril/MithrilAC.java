@@ -197,11 +197,6 @@ public class MithrilAC extends Application {
     private static final String PREF_KEY_TIMEFENCE_LIST = "timefenceList";
     private static final String DATABASE_NAME = "mithril.db";
     private static final String DEBUG_TAG = "MithrilDebugTag";
-
-    public static String[] getContextArrayTypes() {
-        return CONTEXT_ARRAY_TYPES;
-    }
-
     /**
      * Context constants
      * TODO Change the constants as per the ontology and ensure that you generate some rules to be modified by the automated script
@@ -605,6 +600,10 @@ public class MithrilAC extends Application {
             "('android.permission.ACCESS_VR_MANAGER', 'signature', '" + NO_PERMISSION_GROUP.first + "', '" + PERMISSION_FLAG_NONE + "'),\n" +
             "('android.permission.UPDATE_LOCK_TASK_PACKAGES', 'signature|setup', '" + NO_PERMISSION_GROUP.first + "', '" + PERMISSION_FLAG_NONE + "'),\n" +
             "('android.permission.SUBSTITUTE_NOTIFICATION_APP_NAME', 'signature|privileged', '" + NO_PERMISSION_GROUP.first + "', '" + PERMISSION_FLAG_NONE + "');\n";
+
+    public static String[] getContextArrayTypes() {
+        return CONTEXT_ARRAY_TYPES;
+    }
 
     public static String getCmdGrantGetUsageStats() {
         return CMD_GRANT_GET_USAGE_STATS;

@@ -113,16 +113,16 @@ public class RuleChangeFragment extends Fragment {
                         mithrilDB,
                         violation.getAppId()).getPackageName(),
                 violation.getOprId());
-        Log.d(MithrilAC.getDebugTag(), "contexts: "+policyRules.size());
+        Log.d(MithrilAC.getDebugTag(), "contexts: " + policyRules.size());
         for (PolicyRule policyRule : policyRules) {
             if (policyRule.getPolicyId() == violation.getPolicyId()) {
                 Pair<String, String> contextPiece = MithrilDBHelper.getHelper(getActivity()).findContextByID(mithrilDB, policyRule.getCtxId());
-                Log.d(MithrilAC.getDebugTag(), "contexts: "+violation.getAppId());
-                Log.d(MithrilAC.getDebugTag(), "contexts: "+violation.getOprId());
-                Log.d(MithrilAC.getDebugTag(), "contexts: "+policyRule.getPolicyId());
+                Log.d(MithrilAC.getDebugTag(), "contexts: " + violation.getAppId());
+                Log.d(MithrilAC.getDebugTag(), "contexts: " + violation.getOprId());
+                Log.d(MithrilAC.getDebugTag(), "contexts: " + policyRule.getPolicyId());
                 sharedPreferences = getActivity().getSharedPreferences(MithrilAC.getSharedPreferencesName(), Context.MODE_PRIVATE);
                 retrieveDataJson = sharedPreferences.getString(contextPiece.first + contextPiece.second, "");
-                Log.d(MithrilAC.getDebugTag(),contextPiece.first + contextPiece.second);
+                Log.d(MithrilAC.getDebugTag(), contextPiece.first + contextPiece.second);
                 if (contextPiece.first.equals(MithrilAC.getPrefKeyContextTypeLocation()))
                     semanticUserContext = retrieveDataGson.fromJson(retrieveDataJson, SemanticLocation.class);
                 else if (contextPiece.first.equals(MithrilAC.getPrefKeyContextTypeActivity()))
@@ -172,6 +172,7 @@ public class RuleChangeFragment extends Fragment {
     public interface OnListFragmentInteractionListener {
         // TODO: Update argument type and name
         void onListFragmentInteraction(SemanticUserContext semanticUserContext, String item);
+
         void onListFragmentInteraction(SemanticUserContext semanticUserContext, boolean delete);
     }
 }

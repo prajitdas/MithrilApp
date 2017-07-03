@@ -260,7 +260,7 @@ public class ViolationDetector {
                         long[] currentContextArray = setLowestLevelCurrentContext(mithrilDB, context, semanticUserContexts, currentContextSet);
                         List<Long> lowestContextList = new ArrayList<>();
                         for (int i = 0; i < currentContextArray.length; i++)
-                            if(currentContextArray[i] != 0)
+                            if (currentContextArray[i] != 0)
                                 lowestContextList.add(currentContextArray[i]);
                         for (int i = 0; i < currentContextArray.length; i++) {
                             Pair<String, String> ctxtTypeLabel = MithrilDBHelper.getHelper(context).findContextByID(mithrilDB, currentContextArray[i]);
@@ -323,7 +323,7 @@ public class ViolationDetector {
                 long[] currentContextArray = setLowestLevelCurrentContext(mithrilDB, context, semanticUserContexts, currentContextSet);
                 List<Long> lowestContextList = new ArrayList<>();
                 for (int i = 0; i < currentContextArray.length; i++)
-                    if(currentContextArray[i] != 0)
+                    if (currentContextArray[i] != 0)
                         lowestContextList.add(currentContextArray[i]);
                 for (int i = 0; i < currentContextArray.length; i++) {
                     Pair<String, String> ctxtTypeLabel = MithrilDBHelper.getHelper(context).findContextByID(mithrilDB, currentContextArray[i]);
@@ -404,16 +404,16 @@ public class ViolationDetector {
     }
 
     private static long[] setLowestLevelCurrentContext(SQLiteDatabase mithrilDB,
-                                                          Context context,
-                                                          List<SemanticUserContext> semanticUserContexts,
-                                                          Set<Long> contextIds) {
+                                                       Context context,
+                                                       List<SemanticUserContext> semanticUserContexts,
+                                                       Set<Long> contextIds) {
         long[] currentContextIds = new long[4];
         int lowestTemporal = Integer.MAX_VALUE;
         int lowestLocation = Integer.MAX_VALUE;
         int lowestPresence = Integer.MAX_VALUE;
         int lowestActivity = Integer.MAX_VALUE;
         try {
-            for(Long contextId : contextIds) {
+            for (Long contextId : contextIds) {
                 Pair<String, String> labelType = MithrilDBHelper.getHelper(context).findContextByID(mithrilDB, contextId);
                 for (SemanticUserContext semanticUserContext : semanticUserContexts) {
                     if (labelType.first.equals(semanticUserContext.getType()) && labelType.second.equals(semanticUserContext.getLabel())) {
