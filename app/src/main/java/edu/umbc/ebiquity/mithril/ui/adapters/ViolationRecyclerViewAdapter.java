@@ -51,7 +51,7 @@ public class ViolationRecyclerViewAdapter extends RecyclerView.Adapter<Violation
     public void onBindViewHolder(final ViewHolder holder, final int position) {
         final SQLiteDatabase mithrilDB = MithrilDBHelper.getHelper(view.getContext()).getWritableDatabase();
         final AppData violatingApp = MithrilDBHelper.getHelper(view.getContext()).findAppById(mithrilDB, mValues.get(position).getAppId());
-        final long rowid = MithrilDBHelper.getHelper(view.getContext()).findViolationRowIdByPolicyAppOpId(mithrilDB, mValues.get(position));
+//        final long rowid = MithrilDBHelper.getHelper(view.getContext()).findViolationRowIdByPolicyAppOpId(mithrilDB, mValues.get(position));
         final List<PolicyRule> policies = MithrilDBHelper.getHelper(view.getContext()).findAllPoliciesById(mithrilDB, mValues.get(position).getPolicyId());
 
         holder.mItem = mValues.get(position);
@@ -85,7 +85,7 @@ public class ViolationRecyclerViewAdapter extends RecyclerView.Adapter<Violation
                     policyRule.setActStr("Deny");
                     MithrilDBHelper.getHelper(view.getContext()).updatePolicyRule(mithrilDB, policyRule);
                 }
-                MithrilDBHelper.getHelper(view.getContext()).updateViolationForRowId(mithrilDB, mValues.get(position), rowid);
+                MithrilDBHelper.getHelper(view.getContext()).updateViolation(mithrilDB, mValues.get(position));
                 if (null != mListener) {
                     // Notify the active callbacks interface (the activity, if the
                     // fragment is attached to one) that an item has been selected.
@@ -106,7 +106,7 @@ public class ViolationRecyclerViewAdapter extends RecyclerView.Adapter<Violation
                     policyRule.setActStr("Allow");
                     MithrilDBHelper.getHelper(view.getContext()).updatePolicyRule(mithrilDB, policyRule);
                 }
-                MithrilDBHelper.getHelper(view.getContext()).updateViolationForRowId(mithrilDB, mValues.get(position), rowid);
+                MithrilDBHelper.getHelper(view.getContext()).updateViolation(mithrilDB, mValues.get(position));
                 if (null != mListener) {
                     // Notify the active callbacks interface (the activity, if the
                     // fragment is attached to one) that an item has been selected.

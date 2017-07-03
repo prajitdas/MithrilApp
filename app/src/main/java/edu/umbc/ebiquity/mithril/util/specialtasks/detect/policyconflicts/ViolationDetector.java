@@ -366,9 +366,9 @@ public class ViolationDetector {
             MithrilDBHelper.getHelper(context).addViolation(mithrilDB, violation);
         } catch (SQLException e) {
             Log.d(MithrilAC.getDebugTag(), violation.toString());
-            long rowid = MithrilDBHelper.getHelper(context).findViolationRowIdByPolicyAppOpId(mithrilDB, violation);
-            violation.setCount(violation.getCount() + 1);
-            MithrilDBHelper.getHelper(context).updateViolationForRowId(mithrilDB, violation, rowid);
+            Violation foundViolation = MithrilDBHelper.getHelper(context).findViolationByPolicyAppOpPolId(mithrilDB, violation.getAppId(), violation.getOprId(), violation.getPolicyId());
+            foundViolation.setCount(violation.getCount() + 1);
+            MithrilDBHelper.getHelper(context).updateViolation(mithrilDB, foundViolation);
         }
     }
 
@@ -402,33 +402,39 @@ public class ViolationDetector {
                                                           List<SemanticUserContext> semanticUserContexts,
                                                           Set<Long> contextIds) {
         Set<Long> currentContextIds = new HashSet<>();
-        long lowestTemporal = Long.MAX_VALUE;
-        long lowestLocation = Long.MAX_VALUE;
-        long lowestPresence = Long.MAX_VALUE;
-        long lowestActivity = Long.MAX_VALUE;
+        int lowestTemporal = Integer.MAX_VALUE;
+        int lowestLocation = Integer.MAX_VALUE;
+        int lowestPresence = Integer.MAX_VALUE;
+        int lowestActivity = Integer.MAX_VALUE;
         try {
-            for (SemanticUserContext semanticUserContext : semanticUserContexts) {
-                long contextId = MithrilDBHelper.getHelper(context).findContextIdByLabelAndType(mithrilDB, semanticUserContext.getLabel(), semanticUserContext.getType());
-                if (contextIds.contains(contextId)) {
-                    if (semanticUserContext.getType() == MithrilAC.getPrefKeyContextTypeTemporal()) {
-                        if (semanticUserContext.getLevel() < lowestTemporal)
-                            lowestTemporal = semanticUserContext.getLevel();
-                    }
-                    if (semanticUserContext.getType() == MithrilAC.getPrefKeyContextTypeLocation()) {
-                        if (semanticUserContext.getLevel() < lowestLocation)
-                            lowestLocation = semanticUserContext.getLevel();
-                    }
-                    if (semanticUserContext.getType() == MithrilAC.getPrefKeyContextTypePresence()) {
-                        if (semanticUserContext.getLevel() < lowestPresence)
-                            lowestPresence = semanticUserContext.getLevel();
-                    }
-                    if (semanticUserContext.getType() == MithrilAC.getPrefKeyContextTypeActivity()) {
-                        if (semanticUserContext.getLevel() < lowestActivity)
-                            lowestActivity = semanticUserContext.getLevel();
+            for(Long contextId : contextIds) {
+                Pair<String, String> labelType = MithrilDBHelper.getHelper(context).findContextByID(mithrilDB, contextId);
+                for (SemanticUserContext semanticUserContext : semanticUserContexts) {
+                    if (labelType.first.equals(semanticUserContext.getType()) && labelType.second.equals(semanticUserContext.getLabel())) {
+                        if (semanticUserContext.getType().equals(MithrilAC.getPrefKeyContextTypeTemporal())) {
+                            if (semanticUserContext.getLevel() < lowestTemporal) {
+                                currentContextIds.add(contextId);
+                                lowestTemporal = semanticUserContext.getLevel();
+                            }
+                        } else if (semanticUserContext.getType().equals(MithrilAC.getPrefKeyContextTypeLocation())) {
+                            if (semanticUserContext.getLevel() < lowestLocation) {
+                                currentContextIds.add(contextId);
+                                lowestLocation = semanticUserContext.getLevel();
+                            }
+                        } else if (semanticUserContext.getType().equals(MithrilAC.getPrefKeyContextTypePresence())) {
+                            if (semanticUserContext.getLevel() < lowestPresence) {
+                                currentContextIds.add(contextId);
+                                lowestPresence = semanticUserContext.getLevel();
+                            }
+                        } else if (semanticUserContext.getType().equals(MithrilAC.getPrefKeyContextTypeActivity())) {
+                            if (semanticUserContext.getLevel() < lowestActivity) {
+                                currentContextIds.add(contextId);
+                                lowestActivity = semanticUserContext.getLevel();
+                            }
+                        }
                     }
                 }
             }
-            currentContextIds.add(lowestTemporal);
         } catch (ContextImplementationMissingException e) {
             Log.e(MithrilAC.getDebugTag(), e.getMessage());
         }

@@ -241,7 +241,7 @@ public class AppLaunchDetectorService extends Service implements
             for (SemanticUserContext semanticUserContext : semanticUserContextList)
                 Log.d(MithrilAC.getDebugTag(), semanticUserContext.getClass().getName());
 
-            Log.d(MithrilAC.getDebugTag(), "Size" + semanticUserContextList.size());
+//            Log.d(MithrilAC.getDebugTag(), "Size" + semanticUserContextList.size());
             return semanticUserContextList;
         }
         return new ArrayList<>();
@@ -345,19 +345,17 @@ public class AppLaunchDetectorService extends Service implements
          * Let's determine if we are at a certain known location and at what is that location.
          */
         String placeToRetrieve = new String();
-        boolean isFound = false;
+//        boolean isFound = false;
         for (SemanticLocation currSemLoc : currentSemanticLocations.values()) {
             for (SemanticLocation knownSemanticLocation : knownSemanticLocations) {
 //                Log.d(MithrilAC.getDebugTag() + "knownsemloc", knownSemanticLocation.getName() + knownSemanticLocation.getPlaceId() + knownSemanticLocation.getAddress().getAddressLine(0));
 //                Log.d(MithrilAC.getDebugTag() + "currsemloc", currSemLoc.getName() + currSemLoc.getPlaceId() + currSemLoc.getAddress().getAddressLine(0));
-                if (knownSemanticLocation.compareTo(currSemLoc) == 0 && knownSemanticLocation.comparePlaceIds(currSemLoc) == 0) {
+                if (knownSemanticLocation.compareTo(currSemLoc) == 0){// && knownSemanticLocation.comparePlaceIds(currSemLoc) == 0) {
                     placeToRetrieve = knownSemanticLocation.getPlaceId();
-                    isFound = true;
+//                    isFound = true;
                     break;
                 }
             }
-            if (isFound)
-                break;
         }
         if (placeToRetrieve != null) {
             for (SemanticLocation knownSemanticLocation : knownSemanticLocations) {
