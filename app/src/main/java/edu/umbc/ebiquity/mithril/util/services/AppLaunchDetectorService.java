@@ -444,7 +444,7 @@ public class AppLaunchDetectorService extends Service implements
                 .setContentText(getString(R.string.is_this_location_important))
                 .setContentIntent(notificationPendingIntent)
                 .addAction(R.drawable.content_save_all, "Save", notificationPendingIntent)
-                .addAction(R.drawable.delete_circle, "Don't save", notificationPendingIntent);
+                .addAction(R.drawable.delete, "Don't save", notificationPendingIntent);
 
         // Dismiss notification once the user touches it.
         builder.setAutoCancel(true);
