@@ -92,12 +92,6 @@ public class RuleChangeActivity extends AppCompatActivity implements RuleChangeF
         loadRuleChangeFragment();
     }
 
-    @Override
-    public void onBackPressed() {
-        if(ruleAdded)
-            PermissionHelper.toast(this, "Please click on save to go back...");
-    }
-
     private void showDialogContextType() {
         final ArrayAdapter<String> arrayAdapter = new ArrayAdapter<>(this, android.R.layout.select_dialog_singlechoice);
         final String[] listOfContextTypesFromTheOntology = MithrilAC.getContextArrayTypes();
