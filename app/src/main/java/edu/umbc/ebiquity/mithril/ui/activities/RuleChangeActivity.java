@@ -90,6 +90,7 @@ public class RuleChangeActivity extends AppCompatActivity implements RuleChangeF
         });
 
         loadRuleChangeFragment();
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
     }
 
     private void showDialogContextType() {

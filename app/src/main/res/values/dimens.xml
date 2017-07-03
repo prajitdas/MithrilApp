@@ -9,8 +9,8 @@
     <dimen name="card_view_margin">5dp</dimen>
     <dimen name="card_view_elevation">5dp</dimen>
     <dimen name="card_view_corner_radius">10dp</dimen>
-    <dimen name="fab_margin">16dp</dimen>
-    <dimen name="text_margin">16dp</dimen>
+    <dimen name="fab_margin">12dp</dimen>
+    <dimen name="text_margin">12dp</dimen>
     <!-- For fullscreen stuff -->
     <dimen name="top_margin_fullscreen">30dp</dimen>
     <dimen name="side_margin_fullscreen">50dp</dimen>

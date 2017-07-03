@@ -13,17 +13,62 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
+        android:background="@color/colorButton"
         android:theme="@style/AppTheme.Button"
         android:text="@string/see_older_feedback_btn"/>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_above="@+id/olderFeedbackBtn"
+        android:background="@color/colorPrimaryText" />
+
+    <android.support.design.widget.FloatingActionButton
+        android:id="@+id/fab_feedback"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/olderFeedbackBtn"
+        android:layout_alignParentEnd="true"
+        android:layout_margin="@dimen/fab_margin"
+        android:elevation="@dimen/fab_margin"
+        android:theme="@style/AppTheme.FAB"
+        app:fabSize="normal"
+        app:srcCompat="@drawable/cloud_upload" />
 
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_above="@+id/olderFeedbackBtn">
 
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/pol_rule_change_save_btn_label"/>
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <Button
+                android:id="@+id/daysOfWeekBtn"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="10dp"
+                android:layout_marginTop="10dp"
+                android:text="@string/days_of_week"
+                android:textAlignment="textStart"
+                android:textSize="20sp"
+                android:theme="@style/AppTheme.Button" />
+
+            <TextView
+                android:id="@+id/allDayTextView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/daysOfWeekBtn"
+                android:layout_marginBottom="10dp"
+                android:layout_marginStart="15dp"
+                android:layout_marginTop="20dp"
+                android:fontFamily="josephine-sans"
+                android:text="@string/pref_temporal_context_all_day_event"
+                android:textAllCaps="true"
+                android:textColor="@color/colorPrimaryText"
+                android:textSize="20sp" />
+
+        </RelativeLayout>
     </ScrollView>
 </RelativeLayout>
