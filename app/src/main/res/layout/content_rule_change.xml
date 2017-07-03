@@ -19,8 +19,8 @@
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
         android:background="@color/colorButton"
-        android:theme="@style/AppTheme.Button"
-        android:text="@string/pol_rule_change_save_btn_label"/>
+        android:text="@string/pol_rule_change_save_btn_label"
+        android:theme="@style/AppTheme.Button" />
 
     <View
         android:layout_width="match_parent"

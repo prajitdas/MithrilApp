@@ -39,9 +39,9 @@
             android:layout_marginEnd="@dimen/card_view_margin"
             android:layout_marginStart="@dimen/card_view_margin"
             android:layout_marginTop="@dimen/card_view_margin"
-            android:spinnerMode="dropdown"
+            android:layout_toStartOf="@+id/deleteContextBtn"
             android:scrollIndicators="right"
-            android:layout_toStartOf="@+id/deleteContextBtn" />
+            android:spinnerMode="dropdown" />
 
         <ImageButton
             android:id="@+id/deleteContextBtn"

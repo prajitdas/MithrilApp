@@ -14,8 +14,8 @@
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
         android:background="@color/colorButton"
-        android:theme="@style/AppTheme.Button"
-        android:text="@string/see_older_feedback_btn"/>
+        android:text="@string/see_older_feedback_btn"
+        android:theme="@style/AppTheme.Button" />
 
     <View
         android:layout_width="match_parent"
