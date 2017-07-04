@@ -374,6 +374,12 @@
     <string name="feedback_q10">Could you kindly share your gender and age for some demographic study?</string>
     <string name="feedback_yes">Yes</string>
     <string name="feedback_no">No</string>
+    <string name="feedback_good">5 - simple</string>
+    <string name="feedback_bad">0 - complex</string>
+    <string name="feedback_concerned">5 - concerned</string>
+    <string name="feedback_notconcerned">0 - unconcerned</string>
+    <string name="feedback_complex">5 - complex</string>
+    <string name="feedback_simple">0 - simple</string>
 
     <string name="okay">@android:string/ok</string>
     <string name="next">next</string>

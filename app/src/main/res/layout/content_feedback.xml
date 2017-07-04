@@ -23,18 +23,6 @@
         android:layout_above="@+id/olderFeedbackBtn"
         android:background="@color/colorPrimaryText" />
 
-    <!--<android.support.design.widget.FloatingActionButton-->
-        <!--android:id="@+id/fab_feedback"-->
-        <!--android:layout_width="wrap_content"-->
-        <!--android:layout_height="wrap_content"-->
-        <!--android:layout_above="@+id/olderFeedbackBtn"-->
-        <!--android:layout_alignParentEnd="true"-->
-        <!--android:layout_margin="@dimen/fab_margin"-->
-        <!--android:elevation="@dimen/fab_margin"-->
-        <!--android:theme="@style/AppTheme.FAB"-->
-        <!--app:fabSize="normal"-->
-        <!--app:srcCompat="@drawable/cloud_upload" />-->
-
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -315,6 +303,28 @@
                         android:text="@string/feedback_q6"
                         android:textColor="@color/colorPrimaryText"
                         android:textSize="18sp" />
+                    <TextView
+                        android:id="@+id/goodSystem"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_below="@+id/fq6txt"
+                        android:layout_alignParentEnd="true"
+                        android:layout_toRightOf="@+id/systemSimplicityRatingBar"
+                        android:fontFamily="josephine-sans"
+                        android:text="@string/feedback_good"
+                        android:textColor="@color/green"
+                        android:textSize="12sp" />
+                    <TextView
+                        android:id="@+id/badSystem"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_below="@+id/fq6txt"
+                        android:layout_alignParentStart="true"
+                        android:layout_toLeftOf="@+id/systemSimplicityRatingBar"
+                        android:fontFamily="josephine-sans"
+                        android:text="@string/feedback_bad"
+                        android:textColor="@color/red"
+                        android:textSize="12sp" />
                     <RatingBar
                         android:id="@+id/systemSimplicityRatingBar"
                         android:rating="0"
@@ -414,7 +424,28 @@
                         android:text="@string/feedback_q8"
                         android:textColor="@color/colorPrimaryText"
                         android:textSize="18sp" />
-
+                    <TextView
+                        android:id="@+id/concerned"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_below="@+id/fq8txt"
+                        android:layout_alignParentEnd="true"
+                        android:layout_toRightOf="@+id/prisecConcernRatingBar"
+                        android:fontFamily="josephine-sans"
+                        android:text="@string/feedback_concerned"
+                        android:textColor="@color/red"
+                        android:textSize="12sp" />
+                    <TextView
+                        android:id="@+id/notConcerned"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_below="@+id/fq8txt"
+                        android:layout_alignParentStart="true"
+                        android:layout_toLeftOf="@+id/prisecConcernRatingBar"
+                        android:fontFamily="josephine-sans"
+                        android:text="@string/feedback_notconcerned"
+                        android:textColor="@color/green"
+                        android:textSize="12sp" />
                     <RatingBar
                         android:id="@+id/prisecConcernRatingBar"
                         android:rating="0"
@@ -455,6 +486,28 @@
                         android:text="@string/feedback_q9"
                         android:textColor="@color/colorPrimaryText"
                         android:textSize="18sp" />
+                    <TextView
+                        android:id="@+id/complex"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_below="@+id/fq9txt"
+                        android:layout_alignParentEnd="true"
+                        android:layout_toRightOf="@+id/currentOSRatingBar"
+                        android:fontFamily="josephine-sans"
+                        android:text="@string/feedback_complex"
+                        android:textColor="@color/red"
+                        android:textSize="12sp" />
+                    <TextView
+                        android:id="@+id/simple"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_below="@+id/fq9txt"
+                        android:layout_alignParentStart="true"
+                        android:layout_toLeftOf="@+id/currentOSRatingBar"
+                        android:fontFamily="josephine-sans"
+                        android:text="@string/feedback_simple"
+                        android:textColor="@color/green"
+                        android:textSize="12sp" />
                     <RatingBar
                         android:id="@+id/currentOSRatingBar"
                         android:rating="0"
