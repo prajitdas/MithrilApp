@@ -350,7 +350,7 @@
     <string name="feedback_header_user_related">User related</string>
     <string name="feedback_q8">On a scale of 0 to 5 how concerned are you about mobile privacy and security?</string>
     <string name="feedback_q9">On a scale of 0 to 5 how would you rate the complexity of mobile OS privacy and security controls?</string>
-    <string name="feedback_q10">Could you kindly share your gender and age to allow us understand the demography of survey responders?</string>
+    <!--<string name="feedback_q10">Could you kindly share your gender and age to allow us understand the demography of survey responders?</string>-->
     <string name="feedback_yes">Yes</string>
     <string name="feedback_no">No</string>
     <string name="feedback_good">5 - simple</string>

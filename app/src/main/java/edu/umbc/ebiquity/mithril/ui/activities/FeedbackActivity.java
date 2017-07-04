@@ -5,7 +5,9 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.EditText;
 import android.widget.RatingBar;
+import android.widget.Spinner;
 import android.widget.ToggleButton;
 
 import edu.umbc.ebiquity.mithril.R;
@@ -17,7 +19,9 @@ public class FeedbackActivity extends AppCompatActivity {
     private ToggleButton feedbackQ4ToggleBtn;
     private ToggleButton feedbackQ5ToggleBtn;
     private RatingBar feedbackQ6RatingBar;
-
+    private EditText feedbackQ7EditText;
+    private RatingBar feedbackQ8RatingBar;
+    private RatingBar feedbackQ9RatingBar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
