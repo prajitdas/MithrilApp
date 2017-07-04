@@ -64,11 +64,10 @@ public class FeedbackActivity extends AppCompatActivity {
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar_feedback);
         setSupportActionBar(toolbar);
 
+        feedbackJsonResponse = new String();
+
         initViews();
-        initData();
-
         setOnClickListeners();
-
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
     }
 
@@ -99,12 +98,6 @@ public class FeedbackActivity extends AppCompatActivity {
         feedbackQ9OSRatingBar = (RatingBar) findViewById(R.id.currentOSRatingBar);
     }
 
-    private void initData() {
-        feedbackJsonResponse = new String();
-        // Get a RequestQueue
-        queue = VolleySingleton.getInstance(this).getRequestQueue();
-    }
-
     private void setOnClickListeners() {
         feedbackQ1ToggleBtn.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
@@ -113,6 +106,7 @@ public class FeedbackActivity extends AppCompatActivity {
                     buttonView.setChecked(false);
                 else
                     buttonView.setChecked(true);
+                feedbackQ1ToggleBtn.toggle();
                 addToDataUploader(buttonView.isChecked(), MithrilAC.getFeedbackQuestion1());
             }
         });
@@ -124,6 +118,7 @@ public class FeedbackActivity extends AppCompatActivity {
                     buttonView.setChecked(false);
                 else
                     buttonView.setChecked(true);
+                feedbackQ2ToggleBtn.toggle();
                 addToDataUploader(buttonView.isChecked(), MithrilAC.getFeedbackQuestion2());
             }
         });
@@ -135,6 +130,7 @@ public class FeedbackActivity extends AppCompatActivity {
                     buttonView.setChecked(false);
                 else
                     buttonView.setChecked(true);
+                feedbackQ3ToggleBtn.toggle();
                 addToDataUploader(buttonView.isChecked(), MithrilAC.getFeedbackQuestion4());
             }
         });
@@ -146,6 +142,7 @@ public class FeedbackActivity extends AppCompatActivity {
                     buttonView.setChecked(false);
                 else
                     buttonView.setChecked(true);
+                feedbackQ4ToggleBtn.toggle();
                 addToDataUploader(buttonView.isChecked(), MithrilAC.getFeedbackQuestion5());
             }
         });
@@ -177,6 +174,7 @@ public class FeedbackActivity extends AppCompatActivity {
                     buttonView.setChecked(true);
                 else
                     buttonView.setChecked(false);
+                feedbackQ7ToggleBtn.toggle();
                 addToDataUploader(buttonView.isChecked(), MithrilAC.getFeedbackQuestion3());
             }
         });

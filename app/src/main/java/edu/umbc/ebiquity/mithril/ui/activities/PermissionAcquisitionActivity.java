@@ -111,6 +111,7 @@ public class PermissionAcquisitionActivity extends AppCompatActivity {
                     buttonView.setChecked(true);
                 else
                     buttonView.setChecked(false);
+                mGenericPermToggleButton.toggle();
                 if (!PermissionHelper.isAllRequiredPermissionsGranted(buttonView.getContext()))
                     requestAllNecessaryPermissions();
                 else
@@ -124,6 +125,7 @@ public class PermissionAcquisitionActivity extends AppCompatActivity {
                     buttonView.setChecked(true);
                 else
                     buttonView.setChecked(false);
+                mSpecialPermToggleButton.toggle();
                 if (PermissionHelper.needsUsageStatsPermission(buttonView.getContext())) {
                     startActivityForResult(new Intent(Settings.ACTION_USAGE_ACCESS_SETTINGS), MithrilAC.USAGE_STATS_PERMISSION_REQUEST_CODE);
                 } else
@@ -137,6 +139,7 @@ public class PermissionAcquisitionActivity extends AppCompatActivity {
                     buttonView.setChecked(true);
                 else
                     buttonView.setChecked(false);
+                mSettingsPermToggleButton.toggle();
                 if (PermissionHelper.needsWriteSettingsPermission(buttonView.getContext())) {
                     Intent goToSettings = new Intent(Settings.ACTION_MANAGE_WRITE_SETTINGS);
                     goToSettings.setData(Uri.parse("package:" + getPackageName()));
@@ -152,6 +155,7 @@ public class PermissionAcquisitionActivity extends AppCompatActivity {
                     buttonView.setChecked(true);
                 else
                     buttonView.setChecked(false);
+                mSystemAlertWindowPermToggleButton.toggle();
                 if (PermissionHelper.needsSystemAlertWindowPermission(buttonView.getContext())) {
                     Intent goToSettings = new Intent(Settings.ACTION_MANAGE_OVERLAY_PERMISSION);
                     goToSettings.setData(Uri.parse("package:" + getPackageName()));
@@ -167,6 +171,7 @@ public class PermissionAcquisitionActivity extends AppCompatActivity {
                     buttonView.setChecked(true);
                 else
                     buttonView.setChecked(false);
+                mRootAccessToggleButton.toggle();
                 if (PermissionHelper.needsRootPrivileges(buttonView.getContext()) && !isPermissionAcquisitionComplete()) {
                     RootAccess.exec(new String[]{
                             MithrilAC.getCmdGrantGetAppOpsStats(),
