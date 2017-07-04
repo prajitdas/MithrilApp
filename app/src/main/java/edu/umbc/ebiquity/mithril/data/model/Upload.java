@@ -9,17 +9,17 @@ import edu.umbc.ebiquity.mithril.MithrilAC;
  */
 
 public class Upload {
+    private Timestamp uploadTime;
+
+    public Upload(Timestamp uploadTime) {
+        this.uploadTime = uploadTime;
+    }
+
     public Timestamp getUploadTime() {
         return uploadTime;
     }
 
     public void setUploadTime(Timestamp uploadTime) {
-        this.uploadTime = uploadTime;
-    }
-
-    private Timestamp uploadTime;
-
-    public Upload(Timestamp uploadTime) {
         this.uploadTime = uploadTime;
     }
 
