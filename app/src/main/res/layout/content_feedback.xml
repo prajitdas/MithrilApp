@@ -373,6 +373,7 @@
                         android:textSize="18sp" />
                     <EditText
                         android:id="@+id/fq7EditText"
+                        android:hint="@string/age_prompt"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_alignParentBottom="true"
