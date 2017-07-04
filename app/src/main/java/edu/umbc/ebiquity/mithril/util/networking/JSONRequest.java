@@ -1,5 +1,7 @@
 package edu.umbc.ebiquity.mithril.util.networking;
 
+import android.util.Log;
+
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -15,6 +17,8 @@ public final class JSONRequest {
     private JSONObject request;
 
     public JSONRequest(Map<String, String> feedback, String userId) throws JSONException {
+        for(Map.Entry<String, String > feedbackEntry : feedback.entrySet())
+            Log.e(MithrilAC.getDebugTag(), "JSON data: "+feedbackEntry.getValue());
         request = new JSONObject();
         request.put(MithrilAC.getFeedbackQuestion1(), feedback.get(MithrilAC.getFeedbackQuestion1()));
         request.put(MithrilAC.getFeedbackQuestion2(), feedback.get(MithrilAC.getFeedbackQuestion2()));

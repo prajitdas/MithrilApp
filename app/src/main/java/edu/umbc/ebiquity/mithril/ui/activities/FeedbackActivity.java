@@ -6,6 +6,7 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -34,6 +35,7 @@ import edu.umbc.ebiquity.mithril.MithrilAC;
 import edu.umbc.ebiquity.mithril.R;
 import edu.umbc.ebiquity.mithril.util.networking.JSONRequest;
 import edu.umbc.ebiquity.mithril.util.networking.VolleySingleton;
+import edu.umbc.ebiquity.mithril.util.specialtasks.permissions.PermissionHelper;
 
 public class FeedbackActivity extends AppCompatActivity {
     private ToggleButton feedbackQ1ToggleBtn;
@@ -212,41 +214,44 @@ public class FeedbackActivity extends AppCompatActivity {
     }
 
     private void startUpload() {
-        SharedPreferences sharedPreferences = getApplicationContext().getSharedPreferences(MithrilAC.getSharedPreferencesName(), Context.MODE_PRIVATE);
         try {
+            SharedPreferences sharedPreferences = getApplicationContext().getSharedPreferences(MithrilAC.getSharedPreferencesName(), Context.MODE_PRIVATE);
             feedbackJsonRequest = new JSONRequest(feedbackDataMap, sharedPreferences.getString(MithrilAC.getRandomUserId(), getResources().getString(R.string.pref_user_id_default_value)));
+            JsonObjectRequest jsObjRequest = new JsonObjectRequest(
+                    Request.Method.POST,
+                    MithrilAC.getFeedbackUrl(),
+                    feedbackJsonRequest.getRequest(),
+                    new Response.Listener<JSONObject>() {
+                        @Override
+                        public void onResponse(JSONObject response) {
+                            try {
+                                final String status = response.getString("status");
+                                feedbackJsonResponse = "Status: " + status;
+                                PermissionHelper.toast(getApplicationContext(), feedbackJsonResponse);
+                            } catch (JSONException aJSONException) {
+                                Log.e(MithrilAC.getDebugTag(), "Exception in sending data using JSON "+aJSONException.getMessage());
+                            }
+                        }
+                    },
+                    new Response.ErrorListener() {
+                        @Override
+                        public void onErrorResponse(VolleyError error) {
+                            String statusCode;
+                            try {
+                                statusCode = String.valueOf(error.networkResponse.statusCode);
+                                PermissionHelper.toast(getApplicationContext(), feedbackJsonResponse);
+                            } catch (NullPointerException e) {
+                                statusCode = "fatal error! Error code not received";
+                            }
+                            feedbackJsonResponse = "Getting an error code: " + statusCode + " from the server\n";
+                        }
+                    }
+            );
+            // Add a request (in this example, called jsObjRequest) to your RequestQueue.
+            VolleySingleton.getInstance(this).addToRequestQueue(jsObjRequest);
         } catch (JSONException aJSONException) {
+            Log.e(MithrilAC.getDebugTag(), "Exception in sending data using JSON "+aJSONException.getMessage());
         }
-        JsonObjectRequest jsObjRequest = new JsonObjectRequest(
-                Request.Method.POST,
-                MithrilAC.getFeedbackUrl(),
-                feedbackJsonRequest.getRequest(),
-                new Response.Listener<JSONObject>() {
-                    @Override
-                    public void onResponse(JSONObject response) {
-                        try {
-                            final String status = response.getString("status");
-                            feedbackJsonResponse = "Status: " + status;
-                        } catch (JSONException e) {
-                            e.printStackTrace();
-                        }
-                    }
-                },
-                new Response.ErrorListener() {
-                    @Override
-                    public void onErrorResponse(VolleyError error) {
-                        String statusCode;
-                        try {
-                            statusCode = String.valueOf(error.networkResponse.statusCode);
-                        } catch (NullPointerException e) {
-                            statusCode = "fatal error! Error code not received";
-                        }
-                        feedbackJsonResponse = "Getting an error code: " + statusCode + " from the server\n";
-                    }
-                }
-        );
-        // Add a request (in this example, called jsObjRequest) to your RequestQueue.
-        VolleySingleton.getInstance(this).addToRequestQueue(jsObjRequest);
     }
 
     @Override
