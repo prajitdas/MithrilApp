@@ -10,12 +10,10 @@ import android.view.MenuItem;
 import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.RatingBar;
-import android.widget.Spinner;
 import android.widget.ToggleButton;
 
 import edu.umbc.ebiquity.mithril.MithrilAC;
 import edu.umbc.ebiquity.mithril.R;
-import edu.umbc.ebiquity.mithril.util.specialtasks.permissions.PermissionHelper;
 
 public class FeedbackActivity extends AppCompatActivity {
     private ToggleButton feedbackQ1ToggleBtn;
@@ -25,7 +23,7 @@ public class FeedbackActivity extends AppCompatActivity {
     private ToggleButton feedbackQ5ToggleBtn;
     private RatingBar feedbackQ6SimplicityRatingBar;
     private EditText feedbackQ7EditText;
-    private RatingBar feedbackQ8ConernRatingBar;
+    private RatingBar feedbackQ8ConcernRatingBar;
     private RatingBar feedbackQ9OSRatingBar;
 
     @Override
@@ -43,7 +41,7 @@ public class FeedbackActivity extends AppCompatActivity {
         feedbackQ5ToggleBtn = (ToggleButton) findViewById(R.id.fq5btn);
         feedbackQ6SimplicityRatingBar = (RatingBar) findViewById(R.id.systemSimplicityRatingBar);
         feedbackQ7EditText = (EditText) findViewById(R.id.fq7EditText);
-        feedbackQ8ConernRatingBar = (RatingBar) findViewById(R.id.prisecConcernRatingBar);
+        feedbackQ8ConcernRatingBar = (RatingBar) findViewById(R.id.prisecConcernRatingBar);
         feedbackQ9OSRatingBar = (RatingBar) findViewById(R.id.currentOSRatingBar);
 
         setOnClickListeners();
@@ -131,7 +129,7 @@ public class FeedbackActivity extends AppCompatActivity {
             }
         });
 
-        feedbackQ8ConernRatingBar.setOnRatingBarChangeListener(new RatingBar.OnRatingBarChangeListener() {
+        feedbackQ8ConcernRatingBar.setOnRatingBarChangeListener(new RatingBar.OnRatingBarChangeListener() {
             @Override
             public void onRatingChanged(RatingBar ratingBar, float v, boolean b) {
                 addToDataUploader(v, MithrilAC.getFeedbackQuestion8());

@@ -47,7 +47,9 @@
             android:id="@+id/rootAccessToggleButton"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_weight="0.25"
+            android:layout_weight="0.35"
+            android:textOff="@string/button_true_violation"
+            android:textOn="@string/button_false_violation"
             android:theme="@style/AppTheme.Button" />
     </LinearLayout>
 
@@ -76,7 +78,9 @@
             android:id="@+id/genericPermToggleButton"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_weight="0.25"
+            android:layout_weight="0.35"
+            android:textOff="@string/button_true_violation"
+            android:textOn="@string/button_false_violation"
             android:theme="@style/AppTheme.Button" />
     </LinearLayout>
 
@@ -105,7 +109,9 @@
             android:id="@+id/specialPermToggleButton"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_weight="0.25"
+            android:layout_weight="0.35"
+            android:textOff="@string/button_true_violation"
+            android:textOn="@string/button_false_violation"
             android:theme="@style/AppTheme.Button" />
     </LinearLayout>
 
@@ -134,7 +140,9 @@
             android:id="@+id/settingsToggleButton"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_weight="0.25"
+            android:layout_weight="0.35"
+            android:textOff="@string/button_true_violation"
+            android:textOn="@string/button_false_violation"
             android:theme="@style/AppTheme.Button" />
     </LinearLayout>
 
@@ -163,7 +171,9 @@
             android:id="@+id/systemAlertWindowToggleButton"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_weight="0.25"
+            android:layout_weight="0.35"
+            android:textOff="@string/button_true_violation"
+            android:textOn="@string/button_false_violation"
             android:theme="@style/AppTheme.Button" />
     </LinearLayout>
 
