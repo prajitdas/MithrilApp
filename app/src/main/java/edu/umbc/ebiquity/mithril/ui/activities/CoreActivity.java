@@ -170,8 +170,6 @@ public class CoreActivity extends AppCompatActivity
                 loadPermissionsFragment();
         } else if (id == R.id.nav_uploads) {
             loadPastUploadsFragment();
-//        } else if (id == R.id.nav_usage) {
-//            loadUsageStatsFragment();
         } else if (id == R.id.nav_exit) {
             PermissionHelper.quitMithril(this, MithrilAC.MITHRIL_BYE_BYE_MESSAGE);
         } else if (id == R.id.nav_about) {
@@ -180,6 +178,8 @@ public class CoreActivity extends AppCompatActivity
             launchInstanceCreationActivity();
         } else if (id == R.id.nav_reset_app) {
             resetApp();
+//        } else if (id == R.id.nav_usage) {
+//            loadUsageStatsFragment();
 //        } else if (id == R.id.nav_system) {
 //            if (isSystemAppsListEmpty())
 //                loadNothingHereFragment("system apps");
@@ -372,7 +372,7 @@ public class CoreActivity extends AppCompatActivity
 
         // do something for a debug build
         if (!BuildConfig.DEBUG)
-            navigationView.getMenu().getItem(5).getSubMenu().getItem(3).setVisible(false);
+            navigationView.getMenu().getItem(6).getSubMenu().getItem(3).setVisible(false);
 
         applyHeaderView();
     }
