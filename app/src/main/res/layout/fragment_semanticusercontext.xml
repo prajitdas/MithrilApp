@@ -52,7 +52,7 @@
             android:layout_marginEnd="@dimen/card_view_margin"
             android:layout_marginStart="@dimen/card_view_margin"
             android:layout_marginTop="@dimen/card_view_margin"
-            android:backgroundTint="@android:color/holo_red_dark"
+            android:backgroundTint="@color/red"
             android:elevation="@dimen/fab_margin"
             android:src="@drawable/delete"
             android:tint="@color/whitesmoke" />

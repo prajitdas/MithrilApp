@@ -29,8 +29,8 @@
     </style>
 
     <style name="AppTheme.RatingBar" parent="Widget.AppCompat.RatingBar">
-        <item name="android:colorControlNormal">@color/colorPrimaryLight</item>
-        <item name="android:colorControlActivated">@color/colorPrimaryDark</item>
+        <item name="android:colorControlNormal">@android:color/holo_red_light</item>
+        <item name="android:colorControlActivated">@color/red</item>
 
     </style>
 

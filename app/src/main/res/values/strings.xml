@@ -406,6 +406,14 @@
         Website: %5$s
     ]]>
 
+    <string name="gender_pronoun_prompt">Choose your gender pronoun</string>
+    <string-array name="gender_pronoun_arrays">
+        <item>Her</item>
+        <item>Him</item>
+        <item>Their</item>
+        <item>Don\'t wanna answer</item>
+    </string-array>
+
     </string>
     <!-- label for ldetectedAtTimetime used -->
     <string name="last_time_used_label">Last detectedAtTime used</string>
