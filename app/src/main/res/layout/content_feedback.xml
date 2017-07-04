@@ -59,7 +59,8 @@
                         android:textOff="@string/feedback_no"
                         android:textOn="@string/feedback_yes"
                         android:textSize="18sp"
-                        android:theme="@style/AppTheme.Button" />
+                        android:theme="@style/AppTheme.Button"
+                        android:nextFocusDown="@id/fq2btn" />
 
                     <TextView
                         android:id="@+id/fq1txt"
@@ -103,7 +104,8 @@
                         android:textOff="@string/feedback_no"
                         android:textOn="@string/feedback_yes"
                         android:textSize="18sp"
-                        android:theme="@style/AppTheme.Button" />
+                        android:theme="@style/AppTheme.Button"
+                        android:nextFocusDown="@id/fq3btn" />
 
                     <TextView
                         android:id="@+id/fq2txt"
@@ -162,7 +164,8 @@
                         android:textOff="@string/feedback_no"
                         android:textOn="@string/feedback_yes"
                         android:textSize="18sp"
-                        android:theme="@style/AppTheme.Button" />
+                        android:theme="@style/AppTheme.Button"
+                        android:nextFocusDown="@id/fq4btn" />
 
                     <TextView
                         android:id="@+id/fq3txt"
@@ -206,7 +209,8 @@
                         android:textOff="@string/feedback_no"
                         android:textOn="@string/feedback_yes"
                         android:textSize="18sp"
-                        android:theme="@style/AppTheme.Button" />
+                        android:theme="@style/AppTheme.Button"
+                        android:nextFocusDown="@id/systemSimplicityRatingBar" />
 
                     <TextView
                         android:id="@+id/fq4txt"
@@ -295,7 +299,8 @@
                         android:numStars="5"
                         android:rating="1"
                         android:stepSize="0.5"
-                        android:theme="@style/AppTheme.RatingBar" />
+                        android:theme="@style/AppTheme.RatingBar"
+                        android:nextFocusDown="@id/fq6EditText" />
                 </RelativeLayout>
             </android.support.v7.widget.CardView>
 
@@ -336,7 +341,11 @@
                         android:layout_marginBottom="@dimen/activity_vertical_margin"
                         android:layout_marginEnd="@dimen/activity_vertical_margin"
                         android:layout_marginTop="@dimen/activity_vertical_margin"
+                        android:allowUndo="true"
                         android:hint="@string/feedback_editTextHint"
+                        android:imeOptions="actionDone"
+                        android:inputType="textCapSentences|textAutoCorrect|textMultiLine"
+                        android:nextFocusDown="@id/fq7btn"
                         android:textSize="18sp" />
                 </RelativeLayout>
             </android.support.v7.widget.CardView>
@@ -381,7 +390,8 @@
                         android:textOff="@string/feedback_no"
                         android:textOn="@string/feedback_yes"
                         android:textSize="18sp"
-                        android:theme="@style/AppTheme.Button" />
+                        android:theme="@style/AppTheme.Button"
+                        android:nextFocusDown="@id/prisecConcernRatingBar" />
 
                     <TextView
                         android:id="@+id/fq7txt"
@@ -470,7 +480,8 @@
                         android:numStars="5"
                         android:rating="1"
                         android:stepSize="0.5"
-                        android:theme="@style/AppTheme.RatingBar" />
+                        android:theme="@style/AppTheme.RatingBar"
+                        android:nextFocusDown="@id/currentOSRatingBar"/>
                 </RelativeLayout>
             </android.support.v7.widget.CardView>
 
@@ -544,7 +555,8 @@
                         android:numStars="5"
                         android:rating="1"
                         android:stepSize="0.5"
-                        android:theme="@style/AppTheme.RatingBar" />
+                        android:theme="@style/AppTheme.RatingBar"
+                        android:nextFocusUp="@menu/menu_feedback" />
                 </RelativeLayout>
             </android.support.v7.widget.CardView>
         </RelativeLayout>

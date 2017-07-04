@@ -41,6 +41,7 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.Calendar;
 import java.util.List;
+import java.util.UUID;
 
 import edu.umbc.ebiquity.mithril.BuildConfig;
 import edu.umbc.ebiquity.mithril.MithrilAC;
@@ -241,7 +242,16 @@ public class CoreActivity extends AppCompatActivity
         initHouseKeepingTasks();
         initViews();
         defaultFragmentLoad();
+        createUniqueId();
     }
+
+    private void createUniqueId() {
+        if(!sharedPreferences.contains(MithrilAC.getRandomUserId())) {
+            editor.putString(MithrilAC.getRandomUserId(), UUID.randomUUID().toString());
+            editor.apply();
+        }
+    }
+
 
     @Override
     protected void onPause() {
