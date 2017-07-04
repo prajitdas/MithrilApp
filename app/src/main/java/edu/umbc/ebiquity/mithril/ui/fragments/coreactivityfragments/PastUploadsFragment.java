@@ -68,7 +68,7 @@ public class PastUploadsFragment extends Fragment {
         SQLiteDatabase mithrilDB = MithrilDBHelper.getHelper(view.getContext()).getWritableDatabase();
         uploads = MithrilDBHelper.getHelper(view.getContext()).findAllUploads(mithrilDB);
 
-    // Set the adapter
+        // Set the adapter
         if (view instanceof RecyclerView) {
             Context context = view.getContext();
             RecyclerView recyclerView = (RecyclerView) view;

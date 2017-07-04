@@ -86,13 +86,17 @@ public class CoreActivity extends AppCompatActivity
         PolicyRuleFragment.OnListFragmentInteractionListener,
         PastUploadsFragment.OnListFragmentInteractionListener {
     private static final String WHAT_CORE_ACTIVITY_FRAGMENT_ARE_WE_IN = "coreActivityFragment";
+    private static final String WHAT_POLICIES_FRAGMENT = "policies";
+    private static final String WHAT_FEEDBACK_FRAGMENT = "feedback";
+    private static final String WHAT_USER_APPS_FRAGMENT = "user apps";
+    private static final String WHAT_PERMISSIONS_FRAGMENT = "permissions";
+    private static final String WHAT_PAST_UPLOADS_FRAGMENT = "past uploads";
     private final File downloadsDirectory = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS);
     private final String agreementFile = MithrilAC.getFlierPdfFileName();
     private Boolean exit = false;
     private SQLiteDatabase mithrilDB;
     private SharedPreferences sharedPreferences;
     private SharedPreferences.Editor editor;
-
     private DrawerLayout drawer;
     private ActionBarDrawerToggle toggle;
     private NavigationView navigationView;
@@ -103,13 +107,13 @@ public class CoreActivity extends AppCompatActivity
      * We are not launching the BCast receivers, Services and Content provider lists yet
      */
     private boolean isUserAppsListEmpty() {
-        if(MithrilDBHelper.getHelper(this).findAllApps(mithrilDB).size() > 0)
+        if (MithrilDBHelper.getHelper(this).findAllApps(mithrilDB).size() > 0)
             return false;
         return true;
     }
 
     private boolean isPolicyListEmpty() {
-        if(MithrilDBHelper.getHelper(this).findAllPolicies(mithrilDB).size() > 0)
+        if (MithrilDBHelper.getHelper(this).findAllPolicies(mithrilDB).size() > 0)
             return false;
         return true;
     }
@@ -119,7 +123,7 @@ public class CoreActivity extends AppCompatActivity
     }
 
     private boolean isPastUploadsListEmpty() {
-        if(MithrilDBHelper.getHelper(this).findAllUploads(mithrilDB).size() > 0)
+        if (MithrilDBHelper.getHelper(this).findAllUploads(mithrilDB).size() > 0)
             return false;
         return true;
     }
@@ -143,12 +147,6 @@ public class CoreActivity extends AppCompatActivity
     private boolean isBroadcastReceiverListEmpty() {
         return true;
     }
-
-    private static final String WHAT_POLICIES_FRAGMENT = "policies";
-    private static final String WHAT_FEEDBACK_FRAGMENT = "feedback";
-    private static final String WHAT_USER_APPS_FRAGMENT = "user apps";
-    private static final String WHAT_PERMISSIONS_FRAGMENT = "permissions";
-    private static final String WHAT_PAST_UPLOADS_FRAGMENT = "past uploads";
 
     @Override
     public boolean onNavigationItemSelected(@NonNull MenuItem item) {
@@ -185,7 +183,7 @@ public class CoreActivity extends AppCompatActivity
             else
                 loadPermissionsFragment();
         } else if (id == R.id.nav_uploads) {
-            if(isPastUploadsListEmpty())
+            if (isPastUploadsListEmpty())
                 loadNothingHereFragment(WHAT_PAST_UPLOADS_FRAGMENT);
             else
                 loadPastUploadsFragment();
