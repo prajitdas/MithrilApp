@@ -21,10 +21,10 @@
             android:id="@+id/nav_perm"
             android:icon="@drawable/security"
             android:title="@string/permissions" />
-        <!--<item-->
-        <!--android:id="@+id/nav_usage"-->
-        <!--android:icon="@drawable/poll"-->
-        <!--android:title="@string/usage_stats" />-->
+        <item
+            android:id="@+id/nav_uploads"
+            android:icon="@drawable/history"
+            android:title="@string/see_older_feedback_btn" />
     </group>
     <item android:title="@string/more_options">
         <menu>
@@ -46,7 +46,7 @@
             <item
                 android:id="@+id/nav_reset_app"
                 android:checkable="true"
-                android:icon="@drawable/reload"
+                android:icon="@drawable/backup_restore"
                 android:title="@string/reset_app" />
         </menu>
     </item>

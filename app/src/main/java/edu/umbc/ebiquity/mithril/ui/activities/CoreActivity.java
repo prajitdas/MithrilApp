@@ -46,6 +46,7 @@ import edu.umbc.ebiquity.mithril.BuildConfig;
 import edu.umbc.ebiquity.mithril.MithrilAC;
 import edu.umbc.ebiquity.mithril.R;
 import edu.umbc.ebiquity.mithril.data.dbhelpers.MithrilDBHelper;
+import edu.umbc.ebiquity.mithril.data.model.Upload;
 import edu.umbc.ebiquity.mithril.data.model.components.AppData;
 import edu.umbc.ebiquity.mithril.data.model.components.BCastRecvData;
 import edu.umbc.ebiquity.mithril.data.model.components.ContentProvData;
@@ -59,6 +60,7 @@ import edu.umbc.ebiquity.mithril.ui.fragments.coreactivityfragments.AboutFragmen
 import edu.umbc.ebiquity.mithril.ui.fragments.coreactivityfragments.AppsFragment;
 import edu.umbc.ebiquity.mithril.ui.fragments.coreactivityfragments.BroadcastReceiversFragment;
 import edu.umbc.ebiquity.mithril.ui.fragments.coreactivityfragments.ContentProvidersFragment;
+import edu.umbc.ebiquity.mithril.ui.fragments.coreactivityfragments.PastUploadsFragment;
 import edu.umbc.ebiquity.mithril.ui.fragments.coreactivityfragments.PermissionsFragment;
 import edu.umbc.ebiquity.mithril.ui.fragments.coreactivityfragments.PolicyRuleFragment;
 import edu.umbc.ebiquity.mithril.ui.fragments.coreactivityfragments.ServicesFragment;
@@ -81,7 +83,8 @@ public class CoreActivity extends AppCompatActivity
         EmptyFragment.OnFragmentInteractionListener,
         NothingHereFragment.OnFragmentInteractionListener,
         UsageStatsFragment.OnListFragmentInteractionListener,
-        PolicyRuleFragment.OnListFragmentInteractionListener {
+        PolicyRuleFragment.OnListFragmentInteractionListener,
+        PastUploadsFragment.OnListFragmentInteractionListener {
     private static final String WHAT_CORE_ACTIVITY_FRAGMENT_ARE_WE_IN = "coreActivityFragment";
     private final File downloadsDirectory = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS);
     private final String agreementFile = MithrilAC.getFlierPdfFileName();
@@ -165,6 +168,8 @@ public class CoreActivity extends AppCompatActivity
                 loadNothingHereFragment("permissions");
             else
                 loadPermissionsFragment();
+        } else if (id == R.id.nav_uploads) {
+            loadPastUploadsFragment();
 //        } else if (id == R.id.nav_usage) {
 //            loadUsageStatsFragment();
         } else if (id == R.id.nav_exit) {
@@ -581,6 +586,17 @@ public class CoreActivity extends AppCompatActivity
                 .commit();
     }
 
+    private void loadPastUploadsFragment() {
+        Bundle data = new Bundle();
+
+        PastUploadsFragment aPastUploadsFragment = new PastUploadsFragment();
+        aPastUploadsFragment.setArguments(data);
+
+        FragmentManager fragmentManager = getFragmentManager();
+        fragmentManager.beginTransaction().replace(R.id.container_core, aPastUploadsFragment)
+                .commit();
+    }
+
     private void launchInstanceCreationActivity() {
         editor.putBoolean(MithrilAC.getPrefKeyLocaInstancesCreated(), false);
         editor.putBoolean(MithrilAC.getPrefKeyPresInstancesCreated(), false);
@@ -718,5 +734,10 @@ public class CoreActivity extends AppCompatActivity
     @Override
     public void onListFragmentInteraction(PolicyRule item) {
         //TODO do something when the policies data is requested
+    }
+
+    @Override
+    public void onListFragmentInteraction(Upload item) {
+        //TODO do something when the uploads data is requested
     }
 }
