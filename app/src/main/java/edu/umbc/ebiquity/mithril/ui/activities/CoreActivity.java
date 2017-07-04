@@ -268,7 +268,7 @@ public class CoreActivity extends AppCompatActivity
         // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
         if (id == R.id.capture_exec_settings) {
-            if(!PermissionHelper.needsUpdateAppOpsPermission(this))
+            if (!PermissionHelper.needsUpdateAppOpsPermission(this))
                 executeRules();
             else {
                 PermissionHelper.toast(this, "Mithril does not seem to have UPDATE_APP_OPS_STATS permission. Cannot execute any rules. Sorry!", Toast.LENGTH_SHORT);

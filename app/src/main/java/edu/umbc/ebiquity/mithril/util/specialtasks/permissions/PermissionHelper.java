@@ -186,6 +186,6 @@ public class PermissionHelper {
     }
 
     private static boolean hasUpdateAppOpsPermissionA(Context context) {
-        return PermissionHelper.isPermissionGranted(context,"android.permission.UPDATE_APP_OPS_STATS") == PackageManager.PERMISSION_GRANTED;
+        return PermissionHelper.isPermissionGranted(context, "android.permission.UPDATE_APP_OPS_STATS") == PackageManager.PERMISSION_GRANTED;
     }
 }
