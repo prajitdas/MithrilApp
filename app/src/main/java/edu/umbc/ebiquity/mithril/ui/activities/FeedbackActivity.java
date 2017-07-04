@@ -20,9 +20,9 @@ public class FeedbackActivity extends AppCompatActivity {
     private ToggleButton feedbackQ2ToggleBtn;
     private ToggleButton feedbackQ3ToggleBtn;
     private ToggleButton feedbackQ4ToggleBtn;
-    private ToggleButton feedbackQ5ToggleBtn;
-    private RatingBar feedbackQ6SimplicityRatingBar;
-    private EditText feedbackQ7EditText;
+    private RatingBar feedbackQ5SimplicityRatingBar;
+    private EditText feedbackQ6EditText;
+    private ToggleButton feedbackQ7ToggleBtn;
     private RatingBar feedbackQ8ConcernRatingBar;
     private RatingBar feedbackQ9OSRatingBar;
 
@@ -38,9 +38,9 @@ public class FeedbackActivity extends AppCompatActivity {
         feedbackQ2ToggleBtn = (ToggleButton) findViewById(R.id.fq2btn);
         feedbackQ3ToggleBtn = (ToggleButton) findViewById(R.id.fq3btn);
         feedbackQ4ToggleBtn = (ToggleButton) findViewById(R.id.fq4btn);
-        feedbackQ5ToggleBtn = (ToggleButton) findViewById(R.id.fq5btn);
-        feedbackQ6SimplicityRatingBar = (RatingBar) findViewById(R.id.systemSimplicityRatingBar);
-        feedbackQ7EditText = (EditText) findViewById(R.id.fq7EditText);
+        feedbackQ5SimplicityRatingBar = (RatingBar) findViewById(R.id.systemSimplicityRatingBar);
+        feedbackQ6EditText = (EditText) findViewById(R.id.fq6EditText);
+        feedbackQ7ToggleBtn = (ToggleButton) findViewById(R.id.fq7btn);
         feedbackQ8ConcernRatingBar = (RatingBar) findViewById(R.id.prisecConcernRatingBar);
         feedbackQ9OSRatingBar = (RatingBar) findViewById(R.id.currentOSRatingBar);
 
@@ -79,7 +79,7 @@ public class FeedbackActivity extends AppCompatActivity {
                     buttonView.setChecked(true);
                 else
                     buttonView.setChecked(false);
-                addToDataUploader(buttonView.isChecked(), MithrilAC.getFeedbackQuestion3());
+                addToDataUploader(buttonView.isChecked(), MithrilAC.getFeedbackQuestion4());
             }
         });
 
@@ -90,29 +90,18 @@ public class FeedbackActivity extends AppCompatActivity {
                     buttonView.setChecked(true);
                 else
                     buttonView.setChecked(false);
-                addToDataUploader(buttonView.isChecked(), MithrilAC.getFeedbackQuestion4());
-            }
-        });
-
-        feedbackQ5ToggleBtn.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-            @Override
-            public void onCheckedChanged(CompoundButton buttonView, boolean b) {
-                if (!buttonView.isChecked())
-                    buttonView.setChecked(true);
-                else
-                    buttonView.setChecked(false);
                 addToDataUploader(buttonView.isChecked(), MithrilAC.getFeedbackQuestion5());
             }
         });
 
-        feedbackQ6SimplicityRatingBar.setOnRatingBarChangeListener(new RatingBar.OnRatingBarChangeListener() {
+        feedbackQ5SimplicityRatingBar.setOnRatingBarChangeListener(new RatingBar.OnRatingBarChangeListener() {
             @Override
             public void onRatingChanged(RatingBar ratingBar, float v, boolean b) {
                 addToDataUploader(v, MithrilAC.getFeedbackQuestion6());
             }
         });
 
-        feedbackQ7EditText.addTextChangedListener(new TextWatcher() {
+        feedbackQ6EditText.addTextChangedListener(new TextWatcher() {
             @Override
             public void afterTextChanged(Editable editable) {
 
@@ -126,6 +115,17 @@ public class FeedbackActivity extends AppCompatActivity {
             @Override
             public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
                 addToDataUploader(charSequence.toString(), MithrilAC.getFeedbackQuestion7());
+            }
+        });
+
+        feedbackQ7ToggleBtn.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean b) {
+                if (!buttonView.isChecked())
+                    buttonView.setChecked(true);
+                else
+                    buttonView.setChecked(false);
+                addToDataUploader(buttonView.isChecked(), MithrilAC.getFeedbackQuestion3());
             }
         });
 

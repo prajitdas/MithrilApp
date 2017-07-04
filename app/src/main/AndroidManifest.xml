@@ -104,8 +104,7 @@
         android:icon="@mipmap/ic_launcher"
         android:label="@string/short_app_name"
         android:supportsRtl="true"
-        android:theme="@style/AppTheme.NoActionBar"
-        tools:replace="android:label">
+        android:theme="@style/AppTheme.NoActionBar">
 
         <!-- Google Places API Key -->
         <meta-data
