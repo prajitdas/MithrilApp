@@ -86,6 +86,7 @@ public class ViolationRecyclerViewAdapter extends RecyclerView.Adapter<Violation
                     //Context not changing using the same context
                     MithrilDBHelper.getHelper(view.getContext()).updatePolicyRule(mithrilDB, policyRule.getCtxId(), policyRule);
                 }
+                mValues.get(position).setTvfv(true);
                 MithrilDBHelper.getHelper(view.getContext()).updateViolation(mithrilDB, mValues.get(position));
                 if (null != mListener) {
                     // Notify the active callbacks interface (the activity, if the
@@ -108,6 +109,7 @@ public class ViolationRecyclerViewAdapter extends RecyclerView.Adapter<Violation
                     //Context not changing using the same context
                     MithrilDBHelper.getHelper(view.getContext()).updatePolicyRule(mithrilDB, policyRule.getCtxId(), policyRule);
                 }
+                mValues.get(position).setTvfv(false);
                 MithrilDBHelper.getHelper(view.getContext()).updateViolation(mithrilDB, mValues.get(position));
                 if (null != mListener) {
                     // Notify the active callbacks interface (the activity, if the

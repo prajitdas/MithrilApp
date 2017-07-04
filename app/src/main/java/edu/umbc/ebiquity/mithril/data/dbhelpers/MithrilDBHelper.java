@@ -1525,6 +1525,51 @@ public class MithrilDBHelper extends SQLiteOpenHelper {
     }
 
     /**
+     * Finds apps which has violations
+     *
+     * @param db database instance
+     * @return all violations
+     */
+    public List<Violation> findViolationsForApps(SQLiteDatabase db) {
+        // Select Violation Query
+        String selectQuery = "SELECT DISTINCT " +
+                getViolationsLogTableName() + "." + VIOLATIONAPPID + ", " +
+                getViolationsLogTableName() + "." + VIOLATIONAPPSTR +
+                " FROM " + getViolationsLogTableName() +
+                " WHERE " + getViolationsLogTableName() + "." + VIOLATIONASKED + " = 0 " +
+                " ORDER BY " + getViolationsLogTableName() + "." + VIOLATIONDETECTTIME + " DESC  " +
+                ";";
+
+        List<Violation> violations = new ArrayList<>();
+        Cursor cursor = db.rawQuery(selectQuery, null);
+        try {
+            if (cursor.moveToFirst()) {
+                do {
+                    Violation tempViolation = new Violation(
+                            cursor.getInt(0),
+                            cursor.getInt(1),
+                            cursor.getInt(2),
+                            cursor.getString(3),
+                            cursor.getString(4),
+                            cursor.getInt(5) == 1,
+                            cursor.getInt(6) == 1,
+                            new Timestamp(cursor.getLong(7)),
+                            setCtxtIds(cursor.getString(8)),
+                            cursor.getInt(9),
+                            new Resource(cursor.getInt(2))
+                    );
+                    violations.add(tempViolation);
+                } while (cursor.moveToNext());
+            }
+        } catch (SQLException e) {
+            throw new SQLException("Could not find " + e);
+        } finally {
+            cursor.close();
+        }
+        return violations;
+    }
+
+    /**
      * Finds all violations
      *
      * @param db database instance

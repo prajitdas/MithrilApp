@@ -69,12 +69,14 @@ public class RuleChangeActivity extends AppCompatActivity implements RuleChangeF
                 if (!ruleAdded) {
                     currentViolation.setAsked(true);
                     currentViolation.setFeedbackTime(new Timestamp(System.currentTimeMillis()));
+                    currentViolation.setTvfv(false);
                     MithrilDBHelper.getHelper(v.getContext()).updateViolation(mithrilDB, currentViolation);
                     finish();
                 } else {
                     if (rulesdeleted) {
                         currentViolation.setAsked(true);
                         currentViolation.setFeedbackTime(new Timestamp(System.currentTimeMillis()));
+                        currentViolation.setTvfv(false);
                         MithrilDBHelper.getHelper(v.getContext()).updateViolation(mithrilDB, currentViolation);
                         finish();
                     } else

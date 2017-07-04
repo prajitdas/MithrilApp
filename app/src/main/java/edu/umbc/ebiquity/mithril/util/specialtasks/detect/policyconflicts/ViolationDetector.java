@@ -105,11 +105,11 @@ public class ViolationDetector {
         List<Long> currentContextList = new ArrayList<>(currentContextSet);
         Collections.sort(currentContextList);
 
-        int newPolicyId = MithrilDBHelper.getHelper(context).findMaxPolicyId(mithrilDB) + 1;
         // Let's test the rules we found
         for (Resource currentResource : resources) {
             Action actionForCurrentOperationAndApp = Action.DENY;
             int lastOperationPerformed = currentResource.getOp();
+            int newPolicyId = MithrilDBHelper.getHelper(context).findMaxPolicyId(mithrilDB) + 1;
             List<PolicyRule> policyRules = MithrilDBHelper.getHelper(context).findAllPoliciesForAppWhenPerformingOp(mithrilDB, currentPackageName, lastOperationPerformed);
             if (policyRules.size() > 0) {
                 long currentPolicyId = -1;
@@ -171,21 +171,20 @@ public class ViolationDetector {
                                  * deemed true by user feedback. They may also be explicitly defined as false.
                                  * In which case we need to change the policy... We ask for more feedback.
                                  */
-                                handleViolation(context,
+                                handleViolation(
+                                        context,
                                         mithrilDB,
-                                        new Violation(
-                                                rule.getPolicyId(),
-                                                rule.getAppId(),
-                                                rule.getOp(),
-                                                rule.getAppStr(),
-                                                rule.getOpStr(),
-                                                false,
-                                                true,
-                                                new Timestamp(System.currentTimeMillis()),
-                                                policyContextList,
-                                                1,
-                                                currentResource
-                                        )
+                                        rule.getPolicyId(),
+                                        rule.getAppId(),
+                                        rule.getOp(),
+                                        rule.getAppStr(),
+                                        rule.getOpStr(),
+                                        false,
+                                        true,
+                                        new Timestamp(System.currentTimeMillis()),
+                                        policyContextList,
+                                        1,
+                                        currentResource
                                 );
                             } else {
                                 if (actionForCurrentOperationAndApp.equals(Action.DENY))
@@ -216,21 +215,20 @@ public class ViolationDetector {
                                  * deemed true by user feedback. They may also be explicitly defined as false.
                                  * In which case we need to change the policy... We ask for more feedback.
                                  */
-                                handleViolation(context,
+                                handleViolation(
+                                        context,
                                         mithrilDB,
-                                        new Violation(
-                                                rule.getPolicyId(),
-                                                rule.getAppId(),
-                                                rule.getOp(),
-                                                rule.getAppStr(),
-                                                rule.getOpStr(),
-                                                false,
-                                                true,
-                                                new Timestamp(System.currentTimeMillis()),
-                                                policyContextList,
-                                                1,
-                                                currentResource
-                                        )
+                                        rule.getPolicyId(),
+                                        rule.getAppId(),
+                                        rule.getOp(),
+                                        rule.getAppStr(),
+                                        rule.getOpStr(),
+                                        false,
+                                        true,
+                                        new Timestamp(System.currentTimeMillis()),
+                                        policyContextList,
+                                        1,
+                                        currentResource
                                 );
                             } else {
                                 if (actionForCurrentOperationAndApp.equals(Action.DENY))
@@ -276,21 +274,20 @@ public class ViolationDetector {
 //                                    Action.ALLOW,
 //                                    mithrilDB, context)
 //                            );
-                            handleViolation(context,
+                            handleViolation(
+                                    context,
                                     mithrilDB,
-                                    new Violation(
-                                            newPolicyId,
-                                            appId,
-                                            lastOperationPerformed,
-                                            app.getAppName(), // the name returned is not correct we have find the method that fixes that
-                                            AppOpsManager.opToName(lastOperationPerformed),
-                                            false,
-                                            true,
-                                            new Timestamp(System.currentTimeMillis()),
-                                            lowestContextList,
-                                            1,
-                                            currentResource
-                                    )
+                                    newPolicyId,
+                                    appId,
+                                    lastOperationPerformed,
+                                    app.getAppName(), // the name returned is not correct we have find the method that fixes that
+                                    AppOpsManager.opToName(lastOperationPerformed),
+                                    false,
+                                    true,
+                                    new Timestamp(System.currentTimeMillis()),
+                                    lowestContextList,
+                                    1,
+                                    currentResource
                             );
                         }
                     }
@@ -346,34 +343,46 @@ public class ViolationDetector {
                             Action.ALLOW,
                             mithrilDB, context)
                     );
-                    handleViolation(context,
+                    handleViolation(
+                            context,
                             mithrilDB,
-                            new Violation(
-                                    newPolicyId,
-                                    appId,
-                                    lastOperationPerformed,
-                                    app.getAppName(), // the name returned is not correct we have find the method that fixes that
-                                    AppOpsManager.opToName(lastOperationPerformed), // Manifest.permission.ACCESS_FINE_LOCATION,
-                                    false,
-                                    true,
-                                    new Timestamp(System.currentTimeMillis()),
-                                    lowestContextList,
-                                    1,
-                                    currentResource
-                            )
+                            newPolicyId,
+                            appId,
+                            lastOperationPerformed,
+                            app.getAppName(), // the name returned is not correct we have find the method that fixes that
+                            AppOpsManager.opToName(lastOperationPerformed), // Manifest.permission.ACCESS_FINE_LOCATION,
+                            false,
+                            true,
+                            new Timestamp(System.currentTimeMillis()),
+                            lowestContextList,
+                            1,
+                            currentResource
                     );
                 }
             }
         }
     }
 
-    private static void handleViolation(Context context, SQLiteDatabase mithrilDB, Violation violation) {
+    private static void handleViolation(Context context,
+                                        SQLiteDatabase mithrilDB,
+                                        long polId,
+                                        long appId,
+                                        int op,
+                                        String appname,
+                                        String operationName,
+                                        boolean asked,
+                                        boolean tvfv,
+                                        Timestamp detectTime,
+                                        List<Long> contextList,
+                                        int violationCount,
+                                        Resource resource) {
+        Violation violation = new Violation(polId, appId, op, appname, operationName, asked, tvfv, detectTime, contextList, violationCount, resource);
         try {
             MithrilDBHelper.getHelper(context).addViolation(mithrilDB, violation);
         } catch (SQLException e) {
             Log.d(MithrilAC.getDebugTag(), violation.toString());
             Violation foundViolation = MithrilDBHelper.getHelper(context).findViolationByPolicyAppOpPolId(mithrilDB, violation.getAppId(), violation.getOprId(), violation.getPolicyId());
-            foundViolation.setCount(violation.getCount() + 1);
+            foundViolation.setCount(foundViolation.getCount() + 1);
             MithrilDBHelper.getHelper(context).updateViolation(mithrilDB, foundViolation);
         }
     }
