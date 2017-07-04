@@ -69,6 +69,15 @@ public class MithrilAC extends Application {
      * Private variables start
      */
     private static final String FLIER_PDF_FILE_NAME = "irbconsent.pdf";
+    private static final String FEEDBACK_QUESTION_1 = "fq1";
+    private static final String FEEDBACK_QUESTION_2 = "fq2";
+    private static final String FEEDBACK_QUESTION_3 = "fq3";
+    private static final String FEEDBACK_QUESTION_4 = "fq4";
+    private static final String FEEDBACK_QUESTION_5 = "fq5";
+    private static final String FEEDBACK_QUESTION_6 = "fq6";
+    private static final String FEEDBACK_QUESTION_7 = "fq7";
+    private static final String FEEDBACK_QUESTION_8 = "fq8";
+    private static final String FEEDBACK_QUESTION_9 = "fq9";
     private static final String PERMISSION_PROTECTION_LEVEL_UNKNOWN = "unknown";
     private static final String PERMISSION_PROTECTION_LEVEL_NORMAL = "normal";
     private static final String PERMISSION_PROTECTION_LEVEL_DANGEROUS = "dangerous";
@@ -600,6 +609,42 @@ public class MithrilAC extends Application {
             "('android.permission.ACCESS_VR_MANAGER', 'signature', '" + NO_PERMISSION_GROUP.first + "', '" + PERMISSION_FLAG_NONE + "'),\n" +
             "('android.permission.UPDATE_LOCK_TASK_PACKAGES', 'signature|setup', '" + NO_PERMISSION_GROUP.first + "', '" + PERMISSION_FLAG_NONE + "'),\n" +
             "('android.permission.SUBSTITUTE_NOTIFICATION_APP_NAME', 'signature|privileged', '" + NO_PERMISSION_GROUP.first + "', '" + PERMISSION_FLAG_NONE + "');\n";
+
+    public static String getFeedbackQuestion1() {
+        return FEEDBACK_QUESTION_1;
+    }
+
+    public static String getFeedbackQuestion2() {
+        return FEEDBACK_QUESTION_2;
+    }
+
+    public static String getFeedbackQuestion3() {
+        return FEEDBACK_QUESTION_3;
+    }
+
+    public static String getFeedbackQuestion4() {
+        return FEEDBACK_QUESTION_4;
+    }
+
+    public static String getFeedbackQuestion5() {
+        return FEEDBACK_QUESTION_5;
+    }
+
+    public static String getFeedbackQuestion6() {
+        return FEEDBACK_QUESTION_6;
+    }
+
+    public static String getFeedbackQuestion7() {
+        return FEEDBACK_QUESTION_7;
+    }
+
+    public static String getFeedbackQuestion8() {
+        return FEEDBACK_QUESTION_8;
+    }
+
+    public static String getFeedbackQuestion9() {
+        return FEEDBACK_QUESTION_9;
+    }
 
     public static String[] getContextArrayTypes() {
         return CONTEXT_ARRAY_TYPES;
