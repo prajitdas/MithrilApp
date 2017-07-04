@@ -23,17 +23,17 @@
         android:layout_above="@+id/olderFeedbackBtn"
         android:background="@color/colorPrimaryText" />
 
-    <android.support.design.widget.FloatingActionButton
-        android:id="@+id/fab_feedback"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_above="@+id/olderFeedbackBtn"
-        android:layout_alignParentEnd="true"
-        android:layout_margin="@dimen/fab_margin"
-        android:elevation="@dimen/fab_margin"
-        android:theme="@style/AppTheme.FAB"
-        app:fabSize="normal"
-        app:srcCompat="@drawable/cloud_upload" />
+    <!--<android.support.design.widget.FloatingActionButton-->
+        <!--android:id="@+id/fab_feedback"-->
+        <!--android:layout_width="wrap_content"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:layout_above="@+id/olderFeedbackBtn"-->
+        <!--android:layout_alignParentEnd="true"-->
+        <!--android:layout_margin="@dimen/fab_margin"-->
+        <!--android:elevation="@dimen/fab_margin"-->
+        <!--android:theme="@style/AppTheme.FAB"-->
+        <!--app:fabSize="normal"-->
+        <!--app:srcCompat="@drawable/cloud_upload" />-->
 
     <ScrollView
         android:layout_width="match_parent"
@@ -43,7 +43,29 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent">
             <android.support.v7.widget.CardView
+                android:id="@+id/cardViewHeader1"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/activity_vertical_margin"
+                android:layout_marginBottom="@dimen/activity_vertical_margin"
+                app:cardCornerRadius="@dimen/card_view_corner_radius" >
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentStart="true"
+                    android:layout_alignParentTop="true"
+                    android:layout_marginBottom="@dimen/activity_vertical_margin"
+                    android:layout_marginStart="@dimen/activity_vertical_margin"
+                    android:layout_marginTop="@dimen/activity_vertical_margin"
+                    android:fontFamily="josephine-sans"
+                    android:text="@string/feedback_header_policy_related"
+                    android:textStyle="bold"
+                    android:textColor="@android:color/holo_red_light"
+                    android:textSize="22sp" />
+            </android.support.v7.widget.CardView>
+            <android.support.v7.widget.CardView
                 android:id="@+id/cardViewfq1"
+                android:layout_below="@+id/cardViewHeader1"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/activity_vertical_margin"
@@ -60,9 +82,10 @@
                         android:layout_alignParentTop="true"
                         android:layout_marginBottom="@dimen/activity_vertical_margin"
                         android:layout_marginTop="@dimen/activity_vertical_margin"
+                        android:layout_marginEnd="@dimen/activity_vertical_margin"
                         android:textOn="@string/feedback_yes"
                         android:textOff="@string/feedback_no"
-                        android:textSize="20sp"
+                        android:textSize="18sp"
                         android:theme="@style/AppTheme.Button" />
 
                     <TextView
@@ -70,13 +93,15 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_toLeftOf="@id/fq1btn"
+                        android:layout_alignParentStart="true"
+                        android:layout_alignParentTop="true"
                         android:layout_marginBottom="@dimen/activity_vertical_margin"
-                        android:layout_marginStart="15dp"
-                        android:layout_marginTop="20dp"
+                        android:layout_marginStart="@dimen/activity_vertical_margin"
+                        android:layout_marginTop="@dimen/activity_vertical_margin"
                         android:fontFamily="josephine-sans"
                         android:text="@string/feedback_q1"
                         android:textColor="@color/colorPrimaryText"
-                        android:textSize="20sp" />
+                        android:textSize="18sp" />
                 </RelativeLayout>
             </android.support.v7.widget.CardView>
             <android.support.v7.widget.CardView
@@ -98,9 +123,10 @@
                         android:layout_alignParentTop="true"
                         android:layout_marginBottom="@dimen/activity_vertical_margin"
                         android:layout_marginTop="@dimen/activity_vertical_margin"
+                        android:layout_marginEnd="@dimen/activity_vertical_margin"
                         android:textOn="@string/feedback_yes"
                         android:textOff="@string/feedback_no"
-                        android:textSize="20sp"
+                        android:textSize="18sp"
                         android:theme="@style/AppTheme.Button" />
 
                     <TextView
@@ -108,13 +134,15 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_toLeftOf="@id/fq2btn"
+                        android:layout_alignParentStart="true"
+                        android:layout_alignParentTop="true"
                         android:layout_marginBottom="@dimen/activity_vertical_margin"
-                        android:layout_marginStart="15dp"
-                        android:layout_marginTop="20dp"
+                        android:layout_marginStart="@dimen/activity_vertical_margin"
+                        android:layout_marginTop="@dimen/activity_vertical_margin"
                         android:fontFamily="josephine-sans"
                         android:text="@string/feedback_q2"
                         android:textColor="@color/colorPrimaryText"
-                        android:textSize="20sp" />
+                        android:textSize="18sp" />
                 </RelativeLayout>
             </android.support.v7.widget.CardView>
             <android.support.v7.widget.CardView
@@ -136,9 +164,10 @@
                         android:layout_alignParentTop="true"
                         android:layout_marginBottom="@dimen/activity_vertical_margin"
                         android:layout_marginTop="@dimen/activity_vertical_margin"
+                        android:layout_marginEnd="@dimen/activity_vertical_margin"
                         android:textOn="@string/feedback_yes"
                         android:textOff="@string/feedback_no"
-                        android:textSize="20sp"
+                        android:textSize="18sp"
                         android:theme="@style/AppTheme.Button" />
 
                     <TextView
@@ -146,18 +175,42 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_toLeftOf="@id/fq3btn"
+                        android:layout_alignParentStart="true"
+                        android:layout_alignParentTop="true"
                         android:layout_marginBottom="@dimen/activity_vertical_margin"
-                        android:layout_marginStart="15dp"
-                        android:layout_marginTop="20dp"
+                        android:layout_marginStart="@dimen/activity_vertical_margin"
+                        android:layout_marginTop="@dimen/activity_vertical_margin"
                         android:fontFamily="josephine-sans"
                         android:text="@string/feedback_q3"
                         android:textColor="@color/colorPrimaryText"
-                        android:textSize="20sp" />
+                        android:textSize="18sp" />
                 </RelativeLayout>
             </android.support.v7.widget.CardView>
             <android.support.v7.widget.CardView
-                android:id="@+id/cardViewfq4"
+                android:id="@+id/cardViewHeader2"
                 android:layout_below="@+id/cardViewfq3"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/activity_vertical_margin"
+                android:layout_marginBottom="@dimen/activity_vertical_margin"
+                app:cardCornerRadius="@dimen/card_view_corner_radius" >
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentStart="true"
+                    android:layout_alignParentTop="true"
+                    android:layout_marginBottom="@dimen/activity_vertical_margin"
+                    android:layout_marginStart="@dimen/activity_vertical_margin"
+                    android:layout_marginTop="@dimen/activity_vertical_margin"
+                    android:fontFamily="josephine-sans"
+                    android:text="@string/feedback_header_system_related"
+                    android:textStyle="bold"
+                    android:textColor="@color/colorPrimaryDark"
+                    android:textSize="22sp" />
+            </android.support.v7.widget.CardView>
+            <android.support.v7.widget.CardView
+                android:id="@+id/cardViewfq4"
+                android:layout_below="@+id/cardViewHeader2"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/activity_vertical_margin"
@@ -174,9 +227,10 @@
                         android:layout_alignParentTop="true"
                         android:layout_marginBottom="@dimen/activity_vertical_margin"
                         android:layout_marginTop="@dimen/activity_vertical_margin"
+                        android:layout_marginEnd="@dimen/activity_vertical_margin"
                         android:textOn="@string/feedback_yes"
                         android:textOff="@string/feedback_no"
-                        android:textSize="20sp"
+                        android:textSize="18sp"
                         android:theme="@style/AppTheme.Button" />
 
                     <TextView
@@ -184,13 +238,15 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_toLeftOf="@id/fq4btn"
+                        android:layout_alignParentStart="true"
+                        android:layout_alignParentTop="true"
                         android:layout_marginBottom="@dimen/activity_vertical_margin"
-                        android:layout_marginStart="15dp"
-                        android:layout_marginTop="20dp"
+                        android:layout_marginStart="@dimen/activity_vertical_margin"
+                        android:layout_marginTop="@dimen/activity_vertical_margin"
                         android:fontFamily="josephine-sans"
                         android:text="@string/feedback_q4"
                         android:textColor="@color/colorPrimaryText"
-                        android:textSize="20sp" />
+                        android:textSize="18sp" />
                 </RelativeLayout>
             </android.support.v7.widget.CardView>
             <android.support.v7.widget.CardView
@@ -212,9 +268,10 @@
                         android:layout_alignParentTop="true"
                         android:layout_marginBottom="@dimen/activity_vertical_margin"
                         android:layout_marginTop="@dimen/activity_vertical_margin"
+                        android:layout_marginEnd="@dimen/activity_vertical_margin"
                         android:textOn="@string/feedback_yes"
                         android:textOff="@string/feedback_no"
-                        android:textSize="20sp"
+                        android:textSize="18sp"
                         android:theme="@style/AppTheme.Button" />
 
                     <TextView
@@ -222,13 +279,15 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_toLeftOf="@id/fq5btn"
+                        android:layout_alignParentStart="true"
+                        android:layout_alignParentTop="true"
                         android:layout_marginBottom="@dimen/activity_vertical_margin"
-                        android:layout_marginStart="15dp"
-                        android:layout_marginTop="20dp"
+                        android:layout_marginStart="@dimen/activity_vertical_margin"
+                        android:layout_marginTop="@dimen/activity_vertical_margin"
                         android:fontFamily="josephine-sans"
                         android:text="@string/feedback_q5"
                         android:textColor="@color/colorPrimaryText"
-                        android:textSize="20sp" />
+                        android:textSize="18sp" />
                 </RelativeLayout>
             </android.support.v7.widget.CardView>
             <android.support.v7.widget.CardView
@@ -242,31 +301,33 @@
                 <RelativeLayout
                     android:layout_width="match_parent"
                     android:layout_height="match_parent">
-                    <ToggleButton
-                        android:id="@+id/fq6btn"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_alignParentEnd="true"
-                        android:layout_alignParentTop="true"
-                        android:layout_marginBottom="@dimen/activity_vertical_margin"
-                        android:layout_marginTop="@dimen/activity_vertical_margin"
-                        android:textOn="@string/feedback_yes"
-                        android:textOff="@string/feedback_no"
-                        android:textSize="20sp"
-                        android:theme="@style/AppTheme.Button" />
-
                     <TextView
                         android:id="@+id/fq6txt"
-                        android:layout_width="wrap_content"
+                        android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_toLeftOf="@id/fq6btn"
+                        android:layout_alignParentEnd="true"
+                        android:layout_alignParentStart="true"
+                        android:layout_alignParentTop="true"
                         android:layout_marginBottom="@dimen/activity_vertical_margin"
-                        android:layout_marginStart="15dp"
-                        android:layout_marginTop="20dp"
+                        android:layout_marginStart="@dimen/activity_vertical_margin"
+                        android:layout_marginTop="@dimen/activity_vertical_margin"
                         android:fontFamily="josephine-sans"
                         android:text="@string/feedback_q6"
                         android:textColor="@color/colorPrimaryText"
-                        android:textSize="20sp" />
+                        android:textSize="18sp" />
+                    <RatingBar
+                        android:id="@+id/systemSimplicityRatingBar"
+                        android:rating="0"
+                        android:stepSize="0.5"
+                        android:numStars="5"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_below="@+id/fq6txt"
+                        android:layout_centerHorizontal="true"
+                        android:layout_marginBottom="@dimen/activity_vertical_margin"
+                        android:layout_marginTop="@dimen/activity_vertical_margin"
+                        android:layout_marginEnd="@dimen/activity_vertical_margin"
+                        android:theme="@style/AppTheme.RatingBar" />
                 </RelativeLayout>
             </android.support.v7.widget.CardView>
             <android.support.v7.widget.CardView
@@ -280,31 +341,186 @@
                 <RelativeLayout
                     android:layout_width="match_parent"
                     android:layout_height="match_parent">
-                    <ToggleButton
-                        android:id="@+id/fq7btn"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_alignParentEnd="true"
-                        android:layout_alignParentTop="true"
-                        android:layout_marginBottom="@dimen/activity_vertical_margin"
-                        android:layout_marginTop="@dimen/activity_vertical_margin"
-                        android:textOn="@string/feedback_yes"
-                        android:textOff="@string/feedback_no"
-                        android:textSize="20sp"
-                        android:theme="@style/AppTheme.Button" />
-
                     <TextView
                         android:id="@+id/fq7txt"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_toLeftOf="@id/fq7btn"
+                        android:layout_alignParentStart="true"
+                        android:layout_alignParentEnd="true"
+                        android:layout_alignParentTop="true"
                         android:layout_marginBottom="@dimen/activity_vertical_margin"
-                        android:layout_marginStart="15dp"
-                        android:layout_marginTop="20dp"
+                        android:layout_marginStart="@dimen/activity_vertical_margin"
+                        android:layout_marginTop="@dimen/activity_vertical_margin"
                         android:fontFamily="josephine-sans"
                         android:text="@string/feedback_q7"
                         android:textColor="@color/colorPrimaryText"
-                        android:textSize="20sp" />
+                        android:textSize="18sp" />
+                    <EditText
+                        android:id="@+id/fq7btn"
+                        android:layout_below="@+id/fq7txt"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentBottom="true"
+                        android:layout_marginBottom="@dimen/activity_vertical_margin"
+                        android:layout_marginTop="@dimen/activity_vertical_margin"
+                        android:layout_marginEnd="@dimen/activity_vertical_margin"
+                        android:textSize="18sp" />
+                </RelativeLayout>
+            </android.support.v7.widget.CardView>
+            <android.support.v7.widget.CardView
+                android:id="@+id/cardViewHeader3"
+                android:layout_below="@+id/cardViewfq7"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/activity_vertical_margin"
+                android:layout_marginBottom="@dimen/activity_vertical_margin"
+                app:cardCornerRadius="@dimen/card_view_corner_radius" >
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentStart="true"
+                    android:layout_alignParentTop="true"
+                    android:layout_marginBottom="@dimen/activity_vertical_margin"
+                    android:layout_marginStart="@dimen/activity_vertical_margin"
+                    android:layout_marginTop="@dimen/activity_vertical_margin"
+                    android:fontFamily="josephine-sans"
+                    android:text="@string/feedback_header_user_related"
+                    android:textStyle="bold"
+                    android:textColor="@color/green"
+                    android:textSize="22sp" />
+            </android.support.v7.widget.CardView>
+            <android.support.v7.widget.CardView
+                android:id="@+id/cardViewfq8"
+                android:layout_below="@+id/cardViewHeader3"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/activity_vertical_margin"
+                android:layout_marginBottom="@dimen/activity_vertical_margin"
+                app:cardCornerRadius="@dimen/card_view_corner_radius" >
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent">
+                    <TextView
+                        android:id="@+id/fq8txt"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentEnd="true"
+                        android:layout_alignParentStart="true"
+                        android:layout_alignParentTop="true"
+                        android:layout_marginBottom="@dimen/activity_vertical_margin"
+                        android:layout_marginStart="@dimen/activity_vertical_margin"
+                        android:layout_marginTop="@dimen/activity_vertical_margin"
+                        android:fontFamily="josephine-sans"
+                        android:text="@string/feedback_q8"
+                        android:textColor="@color/colorPrimaryText"
+                        android:textSize="18sp" />
+
+                    <RatingBar
+                        android:id="@+id/prisecConcernRatingBar"
+                        android:rating="0"
+                        android:stepSize="0.5"
+                        android:numStars="5"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_below="@+id/fq8txt"
+                        android:layout_centerHorizontal="true"
+                        android:layout_marginBottom="@dimen/activity_vertical_margin"
+                        android:layout_marginTop="@dimen/activity_vertical_margin"
+                        android:layout_marginEnd="@dimen/activity_vertical_margin"
+                        android:theme="@style/AppTheme.RatingBar" />
+                </RelativeLayout>
+            </android.support.v7.widget.CardView>
+            <android.support.v7.widget.CardView
+                android:id="@+id/cardViewfq9"
+                android:layout_below="@+id/cardViewfq8"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/activity_vertical_margin"
+                android:layout_marginBottom="@dimen/activity_vertical_margin"
+                app:cardCornerRadius="@dimen/card_view_corner_radius" >
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent">
+                    <TextView
+                        android:id="@+id/fq9txt"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentEnd="true"
+                        android:layout_alignParentStart="true"
+                        android:layout_alignParentTop="true"
+                        android:layout_marginBottom="@dimen/activity_vertical_margin"
+                        android:layout_marginStart="@dimen/activity_vertical_margin"
+                        android:layout_marginTop="@dimen/activity_vertical_margin"
+                        android:fontFamily="josephine-sans"
+                        android:text="@string/feedback_q9"
+                        android:textColor="@color/colorPrimaryText"
+                        android:textSize="18sp" />
+                    <RatingBar
+                        android:id="@+id/currentOSRatingBar"
+                        android:rating="0"
+                        android:stepSize="0.5"
+                        android:numStars="5"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_below="@+id/fq9txt"
+                        android:layout_centerHorizontal="true"
+                        android:layout_marginBottom="@dimen/activity_vertical_margin"
+                        android:layout_marginTop="@dimen/activity_vertical_margin"
+                        android:layout_marginEnd="@dimen/activity_vertical_margin"
+                        android:theme="@style/AppTheme.RatingBar" />
+                </RelativeLayout>
+            </android.support.v7.widget.CardView>
+            <android.support.v7.widget.CardView
+                android:id="@+id/cardViewfq10"
+                android:layout_below="@+id/cardViewfq9"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/activity_vertical_margin"
+                android:layout_marginBottom="@dimen/activity_vertical_margin"
+                app:cardCornerRadius="@dimen/card_view_corner_radius" >
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent">
+                    <TextView
+                        android:id="@+id/fq10txt"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentEnd="true"
+                        android:layout_alignParentStart="true"
+                        android:layout_alignParentTop="true"
+                        android:layout_marginBottom="@dimen/activity_vertical_margin"
+                        android:layout_marginStart="@dimen/activity_vertical_margin"
+                        android:layout_marginTop="@dimen/activity_vertical_margin"
+                        android:fontFamily="josephine-sans"
+                        android:text="@string/feedback_q10"
+                        android:textColor="@color/colorPrimaryText"
+                        android:textSize="18sp" />
+                    <Spinner
+                        android:id="@+id/spinnerGender"
+                        android:layout_below="@+id/fq10txt"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentBottom="true"
+                        android:layout_alignParentStart="true"
+                        android:layout_marginBottom="@dimen/activity_vertical_margin"
+                        android:layout_marginTop="@dimen/activity_vertical_margin"
+                        android:layout_marginEnd="@dimen/activity_vertical_margin"
+                        android:textOn="@string/feedback_yes"
+                        android:textOff="@string/feedback_no"
+                        android:textSize="18sp" />
+                    <Spinner
+                        android:id="@+id/spinnerAgeRange"
+                        android:layout_below="@+id/fq10txt"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentBottom="true"
+                        android:layout_alignParentStart="true"
+                        android:layout_marginBottom="@dimen/activity_vertical_margin"
+                        android:layout_marginTop="@dimen/activity_vertical_margin"
+                        android:layout_marginEnd="@dimen/activity_vertical_margin"
+                        android:textOn="@string/feedback_yes"
+                        android:textOff="@string/feedback_no"
+                        android:textSize="18sp" />
                 </RelativeLayout>
             </android.support.v7.widget.CardView>
         </RelativeLayout>

@@ -13,18 +13,25 @@
         <item name="android:progressBackgroundTint">@color/colorPrimaryLight</item>
     </style>
 
-    <style name="AppTheme.Button" parent="Widget.AppCompat.Button.Colored">
+    <style name="AppTheme.Button" parent="Theme.AppCompat.Light">
         <item name="android:colorButtonNormal">@color/colorButton</item>
+        <item name="colorControlHighlight">@color/colorPrimary</item>
         <item name="android:textColor">@color/colorPrimaryIcon</item>
         <item name="android:textSize">18sp</item>
         <item name="android:elevation">@dimen/fab_margin</item>
     </style>
 
     <style name="AppTheme.FAB" parent="Widget.Design.FloatingActionButton">
-        <item name="backgroundTint">@color/colorPrimary</item>
+        <item name="colorAccent">@color/colorPrimary</item>
         <item name="rippleColor">@color/colorPrimaryLight</item>
         <item name="fabSize">normal</item>
         <item name="elevation">@dimen/fab_margin</item>
+    </style>
+
+    <style name="AppTheme.RatingBar" parent="Widget.AppCompat.RatingBar">
+        <item name="android:colorControlNormal">@color/colorPrimaryLight</item>
+        <item name="android:colorControlActivated">@color/colorPrimaryDark</item>
+
     </style>
 
     <style name="AppTheme.NoActionBar">
