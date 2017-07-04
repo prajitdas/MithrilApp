@@ -280,27 +280,6 @@
     <string name="title_activity_setup_timefences">Timefences setup&#8230;</string>
     <string name="title_activity_feedback">Request for feedback</string>
 
-
-    <string-array name="freq_array">
-        <!--<item>Second</item>-->
-        <!--<item>Minute</item>-->
-        <!--<item>Hourly</item>-->
-        <item>Daily</item>
-        <item>Monday</item>
-        <item>Tuesday</item>
-        <item>Wednesday</item>
-        <item>Thursday</item>
-        <item>Friday</item>
-        <item>Saturday</item>
-        <item>Sunday</item>
-        <item>Weekdays</item>
-        <item>Weekends</item>
-        <item>Monthly</item>
-        <!--<item>Quarterly</item>-->
-        <item>Yearly</item>
-        <!--<item>Never</item>-->
-    </string-array>
-
     <string name="title_bottom_navigation_location">Location</string>
     <string name="text_instance_creation_location">location context</string>
     <string name="tooltip_location">Add locations that are vital to your policies, like home and work locations</string>
@@ -371,7 +350,7 @@
     <string name="feedback_header_user_related">User related</string>
     <string name="feedback_q8">On a scale of 0 to 5 how concerned are you about mobile privacy and security?</string>
     <string name="feedback_q9">On a scale of 0 to 5 how would you rate the complexity of mobile OS privacy and security controls?</string>
-    <string name="feedback_q10">Could you kindly share your gender and age for some demographic study?</string>
+    <string name="feedback_q10">Could you kindly share your gender and age to allow us understand the demography of survey responders?</string>
     <string name="feedback_yes">Yes</string>
     <string name="feedback_no">No</string>
     <string name="feedback_good">5 - simple</string>
@@ -392,24 +371,7 @@
 
     <string name="gender_prompt">Choose your gender</string>
 
-    <string-array name="gender_arrays">
-        <item>Female</item>
-        <item>Male</item>
-        <item>Don\'t wanna answer</item>
-    </string-array>
-
     <string name="age_prompt">Choose your age range</string>
-
-    <string-array name="age_arrays">
-        <item>18 - 29+</item>
-        <item>30 - 39+</item>
-        <item>40 - 49+</item>
-        <item>50 - 59+</item>
-        <item>60 - 69+</item>
-        <item>70 - 79+</item>
-        <item>80 - 89+</item>
-        <item>90 - 99+</item>
-    </string-array>
 
     <!-- Manage applications, version string displayed in app snippet -->
     <string name="version_text">version <xliff:g policyId="version_num">%1$s</xliff:g></string>

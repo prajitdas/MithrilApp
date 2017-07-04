@@ -1,22 +1,23 @@
 package edu.umbc.ebiquity.mithril.ui.activities;
 
 import android.os.Bundle;
-import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.View;
-import android.widget.Toast;
+import android.widget.RatingBar;
+import android.widget.ToggleButton;
 
-import edu.umbc.ebiquity.mithril.MithrilAC;
 import edu.umbc.ebiquity.mithril.R;
-import edu.umbc.ebiquity.mithril.util.specialtasks.permissions.PermissionHelper;
 
 public class FeedbackActivity extends AppCompatActivity {
-    private FloatingActionButton fab;
+    private ToggleButton feedbackQ1ToggleBtn;
+    private ToggleButton feedbackQ2ToggleBtn;
+    private ToggleButton feedbackQ3ToggleBtn;
+    private ToggleButton feedbackQ4ToggleBtn;
+    private ToggleButton feedbackQ5ToggleBtn;
+    private RatingBar feedbackQ6RatingBar;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

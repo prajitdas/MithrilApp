@@ -1,5 +1,39 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <string-array name="gender_arrays">
+        <item>Female</item>
+        <item>Male</item>
+        <item>Don\'t wanna answer</item>
+    </string-array>
+    <string-array name="age_arrays">
+        <item>18 - 29+</item>
+        <item>30 - 39+</item>
+        <item>40 - 49+</item>
+        <item>50 - 59+</item>
+        <item>60 - 69+</item>
+        <item>70 - 79+</item>
+        <item>80 - 89+</item>
+        <item>90 - 99+</item>
+    </string-array>
+    <string-array name="freq_array">
+        <!--<item>Second</item>-->
+        <!--<item>Minute</item>-->
+        <!--<item>Hourly</item>-->
+        <item>Daily</item>
+        <item>Monday</item>
+        <item>Tuesday</item>
+        <item>Wednesday</item>
+        <item>Thursday</item>
+        <item>Friday</item>
+        <item>Saturday</item>
+        <item>Sunday</item>
+        <item>Weekdays</item>
+        <item>Weekends</item>
+        <item>Monthly</item>
+        <!--<item>Quarterly</item>-->
+        <item>Yearly</item>
+        <!--<item>Never</item>-->
+    </string-array>
     <!-- Display options for UsageStats class -->
     <string-array name="usage_stats_display_order_types">
         <item>Usage detectedAtTime</item>
