@@ -94,6 +94,13 @@ public class FeedbackActivity extends AppCompatActivity {
         feedbackQ9OSRatingBar = (RatingBar) findViewById(R.id.currentOSRatingBar);
     }
 
+    private void initData() {
+        
+        feedbackJsonResponse = new String();
+        // Get a RequestQueue
+        queue = VolleySingleton.getInstance(this).getRequestQueue();
+    }
+
     private void setOnClickListeners() {
         feedbackQ1ToggleBtn.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
@@ -200,12 +207,6 @@ public class FeedbackActivity extends AppCompatActivity {
 
     private void addToDataUploader(float rating, String questionId) {
         feedbackDataMap.put(questionId, String.valueOf(rating));
-    }
-
-    private void initData() {
-        feedbackJsonResponse = new String();
-        // Get a RequestQueue
-        queue = VolleySingleton.getInstance(this).getRequestQueue();
     }
 
     private void startUpload() {
