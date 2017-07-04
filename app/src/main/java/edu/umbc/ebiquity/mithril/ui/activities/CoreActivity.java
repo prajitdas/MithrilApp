@@ -746,5 +746,9 @@ public class CoreActivity extends AppCompatActivity
     @Override
     public void onListFragmentInteraction(Upload item) {
         //TODO do something when the uploads data is requested
+        Intent intent = new Intent(this, DisplayUploadDataActivity.class);
+        intent.putExtra(MithrilAC.getFeedbackQuestionDataKey(), item.getUploadedData());
+        intent.putExtra(MithrilAC.getFeedbackQuestionDataTimeKey(), item.toString());
+        startActivity(intent);
     }
 }

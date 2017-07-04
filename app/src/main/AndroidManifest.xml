@@ -283,5 +283,8 @@
         <service
             android:name=".util.services.ExecuteRulesIntentService"
             android:exported="false" />
+
+        <activity android:name=".ui.activities.DisplayUploadDataActivity"></activity>
     </application>
+
 </manifest>

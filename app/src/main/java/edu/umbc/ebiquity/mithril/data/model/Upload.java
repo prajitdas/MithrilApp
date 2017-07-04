@@ -14,7 +14,7 @@ public class Upload {
 
     @Override
     public String toString() {
-        return "Upload time: " + MithrilAC.getTimeText(true, uploadTime);
+        return "Upload time: " + MithrilAC.getTimeText(true, getUploadTime());
     }
 
     public Timestamp getUploadTime() {
