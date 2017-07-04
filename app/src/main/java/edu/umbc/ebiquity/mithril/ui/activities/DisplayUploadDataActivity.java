@@ -1,13 +1,12 @@
 package edu.umbc.ebiquity.mithril.ui.activities;
 
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.widget.TextView;
 
 import edu.umbc.ebiquity.mithril.MithrilAC;
 import edu.umbc.ebiquity.mithril.R;
-import edu.umbc.ebiquity.mithril.data.dbhelpers.MithrilDBHelper;
 
 public class DisplayUploadDataActivity extends AppCompatActivity {
 

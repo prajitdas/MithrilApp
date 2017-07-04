@@ -103,11 +103,15 @@ public class CoreActivity extends AppCompatActivity
      * We are not launching the BCast receivers, Services and Content provider lists yet
      */
     private boolean isUserAppsListEmpty() {
-        return false;
+        if(MithrilDBHelper.getHelper(this).findAllApps(mithrilDB).size() > 0)
+            return false;
+        return true;
     }
 
     private boolean isPolicyListEmpty() {
-        return false;
+        if(MithrilDBHelper.getHelper(this).findAllPolicies(mithrilDB).size() > 0)
+            return false;
+        return true;
     }
 
     private boolean isPermissionsListEmpty() {
@@ -115,6 +119,8 @@ public class CoreActivity extends AppCompatActivity
     }
 
     private boolean isPastUploadsListEmpty() {
+        if(MithrilDBHelper.getHelper(this).findAllUploads(mithrilDB).size() > 0)
+            return false;
         return true;
     }
 
@@ -138,6 +144,12 @@ public class CoreActivity extends AppCompatActivity
         return true;
     }
 
+    private static final String WHAT_POLICIES_FRAGMENT = "policies";
+    private static final String WHAT_FEEDBACK_FRAGMENT = "feedback";
+    private static final String WHAT_USER_APPS_FRAGMENT = "user apps";
+    private static final String WHAT_PERMISSIONS_FRAGMENT = "permissions";
+    private static final String WHAT_PAST_UPLOADS_FRAGMENT = "past uploads";
+
     @Override
     public boolean onNavigationItemSelected(@NonNull MenuItem item) {
         // Handle navigation view item clicks here.
@@ -154,27 +166,27 @@ public class CoreActivity extends AppCompatActivity
                 loadViolationsFragment();
         } else if (id == R.id.nav_policies) {
             if (isPolicyListEmpty())
-                loadNothingHereFragment("policies");
+                loadNothingHereFragment(WHAT_POLICIES_FRAGMENT);
             else
                 loadPolicyRuleFragment();
         } else if (id == R.id.nav_feedback) {
             if (isPolicyListEmpty())
-                loadNothingHereFragment("feedback");
+                loadNothingHereFragment(WHAT_FEEDBACK_FRAGMENT);
             else
                 launchFeedbackActivity();
         } else if (id == R.id.nav_apps) {
             if (isUserAppsListEmpty())
-                loadNothingHereFragment("user apps");
+                loadNothingHereFragment(WHAT_USER_APPS_FRAGMENT);
             else
                 loadUserAppsFragment();
         } else if (id == R.id.nav_perm) {
             if (isPermissionsListEmpty())
-                loadNothingHereFragment("permissions");
+                loadNothingHereFragment(WHAT_PERMISSIONS_FRAGMENT);
             else
                 loadPermissionsFragment();
         } else if (id == R.id.nav_uploads) {
             if(isPastUploadsListEmpty())
-                loadNothingHereFragment("past uploads");
+                loadNothingHereFragment(WHAT_PAST_UPLOADS_FRAGMENT);
             else
                 loadPastUploadsFragment();
         } else if (id == R.id.nav_exit) {

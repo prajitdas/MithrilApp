@@ -8,25 +8,9 @@
     tools:context=".ui.activities.FeedbackActivity"
     tools:showIn="@layout/activity_feedback">
 
-    <Button
-        android:id="@+id/olderFeedbackBtn"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:background="@color/colorButton"
-        android:text="@string/see_older_feedback_btn"
-        android:theme="@style/AppTheme.Button" />
-
-    <View
-        android:layout_width="match_parent"
-        android:layout_height="1dp"
-        android:layout_above="@+id/olderFeedbackBtn"
-        android:background="@color/colorPrimaryText" />
-
     <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_above="@+id/olderFeedbackBtn">
+        android:layout_height="match_parent" >
 
         <RelativeLayout
             android:layout_width="match_parent"

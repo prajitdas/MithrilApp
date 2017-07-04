@@ -2,6 +2,7 @@ package edu.umbc.ebiquity.mithril.ui.fragments.coreactivityfragments;
 
 import android.app.Fragment;
 import android.content.Context;
+import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
@@ -14,6 +15,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import edu.umbc.ebiquity.mithril.R;
+import edu.umbc.ebiquity.mithril.data.dbhelpers.MithrilDBHelper;
 import edu.umbc.ebiquity.mithril.data.model.Upload;
 import edu.umbc.ebiquity.mithril.ui.adapters.PastUploadsRecyclerViewAdapter;
 
@@ -63,7 +65,10 @@ public class PastUploadsFragment extends Fragment {
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_uploads_list, container, false);
 
-        // Set the adapter
+        SQLiteDatabase mithrilDB = MithrilDBHelper.getHelper(view.getContext()).getWritableDatabase();
+        uploads = MithrilDBHelper.getHelper(view.getContext()).findAllUploads(mithrilDB);
+
+    // Set the adapter
         if (view instanceof RecyclerView) {
             Context context = view.getContext();
             RecyclerView recyclerView = (RecyclerView) view;

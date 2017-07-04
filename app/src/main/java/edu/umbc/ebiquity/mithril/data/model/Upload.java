@@ -12,6 +12,11 @@ public class Upload {
     private Timestamp uploadTime;
     private String uploadedData;
 
+    public Upload(Timestamp uploadTime, String uploadedData) {
+        setUploadTime(uploadTime);
+        setUploadedData(uploadedData);
+    }
+
     @Override
     public String toString() {
         return "Upload time: " + MithrilAC.getTimeText(true, getUploadTime());

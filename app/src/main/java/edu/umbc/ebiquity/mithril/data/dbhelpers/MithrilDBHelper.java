@@ -32,6 +32,7 @@ import java.util.Map;
 import edu.umbc.ebiquity.mithril.BuildConfig;
 import edu.umbc.ebiquity.mithril.MithrilAC;
 import edu.umbc.ebiquity.mithril.R;
+import edu.umbc.ebiquity.mithril.data.model.Upload;
 import edu.umbc.ebiquity.mithril.data.model.components.AppData;
 import edu.umbc.ebiquity.mithril.data.model.components.PermData;
 import edu.umbc.ebiquity.mithril.data.model.rules.Action;
@@ -61,6 +62,7 @@ public class MithrilDBHelper extends SQLiteOpenHelper {
     private final static String CONTEXT_LOG_TABLE_NAME = "contextlog";
     private final static String ACTION_LOG_TABLE_NAME = "actionlog";
     private final static String VIOLATIONS_LOG_TABLE_NAME = "violationlog";
+    private final static String UPLOADS_TABLE_NAME = "uploads";
     private final static String APP_PERM_VIEW_NAME = "apppermview";
     /**
      * Following are table creation statements
@@ -360,6 +362,24 @@ public class MithrilDBHelper extends SQLiteOpenHelper {
             "FOREIGN KEY(" + ACTIONAPPID + ") REFERENCES " + getAppsTableName() + "(" + APPID + ") ON DELETE CASCADE, " +
             "FOREIGN KEY(" + ACTIONCTXID + ") REFERENCES " + getContextTableName() + "(" + CONTEXTID + "));";
     /**
+     * -- Table 9: uploads
+     * CREATE TABLE uploads (
+     * id int NOT NULL AUTO_INCREMENT,
+     * time timestamp NOT NULL DEFAULT " + Long.toString(System.currentTimeMillis()) + ",
+     * data text NOT NULL,
+     * CONSTRAINT uploads_pk PRIMARY KEY (id)
+     * ) COMMENT 'Table showing uploads';
+     * <p>
+     * ----------------------------------------------------------------------------------------------------------------
+     */
+    private final static String UPLOADID = "id"; // ID of an action taken
+    private final static String UPLOADTIME = "time"; // Time when action was taken
+    private final static String UPLOADDATA = "data"; // Action that was taken for a certain scenario
+    private final static String CREATE_UPLOAD_TABLE = "CREATE TABLE " + getUploadsTableName() + " (" +
+            UPLOADID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
+            UPLOADTIME + " timestamp NOT NULL DEFAULT " + Long.toString(System.currentTimeMillis()) + ", " +
+            UPLOADDATA + " TEXT NOT NULL);";
+    /**
      * -- views
      * -- View: apppermview
      * CREATE VIEW `mithril.db`.apppermview AS
@@ -466,6 +486,10 @@ public class MithrilDBHelper extends SQLiteOpenHelper {
         return APP_PERM_TABLE_NAME;
     }
 
+    public static String getUploadsTableName() {
+        return UPLOADS_TABLE_NAME;
+    }
+
     private static String getAppPermViewName() {
         return APP_PERM_VIEW_NAME;
     }
@@ -498,6 +522,7 @@ public class MithrilDBHelper extends SQLiteOpenHelper {
             db.execSQL(CREATE_CONTEXT_LOG_TABLE);
             db.execSQL(CREATE_VIOLATIONS_LOG_TABLE);
             db.execSQL(CREATE_ACTION_LOG_TABLE);
+            db.execSQL(CREATE_UPLOAD_TABLE);
 
             db.execSQL(CREATE_APP_PERM_VIEW);
         } catch (SQLException sqlException) {
@@ -537,6 +562,7 @@ public class MithrilDBHelper extends SQLiteOpenHelper {
     private void dropDBObjects(SQLiteDatabase db) {
         db.execSQL("DROP VIEW IF EXISTS " + getAppPermViewName());
 
+        db.execSQL("DROP TABLE IF EXISTS " + getUploadsTableName());
         db.execSQL("DROP TABLE IF EXISTS " + getActionLogTableName());
         db.execSQL("DROP TABLE IF EXISTS " + getViolationsLogTableName());
         db.execSQL("DROP TABLE IF EXISTS " + getContextLogTableName());
@@ -1567,6 +1593,37 @@ public class MithrilDBHelper extends SQLiteOpenHelper {
             cursor.close();
         }
         return violations;
+    }
+
+    /**
+     * Finds all violations
+     *
+     * @param db database instance
+     * @return all violations
+     */
+    public List<Upload> findAllUploads(SQLiteDatabase db) {
+        // Select Violation Query
+        String selectQuery = "SELECT " +
+                getUploadsTableName() + "." + UPLOADTIME + ", " +
+                getUploadsTableName() + "." + UPLOADDATA +
+                " FROM " + getUploadsTableName() +
+                " ORDER BY " + getUploadsTableName() + "." + UPLOADTIME + " DESC  " +
+                ";";
+
+        List<Upload> uploads = new ArrayList<>();
+        Cursor cursor = db.rawQuery(selectQuery, null);
+        try {
+            if (cursor.moveToFirst()) {
+                do {
+                    uploads.add(new Upload(new Timestamp(cursor.getLong(0)), cursor.getString(1)));
+                } while (cursor.moveToNext());
+            }
+        } catch (SQLException e) {
+            throw new SQLException("Could not find " + e);
+        } finally {
+            cursor.close();
+        }
+        return uploads;
     }
 
     /**
