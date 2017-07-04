@@ -1,6 +1,6 @@
 package edu.umbc.ebiquity.mithril;
 
-/*
+/**
  * Created on May 27, 2016
  *
  * @author: Prajit Kumar Das
@@ -29,6 +29,6 @@ public class ExampleInstrumentationTest {
         // Context of the app under test.
         Context appContext = InstrumentationRegistry.getTargetContext();
 
-        assertEquals("com.prajitdas.umbciot", appContext.getPackageName());
+        assertEquals("edu.umbc.ebiquity.mithril", appContext.getPackageName());
     }
 }
