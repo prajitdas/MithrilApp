@@ -58,10 +58,10 @@ public class SemanticUserContextRecyclerViewAdapter extends RecyclerView.Adapter
         try {
             final ArrayAdapter<String> arrayAdapter = new ArrayAdapter<>(
                     view.getContext(),
-//                    android.R.layout.simple_spinner_dropdown_item,
-                    R.layout.spinner_item,
+                    android.R.layout.simple_spinner_item,
                     getContexts(holder.mItem.getType())
             );
+            arrayAdapter.setDropDownViewResource(R.layout.spinner_item);
             arrayAdapter.getPosition(semanticUserContexts.get(position).getLabel());
 
             holder.mSpinner.setAdapter(arrayAdapter);

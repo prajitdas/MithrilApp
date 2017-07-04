@@ -31,9 +31,11 @@
     <style name="AppTheme.RatingBar" parent="Widget.AppCompat.RatingBar">
         <item name="android:colorControlNormal">@android:color/holo_red_light</item>
         <item name="android:colorControlActivated">@color/red</item>
-
     </style>
 
+    <style name="AppTheme.Spinner" parent="Widget.AppCompat.Light.DropDownItem.Spinner">
+
+    </style>
     <style name="AppTheme.NoActionBar">
         <item name="windowActionBar">false</item>
         <item name="windowNoTitle">true</item>
