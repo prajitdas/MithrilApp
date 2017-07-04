@@ -54,6 +54,11 @@ public class FeedbackActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
         setContentView(R.layout.activity_feedback);
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar_feedback);
@@ -95,7 +100,6 @@ public class FeedbackActivity extends AppCompatActivity {
     }
 
     private void initData() {
-        
         feedbackJsonResponse = new String();
         // Get a RequestQueue
         queue = VolleySingleton.getInstance(this).getRequestQueue();
@@ -104,51 +108,51 @@ public class FeedbackActivity extends AppCompatActivity {
     private void setOnClickListeners() {
         feedbackQ1ToggleBtn.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
-            public void onCheckedChanged(CompoundButton buttonView, boolean b) {
-                if (!buttonView.isChecked())
-                    buttonView.setChecked(true);
-                else
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                if (buttonView.isChecked())
                     buttonView.setChecked(false);
+                else
+                    buttonView.setChecked(true);
                 addToDataUploader(buttonView.isChecked(), MithrilAC.getFeedbackQuestion1());
             }
         });
 
         feedbackQ2ToggleBtn.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
-            public void onCheckedChanged(CompoundButton buttonView, boolean b) {
-                if (!buttonView.isChecked())
-                    buttonView.setChecked(true);
-                else
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                if (buttonView.isChecked())
                     buttonView.setChecked(false);
+                else
+                    buttonView.setChecked(true);
                 addToDataUploader(buttonView.isChecked(), MithrilAC.getFeedbackQuestion2());
             }
         });
 
         feedbackQ3ToggleBtn.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
-            public void onCheckedChanged(CompoundButton buttonView, boolean b) {
-                if (!buttonView.isChecked())
-                    buttonView.setChecked(true);
-                else
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                if (buttonView.isChecked())
                     buttonView.setChecked(false);
+                else
+                    buttonView.setChecked(true);
                 addToDataUploader(buttonView.isChecked(), MithrilAC.getFeedbackQuestion4());
             }
         });
 
         feedbackQ4ToggleBtn.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
-            public void onCheckedChanged(CompoundButton buttonView, boolean b) {
-                if (!buttonView.isChecked())
-                    buttonView.setChecked(true);
-                else
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                if (buttonView.isChecked())
                     buttonView.setChecked(false);
+                else
+                    buttonView.setChecked(true);
                 addToDataUploader(buttonView.isChecked(), MithrilAC.getFeedbackQuestion5());
             }
         });
 
         feedbackQ5SimplicityRatingBar.setOnRatingBarChangeListener(new RatingBar.OnRatingBarChangeListener() {
             @Override
-            public void onRatingChanged(RatingBar ratingBar, float v, boolean b) {
+            public void onRatingChanged(RatingBar ratingBar, float v, boolean isChecked) {
                 addToDataUploader(v, MithrilAC.getFeedbackQuestion6());
             }
         });
@@ -168,7 +172,7 @@ public class FeedbackActivity extends AppCompatActivity {
 
         feedbackQ7ToggleBtn.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
-            public void onCheckedChanged(CompoundButton buttonView, boolean b) {
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                 if (!buttonView.isChecked())
                     buttonView.setChecked(true);
                 else
@@ -179,14 +183,14 @@ public class FeedbackActivity extends AppCompatActivity {
 
         feedbackQ8ConcernRatingBar.setOnRatingBarChangeListener(new RatingBar.OnRatingBarChangeListener() {
             @Override
-            public void onRatingChanged(RatingBar ratingBar, float v, boolean b) {
+            public void onRatingChanged(RatingBar ratingBar, float v, boolean isChecked) {
                 addToDataUploader(v, MithrilAC.getFeedbackQuestion8());
             }
         });
 
         feedbackQ9OSRatingBar.setOnRatingBarChangeListener(new RatingBar.OnRatingBarChangeListener() {
             @Override
-            public void onRatingChanged(RatingBar ratingBar, float v, boolean b) {
+            public void onRatingChanged(RatingBar ratingBar, float v, boolean isChecked) {
                 addToDataUploader(v, MithrilAC.getFeedbackQuestion9());
             }
         });
@@ -243,6 +247,8 @@ public class FeedbackActivity extends AppCompatActivity {
                     }
                 }
         );
+        // Add a request (in this example, called jsObjRequest) to your RequestQueue.
+        VolleySingleton.getInstance(this).addToRequestQueue(jsObjRequest);
     }
 
     @Override
