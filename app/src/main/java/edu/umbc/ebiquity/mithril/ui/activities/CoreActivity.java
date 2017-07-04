@@ -114,6 +114,10 @@ public class CoreActivity extends AppCompatActivity
         return false;
     }
 
+    private boolean isPastUploadsListEmpty() {
+        return true;
+    }
+
     private boolean isSystemAppsListEmpty() {
         return true;
     }
@@ -169,7 +173,10 @@ public class CoreActivity extends AppCompatActivity
             else
                 loadPermissionsFragment();
         } else if (id == R.id.nav_uploads) {
-            loadPastUploadsFragment();
+            if(isPastUploadsListEmpty())
+                loadNothingHereFragment("past uploads");
+            else
+                loadPastUploadsFragment();
         } else if (id == R.id.nav_exit) {
             PermissionHelper.quitMithril(this, MithrilAC.MITHRIL_BYE_BYE_MESSAGE);
         } else if (id == R.id.nav_about) {
