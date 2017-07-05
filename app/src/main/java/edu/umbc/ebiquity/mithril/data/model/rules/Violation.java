@@ -5,11 +5,16 @@ import android.database.sqlite.SQLiteDatabase;
 import android.os.Parcel;
 import android.os.Parcelable;
 
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
 
 import edu.umbc.ebiquity.mithril.data.dbhelpers.MithrilDBHelper;
+import edu.umbc.ebiquity.mithril.data.model.components.AppData;
 
 public class Violation implements Parcelable {
     public static final Creator<Violation> CREATOR = new Creator<Violation>() {
@@ -35,6 +40,30 @@ public class Violation implements Parcelable {
     private Timestamp feedbackTime;
     private List<Long> ctxtIds = new ArrayList<>();
     private int count;
+
+    public String uploadString() {
+        try {
+            JSONObject jsonObject = new JSONObject();
+            jsonObject.put("policyId", this.policyId);
+            jsonObject.put("appId", this.appId);
+            jsonObject.put("appStr", this.appId);
+            jsonObject.put("oprId", this.appId);
+            jsonObject.put("opStr", this.opStr);
+            jsonObject.put("asked", this.asked);
+            jsonObject.put("tvfv", this.tvfv);
+            jsonObject.put("detectTime", this.detectedAtTime);
+            jsonObject.put("feedbackTime", this.feedbackTime);
+            jsonObject.put("count", this.count);
+            JSONArray ctxtJsonArray = new JSONArray();
+            for(Long ctxtId : ctxtIds)
+                ctxtJsonArray.put(ctxtId);
+            jsonObject.put("ctxtIds", ctxtJsonArray);
+            return jsonObject.toString();
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
 
     public Violation(long policyId, long appId, int oprId, String appStr, String opStr, boolean asked, boolean tvfv, Timestamp detectedAtTime, List<Long> ctxtIds, int count, Resource resource) {
         this.policyId = policyId;

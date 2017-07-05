@@ -5,6 +5,7 @@
     <string name="violationsMenu">Violations</string>
     <string name="policyMenu">Policies</string>
     <string name="feedback">Feedback</string>
+    <string name="give_feedback">Answer feedback questions</string>
     <string name="usage_stats">App usage stats</string>
     <string name="usage_list">App usage list</string>
     <string name="permissions">Permissions</string>

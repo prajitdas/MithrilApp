@@ -3,6 +3,7 @@ package edu.umbc.ebiquity.mithril.ui.activities;
 import android.app.Activity;
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
@@ -13,9 +14,13 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputMethodManager;
+import android.widget.Button;
 import android.widget.CompoundButton;
 import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.RatingBar;
+import android.widget.ScrollView;
+import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.ToggleButton;
 
@@ -24,17 +29,23 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.sql.Timestamp;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import edu.umbc.ebiquity.mithril.MithrilAC;
 import edu.umbc.ebiquity.mithril.R;
 import edu.umbc.ebiquity.mithril.data.dbhelpers.MithrilDBHelper;
+import edu.umbc.ebiquity.mithril.data.model.Policy;
 import edu.umbc.ebiquity.mithril.data.model.Upload;
+import edu.umbc.ebiquity.mithril.data.model.components.AppData;
+import edu.umbc.ebiquity.mithril.data.model.rules.PolicyRule;
+import edu.umbc.ebiquity.mithril.data.model.rules.Violation;
 import edu.umbc.ebiquity.mithril.util.networking.JSONRequest;
 import edu.umbc.ebiquity.mithril.util.networking.VolleySingleton;
 import edu.umbc.ebiquity.mithril.util.specialtasks.permissions.PermissionHelper;
@@ -49,10 +60,15 @@ public class FeedbackActivity extends AppCompatActivity {
     private ToggleButton feedbackQ7ToggleBtn;
     private RatingBar feedbackQ8SimplicityRatingBar;
     private EditText feedbackQ9EditText;
+    private ImageButton uploadButton;
+    private Switch feedbackSwitch;
+    private ScrollView feedbackScrollview;
 
     private Map<String, String> feedbackDataUploaderMap = new HashMap<>();
     private JSONRequest feedbackJsonRequest;
     private String feedbackJsonResponse;
+
+    private SQLiteDatabase mithrilDB;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -67,58 +83,109 @@ public class FeedbackActivity extends AppCompatActivity {
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar_feedback);
         setSupportActionBar(toolbar);
 
-        initData();
         initViews();
+        initData();
         setOnClickListeners();
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
     }
 
     private void initData() {
+        mithrilDB = MithrilDBHelper.getHelper(this).getWritableDatabase();
         feedbackJsonResponse = new String();
         addToDataUploader(extractDatabaseDataToUpload(), MithrilAC.getFeedbackQuestionDataKey());
+        addToDataUploader(false, MithrilAC.getFeedbackQuestion1());
+        addToDataUploader(false, MithrilAC.getFeedbackQuestion2());
+        addToDataUploader(false, MithrilAC.getFeedbackQuestion3());
+        addToDataUploader(feedbackQ4ConcernRatingBar.getRating(), MithrilAC.getFeedbackQuestion4());
+        addToDataUploader(feedbackQ5OSRatingBar.getRating(), MithrilAC.getFeedbackQuestion5());
+        addToDataUploader(false, MithrilAC.getFeedbackQuestion6());
+        addToDataUploader(false, MithrilAC.getFeedbackQuestion7());
+        addToDataUploader(feedbackQ8SimplicityRatingBar.getRating(), MithrilAC.getFeedbackQuestion8());
+        addToDataUploader(feedbackQ9EditText.getText().toString(), MithrilAC.getFeedbackQuestion9());
     }
 
     private String extractDatabaseDataToUpload() {
-        return "";
+        try {
+            JSONObject jsonObject = new JSONObject();
+
+            List<Violation> violations = MithrilDBHelper.getHelper(this).findAllViolations(mithrilDB);
+            JSONArray violationJsonArray = new JSONArray();
+            for(Violation violation : violations)
+                violationJsonArray.put(violation.uploadString());
+            jsonObject.put("violations", violationJsonArray);
+
+            List<PolicyRule> policies = MithrilDBHelper.getHelper(this).findAllPolicies(mithrilDB);
+            JSONArray policyJsonArray = new JSONArray();
+            for(PolicyRule policyRule : policies)
+                policyJsonArray.put(policyRule.uploadString());
+            jsonObject.put("policies", policyJsonArray);
+
+            List<AppData> apps = MithrilDBHelper.getHelper(this).findAllApps(mithrilDB);
+            JSONArray appJsonArray = new JSONArray();
+            for(AppData app : apps)
+                appJsonArray.put(app.uploadString());
+            jsonObject.put("apps", appJsonArray);
+            return jsonObject.toString();
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        return null;
     }
 
     private void initViews() {
+        uploadButton = (ImageButton) findViewById(R.id.simplyUploadBtn);
+
+        feedbackSwitch = (Switch) findViewById(R.id.switchGiveFeedback);
+
+        feedbackScrollview = (ScrollView) findViewById(R.id.feedbackScrollView);
+
         feedbackQ1ToggleBtn = (ToggleButton) findViewById(R.id.fq1btn);
         feedbackQ1ToggleBtn.setChecked(false);
-        addToDataUploader(false, MithrilAC.getFeedbackQuestion1());
 
         feedbackQ2ToggleBtn = (ToggleButton) findViewById(R.id.fq2btn);
         feedbackQ2ToggleBtn.setChecked(false);
-        addToDataUploader(false, MithrilAC.getFeedbackQuestion2());
 
         feedbackQ3ToggleBtn = (ToggleButton) findViewById(R.id.fq3btn);
         feedbackQ3ToggleBtn.setChecked(false);
-        addToDataUploader(false, MithrilAC.getFeedbackQuestion3());
 
         feedbackQ4ConcernRatingBar = (RatingBar) findViewById(R.id.prisecConcernRatingBar);
-        addToDataUploader(feedbackQ4ConcernRatingBar.getRating(), MithrilAC.getFeedbackQuestion4());
 
         feedbackQ5OSRatingBar = (RatingBar) findViewById(R.id.currentOSRatingBar);
-        addToDataUploader(feedbackQ5OSRatingBar.getRating(), MithrilAC.getFeedbackQuestion5());
 
         feedbackQ6ToggleBtn = (ToggleButton) findViewById(R.id.fq6btn);
         feedbackQ6ToggleBtn.setChecked(false);
-        addToDataUploader(false, MithrilAC.getFeedbackQuestion6());
 
         feedbackQ7ToggleBtn = (ToggleButton) findViewById(R.id.fq7btn);
         feedbackQ7ToggleBtn.setChecked(false);
-        addToDataUploader(false, MithrilAC.getFeedbackQuestion7());
 
         feedbackQ8SimplicityRatingBar = (RatingBar) findViewById(R.id.systemSimplicityRatingBar);
-        addToDataUploader(feedbackQ8SimplicityRatingBar.getRating(), MithrilAC.getFeedbackQuestion8());
 
         feedbackQ9EditText = (EditText) findViewById(R.id.fq9EditText);
         feedbackQ9EditText.clearFocus();
         feedbackQ9EditText.setText("");
-        addToDataUploader(feedbackQ9EditText.getText().toString(), MithrilAC.getFeedbackQuestion9());
     }
 
     private void setOnClickListeners() {
+        uploadButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startUpload();
+            }
+        });
+
+        feedbackSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                if(buttonView.isChecked()) {
+                    feedbackSwitch.setChecked(false);
+                    feedbackScrollview.setVisibility(View.GONE);
+                } else {
+                    feedbackSwitch.setChecked(true);
+                    feedbackScrollview.setVisibility(View.VISIBLE);
+                }
+            }
+        });
+
         feedbackQ1ToggleBtn.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
@@ -242,7 +309,7 @@ public class FeedbackActivity extends AppCompatActivity {
             );
             //Store the uploaded data in the database
             MithrilDBHelper.getHelper(this).addUpload(
-                    MithrilDBHelper.getHelper(this).getWritableDatabase(),
+                    mithrilDB,
                     new Upload(
                             new Timestamp(System.currentTimeMillis()),
                             feedbackJsonRequest.getRequest().toString()

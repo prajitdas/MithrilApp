@@ -2,6 +2,9 @@ package edu.umbc.ebiquity.mithril.data.model.components;
 
 import android.graphics.Bitmap;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.util.HashMap;
 import java.util.Map;
 
@@ -21,6 +24,17 @@ public class AppData implements Comparable<AppData> {
     private String appType;
     private int uid;
 
+    public String uploadString() {
+        try {
+            JSONObject jsonObject = new JSONObject();
+            jsonObject.put("appName", this.appName);
+            jsonObject.put("appPkgName", this.packageName);
+            return jsonObject.toString();
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
     private boolean adLibraryUsed; // This information should either come from PrivacyGrade or it should be extracted
     private int id;
     private String requesterCategory; // app_category: 54 Google Play Store Categories

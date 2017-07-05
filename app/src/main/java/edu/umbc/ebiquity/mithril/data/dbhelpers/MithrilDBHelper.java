@@ -63,6 +63,7 @@ public class MithrilDBHelper extends SQLiteOpenHelper {
     private final static String ACTION_LOG_TABLE_NAME = "actionlog";
     private final static String VIOLATIONS_LOG_TABLE_NAME = "violationlog";
     private final static String UPLOADS_TABLE_NAME = "uploads";
+    private final static String FEEDBACK_STATS_TABLE_NAME = "feedback";
     private final static String APP_PERM_VIEW_NAME = "apppermview";
     /**
      * Following are table creation statements
