@@ -2,6 +2,7 @@ package edu.umbc.ebiquity.mithril.ui.activities;
 
 import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
@@ -177,11 +178,13 @@ public class FeedbackActivity extends AppCompatActivity {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                 if(buttonView.isChecked()) {
-                    feedbackSwitch.setChecked(false);
-                    feedbackScrollview.setVisibility(View.GONE);
-                } else {
-                    feedbackSwitch.setChecked(true);
+//                    feedbackSwitch.setChecked(false);
                     feedbackScrollview.setVisibility(View.VISIBLE);
+                    uploadButton.setVisibility(View.GONE);
+                } else {
+//                    feedbackSwitch.setChecked(true);
+                    feedbackScrollview.setVisibility(View.GONE);
+                    uploadButton.setVisibility(View.VISIBLE);
                 }
             }
         });
@@ -325,7 +328,10 @@ public class FeedbackActivity extends AppCompatActivity {
                             try {
                                 final String status = response.getString("status");
                                 feedbackJsonResponse = "Status: " + status;
-                                PermissionHelper.toast(getApplicationContext(), feedbackJsonResponse);
+                                Intent resultIntent = new Intent();
+                                resultIntent.putExtra(MithrilAC.getFeedbackUploadResultKey(), feedbackJsonResponse);
+                                setResult(Activity.RESULT_OK, resultIntent);
+                                finish();
                             } catch (JSONException aJSONException) {
                                 Log.e(MithrilAC.getDebugTag(), "Exception in sending data using JSON "+aJSONException.getMessage());
                             }
@@ -342,6 +348,10 @@ public class FeedbackActivity extends AppCompatActivity {
                                 statusCode = "fatal error! Error code not received";
                             }
                             feedbackJsonResponse = "Getting an error code: " + statusCode + " from the server\n";
+                            Intent resultIntent = new Intent();
+                            resultIntent.putExtra(MithrilAC.getFeedbackUploadResultKey(), feedbackJsonResponse);
+                            setResult(Activity.RESULT_CANCELED, resultIntent);
+                            finish();
                         }
                     }
             );

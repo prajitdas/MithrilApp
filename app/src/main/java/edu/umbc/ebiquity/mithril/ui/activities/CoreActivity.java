@@ -1,6 +1,7 @@
 package edu.umbc.ebiquity.mithril.ui.activities;
 
 import android.Manifest;
+import android.app.Activity;
 import android.app.ActivityManager;
 import android.app.AlertDialog;
 import android.app.AppOpsManager;
@@ -365,6 +366,22 @@ public class CoreActivity extends AppCompatActivity
         }
     }
 
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        // Check which request we're responding to
+        if (requestCode == MithrilAC.FEEDBACK_ACTIVITY_REQUEST_CODE) {
+            // Make sure the request was successful
+            if (resultCode == Activity.RESULT_OK) {
+                // The user picked a contact.
+                // The Intent's data Uri identifies which contact was selected.
+
+                // Do something with the contact here (bigger example below)
+                PermissionHelper.toast(this, data.getStringExtra(MithrilAC.getFeedbackUploadResultKey()));
+            } else if(resultCode == Activity.RESULT_CANCELED)
+                PermissionHelper.toast(this, data.getStringExtra(MithrilAC.getFeedbackUploadResultKey()));
+        }
+    }
+
     private void initHouseKeepingTasks() {
         if (PermissionHelper.isPermissionGranted(this, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED &&
                 !PermissionHelper.needsUsageStatsPermission(this)) {
@@ -634,7 +651,7 @@ public class CoreActivity extends AppCompatActivity
     }
 
     private void launchFeedbackActivity() {
-        startActivity(new Intent(this, FeedbackActivity.class));
+        startActivityForResult(new Intent(this, FeedbackActivity.class), MithrilAC.FEEDBACK_ACTIVITY_REQUEST_CODE);
     }
 
     private boolean isViolationListEmpty() {

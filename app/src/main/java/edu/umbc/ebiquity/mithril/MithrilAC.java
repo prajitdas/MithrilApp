@@ -23,9 +23,10 @@ public class MithrilAC extends Application {
     public static final int USAGE_STATS_PERMISSION_REQUEST_CODE = 2;
     public static final int WRITE_SETTINGS_PERMISSION_REQUEST_CODE = 3;
     public static final int SYSTEM_ALERT_WINDOW_PERMISSION_REQUEST_CODE = 4;
+    public static final int FEEDBACK_ACTIVITY_REQUEST_CODE = 5;
 
-    public static final int SUCCESS_RESULT = 3;
-    public static final int FAILURE_RESULT = 4;
+    public static final int SUCCESS_RESULT = 6;
+    public static final int FAILURE_RESULT = 7;
 
     public static final String MITHRIL_APP_PACKAGE_NAME = "edu.umbc.ebiquity.mithril";
 
@@ -69,6 +70,7 @@ public class MithrilAC extends Application {
      * Private variables start
      */
     private static final String FLIER_PDF_FILE_NAME = "irbconsent.pdf";
+    private static final String FEEDBACK_UPLOAD_RESULT_KEY = "uploadResult";
     private static final String FEEDBACK_QUESTION_1 = "fq1";
     private static final String FEEDBACK_QUESTION_2 = "fq2";
     private static final String FEEDBACK_QUESTION_3 = "fq3";
@@ -613,6 +615,10 @@ public class MithrilAC extends Application {
             "('android.permission.ACCESS_VR_MANAGER', 'signature', '" + NO_PERMISSION_GROUP.first + "', '" + PERMISSION_FLAG_NONE + "'),\n" +
             "('android.permission.UPDATE_LOCK_TASK_PACKAGES', 'signature|setup', '" + NO_PERMISSION_GROUP.first + "', '" + PERMISSION_FLAG_NONE + "'),\n" +
             "('android.permission.SUBSTITUTE_NOTIFICATION_APP_NAME', 'signature|privileged', '" + NO_PERMISSION_GROUP.first + "', '" + PERMISSION_FLAG_NONE + "');\n";
+
+    public static String getFeedbackUploadResultKey() {
+        return FEEDBACK_UPLOAD_RESULT_KEY;
+    }
 
     public static String getRandomUserId() {
         return RANDOM_USER_ID;
