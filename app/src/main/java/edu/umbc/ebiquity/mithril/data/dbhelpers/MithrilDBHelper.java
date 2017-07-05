@@ -63,7 +63,7 @@ public class MithrilDBHelper extends SQLiteOpenHelper {
     private final static String ACTION_LOG_TABLE_NAME = "actionlog";
     private final static String VIOLATIONS_LOG_TABLE_NAME = "violationlog";
     private final static String UPLOADS_TABLE_NAME = "uploads";
-    private final static String FEEDBACK_STATS_TABLE_NAME = "feedback";
+//    private final static String FEEDBACK_STATS_TABLE_NAME = "feedback";
     private final static String APP_PERM_VIEW_NAME = "apppermview";
     /**
      * Following are table creation statements
@@ -147,7 +147,7 @@ public class MithrilDBHelper extends SQLiteOpenHelper {
             PERMICON + " BLOB, " +
             PERMOP + " INTEGER NOT NULL DEFAULT -1, " +
             PERMRISK + " INTEGER NOT NULL DEFAULT 0, " +
-            "CONSTRAINT permissions_unique_name UNIQUE(" + PERMNAME + ") ON CONFLICT ABORT);";
+            "CONSTRAINT permissions_unique_name UNIQUE(" + PERMNAME + ") ON CONFLICT REPLACE);";
     /**
      * -- Table 3: appperm
      * CREATE TABLE appperm (
@@ -577,9 +577,9 @@ public class MithrilDBHelper extends SQLiteOpenHelper {
     }
 
     private void loadDB(SQLiteDatabase db) {
-        insertHardcodedGooglePermissions(db);
         //Load all the permissions that are known for Android into the database. We will refer to them in the future.
         loadAndroidPermissionsIntoDB(db);
+        insertHardcodedGooglePermissions(db);
         //Load all the apps and app permissions that are known for this device into the database. We will refer to them in the future.
         loadRealAppDataIntoDB(db);
     }
@@ -885,8 +885,7 @@ public class MithrilDBHelper extends SQLiteOpenHelper {
         values.put(PERMOP, aPermData.getOp());
         try {
             //The hardcoded permissions are getting replaced if we replace
-            insertedRowId = db.insertWithOnConflict(getPermissionsTableName(), null, values, SQLiteDatabase.CONFLICT_ROLLBACK);
-        } catch (SQLiteConstraintException e) {
+            insertedRowId = db.insertWithOnConflict(getPermissionsTableName(), null, values, SQLiteDatabase.CONFLICT_REPLACE);        } catch (SQLiteConstraintException e) {
             updateConflictedGooglePermissions(db, aPermData);
             throw new PermissionWasUpdateException("Exception occurred for " + aPermData.getPermissionName());
         } catch (SQLException e) {
@@ -937,7 +936,7 @@ public class MithrilDBHelper extends SQLiteOpenHelper {
                 values.put(APPPERMRESPERID, permId);
                 values.put(APPPERMGRANTED, appPermission.getValue());
                 try {
-                    insertedRowId = db.insertWithOnConflict(getAppPermTableName(), null, values, SQLiteDatabase.CONFLICT_ROLLBACK);
+                    insertedRowId = db.insertWithOnConflict(getAppPermTableName(), null, values, SQLiteDatabase.CONFLICT_REPLACE);
                 } catch (SQLiteConstraintException e) {
                     Log.e(MithrilAC.getDebugTag(), "there was a SQLite Constraint Exception " + values, e);
                     return -1;
@@ -1112,7 +1111,7 @@ public class MithrilDBHelper extends SQLiteOpenHelper {
         values.put(UPLOADTIME, anUpload.getTime().getTime());
 
         try {
-            insertedRowId = db.insertWithOnConflict(getUploadsTableName(), null, values, SQLiteDatabase.CONFLICT_ROLLBACK);
+            insertedRowId = db.insertWithOnConflict(getUploadsTableName(), null, values, SQLiteDatabase.CONFLICT_REPLACE);
         } catch (SQLException e) {
             Log.e(MithrilAC.getDebugTag(), "Error inserting " + values, e);
             return -1;
