@@ -55,7 +55,6 @@ public class FeedbackActivity extends AppCompatActivity {
     private Map<String, String> feedbackDataMap = new HashMap<>();
     private JSONRequest feedbackJsonRequest;
     private String feedbackJsonResponse;
-    private RequestQueue queue;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
