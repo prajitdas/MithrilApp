@@ -3,7 +3,6 @@ package edu.umbc.ebiquity.mithril.ui.activities;
 import android.app.Activity;
 import android.content.Context;
 import android.content.SharedPreferences;
-import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
@@ -21,7 +20,6 @@ import android.widget.TextView;
 import android.widget.ToggleButton;
 
 import com.android.volley.Request;
-import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
@@ -52,7 +50,7 @@ public class FeedbackActivity extends AppCompatActivity {
     private RatingBar feedbackQ8SimplicityRatingBar;
     private EditText feedbackQ9EditText;
 
-    private Map<String, String> feedbackDataMap = new HashMap<>();
+    private Map<String, String> feedbackDataUploaderMap = new HashMap<>();
     private JSONRequest feedbackJsonRequest;
     private String feedbackJsonResponse;
 
@@ -222,21 +220,21 @@ public class FeedbackActivity extends AppCompatActivity {
     }
 
     private void addToDataUploader(boolean isChecked, String questionId) {
-        feedbackDataMap.put(questionId, String.valueOf(isChecked));
+        feedbackDataUploaderMap.put(questionId, String.valueOf(isChecked));
     }
 
     private void addToDataUploader(String userInput, String questionId) {
-        feedbackDataMap.put(questionId, userInput);
+        feedbackDataUploaderMap.put(questionId, userInput);
     }
 
     private void addToDataUploader(float rating, String questionId) {
-        feedbackDataMap.put(questionId, String.valueOf(rating));
+        feedbackDataUploaderMap.put(questionId, String.valueOf(rating));
     }
 
     private void startUpload() {
         try {
             SharedPreferences sharedPreferences = getApplicationContext().getSharedPreferences(MithrilAC.getSharedPreferencesName(), Context.MODE_PRIVATE);
-            feedbackJsonRequest = new JSONRequest(feedbackDataMap,
+            feedbackJsonRequest = new JSONRequest(feedbackDataUploaderMap,
                     sharedPreferences.getString(
                             MithrilAC.getRandomUserId(),
                             getResources().getString(R.string.pref_user_id_default_value)

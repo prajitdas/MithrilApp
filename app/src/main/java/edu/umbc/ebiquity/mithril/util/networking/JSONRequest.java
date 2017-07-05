@@ -30,7 +30,7 @@ public final class JSONRequest {
         request.put(MithrilAC.getFeedbackQuestion8(), feedback.get(MithrilAC.getFeedbackQuestion8()));
         request.put(MithrilAC.getFeedbackQuestion9(), feedback.get(MithrilAC.getFeedbackQuestion9()));
         request.put(MithrilAC.getFeedbackQuestionDataKey(), feedback.get(MithrilAC.getFeedbackQuestionDataKey()));
-        request.put(MithrilAC.getFeedbackQuestionDataKey(), System.currentTimeMillis());
+        request.put(MithrilAC.getFeedbackQuestionDataTimeKey(), System.currentTimeMillis());
         request.put(MithrilAC.getRandomUserId(), userId);
     }
 

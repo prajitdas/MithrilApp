@@ -15,7 +15,7 @@ public class DisplayUploadDataActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_display_upload_data);
 
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar_rule_change);
+        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar_uploaded_data);
         setSupportActionBar(toolbar);
 
         Bundle data = getIntent().getExtras();
