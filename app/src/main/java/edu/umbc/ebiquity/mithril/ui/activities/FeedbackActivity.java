@@ -186,7 +186,7 @@ public class FeedbackActivity extends AppCompatActivity {
             @Override
             public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
                 boolean handled = false;
-                if (actionId == EditorInfo.IME_ACTION_SEND) {
+                if (actionId == EditorInfo.IME_ACTION_DONE) {
                     addToDataUploader(feedbackQ9EditText.getText().toString(), MithrilAC.getFeedbackQuestion9());
                     hideKeyboardFrom(v.getContext(), v);
                     handled = true;
