@@ -15,7 +15,6 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputMethodManager;
-import android.widget.Button;
 import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.ImageButton;
@@ -42,7 +41,6 @@ import java.util.Map;
 import edu.umbc.ebiquity.mithril.MithrilAC;
 import edu.umbc.ebiquity.mithril.R;
 import edu.umbc.ebiquity.mithril.data.dbhelpers.MithrilDBHelper;
-import edu.umbc.ebiquity.mithril.data.model.Policy;
 import edu.umbc.ebiquity.mithril.data.model.Upload;
 import edu.umbc.ebiquity.mithril.data.model.components.AppData;
 import edu.umbc.ebiquity.mithril.data.model.rules.PolicyRule;
@@ -70,6 +68,11 @@ public class FeedbackActivity extends AppCompatActivity {
     private String feedbackJsonResponse;
 
     private SQLiteDatabase mithrilDB;
+
+    public static void hideKeyboardFrom(Context context, View view) {
+        InputMethodManager imm = (InputMethodManager) context.getSystemService(Activity.INPUT_METHOD_SERVICE);
+        imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -111,19 +114,19 @@ public class FeedbackActivity extends AppCompatActivity {
 
             List<Violation> violations = MithrilDBHelper.getHelper(this).findAllViolations(mithrilDB);
             JSONArray violationJsonArray = new JSONArray();
-            for(Violation violation : violations)
+            for (Violation violation : violations)
                 violationJsonArray.put(violation.uploadString());
             jsonObject.put("violations", violationJsonArray);
 
             List<PolicyRule> policies = MithrilDBHelper.getHelper(this).findAllPolicies(mithrilDB);
             JSONArray policyJsonArray = new JSONArray();
-            for(PolicyRule policyRule : policies)
+            for (PolicyRule policyRule : policies)
                 policyJsonArray.put(policyRule.uploadString());
             jsonObject.put("policies", policyJsonArray);
 
             List<AppData> apps = MithrilDBHelper.getHelper(this).findAllApps(mithrilDB);
             JSONArray appJsonArray = new JSONArray();
-            for(AppData app : apps)
+            for (AppData app : apps)
                 appJsonArray.put(app.uploadString());
             jsonObject.put("apps", appJsonArray);
             return jsonObject.toString();
@@ -177,7 +180,7 @@ public class FeedbackActivity extends AppCompatActivity {
         feedbackSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                if(buttonView.isChecked()) {
+                if (buttonView.isChecked()) {
 //                    feedbackSwitch.setChecked(false);
                     feedbackScrollview.setVisibility(View.VISIBLE);
                     uploadButton.setVisibility(View.GONE);
@@ -284,11 +287,6 @@ public class FeedbackActivity extends AppCompatActivity {
         });
     }
 
-    public static void hideKeyboardFrom(Context context, View view) {
-        InputMethodManager imm = (InputMethodManager) context.getSystemService(Activity.INPUT_METHOD_SERVICE);
-        imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
-    }
-
     private void addToDataUploader(boolean isChecked, String questionId) {
         feedbackDataUploaderMap.put(questionId, String.valueOf(isChecked));
     }
@@ -333,7 +331,7 @@ public class FeedbackActivity extends AppCompatActivity {
                                 setResult(Activity.RESULT_OK, resultIntent);
                                 finish();
                             } catch (JSONException aJSONException) {
-                                Log.e(MithrilAC.getDebugTag(), "Exception in sending data using JSON "+aJSONException.getMessage());
+                                Log.e(MithrilAC.getDebugTag(), "Exception in sending data using JSON " + aJSONException.getMessage());
                             }
                         }
                     },
@@ -358,7 +356,7 @@ public class FeedbackActivity extends AppCompatActivity {
             // Add a request (in this example, called jsObjRequest) to your RequestQueue.
             VolleySingleton.getInstance(this).addToRequestQueue(jsObjRequest);
         } catch (JSONException aJSONException) {
-            Log.e(MithrilAC.getDebugTag(), "Exception in sending data using JSON "+aJSONException.getMessage());
+            Log.e(MithrilAC.getDebugTag(), "Exception in sending data using JSON " + aJSONException.getMessage());
         }
     }
 

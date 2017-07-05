@@ -247,7 +247,7 @@ public class CoreActivity extends AppCompatActivity
     }
 
     private void createUniqueId() {
-        if(!sharedPreferences.contains(MithrilAC.getRandomUserId())) {
+        if (!sharedPreferences.contains(MithrilAC.getRandomUserId())) {
             editor.putString(MithrilAC.getRandomUserId(), UUID.randomUUID().toString());
             editor.apply();
         }
@@ -377,7 +377,7 @@ public class CoreActivity extends AppCompatActivity
 
                 // Do something with the contact here (bigger example below)
                 PermissionHelper.toast(this, data.getStringExtra(MithrilAC.getFeedbackUploadResultKey()));
-            } else if(resultCode == Activity.RESULT_CANCELED)
+            } else if (resultCode == Activity.RESULT_CANCELED)
                 PermissionHelper.toast(this, data.getStringExtra(MithrilAC.getFeedbackUploadResultKey()));
         }
     }
