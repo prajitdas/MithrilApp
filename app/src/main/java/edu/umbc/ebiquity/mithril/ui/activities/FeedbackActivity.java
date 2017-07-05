@@ -41,12 +41,12 @@ public class FeedbackActivity extends AppCompatActivity {
     private ToggleButton feedbackQ1ToggleBtn;
     private ToggleButton feedbackQ2ToggleBtn;
     private ToggleButton feedbackQ3ToggleBtn;
-    private ToggleButton feedbackQ4ToggleBtn;
-    private RatingBar feedbackQ5SimplicityRatingBar;
-    private EditText feedbackQ6EditText;
+    private RatingBar feedbackQ4ConcernRatingBar;
+    private RatingBar feedbackQ5OSRatingBar;
+    private ToggleButton feedbackQ6ToggleBtn;
     private ToggleButton feedbackQ7ToggleBtn;
-    private RatingBar feedbackQ8ConcernRatingBar;
-    private RatingBar feedbackQ9OSRatingBar;
+    private RatingBar feedbackQ8SimplicityRatingBar;
+    private EditText feedbackQ9EditText;
 
     private Map<String, String> feedbackDataMap = new HashMap<>();
     private JSONRequest feedbackJsonRequest;
@@ -83,21 +83,21 @@ public class FeedbackActivity extends AppCompatActivity {
         feedbackQ3ToggleBtn = (ToggleButton) findViewById(R.id.fq3btn);
         feedbackQ3ToggleBtn.setChecked(false);
 
-        feedbackQ4ToggleBtn = (ToggleButton) findViewById(R.id.fq4btn);
-        feedbackQ4ToggleBtn.setChecked(false);
+        feedbackQ4ConcernRatingBar = (RatingBar) findViewById(R.id.prisecConcernRatingBar);
 
-        feedbackQ5SimplicityRatingBar = (RatingBar) findViewById(R.id.systemSimplicityRatingBar);
+        feedbackQ5OSRatingBar = (RatingBar) findViewById(R.id.currentOSRatingBar);
 
-        feedbackQ6EditText = (EditText) findViewById(R.id.fq6EditText);
-        feedbackQ6EditText.clearFocus();
-        feedbackQ6EditText.setText("");
+        feedbackQ6ToggleBtn = (ToggleButton) findViewById(R.id.fq6btn);
+        feedbackQ6ToggleBtn.setChecked(false);
 
         feedbackQ7ToggleBtn = (ToggleButton) findViewById(R.id.fq7btn);
         feedbackQ7ToggleBtn.setChecked(false);
 
-        feedbackQ8ConcernRatingBar = (RatingBar) findViewById(R.id.prisecConcernRatingBar);
+        feedbackQ8SimplicityRatingBar = (RatingBar) findViewById(R.id.systemSimplicityRatingBar);
 
-        feedbackQ9OSRatingBar = (RatingBar) findViewById(R.id.currentOSRatingBar);
+        feedbackQ9EditText = (EditText) findViewById(R.id.fq9EditText);
+        feedbackQ9EditText.clearFocus();
+        feedbackQ9EditText.setText("");
     }
 
     private void setOnClickListeners() {
@@ -128,70 +128,70 @@ public class FeedbackActivity extends AppCompatActivity {
         feedbackQ3ToggleBtn.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                if (buttonView.isChecked())
-                    buttonView.setChecked(false);
-                else
+                if (!buttonView.isChecked())
                     buttonView.setChecked(true);
+                else
+                    buttonView.setChecked(false);
                 feedbackQ3ToggleBtn.toggle();
-                addToDataUploader(buttonView.isChecked(), MithrilAC.getFeedbackQuestion4());
+                addToDataUploader(buttonView.isChecked(), MithrilAC.getFeedbackQuestion3());
             }
         });
 
-        feedbackQ4ToggleBtn.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+        feedbackQ4ConcernRatingBar.setOnRatingBarChangeListener(new RatingBar.OnRatingBarChangeListener() {
+            @Override
+            public void onRatingChanged(RatingBar ratingBar, float v, boolean isChecked) {
+                addToDataUploader(v, MithrilAC.getFeedbackQuestion4());
+            }
+        });
+
+        feedbackQ5OSRatingBar.setOnRatingBarChangeListener(new RatingBar.OnRatingBarChangeListener() {
+            @Override
+            public void onRatingChanged(RatingBar ratingBar, float v, boolean isChecked) {
+                addToDataUploader(v, MithrilAC.getFeedbackQuestion5());
+            }
+        });
+
+        feedbackQ6ToggleBtn.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                 if (buttonView.isChecked())
                     buttonView.setChecked(false);
                 else
                     buttonView.setChecked(true);
-                feedbackQ4ToggleBtn.toggle();
-                addToDataUploader(buttonView.isChecked(), MithrilAC.getFeedbackQuestion5());
-            }
-        });
-
-        feedbackQ5SimplicityRatingBar.setOnRatingBarChangeListener(new RatingBar.OnRatingBarChangeListener() {
-            @Override
-            public void onRatingChanged(RatingBar ratingBar, float v, boolean isChecked) {
-                addToDataUploader(v, MithrilAC.getFeedbackQuestion6());
-            }
-        });
-
-        feedbackQ6EditText.setOnEditorActionListener(new TextView.OnEditorActionListener() {
-            @Override
-            public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
-                boolean handled = false;
-                if (actionId == EditorInfo.IME_ACTION_DONE) {
-                    addToDataUploader(v.getText().toString(), MithrilAC.getFeedbackQuestion7());
-                    hideKeyboardFrom(v.getContext(), v);
-                    handled = true;
-                }
-                return handled;
+                feedbackQ6ToggleBtn.toggle();
+                addToDataUploader(buttonView.isChecked(), MithrilAC.getFeedbackQuestion6());
             }
         });
 
         feedbackQ7ToggleBtn.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                if (!buttonView.isChecked())
-                    buttonView.setChecked(true);
-                else
+                if (buttonView.isChecked())
                     buttonView.setChecked(false);
+                else
+                    buttonView.setChecked(true);
                 feedbackQ7ToggleBtn.toggle();
-                addToDataUploader(buttonView.isChecked(), MithrilAC.getFeedbackQuestion3());
+                addToDataUploader(buttonView.isChecked(), MithrilAC.getFeedbackQuestion7());
             }
         });
 
-        feedbackQ8ConcernRatingBar.setOnRatingBarChangeListener(new RatingBar.OnRatingBarChangeListener() {
+        feedbackQ8SimplicityRatingBar.setOnRatingBarChangeListener(new RatingBar.OnRatingBarChangeListener() {
             @Override
             public void onRatingChanged(RatingBar ratingBar, float v, boolean isChecked) {
                 addToDataUploader(v, MithrilAC.getFeedbackQuestion8());
             }
         });
 
-        feedbackQ9OSRatingBar.setOnRatingBarChangeListener(new RatingBar.OnRatingBarChangeListener() {
+        feedbackQ9EditText.setOnEditorActionListener(new TextView.OnEditorActionListener() {
             @Override
-            public void onRatingChanged(RatingBar ratingBar, float v, boolean isChecked) {
-                addToDataUploader(v, MithrilAC.getFeedbackQuestion9());
+            public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
+                boolean handled = false;
+                if (actionId == EditorInfo.IME_ACTION_SEND) {
+                    addToDataUploader(feedbackQ9EditText.getText().toString(), MithrilAC.getFeedbackQuestion9());
+                    hideKeyboardFrom(v.getContext(), v);
+                    handled = true;
+                }
+                return handled;
             }
         });
     }
