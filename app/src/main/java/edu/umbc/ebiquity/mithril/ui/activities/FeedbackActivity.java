@@ -3,6 +3,7 @@ package edu.umbc.ebiquity.mithril.ui.activities;
 import android.app.Activity;
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
@@ -28,11 +29,14 @@ import com.android.volley.toolbox.JsonObjectRequest;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.sql.Timestamp;
 import java.util.HashMap;
 import java.util.Map;
 
 import edu.umbc.ebiquity.mithril.MithrilAC;
 import edu.umbc.ebiquity.mithril.R;
+import edu.umbc.ebiquity.mithril.data.dbhelpers.MithrilDBHelper;
+import edu.umbc.ebiquity.mithril.data.model.Upload;
 import edu.umbc.ebiquity.mithril.util.networking.JSONRequest;
 import edu.umbc.ebiquity.mithril.util.networking.VolleySingleton;
 import edu.umbc.ebiquity.mithril.util.specialtasks.permissions.PermissionHelper;
@@ -66,38 +70,55 @@ public class FeedbackActivity extends AppCompatActivity {
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar_feedback);
         setSupportActionBar(toolbar);
 
-        feedbackJsonResponse = new String();
-
+        initData();
         initViews();
         setOnClickListeners();
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
     }
 
+    private void initData() {
+        feedbackJsonResponse = new String();
+        extractDatabaseDataToUpload();
+    }
+
+    private void extractDatabaseDataToUpload() {
+
+    }
+
     private void initViews() {
         feedbackQ1ToggleBtn = (ToggleButton) findViewById(R.id.fq1btn);
         feedbackQ1ToggleBtn.setChecked(false);
+        addToDataUploader(false, MithrilAC.getFeedbackQuestion1());
 
         feedbackQ2ToggleBtn = (ToggleButton) findViewById(R.id.fq2btn);
         feedbackQ2ToggleBtn.setChecked(false);
+        addToDataUploader(false, MithrilAC.getFeedbackQuestion2());
 
         feedbackQ3ToggleBtn = (ToggleButton) findViewById(R.id.fq3btn);
         feedbackQ3ToggleBtn.setChecked(false);
+        addToDataUploader(false, MithrilAC.getFeedbackQuestion3());
 
         feedbackQ4ConcernRatingBar = (RatingBar) findViewById(R.id.prisecConcernRatingBar);
+        addToDataUploader(feedbackQ4ConcernRatingBar.getRating(), MithrilAC.getFeedbackQuestion4());
 
         feedbackQ5OSRatingBar = (RatingBar) findViewById(R.id.currentOSRatingBar);
+        addToDataUploader(feedbackQ5OSRatingBar.getRating(), MithrilAC.getFeedbackQuestion5());
 
         feedbackQ6ToggleBtn = (ToggleButton) findViewById(R.id.fq6btn);
         feedbackQ6ToggleBtn.setChecked(false);
+        addToDataUploader(false, MithrilAC.getFeedbackQuestion6());
 
         feedbackQ7ToggleBtn = (ToggleButton) findViewById(R.id.fq7btn);
         feedbackQ7ToggleBtn.setChecked(false);
+        addToDataUploader(false, MithrilAC.getFeedbackQuestion7());
 
         feedbackQ8SimplicityRatingBar = (RatingBar) findViewById(R.id.systemSimplicityRatingBar);
+        addToDataUploader(feedbackQ8SimplicityRatingBar.getRating(), MithrilAC.getFeedbackQuestion8());
 
         feedbackQ9EditText = (EditText) findViewById(R.id.fq9EditText);
         feedbackQ9EditText.clearFocus();
         feedbackQ9EditText.setText("");
+        addToDataUploader(feedbackQ9EditText.getText().toString(), MithrilAC.getFeedbackQuestion9());
     }
 
     private void setOnClickListeners() {
@@ -216,7 +237,20 @@ public class FeedbackActivity extends AppCompatActivity {
     private void startUpload() {
         try {
             SharedPreferences sharedPreferences = getApplicationContext().getSharedPreferences(MithrilAC.getSharedPreferencesName(), Context.MODE_PRIVATE);
-            feedbackJsonRequest = new JSONRequest(feedbackDataMap, sharedPreferences.getString(MithrilAC.getRandomUserId(), getResources().getString(R.string.pref_user_id_default_value)));
+            feedbackJsonRequest = new JSONRequest(feedbackDataMap,
+                    sharedPreferences.getString(
+                            MithrilAC.getRandomUserId(),
+                            getResources().getString(R.string.pref_user_id_default_value)
+                    )
+            );
+            //Store the uploaded data in the database
+            MithrilDBHelper.getHelper(this).addUpload(
+                    MithrilDBHelper.getHelper(this).getWritableDatabase(),
+                    new Upload(
+                            new Timestamp(System.currentTimeMillis()),
+                            feedbackJsonRequest.getRequest().toString()
+                    )
+            );
             JsonObjectRequest jsObjRequest = new JsonObjectRequest(
                     Request.Method.POST,
                     MithrilAC.getFeedbackUrl(),

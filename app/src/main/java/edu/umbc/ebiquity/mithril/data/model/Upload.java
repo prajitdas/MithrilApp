@@ -9,32 +9,32 @@ import edu.umbc.ebiquity.mithril.MithrilAC;
  */
 
 public class Upload {
-    private Timestamp uploadTime;
-    private String uploadedData;
+    private Timestamp time;
+    private String data;
 
-    public Upload(Timestamp uploadTime, String uploadedData) {
-        setUploadTime(uploadTime);
-        setUploadedData(uploadedData);
+    public Upload(Timestamp time, String data) {
+        setTime(time);
+        setData(data);
     }
 
     @Override
     public String toString() {
-        return "Upload time: " + MithrilAC.getTimeText(true, getUploadTime());
+        return "Upload time: " + MithrilAC.getTimeText(true, getTime());
     }
 
-    public Timestamp getUploadTime() {
-        return uploadTime;
+    public Timestamp getTime() {
+        return time;
     }
 
-    public void setUploadTime(Timestamp uploadTime) {
-        this.uploadTime = uploadTime;
+    public void setTime(Timestamp time) {
+        this.time = time;
     }
 
-    public String getUploadedData() {
-        return uploadedData;
+    public String getData() {
+        return data;
     }
 
-    public void setUploadedData(String uploadedData) {
-        this.uploadedData = uploadedData;
+    public void setData(String data) {
+        this.data = data;
     }
 }

@@ -884,7 +884,7 @@ public class MithrilDBHelper extends SQLiteOpenHelper {
         values.put(PERMOP, aPermData.getOp());
         try {
             //The hardcoded permissions are getting replaced if we replace
-            insertedRowId = db.insertWithOnConflict(getPermissionsTableName(), null, values, SQLiteDatabase.CONFLICT_ABORT);
+            insertedRowId = db.insertWithOnConflict(getPermissionsTableName(), null, values, SQLiteDatabase.CONFLICT_ROLLBACK);
         } catch (SQLiteConstraintException e) {
             updateConflictedGooglePermissions(db, aPermData);
             throw new PermissionWasUpdateException("Exception occurred for " + aPermData.getPermissionName());
@@ -936,7 +936,7 @@ public class MithrilDBHelper extends SQLiteOpenHelper {
                 values.put(APPPERMRESPERID, permId);
                 values.put(APPPERMGRANTED, appPermission.getValue());
                 try {
-                    insertedRowId = db.insertWithOnConflict(getAppPermTableName(), null, values, SQLiteDatabase.CONFLICT_REPLACE);
+                    insertedRowId = db.insertWithOnConflict(getAppPermTableName(), null, values, SQLiteDatabase.CONFLICT_ROLLBACK);
                 } catch (SQLiteConstraintException e) {
                     Log.e(MithrilAC.getDebugTag(), "there was a SQLite Constraint Exception " + values, e);
                     return -1;
@@ -1096,6 +1096,26 @@ public class MithrilDBHelper extends SQLiteOpenHelper {
          * If there is a new violation just replace and update violation count
          */
         insertedRowId = db.insertOrThrow(getViolationsLogTableName(), null, values);
+        return insertedRowId;
+    }
+
+    /**
+     * @param db
+     * @param anUpload
+     * @return
+     */
+    public long addUpload(SQLiteDatabase db, Upload anUpload) {
+        long insertedRowId;
+        ContentValues values = new ContentValues();
+        values.put(UPLOADDATA, anUpload.getData());
+        values.put(UPLOADTIME, anUpload.getTime().getTime());
+
+        try {
+            insertedRowId = db.insertWithOnConflict(getUploadsTableName(), null, values, SQLiteDatabase.CONFLICT_ROLLBACK);
+        } catch (SQLException e) {
+            Log.e(MithrilAC.getDebugTag(), "Error inserting " + values, e);
+            return -1;
+        }
         return insertedRowId;
     }
 
