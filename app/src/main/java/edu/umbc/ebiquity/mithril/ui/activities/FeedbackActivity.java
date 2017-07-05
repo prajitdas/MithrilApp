@@ -78,11 +78,11 @@ public class FeedbackActivity extends AppCompatActivity {
 
     private void initData() {
         feedbackJsonResponse = new String();
-        extractDatabaseDataToUpload();
+        addToDataUploader(extractDatabaseDataToUpload(), MithrilAC.getFeedbackQuestionDataKey());
     }
 
-    private void extractDatabaseDataToUpload() {
-
+    private String extractDatabaseDataToUpload() {
+        return "";
     }
 
     private void initViews() {
