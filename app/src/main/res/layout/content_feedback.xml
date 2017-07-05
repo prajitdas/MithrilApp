@@ -336,7 +336,7 @@
 
             <TextView
                 android:id="@+id/header3TextView"
-                android:layout_below="@+id/cardViewfq4"
+                android:layout_below="@+id/cardViewfq5"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="@dimen/activity_vertical_margin"
@@ -554,7 +554,7 @@
                         android:allowUndo="true"
                         android:hint="@string/feedback_editTextHint"
                         android:imeOptions="actionDone"
-                        android:inputType="textCapSentences|textAutoCorrect|textMultiLine" />
+                        android:inputType="textCapSentences|textAutoCorrect" />
                 </RelativeLayout>
             </android.support.v7.widget.CardView>
         </RelativeLayout>
