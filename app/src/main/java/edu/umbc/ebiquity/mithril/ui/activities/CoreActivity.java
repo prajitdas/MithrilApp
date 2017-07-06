@@ -165,7 +165,8 @@ public class CoreActivity extends AppCompatActivity
             if (isViolationListEmpty())
                 loadEmptyFragment();
             else
-                loadViolationFragment();
+                loadViolationDetailsFragment();
+//                loadViolationFragment();
         } else if (id == R.id.nav_policies) {
             if (isPolicyListEmpty())
                 loadNothingHereFragment(WHAT_POLICIES_FRAGMENT);
@@ -488,7 +489,7 @@ public class CoreActivity extends AppCompatActivity
         if (isViolationListEmpty())
             loadEmptyFragment();
         else
-            loadViolationFragment();
+            loadViolationDetailsFragment();
     }
 
     private void resetApp() {
@@ -560,12 +561,12 @@ public class CoreActivity extends AppCompatActivity
                 .commit();
     }
 
-    private void loadViolationDetailsFragment(String appName) {
-        Bundle data = new Bundle();
-        data.putString(MithrilAC.getPrefKeyAppPkgName(), appName);
-
-        ViolationDetailFragment aViolationDetailFragment = new ViolationDetailFragment();
-        aViolationDetailFragment.setArguments(data);
+    private void loadViolationDetailsFragment() {//String appName) {
+//        Bundle data = new Bundle();
+//        data.putString(MithrilAC.getPrefKeyAppPkgName(), appName);
+//
+//        ViolationDetailFragment aViolationDetailFragment = new ViolationDetailFragment();
+//        aViolationDetailFragment.setArguments(data);
 
         FragmentManager fragmentManager = getFragmentManager();
         fragmentManager.beginTransaction().replace(R.id.container_core, new ViolationDetailFragment())
@@ -747,7 +748,7 @@ public class CoreActivity extends AppCompatActivity
             intent.putExtra("rule", item);
             startActivity(intent);
         } else
-            loadViolationDetailsFragment(appName);
+            loadViolationDetailsFragment(); //appName);
     }
 
     @Override
@@ -805,6 +806,6 @@ public class CoreActivity extends AppCompatActivity
 
     @Override
     public void onListFragmentInteraction(String item) {
-        loadViolationDetailsFragment(item.split(":")[0]);
+//        loadViolationDetailsFragment(item.split(":")[0]);
     }
 }

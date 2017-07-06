@@ -448,6 +448,8 @@ public class InstanceCreationActivity extends AppCompatActivity
         semanticActivities.put(semanticActivity.getLabel(), semanticActivity);
         semanticActivity = new SemanticActivity("Entertainment", true, 0);
         semanticActivities.put(semanticActivity.getLabel(), semanticActivity);
+        semanticActivity = new SemanticActivity("Working", true, 0);
+        semanticActivities.put(semanticActivity.getLabel(), semanticActivity);
 
         isThereActivityContextToSave = true;
     }
@@ -457,7 +459,7 @@ public class InstanceCreationActivity extends AppCompatActivity
         semanticNearActors.put(semanticNearActor.getLabel(), semanticNearActor);
         semanticNearActor = new SemanticNearActor("Personal_Network", true, 1);
         semanticNearActors.put(semanticNearActor.getLabel(), semanticNearActor);
-        semanticNearActor = new SemanticNearActor("Superior", true, 0);
+        semanticNearActor = new SemanticNearActor("Boss", true, 0);
         semanticNearActors.put(semanticNearActor.getLabel(), semanticNearActor);
         semanticNearActor = new SemanticNearActor("Colleague", true, 0);
         semanticNearActors.put(semanticNearActor.getLabel(), semanticNearActor);

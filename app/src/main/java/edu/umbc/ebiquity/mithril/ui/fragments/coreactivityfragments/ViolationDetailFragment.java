@@ -97,7 +97,8 @@ public class ViolationDetailFragment extends Fragment {
 
     private void initData() {
         initDB(view.getContext());
-        violationItems = MithrilDBHelper.getHelper(view.getContext()).findViolationsForApp(mithrilDB, mAppName);
+//        violationItems = MithrilDBHelper.getHelper(view.getContext()).findViolationsForApp(mithrilDB, mAppName);
+        violationItems = MithrilDBHelper.getHelper(view.getContext()).findAllViolations(mithrilDB);
     }
 
     @Override
