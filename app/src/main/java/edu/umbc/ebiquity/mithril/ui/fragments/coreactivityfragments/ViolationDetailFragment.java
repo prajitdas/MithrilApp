@@ -57,7 +57,6 @@ public class ViolationDetailFragment extends Fragment {
         ViolationDetailFragment fragment = new ViolationDetailFragment();
         Bundle args = new Bundle();
         args.putInt(ARG_COLUMN_COUNT, columnCount);
-        fragment.setArguments(args);
         args.putString(MithrilAC.getPrefKeyAppPkgName(), appName);
         fragment.setArguments(args);
         return fragment;
