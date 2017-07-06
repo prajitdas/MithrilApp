@@ -48,7 +48,6 @@ dependencies {
     compile 'com.google.android.gms:play-services-location:11.0.2'
     compile 'com.google.android.gms:play-services-places:11.0.2'
     compile 'com.google.android.gms:play-services-nearby:11.0.2'
-    compile 'com.android.volley:volley:1.0.0'
     compile 'com.google.code.gson:gson:2.8.0'
     compile 'com.scottyab:rootbeer-lib:0.0.6'
     compile 'com.jaredrummler:android-shell:1.0.0'

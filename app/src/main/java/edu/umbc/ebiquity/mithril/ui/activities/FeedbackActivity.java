@@ -4,7 +4,6 @@ import android.annotation.NonNull;
 import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Context;
-import android.content.Intent;
 import android.content.SharedPreferences;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
@@ -27,10 +26,6 @@ import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.ToggleButton;
 
-import com.android.volley.Request;
-import com.android.volley.Response;
-import com.android.volley.VolleyError;
-import com.android.volley.toolbox.JsonObjectRequest;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
@@ -57,8 +52,6 @@ import edu.umbc.ebiquity.mithril.data.model.rules.PolicyRule;
 import edu.umbc.ebiquity.mithril.data.model.rules.Violation;
 import edu.umbc.ebiquity.mithril.data.model.rules.context.ContextForUpload;
 import edu.umbc.ebiquity.mithril.util.networking.JSONRequest;
-import edu.umbc.ebiquity.mithril.util.networking.VolleySingleton;
-import edu.umbc.ebiquity.mithril.util.specialtasks.permissions.PermissionHelper;
 
 public class FeedbackActivity extends AppCompatActivity {
     private ToggleButton feedbackQ1ToggleBtn;
@@ -433,57 +426,6 @@ public class FeedbackActivity extends AppCompatActivity {
             Log.e(MithrilAC.getDebugTag(), "Exception in creating JSON " + aJSONException.getMessage());
         }
         databaseReference.child(getUid()).child(String.valueOf(System.currentTimeMillis())).setValue(feedbackDataUploaderMap);
-    }
-
-    private void oldStartUpload() {
-        //Store the uploaded data in the database
-        MithrilDBHelper.getHelper(this).addUpload(
-                mithrilDB,
-                new Upload(
-                        new Timestamp(System.currentTimeMillis()),
-                        feedbackJsonRequest.getRequest().toString()
-                )
-        );
-        JsonObjectRequest jsObjRequest = new JsonObjectRequest(
-            Request.Method.POST,
-            MithrilAC.getFeedbackUrl(),
-            feedbackJsonRequest.getRequest(),
-            new Response.Listener<JSONObject>() {
-                @Override
-                public void onResponse(JSONObject response) {
-                    try {
-                        final String status = response.getString("status");
-                        feedbackJsonResponse = "Status: " + status;
-                        Intent resultIntent = new Intent();
-                        resultIntent.putExtra(MithrilAC.getFeedbackUploadResultKey(), feedbackJsonResponse);
-                        setResult(Activity.RESULT_OK, resultIntent);
-                        signOut();
-                        finish();
-                    } catch (JSONException aJSONException) {
-                        Log.e(MithrilAC.getDebugTag(), "Exception in sending data using JSON " + aJSONException.getMessage());
-                    }
-                }
-            },
-            new Response.ErrorListener() {
-                @Override
-                public void onErrorResponse(VolleyError error) {
-                    String statusCode;
-                    try {
-                        statusCode = String.valueOf(error.networkResponse.statusCode);
-                        PermissionHelper.toast(getApplicationContext(), feedbackJsonResponse);
-                    } catch (NullPointerException e) {
-                        statusCode = "fatal error! Error code not received";
-                    }
-                    feedbackJsonResponse = "Getting an error code: " + statusCode + " from the server\n";
-                    Intent resultIntent = new Intent();
-                    resultIntent.putExtra(MithrilAC.getFeedbackUploadResultKey(), feedbackJsonResponse);
-                    setResult(Activity.RESULT_CANCELED, resultIntent);
-                    finish();
-                }
-            }
-        );
-        // Add a request (in this example, called jsObjRequest) to your RequestQueue.
-        VolleySingleton.getInstance(this).addToRequestQueue(jsObjRequest);
     }
 
     @Override
