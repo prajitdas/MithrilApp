@@ -3,9 +3,11 @@ package edu.umbc.ebiquity.mithril.ui.activities;
 import android.Manifest;
 import android.app.Activity;
 import android.app.ActivityManager;
+import android.app.AlarmManager;
 import android.app.AlertDialog;
 import android.app.AppOpsManager;
 import android.app.FragmentManager;
+import android.app.PendingIntent;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -69,6 +71,7 @@ import edu.umbc.ebiquity.mithril.ui.fragments.coreactivityfragments.ServicesFrag
 import edu.umbc.ebiquity.mithril.ui.fragments.coreactivityfragments.UsageStatsFragment;
 import edu.umbc.ebiquity.mithril.ui.fragments.coreactivityfragments.ViolationDetailFragment;
 import edu.umbc.ebiquity.mithril.ui.fragments.coreactivityfragments.ViolationFragment;
+import edu.umbc.ebiquity.mithril.util.receivers.AlarmReceiver;
 import edu.umbc.ebiquity.mithril.util.services.AppLaunchDetectorService;
 import edu.umbc.ebiquity.mithril.util.specialtasks.permissions.PermissionHelper;
 import edu.umbc.ebiquity.mithril.util.specialtasks.root.RootAccess;
@@ -247,6 +250,7 @@ public class CoreActivity extends AppCompatActivity
         initViews();
         defaultFragmentLoad();
         createUniqueId();
+        setupAlarm();
     }
 
     private void createUniqueId() {
@@ -490,6 +494,37 @@ public class CoreActivity extends AppCompatActivity
             loadEmptyFragment();
         else
             loadViolationDetailsFragment();
+    }
+
+    private void setupAlarm() {
+        if(!isAlarmUp()) {
+            // Set the alarm to start at approximately 7:00 p.m.
+            Calendar calendar = Calendar.getInstance();
+            calendar.setTimeInMillis(System.currentTimeMillis());
+            calendar.set(Calendar.HOUR_OF_DAY, 4);
+            calendar.set(Calendar.MINUTE, 5);
+
+            PendingIntent pendingIntent = PendingIntent.getBroadcast(
+                    this,
+                    0,
+                    new Intent(CoreActivity.this,
+                            AlarmReceiver.class),
+                    PendingIntent.FLAG_UPDATE_CURRENT);
+            AlarmManager alarmMgr = (AlarmManager) getSystemService(ALARM_SERVICE);
+            // With setInexactRepeating(), you have to use one of the AlarmManager interval
+            // constants--in this case, AlarmManager.INTERVAL_DAY.
+            alarmMgr.setRepeating(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(),
+                    AlarmManager.INTERVAL_DAY, pendingIntent);
+        }
+    }
+
+    private boolean isAlarmUp() {
+        return PendingIntent.getBroadcast(
+                this,
+                0,
+                new Intent(this,
+                        AlarmReceiver.class),
+                PendingIntent.FLAG_NO_CREATE) != null;
     }
 
     private void resetApp() {
