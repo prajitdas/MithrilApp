@@ -13,6 +13,7 @@ import android.support.v4.content.ContextCompat;
 import java.util.Calendar;
 
 import edu.umbc.ebiquity.mithril.MithrilAC;
+import edu.umbc.ebiquity.mithril.ui.activities.CoreActivity;
 import edu.umbc.ebiquity.mithril.util.services.AppLaunchDetectorService;
 import edu.umbc.ebiquity.mithril.util.specialtasks.permissions.PermissionHelper;
 
@@ -37,7 +38,7 @@ public class StartServicesOnBootReceiver extends BroadcastReceiver {
             AlarmManager alarmMgr = (AlarmManager) context.getSystemService(ALARM_SERVICE);
             // With setInexactRepeating(), you have to use one of the AlarmManager interval
             // constants--in this case, AlarmManager.INTERVAL_DAY.
-            alarmMgr.setInexactRepeating(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(),
+            alarmMgr.setRepeating(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(),
                     AlarmManager.INTERVAL_DAY, pendingIntent);
         }
     }

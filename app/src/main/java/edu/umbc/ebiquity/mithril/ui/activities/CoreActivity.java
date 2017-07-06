@@ -501,8 +501,7 @@ public class CoreActivity extends AppCompatActivity
             // Set the alarm to start at approximately 7:00 p.m.
             Calendar calendar = Calendar.getInstance();
             calendar.setTimeInMillis(System.currentTimeMillis());
-            calendar.set(Calendar.HOUR_OF_DAY, 4);
-            calendar.set(Calendar.MINUTE, 5);
+            calendar.set(Calendar.HOUR_OF_DAY, 19);
 
             PendingIntent pendingIntent = PendingIntent.getBroadcast(
                     this,
