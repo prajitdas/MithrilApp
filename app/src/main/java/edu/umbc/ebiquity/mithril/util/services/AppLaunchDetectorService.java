@@ -80,7 +80,7 @@ public class AppLaunchDetectorService extends Service implements
     private Pair<String, List<Resource>> pkgOpPair;
     private boolean servicesAvailable;
     private boolean mInProgress;
-    private boolean mPlacesInProcgress;
+    private boolean mPlacesInProgress;
     /**
      * Tracks whether the user has requested an address. Becomes true when the user requests an
      * address and false when the address (or an error message) is delivered.
@@ -102,7 +102,7 @@ public class AppLaunchDetectorService extends Service implements
     public void onCreate() {
         context = this;
         mInProgress = false;
-        mPlacesInProcgress = false;
+        mPlacesInProgress = false;
         servicesAvailable = servicesConnected();
         sharedPrefs = getSharedPreferences(MithrilAC.getSharedPreferencesName(), Context.MODE_PRIVATE);
         editor = getSharedPreferences(MithrilAC.getSharedPreferencesName(), Context.MODE_PRIVATE).edit();
@@ -128,7 +128,7 @@ public class AppLaunchDetectorService extends Service implements
     @Override
     public void onDestroy() {
         mInProgress = false;
-        mPlacesInProcgress = false;
+        mPlacesInProgress = false;
         super.onDestroy();
     }
 
@@ -145,8 +145,8 @@ public class AppLaunchDetectorService extends Service implements
             mGoogleApiClient.connect();
         }
 
-        if (!mGooglePlacesApiClient.isConnected() || !mGooglePlacesApiClient.isConnecting() && !mPlacesInProcgress) {
-            mPlacesInProcgress = true;
+        if (!mGooglePlacesApiClient.isConnected() || !mGooglePlacesApiClient.isConnecting() && !mPlacesInProgress) {
+            mPlacesInProgress = true;
             mGooglePlacesApiClient.connect();
         }
 
@@ -310,8 +310,8 @@ public class AppLaunchDetectorService extends Service implements
 //                    + String.valueOf(mCurrentLocation.getLongitude()));
             if (mGooglePlacesApiClient.isConnected())
                 guessCurrentPlace();
-            else if (!mGooglePlacesApiClient.isConnected() || !mGooglePlacesApiClient.isConnecting() && !mPlacesInProcgress) {
-                mPlacesInProcgress = true;
+            else if (!mGooglePlacesApiClient.isConnected() || !mGooglePlacesApiClient.isConnecting() && !mPlacesInProgress) {
+                mPlacesInProgress = true;
                 mGooglePlacesApiClient.connect();
             }
         } catch (SecurityException e) {

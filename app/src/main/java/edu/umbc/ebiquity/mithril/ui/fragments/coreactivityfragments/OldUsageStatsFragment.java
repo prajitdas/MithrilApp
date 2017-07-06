@@ -167,7 +167,7 @@ public class OldUsageStatsFragment extends Fragment {
                         appInfo.uid, usageStat.getPackageName());
                 int position = 0;
                 for (final AppOpsState.AppOpEntry entry : entries) {
-                    Resource tempRes = new Resource(entry.getOpEntry(0).getOp());
+                    Resource tempRes = null;
                     final AppOpsManager.OpEntry firstOp = entry.getOpEntry(0);
                     AppOpsManager.OpEntry currEntry = entry.getOpEntry(position);
                     String appOpName = AppOpsManager.opToPermission(currEntry.getOp());
@@ -215,8 +215,10 @@ public class OldUsageStatsFragment extends Fragment {
                         }
                     }
                     tempRes.setRelativeLastTimeUsed(entry.getTimeText(context, true).toString());
-                    tempListOfResource.add(tempRes);
-                    position++;
+                    if(tempRes != null) {
+                        tempListOfResource.add(tempRes);
+                        position++;
+                    }
                 }
                 tempUsageStat.setResourcesUsed(tempListOfResource);
                 appUsageStats.add(tempUsageStat);

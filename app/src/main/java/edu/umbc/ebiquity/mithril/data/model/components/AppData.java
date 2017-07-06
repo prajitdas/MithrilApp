@@ -2,9 +2,6 @@ package edu.umbc.ebiquity.mithril.data.model.components;
 
 import android.graphics.Bitmap;
 
-import org.json.JSONException;
-import org.json.JSONObject;
-
 import java.util.HashMap;
 import java.util.Map;
 
@@ -55,18 +52,6 @@ public class AppData implements Comparable<AppData> {
     }
 
     public AppData() {
-    }
-
-    public String uploadString() {
-        try {
-            JSONObject jsonObject = new JSONObject();
-            jsonObject.put("appName", this.appName);
-            jsonObject.put("appPkgName", this.packageName);
-            return jsonObject.toString();
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
-        return null;
     }
 
     public String getAppDescription() {

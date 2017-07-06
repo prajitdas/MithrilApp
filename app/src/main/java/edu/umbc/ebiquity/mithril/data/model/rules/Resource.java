@@ -32,8 +32,13 @@ public class Resource implements Parcelable, Comparable {
     private int allowedCount;
     private int ignoredCount;
 
-    public Resource(int op) {
+    public Resource(int op, int duration, String relativeLastTimeUsed, int allowedCount, int ignoredCount, int mode) {
         this.op = op;
+        this.duration = duration;
+        this.relativeLastTimeUsed = relativeLastTimeUsed;
+        this.allowedCount = allowedCount;
+        this.ignoredCount = ignoredCount;
+        this.mode = mode;
     }
 
     protected Resource(Parcel in) {

@@ -1,8 +1,5 @@
 package edu.umbc.ebiquity.mithril.data.model.rules.context;
 
-import org.json.JSONException;
-import org.json.JSONObject;
-
 /**
  * Created by prajit on 7/5/17.
  */
@@ -12,20 +9,6 @@ public class ContextForUpload {
     private String type;
     private boolean enabled;
     private int level;
-
-    public String uploadString() {
-        try {
-            JSONObject jsonObject = new JSONObject();
-            jsonObject.put("label", this.label);
-            jsonObject.put("type", this.type);
-            jsonObject.put("enabled", this.enabled);
-            jsonObject.put("level", this.level);
-            return jsonObject.toString();
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
-        return null;
-    }
 
     public ContextForUpload(String label, String type, boolean enabled, int level) {
         this.label = label;

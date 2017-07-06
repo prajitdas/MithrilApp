@@ -40,9 +40,7 @@ import edu.umbc.ebiquity.mithril.data.model.rules.PolicyRule;
 import edu.umbc.ebiquity.mithril.data.model.rules.Resource;
 import edu.umbc.ebiquity.mithril.data.model.rules.Violation;
 import edu.umbc.ebiquity.mithril.data.model.rules.context.ContextForUpload;
-import edu.umbc.ebiquity.mithril.data.model.rules.context.SemanticUserContext;
 import edu.umbc.ebiquity.mithril.simulations.DataGenerator;
-import edu.umbc.ebiquity.mithril.util.specialtasks.errorsnexceptions.ContextImplementationMissingException;
 import edu.umbc.ebiquity.mithril.util.specialtasks.errorsnexceptions.PermissionWasUpdateException;
 import edu.umbc.ebiquity.mithril.util.specialtasks.errorsnexceptions.SemanticInconsistencyException;
 
@@ -312,6 +310,11 @@ public class MithrilDBHelper extends SQLiteOpenHelper {
     private final static String VIOLATIONFEEDBACKTTIME = "feedbacktime";
     private final static String VIOLATIONCTXTIDS = "ctxtids";
     private final static String VIOLATIONCOUNT = "count";
+    private final static String VIOLATIONIGNOREDCOUNT = "ignorecount";
+    private final static String VIOLATIONALLOWEDCOUNT = "allowcount";
+    private final static String VIOLATIONDURATION = "duration";
+    private final static String VIOLATIONRELATIVELASTTIMEUSED = "lasttimeused";
+    private final static String VIOLATIONMODE = "mode";
     private final static String CREATE_VIOLATIONS_LOG_TABLE = "CREATE TABLE " + getViolationsLogTableName() + " (" +
             VIOLATIONPOLICYID + " INTEGER NOT NULL, " +
             VIOLATIONAPPID + " INTEGER NOT NULL, " +
@@ -329,6 +332,11 @@ public class MithrilDBHelper extends SQLiteOpenHelper {
             VIOLATIONFEEDBACKTTIME + " timestamp, " +
             VIOLATIONCTXTIDS + " TEXT NOT NULL, " +
             VIOLATIONCOUNT + " INTEGER NOT NULL DEFAULT 1, " +
+            VIOLATIONIGNOREDCOUNT + " INTEGER NOT NULL DEFAULT 0, " +
+            VIOLATIONALLOWEDCOUNT + " INTEGER NOT NULL DEFAULT 0, " +
+            VIOLATIONDURATION + " INTEGER NOT NULL DEFAULT 0, " +
+            VIOLATIONRELATIVELASTTIMEUSED + " TEXT, " +
+            VIOLATIONMODE + " INTEGER NOT NULL DEFAULT 1, " +
             "PRIMARY KEY(" + VIOLATIONPOLICYID + ", " + VIOLATIONAPPID + ", " + VIOLATIONOPERATION + ", " + VIOLATIONCTXTIDS + "), " +
             "FOREIGN KEY(" + VIOLATIONAPPID + ") REFERENCES " + getAppsTableName() + "(" + APPID + ") ON DELETE CASCADE);";
     /**
@@ -1096,6 +1104,12 @@ public class MithrilDBHelper extends SQLiteOpenHelper {
         else
             values.put(VIOLATIONTRUEFALSE, 0);
         values.put(VIOLATIONCTXTIDS, aViolation.getCtxtIdString());
+        values.put(VIOLATIONIGNOREDCOUNT, aViolation.getResource().getIgnoredCount());
+        values.put(VIOLATIONALLOWEDCOUNT, aViolation.getResource().getAllowedCount());
+        values.put(VIOLATIONDURATION, aViolation.getResource().getDuration());
+        values.put(VIOLATIONRELATIVELASTTIMEUSED, aViolation.getResource().getRelativeLastTimeUsed());
+        values.put(VIOLATIONMODE, aViolation.getResource().getMode());
+
         /**
          * If there is a new violation just replace and update violation count
          */
@@ -1539,7 +1553,12 @@ public class MithrilDBHelper extends SQLiteOpenHelper {
                 getViolationsLogTableName() + "." + VIOLATIONTRUEFALSE + ", " +
                 getViolationsLogTableName() + "." + VIOLATIONDETECTTIME + ", " +
                 getViolationsLogTableName() + "." + VIOLATIONCTXTIDS + ", " +
-                getViolationsLogTableName() + "." + VIOLATIONCOUNT +
+                getViolationsLogTableName() + "." + VIOLATIONCOUNT + ", " +
+                getViolationsLogTableName() + "." + VIOLATIONDURATION + ", " +
+                getViolationsLogTableName() + "." + VIOLATIONRELATIVELASTTIMEUSED + ", " +
+                getViolationsLogTableName() + "." + VIOLATIONALLOWEDCOUNT + ", " +
+                getViolationsLogTableName() + "." + VIOLATIONIGNOREDCOUNT + ", " +
+                getViolationsLogTableName() + "." + VIOLATIONMODE +
                 " FROM " + getViolationsLogTableName() +
                 " WHERE " +
                 getViolationsLogTableName() + "." + VIOLATIONPOLICYID + " = " + polid +
@@ -1563,7 +1582,13 @@ public class MithrilDBHelper extends SQLiteOpenHelper {
                         new Timestamp(cursor.getLong(7)),
                         setCtxtIds(cursor.getString(8)),
                         cursor.getInt(9),
-                        new Resource(cursor.getInt(2))
+                        new Resource(cursor.getInt(2),
+                                cursor.getInt(10),
+                                cursor.getString(11),
+                                cursor.getInt(12),
+                                cursor.getInt(13),
+                                cursor.getInt(14)
+                        )
                 );
             }
         } catch (SQLException e) {
@@ -1583,8 +1608,21 @@ public class MithrilDBHelper extends SQLiteOpenHelper {
     public List<Violation> findViolationsForApps(SQLiteDatabase db) {
         // Select Violation Query
         String selectQuery = "SELECT DISTINCT " +
+                getViolationsLogTableName() + "." + VIOLATIONPOLICYID + ", " +
                 getViolationsLogTableName() + "." + VIOLATIONAPPID + ", " +
-                getViolationsLogTableName() + "." + VIOLATIONAPPSTR +
+                getViolationsLogTableName() + "." + VIOLATIONOPERATION + ", " +
+                getViolationsLogTableName() + "." + VIOLATIONAPPSTR + ", " +
+                getViolationsLogTableName() + "." + VIOLATIONOPSTR + ", " +
+                getViolationsLogTableName() + "." + VIOLATIONASKED + ", " +
+                getViolationsLogTableName() + "." + VIOLATIONTRUEFALSE + ", " +
+                getViolationsLogTableName() + "." + VIOLATIONDETECTTIME + ", " +
+                getViolationsLogTableName() + "." + VIOLATIONCTXTIDS + ", " +
+                getViolationsLogTableName() + "." + VIOLATIONCOUNT + ", " +
+                getViolationsLogTableName() + "." + VIOLATIONDURATION + ", " +
+                getViolationsLogTableName() + "." + VIOLATIONRELATIVELASTTIMEUSED + ", " +
+                getViolationsLogTableName() + "." + VIOLATIONALLOWEDCOUNT + ", " +
+                getViolationsLogTableName() + "." + VIOLATIONIGNOREDCOUNT + ", " +
+                getViolationsLogTableName() + "." + VIOLATIONMODE +
                 " FROM " + getViolationsLogTableName() +
                 " WHERE " + getViolationsLogTableName() + "." + VIOLATIONASKED + " = 0 " +
                 " ORDER BY " + getViolationsLogTableName() + "." + VIOLATIONDETECTTIME + " DESC  " +
@@ -1606,7 +1644,77 @@ public class MithrilDBHelper extends SQLiteOpenHelper {
                             new Timestamp(cursor.getLong(7)),
                             setCtxtIds(cursor.getString(8)),
                             cursor.getInt(9),
-                            new Resource(cursor.getInt(2))
+                            new Resource(cursor.getInt(2),
+                                    cursor.getInt(10),
+                                    cursor.getString(11),
+                                    cursor.getInt(12),
+                                    cursor.getInt(13),
+                                    cursor.getInt(14)
+                            )
+                    );
+                    violations.add(tempViolation);
+                } while (cursor.moveToNext());
+            }
+        } catch (SQLException e) {
+            throw new SQLException("Could not find " + e);
+        } finally {
+            cursor.close();
+        }
+        return violations;
+    }
+
+    /**
+     * Finds all violations
+     *
+     * @param db database instance
+     * @return all violations
+     */
+    public List<Violation> findAllViolations(SQLiteDatabase db) {
+        // Select Violation Query
+        String selectQuery = "SELECT " +
+                getViolationsLogTableName() + "." + VIOLATIONPOLICYID + ", " +
+                getViolationsLogTableName() + "." + VIOLATIONAPPID + ", " +
+                getViolationsLogTableName() + "." + VIOLATIONOPERATION + ", " +
+                getViolationsLogTableName() + "." + VIOLATIONAPPSTR + ", " +
+                getViolationsLogTableName() + "." + VIOLATIONOPSTR + ", " +
+                getViolationsLogTableName() + "." + VIOLATIONASKED + ", " +
+                getViolationsLogTableName() + "." + VIOLATIONTRUEFALSE + ", " +
+                getViolationsLogTableName() + "." + VIOLATIONDETECTTIME + ", " +
+                getViolationsLogTableName() + "." + VIOLATIONCTXTIDS + ", " +
+                getViolationsLogTableName() + "." + VIOLATIONCOUNT + ", " +
+                getViolationsLogTableName() + "." + VIOLATIONDURATION + ", " +
+                getViolationsLogTableName() + "." + VIOLATIONRELATIVELASTTIMEUSED + ", " +
+                getViolationsLogTableName() + "." + VIOLATIONALLOWEDCOUNT + ", " +
+                getViolationsLogTableName() + "." + VIOLATIONIGNOREDCOUNT + ", " +
+                getViolationsLogTableName() + "." + VIOLATIONMODE +
+                " FROM " + getViolationsLogTableName() +
+                " WHERE " + getViolationsLogTableName() + "." + VIOLATIONASKED + " = 0 " +
+                " ORDER BY " + getViolationsLogTableName() + "." + VIOLATIONDETECTTIME + " DESC  " +
+                ";";
+
+        List<Violation> violations = new ArrayList<>();
+        Cursor cursor = db.rawQuery(selectQuery, null);
+        try {
+            if (cursor.moveToFirst()) {
+                do {
+                    Violation tempViolation = new Violation(
+                            cursor.getInt(0),
+                            cursor.getInt(1),
+                            cursor.getInt(2),
+                            cursor.getString(3),
+                            cursor.getString(4),
+                            cursor.getInt(5) == 1,
+                            cursor.getInt(6) == 1,
+                            new Timestamp(cursor.getLong(7)),
+                            setCtxtIds(cursor.getString(8)),
+                            cursor.getInt(9),
+                            new Resource(cursor.getInt(2),
+                                    cursor.getInt(10),
+                                    cursor.getString(11),
+                                    cursor.getInt(12),
+                                    cursor.getInt(13),
+                                    cursor.getInt(14)
+                            )
                     );
                     violations.add(tempViolation);
                 } while (cursor.moveToNext());
@@ -1648,59 +1756,6 @@ public class MithrilDBHelper extends SQLiteOpenHelper {
             cursor.close();
         }
         return uploads;
-    }
-
-    /**
-     * Finds all violations
-     *
-     * @param db database instance
-     * @return all violations
-     */
-    public List<Violation> findAllViolations(SQLiteDatabase db) {
-        // Select Violation Query
-        String selectQuery = "SELECT " +
-                getViolationsLogTableName() + "." + VIOLATIONPOLICYID + ", " +
-                getViolationsLogTableName() + "." + VIOLATIONAPPID + ", " +
-                getViolationsLogTableName() + "." + VIOLATIONOPERATION + ", " +
-                getViolationsLogTableName() + "." + VIOLATIONAPPSTR + ", " +
-                getViolationsLogTableName() + "." + VIOLATIONOPSTR + ", " +
-                getViolationsLogTableName() + "." + VIOLATIONASKED + ", " +
-                getViolationsLogTableName() + "." + VIOLATIONTRUEFALSE + ", " +
-                getViolationsLogTableName() + "." + VIOLATIONDETECTTIME + ", " +
-                getViolationsLogTableName() + "." + VIOLATIONCTXTIDS + ", " +
-                getViolationsLogTableName() + "." + VIOLATIONCOUNT +
-                " FROM " + getViolationsLogTableName() +
-                " WHERE " + getViolationsLogTableName() + "." + VIOLATIONASKED + " = 0 " +
-                " ORDER BY " + getViolationsLogTableName() + "." + VIOLATIONDETECTTIME + " DESC  " +
-                ";";
-
-        List<Violation> violations = new ArrayList<>();
-        Cursor cursor = db.rawQuery(selectQuery, null);
-        try {
-            if (cursor.moveToFirst()) {
-                do {
-                    Violation tempViolation = new Violation(
-                            cursor.getInt(0),
-                            cursor.getInt(1),
-                            cursor.getInt(2),
-                            cursor.getString(3),
-                            cursor.getString(4),
-                            cursor.getInt(5) == 1,
-                            cursor.getInt(6) == 1,
-                            new Timestamp(cursor.getLong(7)),
-                            setCtxtIds(cursor.getString(8)),
-                            cursor.getInt(9),
-                            new Resource(cursor.getInt(2))
-                    );
-                    violations.add(tempViolation);
-                } while (cursor.moveToNext());
-            }
-        } catch (SQLException e) {
-            throw new SQLException("Could not find " + e);
-        } finally {
-            cursor.close();
-        }
-        return violations;
     }
 
     private List<Long> setCtxtIds(String input) {
@@ -2320,6 +2375,11 @@ public class MithrilDBHelper extends SQLiteOpenHelper {
         else
             values.put(VIOLATIONTRUEFALSE, 0);
         values.put(VIOLATIONCTXTIDS, aViolation.getCtxtIdString());
+        values.put(VIOLATIONIGNOREDCOUNT, aViolation.getResource().getIgnoredCount());
+        values.put(VIOLATIONALLOWEDCOUNT, aViolation.getResource().getAllowedCount());
+        values.put(VIOLATIONDURATION, aViolation.getResource().getDuration());
+        values.put(VIOLATIONRELATIVELASTTIMEUSED, aViolation.getResource().getRelativeLastTimeUsed());
+        values.put(VIOLATIONMODE, aViolation.getResource().getMode());
         String[] args = new String[]{
                 String.valueOf(aViolation.getAppId()),
                 String.valueOf(aViolation.getPolicyId()),

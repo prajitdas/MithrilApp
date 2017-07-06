@@ -130,7 +130,6 @@ public class AppLaunchDetector {
 
     private List<Resource> checkUsageEvent() {
         List<Resource> resources = new ArrayList<>();
-        resources.add(new Resource(AppOpsManager.OP_NONE));
         return resources;
     }
 

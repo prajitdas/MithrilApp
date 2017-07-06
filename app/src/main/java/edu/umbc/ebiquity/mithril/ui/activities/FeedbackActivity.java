@@ -34,7 +34,6 @@ import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
-import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -47,11 +46,6 @@ import edu.umbc.ebiquity.mithril.MithrilAC;
 import edu.umbc.ebiquity.mithril.R;
 import edu.umbc.ebiquity.mithril.data.dbhelpers.MithrilDBHelper;
 import edu.umbc.ebiquity.mithril.data.model.Upload;
-import edu.umbc.ebiquity.mithril.data.model.components.AppData;
-import edu.umbc.ebiquity.mithril.data.model.rules.PolicyRule;
-import edu.umbc.ebiquity.mithril.data.model.rules.Violation;
-import edu.umbc.ebiquity.mithril.data.model.rules.context.ContextForUpload;
-import edu.umbc.ebiquity.mithril.util.networking.JSONRequest;
 
 public class FeedbackActivity extends AppCompatActivity {
     private ToggleButton feedbackQ1ToggleBtn;
@@ -68,8 +62,6 @@ public class FeedbackActivity extends AppCompatActivity {
     private ScrollView feedbackScrollview;
 
     private Map<String, Object> feedbackDataUploaderMap = new HashMap<>();
-    private JSONRequest feedbackJsonRequest;
-    private String feedbackJsonResponse;
     private SharedPreferences sharedPreferences;
 
     private SQLiteDatabase mithrilDB;
@@ -178,7 +170,6 @@ public class FeedbackActivity extends AppCompatActivity {
         databaseReference = firebaseDatabase.getReference();
 
         mithrilDB = MithrilDBHelper.getHelper(this).getWritableDatabase();
-        feedbackJsonResponse = new String();
 
         getDataFromDatabase();
 //        addToDataUploader(extractDatabaseDataToUpload(), MithrilAC.getFeedbackQuestionDataKey());
@@ -189,40 +180,6 @@ public class FeedbackActivity extends AppCompatActivity {
         addToDataUploader(MithrilDBHelper.getHelper(this).findAllPolicies(mithrilDB), "policies");
         addToDataUploader(MithrilDBHelper.getHelper(this).findAllApps(mithrilDB), "apps");
         addToDataUploader(MithrilDBHelper.getHelper(this).findAllContexts(mithrilDB), "contexts");
-    }
-
-    private String extractDatabaseDataToUpload() {
-        try {
-            JSONObject jsonObject = new JSONObject();
-
-            List<ContextForUpload> contexts = MithrilDBHelper.getHelper(this).findAllContexts(mithrilDB);
-            JSONArray contextForUploadJsonArray = new JSONArray();
-            for (ContextForUpload contextForUpload : contexts)
-                contextForUploadJsonArray.put(contextForUpload.uploadString());
-            jsonObject.put("contexts", contextForUploadJsonArray);
-
-            List<Violation> violations = MithrilDBHelper.getHelper(this).findAllViolations(mithrilDB);
-            JSONArray violationJsonArray = new JSONArray();
-            for (Violation violation : violations)
-                violationJsonArray.put(violation.uploadString());
-            jsonObject.put("violations", violationJsonArray);
-
-            List<PolicyRule> policies = MithrilDBHelper.getHelper(this).findAllPolicies(mithrilDB);
-            JSONArray policyJsonArray = new JSONArray();
-            for (PolicyRule policyRule : policies)
-                policyJsonArray.put(policyRule.uploadString());
-            jsonObject.put("policies", policyJsonArray);
-
-            List<AppData> apps = MithrilDBHelper.getHelper(this).findAllApps(mithrilDB);
-            JSONArray appJsonArray = new JSONArray();
-            for (AppData app : apps)
-                appJsonArray.put(app.uploadString());
-            jsonObject.put("apps", appJsonArray);
-            return jsonObject.toString();
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
-        return null;
     }
 
     private void initViews() {
@@ -405,7 +362,7 @@ public class FeedbackActivity extends AppCompatActivity {
     }
 
     private void addToDataUploader(String userInput, String questionId) {
-        if (userInput == "")
+        if (userInput.equals(""))
             feedbackDataUploaderMap.remove(questionId);
         else
             feedbackDataUploaderMap.put(questionId, userInput);
@@ -417,15 +374,45 @@ public class FeedbackActivity extends AppCompatActivity {
 
     private void startUpload() {
         signInAnonymously();
+        saveTheDataWeAreUploading();
+        databaseReference.child(getUid()).child(String.valueOf(System.currentTimeMillis())).setValue(feedbackDataUploaderMap);
+    }
+
+    private void saveTheDataWeAreUploading() {
         //Store the uploaded data in the database
         try {
-            feedbackJsonRequest = new JSONRequest(feedbackDataUploaderMap, getUid()+System.currentTimeMillis());
+            JSONRequest feedbackJsonRequest = new JSONRequest(feedbackDataUploaderMap, getUid() + System.currentTimeMillis());
             MithrilDBHelper.getHelper(this).addUpload(mithrilDB, new Upload(new Timestamp(System.currentTimeMillis()),
-                            feedbackJsonRequest.getRequest().toString()));
+                    feedbackJsonRequest.getRequest().toString()));
         } catch (JSONException aJSONException) {
             Log.e(MithrilAC.getDebugTag(), "Exception in creating JSON " + aJSONException.getMessage());
         }
-        databaseReference.child(getUid()).child(String.valueOf(System.currentTimeMillis())).setValue(feedbackDataUploaderMap);
+    }
+
+    public final class JSONRequest {
+        private JSONObject request;
+
+        public JSONRequest(Map<String, Object> feedback, String userId) throws JSONException {
+            for (Map.Entry<String, Object> feedbackEntry : feedback.entrySet())
+                Log.e(MithrilAC.getDebugTag(), "JSON data: " + feedbackEntry.getValue());
+            request = new JSONObject();
+            request.put(MithrilAC.getFeedbackQuestion1(), feedback.get(MithrilAC.getFeedbackQuestion1()));
+            request.put(MithrilAC.getFeedbackQuestion2(), feedback.get(MithrilAC.getFeedbackQuestion2()));
+            request.put(MithrilAC.getFeedbackQuestion3(), feedback.get(MithrilAC.getFeedbackQuestion3()));
+            request.put(MithrilAC.getFeedbackQuestion4(), feedback.get(MithrilAC.getFeedbackQuestion4()));
+            request.put(MithrilAC.getFeedbackQuestion5(), feedback.get(MithrilAC.getFeedbackQuestion5()));
+            request.put(MithrilAC.getFeedbackQuestion6(), feedback.get(MithrilAC.getFeedbackQuestion6()));
+            request.put(MithrilAC.getFeedbackQuestion7(), feedback.get(MithrilAC.getFeedbackQuestion7()));
+            request.put(MithrilAC.getFeedbackQuestion8(), feedback.get(MithrilAC.getFeedbackQuestion8()));
+            request.put(MithrilAC.getFeedbackQuestion9(), feedback.get(MithrilAC.getFeedbackQuestion9()));
+            request.put(MithrilAC.getFeedbackQuestionDataKey(), feedback.get(MithrilAC.getFeedbackQuestionDataKey()));
+            request.put(MithrilAC.getFeedbackQuestionDataTimeKey(), System.currentTimeMillis());
+            request.put(MithrilAC.getRandomUserId(), userId);
+        }
+
+        public JSONObject getRequest() {
+            return request;
+        }
     }
 
     @Override

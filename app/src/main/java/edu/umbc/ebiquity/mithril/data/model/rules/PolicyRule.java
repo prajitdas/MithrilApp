@@ -3,9 +3,6 @@ package edu.umbc.ebiquity.mithril.data.model.rules;
 import android.os.Parcel;
 import android.os.Parcelable;
 
-import org.json.JSONException;
-import org.json.JSONObject;
-
 public class PolicyRule implements Parcelable {
     public static final Creator<PolicyRule> CREATOR = new Creator<PolicyRule>() {
         @Override
@@ -52,24 +49,6 @@ public class PolicyRule implements Parcelable {
         this.ctxStr = ctxStr;
         this.opStr = opStr;
         this.enabled = enabled;
-    }
-
-    public String uploadString() {
-        try {
-            JSONObject jsonObject = new JSONObject();
-            jsonObject.put("policyId", this.policyId);
-            jsonObject.put("appId", this.appId);
-            jsonObject.put("appStr", this.appStr);
-            jsonObject.put("op", this.op);
-            jsonObject.put("opStr", this.opStr);
-            jsonObject.put("ctxId", this.ctxId);
-            jsonObject.put("ctxStr", this.ctxStr);
-            jsonObject.put("actStr", this.actStr);
-            return jsonObject.toString();
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
-        return null;
     }
 
     @Override
