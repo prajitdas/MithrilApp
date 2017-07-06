@@ -91,6 +91,6 @@ public class SemanticActivity extends SemanticUserContext implements Parcelable 
 
     @Override
     public String toString() {
-        return "Doing activity " + inferredActivity;
+        return "In activity " + inferredActivity;
     }
 }

@@ -359,7 +359,7 @@ public class InstanceCreationActivity extends AppCompatActivity
 
                 }
             });
-        } else {//if(currentFragment.equals(FRAGMENT_ACTIVITY)){
+        } else if (currentFragment.equals(FRAGMENT_ACTIVITY)) {
             mOtherCtxtBtn.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -951,7 +951,7 @@ public class InstanceCreationActivity extends AppCompatActivity
             loadSemanticTemporalFragment();
         else if (currentFragment.equals(FRAGMENT_PRESENCE))
             loadSemanticPresenceFragment();
-        else if (currentFragment.equals(FRAGMENT_TEMPORAL))
+        else if (currentFragment.equals(FRAGMENT_ACTIVITY))
             loadSemanticActivityFragment();
     }
 

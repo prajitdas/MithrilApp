@@ -112,21 +112,22 @@ public class FeedbackActivity extends AppCompatActivity {
     public String getUid() {
         if (mAuth.getCurrentUser() == null) {
             signInAnonymously();
-        }
-        return mAuth.getCurrentUser().getUid();
+            return null;
+        } else
+            return mAuth.getCurrentUser().getUid();
     }
 
-    private void signInAnonymously() {
+    private FirebaseUser signInAnonymously() {
         showProgressDialog();
         // [START signin_anonymously]
-        mAuth.signInAnonymously()
+        Task<AuthResult> authResultTask = mAuth.signInAnonymously()
                 .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
                     @Override
                     public void onComplete(@NonNull Task<AuthResult> task) {
                         if (task.isSuccessful()) {
                             // Sign in success, update UI with the signed-in user's information
                             Log.d(MithrilAC.getDebugTag(), "signInAnonymously:success");
-                            FirebaseUser user = mAuth.getCurrentUser();
+                            user = mAuth.getCurrentUser();
                         } else {
                             // If sign in fails, display a message to the user.
                             Log.w(MithrilAC.getDebugTag(), "signInAnonymously:failure", task.getException());
@@ -140,6 +141,7 @@ public class FeedbackActivity extends AppCompatActivity {
                     }
                 });
         // [END signin_anonymously]
+        return user;
     }
 
     private void signOut() {
@@ -148,6 +150,8 @@ public class FeedbackActivity extends AppCompatActivity {
 
     private void initData() {
         mAuth = FirebaseAuth.getInstance();
+        if (mAuth.getCurrentUser() == null)
+            signInAnonymously();
         firebaseDatabase = FirebaseDatabase.getInstance();
         databaseReference = firebaseDatabase.getReference();
 
@@ -348,8 +352,12 @@ public class FeedbackActivity extends AppCompatActivity {
     }
 
     private void startUpload() {
-        saveTheDataWeAreUploading();
-        databaseReference.child(getUid()).child(String.valueOf(System.currentTimeMillis())).setValue(feedbackDataUploaderMap);
+        if (getUid() != null) {
+            saveTheDataWeAreUploading();
+            databaseReference.child(getUid()).child(String.valueOf(System.currentTimeMillis())).setValue(feedbackDataUploaderMap);
+        } else {
+            signInAnonymously();//databaseReference.child(getUid()).child(String.valueOf(System.currentTimeMillis())).setValue(feedbackDataUploaderMap));
+        }
     }
 
     private void saveTheDataWeAreUploading() {
