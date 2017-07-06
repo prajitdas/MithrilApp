@@ -445,42 +445,42 @@ public class FeedbackActivity extends AppCompatActivity {
                 )
         );
         JsonObjectRequest jsObjRequest = new JsonObjectRequest(
-                Request.Method.POST,
-                MithrilAC.getFeedbackUrl(),
-                feedbackJsonRequest.getRequest(),
-                new Response.Listener<JSONObject>() {
-                    @Override
-                    public void onResponse(JSONObject response) {
-                        try {
-                            final String status = response.getString("status");
-                            feedbackJsonResponse = "Status: " + status;
-                            Intent resultIntent = new Intent();
-                            resultIntent.putExtra(MithrilAC.getFeedbackUploadResultKey(), feedbackJsonResponse);
-                            setResult(Activity.RESULT_OK, resultIntent);
-                            signOut();
-                            finish();
-                        } catch (JSONException aJSONException) {
-                            Log.e(MithrilAC.getDebugTag(), "Exception in sending data using JSON " + aJSONException.getMessage());
-                        }
-                    }
-                },
-                new Response.ErrorListener() {
-                    @Override
-                    public void onErrorResponse(VolleyError error) {
-                        String statusCode;
-                        try {
-                            statusCode = String.valueOf(error.networkResponse.statusCode);
-                            PermissionHelper.toast(getApplicationContext(), feedbackJsonResponse);
-                        } catch (NullPointerException e) {
-                            statusCode = "fatal error! Error code not received";
-                        }
-                        feedbackJsonResponse = "Getting an error code: " + statusCode + " from the server\n";
+            Request.Method.POST,
+            MithrilAC.getFeedbackUrl(),
+            feedbackJsonRequest.getRequest(),
+            new Response.Listener<JSONObject>() {
+                @Override
+                public void onResponse(JSONObject response) {
+                    try {
+                        final String status = response.getString("status");
+                        feedbackJsonResponse = "Status: " + status;
                         Intent resultIntent = new Intent();
                         resultIntent.putExtra(MithrilAC.getFeedbackUploadResultKey(), feedbackJsonResponse);
-                        setResult(Activity.RESULT_CANCELED, resultIntent);
+                        setResult(Activity.RESULT_OK, resultIntent);
+                        signOut();
                         finish();
+                    } catch (JSONException aJSONException) {
+                        Log.e(MithrilAC.getDebugTag(), "Exception in sending data using JSON " + aJSONException.getMessage());
                     }
                 }
+            },
+            new Response.ErrorListener() {
+                @Override
+                public void onErrorResponse(VolleyError error) {
+                    String statusCode;
+                    try {
+                        statusCode = String.valueOf(error.networkResponse.statusCode);
+                        PermissionHelper.toast(getApplicationContext(), feedbackJsonResponse);
+                    } catch (NullPointerException e) {
+                        statusCode = "fatal error! Error code not received";
+                    }
+                    feedbackJsonResponse = "Getting an error code: " + statusCode + " from the server\n";
+                    Intent resultIntent = new Intent();
+                    resultIntent.putExtra(MithrilAC.getFeedbackUploadResultKey(), feedbackJsonResponse);
+                    setResult(Activity.RESULT_CANCELED, resultIntent);
+                    finish();
+                }
+            }
         );
         // Add a request (in this example, called jsObjRequest) to your RequestQueue.
         VolleySingleton.getInstance(this).addToRequestQueue(jsObjRequest);
