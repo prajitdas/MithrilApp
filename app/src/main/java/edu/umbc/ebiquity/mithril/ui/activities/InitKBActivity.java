@@ -15,6 +15,7 @@ import edu.umbc.ebiquity.mithril.data.dbhelpers.MithrilDBHelper;
 public class InitKBActivity extends AppCompatActivity {
     private static final int KBLOADED = 0;
     private Handler handler;
+    private SQLiteDatabase mithrilDB;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -27,6 +28,8 @@ public class InitKBActivity extends AppCompatActivity {
             public void handleMessage(Message message) {
                 if (message.what == KBLOADED) {
                     startNextActivity(getApplicationContext(), InstanceCreationActivity.class);
+                    if (mithrilDB != null)
+                        mithrilDB.close();
                 }
             }
         };
@@ -56,9 +59,7 @@ public class InitKBActivity extends AppCompatActivity {
         new Thread(new Runnable() {
             public void run() {
                 // We have it here so that we can just load the animation running first time the db instances are loaded
-                SQLiteDatabase mithrilDB = MithrilDBHelper.getHelper(getApplicationContext()).getWritableDatabase();
-                if (mithrilDB != null)
-                    mithrilDB.close();
+                mithrilDB = MithrilDBHelper.getHelper(getApplicationContext()).getWritableDatabase();
                 handler.sendEmptyMessage(KBLOADED);
             }
         }).start();

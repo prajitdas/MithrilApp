@@ -129,7 +129,8 @@
     <string name="placeholder_text_violation_where">Context was</string>
 
     <!-- Strings related to PrefsFragment -->
-    <string name="pref_user_id_default_value">anonymous</string>
+    <string name="uploading_as">Uploading as&#160;</string>
+    <string name="anonymous">anonymous</string>
     <string name="pref_all_done_key">prefsDone</string>
     <string name="pref_all_done_summary">Done with context information setup</string>
     <string name="pref_all_done_title">Context setup complete</string>

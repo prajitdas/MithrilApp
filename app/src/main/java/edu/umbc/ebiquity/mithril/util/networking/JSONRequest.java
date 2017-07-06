@@ -16,8 +16,8 @@ import edu.umbc.ebiquity.mithril.MithrilAC;
 public final class JSONRequest {
     private JSONObject request;
 
-    public JSONRequest(Map<String, String> feedback, String userId) throws JSONException {
-        for (Map.Entry<String, String> feedbackEntry : feedback.entrySet())
+    public JSONRequest(Map<String, Object> feedback, String userId) throws JSONException {
+        for (Map.Entry<String, Object> feedbackEntry : feedback.entrySet())
             Log.e(MithrilAC.getDebugTag(), "JSON data: " + feedbackEntry.getValue());
         request = new JSONObject();
         request.put(MithrilAC.getFeedbackQuestion1(), feedback.get(MithrilAC.getFeedbackQuestion1()));

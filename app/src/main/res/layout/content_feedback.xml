@@ -9,12 +9,26 @@
     tools:context=".ui.activities.FeedbackActivity"
     tools:showIn="@layout/activity_feedback">
 
+    <TextView
+        android:id="@+id/uploadingAs"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentTop="true"
+        android:layout_marginBottom="@dimen/activity_vertical_margin"
+        android:layout_marginStart="@dimen/activity_vertical_margin"
+        android:layout_marginTop="@dimen/activity_vertical_margin"
+        android:fontFamily="josephine-sans"
+        android:text="@string/uploading_as"
+        android:textColor="@color/colorPrimaryText"
+        android:textSize="18sp" />
+
     <ImageButton
         android:id="@+id/simplyUploadBtn"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentStart="true"
-        android:layout_alignParentTop="true"
+        android:layout_below="@+id/uploadingAs"
         android:layout_marginBottom="@dimen/activity_vertical_margin"
         android:layout_marginEnd="@dimen/activity_vertical_margin"
         android:layout_marginStart="@dimen/activity_vertical_margin"
