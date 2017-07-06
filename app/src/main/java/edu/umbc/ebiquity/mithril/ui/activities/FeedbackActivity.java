@@ -68,7 +68,6 @@ public class FeedbackActivity extends AppCompatActivity {
     private DatabaseReference databaseReference;
     private FirebaseAuth mAuth;
     private FirebaseUser user;
-    private TextView uploadingAsTextView;
     private ProgressDialog mProgressDialog;
 
     public static void hideKeyboardFrom(Context context, View view) {
@@ -93,17 +92,9 @@ public class FeedbackActivity extends AppCompatActivity {
         initData();
 
         user = mAuth.getCurrentUser();
-        updateUI(user);
 
         setOnClickListeners();
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-    }
-
-    private void updateUI(FirebaseUser user) {
-        if (user != null)
-            uploadingAsTextView.setText(getResources().getString(R.string.uploading_as).concat(user.getUid()));
-        else
-            uploadingAsTextView.setText(getResources().getString(R.string.uploading_as).concat(getResources().getString(R.string.anonymous)));
     }
 
     public void showProgressDialog() {
@@ -137,13 +128,11 @@ public class FeedbackActivity extends AppCompatActivity {
                             // Sign in success, update UI with the signed-in user's information
                             Log.d(MithrilAC.getDebugTag(), "signInAnonymously:success");
                             FirebaseUser user = mAuth.getCurrentUser();
-                            updateUI(user);
                         } else {
                             // If sign in fails, display a message to the user.
                             Log.w(MithrilAC.getDebugTag(), "signInAnonymously:failure", task.getException());
                             Toast.makeText(FeedbackActivity.this, "Authentication failed.",
                                     Toast.LENGTH_SHORT).show();
-                            updateUI(null);
                         }
 
                         // [START_EXCLUDE]
@@ -156,7 +145,6 @@ public class FeedbackActivity extends AppCompatActivity {
 
     private void signOut() {
         mAuth.signOut();
-        updateUI(null);
     }
 
     private void initData() {
@@ -177,8 +165,6 @@ public class FeedbackActivity extends AppCompatActivity {
     }
 
     private void initViews() {
-        uploadingAsTextView = (TextView) findViewById(R.id.uploadingAs);
-
         uploadButton = (ImageButton) findViewById(R.id.simplyUploadBtn);
 
         feedbackSwitch = (Switch) findViewById(R.id.switchGiveFeedback);
@@ -224,7 +210,6 @@ public class FeedbackActivity extends AppCompatActivity {
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                 if (buttonView.isChecked()) {
                     feedbackScrollview.setVisibility(View.VISIBLE);
-                    uploadButton.setVisibility(View.GONE);
                     addToDataUploader(false, MithrilAC.getFeedbackQuestion1());
                     addToDataUploader(false, MithrilAC.getFeedbackQuestion2());
                     addToDataUploader(false, MithrilAC.getFeedbackQuestion3());
@@ -236,7 +221,6 @@ public class FeedbackActivity extends AppCompatActivity {
                     addToDataUploader(feedbackQ9EditText.getText().toString(), MithrilAC.getFeedbackQuestion9());
                 } else {
                     feedbackScrollview.setVisibility(View.GONE);
-                    uploadButton.setVisibility(View.VISIBLE);
                     addToDataUploader("", MithrilAC.getFeedbackQuestion1());
                     addToDataUploader("", MithrilAC.getFeedbackQuestion2());
                     addToDataUploader("", MithrilAC.getFeedbackQuestion3());
@@ -379,26 +363,6 @@ public class FeedbackActivity extends AppCompatActivity {
         } catch (JSONException aJSONException) {
             Log.e(MithrilAC.getDebugTag(), "Exception in creating JSON " + aJSONException.getMessage());
         }
-    }
-
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.menu_feedback, menu);
-        return true;
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
-        int id = item.getItemId();
-        if (id == R.id.upload_feedback) {
-            startUpload();
-            return true;
-        }
-        return super.onOptionsItemSelected(item);
     }
 
     public final class JSONRequest {
