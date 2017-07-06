@@ -127,7 +127,7 @@ public class InstanceCreationActivity extends AppCompatActivity
         initData();
         initViews();
         if (semanticTimes.size() == 0)
-            createSemanticTimes();
+            createSemanticTestContexts();
         mGoogleApiClient.connect();
     }
 
@@ -429,6 +429,44 @@ public class InstanceCreationActivity extends AppCompatActivity
         FragmentManager fragmentManager = getFragmentManager();
         fragmentManager.beginTransaction().replace(R.id.container_instances, semanticActivityFragment)
                 .commit();
+    }
+
+    private void createSemanticTestContexts() {
+        createSemanticTimes();
+        createSemanticNearActors();
+        createSemanticActivities();
+    }
+
+    private void createSemanticActivities() {
+        SemanticActivity semanticActivity = new SemanticActivity("Personal_Activity", true, 1);
+        semanticActivities.put(semanticActivity.getLabel(), semanticActivity);
+        semanticActivity = new SemanticActivity("Professional_Activity", true, 1);
+        semanticActivities.put(semanticActivity.getLabel(), semanticActivity);
+        semanticActivity = new SemanticActivity("Date", true, 0);
+        semanticActivities.put(semanticActivity.getLabel(), semanticActivity);
+        semanticActivity = new SemanticActivity("Sleeping", true, 0);
+        semanticActivities.put(semanticActivity.getLabel(), semanticActivity);
+        semanticActivity = new SemanticActivity("Entertainment", true, 0);
+        semanticActivities.put(semanticActivity.getLabel(), semanticActivity);
+
+        isThereActivityContextToSave = true;
+    }
+
+    private void createSemanticNearActors() {
+        SemanticNearActor semanticNearActor = new SemanticNearActor("Professional_Network", true, 1);
+        semanticNearActors.put(semanticNearActor.getLabel(), semanticNearActor);
+        semanticNearActor = new SemanticNearActor("Personal_Network", true, 1);
+        semanticNearActors.put(semanticNearActor.getLabel(), semanticNearActor);
+        semanticNearActor = new SemanticNearActor("Superior", true, 0);
+        semanticNearActors.put(semanticNearActor.getLabel(), semanticNearActor);
+        semanticNearActor = new SemanticNearActor("Colleague", true, 0);
+        semanticNearActors.put(semanticNearActor.getLabel(), semanticNearActor);
+        semanticNearActor = new SemanticNearActor("Family", true, 0);
+        semanticNearActors.put(semanticNearActor.getLabel(), semanticNearActor);
+        semanticNearActor = new SemanticNearActor("Friends", true, 0);
+        semanticNearActors.put(semanticNearActor.getLabel(), semanticNearActor);
+
+        isTherePresenceContextToSave = true;
     }
 
     private void createSemanticTimes() {
