@@ -88,4 +88,9 @@ public class SemanticNearActor extends SemanticUserContext implements Parcelable
     public void setLevel(int level) {
         this.level = level;
     }
+
+    @Override
+    public String toString() {
+        return "In presence of " + inferredRelationship;
+    }
 }

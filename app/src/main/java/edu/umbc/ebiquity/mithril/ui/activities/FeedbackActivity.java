@@ -10,8 +10,6 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.KeyEvent;
-import android.view.Menu;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputMethodManager;
@@ -112,8 +110,10 @@ public class FeedbackActivity extends AppCompatActivity {
     }
 
     public String getUid() {
-        user = mAuth.getCurrentUser();
-        return user.getUid();
+        if (mAuth.getCurrentUser() == null) {
+            signInAnonymously();
+        }
+        return mAuth.getCurrentUser().getUid();
     }
 
     private void signInAnonymously() {
@@ -348,7 +348,6 @@ public class FeedbackActivity extends AppCompatActivity {
     }
 
     private void startUpload() {
-        signInAnonymously();
         saveTheDataWeAreUploading();
         databaseReference.child(getUid()).child(String.valueOf(System.currentTimeMillis())).setValue(feedbackDataUploaderMap);
     }
