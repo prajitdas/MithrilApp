@@ -14,43 +14,56 @@ import android.view.ViewGroup;
 import java.util.ArrayList;
 import java.util.List;
 
+import edu.umbc.ebiquity.mithril.MithrilAC;
 import edu.umbc.ebiquity.mithril.R;
 import edu.umbc.ebiquity.mithril.data.dbhelpers.MithrilDBHelper;
-import edu.umbc.ebiquity.mithril.ui.adapters.ViolationRecyclerViewAdapter;
+import edu.umbc.ebiquity.mithril.data.model.rules.Violation;
+import edu.umbc.ebiquity.mithril.ui.adapters.ViolationDetailsRecyclerViewAdapter;
 
 /**
  * A fragment representing a list of Items.
- * <p/>
+ * <p>
  * Activities containing this fragment MUST implement the {@link OnListFragmentInteractionListener}
  * interface.
  */
-public class ViolationFragment extends Fragment {
+public class ViolationDetailFragment extends Fragment {
 
     // TODO: Customize parameter argument names
     private static final String ARG_COLUMN_COUNT = "column-count";
+    /**
+     * An array of violation items.
+     */
+    public List<Violation> violationItems = new ArrayList<>();
+    //    /**
+//     * A map of violation items, by ID.
+//     */
+//    public Map<String, Violation> violationItemsMap = new HashMap<>();
+    private SQLiteDatabase mithrilDB;
+    private View view;
     // TODO: Customize parameters
     private int mColumnCount = 1;
     private OnListFragmentInteractionListener mListener;
-    private List<String> appViolations = new ArrayList<>();
-    private SQLiteDatabase mithrilDB;
-    private View view;
 
     /**
      * Mandatory empty constructor for the fragment manager to instantiate the
      * fragment (e.g. upon screen orientation changes).
      */
-    public ViolationFragment() {
+    public ViolationDetailFragment() {
     }
 
     // TODO: Customize parameter initialization
     @SuppressWarnings("unused")
-    public static ViolationFragment newInstance(int columnCount) {
-        ViolationFragment fragment = new ViolationFragment();
+    public static ViolationDetailFragment newInstance(int columnCount, String appName) {
+        ViolationDetailFragment fragment = new ViolationDetailFragment();
         Bundle args = new Bundle();
         args.putInt(ARG_COLUMN_COUNT, columnCount);
         fragment.setArguments(args);
+        args.putString(MithrilAC.getPrefKeyAppPkgName(), appName);
+        fragment.setArguments(args);
         return fragment;
     }
+
+    private String mAppName;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -58,13 +71,14 @@ public class ViolationFragment extends Fragment {
 
         if (getArguments() != null) {
             mColumnCount = getArguments().getInt(ARG_COLUMN_COUNT);
+            mAppName = getArguments().getString(MithrilAC.getPrefKeyAppPkgName());
         }
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        view = inflater.inflate(R.layout.fragment_violation_list, container, false);
+        view = inflater.inflate(R.layout.fragment_violation_details_list, container, false);
 
         initData();
 
@@ -77,19 +91,14 @@ public class ViolationFragment extends Fragment {
             } else {
                 recyclerView.setLayoutManager(new GridLayoutManager(context, mColumnCount));
             }
-            recyclerView.setAdapter(new ViolationRecyclerViewAdapter(appViolations, mListener));
+            recyclerView.setAdapter(new ViolationDetailsRecyclerViewAdapter(violationItems, mListener));
         }
         return view;
     }
 
     private void initData() {
         initDB(view.getContext());
-        appViolations = MithrilDBHelper.getHelper(view.getContext()).findAppViolations(mithrilDB);
-    }
-
-    private void initDB(Context context) {
-        // Let's get the DB instances loaded too
-        mithrilDB = MithrilDBHelper.getHelper(context).getWritableDatabase();
+        violationItems = MithrilDBHelper.getHelper(view.getContext()).findViolationsForApp(mithrilDB, mAppName);
     }
 
     @Override
@@ -109,18 +118,23 @@ public class ViolationFragment extends Fragment {
         mListener = null;
     }
 
+    private void initDB(Context context) {
+        // Let's get the DB instances loaded too
+        mithrilDB = MithrilDBHelper.getHelper(context).getWritableDatabase();
+    }
+
     /**
      * This interface must be implemented by activities that contain this
      * fragment to allow an interaction in this fragment to be communicated
      * to the activity and potentially other fragments contained in that
      * activity.
-     * <p/>
+     * <p>
      * See the Android Training lesson <a href=
      * "http://developer.android.com/training/basics/fragments/communicating.html"
      * >Communicating with Other Fragments</a> for more information.
      */
     public interface OnListFragmentInteractionListener {
         // TODO: Update argument type and name
-        void onListFragmentInteraction(String item);
+        void onListFragmentInteraction(Violation item, boolean blocked, String appName);
     }
 }

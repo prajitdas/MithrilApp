@@ -4,7 +4,6 @@ import android.annotation.NonNull;
 import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Context;
-import android.content.SharedPreferences;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
@@ -62,14 +61,13 @@ public class FeedbackActivity extends AppCompatActivity {
     private ScrollView feedbackScrollview;
 
     private Map<String, Object> feedbackDataUploaderMap = new HashMap<>();
-    private SharedPreferences sharedPreferences;
 
     private SQLiteDatabase mithrilDB;
     // Write a message to the database
     private FirebaseDatabase firebaseDatabase;
     private DatabaseReference databaseReference;
-//    private String userId;
     private FirebaseAuth mAuth;
+    private FirebaseUser user;
     private TextView uploadingAsTextView;
     private ProgressDialog mProgressDialog;
 
@@ -94,7 +92,7 @@ public class FeedbackActivity extends AppCompatActivity {
         initViews();
         initData();
 
-        FirebaseUser user = mAuth.getCurrentUser();
+        user = mAuth.getCurrentUser();
         updateUI(user);
 
         setOnClickListeners();
@@ -103,7 +101,7 @@ public class FeedbackActivity extends AppCompatActivity {
 
     private void updateUI(FirebaseUser user) {
         if (user != null)
-            uploadingAsTextView.setText(getResources().getString(R.string.uploading_as).concat(user.getDisplayName()));
+            uploadingAsTextView.setText(getResources().getString(R.string.uploading_as).concat(user.getUid()));
         else
             uploadingAsTextView.setText(getResources().getString(R.string.uploading_as).concat(getResources().getString(R.string.anonymous)));
     }
@@ -125,7 +123,7 @@ public class FeedbackActivity extends AppCompatActivity {
     }
 
     public String getUid() {
-        return FirebaseAuth.getInstance().getCurrentUser().getUid();
+        return user.getUid();
     }
 
     private void signInAnonymously() {
@@ -162,9 +160,6 @@ public class FeedbackActivity extends AppCompatActivity {
     }
 
     private void initData() {
-        sharedPreferences = getApplicationContext().getSharedPreferences(MithrilAC.getSharedPreferencesName(), Context.MODE_PRIVATE);
-//        userId = sharedPreferences.getString(MithrilAC.getRandomUserId(), getResources().getString(R.string.anonymous));
-
         mAuth = FirebaseAuth.getInstance();
         firebaseDatabase = FirebaseDatabase.getInstance();
         databaseReference = firebaseDatabase.getReference();
@@ -172,7 +167,6 @@ public class FeedbackActivity extends AppCompatActivity {
         mithrilDB = MithrilDBHelper.getHelper(this).getWritableDatabase();
 
         getDataFromDatabase();
-//        addToDataUploader(extractDatabaseDataToUpload(), MithrilAC.getFeedbackQuestionDataKey());
     }
 
     private void getDataFromDatabase() {
@@ -229,7 +223,6 @@ public class FeedbackActivity extends AppCompatActivity {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                 if (buttonView.isChecked()) {
-//                    feedbackSwitch.setChecked(false);
                     feedbackScrollview.setVisibility(View.VISIBLE);
                     uploadButton.setVisibility(View.GONE);
                     addToDataUploader(false, MithrilAC.getFeedbackQuestion1());
@@ -242,7 +235,6 @@ public class FeedbackActivity extends AppCompatActivity {
                     addToDataUploader(feedbackQ8SimplicityRatingBar.getRating(), MithrilAC.getFeedbackQuestion8());
                     addToDataUploader(feedbackQ9EditText.getText().toString(), MithrilAC.getFeedbackQuestion9());
                 } else {
-//                    feedbackSwitch.setChecked(true);
                     feedbackScrollview.setVisibility(View.GONE);
                     uploadButton.setVisibility(View.VISIBLE);
                     addToDataUploader("", MithrilAC.getFeedbackQuestion1());
@@ -389,6 +381,26 @@ public class FeedbackActivity extends AppCompatActivity {
         }
     }
 
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        // Inflate the menu; this adds items to the action bar if it is present.
+        getMenuInflater().inflate(R.menu.menu_feedback, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        // Handle action bar item clicks here. The action bar will
+        // automatically handle clicks on the Home/Up button, so long
+        // as you specify a parent activity in AndroidManifest.xml.
+        int id = item.getItemId();
+        if (id == R.id.upload_feedback) {
+            startUpload();
+            return true;
+        }
+        return super.onOptionsItemSelected(item);
+    }
+
     public final class JSONRequest {
         private JSONObject request;
 
@@ -413,25 +425,5 @@ public class FeedbackActivity extends AppCompatActivity {
         public JSONObject getRequest() {
             return request;
         }
-    }
-
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.menu_feedback, menu);
-        return true;
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
-        int id = item.getItemId();
-        if (id == R.id.upload_feedback) {
-            startUpload();
-            return true;
-        }
-        return super.onOptionsItemSelected(item);
     }
 }

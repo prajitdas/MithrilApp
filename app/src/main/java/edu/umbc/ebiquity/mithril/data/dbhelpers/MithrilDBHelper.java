@@ -1727,6 +1727,97 @@ public class MithrilDBHelper extends SQLiteOpenHelper {
         return violations;
     }
 
+    public List<Violation> findViolationsForApp(SQLiteDatabase db, String appName) {
+        // Select Violation Query
+        String selectQuery = "SELECT " +
+                getViolationsLogTableName() + "." + VIOLATIONPOLICYID + ", " +
+                getViolationsLogTableName() + "." + VIOLATIONAPPID + ", " +
+                getViolationsLogTableName() + "." + VIOLATIONOPERATION + ", " +
+                getViolationsLogTableName() + "." + VIOLATIONAPPSTR + ", " +
+                getViolationsLogTableName() + "." + VIOLATIONOPSTR + ", " +
+                getViolationsLogTableName() + "." + VIOLATIONASKED + ", " +
+                getViolationsLogTableName() + "." + VIOLATIONTRUEFALSE + ", " +
+                getViolationsLogTableName() + "." + VIOLATIONDETECTTIME + ", " +
+                getViolationsLogTableName() + "." + VIOLATIONCTXTIDS + ", " +
+                getViolationsLogTableName() + "." + VIOLATIONCOUNT + ", " +
+                getViolationsLogTableName() + "." + VIOLATIONDURATION + ", " +
+                getViolationsLogTableName() + "." + VIOLATIONRELATIVELASTTIMEUSED + ", " +
+                getViolationsLogTableName() + "." + VIOLATIONALLOWEDCOUNT + ", " +
+                getViolationsLogTableName() + "." + VIOLATIONIGNOREDCOUNT + ", " +
+                getViolationsLogTableName() + "." + VIOLATIONMODE +
+                " FROM " +
+                getViolationsLogTableName() +
+                " WHERE " +
+                getViolationsLogTableName() + "." + VIOLATIONASKED + " = 0 " +
+                " AND " +
+                getViolationsLogTableName() + "." + VIOLATIONAPPSTR + " = '" + appName + "' " +
+                " ORDER BY " +
+                getViolationsLogTableName() + "." + VIOLATIONDETECTTIME + " DESC  " +
+                ";";
+
+        List<Violation> violations = new ArrayList<>();
+        Cursor cursor = db.rawQuery(selectQuery, null);
+        try {
+            if (cursor.moveToFirst()) {
+                do {
+                    Violation tempViolation = new Violation(
+                            cursor.getInt(0),
+                            cursor.getInt(1),
+                            cursor.getInt(2),
+                            cursor.getString(3),
+                            cursor.getString(4),
+                            cursor.getInt(5) == 1,
+                            cursor.getInt(6) == 1,
+                            new Timestamp(cursor.getLong(7)),
+                            setCtxtIds(cursor.getString(8)),
+                            cursor.getInt(9),
+                            new Resource(cursor.getInt(2),
+                                    cursor.getInt(10),
+                                    cursor.getString(11),
+                                    cursor.getInt(12),
+                                    cursor.getInt(13),
+                                    cursor.getInt(14)
+                            )
+                    );
+                    violations.add(tempViolation);
+                } while (cursor.moveToNext());
+            }
+        } catch (SQLException e) {
+            throw new SQLException("Could not find " + e);
+        } finally {
+            cursor.close();
+        }
+        return violations;
+    }
+
+    public List<String> findAppViolations(SQLiteDatabase db) {
+        // Select Violation Query
+        String selectQuery = "SELECT COUNT(" +
+                getViolationsLogTableName() + "." + VIOLATIONPOLICYID + "), " +
+                getViolationsLogTableName() + "." + VIOLATIONAPPSTR +
+                " FROM " + getViolationsLogTableName() +
+                " GROUP BY " + getViolationsLogTableName() + "." + VIOLATIONAPPSTR + ";";
+
+        List<String> appViolations = new ArrayList<>();
+        Cursor cursor = db.rawQuery(selectQuery, null);
+        try {
+            if (cursor.moveToFirst()) {
+                do {
+                    appViolations.add(
+                            cursor.getString(1) +
+                            ": has " +
+                            String.valueOf(cursor.getInt(0)) +
+                            " violations");
+                } while (cursor.moveToNext());
+            }
+        } catch (SQLException e) {
+            throw new SQLException("Could not find " + e);
+        } finally {
+            cursor.close();
+        }
+        return appViolations;
+    }
+
     /**
      * Finds all violations
      *

@@ -67,6 +67,7 @@ import edu.umbc.ebiquity.mithril.ui.fragments.coreactivityfragments.PermissionsF
 import edu.umbc.ebiquity.mithril.ui.fragments.coreactivityfragments.PolicyRuleFragment;
 import edu.umbc.ebiquity.mithril.ui.fragments.coreactivityfragments.ServicesFragment;
 import edu.umbc.ebiquity.mithril.ui.fragments.coreactivityfragments.UsageStatsFragment;
+import edu.umbc.ebiquity.mithril.ui.fragments.coreactivityfragments.ViolationDetailFragment;
 import edu.umbc.ebiquity.mithril.ui.fragments.coreactivityfragments.ViolationFragment;
 import edu.umbc.ebiquity.mithril.util.services.AppLaunchDetectorService;
 import edu.umbc.ebiquity.mithril.util.specialtasks.permissions.PermissionHelper;
@@ -81,6 +82,7 @@ public class CoreActivity extends AppCompatActivity
         ContentProvidersFragment.OnListFragmentInteractionListener,
         ServicesFragment.OnListFragmentInteractionListener,
         AboutFragment.OnFragmentInteractionListener,
+        ViolationDetailFragment.OnListFragmentInteractionListener,
         ViolationFragment.OnListFragmentInteractionListener,
         EmptyFragment.OnFragmentInteractionListener,
         NothingHereFragment.OnFragmentInteractionListener,
@@ -163,7 +165,7 @@ public class CoreActivity extends AppCompatActivity
             if (isViolationListEmpty())
                 loadEmptyFragment();
             else
-                loadViolationsFragment();
+                loadViolationFragment();
         } else if (id == R.id.nav_policies) {
             if (isPolicyListEmpty())
                 loadNothingHereFragment(WHAT_POLICIES_FRAGMENT);
@@ -486,7 +488,7 @@ public class CoreActivity extends AppCompatActivity
         if (isViolationListEmpty())
             loadEmptyFragment();
         else
-            loadViolationsFragment();
+            loadViolationFragment();
     }
 
     private void resetApp() {
@@ -558,9 +560,15 @@ public class CoreActivity extends AppCompatActivity
                 .commit();
     }
 
-    private void loadViolationsFragment() {
+    private void loadViolationDetailsFragment(String appName) {
+        Bundle data = new Bundle();
+        data.putString(MithrilAC.getPrefKeyAppPkgName(), appName);
+
+        ViolationDetailFragment aViolationDetailFragment = new ViolationDetailFragment();
+        aViolationDetailFragment.setArguments(data);
+
         FragmentManager fragmentManager = getFragmentManager();
-        fragmentManager.beginTransaction().replace(R.id.container_core, new ViolationFragment())
+        fragmentManager.beginTransaction().replace(R.id.container_core, new ViolationDetailFragment())
                 .commit();
     }
 
@@ -591,6 +599,12 @@ public class CoreActivity extends AppCompatActivity
     private void loadUsageStatsFragment() {
         FragmentManager fragmentManager = getFragmentManager();
         fragmentManager.beginTransaction().replace(R.id.container_core, new UsageStatsFragment())
+                .commit();
+    }
+
+    private void loadViolationFragment() {
+        FragmentManager fragmentManager = getFragmentManager();
+        fragmentManager.beginTransaction().replace(R.id.container_core, new ViolationFragment())
                 .commit();
     }
 
@@ -727,13 +741,13 @@ public class CoreActivity extends AppCompatActivity
     }
 
     @Override
-    public void onListFragmentInteraction(Violation item, boolean blocked) {
+    public void onListFragmentInteraction(Violation item, boolean blocked, String appName) {
         if (!blocked) {
             Intent intent = new Intent(this, RuleChangeActivity.class);
             intent.putExtra("rule", item);
             startActivity(intent);
         } else
-            loadViolationsFragment();
+            loadViolationDetailsFragment(appName);
     }
 
     @Override
@@ -787,5 +801,10 @@ public class CoreActivity extends AppCompatActivity
         intent.putExtra(MithrilAC.getFeedbackQuestionDataKey(), item.getData());
         intent.putExtra(MithrilAC.getFeedbackQuestionDataTimeKey(), item.toString());
         startActivity(intent);
+    }
+
+    @Override
+    public void onListFragmentInteraction(String item) {
+        loadViolationDetailsFragment(item.split(":")[0]);
     }
 }

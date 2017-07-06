@@ -3,9 +3,8 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/list"
-    android:name=".ui.fragments.coreactivityfragments.ViolationFragment"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     app:layoutManager="LinearLayoutManager"
-    tools:context=".ui.fragments.coreactivityfragments.ViolationFragment"
-    tools:listitem="@layout/fragment_violation" />
+    tools:context=".ui.fragments.coreactivityfragments.ViolationDetailFragment"
+    tools:listitem="@layout/fragment_violation_details" />
