@@ -1755,6 +1755,7 @@ public class MithrilDBHelper extends SQLiteOpenHelper {
                 getViolationsLogTableName() + "." + VIOLATIONDETECTTIME + " DESC  " +
                 ";";
 
+        Log.d(MithrilAC.getDebugTag(), selectQuery);
         List<Violation> violations = new ArrayList<>();
         Cursor cursor = db.rawQuery(selectQuery, null);
         try {
