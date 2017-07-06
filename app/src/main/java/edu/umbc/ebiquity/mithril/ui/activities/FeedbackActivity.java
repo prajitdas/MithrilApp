@@ -425,6 +425,18 @@ public class FeedbackActivity extends AppCompatActivity {
     private void startUpload() {
         signInAnonymously();
         //Store the uploaded data in the database
+        try {
+            feedbackJsonRequest = new JSONRequest(feedbackDataUploaderMap, getUid()+System.currentTimeMillis());
+            MithrilDBHelper.getHelper(this).addUpload(mithrilDB, new Upload(new Timestamp(System.currentTimeMillis()),
+                            feedbackJsonRequest.getRequest().toString()));
+        } catch (JSONException aJSONException) {
+            Log.e(MithrilAC.getDebugTag(), "Exception in creating JSON " + aJSONException.getMessage());
+        }
+        databaseReference.child(getUid()).child(String.valueOf(System.currentTimeMillis())).setValue(feedbackDataUploaderMap);
+    }
+
+    private void oldStartUpload() {
+        //Store the uploaded data in the database
         MithrilDBHelper.getHelper(this).addUpload(
                 mithrilDB,
                 new Upload(
@@ -432,68 +444,46 @@ public class FeedbackActivity extends AppCompatActivity {
                         feedbackJsonRequest.getRequest().toString()
                 )
         );
-        databaseReference.child(getUid()).child(String.valueOf(System.currentTimeMillis())).setValue(feedbackDataUploaderMap);
-    }
-
-    private void oldStartUpload() {
-        try {
-            feedbackJsonRequest = new JSONRequest(feedbackDataUploaderMap,
-                    sharedPreferences.getString(
-                            MithrilAC.getRandomUserId(),
-                            getResources().getString(R.string.anonymous)
-                    )
-            );
-            //Store the uploaded data in the database
-            MithrilDBHelper.getHelper(this).addUpload(
-                    mithrilDB,
-                    new Upload(
-                            new Timestamp(System.currentTimeMillis()),
-                            feedbackJsonRequest.getRequest().toString()
-                    )
-            );
-            JsonObjectRequest jsObjRequest = new JsonObjectRequest(
-                    Request.Method.POST,
-                    MithrilAC.getFeedbackUrl(),
-                    feedbackJsonRequest.getRequest(),
-                    new Response.Listener<JSONObject>() {
-                        @Override
-                        public void onResponse(JSONObject response) {
-                            try {
-                                final String status = response.getString("status");
-                                feedbackJsonResponse = "Status: " + status;
-                                Intent resultIntent = new Intent();
-                                resultIntent.putExtra(MithrilAC.getFeedbackUploadResultKey(), feedbackJsonResponse);
-                                setResult(Activity.RESULT_OK, resultIntent);
-                                signOut();
-                                finish();
-                            } catch (JSONException aJSONException) {
-                                Log.e(MithrilAC.getDebugTag(), "Exception in sending data using JSON " + aJSONException.getMessage());
-                            }
-                        }
-                    },
-                    new Response.ErrorListener() {
-                        @Override
-                        public void onErrorResponse(VolleyError error) {
-                            String statusCode;
-                            try {
-                                statusCode = String.valueOf(error.networkResponse.statusCode);
-                                PermissionHelper.toast(getApplicationContext(), feedbackJsonResponse);
-                            } catch (NullPointerException e) {
-                                statusCode = "fatal error! Error code not received";
-                            }
-                            feedbackJsonResponse = "Getting an error code: " + statusCode + " from the server\n";
+        JsonObjectRequest jsObjRequest = new JsonObjectRequest(
+                Request.Method.POST,
+                MithrilAC.getFeedbackUrl(),
+                feedbackJsonRequest.getRequest(),
+                new Response.Listener<JSONObject>() {
+                    @Override
+                    public void onResponse(JSONObject response) {
+                        try {
+                            final String status = response.getString("status");
+                            feedbackJsonResponse = "Status: " + status;
                             Intent resultIntent = new Intent();
                             resultIntent.putExtra(MithrilAC.getFeedbackUploadResultKey(), feedbackJsonResponse);
-                            setResult(Activity.RESULT_CANCELED, resultIntent);
+                            setResult(Activity.RESULT_OK, resultIntent);
+                            signOut();
                             finish();
+                        } catch (JSONException aJSONException) {
+                            Log.e(MithrilAC.getDebugTag(), "Exception in sending data using JSON " + aJSONException.getMessage());
                         }
                     }
-            );
-            // Add a request (in this example, called jsObjRequest) to your RequestQueue.
-            VolleySingleton.getInstance(this).addToRequestQueue(jsObjRequest);
-        } catch (JSONException aJSONException) {
-            Log.e(MithrilAC.getDebugTag(), "Exception in sending data using JSON " + aJSONException.getMessage());
-        }
+                },
+                new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        String statusCode;
+                        try {
+                            statusCode = String.valueOf(error.networkResponse.statusCode);
+                            PermissionHelper.toast(getApplicationContext(), feedbackJsonResponse);
+                        } catch (NullPointerException e) {
+                            statusCode = "fatal error! Error code not received";
+                        }
+                        feedbackJsonResponse = "Getting an error code: " + statusCode + " from the server\n";
+                        Intent resultIntent = new Intent();
+                        resultIntent.putExtra(MithrilAC.getFeedbackUploadResultKey(), feedbackJsonResponse);
+                        setResult(Activity.RESULT_CANCELED, resultIntent);
+                        finish();
+                    }
+                }
+        );
+        // Add a request (in this example, called jsObjRequest) to your RequestQueue.
+        VolleySingleton.getInstance(this).addToRequestQueue(jsObjRequest);
     }
 
     @Override
