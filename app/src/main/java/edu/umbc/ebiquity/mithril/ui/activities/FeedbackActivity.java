@@ -91,8 +91,6 @@ public class FeedbackActivity extends AppCompatActivity {
         initViews();
         initData();
 
-        user = mAuth.getCurrentUser();
-
         setOnClickListeners();
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
     }
@@ -114,6 +112,7 @@ public class FeedbackActivity extends AppCompatActivity {
     }
 
     public String getUid() {
+        user = mAuth.getCurrentUser();
         return user.getUid();
     }
 

@@ -23,7 +23,6 @@ public class MithrilAC extends Application {
     public static final int USAGE_STATS_PERMISSION_REQUEST_CODE = 2;
     public static final int WRITE_SETTINGS_PERMISSION_REQUEST_CODE = 3;
     public static final int SYSTEM_ALERT_WINDOW_PERMISSION_REQUEST_CODE = 4;
-    public static final int FEEDBACK_ACTIVITY_REQUEST_CODE = 5;
 
     public static final int SUCCESS_RESULT = 6;
     public static final int FAILURE_RESULT = 7;
