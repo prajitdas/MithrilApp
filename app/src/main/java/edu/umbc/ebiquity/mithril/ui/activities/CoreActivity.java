@@ -1,7 +1,6 @@
 package edu.umbc.ebiquity.mithril.ui.activities;
 
 import android.Manifest;
-import android.app.Activity;
 import android.app.ActivityManager;
 import android.app.AlarmManager;
 import android.app.AlertDialog;
@@ -114,15 +113,11 @@ public class CoreActivity extends AppCompatActivity
      * We are not launching the BCast receivers, Services and Content provider lists yet
      */
     private boolean isUserAppsListEmpty() {
-        if (MithrilDBHelper.getHelper(this).findAllApps(mithrilDB).size() > 0)
-            return false;
-        return true;
+        return MithrilDBHelper.getHelper(this).findAllApps(mithrilDB).size() <= 0;
     }
 
     private boolean isPolicyListEmpty() {
-        if (MithrilDBHelper.getHelper(this).findAllPolicies(mithrilDB).size() > 0)
-            return false;
-        return true;
+        return MithrilDBHelper.getHelper(this).findAllPolicies(mithrilDB).size() <= 0;
     }
 
     private boolean isPermissionsListEmpty() {
@@ -130,9 +125,7 @@ public class CoreActivity extends AppCompatActivity
     }
 
     private boolean isPastUploadsListEmpty() {
-        if (MithrilDBHelper.getHelper(this).findAllUploads(mithrilDB).size() > 0)
-            return false;
-        return true;
+        return MithrilDBHelper.getHelper(this).findAllUploads(mithrilDB).size() <= 0;
     }
 
     private boolean isSystemAppsListEmpty() {
@@ -176,10 +169,7 @@ public class CoreActivity extends AppCompatActivity
             else
                 loadPolicyRuleFragment();
         } else if (id == R.id.nav_feedback) {
-            if (isPolicyListEmpty())
-                loadNothingHereFragment(WHAT_FEEDBACK_FRAGMENT);
-            else
-                launchFeedbackActivity();
+            launchFeedbackActivity();
         } else if (id == R.id.nav_apps) {
             if (isUserAppsListEmpty())
                 loadNothingHereFragment(WHAT_USER_APPS_FRAGMENT);
