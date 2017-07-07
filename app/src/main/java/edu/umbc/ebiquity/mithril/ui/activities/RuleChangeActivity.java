@@ -70,10 +70,11 @@ public class RuleChangeActivity extends AppCompatActivity implements RuleChangeF
         allowDenyToggle.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                if (isChecked)
-                    allowDenyToggle.setChecked(false);
+                if (buttonView.isChecked())
+                    buttonView.setChecked(false);
                 else
-                    allowDenyToggle.setChecked(true);
+                    buttonView.setChecked(true);
+                allowDenyToggle.toggle();
             }
         });
 
