@@ -218,7 +218,7 @@ public class MithrilAC extends Application {
      */
     private static final String CONTEXT_ARRAY_TYPES[] = {PREF_KEY_CONTEXT_TYPE_ACTIVITY, PREF_KEY_CONTEXT_TYPE_TEMPORAL, PREF_KEY_CONTEXT_TYPE_PRESENCE, PREF_KEY_CONTEXT_TYPE_LOCATION};
     private static final String CONTEXT_ARRAY_ACTIVITY[] = {"Activity", "Personal_Activity", "Professional_Activity", "Date", "Entertainment",
-            "Exercising", "Sleeping", "Partying", "Playing", "Running"};
+            "Exercising", "Sleeping", "Partying", "Playing", "Running", "Driving", "Biking", "Walking", "Running", "Working"};
     private static final String CONTEXT_ARRAY_LOCATION[] = {"Location", "Place", "Classroom", "Home", "Library", "Movie_Theatre", "Office",
             "Department_Office", "Lab", "Supervisor_Office", "Government_Office", "Post_Office", "Secure_Government_Office"};
     private static final String CONTEXT_ARRAY_PRESENCE_INFO_IDENTITY[] = {"Public", "Professional_Network", "Personal_Network", "Superior",
