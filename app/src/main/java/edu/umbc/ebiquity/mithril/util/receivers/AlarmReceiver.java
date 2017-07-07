@@ -10,10 +10,8 @@ import android.support.v4.app.NotificationCompat;
 import android.support.v4.app.TaskStackBuilder;
 
 import edu.umbc.ebiquity.mithril.R;
-import edu.umbc.ebiquity.mithril.data.model.rules.context.SemanticLocation;
 import edu.umbc.ebiquity.mithril.ui.activities.CoreActivity;
 import edu.umbc.ebiquity.mithril.ui.activities.FeedbackActivity;
-import edu.umbc.ebiquity.mithril.ui.activities.InstanceCreationActivity;
 
 /**
  * Created by prajit on 7/6/17.
@@ -54,8 +52,7 @@ public class AlarmReceiver extends BroadcastReceiver {
                 .setContentTitle(context.getString(R.string.title_activity_feedback))
                 .setContentText(context.getString(R.string.mind_uploading_some_feedback))
                 .setContentIntent(notificationPendingIntent)
-                .addAction(android.R.string.ok, "Okay", notificationPendingIntent)
-                .addAction(android.R.string.cancel, "Dismiss", notificationPendingIntent);
+                .addAction(android.R.string.ok, "Okay", notificationPendingIntent);
 
         // Dismiss notification once the user touches it.
         builder.setAutoCancel(true);
