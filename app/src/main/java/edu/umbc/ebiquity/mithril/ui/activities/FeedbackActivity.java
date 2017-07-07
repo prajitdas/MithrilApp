@@ -161,8 +161,8 @@ public class FeedbackActivity extends AppCompatActivity {
     }
 
     private void getDataFromDatabase() {
-        addToDataUploader(MithrilDBHelper.getHelper(this).findAllViolations(mithrilDB), "violations");
-        addToDataUploader(MithrilDBHelper.getHelper(this).findAllPolicies(mithrilDB), "policies");
+        addToDataUploader(MithrilDBHelper.getHelper(this).findEveryViolation(mithrilDB), "violations");
+        addToDataUploader(MithrilDBHelper.getHelper(this).findEveryPolicy(mithrilDB), "policies");
         addToDataUploader(MithrilDBHelper.getHelper(this).findAllApps(mithrilDB), "apps");
         addToDataUploader(MithrilDBHelper.getHelper(this).findAllContexts(mithrilDB), "contexts");
     }

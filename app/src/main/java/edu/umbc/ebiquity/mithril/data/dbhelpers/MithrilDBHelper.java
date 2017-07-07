@@ -1727,6 +1727,69 @@ public class MithrilDBHelper extends SQLiteOpenHelper {
         return violations;
     }
 
+    /**
+     * Finds all violations
+     *
+     * @param db database instance
+     * @return all violations
+     */
+    public List<Violation> findEveryViolation(SQLiteDatabase db) {
+        // Select Violation Query
+        String selectQuery = "SELECT " +
+                getViolationsLogTableName() + "." + VIOLATIONPOLICYID + ", " +
+                getViolationsLogTableName() + "." + VIOLATIONAPPID + ", " +
+                getViolationsLogTableName() + "." + VIOLATIONOPERATION + ", " +
+                getViolationsLogTableName() + "." + VIOLATIONAPPSTR + ", " +
+                getViolationsLogTableName() + "." + VIOLATIONOPSTR + ", " +
+                getViolationsLogTableName() + "." + VIOLATIONASKED + ", " +
+                getViolationsLogTableName() + "." + VIOLATIONTRUEFALSE + ", " +
+                getViolationsLogTableName() + "." + VIOLATIONDETECTTIME + ", " +
+                getViolationsLogTableName() + "." + VIOLATIONCTXTIDS + ", " +
+                getViolationsLogTableName() + "." + VIOLATIONCOUNT + ", " +
+                getViolationsLogTableName() + "." + VIOLATIONDURATION + ", " +
+                getViolationsLogTableName() + "." + VIOLATIONRELATIVELASTTIMEUSED + ", " +
+                getViolationsLogTableName() + "." + VIOLATIONALLOWEDCOUNT + ", " +
+                getViolationsLogTableName() + "." + VIOLATIONIGNOREDCOUNT + ", " +
+                getViolationsLogTableName() + "." + VIOLATIONMODE +
+                " FROM " + getViolationsLogTableName() +
+                " ORDER BY " + getViolationsLogTableName() + "." + VIOLATIONDETECTTIME + " DESC  " +
+                ";";
+
+        List<Violation> violations = new ArrayList<>();
+        Cursor cursor = db.rawQuery(selectQuery, null);
+        try {
+            if (cursor.moveToFirst()) {
+                do {
+                    Violation tempViolation = new Violation(
+                            cursor.getInt(0),
+                            cursor.getInt(1),
+                            cursor.getInt(2),
+                            cursor.getString(3),
+                            cursor.getString(4),
+                            cursor.getInt(5) == 1,
+                            cursor.getInt(6) == 1,
+                            new Timestamp(cursor.getLong(7)),
+                            setCtxtIds(cursor.getString(8)),
+                            cursor.getInt(9),
+                            new Resource(cursor.getInt(2),
+                                    cursor.getInt(10),
+                                    cursor.getString(11),
+                                    cursor.getInt(12),
+                                    cursor.getInt(13),
+                                    cursor.getInt(14)
+                            )
+                    );
+                    violations.add(tempViolation);
+                } while (cursor.moveToNext());
+            }
+        } catch (SQLException e) {
+            throw new SQLException("Could not find " + e);
+        } finally {
+            cursor.close();
+        }
+        return violations;
+    }
+
     public List<Violation> findViolationsForApp(SQLiteDatabase db, String appName) {
         // Select Violation Query
         String selectQuery = "SELECT " +
@@ -1857,6 +1920,120 @@ public class MithrilDBHelper extends SQLiteOpenHelper {
             ctxtIds.add(Long.parseLong(ctxtIdStrings[i]));
         return ctxtIds;
     }
+
+    /**
+     * Getting all policies
+     *
+     * @param db database instance
+     * @return all policies
+     */
+    public ArrayList<PolicyRule> findPolicyForContext(SQLiteDatabase db) {
+        ArrayList<PolicyRule> policyRules = new ArrayList<>();
+        // Select All Query
+        String selectQuery = "SELECT " +
+                getPolicyRulesTableName() + "." + POLRULID + ", " +
+                getPolicyRulesTableName() + "." + POLRULAPPID + ", " +
+                getPolicyRulesTableName() + "." + POLRULCTXID + ", " +
+                getPolicyRulesTableName() + "." + POLRULOPID + ", " +
+                getPolicyRulesTableName() + "." + POLRULACTIN + ", " +
+                getPolicyRulesTableName() + "." + POLRULACTSTR + ", " +
+                getPolicyRulesTableName() + "." + POLRULAPPSTR + ", " +
+                getPolicyRulesTableName() + "." + POLRULCTXSTR + ", " +
+                getPolicyRulesTableName() + "." + POLRULOPSTR + ", " +
+                getPolicyRulesTableName() + "." + POLRULENABLED +
+                " FROM " +
+                getPolicyRulesTableName() + ", " + getContextTableName() +
+                " WHERE " +
+                getPolicyRulesTableName() + "." + POLRULCTXID + " = " + getContextTableName() + "." + CONTEXTID +
+                " AND " +
+                getContextTableName() + "." + CONTEXTENABLED + " = 1;";
+
+        Cursor cursor = db.rawQuery(selectQuery, null);
+        try {
+
+            // looping through all rows and adding to list
+            if (cursor.moveToFirst()) {
+                do {
+                    // Adding policies to list
+                    policyRules.add(new PolicyRule(
+                            cursor.getInt(0),
+                            cursor.getLong(1),
+                            cursor.getLong(2),
+                            cursor.getInt(3),
+                            cursor.getInt(4) == 1 ? Action.ALLOW : Action.DENY,
+                            cursor.getString(5),
+                            cursor.getString(6),
+                            cursor.getString(7),
+                            cursor.getString(8),
+                            cursor.getInt(9) == 1));
+                } while (cursor.moveToNext());
+            }
+        } catch (SQLException e) {
+            throw new SQLException("Could not find " + e);
+        } finally {
+            cursor.close();
+        }
+        // return policy rules list
+        return policyRules;
+    }
+
+    /**
+     * Getting all policies
+     *
+     * @param db database instance
+     * @return all policies
+     */
+    public ArrayList<PolicyRule> findEveryPolicy(SQLiteDatabase db) {
+        ArrayList<PolicyRule> policyRules = new ArrayList<>();
+        // Select All Query
+        String selectQuery = "SELECT " +
+                getPolicyRulesTableName() + "." + POLRULID + ", " +
+                getPolicyRulesTableName() + "." + POLRULAPPID + ", " +
+                getPolicyRulesTableName() + "." + POLRULCTXID + ", " +
+                getPolicyRulesTableName() + "." + POLRULOPID + ", " +
+                getPolicyRulesTableName() + "." + POLRULACTIN + ", " +
+                getPolicyRulesTableName() + "." + POLRULACTSTR + ", " +
+                getPolicyRulesTableName() + "." + POLRULAPPSTR + ", " +
+                getPolicyRulesTableName() + "." + POLRULCTXSTR + ", " +
+                getPolicyRulesTableName() + "." + POLRULOPSTR + ", " +
+                getPolicyRulesTableName() + "." + POLRULENABLED +
+                " FROM " +
+                getPolicyRulesTableName() + ", " + getContextTableName() +
+                " WHERE " +
+                getPolicyRulesTableName() + "." + POLRULCTXID + " = " + getContextTableName() + "." + CONTEXTID +
+                " AND " +
+                getContextTableName() + "." + CONTEXTENABLED + " = 1;";
+
+        Log.d(MithrilAC.getDebugTag(), "Query: " + selectQuery);
+        Cursor cursor = db.rawQuery(selectQuery, null);
+        try {
+
+            // looping through all rows and adding to list
+            if (cursor.moveToFirst()) {
+                do {
+                    // Adding policies to list
+                    policyRules.add(new PolicyRule(
+                            cursor.getInt(0),
+                            cursor.getLong(1),
+                            cursor.getLong(2),
+                            cursor.getInt(3),
+                            cursor.getInt(4) == 1 ? Action.ALLOW : Action.DENY,
+                            cursor.getString(5),
+                            cursor.getString(6),
+                            cursor.getString(7),
+                            cursor.getString(8),
+                            cursor.getInt(9) == 1));
+                } while (cursor.moveToNext());
+            }
+        } catch (SQLException e) {
+            throw new SQLException("Could not find " + e);
+        } finally {
+            cursor.close();
+        }
+        // return policy rules list
+        return policyRules;
+    }
+
 
     /**
      * Getting all policies
@@ -2380,7 +2557,7 @@ public class MithrilDBHelper extends SQLiteOpenHelper {
                 do {
                     contexts.add(new ContextForUpload(cursor.getString(0),
                                 cursor.getString(1),
-                                cursor.getInt(2) == 1 ? true : false,
+                            cursor.getInt(2) == 1,
                                 cursor.getInt(3)
                             )
                     );

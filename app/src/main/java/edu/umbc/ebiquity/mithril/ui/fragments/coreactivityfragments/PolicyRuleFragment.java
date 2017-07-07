@@ -86,7 +86,7 @@ public class PolicyRuleFragment extends Fragment {
 
     private void initData() {
         initDB(view.getContext());
-        policies = MithrilDBHelper.getHelper(view.getContext()).findAllPolicies(mithrilDB);
+        policies = MithrilDBHelper.getHelper(view.getContext()).findEveryPolicy(mithrilDB);
     }
 
 

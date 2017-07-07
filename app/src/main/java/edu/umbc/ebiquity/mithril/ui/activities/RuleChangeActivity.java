@@ -16,6 +16,8 @@ import android.util.Pair;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.CompoundButton;
+import android.widget.ToggleButton;
 
 import com.google.gson.Gson;
 
@@ -48,6 +50,7 @@ public class RuleChangeActivity extends AppCompatActivity implements RuleChangeF
     private boolean rulesdeleted;
     private Button saveBtn;
     private SQLiteDatabase mithrilDB;
+    private ToggleButton allowDenyToggle;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -61,6 +64,18 @@ public class RuleChangeActivity extends AppCompatActivity implements RuleChangeF
         currentViolation = getIntent().getParcelableExtra("rule");
         ruleAdded = false;
         rulesdeleted = false;
+
+        allowDenyToggle = (ToggleButton) findViewById(R.id.allowDenyToggleButton);
+        allowDenyToggle.setChecked(true);
+        allowDenyToggle.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                if (isChecked)
+                    allowDenyToggle.setChecked(false);
+                else
+                    allowDenyToggle.setChecked(true);
+            }
+        });
 
         saveBtn = (Button) findViewById(R.id.ruleSaveBtn);
         saveBtn.setOnClickListener(new View.OnClickListener() {
@@ -214,6 +229,10 @@ public class RuleChangeActivity extends AppCompatActivity implements RuleChangeF
                     policyRule.setCtxId(ctxtId);
                     policyRule.setCtxStr(newContextLabel);
                     policyRule.setEnabled(true);
+                    if (!allowDenyToggle.isChecked()) {
+                        policyRule.setAction(Action.DENY);
+                        policyRule.setActStr("Deny");
+                    }
                     int retval = MithrilDBHelper.getHelper(this).updatePolicyRule(mithrilDB, oldId, policyRule);
                     Log.d(MithrilAC.getDebugTag(), "retval" + retval);
                 }

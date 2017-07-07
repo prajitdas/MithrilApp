@@ -50,6 +50,7 @@
             android:layout_weight="0.35"
             android:textOff="@string/button_true_violation"
             android:textOn="@string/button_false_violation"
+            android:textSize="14sp"
             android:theme="@style/AppTheme.Button" />
     </LinearLayout>
 
@@ -81,6 +82,7 @@
             android:layout_weight="0.35"
             android:textOff="@string/button_true_violation"
             android:textOn="@string/button_false_violation"
+            android:textSize="14sp"
             android:theme="@style/AppTheme.Button" />
     </LinearLayout>
 
@@ -112,6 +114,7 @@
             android:layout_weight="0.35"
             android:textOff="@string/button_true_violation"
             android:textOn="@string/button_false_violation"
+            android:textSize="14sp"
             android:theme="@style/AppTheme.Button" />
     </LinearLayout>
 
@@ -143,6 +146,7 @@
             android:layout_weight="0.35"
             android:textOff="@string/button_true_violation"
             android:textOn="@string/button_false_violation"
+            android:textSize="14sp"
             android:theme="@style/AppTheme.Button" />
     </LinearLayout>
 
@@ -174,6 +178,7 @@
             android:layout_weight="0.35"
             android:textOff="@string/button_true_violation"
             android:textOn="@string/button_false_violation"
+            android:textSize="14sp"
             android:theme="@style/AppTheme.Button" />
     </LinearLayout>
 
