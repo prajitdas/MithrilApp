@@ -16,12 +16,12 @@ import android.view.inputmethod.InputMethodManager;
 import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.ImageButton;
+import android.widget.RadioGroup;
 import android.widget.RatingBar;
 import android.widget.ScrollView;
 import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.Toast;
-import android.widget.ToggleButton;
 
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
@@ -45,15 +45,15 @@ import edu.umbc.ebiquity.mithril.data.dbhelpers.MithrilDBHelper;
 import edu.umbc.ebiquity.mithril.data.model.Upload;
 
 public class FeedbackActivity extends AppCompatActivity {
-    private ToggleButton feedbackQ1ToggleBtn;
-    private ToggleButton feedbackQ2ToggleBtn;
-    private ToggleButton feedbackQ3ToggleBtn;
-    private RatingBar feedbackQ4ConcernRatingBar;
-    private RatingBar feedbackQ5OSRatingBar;
-    private ToggleButton feedbackQ6ToggleBtn;
-    private ToggleButton feedbackQ7ToggleBtn;
-    private RatingBar feedbackQ8SimplicityRatingBar;
-    private EditText feedbackQ9EditText;
+    private RadioGroup fq1RadioGroup;
+    private RadioGroup fq2RadioGroup;
+    private RadioGroup fq3RadioGroup;
+    private RadioGroup fq4RadioGroup;
+    private RadioGroup fq5RadioGroup;
+    private RadioGroup fq6RadioGroup;
+    private RatingBar feedbackQ7SimplicityRatingBar;
+    private EditText feedbackQ8EditText;
+
     private ImageButton uploadButton;
     private Switch feedbackSwitch;
     private ScrollView feedbackScrollview;
@@ -174,30 +174,24 @@ public class FeedbackActivity extends AppCompatActivity {
 
         feedbackScrollview = (ScrollView) findViewById(R.id.feedbackScrollView);
 
-        feedbackQ1ToggleBtn = (ToggleButton) findViewById(R.id.fq1btn);
-        feedbackQ1ToggleBtn.setChecked(false);
+        fq1RadioGroup = (RadioGroup) findViewById(R.id.fq1RadioGroup);
+        fq1RadioGroup.check(R.id.fq1radio_strongly_agree);
+        fq2RadioGroup = (RadioGroup) findViewById(R.id.fq2RadioGroup);
+        fq2RadioGroup.check(R.id.fq2radio_strongly_agree);
+        fq3RadioGroup = (RadioGroup) findViewById(R.id.fq3RadioGroup);
+        fq3RadioGroup.check(R.id.fq3radio_strongly_agree);
+        fq4RadioGroup = (RadioGroup) findViewById(R.id.fq4RadioGroup);
+        fq4RadioGroup.check(R.id.fq4radio_strongly_agree);
+        fq5RadioGroup = (RadioGroup) findViewById(R.id.fq5RadioGroup);
+        fq5RadioGroup.check(R.id.fq5radio_strongly_agree);
+        fq6RadioGroup = (RadioGroup) findViewById(R.id.fq6RadioGroup);
+        fq6RadioGroup.check(R.id.fq6radio_strongly_agree);
 
-        feedbackQ2ToggleBtn = (ToggleButton) findViewById(R.id.fq2btn);
-        feedbackQ2ToggleBtn.setChecked(false);
+        feedbackQ7SimplicityRatingBar = (RatingBar) findViewById(R.id.systemSimplicityRatingBar);
 
-        feedbackQ3ToggleBtn = (ToggleButton) findViewById(R.id.fq3btn);
-        feedbackQ3ToggleBtn.setChecked(false);
-
-        feedbackQ4ConcernRatingBar = (RatingBar) findViewById(R.id.prisecConcernRatingBar);
-
-        feedbackQ5OSRatingBar = (RatingBar) findViewById(R.id.currentOSRatingBar);
-
-        feedbackQ6ToggleBtn = (ToggleButton) findViewById(R.id.fq6btn);
-        feedbackQ6ToggleBtn.setChecked(false);
-
-        feedbackQ7ToggleBtn = (ToggleButton) findViewById(R.id.fq7btn);
-        feedbackQ7ToggleBtn.setChecked(false);
-
-        feedbackQ8SimplicityRatingBar = (RatingBar) findViewById(R.id.systemSimplicityRatingBar);
-
-        feedbackQ9EditText = (EditText) findViewById(R.id.fq9EditText);
-        feedbackQ9EditText.clearFocus();
-        feedbackQ9EditText.setText("");
+        feedbackQ8EditText = (EditText) findViewById(R.id.fq8EditText);
+        feedbackQ8EditText.clearFocus();
+        feedbackQ8EditText.setText("");
     }
 
     private void setOnClickListeners() {
@@ -213,15 +207,14 @@ public class FeedbackActivity extends AppCompatActivity {
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                 if (buttonView.isChecked()) {
                     feedbackScrollview.setVisibility(View.VISIBLE);
-                    addToDataUploader(false, MithrilAC.getFeedbackQuestion1());
-                    addToDataUploader(false, MithrilAC.getFeedbackQuestion2());
-                    addToDataUploader(false, MithrilAC.getFeedbackQuestion3());
-                    addToDataUploader(feedbackQ4ConcernRatingBar.getRating(), MithrilAC.getFeedbackQuestion4());
-                    addToDataUploader(feedbackQ5OSRatingBar.getRating(), MithrilAC.getFeedbackQuestion5());
-                    addToDataUploader(false, MithrilAC.getFeedbackQuestion6());
-                    addToDataUploader(false, MithrilAC.getFeedbackQuestion7());
-                    addToDataUploader(feedbackQ8SimplicityRatingBar.getRating(), MithrilAC.getFeedbackQuestion8());
-                    addToDataUploader(feedbackQ9EditText.getText().toString(), MithrilAC.getFeedbackQuestion9());
+                    addToDataUploader(getResources().getString(R.string.strongly_agree), MithrilAC.getFeedbackQuestion1());
+                    addToDataUploader(getResources().getString(R.string.strongly_agree), MithrilAC.getFeedbackQuestion2());
+                    addToDataUploader(getResources().getString(R.string.strongly_agree), MithrilAC.getFeedbackQuestion3());
+                    addToDataUploader(getResources().getString(R.string.strongly_agree), MithrilAC.getFeedbackQuestion4());
+                    addToDataUploader(getResources().getString(R.string.strongly_agree), MithrilAC.getFeedbackQuestion5());
+                    addToDataUploader(getResources().getString(R.string.strongly_agree), MithrilAC.getFeedbackQuestion6());
+                    addToDataUploader(feedbackQ7SimplicityRatingBar.getRating(), MithrilAC.getFeedbackQuestion7());
+                    addToDataUploader(feedbackQ8EditText.getText().toString(), MithrilAC.getFeedbackQuestion8());
                 } else {
                     feedbackScrollview.setVisibility(View.GONE);
                     addToDataUploader("", MithrilAC.getFeedbackQuestion1());
@@ -232,98 +225,125 @@ public class FeedbackActivity extends AppCompatActivity {
                     addToDataUploader("", MithrilAC.getFeedbackQuestion6());
                     addToDataUploader("", MithrilAC.getFeedbackQuestion7());
                     addToDataUploader("", MithrilAC.getFeedbackQuestion8());
-                    addToDataUploader("", MithrilAC.getFeedbackQuestion9());
                 }
             }
         });
 
-        feedbackQ1ToggleBtn.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+        fq1RadioGroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
             @Override
-            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                if (buttonView.isChecked())
-                    buttonView.setChecked(false);
-                else
-                    buttonView.setChecked(true);
-                feedbackQ1ToggleBtn.toggle();
-                addToDataUploader(buttonView.isChecked(), MithrilAC.getFeedbackQuestion1());
+            public void onCheckedChanged(RadioGroup group, int checkedId) {
+                // find which radio button is selected
+                if (checkedId == R.id.fq1radio_strongly_agree)
+                    addToDataUploader(getResources().getString(R.string.strongly_agree), MithrilAC.getFeedbackQuestion1());
+                else if (checkedId == R.id.fq1radio_agree)
+                    addToDataUploader(getResources().getString(R.string.agree), MithrilAC.getFeedbackQuestion1());
+                else if (checkedId == R.id.fq1radio_neutral)
+                    addToDataUploader(getResources().getString(R.string.neutral), MithrilAC.getFeedbackQuestion1());
+                else if (checkedId == R.id.fq1radio_disagree)
+                    addToDataUploader(getResources().getString(R.string.disagree), MithrilAC.getFeedbackQuestion1());
+                else if (checkedId == R.id.fq1radio_strongly_disagree)
+                    addToDataUploader(getResources().getString(R.string.strongly_disagree), MithrilAC.getFeedbackQuestion1());
             }
         });
 
-        feedbackQ2ToggleBtn.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+        fq2RadioGroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
             @Override
-            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                if (buttonView.isChecked())
-                    buttonView.setChecked(false);
-                else
-                    buttonView.setChecked(true);
-                feedbackQ2ToggleBtn.toggle();
-                addToDataUploader(buttonView.isChecked(), MithrilAC.getFeedbackQuestion2());
+            public void onCheckedChanged(RadioGroup group, int checkedId) {
+                // find which radio button is selected
+                if (checkedId == R.id.fq2radio_strongly_agree)
+                    addToDataUploader(getResources().getString(R.string.strongly_agree), MithrilAC.getFeedbackQuestion2());
+                else if (checkedId == R.id.fq2radio_agree)
+                    addToDataUploader(getResources().getString(R.string.agree), MithrilAC.getFeedbackQuestion2());
+                else if (checkedId == R.id.fq2radio_neutral)
+                    addToDataUploader(getResources().getString(R.string.neutral), MithrilAC.getFeedbackQuestion2());
+                else if (checkedId == R.id.fq2radio_disagree)
+                    addToDataUploader(getResources().getString(R.string.disagree), MithrilAC.getFeedbackQuestion2());
+                else if (checkedId == R.id.fq2radio_strongly_disagree)
+                    addToDataUploader(getResources().getString(R.string.strongly_disagree), MithrilAC.getFeedbackQuestion2());
             }
         });
 
-        feedbackQ3ToggleBtn.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+        fq3RadioGroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
             @Override
-            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                if (!buttonView.isChecked())
-                    buttonView.setChecked(true);
-                else
-                    buttonView.setChecked(false);
-                feedbackQ3ToggleBtn.toggle();
-                addToDataUploader(buttonView.isChecked(), MithrilAC.getFeedbackQuestion3());
+            public void onCheckedChanged(RadioGroup group, int checkedId) {
+                // find which radio button is selected
+                if (checkedId == R.id.fq3radio_strongly_agree)
+                    addToDataUploader(getResources().getString(R.string.strongly_agree), MithrilAC.getFeedbackQuestion3());
+                else if (checkedId == R.id.fq3radio_agree)
+                    addToDataUploader(getResources().getString(R.string.agree), MithrilAC.getFeedbackQuestion3());
+                else if (checkedId == R.id.fq3radio_neutral)
+                    addToDataUploader(getResources().getString(R.string.neutral), MithrilAC.getFeedbackQuestion3());
+                else if (checkedId == R.id.fq3radio_disagree)
+                    addToDataUploader(getResources().getString(R.string.disagree), MithrilAC.getFeedbackQuestion3());
+                else if (checkedId == R.id.fq3radio_strongly_disagree)
+                    addToDataUploader(getResources().getString(R.string.strongly_disagree), MithrilAC.getFeedbackQuestion3());
             }
         });
 
-        feedbackQ4ConcernRatingBar.setOnRatingBarChangeListener(new RatingBar.OnRatingBarChangeListener() {
+        fq4RadioGroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(RadioGroup group, int checkedId) {
+                // find which radio button is selected
+                if (checkedId == R.id.fq4radio_strongly_agree)
+                    addToDataUploader(getResources().getString(R.string.strongly_agree), MithrilAC.getFeedbackQuestion4());
+                else if (checkedId == R.id.fq4radio_agree)
+                    addToDataUploader(getResources().getString(R.string.agree), MithrilAC.getFeedbackQuestion4());
+                else if (checkedId == R.id.fq4radio_neutral)
+                    addToDataUploader(getResources().getString(R.string.neutral), MithrilAC.getFeedbackQuestion4());
+                else if (checkedId == R.id.fq4radio_disagree)
+                    addToDataUploader(getResources().getString(R.string.disagree), MithrilAC.getFeedbackQuestion4());
+                else if (checkedId == R.id.fq4radio_strongly_disagree)
+                    addToDataUploader(getResources().getString(R.string.strongly_disagree), MithrilAC.getFeedbackQuestion4());
+            }
+        });
+
+        fq5RadioGroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(RadioGroup group, int checkedId) {
+                // find which radio button is selected
+                if (checkedId == R.id.fq5radio_strongly_agree)
+                    addToDataUploader(getResources().getString(R.string.strongly_agree), MithrilAC.getFeedbackQuestion5());
+                else if (checkedId == R.id.fq5radio_agree)
+                    addToDataUploader(getResources().getString(R.string.agree), MithrilAC.getFeedbackQuestion5());
+                else if (checkedId == R.id.fq5radio_neutral)
+                    addToDataUploader(getResources().getString(R.string.neutral), MithrilAC.getFeedbackQuestion5());
+                else if (checkedId == R.id.fq5radio_disagree)
+                    addToDataUploader(getResources().getString(R.string.disagree), MithrilAC.getFeedbackQuestion5());
+                else if (checkedId == R.id.fq5radio_strongly_disagree)
+                    addToDataUploader(getResources().getString(R.string.strongly_disagree), MithrilAC.getFeedbackQuestion5());
+            }
+        });
+
+        fq6RadioGroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(RadioGroup group, int checkedId) {
+                // find which radio button is selected
+                if (checkedId == R.id.fq6radio_strongly_agree)
+                    addToDataUploader(getResources().getString(R.string.strongly_agree), MithrilAC.getFeedbackQuestion6());
+                else if (checkedId == R.id.fq6radio_agree)
+                    addToDataUploader(getResources().getString(R.string.agree), MithrilAC.getFeedbackQuestion6());
+                else if (checkedId == R.id.fq6radio_neutral)
+                    addToDataUploader(getResources().getString(R.string.neutral), MithrilAC.getFeedbackQuestion6());
+                else if (checkedId == R.id.fq6radio_disagree)
+                    addToDataUploader(getResources().getString(R.string.disagree), MithrilAC.getFeedbackQuestion6());
+                else if (checkedId == R.id.fq6radio_strongly_disagree)
+                    addToDataUploader(getResources().getString(R.string.strongly_disagree), MithrilAC.getFeedbackQuestion6());
+            }
+        });
+
+        feedbackQ7SimplicityRatingBar.setOnRatingBarChangeListener(new RatingBar.OnRatingBarChangeListener() {
             @Override
             public void onRatingChanged(RatingBar ratingBar, float v, boolean isChecked) {
-                addToDataUploader(v, MithrilAC.getFeedbackQuestion4());
+                addToDataUploader(v, MithrilAC.getFeedbackQuestion7());
             }
         });
 
-        feedbackQ5OSRatingBar.setOnRatingBarChangeListener(new RatingBar.OnRatingBarChangeListener() {
-            @Override
-            public void onRatingChanged(RatingBar ratingBar, float v, boolean isChecked) {
-                addToDataUploader(v, MithrilAC.getFeedbackQuestion5());
-            }
-        });
-
-        feedbackQ6ToggleBtn.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-            @Override
-            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                if (buttonView.isChecked())
-                    buttonView.setChecked(false);
-                else
-                    buttonView.setChecked(true);
-                feedbackQ6ToggleBtn.toggle();
-                addToDataUploader(buttonView.isChecked(), MithrilAC.getFeedbackQuestion6());
-            }
-        });
-
-        feedbackQ7ToggleBtn.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-            @Override
-            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                if (buttonView.isChecked())
-                    buttonView.setChecked(false);
-                else
-                    buttonView.setChecked(true);
-                feedbackQ7ToggleBtn.toggle();
-                addToDataUploader(buttonView.isChecked(), MithrilAC.getFeedbackQuestion7());
-            }
-        });
-
-        feedbackQ8SimplicityRatingBar.setOnRatingBarChangeListener(new RatingBar.OnRatingBarChangeListener() {
-            @Override
-            public void onRatingChanged(RatingBar ratingBar, float v, boolean isChecked) {
-                addToDataUploader(v, MithrilAC.getFeedbackQuestion8());
-            }
-        });
-
-        feedbackQ9EditText.setOnEditorActionListener(new TextView.OnEditorActionListener() {
+        feedbackQ8EditText.setOnEditorActionListener(new TextView.OnEditorActionListener() {
             @Override
             public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
                 boolean handled = false;
                 if (actionId == EditorInfo.IME_ACTION_DONE) {
-                    addToDataUploader(feedbackQ9EditText.getText().toString(), MithrilAC.getFeedbackQuestion9());
+                    addToDataUploader(feedbackQ8EditText.getText().toString(), MithrilAC.getFeedbackQuestion8());
                     hideKeyboardFrom(v.getContext(), v);
                     handled = true;
                 }
@@ -334,10 +354,6 @@ public class FeedbackActivity extends AppCompatActivity {
 
     private void addToDataUploader(List<?> someData, String dataLabel) {
         feedbackDataUploaderMap.put(dataLabel, someData);
-    }
-
-    private void addToDataUploader(boolean isChecked, String questionId) {
-        feedbackDataUploaderMap.put(questionId, String.valueOf(isChecked));
     }
 
     private void addToDataUploader(String userInput, String questionId) {
@@ -386,7 +402,6 @@ public class FeedbackActivity extends AppCompatActivity {
             request.put(MithrilAC.getFeedbackQuestion6(), feedback.get(MithrilAC.getFeedbackQuestion6()));
             request.put(MithrilAC.getFeedbackQuestion7(), feedback.get(MithrilAC.getFeedbackQuestion7()));
             request.put(MithrilAC.getFeedbackQuestion8(), feedback.get(MithrilAC.getFeedbackQuestion8()));
-            request.put(MithrilAC.getFeedbackQuestion9(), feedback.get(MithrilAC.getFeedbackQuestion9()));
             request.put(MithrilAC.getFeedbackQuestionDataKey(), feedback.get(MithrilAC.getFeedbackQuestionDataKey()));
             request.put(MithrilAC.getFeedbackQuestionDataTimeKey(), System.currentTimeMillis());
             request.put(MithrilAC.getRandomUserId(), userId);
