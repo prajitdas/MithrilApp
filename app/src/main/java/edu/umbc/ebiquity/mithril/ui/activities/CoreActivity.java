@@ -471,7 +471,7 @@ public class CoreActivity extends AppCompatActivity
     }
 
     private void setupAlarm() {
-        if(!isAlarmUp()) {
+        if (!isAlarmUp()) {
             // Set the alarm to start at approximately 7:00 p.m.
             Calendar calendar = Calendar.getInstance();
             calendar.setTimeInMillis(System.currentTimeMillis());
