@@ -8,6 +8,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.database.sqlite.SQLiteDatabase;
+import android.icu.util.Calendar;
 import android.location.Address;
 import android.location.Location;
 import android.os.Build;
@@ -26,7 +27,6 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.Toast;
 
-import com.google.android.gms.awareness.fence.TimeFence;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GoogleApiAvailability;
 import com.google.android.gms.common.GooglePlayServicesNotAvailableException;
@@ -80,7 +80,7 @@ public class InstanceCreationActivity extends AppCompatActivity
 //    private final int TIME_REQUEST_CODE_DND = 5;
     private final int TIME_REQUEST_CODE_MORE = 6;
     private final int GEOFENCE_REQUEST_CODE = 7;
-//    private final int TIMEFENCE_REQUEST_CODE = 8;
+//    private final int Calendar_REQUEST_CODE = 8;
     /**
      * Provides the entry point to Google Play services: Geo fence
      */
@@ -475,7 +475,7 @@ public class InstanceCreationActivity extends AppCompatActivity
         /**********************************************************************************************************************/
 
         List<Integer> monday = new ArrayList<>();
-        monday.add(TimeFence.DAY_OF_WEEK_MONDAY);
+        monday.add(Calendar.MONDAY);
         /**
          * Monday context creation
          */
@@ -495,7 +495,7 @@ public class InstanceCreationActivity extends AppCompatActivity
         /**********************************************************************************************************************/
 
         List<Integer> tuesday = new ArrayList<>();
-        tuesday.add(TimeFence.DAY_OF_WEEK_TUESDAY);
+        tuesday.add(Calendar.TUESDAY);
         /**
          * Tuesday context creation
          */
@@ -515,7 +515,7 @@ public class InstanceCreationActivity extends AppCompatActivity
         /**********************************************************************************************************************/
 
         List<Integer> wednesday = new ArrayList<>();
-        wednesday.add(TimeFence.DAY_OF_WEEK_WEDNESDAY);
+        wednesday.add(Calendar.WEDNESDAY);
         /**
          * Wednesday context creation
          */
@@ -535,7 +535,7 @@ public class InstanceCreationActivity extends AppCompatActivity
         /**********************************************************************************************************************/
 
         List<Integer> thursday = new ArrayList<>();
-        thursday.add(TimeFence.DAY_OF_WEEK_THURSDAY);
+        thursday.add(Calendar.THURSDAY);
         /**
          * Thursday context creation
          */
@@ -555,7 +555,7 @@ public class InstanceCreationActivity extends AppCompatActivity
         /**********************************************************************************************************************/
 
         List<Integer> friday = new ArrayList<>();
-        friday.add(TimeFence.DAY_OF_WEEK_FRIDAY);
+        friday.add(Calendar.FRIDAY);
         /**
          * Friday context creation
          */
@@ -575,7 +575,7 @@ public class InstanceCreationActivity extends AppCompatActivity
         /**********************************************************************************************************************/
 
         List<Integer> saturday = new ArrayList<>();
-        saturday.add(TimeFence.DAY_OF_WEEK_SATURDAY);
+        saturday.add(Calendar.SATURDAY);
         /**
          * Saturday context creation
          */
@@ -595,7 +595,7 @@ public class InstanceCreationActivity extends AppCompatActivity
         /**********************************************************************************************************************/
 
         List<Integer> sunday = new ArrayList<>();
-        sunday.add(TimeFence.DAY_OF_WEEK_SUNDAY);
+        sunday.add(Calendar.SUNDAY);
         /**
          * Sunday context creation
          */
@@ -615,8 +615,8 @@ public class InstanceCreationActivity extends AppCompatActivity
         /**********************************************************************************************************************/
 
         List<Integer> weekend = new ArrayList<>();
-        weekend.add(TimeFence.DAY_OF_WEEK_SATURDAY);
-        weekend.add(TimeFence.DAY_OF_WEEK_SUNDAY);
+        weekend.add(Calendar.SATURDAY);
+        weekend.add(Calendar.SUNDAY);
 
         /**
          * Weekend context creation
@@ -637,13 +637,13 @@ public class InstanceCreationActivity extends AppCompatActivity
         /**********************************************************************************************************************/
 
         List<Integer> allWeek = new ArrayList<>();
-        allWeek.add(TimeFence.DAY_OF_WEEK_MONDAY);
-        allWeek.add(TimeFence.DAY_OF_WEEK_TUESDAY);
-        allWeek.add(TimeFence.DAY_OF_WEEK_WEDNESDAY);
-        allWeek.add(TimeFence.DAY_OF_WEEK_THURSDAY);
-        allWeek.add(TimeFence.DAY_OF_WEEK_FRIDAY);
-        allWeek.add(TimeFence.DAY_OF_WEEK_SATURDAY);
-        allWeek.add(TimeFence.DAY_OF_WEEK_SUNDAY);
+        allWeek.add(Calendar.MONDAY);
+        allWeek.add(Calendar.TUESDAY);
+        allWeek.add(Calendar.WEDNESDAY);
+        allWeek.add(Calendar.THURSDAY);
+        allWeek.add(Calendar.FRIDAY);
+        allWeek.add(Calendar.SATURDAY);
+        allWeek.add(Calendar.SUNDAY);
 
         /**
          * AnydayOrAnytime context creation
@@ -790,11 +790,11 @@ public class InstanceCreationActivity extends AppCompatActivity
         /**********************************************************************************************************************/
 
         List<Integer> workweek = new ArrayList<>();
-        workweek.add(TimeFence.DAY_OF_WEEK_MONDAY);
-        workweek.add(TimeFence.DAY_OF_WEEK_TUESDAY);
-        workweek.add(TimeFence.DAY_OF_WEEK_WEDNESDAY);
-        workweek.add(TimeFence.DAY_OF_WEEK_THURSDAY);
-        workweek.add(TimeFence.DAY_OF_WEEK_FRIDAY);
+        workweek.add(Calendar.MONDAY);
+        workweek.add(Calendar.TUESDAY);
+        workweek.add(Calendar.WEDNESDAY);
+        workweek.add(Calendar.THURSDAY);
+        workweek.add(Calendar.FRIDAY);
 
         /**
          * Professional hours context
@@ -1013,13 +1013,13 @@ public class InstanceCreationActivity extends AppCompatActivity
 
 //    private void openTemporalDataEntryActivity(int requestCode, String label) {
 //        List<Integer> dayOfWeek = new ArrayList<>();
-//        dayOfWeek.add(TimeFence.DAY_OF_WEEK_SUNDAY);
-//        dayOfWeek.add(TimeFence.DAY_OF_WEEK_MONDAY);
-//        dayOfWeek.add(TimeFence.DAY_OF_WEEK_TUESDAY);
-//        dayOfWeek.add(TimeFence.DAY_OF_WEEK_WEDNESDAY);
-//        dayOfWeek.add(TimeFence.DAY_OF_WEEK_THURSDAY);
-//        dayOfWeek.add(TimeFence.DAY_OF_WEEK_FRIDAY);
-//        dayOfWeek.add(TimeFence.DAY_OF_WEEK_SATURDAY);
+//        dayOfWeek.add(Calendar.SUNDAY);
+//        dayOfWeek.add(Calendar.MONDAY);
+//        dayOfWeek.add(Calendar.TUESDAY);
+//        dayOfWeek.add(Calendar.WEDNESDAY);
+//        dayOfWeek.add(Calendar.THURSDAY);
+//        dayOfWeek.add(Calendar.FRIDAY);
+//        dayOfWeek.add(Calendar.SATURDAY);
 //
 //        SemanticTime semanticTime = new SemanticTime(dayOfWeek, 0, 0, 0, 0, label, false, 0);
 //
@@ -1277,10 +1277,10 @@ public class InstanceCreationActivity extends AppCompatActivity
     }
 
 //    private void setTemporalFences() {
-//        Intent intent = new Intent(this, SetupTimefencesActivity.class);
+//        Intent intent = new Intent(this, SetupCalendarsActivity.class);
 //        ArrayList<SemanticTime> tempList = new ArrayList<>(semanticTimes.values());
-//        intent.putParcelableArrayListExtra(MithrilAC.getPrefKeyTimefenceList(), tempList);
-//        startActivityForResult(intent, TIMEFENCE_REQUEST_CODE);
+//        intent.putParcelableArrayListExtra(MithrilAC.getPrefKeyCalendarList(), tempList);
+//        startActivityForResult(intent, Calendar_REQUEST_CODE);
 //    }
 
     /**
