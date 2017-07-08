@@ -9,7 +9,6 @@ import java.util.Map;
 
 import edu.umbc.ebiquity.mithril.MithrilAC;
 import edu.umbc.ebiquity.mithril.data.model.rules.context.SemanticTime;
-import edu.umbc.ebiquity.mithril.util.specialtasks.contextinstances.DayOfWeek;
 
 public class DetectTemporalContext {
     public static List<SemanticTime> whatTimeIsItNow(Map<String, SemanticTime> semanticTimes) {
