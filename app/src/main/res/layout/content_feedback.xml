@@ -304,7 +304,6 @@
                         android:id="@+id/fq4txt"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_alignParentEnd="true"
                         android:layout_alignParentStart="true"
                         android:layout_alignParentTop="true"
                         android:layout_marginBottom="@dimen/activity_vertical_margin"
@@ -325,31 +324,31 @@
                             android:id="@+id/fq4radio_strongly_agree"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="@string/strongly_agree" />
+                            android:text="@string/extremely_confident" />
 
                         <RadioButton
                             android:id="@+id/fq4radio_agree"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="@string/agree" />
+                            android:text="@string/quite_confident" />
 
                         <RadioButton
                             android:id="@+id/fq4radio_neutral"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="@string/neutral" />
+                            android:text="@string/somewhat_confident" />
 
                         <RadioButton
                             android:id="@+id/fq4radio_disagree"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="@string/disagree" />
+                            android:text="@string/slightly_confident" />
 
                         <RadioButton
                             android:id="@+id/fq4radio_strongly_disagree"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="@string/strongly_disagree" />
+                            android:text="@string/not_confident_at_all" />
                     </RadioGroup>
                 </RelativeLayout>
             </android.support.v7.widget.CardView>
@@ -420,21 +419,6 @@
                     </RadioGroup>
                 </RelativeLayout>
             </android.support.v7.widget.CardView>
-
-            <!--<TextView-->
-            <!--android:id="@+id/header3TextView"-->
-            <!--android:layout_width="match_parent"-->
-            <!--android:layout_height="wrap_content"-->
-            <!--android:layout_below="@+id/cardViewfq5"-->
-            <!--android:layout_marginBottom="@dimen/activity_vertical_margin"-->
-            <!--android:layout_marginStart="@dimen/activity_vertical_margin"-->
-            <!--android:layout_marginTop="@dimen/activity_vertical_margin"-->
-            <!--android:fontFamily="josephine-sans"-->
-            <!--android:text="@string/feedback_header_system_related"-->
-            <!--android:textAllCaps="true"-->
-            <!--android:textColor="@color/colorPrimaryDark"-->
-            <!--android:textSize="25sp"-->
-            <!--android:textStyle="bold" />-->
 
             <android.support.v7.widget.CardView
                 android:id="@+id/cardViewfq6"
@@ -583,7 +567,7 @@
 
                     <TextView
                         android:id="@+id/fq8txt"
-                        android:layout_width="match_parent"
+                        android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_alignParentEnd="true"
                         android:layout_alignParentStart="true"
@@ -596,20 +580,42 @@
                         android:textColor="@color/colorPrimaryText"
                         android:textSize="18sp" />
 
-                    <RatingBar
-                        android:id="@+id/systemSimplicityRatingBar"
-                        android:layout_width="wrap_content"
+                    <RadioGroup xmlns:android="http://schemas.android.com/apk/res/android"
+                        android:id="@+id/fq8RadioGroup"
+                        android:layout_width="fill_parent"
                         android:layout_height="wrap_content"
-                        android:layout_below="@+id/fq8txt"
-                        android:layout_centerHorizontal="true"
-                        android:layout_marginBottom="@dimen/activity_vertical_margin"
-                        android:layout_marginEnd="@dimen/activity_vertical_margin"
-                        android:layout_marginTop="@dimen/activity_vertical_margin"
-                        android:nextFocusDown="@id/fq9EditText"
-                        android:numStars="5"
-                        android:rating="1"
-                        android:stepSize="0.5"
-                        android:theme="@style/AppTheme.RatingBar" />
+                        android:layout_below="@+id/fq8txt">
+
+                        <RadioButton
+                            android:id="@+id/fq8radio_strongly_agree"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="@string/strongly_agree" />
+
+                        <RadioButton
+                            android:id="@+id/fq8radio_agree"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="@string/agree" />
+
+                        <RadioButton
+                            android:id="@+id/fq8radio_neutral"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="@string/neutral" />
+
+                        <RadioButton
+                            android:id="@+id/fq8radio_disagree"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="@string/disagree" />
+
+                        <RadioButton
+                            android:id="@+id/fq8radio_strongly_disagree"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="@string/strongly_disagree" />
+                    </RadioGroup>
                 </RelativeLayout>
             </android.support.v7.widget.CardView>
 
@@ -627,8 +633,8 @@
                     android:layout_height="match_parent">
 
                     <TextView
-                        android:id="@+id/fq9TextView"
-                        android:layout_width="wrap_content"
+                        android:id="@+id/fq9txt"
+                        android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_alignParentEnd="true"
                         android:layout_alignParentStart="true"
@@ -641,18 +647,63 @@
                         android:textColor="@color/colorPrimaryText"
                         android:textSize="18sp" />
 
+                    <RatingBar
+                        android:id="@+id/systemSimplicityRatingBar"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_below="@+id/fq9txt"
+                        android:layout_centerHorizontal="true"
+                        android:layout_marginBottom="@dimen/activity_vertical_margin"
+                        android:layout_marginEnd="@dimen/activity_vertical_margin"
+                        android:layout_marginTop="@dimen/activity_vertical_margin"
+                        android:nextFocusDown="@id/fq10EditText"
+                        android:numStars="5"
+                        android:rating="1"
+                        android:stepSize="0.5"
+                        android:theme="@style/AppTheme.RatingBar" />
+                </RelativeLayout>
+            </android.support.v7.widget.CardView>
+
+            <android.support.v7.widget.CardView
+                android:id="@+id/cardViewfq10"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/cardViewfq9"
+                android:layout_marginBottom="@dimen/activity_vertical_margin"
+                android:layout_marginTop="@dimen/activity_vertical_margin"
+                app:cardCornerRadius="@dimen/card_view_corner_radius">
+
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent">
+
+                    <TextView
+                        android:id="@+id/fq10TextView"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentEnd="true"
+                        android:layout_alignParentStart="true"
+                        android:layout_alignParentTop="true"
+                        android:layout_marginBottom="@dimen/activity_vertical_margin"
+                        android:layout_marginStart="@dimen/activity_vertical_margin"
+                        android:layout_marginTop="@dimen/activity_vertical_margin"
+                        android:fontFamily="josephine-sans"
+                        android:text="@string/feedback_q10"
+                        android:textColor="@color/colorPrimaryText"
+                        android:textSize="18sp" />
+
                     <EditText
-                        android:id="@+id/fq9EditText"
+                        android:id="@+id/fq10EditText"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_alignParentBottom="true"
-                        android:layout_below="@+id/fq9TextView"
+                        android:layout_below="@+id/fq10TextView"
                         android:layout_marginBottom="@dimen/activity_vertical_margin"
                         android:layout_marginEnd="@dimen/activity_vertical_margin"
                         android:layout_marginTop="@dimen/activity_vertical_margin"
                         android:allowUndo="true"
                         android:hint="@string/feedback_editTextHint"
-                        android:imeOptions="actionDone"
+                        android:imeOptions="actionSend"
                         android:inputType="textCapSentences|textAutoCorrect" />
                 </RelativeLayout>
             </android.support.v7.widget.CardView>

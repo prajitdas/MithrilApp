@@ -52,8 +52,9 @@ public class FeedbackActivity extends AppCompatActivity {
     private RadioGroup fq5RadioGroup;
     private RadioGroup fq6RadioGroup;
     private RadioGroup fq7RadioGroup;
-    private RatingBar feedbackQ8SimplicityRatingBar;
-    private EditText feedbackQ9EditText;
+    private RadioGroup fq8RadioGroup;
+    private RatingBar feedbackQ9SimplicityRatingBar;
+    private EditText feedbackQ10EditText;
 
     private ImageButton uploadButton;
     private Switch feedbackSwitch;
@@ -189,11 +190,14 @@ public class FeedbackActivity extends AppCompatActivity {
         fq6RadioGroup.check(R.id.fq6radio_strongly_agree);
         fq7RadioGroup = (RadioGroup) findViewById(R.id.fq7RadioGroup);
         fq7RadioGroup.check(R.id.fq7radio_strongly_agree);
-        feedbackQ8SimplicityRatingBar = (RatingBar) findViewById(R.id.systemSimplicityRatingBar);
+        fq8RadioGroup = (RadioGroup) findViewById(R.id.fq8RadioGroup);
+        fq8RadioGroup.check(R.id.fq8radio_strongly_agree);
 
-        feedbackQ9EditText = (EditText) findViewById(R.id.fq9EditText);
-        feedbackQ9EditText.clearFocus();
-        feedbackQ9EditText.setText("");
+        feedbackQ9SimplicityRatingBar = (RatingBar) findViewById(R.id.systemSimplicityRatingBar);
+
+        feedbackQ10EditText = (EditText) findViewById(R.id.fq10EditText);
+        feedbackQ10EditText.clearFocus();
+        feedbackQ10EditText.setText("");
     }
 
     private void setOnClickListeners() {
@@ -212,12 +216,13 @@ public class FeedbackActivity extends AppCompatActivity {
                     addToDataUploader(getResources().getString(R.string.strongly_agree), MithrilAC.getFeedbackQuestion1());
                     addToDataUploader(getResources().getString(R.string.strongly_agree), MithrilAC.getFeedbackQuestion2());
                     addToDataUploader(getResources().getString(R.string.strongly_agree), MithrilAC.getFeedbackQuestion3());
-                    addToDataUploader(getResources().getString(R.string.strongly_agree), MithrilAC.getFeedbackQuestion4());
+                    addToDataUploader(getResources().getString(R.string.extremely_confident), MithrilAC.getFeedbackQuestion4());
                     addToDataUploader(getResources().getString(R.string.strongly_agree), MithrilAC.getFeedbackQuestion5());
                     addToDataUploader(getResources().getString(R.string.strongly_agree), MithrilAC.getFeedbackQuestion6());
                     addToDataUploader(getResources().getString(R.string.strongly_agree), MithrilAC.getFeedbackQuestion7());
-                    addToDataUploader(feedbackQ8SimplicityRatingBar.getRating(), MithrilAC.getFeedbackQuestion8());
-                    addToDataUploader(feedbackQ9EditText.getText().toString(), MithrilAC.getFeedbackQuestion9());
+                    addToDataUploader(getResources().getString(R.string.strongly_agree), MithrilAC.getFeedbackQuestion8());
+                    addToDataUploader(feedbackQ9SimplicityRatingBar.getRating(), MithrilAC.getFeedbackQuestion9());
+                    addToDataUploader(feedbackQ10EditText.getText().toString(), MithrilAC.getFeedbackQuestion10());
                 } else {
                     feedbackScrollview.setVisibility(View.GONE);
                     addToDataUploader("", MithrilAC.getFeedbackQuestion1());
@@ -229,6 +234,7 @@ public class FeedbackActivity extends AppCompatActivity {
                     addToDataUploader("", MithrilAC.getFeedbackQuestion7());
                     addToDataUploader("", MithrilAC.getFeedbackQuestion8());
                     addToDataUploader("", MithrilAC.getFeedbackQuestion9());
+                    addToDataUploader("", MithrilAC.getFeedbackQuestion10());
                 }
             }
         });
@@ -289,15 +295,15 @@ public class FeedbackActivity extends AppCompatActivity {
             public void onCheckedChanged(RadioGroup group, int checkedId) {
                 // find which radio button is selected
                 if (checkedId == R.id.fq4radio_strongly_agree)
-                    addToDataUploader(getResources().getString(R.string.strongly_agree), MithrilAC.getFeedbackQuestion4());
+                    addToDataUploader(getResources().getString(R.string.extremely_confident), MithrilAC.getFeedbackQuestion4());
                 else if (checkedId == R.id.fq4radio_agree)
-                    addToDataUploader(getResources().getString(R.string.agree), MithrilAC.getFeedbackQuestion4());
+                    addToDataUploader(getResources().getString(R.string.quite_confident), MithrilAC.getFeedbackQuestion4());
                 else if (checkedId == R.id.fq4radio_neutral)
-                    addToDataUploader(getResources().getString(R.string.neutral), MithrilAC.getFeedbackQuestion4());
+                    addToDataUploader(getResources().getString(R.string.somewhat_confident), MithrilAC.getFeedbackQuestion4());
                 else if (checkedId == R.id.fq4radio_disagree)
-                    addToDataUploader(getResources().getString(R.string.disagree), MithrilAC.getFeedbackQuestion4());
+                    addToDataUploader(getResources().getString(R.string.slightly_confident), MithrilAC.getFeedbackQuestion4());
                 else if (checkedId == R.id.fq4radio_strongly_disagree)
-                    addToDataUploader(getResources().getString(R.string.strongly_disagree), MithrilAC.getFeedbackQuestion4());
+                    addToDataUploader(getResources().getString(R.string.not_confident_at_all), MithrilAC.getFeedbackQuestion4());
             }
         });
 
@@ -352,21 +358,39 @@ public class FeedbackActivity extends AppCompatActivity {
             }
         });
 
-        feedbackQ8SimplicityRatingBar.setOnRatingBarChangeListener(new RatingBar.OnRatingBarChangeListener() {
+        fq8RadioGroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
             @Override
-            public void onRatingChanged(RatingBar ratingBar, float v, boolean isChecked) {
-                addToDataUploader(v, MithrilAC.getFeedbackQuestion8());
+            public void onCheckedChanged(RadioGroup group, int checkedId) {
+                // find which radio button is selected
+                if (checkedId == R.id.fq8radio_strongly_agree)
+                    addToDataUploader(getResources().getString(R.string.strongly_agree), MithrilAC.getFeedbackQuestion8());
+                else if (checkedId == R.id.fq8radio_agree)
+                    addToDataUploader(getResources().getString(R.string.agree), MithrilAC.getFeedbackQuestion8());
+                else if (checkedId == R.id.fq8radio_neutral)
+                    addToDataUploader(getResources().getString(R.string.neutral), MithrilAC.getFeedbackQuestion8());
+                else if (checkedId == R.id.fq8radio_disagree)
+                    addToDataUploader(getResources().getString(R.string.disagree), MithrilAC.getFeedbackQuestion8());
+                else if (checkedId == R.id.fq8radio_strongly_disagree)
+                    addToDataUploader(getResources().getString(R.string.strongly_disagree), MithrilAC.getFeedbackQuestion8());
             }
         });
 
-        feedbackQ9EditText.setOnEditorActionListener(new TextView.OnEditorActionListener() {
+        feedbackQ9SimplicityRatingBar.setOnRatingBarChangeListener(new RatingBar.OnRatingBarChangeListener() {
+            @Override
+            public void onRatingChanged(RatingBar ratingBar, float v, boolean isChecked) {
+                addToDataUploader(v, MithrilAC.getFeedbackQuestion9());
+            }
+        });
+
+        feedbackQ10EditText.setOnEditorActionListener(new TextView.OnEditorActionListener() {
             @Override
             public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
                 boolean handled = false;
-                if (actionId == EditorInfo.IME_ACTION_DONE) {
-                    addToDataUploader(feedbackQ9EditText.getText().toString(), MithrilAC.getFeedbackQuestion9());
+                if (actionId == EditorInfo.IME_ACTION_SEND) {
+                    addToDataUploader(feedbackQ10EditText.getText().toString(), MithrilAC.getFeedbackQuestion10());
                     hideKeyboardFrom(v.getContext(), v);
                     handled = true;
+                    uploadButton.performClick();
                 }
                 return handled;
             }
@@ -424,6 +448,7 @@ public class FeedbackActivity extends AppCompatActivity {
             request.put(MithrilAC.getFeedbackQuestion7(), feedback.get(MithrilAC.getFeedbackQuestion7()));
             request.put(MithrilAC.getFeedbackQuestion8(), feedback.get(MithrilAC.getFeedbackQuestion8()));
             request.put(MithrilAC.getFeedbackQuestion9(), feedback.get(MithrilAC.getFeedbackQuestion9()));
+            request.put(MithrilAC.getFeedbackQuestion10(), feedback.get(MithrilAC.getFeedbackQuestion10()));
             request.put(MithrilAC.getFeedbackQuestionDataKey(), feedback.get(MithrilAC.getFeedbackQuestionDataKey()));
             request.put(MithrilAC.getFeedbackQuestionDataTimeKey(), System.currentTimeMillis());
             request.put(MithrilAC.getRandomUserId(), userId);
