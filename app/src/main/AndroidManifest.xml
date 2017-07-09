@@ -240,7 +240,8 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".ui.activities.CoreActivity" />
         </activity>
-        <activity android:name=".ui.activities.DisplayUploadDataActivity"
+        <activity
+            android:name=".ui.activities.DisplayUploadDataActivity"
             android:label="@string/title_activity_display_upload_data"
             android:parentActivityName=".ui.activities.CoreActivity"
             android:theme="@style/AppTheme.NoActionBar">

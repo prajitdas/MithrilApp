@@ -21,7 +21,7 @@ public class StartServicesOnBootReceiver extends BroadcastReceiver {
     private SharedPreferences sharedPref;
 
     private void setupAlarm(Context context) {
-        if(!isAlarmUp(context)) {
+        if (!isAlarmUp(context)) {
             // Set the alarm to start at approximately 7:00 p.m.
             Calendar calendar = Calendar.getInstance();
             calendar.setTimeInMillis(System.currentTimeMillis());

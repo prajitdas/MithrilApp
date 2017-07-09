@@ -215,7 +215,7 @@ public class OldUsageStatsFragment extends Fragment {
                         }
                     }
                     tempRes.setRelativeLastTimeUsed(entry.getTimeText(context, true).toString());
-                    if(tempRes != null) {
+                    if (tempRes != null) {
                         tempListOfResource.add(tempRes);
                         position++;
                     }

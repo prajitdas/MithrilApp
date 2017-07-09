@@ -64,7 +64,7 @@ public class MithrilDBHelper extends SQLiteOpenHelper {
     private final static String ACTION_LOG_TABLE_NAME = "actionlog";
     private final static String VIOLATIONS_LOG_TABLE_NAME = "violationlog";
     private final static String UPLOADS_TABLE_NAME = "uploads";
-//    private final static String FEEDBACK_STATS_TABLE_NAME = "feedback";
+    //    private final static String FEEDBACK_STATS_TABLE_NAME = "feedback";
     private final static String APP_PERM_VIEW_NAME = "apppermview";
     /**
      * Following are table creation statements
@@ -1869,9 +1869,9 @@ public class MithrilDBHelper extends SQLiteOpenHelper {
                 do {
                     appViolations.add(
                             cursor.getString(1) +
-                            ": has " +
-                            String.valueOf(cursor.getInt(0)) +
-                            " violations");
+                                    ": has " +
+                                    String.valueOf(cursor.getInt(0)) +
+                                    " violations");
                 } while (cursor.moveToNext());
             }
         } catch (SQLException e) {
@@ -2556,9 +2556,9 @@ public class MithrilDBHelper extends SQLiteOpenHelper {
             if (cursor.moveToFirst()) {
                 do {
                     contexts.add(new ContextForUpload(cursor.getString(0),
-                                cursor.getString(1),
-                            cursor.getInt(2) == 1,
-                                cursor.getInt(3)
+                                    cursor.getString(1),
+                                    cursor.getInt(2) == 1,
+                                    cursor.getInt(3)
                             )
                     );
                 } while (cursor.moveToNext());

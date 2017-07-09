@@ -345,14 +345,15 @@
     <string name="feedback_header">Mithril models \"fine-grained context\" as\n* user\'s location,\n* time of day,\n* what activity they are involved in and\n* who are they around.
         \nFollowing are some questions about our system\'s usefulness and the context model. Please let us know your feedback&#8230;</string>
     <string name="feedback_q1">1. Mobile apps take too many permissions</string>
-    <string name="feedback_q2">2. Often times mobile apps lack clarity about the necessity of requested permissions</string>
+    <string name="feedback_q2">2. I am often unsure why a mobile app needs a requested permission</string>
     <string name="feedback_q3">3. Mobile operating system security and privacy settings are difficult to find</string>
-    <string name="feedback_q4">4. Information that an app used some category of permission in a specific \"fine-grained context\" makes it easy to allow or deny such access</string>
-    <string name="feedback_q5">5. Your privacy and security needs often change depending on \"fine-grained context\" e.g. allow camera access to social media apps at home but not at work</string>
-    <string name="feedback_q6">6. The final captured policy accurately represents your privacy and security needs</string>
-    <string name="feedback_q7">7. Using Mithril was worth the effort given the benefits</string>
-    <string name="feedback_q8">8. Please rate Mithril\'s ability to help you define your policies</string>
-    <string name="feedback_q9">9. Please tell us how we can improve this system&#8230;</string>
+    <string name="feedback_q4">4. How confident are you in your ability of managing mobile privacy and security settings</string>
+    <string name="feedback_q5">5. Knowing that an app used a type of permission in a specific context makes it easy to allow or deny such access</string>
+    <string name="feedback_q6">6. My privacy and security needs often change depending on my context, e.g., allowing social media access at home but not at work</string>
+    <string name="feedback_q7">7. Mithril\'s final captured policy better represented my privacy and security preferences</string>
+    <string name="feedback_q8">8. Using Mithril was worth the effort given the benefits</string>
+    <string name="feedback_q9">9. Please rate Mithril\'s ability to help you define your policies</string>
+    <string name="feedback_q10">10. Please tell us how we can improve this system&#8230;</string>
 
     <!-- Likert 5 point response scale -->
     <string name="strongly_agree">Strongly agree</string>
@@ -360,6 +361,12 @@
     <string name="neutral">Neutral</string>
     <string name="disagree">Disagree</string>
     <string name="strongly_disagree">Strongly disagree</string>
+
+    <string name="extremely_confident">Extremely confident</string>
+    <string name="slightly_confident">Slightly confident</string>
+    <string name="somewhat_confident">Somewhat confident</string>
+    <string name="quite_confident">Quite confident</string>
+    <string name="not_confident_at_all">Not confident at all</string>
 
     <string name="feedback_old_q1">Would you agree that some apps take unnecessary permissions?</string>
     <string name="feedback_old_q2">Would you agree information that \"app used data X in context Y\" simplifies the decision of whether to share said data or not?</string>

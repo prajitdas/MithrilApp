@@ -54,42 +54,42 @@ public class DetectTemporalContext {
                 break;
         }
 
-        if (isWithinTimePeriod(semanticTimes.get(MithrilAC.getPrefBreakfastTemporalKey()))) {
+        if (isWithinTimePeriod(semanticTimes.get(MithrilAC.getPrefBreakfastTemporalKey()), dow)) {
             currentSemanticTimes.add(semanticTimes.get(MithrilAC.getPrefBreakfastTemporalKey()));
             currentSemanticTimes.add(semanticTimes.get(MithrilAC.getPrefPersonalTemporalKey()));
             Log.d(MithrilAC.getDebugTag(), "times 8size" + currentSemanticTimes.size());
         }
-        if (isWithinTimePeriod(semanticTimes.get(MithrilAC.getPrefLunchTemporalKey()))) {
+        if (isWithinTimePeriod(semanticTimes.get(MithrilAC.getPrefLunchTemporalKey()), dow)) {
             currentSemanticTimes.add(semanticTimes.get(MithrilAC.getPrefLunchTemporalKey()));
             currentSemanticTimes.add(semanticTimes.get(MithrilAC.getPrefPersonalTemporalKey()));
             Log.d(MithrilAC.getDebugTag(), "times 9size" + currentSemanticTimes.size());
         }
-        if (isWithinTimePeriod(semanticTimes.get(MithrilAC.getPrefDinnerTemporalKey()))) {
+        if (isWithinTimePeriod(semanticTimes.get(MithrilAC.getPrefDinnerTemporalKey()), dow)) {
             currentSemanticTimes.add(semanticTimes.get(MithrilAC.getPrefDinnerTemporalKey()));
             currentSemanticTimes.add(semanticTimes.get(MithrilAC.getPrefPersonalTemporalKey()));
             Log.d(MithrilAC.getDebugTag(), "times 10size" + currentSemanticTimes.size());
         }
-        if (isWithinTimePeriod(semanticTimes.get(MithrilAC.getPrefDndTemporalKey()))) {
+        if (isWithinTimePeriod(semanticTimes.get(MithrilAC.getPrefDndTemporalKey()), dow)) {
             currentSemanticTimes.add(semanticTimes.get(MithrilAC.getPrefDndTemporalKey()));
             currentSemanticTimes.add(semanticTimes.get(MithrilAC.getPrefPersonalTemporalKey()));
             Log.d(MithrilAC.getDebugTag(), "times 11size" + currentSemanticTimes.size());
         }
-        if (isWithinTimePeriod(semanticTimes.get(MithrilAC.getPrefFamilyTemporalKey()))) {
+        if (isWithinTimePeriod(semanticTimes.get(MithrilAC.getPrefFamilyTemporalKey()), dow)) {
             currentSemanticTimes.add(semanticTimes.get(MithrilAC.getPrefFamilyTemporalKey()));
             currentSemanticTimes.add(semanticTimes.get(MithrilAC.getPrefPersonalTemporalKey()));
             Log.d(MithrilAC.getDebugTag(), "times 12size" + currentSemanticTimes.size());
         }
-        if (isWithinTimePeriod(semanticTimes.get(MithrilAC.getPrefAloneTemporalKey()))) {
+        if (isWithinTimePeriod(semanticTimes.get(MithrilAC.getPrefAloneTemporalKey()), dow)) {
             currentSemanticTimes.add(semanticTimes.get(MithrilAC.getPrefAloneTemporalKey()));
             currentSemanticTimes.add(semanticTimes.get(MithrilAC.getPrefPersonalTemporalKey()));
             Log.d(MithrilAC.getDebugTag(), "times 13size" + currentSemanticTimes.size());
         }
-        if (isWithinTimePeriod(semanticTimes.get(MithrilAC.getPrefWorkMorningTemporalKey()))) {
+        if (isWithinTimePeriod(semanticTimes.get(MithrilAC.getPrefWorkMorningTemporalKey()), dow)) {
             currentSemanticTimes.add(semanticTimes.get(MithrilAC.getPrefWorkMorningTemporalKey()));
             currentSemanticTimes.add(semanticTimes.get(MithrilAC.getPrefProfessionalTemporalKey()));
             Log.d(MithrilAC.getDebugTag(), "times 14size" + currentSemanticTimes.size());
         }
-        if (isWithinTimePeriod(semanticTimes.get(MithrilAC.getPrefWorkAfternoonTemporalKey()))) {
+        if (isWithinTimePeriod(semanticTimes.get(MithrilAC.getPrefWorkAfternoonTemporalKey()), dow)) {
             currentSemanticTimes.add(semanticTimes.get(MithrilAC.getPrefWorkAfternoonTemporalKey()));
             currentSemanticTimes.add(semanticTimes.get(MithrilAC.getPrefProfessionalTemporalKey()));
             Log.d(MithrilAC.getDebugTag(), "times 15size" + currentSemanticTimes.size());
@@ -99,7 +99,10 @@ public class DetectTemporalContext {
         return currentSemanticTimes;
     }
 
-    private static boolean isWithinTimePeriod(SemanticTime semanticTime) {
+    private static boolean isWithinTimePeriod(SemanticTime semanticTime, int dow) {
+        List<Integer> daysOfWeekForSemanticTime = semanticTime.getDayOfWeek();
+        if (!daysOfWeekForSemanticTime.contains(dow))
+            return false;
         Calendar currCalendar = Calendar.getInstance();
         Calendar knownCalStart = Calendar.getInstance();
         knownCalStart.set(Calendar.HOUR_OF_DAY, semanticTime.getStartHour());

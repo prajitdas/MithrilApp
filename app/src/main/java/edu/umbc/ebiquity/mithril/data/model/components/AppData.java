@@ -30,6 +30,7 @@ public class AppData implements Comparable<AppData> {
     private String requesterReviewCount; // review_count
     private String requesterReviewRating; // review_rating
     private String requesterUsageCount;    // installs
+
     public AppData(String appDescription,
                    String associatedProcessName,
                    int targetSdkVersion,

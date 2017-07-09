@@ -79,6 +79,7 @@ public class MithrilAC extends Application {
     private static final String FEEDBACK_QUESTION_7 = "fq7";
     private static final String FEEDBACK_QUESTION_8 = "fq8";
     private static final String FEEDBACK_QUESTION_9 = "fq9";
+    private static final String FEEDBACK_QUESTION_10 = "fq10";
     private static final String FEEDBACK_QUESTION_DATA_KEY = "feedbackDataKey";
     private static final String FEEDBACK_QUESTION_DATA_TIME_KEY = "feedbackDataTimeKey";
     private static final String FEEDBACK_URL = "http://104.154.36.223/bot/feedback/";
@@ -669,6 +670,10 @@ public class MithrilAC extends Application {
 
     public static String getFeedbackQuestion9() {
         return FEEDBACK_QUESTION_9;
+    }
+
+    public static String getFeedbackQuestion10() {
+        return FEEDBACK_QUESTION_10;
     }
 
     public static String[] getContextArrayTypes() {

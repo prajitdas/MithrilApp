@@ -319,10 +319,14 @@ public class CoreActivity extends AppCompatActivity
             ApplicationInfo applicationInfo = packageManager.getApplicationInfo(packageName, PackageManager.GET_META_DATA);
             int uid = applicationInfo.uid;
 
-            Log.d(MithrilAC.getDebugTag(), "Mode allowed: " + Integer.toString(AppOpsManager.MODE_ALLOWED));
-            Log.d(MithrilAC.getDebugTag(), "Mode default: " + Integer.toString(AppOpsManager.MODE_DEFAULT));
-            Log.d(MithrilAC.getDebugTag(), "Mode error: " + Integer.toString(AppOpsManager.MODE_ERRORED));
-            Log.d(MithrilAC.getDebugTag(), "Mode ignored: " + Integer.toString(AppOpsManager.MODE_IGNORED));
+            //Testing ability to check app notifications
+            int result = appOpsManager.checkOpNoThrow(AppOpsManager.OP_ACCESS_NOTIFICATIONS, uid, packageName);
+            Log.d(MithrilAC.getDebugTag(), "Mode allowed: " + "Result: " + (result == AppOpsManager.MODE_ALLOWED));
+
+//            Log.d(MithrilAC.getDebugTag(), "Mode allowed: " + Integer.toString(AppOpsManager.MODE_ALLOWED));
+//            Log.d(MithrilAC.getDebugTag(), "Mode default: " + Integer.toString(AppOpsManager.MODE_DEFAULT));
+//            Log.d(MithrilAC.getDebugTag(), "Mode error: " + Integer.toString(AppOpsManager.MODE_ERRORED));
+//            Log.d(MithrilAC.getDebugTag(), "Mode ignored: " + Integer.toString(AppOpsManager.MODE_IGNORED));
 
             /*
              * Check and block read contacts for Gmail app
@@ -471,7 +475,7 @@ public class CoreActivity extends AppCompatActivity
     }
 
     private void setupAlarm() {
-        if(!isAlarmUp()) {
+        if (!isAlarmUp()) {
             // Set the alarm to start at approximately 7:00 p.m.
             Calendar calendar = Calendar.getInstance();
             calendar.setTimeInMillis(System.currentTimeMillis());
