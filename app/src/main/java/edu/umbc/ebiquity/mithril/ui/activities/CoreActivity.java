@@ -312,6 +312,31 @@ public class CoreActivity extends AppCompatActivity
     private void executeRules() {
         AppOpsManager appOpsManager = (AppOpsManager) getSystemService(Context.APP_OPS_SERVICE);
 
+        /**
+         try {
+         final int previous = Settings.System.getInt(getContentResolver(),
+         Settings.System.SCREEN_OFF_TIMEOUT);  // retain previous timeout value
+         Settings.System.putInt(getContentResolver(),
+         Settings.System.SCREEN_OFF_TIMEOUT, 0);  // set timeout to 0
+
+         // wait 3 seconds then reset the timeout setting
+         new Thread(new Runnable() {
+        @Override public void run() {
+        try {
+        Thread.sleep(3000);
+        } catch (InterruptedException e) {
+        e.printStackTrace();
+        }
+        Settings.System.putInt(
+        getContentResolver(),
+        Settings.System.SCREEN_OFF_TIMEOUT, previous);
+        }
+        }).start();
+         } catch (Settings.SettingNotFoundException e) {
+         Log.e(MithrilAC.getDebugTag(), "settings not found...");
+         }
+         */
+
         try {
             // Let's try to block contacts permission for YouTube!
             String packageName = "com.google.android.gm";
