@@ -2693,7 +2693,7 @@ public class MithrilDBHelper extends SQLiteOpenHelper {
         values.put(VIOLATIONAPPSTR, aViolation.getAppStr());
         values.put(VIOLATIONOPSTR, aViolation.getOpStr());
         values.put(VIOLATIONDETECTTIME, new Long(aViolation.getDetectedAtTime().getTime()));
-        values.put(VIOLATIONFEEDBACKTTIME, new Long(aViolation.getFeedbackTime().getTime()));
+        values.put(VIOLATIONFEEDBACKTTIME, System.currentTimeMillis());
         if (aViolation.isAsked())
             values.put(VIOLATIONASKED, 1);
         else

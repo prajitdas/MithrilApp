@@ -99,25 +99,37 @@ public class ViolationDetailsRecyclerViewAdapter extends RecyclerView.Adapter<Vi
         holder.mFalseViolationButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-//                PermissionHelper.toast(view.getContext(), "Will allow...");
-                mValues.get(position).setAsked(true);
-                mValues.get(position).setFeedbackTime(new Timestamp(System.currentTimeMillis()));
-                for (PolicyRule policyRule : policies) {
-                    policyRule.setEnabled(true);
-                    policyRule.setAction(Action.ALLOW);
-                    policyRule.setActStr("Allow");
-                    //Context not changing using the same context
-                    MithrilDBHelper.getHelper(view.getContext()).updatePolicyRule(mithrilDB, policyRule.getCtxId(), policyRule);
-                }
-                mValues.get(position).setTvfv(false);
-                MithrilDBHelper.getHelper(view.getContext()).updateViolation(mithrilDB, mValues.get(position));
+//                PermissionHelper.toast(view.getContext(), "We need to know when to block then...");
                 if (null != mListener) {
                     // Notify the active callbacks interface (the activity, if the
                     // fragment is attached to one) that an item has been selected.
-                    mListener.onListFragmentInteraction(holder.mItem, true, holder.mItem.getAppStr());
+                    mListener.onListFragmentInteraction(holder.mItem, false, holder.mItem.getAppStr());
                 }
             }
         });
+
+//        holder.mFalseViolationButton.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+////                PermissionHelper.toast(view.getContext(), "Will allow...");
+//                mValues.get(position).setAsked(true);
+//                mValues.get(position).setFeedbackTime(new Timestamp(System.currentTimeMillis()));
+//                for (PolicyRule policyRule : policies) {
+//                    policyRule.setEnabled(true);
+//                    policyRule.setAction(Action.ALLOW);
+//                    policyRule.setActStr("Allow");
+//                    //Context not changing using the same context
+//                    MithrilDBHelper.getHelper(view.getContext()).updatePolicyRule(mithrilDB, policyRule.getCtxId(), policyRule);
+//                }
+//                mValues.get(position).setTvfv(false);
+//                MithrilDBHelper.getHelper(view.getContext()).updateViolation(mithrilDB, mValues.get(position));
+//                if (null != mListener) {
+//                    // Notify the active callbacks interface (the activity, if the
+//                    // fragment is attached to one) that an item has been selected.
+//                    mListener.onListFragmentInteraction(holder.mItem, true, holder.mItem.getAppStr());
+//                }
+//            }
+//        });
 
         holder.mFalsePartialViolationButton.setOnClickListener(new View.OnClickListener() {
             @Override

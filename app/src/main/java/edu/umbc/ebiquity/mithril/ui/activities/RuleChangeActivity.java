@@ -66,7 +66,7 @@ public class RuleChangeActivity extends AppCompatActivity implements RuleChangeF
         rulesdeleted = false;
 
         allowDenyToggle = (ToggleButton) findViewById(R.id.allowDenyToggleButton);
-        allowDenyToggle.setChecked(true);
+        allowDenyToggle.setChecked(false);
         allowDenyToggle.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
@@ -85,14 +85,14 @@ public class RuleChangeActivity extends AppCompatActivity implements RuleChangeF
                 if (!ruleAdded) {
                     currentViolation.setAsked(true);
                     currentViolation.setFeedbackTime(new Timestamp(System.currentTimeMillis()));
-                    currentViolation.setTvfv(false);
+                    currentViolation.setTvfv(true);
                     MithrilDBHelper.getHelper(v.getContext()).updateViolation(mithrilDB, currentViolation);
                     finish();
                 } else {
                     if (rulesdeleted) {
                         currentViolation.setAsked(true);
                         currentViolation.setFeedbackTime(new Timestamp(System.currentTimeMillis()));
-                        currentViolation.setTvfv(false);
+                        currentViolation.setTvfv(true);
                         MithrilDBHelper.getHelper(v.getContext()).updateViolation(mithrilDB, currentViolation);
                         finish();
                     } else
