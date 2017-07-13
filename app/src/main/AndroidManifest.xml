@@ -296,5 +296,10 @@
         <service
             android:name=".util.services.ExecuteRulesIntentService"
             android:exported="false" />
+        <service
+            android:name=".util.services.ViolationDetectionService"
+            android:enabled="true"
+            android:exported="true"></service>
     </application>
+
 </manifest>
