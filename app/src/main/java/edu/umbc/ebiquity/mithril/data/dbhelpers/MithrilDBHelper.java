@@ -43,6 +43,7 @@ import edu.umbc.ebiquity.mithril.data.model.rules.context.ContextForUpload;
 import edu.umbc.ebiquity.mithril.simulations.DataGenerator;
 import edu.umbc.ebiquity.mithril.util.specialtasks.errorsnexceptions.PermissionWasUpdateException;
 import edu.umbc.ebiquity.mithril.util.specialtasks.errorsnexceptions.SemanticInconsistencyException;
+import edu.umbc.ebiquity.mithril.util.specialtasks.policymanagement.AppCategoryExtractor;
 
 public class MithrilDBHelper extends SQLiteOpenHelper {
     // Database declarations
@@ -89,7 +90,7 @@ public class MithrilDBHelper extends SQLiteOpenHelper {
     private final static String APPID = "id"; // ID of an installed app
     private final static String APPUID = "uid";
     private final static String APPDESCRIPTION = "description";
-    private final static String APPASSOCIATEDPROCNAME = "assocprocname";
+    private final static String APPCATEGORY = "appcategory";
     private final static String APPTARGETSDKVERSION = "targetsdkver";
     private final static String APPICON = "icon";
     private final static String APPNAME = "label";
@@ -102,7 +103,7 @@ public class MithrilDBHelper extends SQLiteOpenHelper {
             APPID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
             APPUID + " INTEGER NOT NULL, " +
             APPDESCRIPTION + " TEXT NULL, " +
-            APPASSOCIATEDPROCNAME + " TEXT NULL, " +
+            APPCATEGORY + " TEXT NOT NULL, " +
             APPTARGETSDKVERSION + " TEXT NOT NULL, " +
             APPICON + " BLOB, " +
             APPNAME + " TEXT NOT NULL, " +
@@ -666,8 +667,21 @@ public class MithrilDBHelper extends SQLiteOpenHelper {
                         else
                             tempAppData.setAppDescription(MithrilAC.getDefaultDescription());
 
-                        //App process name
-                        tempAppData.setAssociatedProcessName(pack.applicationInfo.processName);
+                        Log.d(MithrilAC.getDebugTag(), "came here, saw:"+pack.packageName);
+                        try {
+                            /**
+                             * Static info about app category downloaded from the GCloud server to be used for policy management later
+                             * App category
+                             */
+                            tempAppData.setAppCategory(
+                                    AppCategoryExtractor.getAppCategory(
+                                            context,
+                                            pack.packageName.split(".")[-1].charAt(0) + "appcat.json",
+                                            pack.packageName)
+                            );
+                        } catch (NullPointerException nullPointerException) {
+                            Log.e(MithrilAC.getDebugTag(), "Nullpointer was caused"+nullPointerException.getMessage());
+                        }
 
                         //App target SDK version
                         tempAppData.setTargetSdkVersion(pack.applicationInfo.targetSdkVersion);
@@ -855,8 +869,7 @@ public class MithrilDBHelper extends SQLiteOpenHelper {
         long insertedRowId;
         ContentValues values = new ContentValues();
         values.put(APPDESCRIPTION, anAppData.getAppDescription());
-        if (anAppData.getAssociatedProcessName() != null)
-            values.put(APPASSOCIATEDPROCNAME, anAppData.getAssociatedProcessName());
+        values.put(APPCATEGORY, anAppData.getAppCategory());
         values.put(APPTARGETSDKVERSION, anAppData.getTargetSdkVersion());
         values.put(APPICON, getBitmapAsByteArray(anAppData.getIcon()));
         values.put(APPNAME, anAppData.getAppName());
@@ -1147,7 +1160,7 @@ public class MithrilDBHelper extends SQLiteOpenHelper {
         // Select AppData Query
         String selectQuery = "SELECT " +
                 getAppsTableName() + "." + APPDESCRIPTION + ", " +
-                getAppsTableName() + "." + APPASSOCIATEDPROCNAME + ", " +
+                getAppsTableName() + "." + APPCATEGORY + ", " +
                 getAppsTableName() + "." + APPTARGETSDKVERSION + ", " +
                 getAppsTableName() + "." + APPICON + ", " +
                 getAppsTableName() + "." + APPNAME + ", " +
@@ -1220,7 +1233,7 @@ public class MithrilDBHelper extends SQLiteOpenHelper {
         // Select AppData Query
         String selectQuery = "SELECT " +
                 getAppsTableName() + "." + APPDESCRIPTION + ", " +
-                getAppsTableName() + "." + APPASSOCIATEDPROCNAME + ", " +
+                getAppsTableName() + "." + APPCATEGORY + ", " +
                 getAppsTableName() + "." + APPTARGETSDKVERSION + ", " +
                 getAppsTableName() + "." + APPICON + ", " +
                 getAppsTableName() + "." + APPNAME + ", " +
@@ -1268,7 +1281,7 @@ public class MithrilDBHelper extends SQLiteOpenHelper {
         // Select AppData Query
         String selectQuery = "SELECT " +
                 getAppsTableName() + "." + APPDESCRIPTION + ", " +
-                getAppsTableName() + "." + APPASSOCIATEDPROCNAME + ", " +
+                getAppsTableName() + "." + APPCATEGORY + ", " +
                 getAppsTableName() + "." + APPTARGETSDKVERSION + ", " +
                 getAppsTableName() + "." + APPICON + ", " +
                 getAppsTableName() + "." + APPNAME + ", " +

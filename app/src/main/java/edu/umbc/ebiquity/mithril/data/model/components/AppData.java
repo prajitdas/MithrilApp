@@ -11,7 +11,7 @@ import java.util.Map;
 public class AppData implements Comparable<AppData> {
     private String appDescription;
     private Map<String, Boolean> permissions;
-    private String associatedProcessName;
+    private String appCategory;
     private int targetSdkVersion;
     private Bitmap icon;
     private String appName;
@@ -32,7 +32,7 @@ public class AppData implements Comparable<AppData> {
     private String requesterUsageCount;    // installs
 
     public AppData(String appDescription,
-                   String associatedProcessName,
+                   String appCategory,
                    int targetSdkVersion,
                    Bitmap icon,
                    String appName,
@@ -41,7 +41,7 @@ public class AppData implements Comparable<AppData> {
                    String appType,
                    int uid) {
         setAppDescription(appDescription);
-        setAssociatedProcessName(associatedProcessName);
+        setAppCategory(appCategory);
         setTargetSdkVersion(targetSdkVersion);
         setIcon(icon);
         setAppName(appName);
@@ -85,12 +85,14 @@ public class AppData implements Comparable<AppData> {
         permissions.put(permission, granted);
     }
 
-    public String getAssociatedProcessName() {
-        return associatedProcessName;
+    public String getAppCategory() {
+        return appCategory;
     }
 
-    public void setAssociatedProcessName(String associatedProcessName) {
-        this.associatedProcessName = associatedProcessName;
+    public void setAppCategory(String appCategory) {
+        if (appCategory == null)
+            throw new NullPointerException();
+        this.appCategory = appCategory;
     }
 
     public int getTargetSdkVersion() {
@@ -174,7 +176,7 @@ public class AppData implements Comparable<AppData> {
         if (getUid() != appData.getUid()) return false;
         if (!getAppDescription().equals(appData.getAppDescription())) return false;
         if (!getPermissions().equals(appData.getPermissions())) return false;
-        if (!getAssociatedProcessName().equals(appData.getAssociatedProcessName())) return false;
+        if (!getAppCategory().equals(appData.getAppCategory())) return false;
         if (!getIcon().equals(appData.getIcon())) return false;
         if (!getAppName().equals(appData.getAppName())) return false;
         if (!getPackageName().equals(appData.getPackageName())) return false;
@@ -187,7 +189,7 @@ public class AppData implements Comparable<AppData> {
     public int hashCode() {
         int result = getAppDescription().hashCode();
         result = 31 * result + getPermissions().hashCode();
-        result = 31 * result + getAssociatedProcessName().hashCode();
+        result = 31 * result + getAppCategory().hashCode();
         result = 31 * result + getTargetSdkVersion();
         result = 31 * result + getIcon().hashCode();
         result = 31 * result + getAppName().hashCode();
@@ -204,7 +206,7 @@ public class AppData implements Comparable<AppData> {
         return "AppData{" +
                 "appDescription='" + appDescription + '\'' +
                 ", permissions=" + permissions +
-                ", associatedProcessName='" + associatedProcessName + '\'' +
+                ", appCategory='" + appCategory + '\'' +
                 ", targetSdkVersion=" + targetSdkVersion +
                 ", icon=" + icon +
                 ", appName='" + appName + '\'' +

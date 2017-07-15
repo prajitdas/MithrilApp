@@ -55,7 +55,7 @@ public class AppInstallBroadcastReceiver extends BroadcastReceiver {
                             tempAppData.setAppDescription(packageInfo.applicationInfo.loadDescription(packageManager).toString());
                         else
                             tempAppData.setAppDescription(MithrilAC.getDefaultDescription());
-                        tempAppData.setAssociatedProcessName(packageInfo.applicationInfo.processName);
+                        tempAppData.setAppCategory(packageInfo.applicationInfo.processName);
                         tempAppData.setTargetSdkVersion(packageInfo.applicationInfo.targetSdkVersion);
                         if (packageInfo.applicationInfo.loadIcon(packageManager) instanceof BitmapDrawable)
                             tempAppData.setIcon(((BitmapDrawable) packageInfo.applicationInfo.loadIcon(packageManager)).getBitmap());
