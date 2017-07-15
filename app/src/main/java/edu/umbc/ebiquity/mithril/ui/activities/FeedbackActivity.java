@@ -415,7 +415,7 @@ public class FeedbackActivity extends AppCompatActivity {
     private void startUpload() {
         if (getUid() != null) {
             saveTheDataWeAreUploading();
-            databaseReference.child(getUid()).child(String.valueOf(System.currentTimeMillis())).setValue(feedbackDataUploaderMap);
+            databaseReference.child(MithrilAC.getMithrilFirebaseServerKeyUsers()).child(getUid()).child(String.valueOf(System.currentTimeMillis())).setValue(feedbackDataUploaderMap);
         } else {
             signInAnonymously();//databaseReference.child(getUid()).child(String.valueOf(System.currentTimeMillis())).setValue(feedbackDataUploaderMap));
         }

@@ -667,22 +667,6 @@ public class MithrilDBHelper extends SQLiteOpenHelper {
                         else
                             tempAppData.setAppDescription(MithrilAC.getDefaultDescription());
 
-                        Log.d(MithrilAC.getDebugTag(), "came here, saw:"+pack.packageName);
-                        try {
-                            /**
-                             * Static info about app category downloaded from the GCloud server to be used for policy management later
-                             * App category
-                             */
-                            tempAppData.setAppCategory(
-                                    AppCategoryExtractor.getAppCategory(
-                                            context,
-                                            pack.packageName.split(".")[-1].charAt(0) + "appcat.json",
-                                            pack.packageName)
-                            );
-                        } catch (NullPointerException nullPointerException) {
-                            Log.e(MithrilAC.getDebugTag(), "Null pointer was caused"+nullPointerException.getMessage());
-                        }
-
                         //App target SDK version
                         tempAppData.setTargetSdkVersion(pack.applicationInfo.targetSdkVersion);
 
@@ -698,7 +682,24 @@ public class MithrilDBHelper extends SQLiteOpenHelper {
 
                         //App package name
                         tempAppData.setPackageName(pack.packageName);
-//                        Log.d(MithrilAC.getDebugTag(), "Inserting app: "+pack.packageName+" into the DB!");
+
+                        try {
+                            /**
+                             * Static info about app category downloaded from the GCloud server to be used for policy management later
+                             * Knowledge: https://stackoverflow.com/questions/7935858/the-split-method-in-java-does-not-work-on-a-dot
+                             * The split method does not work on "." unless escape characters are used!
+                             */
+                            String[] pkgNameParts = tempAppData.getPackageName().split("\\.");
+                            Log.d(MithrilAC.getDebugTag(), "parts: "+pkgNameParts.length);
+                            tempAppData.setAppCategory(
+                                    AppCategoryExtractor.getAppCategory(
+                                            context,
+                                            pkgNameParts[pkgNameParts.length-1].charAt(0) + "appcat.json",
+                                            tempAppData.getPackageName())
+                            );
+                        } catch (NullPointerException nullPointerException) {
+                            Log.e(MithrilAC.getDebugTag(), "Null pointer was caused"+nullPointerException.getMessage());
+                        }
 
                         //App version info
                         tempAppData.setVersionInfo(pack.versionName);
