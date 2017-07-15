@@ -680,7 +680,7 @@ public class MithrilDBHelper extends SQLiteOpenHelper {
                                             pack.packageName)
                             );
                         } catch (NullPointerException nullPointerException) {
-                            Log.e(MithrilAC.getDebugTag(), "Nullpointer was caused"+nullPointerException.getMessage());
+                            Log.e(MithrilAC.getDebugTag(), "Null pointer was caused"+nullPointerException.getMessage());
                         }
 
                         //App target SDK version
@@ -881,12 +881,14 @@ public class MithrilDBHelper extends SQLiteOpenHelper {
             values.put(APPINSTALLED, 0);
         values.put(APPTYPE, anAppData.getAppType());
         values.put(APPUID, anAppData.getUid());
+        Log.d(MithrilAC.getDebugTag(), "came here, saw:"+anAppData.getPackageName());
         try {
             insertedRowId = db.insertWithOnConflict(getAppsTableName(), null, values, SQLiteDatabase.CONFLICT_REPLACE);
         } catch (SQLException e) {
             Log.e(MithrilAC.getDebugTag(), "Error inserting " + values, e);
             return -1;
         }
+        Log.d(MithrilAC.getDebugTag(), "inserted: "+anAppData.getPackageName()+" into row: "+insertedRowId);
         return insertedRowId;
     }
 
