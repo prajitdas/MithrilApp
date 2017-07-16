@@ -87,6 +87,7 @@ public class MithrilAC extends Application {
     private static final String FEEDBACK_QUESTION_DATA_TIME_KEY = "feedbackDataTimeKey";
     private static final String FEEDBACK_URL = "http://104.154.36.223/bot/feedback/";
     private static final String RANDOM_USER_ID = "randomUserId";
+    private static final String APP_CATEGORY_UNKNOWN = "unknownAppCategory";
     private static final String PERMISSION_PROTECTION_LEVEL_UNKNOWN = "unknown";
     private static final String PERMISSION_PROTECTION_LEVEL_NORMAL = "normal";
     private static final String PERMISSION_PROTECTION_LEVEL_DANGEROUS = "dangerous";
@@ -618,6 +619,15 @@ public class MithrilAC extends Application {
             "('android.permission.ACCESS_VR_MANAGER', 'signature', '" + NO_PERMISSION_GROUP.first + "', '" + PERMISSION_FLAG_NONE + "'),\n" +
             "('android.permission.UPDATE_LOCK_TASK_PACKAGES', 'signature|setup', '" + NO_PERMISSION_GROUP.first + "', '" + PERMISSION_FLAG_NONE + "'),\n" +
             "('android.permission.SUBSTITUTE_NOTIFICATION_APP_NAME', 'signature|privileged', '" + NO_PERMISSION_GROUP.first + "', '" + PERMISSION_FLAG_NONE + "');\n";
+    private static int POLICY_ID;
+
+    public static int getPolicyId() {
+        return POLICY_ID;
+    }
+
+    public static String getAppCategoryUnknown() {
+        return APP_CATEGORY_UNKNOWN;
+    }
 
     public static String getMithrilFirebaseServerKeyUsers() {
         return MITHRIL_FIREBASE_SERVER_KEY_USERS;
