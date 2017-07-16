@@ -683,12 +683,13 @@ public class MithrilDBHelper extends SQLiteOpenHelper {
                         //App package name
                         tempAppData.setPackageName(pack.packageName);
 
+                        /*
                         try {
                             /**
                              * Static info about app category downloaded from the GCloud server to be used for policy management later
                              * Knowledge: https://stackoverflow.com/questions/7935858/the-split-method-in-java-does-not-work-on-a-dot
                              * The split method does not work on "." unless escape characters are used!
-                             */
+                             *
                             String[] pkgNameParts = tempAppData.getPackageName().split("\\.");
                             Log.d(MithrilAC.getDebugTag(), "parts: "+pkgNameParts.length);
                             tempAppData.setAppCategory(
@@ -700,6 +701,9 @@ public class MithrilDBHelper extends SQLiteOpenHelper {
                         } catch (NullPointerException nullPointerException) {
                             Log.e(MithrilAC.getDebugTag(), "Null pointer was caused"+nullPointerException.getMessage());
                         }
+                        */
+
+                        tempAppData.setAppCategory(AppCategoryExtractor.getAppCategory(tempAppData.getPackageName()));
 
                         //App version info
                         tempAppData.setVersionInfo(pack.versionName);
