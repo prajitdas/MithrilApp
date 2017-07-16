@@ -45,87 +45,87 @@ public class DataGenerator {
          */
         if (appCategory.equals("family")) {
             /** "messages": 0.6388888888888888 */
-            /** "contacts": 0.5555555555555556 */
-            /** "media": 0.6111111111111112 */
-            /** "overlay": 0.8055555555555556 */
-            /** "storage": 0.7777777777777778 */
-            /** "calling": 0.5833333333333334 */
-            /** "notifications": 0.4444444444444444 */
-            /** "identification": 0.2777777777777778 */
-            /** "location": 0.5 */
-            /** "calendar": 0.6388888888888888 */
             for (String permission : getMessagesPolicies())
                 permActionMap.put(permission, actionAllow);
+            /** "contacts": 0.5555555555555556 */
             for (String permission : getContactsPolicies())
                 permActionMap.put(permission, actionAllow);
+            /** "media": 0.6111111111111112 */
             for (String permission : getMediaPolicies())
                 permActionMap.put(permission, actionAllow);
+            /** "overlay": 0.8055555555555556 */
             for (String permission : getOverlayPolicies())
                 permActionMap.put(permission, actionAllow);
+            /** "storage": 0.7777777777777778 */
             for (String permission : getStoragePolicies())
                 permActionMap.put(permission, actionAllow);
+            /** "calling": 0.5833333333333334 */
             for (String permission : getCallingPolicies())
                 permActionMap.put(permission, actionAllow);
+            /** "notifications": 0.4444444444444444 */
             for (String permission : getNotificationsPolicies())
                 permActionMap.put(permission, actionAllow);
+            /** "identification": 0.2777777777777778 */
             for (String permission : getIdentificationPolicies())
                 permActionMap.put(permission, actionAllow);
+            /** "location": 0.5 */
             for (String permission : getLocationPolicies())
                 permActionMap.put(permission, actionAllow);
+            /** "calendar": 0.6388888888888888 */
             for (String permission : getCalendarPolicies())
                 permActionMap.put(permission, actionAllow);
         } else if (appCategory.equals("communication")) {
             /** "messages": 0.5077399380804953 */
-            /** "contacts": 0.5510835913312694 */
-            /** "media": 0.5634674922600619 */
-            /** "overlay": 0.7368421052631579 */
-            /** "storage": 0.7631578947368421 */
-            /** "calling": 0.48761609907120745 */
-            /** "notifications": 0.6269349845201239 */
-            /** "identification": 0.2678018575851393 */
-            /** "location": 0.3560371517027864 */
-            /** "calendar": 0.5077399380804953 */
             for (String permission : getMessagesPolicies())
                 permActionMap.put(permission, actionAllow);
+            /** "contacts": 0.5510835913312694 */
             for (String permission : getContactsPolicies())
                 permActionMap.put(permission, actionAllow);
+            /** "media": 0.5634674922600619 */
             for (String permission : getMediaPolicies())
                 permActionMap.put(permission, actionAllow);
+            /** "overlay": 0.7368421052631579 */
             for (String permission : getOverlayPolicies())
                 permActionMap.put(permission, actionAllow);
+            /** "storage": 0.7631578947368421 */
             for (String permission : getStoragePolicies())
                 permActionMap.put(permission, actionAllow);
+            /** "calling": 0.48761609907120745 */
             for (String permission : getCallingPolicies())
                 permActionMap.put(permission, actionAllow);
+            /** "notifications": 0.6269349845201239 */
             for (String permission : getNotificationsPolicies())
                 permActionMap.put(permission, actionAllow);
+            /** "identification": 0.2678018575851393 */
             for (String permission : getIdentificationPolicies())
                 permActionMap.put(permission, actionAllow);
+            /** "location": 0.3560371517027864 */
             for (String permission : getLocationPolicies())
                 permActionMap.put(permission, actionAllow);
+            /** "calendar": 0.5077399380804953 */
             for (String permission : getCalendarPolicies())
                 permActionMap.put(permission, actionAllow);
         } else if (appCategory.equals("puzzle")) {
             /** "messages": 0.4666666666666667 */
+            for (String permission : getMessagesPolicies())
+                permActionMap.put(permission, actionAllow);
             /** "contacts": 0.44285714285714284 */
+            for (String permission : getContactsPolicies())
+                permActionMap.put(permission, actionAllow);
             /** "media": 0.4642857142857143 */
+            for (String permission : getMediaPolicies())
+                permActionMap.put(permission, actionAllow);
             /** "overlay": 0.6952380952380952 */
+            for (String permission : getOverlayPolicies())
+                permActionMap.put(permission, actionAllow);
             /** "storage": 0.6547619047619048 */
+            for (String permission : getStoragePolicies())
+                permActionMap.put(permission, actionAllow);
             /** "calling": 0.42142857142857143 */
             /** "notifications": 0.4142857142857143 */
             /** "identification": 0.15 */
             /** "location": 0.4 */
             /** "calendar": 0.4666666666666667 */
-            for (String permission : getMessagesPolicies())
-                permActionMap.put(permission, actionAllow);
-            for (String permission : getContactsPolicies())
-                permActionMap.put(permission, actionAllow);
-            for (String permission : getMediaPolicies())
-                permActionMap.put(permission, actionAllow);
-            for (String permission : getOverlayPolicies())
-                permActionMap.put(permission, actionAllow);
-            for (String permission : getStoragePolicies())
-                permActionMap.put(permission, actionAllow);
             for (String permission : getCallingPolicies())
                 permActionMap.put(permission, actionAllow);
             for (String permission : getNotificationsPolicies())

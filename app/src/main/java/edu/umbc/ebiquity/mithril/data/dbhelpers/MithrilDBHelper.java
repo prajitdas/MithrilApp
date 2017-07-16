@@ -31,10 +31,12 @@ import java.util.Map;
 
 import edu.umbc.ebiquity.mithril.MithrilAC;
 import edu.umbc.ebiquity.mithril.R;
+import edu.umbc.ebiquity.mithril.data.model.Feedback;
 import edu.umbc.ebiquity.mithril.data.model.Upload;
 import edu.umbc.ebiquity.mithril.data.model.components.AppData;
 import edu.umbc.ebiquity.mithril.data.model.components.PermData;
 import edu.umbc.ebiquity.mithril.data.model.rules.Action;
+import edu.umbc.ebiquity.mithril.data.model.rules.DefaultRule;
 import edu.umbc.ebiquity.mithril.data.model.rules.PolicyRule;
 import edu.umbc.ebiquity.mithril.data.model.rules.Resource;
 import edu.umbc.ebiquity.mithril.data.model.rules.Violation;
@@ -64,7 +66,8 @@ public class MithrilDBHelper extends SQLiteOpenHelper {
     private final static String ACTION_LOG_TABLE_NAME = "actionlog";
     private final static String VIOLATIONS_LOG_TABLE_NAME = "violationlog";
     private final static String UPLOADS_TABLE_NAME = "uploads";
-    //    private final static String FEEDBACK_STATS_TABLE_NAME = "feedback";
+    private final static String FEEDBACK_STATS_TABLE_NAME = "feedback";
+    private final static String DEFAULT_POLICIES_TABLE_NAME = "defpol";
     private final static String APP_PERM_VIEW_NAME = "apppermview";
     /**
      * Following are table creation statements
@@ -392,6 +395,49 @@ public class MithrilDBHelper extends SQLiteOpenHelper {
             UPLOADTIME + " timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP, " +
             UPLOADDATA + " TEXT NOT NULL);";
     /**
+     * -- Table 10: feedback
+     * CREATE TABLE feedback (
+     * id int NOT NULL AUTO_INCREMENT,
+     * time timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+     * tv int not null,
+     * fv int not null,
+     * polcnt int not null
+     * ) COMMENT 'Table showing uploads';
+     * <p>
+     * ----------------------------------------------------------------------------------------------------------------
+     */
+    private final static String FEEDBACKID = "id";
+    private final static String FEEDBACKTIME = "time";
+    private final static String FEEDBACKTV = "tv";
+    private final static String FEEDBACKFV = "fv";
+    private final static String FEEDBACKPOLCNT = "polcnt";
+    private final static String CREATE_FEEDBACK_STATS_TABLE = "CREATE TABLE " + getFeedbackStatsTableName() + " (" +
+            FEEDBACKID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
+            FEEDBACKTIME + " timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP, " +
+            FEEDBACKTV + " INTEGER NOT NULL, " +
+            FEEDBACKFV + " INTEGER NOT NULL, " +
+            FEEDBACKPOLCNT + " INTEGER NOT NULL);";
+    /**
+     * -- Table 11: defpol
+     * CREATE TABLE defpol (
+     * id int NOT NULL AUTO_INCREMENT,
+     * category text not null,
+     * permission text not null,
+     * value double not null
+     * ) COMMENT 'Table showing uploads';
+     * <p>
+     * ----------------------------------------------------------------------------------------------------------------
+     */
+    private final static String DEFPOLID = "id";
+    private final static String DEFPOLAPPCAT = "category";
+    private final static String DEFPOLPERM = "permission";
+    private final static String DEFPOLVAL = "value";
+    private final static String CREATE_DEFAULT_POLICIES_TABLE = "CREATE TABLE " + getDefaultPoliciesTableName() + " (" +
+            DEFPOLID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
+            DEFPOLAPPCAT + " TEXT NOT NULL, " +
+            DEFPOLPERM + " TEXT NOT NULL, " +
+            DEFPOLVAL + " DOUBLE NOT NULL);";
+    /**
      * -- views
      * -- View: apppermview
      * CREATE VIEW `mithril.db`.apppermview AS
@@ -440,6 +486,8 @@ public class MithrilDBHelper extends SQLiteOpenHelper {
     private static MithrilDBHelper instance;
     private AppOpsManager appOpsManager;
     private Context context;
+    private String feedbackTableName;
+    private String defaultPoliciesTableName;
 
     /**
      * -------------------------------------------------------------------------------------------------------------------------------------------------------------------
@@ -512,6 +560,14 @@ public class MithrilDBHelper extends SQLiteOpenHelper {
         return outputStream.toByteArray();
     }
 
+    public static String getFeedbackStatsTableName() {
+        return FEEDBACK_STATS_TABLE_NAME;
+    }
+
+    public static String getDefaultPoliciesTableName() {
+        return DEFAULT_POLICIES_TABLE_NAME;
+    }
+
     public Context getContext() {
         return context;
     }
@@ -535,6 +591,8 @@ public class MithrilDBHelper extends SQLiteOpenHelper {
             db.execSQL(CREATE_VIOLATIONS_LOG_TABLE);
             db.execSQL(CREATE_ACTION_LOG_TABLE);
             db.execSQL(CREATE_UPLOAD_TABLE);
+            db.execSQL(CREATE_FEEDBACK_STATS_TABLE);
+            db.execSQL(CREATE_DEFAULT_POLICIES_TABLE);
 
             db.execSQL(CREATE_APP_PERM_VIEW);
         } catch (SQLException sqlException) {
@@ -574,6 +632,8 @@ public class MithrilDBHelper extends SQLiteOpenHelper {
     private void dropDBObjects(SQLiteDatabase db) {
         db.execSQL("DROP VIEW IF EXISTS " + getAppPermViewName());
 
+        db.execSQL("DROP TABLE IF EXISTS " + getDefaultPoliciesTableName());
+        db.execSQL("DROP TABLE IF EXISTS " + getFeedbackStatsTableName());
         db.execSQL("DROP TABLE IF EXISTS " + getUploadsTableName());
         db.execSQL("DROP TABLE IF EXISTS " + getActionLogTableName());
         db.execSQL("DROP TABLE IF EXISTS " + getViolationsLogTableName());
@@ -586,6 +646,17 @@ public class MithrilDBHelper extends SQLiteOpenHelper {
 
         onCreate(db);
     }
+
+//    private void loadDefaultDataIntoDB(SQLiteDatabase db) throws SQLException, SemanticInconsistencyException {
+//        DataGenerator.setPolicySocialMediaCameraAccessAtHomeOnWeekends(db, context);
+//        DataGenerator.setPolicySocialMediaCameraAccessAtWorkOnWeekdaysDuringLunchHours(db, context);
+//        DataGenerator.setPolicySocialMediaLocationAccessAtHomeOnWeekdaysDuringEveningPersonalHours(db, context);
+//        DataGenerator.setPolicyChatAppsReadSmsAccessAtWork(db, context);
+//        DataGenerator.setPolicyChatAppsReceiveSmsAccessAtWork(db, context);
+//        DataGenerator.setPolicyChatAppsSendSmsAccessAtWork(db, context);
+//        DataGenerator.setPolicyEmailClientsReadCalendarAccessAtWorkDuringWeekdays(db, context);
+//        DataGenerator.setPolicyEmailClientsWriteCalendarAccessAtWorkDuringWeekdays(db, context);
+//    }
 
     private void loadDB(SQLiteDatabase db) {
         //Load all the permissions that are known for Android into the database. We will refer to them in the future.
@@ -607,17 +678,6 @@ public class MithrilDBHelper extends SQLiteOpenHelper {
 //        else
         // Load data from server
     }
-
-//    private void loadDefaultDataIntoDB(SQLiteDatabase db) throws SQLException, SemanticInconsistencyException {
-//        DataGenerator.setPolicySocialMediaCameraAccessAtHomeOnWeekends(db, context);
-//        DataGenerator.setPolicySocialMediaCameraAccessAtWorkOnWeekdaysDuringLunchHours(db, context);
-//        DataGenerator.setPolicySocialMediaLocationAccessAtHomeOnWeekdaysDuringEveningPersonalHours(db, context);
-//        DataGenerator.setPolicyChatAppsReadSmsAccessAtWork(db, context);
-//        DataGenerator.setPolicyChatAppsReceiveSmsAccessAtWork(db, context);
-//        DataGenerator.setPolicyChatAppsSendSmsAccessAtWork(db, context);
-//        DataGenerator.setPolicyEmailClientsReadCalendarAccessAtWorkDuringWeekdays(db, context);
-//        DataGenerator.setPolicyEmailClientsWriteCalendarAccessAtWorkDuringWeekdays(db, context);
-//    }
 
     private void insertHardcodedGooglePermissions(SQLiteDatabase db) {
         try {
@@ -827,6 +887,11 @@ public class MithrilDBHelper extends SQLiteOpenHelper {
         return tempPermData;
     }
 
+    /**
+     * -----------------------------------------------------------------------------------------------------------------------------------------------------------------
+     * All CRUD(Create, Read, Update, Delete) Operations
+     */
+
     private Bitmap getPermissionIconBitmap(PermissionInfo permissionInfo) {
         PackageManager packageManager = getContext().getPackageManager();
 
@@ -866,10 +931,6 @@ public class MithrilDBHelper extends SQLiteOpenHelper {
     }
 
     /**
-     * -----------------------------------------------------------------------------------------------------------------------------------------------------------------
-     * All CRUD(Create, Read, Update, Delete) Operations
-     */
-    /**
      * @param db
      * @param anAppData
      * @return
@@ -890,14 +951,46 @@ public class MithrilDBHelper extends SQLiteOpenHelper {
             values.put(APPINSTALLED, 0);
         values.put(APPTYPE, anAppData.getAppType());
         values.put(APPUID, anAppData.getUid());
-        Log.d(MithrilAC.getDebugTag(), "came here, saw:" + anAppData.getPackageName());
+
         try {
             insertedRowId = db.insertWithOnConflict(getAppsTableName(), null, values, SQLiteDatabase.CONFLICT_REPLACE);
         } catch (SQLException e) {
             Log.e(MithrilAC.getDebugTag(), "Error inserting " + values, e);
             return -1;
         }
-        Log.d(MithrilAC.getDebugTag(), "inserted: " + anAppData.getPackageName() + " into row: " + insertedRowId);
+        return insertedRowId;
+    }
+
+    public long addFeedback(SQLiteDatabase db, Feedback aFeedback) {
+        long insertedRowId;
+        ContentValues values = new ContentValues();
+        values.put(FEEDBACKTIME, new Long(aFeedback.getTime().getTime()));
+        values.put(FEEDBACKTV, aFeedback.getTvcount());
+        values.put(FEEDBACKTV, aFeedback.getFvcount());
+        values.put(FEEDBACKPOLCNT, aFeedback.getPolcount());
+
+        try {
+            insertedRowId = db.insertOrThrow(getFeedbackStatsTableName(), null, values);
+        } catch (SQLException e) {
+            Log.e(MithrilAC.getDebugTag(), "Error inserting " + values, e);
+            return -1;
+        }
+        return insertedRowId;
+    }
+
+    public long addApp(SQLiteDatabase db, DefaultRule aDefaultRule) {
+        long insertedRowId;
+        ContentValues values = new ContentValues();
+        values.put(DEFPOLAPPCAT, aDefaultRule.getAppCat());
+        values.put(DEFPOLPERM, aDefaultRule.getPermission());
+        values.put(DEFPOLVAL, aDefaultRule.getValue());
+
+        try {
+            insertedRowId = db.insertOrThrow(getDefaultPoliciesTableName(), null, values);
+        } catch (SQLException e) {
+            Log.e(MithrilAC.getDebugTag(), "Error inserting " + values, e);
+            return -1;
+        }
         return insertedRowId;
     }
 
@@ -1056,7 +1149,7 @@ public class MithrilDBHelper extends SQLiteOpenHelper {
             if (rules.size() > 0) {
                 if (aPolicyRule.getAction() == rules.get(0).getAction()) {
                     try {
-                        return db.insertOrThrow(getPolicyRulesTableName(), null, insertPolicy(aPolicyRule));
+                        return db.insertOrThrow(getPolicyRulesTableName(), null, formNewPolicy(aPolicyRule));
                     } catch (SQLException e) {
                         Log.e(MithrilAC.getDebugTag(), "Error inserting policy for " + aPolicyRule.getAppStr(), e);
                         return -1;
@@ -1066,7 +1159,7 @@ public class MithrilDBHelper extends SQLiteOpenHelper {
                 }
             } else {
                 try {
-                    return db.insertOrThrow(getPolicyRulesTableName(), null, insertPolicy(aPolicyRule));
+                    return db.insertOrThrow(getPolicyRulesTableName(), null, formNewPolicy(aPolicyRule));
                 } catch (SQLException e) {
                     Log.e(MithrilAC.getDebugTag(), "Error inserting policy for " + aPolicyRule.getAppStr(), e);
                     return -1;
@@ -1076,7 +1169,7 @@ public class MithrilDBHelper extends SQLiteOpenHelper {
             return -1;
     }
 
-    private ContentValues insertPolicy(PolicyRule aPolicyRule) {
+    private ContentValues formNewPolicy(PolicyRule aPolicyRule) {
         ContentValues values = new ContentValues();
         values.put(POLRULID, aPolicyRule.getPolicyId());
         values.put(POLRULAPPID, aPolicyRule.getAppId());
@@ -1159,6 +1252,76 @@ public class MithrilDBHelper extends SQLiteOpenHelper {
             return -1;
         }
         return insertedRowId;
+    }
+
+    /**
+     * @param db
+     * @return
+     */
+    public List<DefaultRule> findAllDefaultRules(SQLiteDatabase db) {
+        // Select AppData Query
+        String selectQuery = "SELECT " +
+                getDefaultPoliciesTableName() + "." + DEFPOLAPPCAT + ", " +
+                getDefaultPoliciesTableName() + "." + DEFPOLPERM + ", " +
+                getDefaultPoliciesTableName() + "." + DEFPOLVAL +
+                " FROM " + getDefaultPoliciesTableName() + ";";
+
+        List<DefaultRule> rules = new ArrayList<>();
+        Cursor cursor = db.rawQuery(selectQuery, null);
+        try {
+            if (cursor.moveToFirst()) {
+                do {
+                    rules.add(
+                            new DefaultRule(
+                                    cursor.getString(0),
+                                    cursor.getString(1),
+                                    cursor.getDouble(2)
+                            )
+                    );
+                } while (cursor.moveToNext());
+            }
+        } catch (SQLException e) {
+            throw new SQLException("Could not find " + e);
+        } finally {
+            cursor.close();
+        }
+        return rules;
+    }
+
+    /**
+     * @param db
+     * @return
+     */
+    public List<Feedback> findAllFeedbacks(SQLiteDatabase db) {
+        // Select AppData Query
+        String selectQuery = "SELECT " +
+                getFeedbackStatsTableName() + "." + FEEDBACKTIME + ", " +
+                getFeedbackStatsTableName() + "." + FEEDBACKTV + ", " +
+                getFeedbackStatsTableName() + "." + FEEDBACKFV + ", " +
+                getFeedbackStatsTableName() + "." + FEEDBACKPOLCNT +
+                " FROM " + getFeedbackStatsTableName() + ";";
+
+        List<Feedback> feedbackList = new ArrayList<>();
+        Cursor cursor = db.rawQuery(selectQuery, null);
+        try {
+            if (cursor.moveToFirst()) {
+                do {
+                    feedbackList.add(
+                            new Feedback(
+                                    new Timestamp(cursor.getLong(0)),
+                                    cursor.getInt(0),
+                                    cursor.getInt(1),
+                                    cursor.getInt(2)
+                            )
+                    );
+                } while (cursor.moveToNext());
+            }
+        } catch (SQLException e) {
+            throw new SQLException("Could not find " + e);
+        } finally {
+            cursor.close();
+        }
+        return feedbackList;
     }
 
     /**
@@ -2058,7 +2221,6 @@ public class MithrilDBHelper extends SQLiteOpenHelper {
         return policyRules;
     }
 
-
     /**
      * Getting all policies
      *
@@ -2674,6 +2836,47 @@ public class MithrilDBHelper extends SQLiteOpenHelper {
         return userContext;
     }
 
+//    /**
+//     * method to update single violation
+//     */
+//    public int updateViolationForRowId(SQLiteDatabase db, Violation aViolation, long rowid) {
+//        ContentValues values = new ContentValues();
+//        values.put(VIOLATIONPOLICYID, aViolation.getPolicyId());
+//        values.put(VIOLATIONAPPID, aViolation.getAppId());
+//        values.put(VIOLATIONOPERATION, aViolation.getOprId());
+//        values.put(VIOLATIONAPPSTR, aViolation.getAppStr());
+//        values.put(VIOLATIONOPSTR, aViolation.getOpStr());
+//        values.put(VIOLATIONDETECTTIME, new Long(aViolation.getDetectedAtTime().getTime()));
+//        values.put(VIOLATIONFEEDBACKTTIME, new Long(aViolation.getFeedbackTime().getTime()));
+//        if (aViolation.isAsked())
+//            values.put(VIOLATIONASKED, 1);
+//        else
+//            values.put(VIOLATIONASKED, 0);
+//        if (aViolation.isTvfv())
+//            values.put(VIOLATIONTRUEFALSE, 1);
+//        else
+//            values.put(VIOLATIONTRUEFALSE, 0);
+//        values.put(VIOLATIONCTXTIDS, aViolation.getCtxtIdString());
+//        String[] args = new String[]{
+//                String.valueOf(aViolation.getAppId()),
+//                String.valueOf(aViolation.getPolicyId()),
+//                String.valueOf(aViolation.getOprId()),
+//                String.valueOf(rowid)
+//        };
+//
+//        try {
+//            return db.update(getViolationsLogTableName(),
+//                    values,
+//                    VIOLATIONAPPID + " = ? AND " +
+//                            VIOLATIONPOLICYID + " = ? AND " +
+//                            VIOLATIONOPERATION + " = ? AND " +
+//                            "ROWID = ? ",
+//                    args);
+//        } catch (SQLException e) {
+//            throw new SQLException("Exception " + e + " error updating violation: " + aViolation.getPolicyId());
+//        }
+//    }
+
     public List<Integer> findCurrentContextFromLogs(SQLiteDatabase db) {
         List<Integer> currentContext = new ArrayList<>();
         // Select Query
@@ -2750,47 +2953,6 @@ public class MithrilDBHelper extends SQLiteOpenHelper {
         }
     }
 
-//    /**
-//     * method to update single violation
-//     */
-//    public int updateViolationForRowId(SQLiteDatabase db, Violation aViolation, long rowid) {
-//        ContentValues values = new ContentValues();
-//        values.put(VIOLATIONPOLICYID, aViolation.getPolicyId());
-//        values.put(VIOLATIONAPPID, aViolation.getAppId());
-//        values.put(VIOLATIONOPERATION, aViolation.getOprId());
-//        values.put(VIOLATIONAPPSTR, aViolation.getAppStr());
-//        values.put(VIOLATIONOPSTR, aViolation.getOpStr());
-//        values.put(VIOLATIONDETECTTIME, new Long(aViolation.getDetectedAtTime().getTime()));
-//        values.put(VIOLATIONFEEDBACKTTIME, new Long(aViolation.getFeedbackTime().getTime()));
-//        if (aViolation.isAsked())
-//            values.put(VIOLATIONASKED, 1);
-//        else
-//            values.put(VIOLATIONASKED, 0);
-//        if (aViolation.isTvfv())
-//            values.put(VIOLATIONTRUEFALSE, 1);
-//        else
-//            values.put(VIOLATIONTRUEFALSE, 0);
-//        values.put(VIOLATIONCTXTIDS, aViolation.getCtxtIdString());
-//        String[] args = new String[]{
-//                String.valueOf(aViolation.getAppId()),
-//                String.valueOf(aViolation.getPolicyId()),
-//                String.valueOf(aViolation.getOprId()),
-//                String.valueOf(rowid)
-//        };
-//
-//        try {
-//            return db.update(getViolationsLogTableName(),
-//                    values,
-//                    VIOLATIONAPPID + " = ? AND " +
-//                            VIOLATIONPOLICYID + " = ? AND " +
-//                            VIOLATIONOPERATION + " = ? AND " +
-//                            "ROWID = ? ",
-//                    args);
-//        } catch (SQLException e) {
-//            throw new SQLException("Exception " + e + " error updating violation: " + aViolation.getPolicyId());
-//        }
-//    }
-
     /**
      * method to update single violation
      * Update is being removed because of the foreign key constraint as this causes an SQLException during insertion
@@ -2835,44 +2997,6 @@ public class MithrilDBHelper extends SQLiteOpenHelper {
         }
     }
 
-    public int updateContext(SQLiteDatabase db, String label, String type, boolean enabled) {
-        ContentValues values = new ContentValues();
-        values.put(CONTEXTTYPE, type);
-        values.put(CONTEXTSEMLBL, label);
-        if (enabled)
-            values.put(CONTEXTENABLED, 1);
-        else
-            values.put(CONTEXTENABLED, 0);
-        try {
-            return db.update(getContextTableName(), values, CONTEXTSEMLBL + " = ? AND " + CONTEXTTYPE + " = ? ",
-                    new String[]{label, type});
-        } catch (SQLException e) {
-            throw new SQLException("Exception " + e + " error updating Context: " + label);
-        }
-    }
-
-    /**
-     * method to update conflicted Google permissions
-     * We found extra information about the Google permissions and we are adding those in the table
-     */
-    private int updateConflictedGooglePermissions(SQLiteDatabase db, PermData aPermData) {
-//        name, protectionlvl, permgrp, flags (these four columns should already be present)
-        ContentValues values = new ContentValues();
-        values.put(PERMDESC, aPermData.getPermissionDescription());
-        values.put(PERMICON, getBitmapAsByteArray(aPermData.getPermissionIcon()));
-        values.put(PERMLABEL, aPermData.getPermissionLabel());
-        if (aPermData.getPermissionGroup().equals(MithrilAC.NO_PERMISSION_GROUP))
-            values.put(PERMGROUP, aPermData.getPermissionGroup());
-        if (aPermData.getPermissionFlag().equals(MithrilAC.getPermissionFlagNone()))
-            values.put(PERMFLAG, aPermData.getPermissionFlag());
-        try {
-            return db.update(getPermissionsTableName(), values, PERMNAME + " = ?",
-                    new String[]{aPermData.getPermissionName()});
-        } catch (SQLException e) {
-            throw new SQLException("Exception " + e + " error updating permission: " + aPermData.getPermissionName());
-        }
-    }
-
 //    /**
 //     * method to delete a row from a table based on the identifier
 //     *
@@ -2896,19 +3020,19 @@ public class MithrilDBHelper extends SQLiteOpenHelper {
 //        }
 //    }
 
-    /**
-     * Given a certain app uid deletes app from the database
-     *
-     * @param db  database instance
-     * @param uid app linux UID
-     */
-    public void deleteAppByUID(SQLiteDatabase db, int uid) {
+    public int updateContext(SQLiteDatabase db, String label, String type, boolean enabled) {
+        ContentValues values = new ContentValues();
+        values.put(CONTEXTTYPE, type);
+        values.put(CONTEXTSEMLBL, label);
+        if (enabled)
+            values.put(CONTEXTENABLED, 1);
+        else
+            values.put(CONTEXTENABLED, 0);
         try {
-//            Log.d(MithrilAC.getDebugTag(), "Deleting this: " + Integer.toString(uid));
-            db.delete(getAppsTableName(), APPUID + " = ?",
-                    new String[]{String.valueOf(uid)});
+            return db.update(getContextTableName(), values, CONTEXTSEMLBL + " = ? AND " + CONTEXTTYPE + " = ? ",
+                    new String[]{label, type});
         } catch (SQLException e) {
-            throw new SQLException("Could not find " + e.getMessage());
+            throw new SQLException("Exception " + e + " error updating Context: " + label);
         }
     }
 
@@ -2933,6 +3057,44 @@ public class MithrilDBHelper extends SQLiteOpenHelper {
 //            throw new SQLException("Could not find " + e);
 //        }
 //    }
+
+    /**
+     * method to update conflicted Google permissions
+     * We found extra information about the Google permissions and we are adding those in the table
+     */
+    private int updateConflictedGooglePermissions(SQLiteDatabase db, PermData aPermData) {
+//        name, protectionlvl, permgrp, flags (these four columns should already be present)
+        ContentValues values = new ContentValues();
+        values.put(PERMDESC, aPermData.getPermissionDescription());
+        values.put(PERMICON, getBitmapAsByteArray(aPermData.getPermissionIcon()));
+        values.put(PERMLABEL, aPermData.getPermissionLabel());
+        if (aPermData.getPermissionGroup().equals(MithrilAC.NO_PERMISSION_GROUP))
+            values.put(PERMGROUP, aPermData.getPermissionGroup());
+        if (aPermData.getPermissionFlag().equals(MithrilAC.getPermissionFlagNone()))
+            values.put(PERMFLAG, aPermData.getPermissionFlag());
+        try {
+            return db.update(getPermissionsTableName(), values, PERMNAME + " = ?",
+                    new String[]{aPermData.getPermissionName()});
+        } catch (SQLException e) {
+            throw new SQLException("Exception " + e + " error updating permission: " + aPermData.getPermissionName());
+        }
+    }
+
+    /**
+     * Given a certain app uid deletes app from the database
+     *
+     * @param db  database instance
+     * @param uid app linux UID
+     */
+    public void deleteAppByUID(SQLiteDatabase db, int uid) {
+        try {
+//            Log.d(MithrilAC.getDebugTag(), "Deleting this: " + Integer.toString(uid));
+            db.delete(getAppsTableName(), APPUID + " = ?",
+                    new String[]{String.valueOf(uid)});
+        } catch (SQLException e) {
+            throw new SQLException("Could not find " + e.getMessage());
+        }
+    }
 
     /**
      * @param db
