@@ -29,7 +29,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import edu.umbc.ebiquity.mithril.BuildConfig;
 import edu.umbc.ebiquity.mithril.MithrilAC;
 import edu.umbc.ebiquity.mithril.R;
 import edu.umbc.ebiquity.mithril.data.model.Upload;
@@ -597,23 +596,28 @@ public class MithrilDBHelper extends SQLiteOpenHelper {
     }
 
     public void loadPoliciesForApps(SQLiteDatabase db) throws SemanticInconsistencyException {
+        List<AppData> apps = findAllApps(db);
+        for (AppData app : apps) {
+            if (!app.getAppCategory().equals(MithrilAC.getAppCategoryUnknown()))
+                DataGenerator.setPolicy(db, context, app.getAppName(), app.getPackageName(), app.getAppCategory());
+        }
         //We have to get the policies from somewhere. The best case scenario would be a server that gives us the policies.
-        if (BuildConfig.DEBUG)
-            loadDefaultDataIntoDB(db);
+//        if (BuildConfig.DEBUG)
+//            loadDefaultDataIntoDB(db);
 //        else
         // Load data from server
     }
 
-    private void loadDefaultDataIntoDB(SQLiteDatabase db) throws SQLException, SemanticInconsistencyException {
-        DataGenerator.setPolicySocialMediaCameraAccessAtHomeOnWeekends(db, context);
-        DataGenerator.setPolicySocialMediaCameraAccessAtWorkOnWeekdaysDuringLunchHours(db, context);
-        DataGenerator.setPolicySocialMediaLocationAccessAtHomeOnWeekdaysDuringEveningPersonalHours(db, context);
-        DataGenerator.setPolicyChatAppsReadSmsAccessAtWork(db, context);
-        DataGenerator.setPolicyChatAppsReceiveSmsAccessAtWork(db, context);
-        DataGenerator.setPolicyChatAppsSendSmsAccessAtWork(db, context);
-        DataGenerator.setPolicyEmailClientsReadCalendarAccessAtWorkDuringWeekdays(db, context);
-        DataGenerator.setPolicyEmailClientsWriteCalendarAccessAtWorkDuringWeekdays(db, context);
-    }
+//    private void loadDefaultDataIntoDB(SQLiteDatabase db) throws SQLException, SemanticInconsistencyException {
+//        DataGenerator.setPolicySocialMediaCameraAccessAtHomeOnWeekends(db, context);
+//        DataGenerator.setPolicySocialMediaCameraAccessAtWorkOnWeekdaysDuringLunchHours(db, context);
+//        DataGenerator.setPolicySocialMediaLocationAccessAtHomeOnWeekdaysDuringEveningPersonalHours(db, context);
+//        DataGenerator.setPolicyChatAppsReadSmsAccessAtWork(db, context);
+//        DataGenerator.setPolicyChatAppsReceiveSmsAccessAtWork(db, context);
+//        DataGenerator.setPolicyChatAppsSendSmsAccessAtWork(db, context);
+//        DataGenerator.setPolicyEmailClientsReadCalendarAccessAtWorkDuringWeekdays(db, context);
+//        DataGenerator.setPolicyEmailClientsWriteCalendarAccessAtWorkDuringWeekdays(db, context);
+//    }
 
     private void insertHardcodedGooglePermissions(SQLiteDatabase db) {
         try {
@@ -886,14 +890,14 @@ public class MithrilDBHelper extends SQLiteOpenHelper {
             values.put(APPINSTALLED, 0);
         values.put(APPTYPE, anAppData.getAppType());
         values.put(APPUID, anAppData.getUid());
-        Log.d(MithrilAC.getDebugTag(), "came here, saw:"+anAppData.getPackageName());
+        Log.d(MithrilAC.getDebugTag(), "came here, saw:" + anAppData.getPackageName());
         try {
             insertedRowId = db.insertWithOnConflict(getAppsTableName(), null, values, SQLiteDatabase.CONFLICT_REPLACE);
         } catch (SQLException e) {
             Log.e(MithrilAC.getDebugTag(), "Error inserting " + values, e);
             return -1;
         }
-        Log.d(MithrilAC.getDebugTag(), "inserted: "+anAppData.getPackageName()+" into row: "+insertedRowId);
+        Log.d(MithrilAC.getDebugTag(), "inserted: " + anAppData.getPackageName() + " into row: " + insertedRowId);
         return insertedRowId;
     }
 

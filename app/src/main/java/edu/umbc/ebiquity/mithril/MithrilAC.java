@@ -23,12 +23,9 @@ public class MithrilAC extends Application {
     public static final int USAGE_STATS_PERMISSION_REQUEST_CODE = 2;
     public static final int WRITE_SETTINGS_PERMISSION_REQUEST_CODE = 3;
     public static final int SYSTEM_ALERT_WINDOW_PERMISSION_REQUEST_CODE = 4;
-
     public static final int SUCCESS_RESULT = 6;
     public static final int FAILURE_RESULT = 7;
-
     public static final String MITHRIL_APP_PACKAGE_NAME = "edu.umbc.ebiquity.mithril";
-
     public static final String PHONE_NOT_ROOTED_MITHRIL_BYE_BYE_MESSAGE = "Your phone is not rooted\nMithril won't work on this device\nSorry and thanks for participating in our survey";
     public static final String MITHRIL_BYE_BYE_MESSAGE = "Bye! Thanks for helping with our survey...";
     private static final String MITHRIL_FIREBASE_SERVER_KEY_USERS = "users";
@@ -87,6 +84,7 @@ public class MithrilAC extends Application {
     private static final String FEEDBACK_QUESTION_DATA_TIME_KEY = "feedbackDataTimeKey";
     private static final String FEEDBACK_URL = "http://104.154.36.223/bot/feedback/";
     private static final String RANDOM_USER_ID = "randomUserId";
+    private static final String APP_CATEGORY_UNKNOWN = "unknownAppCategory";
     private static final String PERMISSION_PROTECTION_LEVEL_UNKNOWN = "unknown";
     private static final String PERMISSION_PROTECTION_LEVEL_NORMAL = "normal";
     private static final String PERMISSION_PROTECTION_LEVEL_DANGEROUS = "dangerous";
@@ -130,8 +128,7 @@ public class MithrilAC extends Application {
     private static final String CMD_GRANT_MANAGE_APP_OPS_RESTRICTIONS = "pm grant " + MITHRIL_APP_PACKAGE_NAME + " android.permission.MANAGE_APP_OPS_RESTRICTIONS";
     private static final String CMD_REVOKE_MANAGE_APP_OPS_RESTRICTIONS = "pm revoke " + MITHRIL_APP_PACKAGE_NAME + " android.permission.MANAGE_APP_OPS_RESTRICTIONS";
     private static final String CMD_ROOT_PRIVILEGE = "su -c";
-    private static final String CMD_DETECT_APP_LAUNCH = "logcat -d ActivityManager:I *:S | grep 'LAUNCHER'";
-    //    private static final String CMD_DETECT_APP_LAUNCH = "logcat -d ActivityManager:I *:S | grep 'LAUNCHER' | cut -f5 -d'=' | cut -f1 -d'/'";
+    private static final String CMD_DETECT_APP_LAUNCH = "logcat -d ActivityManager:I *:S | grep 'LAUNCHER' | cut -f5 -d'=' | cut -f1 -d'/'";
     private static final String CMD_DETECT_APP_LAUNCH_DATE = "logcat -d ActivityManager:I *:S | grep 'LAUNCHER' | cut -f1 -d' '";
     private static final String CMD_DETECT_APP_LAUNCH_TIME = "logcat -d ActivityManager:I *:S | grep 'LAUNCHER' | cut -f2 -d' '";
     private static final String LOG_INTENT = "android.intent.category.LAUNCHER";
@@ -155,7 +152,6 @@ public class MithrilAC extends Application {
     private static final String PREF_LUNCH_TEMPORAL_KEY = "Lunch"; //1200 - 1230
     private static final String PREF_WORK_AFTERNOON_TEMPORAL_KEY = "Work_Afternoon"; //1230 - 1600 only Monday - Friday
     private static final String PREF_FAMILY_TEMPORAL_KEY = "Family_Time"; //1600 - 1900
-    private static final String PREF_DINNER_TEMPORAL_KEY = "Dinner"; //1900 - 1930
     private static final String PREF_ALONE_TEMPORAL_KEY = "Alone_Time"; //1930 - 2100
     private static final String PREF_DND_TEMPORAL_KEY = "DND"; //2100 - 0800
     private static final String PREF_MONDAY_TEMPORAL_KEY = "Monday";
@@ -196,14 +192,14 @@ public class MithrilAC extends Application {
     private static final String PREF_KEY_USER_APPS_DISPLAY = "userApps";
     private static final String PREF_KEY_APP_DISPLAY_TYPE = "AppDisplayTypeTag";
     private static final String PREF_KEY_APP_PKG_NAME = "AppPkgNameTag";
-    //    private static final String PREF_TIME_INSTANT_SUNRISE_TEMPORAL_KEY = "Sunrise"; //Sunrise in a locale
-//    private static final String PREF_TIME_INSTANT_SUNSET_TEMPORAL_KEY = "Sunset"; // Sunset in a locale
-//    private static final String PREF_MORNING_TEMPORAL_KEY = "Morning"; //0800 - 1200
-//    private static final String PREF_AFTERNOON_TEMPORAL_KEY = "Afternoon"; //1200 - 1600
-//    private static final String PREF_EVENING_TEMPORAL_KEY = "Evening"; //1600 - 2100
-//    private static final String PREF_DINNER_TEMPORAL_KEY = "Dinner"; //1900 - 1930
-//    private static final String PREF_NIGHT_TEMPORAL_KEY = "Night"; //2100 - 0800
-//    private static final String PREF_HOLIDAY_TEMPORAL_KEY = "Holiday"; //Official holiday
+    private static final String PREF_TIME_INSTANT_SUNRISE_TEMPORAL_KEY = "Sunrise"; //Sunrise in a locale
+    private static final String PREF_TIME_INSTANT_SUNSET_TEMPORAL_KEY = "Sunset"; // Sunset in a locale
+    private static final String PREF_MORNING_TEMPORAL_KEY = "Morning"; //0800 - 1200
+    private static final String PREF_AFTERNOON_TEMPORAL_KEY = "Afternoon"; //1200 - 1600
+    private static final String PREF_EVENING_TEMPORAL_KEY = "Evening"; //1600 - 2100
+    private static final String PREF_DINNER_TEMPORAL_KEY = "Dinner"; //1900 - 1930
+    private static final String PREF_NIGHT_TEMPORAL_KEY = "Night"; //2100 - 0800
+    private static final String PREF_HOLIDAY_TEMPORAL_KEY = "Holiday"; //Official holiday
     private static final String PREF_KEY_PERM_GROUP_NAME = "PermGroupNameTag";
     private static final String PREF_KEY_PERM_GROUP_LABEL = "PermGroupLabelTag";
     private static final String PREF_KEY_APP_COUNT = "AppCount";
@@ -618,6 +614,43 @@ public class MithrilAC extends Application {
             "('android.permission.ACCESS_VR_MANAGER', 'signature', '" + NO_PERMISSION_GROUP.first + "', '" + PERMISSION_FLAG_NONE + "'),\n" +
             "('android.permission.UPDATE_LOCK_TASK_PACKAGES', 'signature|setup', '" + NO_PERMISSION_GROUP.first + "', '" + PERMISSION_FLAG_NONE + "'),\n" +
             "('android.permission.SUBSTITUTE_NOTIFICATION_APP_NAME', 'signature|privileged', '" + NO_PERMISSION_GROUP.first + "', '" + PERMISSION_FLAG_NONE + "');\n";
+    private static int POLICY_ID;
+
+    public static String getPrefTimeInstantSunriseTemporalKey() {
+        return PREF_TIME_INSTANT_SUNRISE_TEMPORAL_KEY;
+    }
+
+    public static String getPrefTimeInstantSunsetTemporalKey() {
+        return PREF_TIME_INSTANT_SUNSET_TEMPORAL_KEY;
+    }
+
+    public static String getPrefMorningTemporalKey() {
+        return PREF_MORNING_TEMPORAL_KEY;
+    }
+
+    public static String getPrefAfternoonTemporalKey() {
+        return PREF_AFTERNOON_TEMPORAL_KEY;
+    }
+
+    public static String getPrefEveningTemporalKey() {
+        return PREF_EVENING_TEMPORAL_KEY;
+    }
+
+    public static String getPrefNightTemporalKey() {
+        return PREF_NIGHT_TEMPORAL_KEY;
+    }
+
+    public static String getPrefHolidayTemporalKey() {
+        return PREF_HOLIDAY_TEMPORAL_KEY;
+    }
+
+    public static int getPolicyId() {
+        return POLICY_ID;
+    }
+
+    public static String getAppCategoryUnknown() {
+        return APP_CATEGORY_UNKNOWN;
+    }
 
     public static String getMithrilFirebaseServerKeyUsers() {
         return MITHRIL_FIREBASE_SERVER_KEY_USERS;

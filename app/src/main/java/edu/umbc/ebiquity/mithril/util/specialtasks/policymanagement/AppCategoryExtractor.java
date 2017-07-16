@@ -1,5 +1,7 @@
 package edu.umbc.ebiquity.mithril.util.specialtasks.policymanagement;
 
+import edu.umbc.ebiquity.mithril.MithrilAC;
+
 /**
  * Created by Prajit on 7/15/2017.
  */
@@ -520,6 +522,6 @@ public class AppCategoryExtractor {
         else if (packageName.equals("com.fungamesforfree.snipershooter.free")) return "game_action";
         else if (packageName.equals("com.tinyco.familyguy")) return "game_adventure";
         else if (packageName.equals("com.fortafygames.colorswitch")) return "game_action";
-        else return "unknown";
+        else return MithrilAC.getAppCategoryUnknown();
     }
 }
