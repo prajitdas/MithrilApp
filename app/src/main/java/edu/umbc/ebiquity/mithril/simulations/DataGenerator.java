@@ -4,7 +4,6 @@ import android.Manifest;
 import android.app.AppOpsManager;
 import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
-import android.util.Log;
 
 import java.util.HashMap;
 import java.util.Map;

@@ -83,7 +83,7 @@ public class ViolationDetectionService extends Service implements
     private GoogleApiClient mGooglePlacesApiClient;
     private Location mCurrentLocation;
     private Place mCurrentPlace;
-    private Pair<String, ArrayList<Resource>> pkgOpPair;
+    private Pair<String, List<Resource>> pkgOpPair;
     private boolean servicesAvailable;
     private boolean mInProgress;
     private boolean mPlacesInProgress;
@@ -100,8 +100,6 @@ public class ViolationDetectionService extends Service implements
     private boolean mPlaceRequested;
     private AddressResultReceiver mAddressResultReceiver;
     private Map<String, SemanticLocation> currentSemanticLocations = new HashMap<>();
-    private String currentPackageName;
-    private ArrayList<Resource> resourcesUsed = new ArrayList<>();
 
     private static void handleViolation(Context context,
                                         SQLiteDatabase mithrilDB,
@@ -241,7 +239,7 @@ public class ViolationDetectionService extends Service implements
      * For example, if A={1,3,5} then B={1,5} is a proper subset of A. The set C={1,3,5} is a subset of A, but it is an improper subset of A
      * since C=A. The set D={1,4} is not even a subset of A, since 4 is not an element of A.
      */
-    public void detectViolation() {
+    public void detectViolation(String currentPackageName, List<Resource> resourcesUsed) {
 //        if (semanticUserContexts.size() == 0) {
 //            Log.e(MithrilAC.getDebugTag(), "Houston, we have a problem! We can't detect current context");
 //            return;
@@ -279,11 +277,13 @@ public class ViolationDetectionService extends Service implements
                             policyRuleMap.put(policyRule.getPolicyId(), tempRules);
                         currentPolicyId = policyRule.getPolicyId();
                     }
-                    Log.d(MithrilAC.getDebugTag(), "currentPolicyId:" + currentPolicyId);
                 }
-                Log.d(MithrilAC.getDebugTag(), "current policies found:" + policyRuleMap.size());
                 // Now we have a map of policyId and rules that are part of that policyId
                 for (Map.Entry<Long, List<PolicyRule>> policyRuleMapEntry : policyRuleMap.entrySet()) {
+                    for (int i = 0; i < policyRuleMapEntry.getValue().size(); i++)
+                        Log.d(MithrilAC.getDebugTag(), "detect violation: id"+policyRuleMapEntry.getKey()+", context: "+policyRuleMapEntry.getValue().get(i).toString());
+
+//                    Log.d(MithrilAC.getDebugTag(), "detect violation: "+currentPackageName+lastOperationPerformed+" key "+policyRuleMapEntry.getKey()+" value "+policyRuleMapEntry.getValue().get(0).getCtxStr());
                     //Found some policies let's group them by policy Id
 //                    Set<Long> policyContextSet = new HashSet<>();
 //                    List<Long> policyContextList = new ArrayList<>(policyContextSet);
@@ -653,20 +653,13 @@ public class ViolationDetectionService extends Service implements
     public int onStartCommand(Intent intent, int flags, int startId) {
         super.onStartCommand(intent, flags, startId);
 
-        currentPackageName = intent.getExtras().getString(MithrilAC.getCurrentPackageName());
-        resourcesUsed = intent.getParcelableArrayListExtra(MithrilAC.getUsedResources());
-
-        detectViolation();
-
         if (!servicesAvailable || mGoogleApiClient.isConnected() || mInProgress)
             return START_STICKY;
-
         setUpLocationClientIfNeeded();
         if (!mGoogleApiClient.isConnected() || !mGoogleApiClient.isConnecting() && !mInProgress) {
             mInProgress = true;
             mGoogleApiClient.connect();
         }
-
         if (!mGooglePlacesApiClient.isConnected() || !mGooglePlacesApiClient.isConnecting() && !mPlacesInProgress) {
             mPlacesInProgress = true;
             mGooglePlacesApiClient.connect();
@@ -697,7 +690,7 @@ public class ViolationDetectionService extends Service implements
                                 requestLastLocation();
                                 guessCurrentPlace();
 
-                                detectViolation();
+                                detectViolation(pkgOpPair.first, pkgOpPair.second);
                             } else {
                                 //currently running app is same as previously detected app
                                 //nothing to do
@@ -711,7 +704,7 @@ public class ViolationDetectionService extends Service implements
                             requestLastLocation();
                             guessCurrentPlace();
 
-                            detectViolation();
+                            detectViolation(pkgOpPair.first, pkgOpPair.second);
                         }
                     } else {
                         //null! nothing to do
