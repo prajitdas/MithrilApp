@@ -39,6 +39,7 @@ public class DataGenerator {
                             MithrilAC.getPrefHomeLocationKey(), // important context label
                             MithrilAC.getPrefKeyContextTypeLocation(), // important context type
                             permActionEntry.getValue(), // the action allow/block
+                            true, // Enabling the default policies
                             mithrilDB, // DB ref
                             context // app context
                     )
@@ -55,6 +56,7 @@ public class DataGenerator {
                             MithrilAC.getPrefDndTemporalKey(), // important context label
                             MithrilAC.getPrefKeyContextTypeTemporal(), // important context type
                             actionDeny,//permActionEntry.getValue(), // the action allow/block
+                            true, // Enabling the default policies
                             mithrilDB, // DB ref
                             context // app context
                     )
@@ -71,6 +73,7 @@ public class DataGenerator {
                             MithrilAC.getPrefWorkLocationKey(), // important context label
                             MithrilAC.getPrefKeyContextTypeLocation(), // important context type
                             permActionEntry.getValue(), // the action allow/block
+                            true, // Enabling the default policies
                             mithrilDB, // DB ref
                             context // app context
                     )
@@ -87,6 +90,7 @@ public class DataGenerator {
                             MithrilAC.getPrefWorkLocationKey(), // important context label
                             MithrilAC.getPrefKeyContextTypeLocation(), // important context type
                             actionDeny,//permActionEntry.getValue(), // the action allow/block
+                            true, // Enabling the default policies
                             mithrilDB, // DB ref
                             context // app context
                     )
@@ -100,6 +104,7 @@ public class DataGenerator {
                             MithrilAC.getPrefBossPresenceKey(), // important context label
                             MithrilAC.getPrefKeyContextTypePresence(), // important context type
                             actionDeny,//permActionEntry.getValue(), // the action allow/block
+                            true, // Enabling the default policies
                             mithrilDB, // DB ref
                             context // app context
                     )
@@ -115,16 +120,17 @@ public class DataGenerator {
                                               String contextLabel,
                                               String contextType,
                                               Action action,
-                                              SQLiteDatabase mithrilDB, Context context) {
+                                              boolean enabled,
+                                              SQLiteDatabase mithrilDB,
+                                              Context context) {
         long appId, ctxtId;
         appId = MithrilDBHelper.getHelper(context).findAppIdByAppPkgName(mithrilDB, appPkgName);
         ctxtId = MithrilDBHelper.getHelper(context).findContextIdByLabelAndType(mithrilDB, contextLabel, contextType);
         int opCode = AppOpsManager.permissionToOpCode(op);
         if (op.equals(Manifest.permission.SYSTEM_ALERT_WINDOW))
             opCode = 24;
-        Log.d(MithrilAC.getDebugTag(), "operation: " + op);
-        Log.d(MithrilAC.getDebugTag(), "op: " + opCode);
-        Log.d(MithrilAC.getDebugTag(), "AppOps: " + op);
+        else if(op.equals(Manifest.permission.ACCESS_NOTIFICATIONS))
+            opCode = 25;
         if (appId == -1 || ctxtId == -1)
             return null;
         return new PolicyRule(
@@ -137,7 +143,7 @@ public class DataGenerator {
                 appName,
                 contextLabel,
                 op,
-                false
+                enabled
         );
     }
 

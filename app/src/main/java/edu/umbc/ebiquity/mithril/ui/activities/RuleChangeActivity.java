@@ -157,6 +157,7 @@ public class RuleChangeActivity extends AppCompatActivity implements RuleChangeF
                             semanticLocationLabel,
                             semanticLocationType,
                             currentAction,
+                            false,
                             mithrilDB, builder.getContext());
                     try {
                         MithrilDBHelper.getHelper(builder.getContext()).addPolicyRule(mithrilDB, policyRule);

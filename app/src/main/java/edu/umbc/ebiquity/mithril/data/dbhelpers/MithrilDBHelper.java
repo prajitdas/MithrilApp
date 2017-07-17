@@ -1,5 +1,6 @@
 package edu.umbc.ebiquity.mithril.data.dbhelpers;
 
+import android.Manifest;
 import android.app.AppOpsManager;
 import android.content.ContentValues;
 import android.content.Context;
@@ -659,9 +660,9 @@ public class MithrilDBHelper extends SQLiteOpenHelper {
 //    }
 
     private void loadDB(SQLiteDatabase db) {
+        insertHardcodedGooglePermissions(db);
         //Load all the permissions that are known for Android into the database. We will refer to them in the future.
         loadAndroidPermissionsIntoDB(db);
-        insertHardcodedGooglePermissions(db);
         loadDefaultPoliciesFromBackgroundKnowledge(db);
         //Load all the apps and app permissions that are known for this device into the database. We will refer to them in the future.
         loadRealAppDataIntoDB(db);
@@ -894,6 +895,11 @@ public class MithrilDBHelper extends SQLiteOpenHelper {
         tempPermData.setPermissionLabel(permissionInfo.loadLabel(packageManager).toString());
 
         tempPermData.setOp(AppOpsManager.permissionToOpCode(permissionInfo.name));
+        if(permissionInfo.name.equals("android.permission.SYSTEM_ALERT_WINDOW"))
+            tempPermData.setOp(24);
+        else if(permissionInfo.name.equals(Manifest.permission.ACCESS_NOTIFICATIONS))
+            tempPermData.setOp(25);
+
         Log.d(MithrilAC.getDebugTag(), "Permission: "+permissionInfo.name+" opcode: "+AppOpsManager.permissionToOpCode(permissionInfo.name));
 
         return tempPermData;
@@ -1025,7 +1031,7 @@ public class MithrilDBHelper extends SQLiteOpenHelper {
         values.put(PERMOP, aPermData.getOp());
         try {
             //The hardcoded permissions are getting replaced if we replace
-            insertedRowId = db.insertWithOnConflict(getPermissionsTableName(), null, values, SQLiteDatabase.CONFLICT_IGNORE);
+            insertedRowId = db.insertWithOnConflict(getPermissionsTableName(), null, values, SQLiteDatabase.CONFLICT_REPLACE);
         } catch (SQLiteConstraintException e) {
             updateConflictedGooglePermissions(db, aPermData);
             throw new PermissionWasUpdateException("Exception occurred for " + aPermData.getPermissionName());
