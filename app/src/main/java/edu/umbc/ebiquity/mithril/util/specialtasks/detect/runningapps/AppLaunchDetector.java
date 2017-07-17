@@ -45,7 +45,7 @@ public class AppLaunchDetector {
 //        mithrilDB = MithrilDBHelper.getHelper(this.context).getWritableDatabase();
     }
 
-    public Pair<String, List<Resource>> getForegroundApp(Context context) {
+    public Pair<String, ArrayList<Resource>> getForegroundApp(Context context) {
         long time = System.currentTimeMillis();
         try {
             /*
@@ -121,20 +121,20 @@ public class AppLaunchDetector {
         return false;
     }
 
-    private List<Resource> getOp() {
+    private ArrayList<Resource> getOp() {
         if (currentUsageEvent == null)
             return checkUsageStats();
         else
             return checkUsageEvent();
     }
 
-    private List<Resource> checkUsageEvent() {
-        List<Resource> resources = new ArrayList<>();
+    private ArrayList<Resource> checkUsageEvent() {
+        ArrayList<Resource> resources = new ArrayList<>();
         return resources;
     }
 
-    private List<Resource> checkUsageStats() {
-        List<Resource> resources = new ArrayList<>();
+    private ArrayList<Resource> checkUsageStats() {
+        ArrayList<Resource> resources = new ArrayList<>();
         try {
             ApplicationInfo appInfo = mPackageManager.getApplicationInfo(currentPackageName, 0);
             AppOpsState appOpsState = new AppOpsState(context);

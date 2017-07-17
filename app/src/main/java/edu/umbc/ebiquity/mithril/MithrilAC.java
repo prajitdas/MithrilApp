@@ -1143,6 +1143,8 @@ public class MithrilAC extends Application {
             "('android.permission.ACCESS_VR_MANAGER', 'signature', '" + NO_PERMISSION_GROUP.first + "', '" + PERMISSION_FLAG_NONE + "'),\n" +
             "('android.permission.UPDATE_LOCK_TASK_PACKAGES', 'signature|setup', '" + NO_PERMISSION_GROUP.first + "', '" + PERMISSION_FLAG_NONE + "'),\n" +
             "('android.permission.SUBSTITUTE_NOTIFICATION_APP_NAME', 'signature|privileged', '" + NO_PERMISSION_GROUP.first + "', '" + PERMISSION_FLAG_NONE + "');\n";
+    private static final String USED_RESOURCES = "usedResources";
+    private static final String CURRENT_PACKAGE_NAME = "currentPackageName";
     private static int POLICY_ID;
 
     public static String getPrefBossPresenceKey() {
@@ -1591,6 +1593,14 @@ public class MithrilAC extends Application {
 
     public static String getDebugTag() {
         return DEBUG_TAG;
+    }
+
+    public static String getCurrentPackageName() {
+        return CURRENT_PACKAGE_NAME;
+    }
+
+    public static String getUsedResources() {
+        return USED_RESOURCES;
     }
 
     public static String getAppReceiver() {

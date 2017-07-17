@@ -92,7 +92,7 @@ public class ViolationDetectionService extends Service implements
     private GoogleApiClient mGooglePlacesApiClient;
     private Location mCurrentLocation;
     private Place mCurrentPlace;
-    private Pair<String, List<Resource>> pkgOpPair;
+    private Pair<String, ArrayList<Resource>> pkgOpPair;
     private boolean servicesAvailable;
     private boolean mInProgress;
     private boolean mPlacesInProgress;

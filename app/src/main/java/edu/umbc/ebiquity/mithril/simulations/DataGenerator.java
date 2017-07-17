@@ -33,7 +33,7 @@ public class DataGenerator {
             MithrilDBHelper.getHelper(context).addPolicyRule(
                     mithrilDB,
                     DataGenerator.createPolicyRule(
-                            policyId++, // auto increment policy!
+                            ++policyId, // auto increment policy!
                             app.getPackageName(), app.getAppName(), // app info
                             permActionEntry.getKey(), // permission info
                             MithrilAC.getPrefHomeLocationKey(), // important context label
@@ -50,7 +50,7 @@ public class DataGenerator {
             MithrilDBHelper.getHelper(context).addPolicyRule(
                     mithrilDB,
                     DataGenerator.createPolicyRule(
-                            policyId++, // auto increment policy!
+                            ++policyId, // auto increment policy!
                             app.getPackageName(), app.getAppName(), // app info
                             permActionEntry.getKey(), // permission info
                             MithrilAC.getPrefDndTemporalKey(), // important context label
@@ -67,7 +67,7 @@ public class DataGenerator {
             MithrilDBHelper.getHelper(context).addPolicyRule(
                     mithrilDB,
                     DataGenerator.createPolicyRule(
-                            policyId++, // auto increment policy!
+                            ++policyId, // auto increment policy!
                             app.getPackageName(), app.getAppName(), // app info
                             permActionEntry.getKey(), // permission info
                             MithrilAC.getPrefWorkLocationKey(), // important context label
@@ -84,7 +84,7 @@ public class DataGenerator {
             MithrilDBHelper.getHelper(context).addPolicyRule(
                     mithrilDB,
                     DataGenerator.createPolicyRule(
-                            policyId++, // auto increment policy!
+                            ++policyId, // auto increment policy!
                             app.getPackageName(), app.getAppName(), // app info
                             permActionEntry.getKey(), // permission info
                             MithrilAC.getPrefWorkLocationKey(), // important context label

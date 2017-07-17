@@ -780,6 +780,9 @@ public class MithrilDBHelper extends SQLiteOpenHelper {
                         }
                         */
 
+                        /**
+                         * TODO Sandeep's webservice will be called here
+                         */
                         tempAppData.setAppCategory(AppCategoryExtractor.getAppCategory(tempAppData.getPackageName()));
 
                         //App version info
