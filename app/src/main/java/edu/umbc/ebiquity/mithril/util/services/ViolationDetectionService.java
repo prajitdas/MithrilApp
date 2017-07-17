@@ -45,6 +45,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.Timer;
+import java.util.TimerTask;
 
 import edu.umbc.ebiquity.mithril.MithrilAC;
 import edu.umbc.ebiquity.mithril.R;
@@ -278,7 +279,9 @@ public class ViolationDetectionService extends Service implements
                             policyRuleMap.put(policyRule.getPolicyId(), tempRules);
                         currentPolicyId = policyRule.getPolicyId();
                     }
+                    Log.d(MithrilAC.getDebugTag(), "currentPolicyId:" + currentPolicyId);
                 }
+                Log.d(MithrilAC.getDebugTag(), "current policies found:" + policyRuleMap.size());
                 // Now we have a map of policyId and rules that are part of that policyId
                 for (Map.Entry<Long, List<PolicyRule>> policyRuleMapEntry : policyRuleMap.entrySet()) {
                     //Found some policies let's group them by policy Id
@@ -315,6 +318,58 @@ public class ViolationDetectionService extends Service implements
                             );
                         }
                     }
+                }
+            }
+        }
+    }
+
+    private boolean isPolicyApplicable(List<PolicyRule> policyRules) {
+        boolean policyApplicable = false;
+        for (PolicyRule policyRule : policyRules) {
+            Gson retrieveDataGson = new Gson();
+            String retrieveDataJson;
+            Pair<String, String> contextTypeLabel = MithrilDBHelper.getHelper(context).findContextByID(mithrilDB, policyRule.getCtxId());
+            SemanticUserContext semanticUserContext;
+            if (contextTypeLabel.first.equals(MithrilAC.getPrefKeyContextTypeTemporal())) {
+                retrieveDataJson = sharedPrefs.getString(contextTypeLabel.second, "");
+                semanticUserContext = retrieveDataGson.fromJson(retrieveDataJson, SemanticTime.class);
+                for (SemanticTime time : getSemanticTimes()) {
+                    if (time.equals(semanticUserContext))
+                        policyApplicable = true;
+                    else
+                        return false;
+                }
+            } else if (contextTypeLabel.first.equals(MithrilAC.getPrefKeyContextTypeLocation())) {
+                retrieveDataJson = sharedPrefs.getString(contextTypeLabel.second, "");
+                semanticUserContext = retrieveDataGson.fromJson(retrieveDataJson, SemanticLocation.class);
+                for (SemanticLocation location : getSemanticLocations()) {
+                    if (location.equals(semanticUserContext))
+                        policyApplicable = true;
+                    else
+                        return false;
+                }
+            } else if (contextTypeLabel.first.equals(MithrilAC.getPrefKeyContextTypeTemporal())) {
+                retrieveDataJson = sharedPrefs.getString(contextTypeLabel.second, "");
+                semanticUserContext = retrieveDataGson.fromJson(retrieveDataJson, SemanticNearActor.class);
+                for (SemanticNearActor nearActor : getSemanticNearActors()) {
+                    if (nearActor.equals(semanticUserContext))
+                        policyApplicable = true;
+                    else
+                        return false;
+                }
+            } else if (contextTypeLabel.first.equals(MithrilAC.getPrefKeyContextTypeTemporal())) {
+                retrieveDataJson = sharedPrefs.getString(contextTypeLabel.second, "");
+                semanticUserContext = retrieveDataGson.fromJson(retrieveDataJson, SemanticActivity.class);
+                for (SemanticActivity activity : getSemanticActivities()) {
+                    if (activity.equals(semanticUserContext))
+                        policyApplicable = true;
+                    else
+                        return false;
+                }
+            }
+        }
+        return policyApplicable;
+    }
                     /**
                      * If current context is a subset of policy context or they are equal then we get true for the following test
                      * We have assumed a closed world. Explicit access has to be defined.
@@ -332,12 +387,12 @@ public class ViolationDetectionService extends Service implements
                      * to handle or use because we will be asking the users too many questions.
                      * However, a safe bet is that if there is any rule that states when every one of these contextual
                      * situations apply only then allow access then we are using a restrictive but safe access principle.
-                     */
+                     *
 //                    if (MithrilCollections.isExactMatchSet(policyContextSet, currentContextSet)) {
 //                        /**
 //                         * We have an exact context match! Current context is an exact match for rule context.
 //                         * We have to do something...
-//                         */
+//                         *
 //                        Log.d(MithrilAC.getDebugTag(), "Exact match. Do something! operation:" + lastOperationPerformed + " policy:" + policyContextSet + " current context:" + currentContextSet);
 //                        for (PolicyRule rule : policyRules) {
 //                            //Rule has an deny action, we have a violation to ask questions about
@@ -354,7 +409,7 @@ public class ViolationDetectionService extends Service implements
 //                                 * We have a violation! All violations start as a false violation and they are
 //                                 * deemed true by user feedback. They may also be explicitly defined as false.
 //                                 * In which case we need to change the policy... We ask for more feedback.
-//                                 */
+//                                 *
 //                                handleViolation(
 //                                        context,
 //                                        mithrilDB,
@@ -382,7 +437,7 @@ public class ViolationDetectionService extends Service implements
 //                        /**
 //                         * We have a subset context match! Policy context is a proper subset match for rule context.
 //                         * We have to do something...
-//                         */
+//                         *
 //                        Log.d(MithrilAC.getDebugTag(), "Subset match. Do something! operation:" + lastOperationPerformed + " policy:" + policyContextSet + " current context:" + currentContextSet);
 //                        for (PolicyRule rule : policyRules) {
 //                            //Rule has an deny action, we have a violation to ask questions about
@@ -399,7 +454,7 @@ public class ViolationDetectionService extends Service implements
 //                                 * We have a violation! All violations start as a false violation and they are
 //                                 * deemed true by user feedback. They may also be explicitly defined as false.
 //                                 * In which case we need to change the policy... We ask for more feedback.
-//                                 */
+//                                 *
 //                                handleViolation(
 //                                        context,
 //                                        mithrilDB,
@@ -438,7 +493,7 @@ public class ViolationDetectionService extends Service implements
 //                         * Context are by default enabled.
 //                         * PolicyRules are by default disabled.
 //                         * Violations are by default marked true.
-//                         */
+//                         *
 //                        Log.d(MithrilAC.getDebugTag(), "No match. Perhaps it's a superset or complete mismatch.. we don't know what to do, ask user operation:" + lastOperationPerformed + " policy:" + policyContextSet + " current context:" + currentContextSet);
 //                        long[] currentContextArray = setLowestLevelCurrentContext(mithrilDB, context, semanticUserContexts, currentContextSet);
 //                        List<Long> lowestContextList = new ArrayList<>();
@@ -488,7 +543,7 @@ public class ViolationDetectionService extends Service implements
                  * REMOVE THIS AFTER DEMO
                  * com.google.android.youtube launch is not allowed in US!
                  * change policy to allowed in
-                 */
+                 *
                 //            mithrilDB.close();
             }
             /**
@@ -549,57 +604,9 @@ public class ViolationDetectionService extends Service implements
              currentResource
              );
              }
-             }*/
+             }*
         }
-    }
-
-    private boolean isPolicyApplicable(List<PolicyRule> policyRules) {
-        boolean policyApplicable = false;
-        for (PolicyRule policyRule : policyRules) {
-            Gson retrieveDataGson = new Gson();
-            String retrieveDataJson;
-            Pair<String, String> contextTypeLabel = MithrilDBHelper.getHelper(context).findContextByID(mithrilDB, policyRule.getCtxId());
-            SemanticUserContext semanticUserContext;
-            if (contextTypeLabel.first.equals(MithrilAC.getPrefKeyContextTypeTemporal())) {
-                retrieveDataJson = sharedPrefs.getString(contextTypeLabel.second, "");
-                semanticUserContext = retrieveDataGson.fromJson(retrieveDataJson, SemanticTime.class);
-                for (SemanticTime time : getSemanticTimes()) {
-                    if (time.equals(semanticUserContext))
-                        policyApplicable = true;
-                    else
-                        return false;
-                }
-            } else if (contextTypeLabel.first.equals(MithrilAC.getPrefKeyContextTypeLocation())) {
-                retrieveDataJson = sharedPrefs.getString(contextTypeLabel.second, "");
-                semanticUserContext = retrieveDataGson.fromJson(retrieveDataJson, SemanticLocation.class);
-                for (SemanticLocation location : getSemanticLocations()) {
-                    if (location.equals(semanticUserContext))
-                        policyApplicable = true;
-                    else
-                        return false;
-                }
-            } else if (contextTypeLabel.first.equals(MithrilAC.getPrefKeyContextTypeTemporal())) {
-                retrieveDataJson = sharedPrefs.getString(contextTypeLabel.second, "");
-                semanticUserContext = retrieveDataGson.fromJson(retrieveDataJson, SemanticNearActor.class);
-                for (SemanticNearActor nearActor : getSemanticNearActors()) {
-                    if (nearActor.equals(semanticUserContext))
-                        policyApplicable = true;
-                    else
-                        return false;
-                }
-            } else if (contextTypeLabel.first.equals(MithrilAC.getPrefKeyContextTypeTemporal())) {
-                retrieveDataJson = sharedPrefs.getString(contextTypeLabel.second, "");
-                semanticUserContext = retrieveDataGson.fromJson(retrieveDataJson, SemanticActivity.class);
-                for (SemanticActivity activity : getSemanticActivities()) {
-                    if (activity.equals(semanticUserContext))
-                        policyApplicable = true;
-                    else
-                        return false;
-                }
-            }
-        }
-        return policyApplicable;
-    }
+    } */
 
     @Override
     public IBinder onBind(Intent intent) {
@@ -665,7 +672,53 @@ public class ViolationDetectionService extends Service implements
             mGooglePlacesApiClient.connect();
         }
 
+        mTimer.scheduleAtFixedRate(new LaunchedAppDetectTimerTask(), 0, MithrilAC.getLaunchDetectInterval());
+
         return START_STICKY;
+    }
+
+    private class LaunchedAppDetectTimerTask extends TimerTask {
+        @Override
+        public void run() {
+            // run on another thread
+            mHandler.post(new Runnable() {
+                @Override
+                public void run() {
+                    pkgOpPair = appLaunchDetector.getForegroundApp(context);
+                    if (pkgOpPair != null) {
+                        if (sharedPrefs.contains(MithrilAC.getPrefKeyLastRunningApp())) {
+                            if (!sharedPrefs.getString(MithrilAC.getPrefKeyLastRunningApp(), "").equals(pkgOpPair.first)) {
+                                //last running app is not same as currently running one
+                                //detect violation, if any
+                                //no need to change sharedprefs
+                                editor.putString(MithrilAC.getPrefKeyLastRunningApp(), pkgOpPair.first);
+                                editor.apply();
+
+                                requestLastLocation();
+                                guessCurrentPlace();
+
+                                detectViolation();
+                            } else {
+                                //currently running app is same as previously detected app
+                                //nothing to do
+                            }
+                        } else {
+                            //there's no known last running app
+                            //add to sharedprefs currently running app and detect violation, if any
+                            editor.putString(MithrilAC.getPrefKeyLastRunningApp(), pkgOpPair.first);
+                            editor.apply();
+
+                            requestLastLocation();
+                            guessCurrentPlace();
+
+                            detectViolation();
+                        }
+                    } else {
+                        //null! nothing to do
+                    }
+                }
+            });
+        }
     }
 
     private boolean servicesConnected() {

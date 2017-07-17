@@ -71,7 +71,7 @@ import edu.umbc.ebiquity.mithril.ui.fragments.coreactivityfragments.UsageStatsFr
 import edu.umbc.ebiquity.mithril.ui.fragments.coreactivityfragments.ViolationDetailFragment;
 import edu.umbc.ebiquity.mithril.ui.fragments.coreactivityfragments.ViolationFragment;
 import edu.umbc.ebiquity.mithril.util.receivers.AlarmReceiver;
-import edu.umbc.ebiquity.mithril.util.services.AppLaunchDetectorService;
+import edu.umbc.ebiquity.mithril.util.services.ViolationDetectionService;
 import edu.umbc.ebiquity.mithril.util.specialtasks.permissions.PermissionHelper;
 import edu.umbc.ebiquity.mithril.util.specialtasks.root.RootAccess;
 
@@ -395,7 +395,7 @@ public class CoreActivity extends AppCompatActivity
     private void initHouseKeepingTasks() {
         if (PermissionHelper.isPermissionGranted(this, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED &&
                 !PermissionHelper.needsUsageStatsPermission(this)) {
-            startService(new Intent(this, AppLaunchDetectorService.class));
+            startService(new Intent(this, ViolationDetectionService.class));
         } else
             PermissionHelper.quitMithril(this, MithrilAC.MITHRIL_BYE_BYE_MESSAGE);
         initDB(this);

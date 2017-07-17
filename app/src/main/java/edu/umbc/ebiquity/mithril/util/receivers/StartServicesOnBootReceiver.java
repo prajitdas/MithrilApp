@@ -12,7 +12,7 @@ import android.content.pm.PackageManager;
 import java.util.Calendar;
 
 import edu.umbc.ebiquity.mithril.MithrilAC;
-import edu.umbc.ebiquity.mithril.util.services.AppLaunchDetectorService;
+import edu.umbc.ebiquity.mithril.util.services.ViolationDetectionService;
 import edu.umbc.ebiquity.mithril.util.specialtasks.permissions.PermissionHelper;
 
 import static android.content.Context.ALARM_SERVICE;
@@ -59,7 +59,7 @@ public class StartServicesOnBootReceiver extends BroadcastReceiver {
                 if (PermissionHelper.isExplicitPermissionAcquisitionNecessary()) {
                     if (PermissionHelper.isPermissionGranted(context, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED &&
                             !PermissionHelper.needsUsageStatsPermission(context))
-                        context.startService(new Intent(context, AppLaunchDetectorService.class));
+                        context.startService(new Intent(context, ViolationDetectionService.class));
                 }
                 setupAlarm(context);
             }

@@ -81,17 +81,9 @@ public class AppLaunchDetectorService extends Service {
         }
     }
 
-//    @Override
-//    public void onDestroy() {
-//        mInProgress = false;
-//        mPlacesInProgress = false;
-//        super.onDestroy();
-//    }
-
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
         super.onStartCommand(intent, flags, startId);
-
 //        if (!servicesAvailable || mGoogleApiClient.isConnected() || mInProgress)
 //            return START_STICKY;
 //
@@ -105,108 +97,329 @@ public class AppLaunchDetectorService extends Service {
 //            mPlacesInProgress = true;
 //            mGooglePlacesApiClient.connect();
 //        }
-
         mTimer.scheduleAtFixedRate(new LaunchedAppDetectTimerTask(), 0, MithrilAC.getLaunchDetectInterval());
-
         return START_STICKY;
     }
 
-//    private boolean servicesConnected() {
-//        GoogleApiAvailability googleAPI = GoogleApiAvailability.getInstance();
-//        int result = googleAPI.isGooglePlayServicesAvailable(this);
-//        if (result != ConnectionResult.SUCCESS) {
-//            if (googleAPI.isUserResolvableError(result))
-//                PermissionHelper.toast(this, "Could not connect to the Google API services");
-//            return false;
+    /**
+     * Creates an intent, adds location data to it as an extra, and starts the intent service for
+     * fetching an address.
+     */
+    protected void startViolationDetectionService(String currentPackageName, ArrayList<Resource> resources) {
+        Intent intent = new Intent(this, ViolationDetectionService.class);
+
+        intent.putExtra(MithrilAC.getCurrentPackageName(), currentPackageName);
+        intent.putParcelableArrayListExtra(MithrilAC.getUsedResources(), resources);
+
+        startService(intent);
+    }
+
+    private class LaunchedAppDetectTimerTask extends TimerTask {
+        @Override
+        public void run() {
+            // run on another thread
+            mHandler.post(new Runnable() {
+                @Override
+                public void run() {
+                    pkgOpPair = appLaunchDetector.getForegroundApp(context);
+                    if (pkgOpPair != null) {
+                        if (sharedPrefs.contains(MithrilAC.getPrefKeyLastRunningApp())) {
+                            if (!sharedPrefs.getString(MithrilAC.getPrefKeyLastRunningApp(), "").equals(pkgOpPair.first)) {
+                                //last running app is not same as currently running one
+                                //detect violation, if any
+                                //no need to change sharedprefs
+                                editor.putString(MithrilAC.getPrefKeyLastRunningApp(), pkgOpPair.first);
+                                editor.apply();
+
+//                                requestLastLocation();
+//                                guessCurrentPlace();
+
+                                startViolationDetectionService(pkgOpPair.first, pkgOpPair.second);
+
+                                /*
+                                try {
+                                    ViolationDetector.detectViolation(
+                                            context,
+                                            pkgOpPair.first,
+                                            pkgOpPair.second,
+                                            getSemanticContexts());
+                                } catch (SemanticInconsistencyException e) {
+                                    Log.e(MithrilAC.getDebugTag(), e.getMessage());
+                                }
+                                */
+                                /**
+                                 * Once we receive the result of the address search, we can detect violation
+                                 */
+                            } else {
+                                //currently running app is same as previously detected app
+                                //nothing to do
+                            }
+                        } else {
+                            //there's no known last running app
+                            //add to sharedprefs currently running app and detect violation, if any
+                            editor.putString(MithrilAC.getPrefKeyLastRunningApp(), pkgOpPair.first);
+                            editor.apply();
+
+//                            requestLastLocation();
+//                            guessCurrentPlace();
+
+                            startViolationDetectionService(pkgOpPair.first, pkgOpPair.second);
+
+                            /*
+                            try {
+                                ViolationDetector.detectViolation(
+                                        context,
+                                        pkgOpPair.first,
+                                        pkgOpPair.second,
+                                        getSemanticContexts());
+                            } catch (SemanticInconsistencyException e) {
+                                Log.e(MithrilAC.getDebugTag(), e.getMessage());
+                            }
+                            */
+                        }
+                    } else {
+                        //null! nothing to do
+                    }
+                }
+            });
+        }
+    }
+}
+/**
+ //    @Override
+ //    public void onDestroy() {
+ //        mInProgress = false;
+ //        mPlacesInProgress = false;
+ //        super.onDestroy();
+ //    }
+
+//    private class AddressResultReceiver extends ResultReceiver {
+//        private Context context;
+//        /**
+//         * The formatted location address.
+//         *
+//        private Address mAddressOutput;
+//        /**
+//         * Tracks whether the user has requested an address. Becomes true when the user requests an
+//         * address and false when the address (or an error message) is delivered.
+//         * The user requests an address by pressing the Fetch Address button. This may happen
+//         * before GoogleApiClient connects. This activity uses this boolean to keep track of the
+//         * user's intent. If the value is true, the activity tries to fetch the address as soon as
+//         * GoogleApiClient connects.
+//         *
+//        private boolean mPlaceRequested;
+//
+//        public AddressResultReceiver(Handler handler, Context aContext) {
+//            super(handler);
+//
+//            context = aContext;
+//            // Set defaults, then update using values stored in the Bundle.
+//            mPlaceRequested = false;
+//            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N)
+//                mAddressOutput = new Address(context.getResources().getConfiguration().getLocales().get(0));
+//            else
+//                mAddressOutput = new Address(context.getResources().getConfiguration().locale);
 //        }
-//        return true;
-//    }
 //
-//    private void setUpLocationClientIfNeeded() {
-//        if (mGoogleApiClient == null)
-//            buildGoogleApiClient();
-//        if (mGooglePlacesApiClient == null)
-//            buildGooglePlacesApiClient();
-//    }
+//        @Override
+//        protected void onReceiveResult(int resultCode, Bundle resultData) {
+//            mPlaceRequested = resultData.getBoolean(MithrilAC.getAddressRequestedExtra(), false);
+//            String key = resultData.getString(MithrilAC.getCurrAddressKey(), null);
+//            if (key.equals(null))
+//                throw new AddressKeyMissingError();
+//            else {
+//                // Display the address string
+//                // or an error message sent from the intent service.
+//                Gson gson = new Gson();
+//                String json = resultData.getString(MithrilAC.getResultDataKey(), "");
+//                try {
+//                    mAddressOutput = gson.fromJson(json, Address.class);
+//                } catch (JsonSyntaxException e) {
+//                    Log.d(MithrilAC.getDebugTag(), e.getMessage());
+//                }
 //
-//    protected synchronized void buildGoogleApiClient() {
-//        mGoogleApiClient = new GoogleApiClient.Builder(this)
-//                .addApi(LocationServices.API)
-//                .addConnectionCallbacks(AppLaunchDetectorService.this)
-//                .addOnConnectionFailedListener(AppLaunchDetectorService.this)
-//                .build();
-//    }
+////                Log.d(MithrilAC.getDebugTag(), "We are at address: " + resultData.getString(MithrilAC.getCurrAddressKey()) + mAddressOutput);
+//                // Show a toast message if an address was found.
+//                if (resultCode == MithrilAC.SUCCESS_RESULT && mCurrentPlace != null && mCurrentLocation != null) {
+//                    SemanticLocation tempSemanticLocation = new SemanticLocation(key, mCurrentLocation, 0);
+//                    tempSemanticLocation.setName(mCurrentPlace.getName().toString());
+//                    tempSemanticLocation.setPlaceId(mCurrentPlace.getId());
+//                    tempSemanticLocation.setPlaceTypes(mCurrentPlace.getPlaceTypes());
+//                    tempSemanticLocation.setAddress(mAddressOutput);
 //
-//    protected synchronized void buildGooglePlacesApiClient() {
-//        mGooglePlacesApiClient = new GoogleApiClient
-//                .Builder(this)
-//                .addApi(Places.GEO_DATA_API)
-//                .addApi(Places.PLACE_DETECTION_API)
-//                .addConnectionCallbacks(AppLaunchDetectorService.this)
-//                .addOnConnectionFailedListener(AppLaunchDetectorService.this)
-//                .build();
-//    }
+//                    Address address = tempSemanticLocation.getAddress();
+//                    Location location = tempSemanticLocation.getLocation();
+//                    String placeId = tempSemanticLocation.getPlaceId();
+//                    List<Integer> placeTypes = tempSemanticLocation.getPlaceTypes();
 //
-//    @Override
-//    public void onConnected(@Nullable Bundle bundle) {
-//        if (mGoogleApiClient.isConnected())
-//            requestLastLocation();
-//        if (mGooglePlacesApiClient.isConnected())
-//            guessCurrentPlace();
-//    }
-//
-//    @Override
-//    public void onConnectionSuspended(int i) {
-//        Log.d(MithrilAC.getDebugTag(), "Disconnected. Please re-connect.");
-//        mInProgress = false;
-//        mGoogleApiClient = null;
-//        mGooglePlacesApiClient = null;
-//    }
-//
-//    @Override
-//    public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {
-//        Log.d(MithrilAC.getDebugTag(), "Connection failed");
-//        mInProgress = false;
-//    }
-//
-//    @Override
-//    public void onLocationChanged(Location location) {
-//        mCurrentLocation = location;
-//    }
-//
-//    private List<SemanticUserContext> getSemanticContexts() {
-//        List<SemanticUserContext> semanticUserContextList = new ArrayList<>();
-//
-//        //We are always at some location... where are we now? Also we are only in one place at a time
-//        if (mGoogleApiClient.isConnected()) {
-//            for (SemanticLocation semanticLocation : getSemanticLocations())
-//                semanticUserContextList.add(semanticLocation);
-//
-//            //Do we know the semantic temporal contexts?
-//            for (SemanticTime semanticTime : getSemanticTimes())
-//                semanticUserContextList.add(semanticTime);
-//
-//            //Do we detect any presence?
-//            for (SemanticNearActor semanticNearActor : getSemanticNearActors())
-//                semanticUserContextList.add(semanticNearActor);
-//
-//            //Do we know of any activity significant to the user?
-//            for (SemanticActivity semanticActivity : getSemanticActivities())
-//                semanticUserContextList.add(semanticActivity);
-//
-//            for (SemanticUserContext semanticUserContext : semanticUserContextList)
-//                Log.d(MithrilAC.getDebugTag(), semanticUserContext.getClass().getName());
-//
-////            Log.d(MithrilAC.getDebugTag(), "Size" + semanticUserContextList.size());
-//            return semanticUserContextList;
+//                    currentSemanticLocations.put(key, new SemanticLocation(location, address,
+//                            key,
+//                            false, tempSemanticLocation.getName(), placeId, placeTypes, false, 0));
+//                    currentSemanticLocations.put(key + "_Street", new SemanticLocation(location, address,
+//                            key + "_Street",
+//                            false, address.getThoroughfare(), placeId, placeTypes, false, 1));
+//                    currentSemanticLocations.put(key + "_City", new SemanticLocation(location, address,
+//                            key + "_City",
+//                            false, address.getLocality(), placeId, placeTypes, false, 2));
+//                    currentSemanticLocations.put(key + "_State", new SemanticLocation(location, address,
+//                            key + "_State",
+//                            false, address.getAdminArea(), placeId, placeTypes, false, 3));
+//                    currentSemanticLocations.put(key + "_Country", new SemanticLocation(location, address,
+//                            key + "_Country",
+//                            false, address.getCountryName(), placeId, placeTypes, false, 4));
+//                }
+//                // Reset. Enable the Fetch Address button and stop showing the progress bar.
+//                mPlaceRequested = false;
+//            }
 //        }
-//        return new ArrayList<>();
 //    }
-//
-//    /**
-//     * Creates an intent, adds location data to it as an extra, and starts the intent service for
-//     * fetching an address.
-//     */
+ * private void doNothingOldCode() {
+ * List<SemanticLocation> tempLocations = new ArrayList<>(currentSemanticLocations.values());
+ * Collections.sort(tempLocations, SemanticLocation.Comparators.LEVEL);
+ * currentSemanticLocations.clear();
+ * for(SemanticLocation semanticLocation : tempLocations)
+ * currentSemanticLocations.put(semanticLocation.getLabel(), semanticLocation);
+ * if (level > knownSemanticLocation.getLevel()) {
+ * level = knownSemanticLocation.getLevel();
+ * semanticLocation = knownSemanticLocation;
+ * }
+ * }
+ * }
+ * }
+ * Log.d(MithrilAC.getDebugTag(), "Did not match but at least we got a location" + currSemLoc.getLabel() + currSemLoc.getName());
+ * }
+ * if (semanticLocation != null) {
+ * Log.d(MithrilAC.getDebugTag(), "This is what we matched " + semanticLocation.getLabel() + semanticLocation.getName());
+ * int level = Integer.MAX_VALUE;
+ * for(SemanticLocation knownSemanticLocation : knownSemanticLocations) {
+ * if(knownSemanticLocation.getPlaceId().equals(semanticLocation.getPlaceId())) {
+ * if (level > knownSemanticLocation.getLevel()) {
+ * level = knownSemanticLocation.getLevel();
+ * semanticLocation = knownSemanticLocation;
+ * Log.d(MithrilAC.getDebugTag(), "Eureka we got a match to a location" + semanticLocation.getName() + semanticLocation.getLabel());
+ * }
+ * }
+ * }
+ * float shortestDistanceToKnownLocation = Float.MAX_VALUE;
+ * Log.d(MithrilAC.getDebugTag(), "1st Eureka we got a match to a location" +
+ * String.valueOf(knownSemanticLocations.size()));
+ * for(SemanticLocation knownSemanticLocation : knownSemanticLocations) {
+ * float distanceTo = currentLocation.distanceTo(knownSemanticLocation.getLocation());
+ * if (distanceTo < MithrilAC.getRadiusOf200Meters() && shortestDistanceToKnownLocation > distanceTo) {
+ * Log.d(MithrilAC.getDebugTag(), "3rd Eureka we got a match to a location" + knownSemanticLocation.getName() + knownSemanticLocation.getLabel());
+ * shortestDistanceToKnownLocation = distanceTo;
+ * semanticLocation = knownSemanticLocation;
+ * Log.d(MithrilAC.getDebugTag(), "Passed location found: "
+ * + String.valueOf(currentLocation.getLatitude())
+ * + String.valueOf(knownSemanticLocation.getLocation().getLatitude())
+ * + String.valueOf(distanceTo)
+ * );
+ * }
+ * }
+ * if (semanticLocations.size() == 0) {
+ * semanticLocations.add(handleUnknownLocation(mCurrentLocation));
+ * }
+ * Log.d(MithrilAC.getDebugTag(), pkgOpPair.first);
+ * requestLastLocation();
+ * guessCurrentPlace();
+ * startSearchAddressIntentService(mCurrentLocation);
+ * }
+ //    private boolean servicesConnected() {
+ //        GoogleApiAvailability googleAPI = GoogleApiAvailability.getInstance();
+ //        int result = googleAPI.isGooglePlayServicesAvailable(this);
+ //        if (result != ConnectionResult.SUCCESS) {
+ //            if (googleAPI.isUserResolvableError(result))
+ //                PermissionHelper.toast(this, "Could not connect to the Google API services");
+ //            return false;
+ //        }
+ //        return true;
+ //    }
+ //
+ //    private void setUpLocationClientIfNeeded() {
+ //        if (mGoogleApiClient == null)
+ //            buildGoogleApiClient();
+ //        if (mGooglePlacesApiClient == null)
+ //            buildGooglePlacesApiClient();
+ //    }
+ //
+ //    protected synchronized void buildGoogleApiClient() {
+ //        mGoogleApiClient = new GoogleApiClient.Builder(this)
+ //                .addApi(LocationServices.API)
+ //                .addConnectionCallbacks(AppLaunchDetectorService.this)
+ //                .addOnConnectionFailedListener(AppLaunchDetectorService.this)
+ //                .build();
+ //    }
+ //
+ //    protected synchronized void buildGooglePlacesApiClient() {
+ //        mGooglePlacesApiClient = new GoogleApiClient
+ //                .Builder(this)
+ //                .addApi(Places.GEO_DATA_API)
+ //                .addApi(Places.PLACE_DETECTION_API)
+ //                .addConnectionCallbacks(AppLaunchDetectorService.this)
+ //                .addOnConnectionFailedListener(AppLaunchDetectorService.this)
+ //                .build();
+ //    }
+ //
+ //    @Override
+ //    public void onConnected(@Nullable Bundle bundle) {
+ //        if (mGoogleApiClient.isConnected())
+ //            requestLastLocation();
+ //        if (mGooglePlacesApiClient.isConnected())
+ //            guessCurrentPlace();
+ //    }
+ //
+ //    @Override
+ //    public void onConnectionSuspended(int i) {
+ //        Log.d(MithrilAC.getDebugTag(), "Disconnected. Please re-connect.");
+ //        mInProgress = false;
+ //        mGoogleApiClient = null;
+ //        mGooglePlacesApiClient = null;
+ //    }
+ //
+ //    @Override
+ //    public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {
+ //        Log.d(MithrilAC.getDebugTag(), "Connection failed");
+ //        mInProgress = false;
+ //    }
+ //
+ //    @Override
+ //    public void onLocationChanged(Location location) {
+ //        mCurrentLocation = location;
+ //    }
+ //
+ //    private List<SemanticUserContext> getSemanticContexts() {
+ //        List<SemanticUserContext> semanticUserContextList = new ArrayList<>();
+ //
+ //        //We are always at some location... where are we now? Also we are only in one place at a time
+ //        if (mGoogleApiClient.isConnected()) {
+ //            for (SemanticLocation semanticLocation : getSemanticLocations())
+ //                semanticUserContextList.add(semanticLocation);
+ //
+ //            //Do we know the semantic temporal contexts?
+ //            for (SemanticTime semanticTime : getSemanticTimes())
+ //                semanticUserContextList.add(semanticTime);
+ //
+ //            //Do we detect any presence?
+ //            for (SemanticNearActor semanticNearActor : getSemanticNearActors())
+ //                semanticUserContextList.add(semanticNearActor);
+ //
+ //            //Do we know of any activity significant to the user?
+ //            for (SemanticActivity semanticActivity : getSemanticActivities())
+ //                semanticUserContextList.add(semanticActivity);
+ //
+ //            for (SemanticUserContext semanticUserContext : semanticUserContextList)
+ //                Log.d(MithrilAC.getDebugTag(), semanticUserContext.getClass().getName());
+ //
+ ////            Log.d(MithrilAC.getDebugTag(), "Size" + semanticUserContextList.size());
+ //            return semanticUserContextList;
+ //        }
+ //        return new ArrayList<>();
+ //    }
+ //
+ //    /**
+ //     * Creates an intent, adds location data to it as an extra, and starts the intent service for
+ //     * fetching an address.
+ //     *
 //    protected void startSearchAddressIntentService(Location location) {
 //        // Create an intent for passing to the intent service responsible for fetching the address.
 //        Intent intent = new Intent(this, FetchAddressIntentService.class);
@@ -299,7 +512,7 @@ public class AppLaunchDetectorService extends Service {
 //        /**
 //         * We are parsing all known locations and we know the current location's distance to them.
 //         * Let's determine if we are at a certain known location and at what is that location.
-//         */
+//         *
 //        String placeToRetrieve = new String();
 ////        boolean isFound = false;
 //        for (SemanticLocation currSemLoc : currentSemanticLocations.values()) {
@@ -370,7 +583,7 @@ public class AppLaunchDetectorService extends Service {
 //    /**
 //     * Posts a notification in the notification bar when a transition is detected.
 //     * If the user clicks the notification, control goes to the MainActivity.
-//     */
+//     *
 //    private void sendNotification(SemanticLocation semanticLocation) {
 //        // Create an explicit content Intent that starts the main Activity.
 //        Intent notificationIntent = new Intent(this, InstanceCreationActivity.class);
@@ -412,222 +625,4 @@ public class AppLaunchDetectorService extends Service {
 //        // Issue the notification
 //        mNotificationManager.notify(0, builder.build());
 //    }
-
-    /**
-     * Creates an intent, adds location data to it as an extra, and starts the intent service for
-     * fetching an address.
-     */
-    protected void startViolationDetectionService(String currentPackageName, ArrayList<Resource> resources) {
-        Intent intent = new Intent(this, ViolationDetectionService.class);
-
-        intent.putExtra(MithrilAC.getCurrentPackageName(), currentPackageName);
-        intent.putParcelableArrayListExtra(MithrilAC.getUsedResources(), resources);
-
-        startService(intent);
-    }
-
-    private class LaunchedAppDetectTimerTask extends TimerTask {
-        @Override
-        public void run() {
-            // run on another thread
-            mHandler.post(new Runnable() {
-                @Override
-                public void run() {
-                    pkgOpPair = appLaunchDetector.getForegroundApp(context);
-                    if (pkgOpPair != null) {
-                        if (sharedPrefs.contains(MithrilAC.getPrefKeyLastRunningApp())) {
-                            if (!sharedPrefs.getString(MithrilAC.getPrefKeyLastRunningApp(), "").equals(pkgOpPair.first)) {
-                                //last running app is not same as currently running one
-                                //detect violation, if any
-                                //no need to change sharedprefs
-                                editor.putString(MithrilAC.getPrefKeyLastRunningApp(), pkgOpPair.first);
-                                editor.apply();
-
-//                                requestLastLocation();
-//                                guessCurrentPlace();
-
-                                startViolationDetectionService(pkgOpPair.first, pkgOpPair.second);
-
-                                /*
-                                try {
-                                    ViolationDetector.detectViolation(
-                                            context,
-                                            pkgOpPair.first,
-                                            pkgOpPair.second,
-                                            getSemanticContexts());
-                                } catch (SemanticInconsistencyException e) {
-                                    Log.e(MithrilAC.getDebugTag(), e.getMessage());
-                                }
-                                */
-                                /**
-                                 * Once we receive the result of the address search, we can detect violation
-                                 */
-                            } else {
-                                //currently running app is same as previously detected app
-                                //nothing to do
-                            }
-                        } else {
-                            //there's no known last running app
-                            //add to sharedprefs currently running app and detect violation, if any
-                            editor.putString(MithrilAC.getPrefKeyLastRunningApp(), pkgOpPair.first);
-                            editor.apply();
-
-//                            requestLastLocation();
-//                            guessCurrentPlace();
-
-                            startViolationDetectionService(pkgOpPair.first, pkgOpPair.second);
-
-                            /*
-                            try {
-                                ViolationDetector.detectViolation(
-                                        context,
-                                        pkgOpPair.first,
-                                        pkgOpPair.second,
-                                        getSemanticContexts());
-                            } catch (SemanticInconsistencyException e) {
-                                Log.e(MithrilAC.getDebugTag(), e.getMessage());
-                            }
-                            */
-                        }
-                    } else {
-                        //null! nothing to do
-                    }
-                }
-            });
-        }
-    }
-
-//    private class AddressResultReceiver extends ResultReceiver {
-//        private Context context;
-//        /**
-//         * The formatted location address.
-//         */
-//        private Address mAddressOutput;
-//        /**
-//         * Tracks whether the user has requested an address. Becomes true when the user requests an
-//         * address and false when the address (or an error message) is delivered.
-//         * The user requests an address by pressing the Fetch Address button. This may happen
-//         * before GoogleApiClient connects. This activity uses this boolean to keep track of the
-//         * user's intent. If the value is true, the activity tries to fetch the address as soon as
-//         * GoogleApiClient connects.
-//         */
-//        private boolean mPlaceRequested;
-//
-//        public AddressResultReceiver(Handler handler, Context aContext) {
-//            super(handler);
-//
-//            context = aContext;
-//            // Set defaults, then update using values stored in the Bundle.
-//            mPlaceRequested = false;
-//            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N)
-//                mAddressOutput = new Address(context.getResources().getConfiguration().getLocales().get(0));
-//            else
-//                mAddressOutput = new Address(context.getResources().getConfiguration().locale);
-//        }
-//
-//        @Override
-//        protected void onReceiveResult(int resultCode, Bundle resultData) {
-//            mPlaceRequested = resultData.getBoolean(MithrilAC.getAddressRequestedExtra(), false);
-//            String key = resultData.getString(MithrilAC.getCurrAddressKey(), null);
-//            if (key.equals(null))
-//                throw new AddressKeyMissingError();
-//            else {
-//                // Display the address string
-//                // or an error message sent from the intent service.
-//                Gson gson = new Gson();
-//                String json = resultData.getString(MithrilAC.getResultDataKey(), "");
-//                try {
-//                    mAddressOutput = gson.fromJson(json, Address.class);
-//                } catch (JsonSyntaxException e) {
-//                    Log.d(MithrilAC.getDebugTag(), e.getMessage());
-//                }
-//
-////                Log.d(MithrilAC.getDebugTag(), "We are at address: " + resultData.getString(MithrilAC.getCurrAddressKey()) + mAddressOutput);
-//                // Show a toast message if an address was found.
-//                if (resultCode == MithrilAC.SUCCESS_RESULT && mCurrentPlace != null && mCurrentLocation != null) {
-//                    SemanticLocation tempSemanticLocation = new SemanticLocation(key, mCurrentLocation, 0);
-//                    tempSemanticLocation.setName(mCurrentPlace.getName().toString());
-//                    tempSemanticLocation.setPlaceId(mCurrentPlace.getId());
-//                    tempSemanticLocation.setPlaceTypes(mCurrentPlace.getPlaceTypes());
-//                    tempSemanticLocation.setAddress(mAddressOutput);
-//
-//                    Address address = tempSemanticLocation.getAddress();
-//                    Location location = tempSemanticLocation.getLocation();
-//                    String placeId = tempSemanticLocation.getPlaceId();
-//                    List<Integer> placeTypes = tempSemanticLocation.getPlaceTypes();
-//
-//                    currentSemanticLocations.put(key, new SemanticLocation(location, address,
-//                            key,
-//                            false, tempSemanticLocation.getName(), placeId, placeTypes, false, 0));
-//                    currentSemanticLocations.put(key + "_Street", new SemanticLocation(location, address,
-//                            key + "_Street",
-//                            false, address.getThoroughfare(), placeId, placeTypes, false, 1));
-//                    currentSemanticLocations.put(key + "_City", new SemanticLocation(location, address,
-//                            key + "_City",
-//                            false, address.getLocality(), placeId, placeTypes, false, 2));
-//                    currentSemanticLocations.put(key + "_State", new SemanticLocation(location, address,
-//                            key + "_State",
-//                            false, address.getAdminArea(), placeId, placeTypes, false, 3));
-//                    currentSemanticLocations.put(key + "_Country", new SemanticLocation(location, address,
-//                            key + "_Country",
-//                            false, address.getCountryName(), placeId, placeTypes, false, 4));
-//                }
-//                // Reset. Enable the Fetch Address button and stop showing the progress bar.
-//                mPlaceRequested = false;
-//            }
-//        }
-//    }
-}
-/**
- * private void doNothingOldCode() {
- * List<SemanticLocation> tempLocations = new ArrayList<>(currentSemanticLocations.values());
- * Collections.sort(tempLocations, SemanticLocation.Comparators.LEVEL);
- * currentSemanticLocations.clear();
- * for(SemanticLocation semanticLocation : tempLocations)
- * currentSemanticLocations.put(semanticLocation.getLabel(), semanticLocation);
- * if (level > knownSemanticLocation.getLevel()) {
- * level = knownSemanticLocation.getLevel();
- * semanticLocation = knownSemanticLocation;
- * }
- * }
- * }
- * }
- * Log.d(MithrilAC.getDebugTag(), "Did not match but at least we got a location" + currSemLoc.getLabel() + currSemLoc.getName());
- * }
- * if (semanticLocation != null) {
- * Log.d(MithrilAC.getDebugTag(), "This is what we matched " + semanticLocation.getLabel() + semanticLocation.getName());
- * int level = Integer.MAX_VALUE;
- * for(SemanticLocation knownSemanticLocation : knownSemanticLocations) {
- * if(knownSemanticLocation.getPlaceId().equals(semanticLocation.getPlaceId())) {
- * if (level > knownSemanticLocation.getLevel()) {
- * level = knownSemanticLocation.getLevel();
- * semanticLocation = knownSemanticLocation;
- * Log.d(MithrilAC.getDebugTag(), "Eureka we got a match to a location" + semanticLocation.getName() + semanticLocation.getLabel());
- * }
- * }
- * }
- * float shortestDistanceToKnownLocation = Float.MAX_VALUE;
- * Log.d(MithrilAC.getDebugTag(), "1st Eureka we got a match to a location" +
- * String.valueOf(knownSemanticLocations.size()));
- * for(SemanticLocation knownSemanticLocation : knownSemanticLocations) {
- * float distanceTo = currentLocation.distanceTo(knownSemanticLocation.getLocation());
- * if (distanceTo < MithrilAC.getRadiusOf200Meters() && shortestDistanceToKnownLocation > distanceTo) {
- * Log.d(MithrilAC.getDebugTag(), "3rd Eureka we got a match to a location" + knownSemanticLocation.getName() + knownSemanticLocation.getLabel());
- * shortestDistanceToKnownLocation = distanceTo;
- * semanticLocation = knownSemanticLocation;
- * Log.d(MithrilAC.getDebugTag(), "Passed location found: "
- * + String.valueOf(currentLocation.getLatitude())
- * + String.valueOf(knownSemanticLocation.getLocation().getLatitude())
- * + String.valueOf(distanceTo)
- * );
- * }
- * }
- * if (semanticLocations.size() == 0) {
- * semanticLocations.add(handleUnknownLocation(mCurrentLocation));
- * }
- * Log.d(MithrilAC.getDebugTag(), pkgOpPair.first);
- * requestLastLocation();
- * guessCurrentPlace();
- * startSearchAddressIntentService(mCurrentLocation);
- * }
- */
+*/
