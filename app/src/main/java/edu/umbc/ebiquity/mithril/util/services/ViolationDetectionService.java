@@ -50,6 +50,7 @@ import java.util.TimerTask;
 import edu.umbc.ebiquity.mithril.MithrilAC;
 import edu.umbc.ebiquity.mithril.R;
 import edu.umbc.ebiquity.mithril.data.dbhelpers.MithrilDBHelper;
+import edu.umbc.ebiquity.mithril.data.model.Policy;
 import edu.umbc.ebiquity.mithril.data.model.rules.Action;
 import edu.umbc.ebiquity.mithril.data.model.rules.PolicyRule;
 import edu.umbc.ebiquity.mithril.data.model.rules.Resource;
@@ -247,6 +248,7 @@ public class ViolationDetectionService extends Service implements
 //        if (resources.size() == 0) {
 //            if (PermissionHelper.isPermissionGranted(context, Manifest.permission.GET_APP_OPS_STATS) != PackageManager.PERMISSION_GRANTED)
 //                Log.e(MithrilAC.getDebugTag(), "We do not have GET_APP_OPS_STATS permission!");
+
 //            return;
 //        }
 //        if (resources.get(0).getOp() == AppOpsManager.OP_NONE) {
@@ -257,37 +259,37 @@ public class ViolationDetectionService extends Service implements
 //        Set<Long> currentContextSet = populateCurrentContext(mithrilDB, context, semanticUserContexts);
 //        List<Long> currentContextList = new ArrayList<>(currentContextSet);
 //        Collections.sort(currentContextList);
-
-        // Let's test the rules we found
-        for (Resource currentResource : resourcesUsed) {
 //            Action actionForCurrentOperationAndApp = Action.DENY;
-            int lastOperationPerformed = currentResource.getOp();
 //            int newPolicyId = MithrilDBHelper.getHelper(context).findMaxPolicyId(mithrilDB) + 1;
-            List<PolicyRule> policyRules = MithrilDBHelper.getHelper(context).findAllPoliciesForAppWhenPerformingOp(mithrilDB, currentPackageName, lastOperationPerformed);
-            if (policyRules.size() > 0) {
-                long currentPolicyId = -1;
-                // Get all rules for current policy. There are multiple rules because each rule represents a context condition.
-                List<PolicyRule> tempRules = new ArrayList<>();
-                Map<Long, List<PolicyRule>> policyRuleMap = new HashMap<>();
-                for (PolicyRule policyRule : policyRules) {
-                    if (currentPolicyId == policyRule.getPolicyId())
-                        tempRules.add(policyRule);
-                    else {
-                        if (currentPolicyId != -1)
-                            policyRuleMap.put(policyRule.getPolicyId(), tempRules);
-                        currentPolicyId = policyRule.getPolicyId();
-                    }
-                }
-                // Now we have a map of policyId and rules that are part of that policyId
-                for (Map.Entry<Long, List<PolicyRule>> policyRuleMapEntry : policyRuleMap.entrySet()) {
-                    for (int i = 0; i < policyRuleMapEntry.getValue().size(); i++)
-                        Log.d(MithrilAC.getDebugTag(), "detect violation: id"+policyRuleMapEntry.getKey()+", context: "+policyRuleMapEntry.getValue().get(i).toString());
 
+        //                for (Map.Entry<Long, List<PolicyRule>> policyRuleMapEntry : policyRuleMap.entrySet()) {
+//                    Log.d(MithrilAC.getDebugTag(), "detect violation: "+policyRuleMapEntry.getValue().size());
+//                    for (int i = 0; i < policyRuleMapEntry.getValue().size(); i++)
+//                        Log.d(MithrilAC.getDebugTag(), "looped detect violation: id" + policyRuleMapEntry.getKey() + ", context: " + policyRuleMapEntry.getValue().get(i).toString());
+//                }
 //                    Log.d(MithrilAC.getDebugTag(), "detect violation: "+currentPackageName+lastOperationPerformed+" key "+policyRuleMapEntry.getKey()+" value "+policyRuleMapEntry.getValue().get(0).getCtxStr());
-                    //Found some policies let's group them by policy Id
+        //Found some policies let's group them by policy Id
 //                    Set<Long> policyContextSet = new HashSet<>();
 //                    List<Long> policyContextList = new ArrayList<>(policyContextSet);
 //                    Collections.sort(policyContextList);
+        // Let's test the rules we found
+        for (Resource currentResource : resourcesUsed) {
+            int lastOperationPerformed = currentResource.getOp();
+            List<PolicyRule> policyRules = MithrilDBHelper.getHelper(context).findAllPoliciesForAppWhenPerformingOp(mithrilDB, currentPackageName, lastOperationPerformed);
+            if (policyRules.size() > 0) {
+                List<Long> policyIds = pickPolicyIds(policyRules);
+                Map<Long, List<PolicyRule>> policyRuleMap = new HashMap<>();
+                for (Long policyId : policyIds) {
+                    List<PolicyRule> tempRules = new ArrayList<>();
+                    for (PolicyRule rule : policyRules)
+                        if (rule.getPolicyId() == policyId)
+                            tempRules.add(rule);
+                    policyRuleMap.put(policyId, tempRules);
+                }
+
+                // Now we have a map of policyId and rules that are part of that policyId
+                for (Map.Entry<Long, List<PolicyRule>> policyRuleMapEntry : policyRuleMap.entrySet()) {
+
                     if (isPolicyApplicable(policyRuleMapEntry.getValue())) {
                         List<PolicyRule> rules = new ArrayList<>();
                         List<Long> contextIds = new ArrayList<>();
@@ -329,6 +331,7 @@ public class ViolationDetectionService extends Service implements
             Gson retrieveDataGson = new Gson();
             String retrieveDataJson;
             Pair<String, String> contextTypeLabel = MithrilDBHelper.getHelper(context).findContextByID(mithrilDB, policyRule.getCtxId());
+            Log.d(MithrilAC.getDebugTag(), "looped detect violation: context type" + contextTypeLabel.first + " label: " + contextTypeLabel.second);
             SemanticUserContext semanticUserContext;
             if (contextTypeLabel.first.equals(MithrilAC.getPrefKeyContextTypeTemporal())) {
                 retrieveDataJson = sharedPrefs.getString(contextTypeLabel.second, "");
@@ -370,6 +373,14 @@ public class ViolationDetectionService extends Service implements
         }
         return policyApplicable;
     }
+
+    private List<Long> pickPolicyIds(List<PolicyRule> policyRules) {
+        List<Long> policyIds = new ArrayList<>();
+        for (PolicyRule rule : policyRules)
+            policyIds.add(rule.getPolicyId());
+        return policyIds;
+    }
+
                     /**
                      * If current context is a subset of policy context or they are equal then we get true for the following test
                      * We have assumed a closed world. Explicit access has to be defined.
