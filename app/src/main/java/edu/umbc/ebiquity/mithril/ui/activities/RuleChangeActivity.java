@@ -1,6 +1,7 @@
 package edu.umbc.ebiquity.mithril.ui.activities;
 
 import android.app.AlertDialog;
+import android.app.AppOpsManager;
 import android.app.FragmentManager;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -152,7 +153,7 @@ public class RuleChangeActivity extends AppCompatActivity implements RuleChangeF
                             currentViolation.getPolicyId(),
                             appPkgName,
                             app.getAppName(), // the name returned is not correct we have find the method that fixes that
-                            currentViolation.getOprId(), // Manifest.permission.ACCESS_FINE_LOCATION,
+                            AppOpsManager.opToPermission(currentViolation.getOprId()), // Manifest.permission.ACCESS_FINE_LOCATION,
                             semanticLocationLabel,
                             semanticLocationType,
                             currentAction,

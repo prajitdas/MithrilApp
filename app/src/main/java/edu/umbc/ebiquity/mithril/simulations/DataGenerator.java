@@ -35,7 +35,7 @@ public class DataGenerator {
                     DataGenerator.createPolicyRule(
                             policyId++, // auto increment policy!
                             app.getPackageName(), app.getAppName(), // app info
-                            AppOpsManager.permissionToOpCode(permActionEntry.getKey()), // permission info
+                            permActionEntry.getKey(), // permission info
                             MithrilAC.getPrefHomeLocationKey(), // important context label
                             MithrilAC.getPrefKeyContextTypeLocation(), // important context type
                             permActionEntry.getValue(), // the action allow/block
@@ -51,7 +51,7 @@ public class DataGenerator {
                     DataGenerator.createPolicyRule(
                             policyId++, // auto increment policy!
                             app.getPackageName(), app.getAppName(), // app info
-                            AppOpsManager.permissionToOpCode(permActionEntry.getKey()), // permission info
+                            permActionEntry.getKey(), // permission info
                             MithrilAC.getPrefDndTemporalKey(), // important context label
                             MithrilAC.getPrefKeyContextTypeTemporal(), // important context type
                             actionDeny,//permActionEntry.getValue(), // the action allow/block
@@ -67,7 +67,7 @@ public class DataGenerator {
                     DataGenerator.createPolicyRule(
                             policyId++, // auto increment policy!
                             app.getPackageName(), app.getAppName(), // app info
-                            AppOpsManager.permissionToOpCode(permActionEntry.getKey()), // permission info
+                            permActionEntry.getKey(), // permission info
                             MithrilAC.getPrefWorkLocationKey(), // important context label
                             MithrilAC.getPrefKeyContextTypeLocation(), // important context type
                             permActionEntry.getValue(), // the action allow/block
@@ -83,7 +83,7 @@ public class DataGenerator {
                     DataGenerator.createPolicyRule(
                             policyId++, // auto increment policy!
                             app.getPackageName(), app.getAppName(), // app info
-                            AppOpsManager.permissionToOpCode(permActionEntry.getKey()), // permission info
+                            permActionEntry.getKey(), // permission info
                             MithrilAC.getPrefWorkLocationKey(), // important context label
                             MithrilAC.getPrefKeyContextTypeLocation(), // important context type
                             actionDeny,//permActionEntry.getValue(), // the action allow/block
@@ -96,7 +96,7 @@ public class DataGenerator {
                     DataGenerator.createPolicyRule(
                             policyId, // auto increment policy!
                             app.getPackageName(), app.getAppName(), // app info
-                            AppOpsManager.permissionToOpCode(permActionEntry.getKey()), // permission info
+                            permActionEntry.getKey(), // permission info
                             MithrilAC.getPrefBossPresenceKey(), // important context label
                             MithrilAC.getPrefKeyContextTypePresence(), // important context type
                             actionDeny,//permActionEntry.getValue(), // the action allow/block
@@ -111,7 +111,7 @@ public class DataGenerator {
     public static PolicyRule createPolicyRule(long policyId,
                                               String appPkgName,
                                               String appName,
-                                              int op,
+                                              String op,
                                               String contextLabel,
                                               String contextType,
                                               Action action,
@@ -119,20 +119,21 @@ public class DataGenerator {
         long appId, ctxtId;
         appId = MithrilDBHelper.getHelper(context).findAppIdByAppPkgName(mithrilDB, appPkgName);
         ctxtId = MithrilDBHelper.getHelper(context).findContextIdByLabelAndType(mithrilDB, contextLabel, contextType);
-        Log.d(MithrilAC.getDebugTag(), "OpCode: " + String.valueOf(op));
-        Log.d(MithrilAC.getDebugTag(), "AppOps: " + AppOpsManager.opToPermission(op));
+        Log.d(MithrilAC.getDebugTag(), "operation: " + op);
+        Log.d(MithrilAC.getDebugTag(), "op: " + AppOpsManager.permissionToOpCode(op));
+        Log.d(MithrilAC.getDebugTag(), "AppOps: " + AppOpsManager.opToPermission(AppOpsManager.permissionToOpCode(op)));
         if (appId == -1 || ctxtId == -1)
             return null;
         return new PolicyRule(
                 policyId,
                 appId,
                 ctxtId,
-                op,
+                AppOpsManager.permissionToOpCode(op),
                 action,
                 action.getActionString(),
                 appName,
                 contextLabel,
-                AppOpsManager.opToPermission(op),
+                AppOpsManager.opToPermission(AppOpsManager.permissionToOpCode(op)),
                 false
         );
     }

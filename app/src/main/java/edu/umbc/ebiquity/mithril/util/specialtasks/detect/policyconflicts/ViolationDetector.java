@@ -337,7 +337,7 @@ public class ViolationDetector {
                             newPolicyId,
                             currentPackageName,
                             app.getAppName(), // the name returned is not correct we have find the method that fixes that
-                            lastOperationPerformed, // Manifest.permission.ACCESS_FINE_LOCATION,
+                            AppOpsManager.opToPermission(lastOperationPerformed), // Manifest.permission.ACCESS_FINE_LOCATION,
                             ctxtTypeLabel.second,
                             ctxtTypeLabel.first,
                             Action.ALLOW,
