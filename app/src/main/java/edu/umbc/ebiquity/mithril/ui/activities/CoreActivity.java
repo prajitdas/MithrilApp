@@ -117,7 +117,7 @@ public class CoreActivity extends AppCompatActivity
     }
 
     private boolean isPolicyListEmpty() {
-        return MithrilDBHelper.getHelper(this).findAllPolicies(mithrilDB).size() <= 0;
+        return MithrilDBHelper.getHelper(this).findEveryPolicy(mithrilDB).size() <= 0;
     }
 
     private boolean isPermissionsListEmpty() {

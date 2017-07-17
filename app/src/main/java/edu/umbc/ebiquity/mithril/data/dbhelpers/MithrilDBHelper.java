@@ -2243,7 +2243,6 @@ public class MithrilDBHelper extends SQLiteOpenHelper {
                 " AND " +
                 getContextTableName() + "." + CONTEXTENABLED + " = 1;";
 
-        Log.d(MithrilAC.getDebugTag(), "Query: " + selectQuery);
         Cursor cursor = db.rawQuery(selectQuery, null);
         try {
 
