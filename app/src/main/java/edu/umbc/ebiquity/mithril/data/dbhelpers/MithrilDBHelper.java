@@ -1285,7 +1285,7 @@ public class MithrilDBHelper extends SQLiteOpenHelper {
         try {
             if (cursor.moveToFirst()) {
                 do {
-                    permValues.put(cursor.getString(1), cursor.getDouble(2));
+                    permValues.put(cursor.getString(0), cursor.getDouble(1));
                 } while (cursor.moveToNext());
             }
         } catch (SQLException e) {
