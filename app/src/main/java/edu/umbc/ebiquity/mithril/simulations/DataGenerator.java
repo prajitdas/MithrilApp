@@ -119,21 +119,24 @@ public class DataGenerator {
         long appId, ctxtId;
         appId = MithrilDBHelper.getHelper(context).findAppIdByAppPkgName(mithrilDB, appPkgName);
         ctxtId = MithrilDBHelper.getHelper(context).findContextIdByLabelAndType(mithrilDB, contextLabel, contextType);
+        int opCode = AppOpsManager.permissionToOpCode(op);
+        if (op.equals(Manifest.permission.SYSTEM_ALERT_WINDOW))
+            opCode = 24;
         Log.d(MithrilAC.getDebugTag(), "operation: " + op);
-        Log.d(MithrilAC.getDebugTag(), "op: " + AppOpsManager.permissionToOpCode(op));
-        Log.d(MithrilAC.getDebugTag(), "AppOps: " + AppOpsManager.opToPermission(AppOpsManager.permissionToOpCode(op)));
+        Log.d(MithrilAC.getDebugTag(), "op: " + opCode);
+        Log.d(MithrilAC.getDebugTag(), "AppOps: " + op);
         if (appId == -1 || ctxtId == -1)
             return null;
         return new PolicyRule(
                 policyId,
                 appId,
                 ctxtId,
-                AppOpsManager.permissionToOpCode(op),
+                opCode,
                 action,
                 action.getActionString(),
                 appName,
                 contextLabel,
-                AppOpsManager.opToPermission(AppOpsManager.permissionToOpCode(op)),
+                op,
                 false
         );
     }
@@ -155,68 +158,50 @@ public class DataGenerator {
     private static Map<String, Action> getMessagesPolicies() {
         if (permValues.get("messages") >= 0.5) {
             permActionMap.put(Manifest.permission.ADD_VOICEMAIL, actionAllow);
-            permActionMap.put(Manifest.permission.WRITE_VOICEMAIL, actionAllow);
-            permActionMap.put(Manifest.permission.READ_VOICEMAIL, actionAllow);
-            permActionMap.put(Manifest.permission.READ_SMS, actionAllow);
-            permActionMap.put(Manifest.permission.WRITE_SMS, actionAllow);
-            permActionMap.put(Manifest.permission.SEND_SMS_NO_CONFIRMATION, actionAllow);
+            permActionMap.put(android.Manifest.permission.READ_SMS, actionAllow);
         } else {
             permActionMap.put(Manifest.permission.ADD_VOICEMAIL, actionDeny);
-            permActionMap.put(Manifest.permission.WRITE_VOICEMAIL, actionDeny);
-            permActionMap.put(Manifest.permission.READ_VOICEMAIL, actionDeny);
-            permActionMap.put(Manifest.permission.READ_SMS, actionDeny);
-            permActionMap.put(Manifest.permission.WRITE_SMS, actionDeny);
-            permActionMap.put(Manifest.permission.SEND_SMS_NO_CONFIRMATION, actionDeny);
+            permActionMap.put(android.Manifest.permission.READ_SMS, actionDeny);
         }
         return permActionMap;
     }
 
     private static Map<String, Action> getContactsPolicies() {
         if (permValues.get("contacts") >= 0.5) {
-            permActionMap.put(Manifest.permission.READ_CONTACTS, actionAllow);
-            permActionMap.put(Manifest.permission.WRITE_CONTACTS, actionAllow);
+            permActionMap.put(android.Manifest.permission.READ_CONTACTS, actionAllow);
+            permActionMap.put(android.Manifest.permission.WRITE_CONTACTS, actionAllow);
         } else {
-            permActionMap.put(Manifest.permission.READ_CONTACTS, actionDeny);
-            permActionMap.put(Manifest.permission.WRITE_CONTACTS, actionDeny);
+            permActionMap.put(android.Manifest.permission.READ_CONTACTS, actionDeny);
+            permActionMap.put(android.Manifest.permission.WRITE_CONTACTS, actionDeny);
         }
         return permActionMap;
     }
 
     private static Map<String, Action> getMediaPolicies() {
         if (permValues.get("media") >= 0.5) {
-            permActionMap.put(Manifest.permission.CAMERA, actionAllow);
-            permActionMap.put(Manifest.permission.RECORD_AUDIO, actionAllow);
-            permActionMap.put(Manifest.permission.CAPTURE_VIDEO_OUTPUT, actionAllow);
-            permActionMap.put(Manifest.permission.CAPTURE_SECURE_VIDEO_OUTPUT, actionAllow);
-            permActionMap.put(Manifest.permission.REMOTE_AUDIO_PLAYBACK, actionAllow);
+            permActionMap.put(android.Manifest.permission.CAMERA, actionAllow);
+            permActionMap.put(android.Manifest.permission.RECORD_AUDIO, actionAllow);
         } else {
-            permActionMap.put(Manifest.permission.CAMERA, actionDeny);
-            permActionMap.put(Manifest.permission.RECORD_AUDIO, actionDeny);
-            permActionMap.put(Manifest.permission.CAPTURE_VIDEO_OUTPUT, actionDeny);
-            permActionMap.put(Manifest.permission.CAPTURE_SECURE_VIDEO_OUTPUT, actionDeny);
-            permActionMap.put(Manifest.permission.REMOTE_AUDIO_PLAYBACK, actionDeny);
+            permActionMap.put(android.Manifest.permission.CAMERA, actionDeny);
+            permActionMap.put(android.Manifest.permission.RECORD_AUDIO, actionDeny);
         }
         return permActionMap;
     }
 
     private static Map<String, Action> getOverlayPolicies() {
         if (permValues.get("overlay") >= 0.5) {
-            permActionMap.put(Manifest.permission.SYSTEM_ALERT_WINDOW, actionAllow);
+            permActionMap.put(android.Manifest.permission.SYSTEM_ALERT_WINDOW, actionAllow);
         } else {
-            permActionMap.put(Manifest.permission.SYSTEM_ALERT_WINDOW, actionDeny);
+            permActionMap.put(android.Manifest.permission.SYSTEM_ALERT_WINDOW, actionDeny);
         }
         return permActionMap;
     }
 
     private static Map<String, Action> getStoragePolicies() {
         if (permValues.get("storage") >= 0.5) {
-            permActionMap.put(Manifest.permission.WRITE_MEDIA_STORAGE, actionAllow);
-            permActionMap.put(Manifest.permission.STORAGE_INTERNAL, actionAllow);
             permActionMap.put(Manifest.permission.READ_EXTERNAL_STORAGE, actionAllow);
             permActionMap.put(Manifest.permission.WRITE_EXTERNAL_STORAGE, actionAllow);
         } else {
-            permActionMap.put(Manifest.permission.WRITE_MEDIA_STORAGE, actionDeny);
-            permActionMap.put(Manifest.permission.STORAGE_INTERNAL, actionDeny);
             permActionMap.put(Manifest.permission.READ_EXTERNAL_STORAGE, actionDeny);
             permActionMap.put(Manifest.permission.WRITE_EXTERNAL_STORAGE, actionDeny);
         }
@@ -225,30 +210,26 @@ public class DataGenerator {
 
     private static Map<String, Action> getCallingPolicies() {
         if (permValues.get("calling") >= 0.5) {
-            permActionMap.put(Manifest.permission.CALL_PHONE, actionAllow);
-            permActionMap.put(Manifest.permission.SEND_SMS, actionAllow);
-            permActionMap.put(Manifest.permission.RECEIVE_SMS, actionAllow);
-            permActionMap.put(Manifest.permission.READ_CALL_LOG, actionAllow);
-            permActionMap.put(Manifest.permission.WRITE_CALL_LOG, actionAllow);
+            permActionMap.put(android.Manifest.permission.CALL_PHONE, actionAllow);
+            permActionMap.put(android.Manifest.permission.SEND_SMS, actionAllow);
+            permActionMap.put(android.Manifest.permission.RECEIVE_SMS, actionAllow);
+            permActionMap.put(android.Manifest.permission.READ_CALL_LOG, actionAllow);
+            permActionMap.put(android.Manifest.permission.WRITE_CALL_LOG, actionAllow);
         } else {
-            permActionMap.put(Manifest.permission.CALL_PHONE, actionDeny);
-            permActionMap.put(Manifest.permission.SEND_SMS, actionDeny);
-            permActionMap.put(Manifest.permission.RECEIVE_SMS, actionDeny);
-            permActionMap.put(Manifest.permission.READ_CALL_LOG, actionDeny);
-            permActionMap.put(Manifest.permission.WRITE_CALL_LOG, actionDeny);
+            permActionMap.put(android.Manifest.permission.CALL_PHONE, actionDeny);
+            permActionMap.put(android.Manifest.permission.SEND_SMS, actionDeny);
+            permActionMap.put(android.Manifest.permission.RECEIVE_SMS, actionDeny);
+            permActionMap.put(android.Manifest.permission.READ_CALL_LOG, actionDeny);
+            permActionMap.put(android.Manifest.permission.WRITE_CALL_LOG, actionDeny);
         }
         return permActionMap;
     }
 
     private static Map<String, Action> getNotificationsPolicies() {
         if (permValues.get("notifications") >= 0.5) {
-            permActionMap.put(Manifest.permission.ACCESS_NOTIFICATIONS, actionAllow);
-            permActionMap.put(Manifest.permission.ACCESS_NOTIFICATION_POLICY, actionAllow);
-            permActionMap.put(Manifest.permission.MANAGE_NOTIFICATIONS, actionAllow);
+            permActionMap.put(android.Manifest.permission.ACCESS_NOTIFICATIONS, actionAllow);
         } else {
-            permActionMap.put(Manifest.permission.ACCESS_NOTIFICATIONS, actionDeny);
-            permActionMap.put(Manifest.permission.ACCESS_NOTIFICATION_POLICY, actionDeny);
-            permActionMap.put(Manifest.permission.MANAGE_NOTIFICATIONS, actionDeny);
+            permActionMap.put(android.Manifest.permission.ACCESS_NOTIFICATIONS, actionDeny);
         }
         return permActionMap;
     }
@@ -256,40 +237,30 @@ public class DataGenerator {
     private static Map<String, Action> getIdentificationPolicies() {
         if (permValues.get("identification") >= 0.5) {
             permActionMap.put(Manifest.permission.GET_ACCOUNTS, actionAllow);
-            permActionMap.put(Manifest.permission.GET_ACCOUNTS_PRIVILEGED, actionAllow);
-            permActionMap.put(Manifest.permission.REAL_GET_TASKS, actionAllow);
         } else {
             permActionMap.put(Manifest.permission.GET_ACCOUNTS, actionDeny);
-            permActionMap.put(Manifest.permission.GET_ACCOUNTS_PRIVILEGED, actionDeny);
-            permActionMap.put(Manifest.permission.REAL_GET_TASKS, actionDeny);
         }
         return permActionMap;
     }
 
     private static Map<String, Action> getLocationPolicies() {
         if (permValues.get("location") >= 0.5) {
-            permActionMap.put(Manifest.permission.LOCATION_HARDWARE, actionAllow);
-            permActionMap.put(Manifest.permission.ACCESS_COARSE_LOCATION, actionAllow);
-            permActionMap.put(Manifest.permission.ACCESS_FINE_LOCATION, actionAllow);
-            permActionMap.put(Manifest.permission.INSTALL_LOCATION_PROVIDER, actionAllow);
-            permActionMap.put(Manifest.permission.CONTROL_LOCATION_UPDATES, actionAllow);
+            permActionMap.put(android.Manifest.permission.ACCESS_COARSE_LOCATION, actionAllow);
+            permActionMap.put(android.Manifest.permission.ACCESS_FINE_LOCATION, actionAllow);
         } else {
-            permActionMap.put(Manifest.permission.LOCATION_HARDWARE, actionDeny);
-            permActionMap.put(Manifest.permission.ACCESS_COARSE_LOCATION, actionDeny);
-            permActionMap.put(Manifest.permission.ACCESS_FINE_LOCATION, actionDeny);
-            permActionMap.put(Manifest.permission.INSTALL_LOCATION_PROVIDER, actionDeny);
-            permActionMap.put(Manifest.permission.CONTROL_LOCATION_UPDATES, actionDeny);
+            permActionMap.put(android.Manifest.permission.ACCESS_COARSE_LOCATION, actionDeny);
+            permActionMap.put(android.Manifest.permission.ACCESS_FINE_LOCATION, actionDeny);
         }
         return permActionMap;
     }
 
     private static Map<String, Action> getCalendarPolicies() {
         if (permValues.get("calendar") >= 0.5) {
-            permActionMap.put(Manifest.permission.READ_CALENDAR, actionAllow);
-            permActionMap.put(Manifest.permission.WRITE_CALENDAR, actionAllow);
+            permActionMap.put(android.Manifest.permission.READ_CALENDAR, actionAllow);
+            permActionMap.put(android.Manifest.permission.WRITE_CALENDAR, actionAllow);
         } else {
-            permActionMap.put(Manifest.permission.READ_CALENDAR, actionDeny);
-            permActionMap.put(Manifest.permission.WRITE_CALENDAR, actionDeny);
+            permActionMap.put(android.Manifest.permission.READ_CALENDAR, actionDeny);
+            permActionMap.put(android.Manifest.permission.WRITE_CALENDAR, actionDeny);
         }
         return permActionMap;
     }

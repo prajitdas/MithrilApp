@@ -894,7 +894,7 @@ public class MithrilDBHelper extends SQLiteOpenHelper {
         tempPermData.setPermissionLabel(permissionInfo.loadLabel(packageManager).toString());
 
         tempPermData.setOp(AppOpsManager.permissionToOpCode(permissionInfo.name));
-//        Log.d(MithrilAC.getDebugTag(), "Permission: "+permissionInfo.name);
+        Log.d(MithrilAC.getDebugTag(), "Permission: "+permissionInfo.name+" opcode: "+AppOpsManager.permissionToOpCode(permissionInfo.name));
 
         return tempPermData;
     }
