@@ -662,15 +662,27 @@ public class MithrilDBHelper extends SQLiteOpenHelper {
         //Load all the permissions that are known for Android into the database. We will refer to them in the future.
         loadAndroidPermissionsIntoDB(db);
         insertHardcodedGooglePermissions(db);
+        loadDefaultPoliciesFromBackgroundKnowledge(db);
         //Load all the apps and app permissions that are known for this device into the database. We will refer to them in the future.
         loadRealAppDataIntoDB(db);
+    }
+
+    public void loadDefaultPoliciesFromBackgroundKnowledge(SQLiteDatabase db) {
+        try {
+            db.execSQL(MithrilAC.getInsertStatementDefaultPolicies());
+        } catch (SQLException sqlException) {
+            Log.e(MithrilAC.getDebugTag(), "Following error occurred while inserting data in SQLite DB - " + sqlException.getMessage());
+        } catch (Exception e) {
+            Log.e(MithrilAC.getDebugTag(), "Some other error occurred while inserting data in SQLite DB - " + e.getMessage());
+        }
     }
 
     public void loadPoliciesForApps(SQLiteDatabase db) throws SemanticInconsistencyException {
         List<AppData> apps = findAllApps(db);
         for (AppData app : apps) {
-            if (!app.getAppCategory().equals(MithrilAC.getAppCategoryUnknown()))
-                DataGenerator.setPolicy(db, context, app.getAppName(), app.getPackageName(), app.getAppCategory());
+            if (!app.getAppCategory().equals(MithrilAC.getAppCategoryUnknown())) {
+                DataGenerator.setPolicy(db, context, app);
+            }
         }
         //We have to get the policies from somewhere. The best case scenario would be a server that gives us the policies.
 //        if (BuildConfig.DEBUG)
@@ -1253,6 +1265,37 @@ public class MithrilDBHelper extends SQLiteOpenHelper {
         }
         return insertedRowId;
     }
+
+    /**
+     *
+     * @param db
+     * @param appCategory
+     * @return
+     */
+    public Map<String, Double> findDefaultRulesForAppCategory(SQLiteDatabase db, String appCategory) {
+        // Select AppData Query
+        String selectQuery = "SELECT " +
+                getDefaultPoliciesTableName() + "." + DEFPOLPERM + ", " +
+                getDefaultPoliciesTableName() + "." + DEFPOLVAL +
+                " FROM " + getDefaultPoliciesTableName() +
+                " WHERE " + getDefaultPoliciesTableName() + "." + DEFPOLAPPCAT + " = '" + appCategory + "';";
+
+        Map<String, Double> permValues = new HashMap<>();
+        Cursor cursor = db.rawQuery(selectQuery, null);
+        try {
+            if (cursor.moveToFirst()) {
+                do {
+                    permValues.put(cursor.getString(1), cursor.getDouble(2));
+                } while (cursor.moveToNext());
+            }
+        } catch (SQLException e) {
+            throw new SQLException("Could not find " + e);
+        } finally {
+            cursor.close();
+        }
+        return permValues;
+    }
+
 
     /**
      * @param db

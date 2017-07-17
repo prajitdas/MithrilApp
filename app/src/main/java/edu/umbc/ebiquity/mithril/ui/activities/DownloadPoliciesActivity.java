@@ -69,6 +69,7 @@ public class DownloadPoliciesActivity extends AppCompatActivity {
                     /**
                      * This is where we will download policy data from the server but for now we will simply load the database with the policies manually
                      */
+                    //Apps, permissions and contexts have been loaded, let's load app policies!
                     MithrilDBHelper.getHelper(getApplicationContext()).loadPoliciesForApps(mithrilDB);
                     if (mithrilDB != null)
                         mithrilDB.close();
