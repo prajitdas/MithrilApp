@@ -4,6 +4,7 @@ import android.Manifest;
 import android.app.AppOpsManager;
 import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
+import android.util.Log;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -44,6 +45,7 @@ public class DataGenerator {
                             context // app context
                     )
             );
+            Log.d(MithrilAC.getDebugTag(), "created policy: "+policyId);
             /** Apply CROWDSOURCED policy at home location */
             policyId++;
             /** Apply *****BLOCK***** policy during DND hours */
@@ -61,6 +63,7 @@ public class DataGenerator {
                             context // app context
                     )
             );
+            Log.d(MithrilAC.getDebugTag(), "created policy: "+policyId);
             /** Apply *****BLOCK***** policy during DND hours */
             policyId++;
             /** Apply CROWDSOURCED policy at work location */
@@ -78,6 +81,7 @@ public class DataGenerator {
                             context // app context
                     )
             );
+            Log.d(MithrilAC.getDebugTag(), "created policy: "+policyId);
             /** Apply CROWDSOURCED policy at work location */
             policyId++;
             /** Apply *****BLOCK***** policy at work location, in presence of boss */
@@ -95,6 +99,7 @@ public class DataGenerator {
                             context // app context
                     )
             );
+            Log.d(MithrilAC.getDebugTag(), "created policy: "+policyId);
             MithrilDBHelper.getHelper(context).addPolicyRule(
                     mithrilDB,
                     DataGenerator.createPolicyRule(
@@ -109,6 +114,7 @@ public class DataGenerator {
                             context // app context
                     )
             );
+            Log.d(MithrilAC.getDebugTag(), "created policy: "+policyId);
             /** Apply *****BLOCK***** policy at work location, in presence of boss */
         }
     }
