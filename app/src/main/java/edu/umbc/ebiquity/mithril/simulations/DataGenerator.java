@@ -29,11 +29,12 @@ public class DataGenerator {
         if (policyId == -1)
             policyId = 0;
         for (Map.Entry<String, Action> permActionEntry : permActionMap.entrySet()) {
+            policyId++;
             /** Apply CROWDSOURCED policy at home location */
             MithrilDBHelper.getHelper(context).addPolicyRule(
                     mithrilDB,
                     DataGenerator.createPolicyRule(
-                            ++policyId, // auto increment policy!
+                            policyId, // auto increment policy!
                             app.getPackageName(), app.getAppName(), // app info
                             permActionEntry.getKey(), // permission info
                             MithrilAC.getPrefHomeLocationKey(), // important context label
@@ -45,12 +46,12 @@ public class DataGenerator {
                     )
             );
             /** Apply CROWDSOURCED policy at home location */
-
+            policyId++;
             /** Apply *****BLOCK***** policy during DND hours */
             MithrilDBHelper.getHelper(context).addPolicyRule(
                     mithrilDB,
                     DataGenerator.createPolicyRule(
-                            ++policyId, // auto increment policy!
+                            policyId, // auto increment policy!
                             app.getPackageName(), app.getAppName(), // app info
                             permActionEntry.getKey(), // permission info
                             MithrilAC.getPrefDndTemporalKey(), // important context label
@@ -62,12 +63,12 @@ public class DataGenerator {
                     )
             );
             /** Apply *****BLOCK***** policy during DND hours */
-
+            policyId++;
             /** Apply CROWDSOURCED policy at work location */
             MithrilDBHelper.getHelper(context).addPolicyRule(
                     mithrilDB,
                     DataGenerator.createPolicyRule(
-                            ++policyId, // auto increment policy!
+                            policyId, // auto increment policy!
                             app.getPackageName(), app.getAppName(), // app info
                             permActionEntry.getKey(), // permission info
                             MithrilAC.getPrefWorkLocationKey(), // important context label
@@ -79,12 +80,12 @@ public class DataGenerator {
                     )
             );
             /** Apply CROWDSOURCED policy at work location */
-
+            policyId++;
             /** Apply *****BLOCK***** policy at work location, in presence of boss */
             MithrilDBHelper.getHelper(context).addPolicyRule(
                     mithrilDB,
                     DataGenerator.createPolicyRule(
-                            ++policyId, // auto increment policy!
+                            policyId, // auto increment policy!
                             app.getPackageName(), app.getAppName(), // app info
                             permActionEntry.getKey(), // permission info
                             MithrilAC.getPrefWorkLocationKey(), // important context label
