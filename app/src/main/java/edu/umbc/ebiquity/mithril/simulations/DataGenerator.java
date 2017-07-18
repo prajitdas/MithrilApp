@@ -45,7 +45,7 @@ public class DataGenerator {
                             context // app context
                     )
             );
-            Log.d(MithrilAC.getDebugTag(), "created policy: "+policyId);
+            Log.d(MithrilAC.getDebugTag(), "created policy: " + policyId);
             /** Apply CROWDSOURCED policy at home location */
             policyId++;
             /** Apply *****BLOCK***** policy during DND hours */
@@ -63,7 +63,7 @@ public class DataGenerator {
                             context // app context
                     )
             );
-            Log.d(MithrilAC.getDebugTag(), "created policy: "+policyId);
+            Log.d(MithrilAC.getDebugTag(), "created policy: " + policyId);
             /** Apply *****BLOCK***** policy during DND hours */
             policyId++;
             /** Apply CROWDSOURCED policy at work location */
@@ -81,7 +81,7 @@ public class DataGenerator {
                             context // app context
                     )
             );
-            Log.d(MithrilAC.getDebugTag(), "created policy: "+policyId);
+            Log.d(MithrilAC.getDebugTag(), "created policy: " + policyId);
             /** Apply CROWDSOURCED policy at work location */
             policyId++;
             /** Apply *****BLOCK***** policy at work location, in presence of boss */
@@ -99,7 +99,7 @@ public class DataGenerator {
                             context // app context
                     )
             );
-            Log.d(MithrilAC.getDebugTag(), "created policy: "+policyId);
+            Log.d(MithrilAC.getDebugTag(), "created policy: " + policyId);
             MithrilDBHelper.getHelper(context).addPolicyRule(
                     mithrilDB,
                     DataGenerator.createPolicyRule(
@@ -114,7 +114,7 @@ public class DataGenerator {
                             context // app context
                     )
             );
-            Log.d(MithrilAC.getDebugTag(), "created policy: "+policyId);
+            Log.d(MithrilAC.getDebugTag(), "created policy: " + policyId);
             /** Apply *****BLOCK***** policy at work location, in presence of boss */
         }
     }
@@ -135,7 +135,7 @@ public class DataGenerator {
         int opCode = AppOpsManager.permissionToOpCode(op);
         if (op.equals(Manifest.permission.SYSTEM_ALERT_WINDOW))
             opCode = 24;
-        else if(op.equals(Manifest.permission.ACCESS_NOTIFICATIONS))
+        else if (op.equals(Manifest.permission.ACCESS_NOTIFICATIONS))
             opCode = 25;
         if (appId == -1 || ctxtId == -1)
             return null;

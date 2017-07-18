@@ -898,12 +898,12 @@ public class MithrilDBHelper extends SQLiteOpenHelper {
         tempPermData.setPermissionLabel(permissionInfo.loadLabel(packageManager).toString());
 
         tempPermData.setOp(AppOpsManager.permissionToOpCode(permissionInfo.name));
-        if(permissionInfo.name.equals("android.permission.SYSTEM_ALERT_WINDOW"))
+        if (permissionInfo.name.equals("android.permission.SYSTEM_ALERT_WINDOW"))
             tempPermData.setOp(24);
-        else if(permissionInfo.name.equals(Manifest.permission.ACCESS_NOTIFICATIONS))
+        else if (permissionInfo.name.equals(Manifest.permission.ACCESS_NOTIFICATIONS))
             tempPermData.setOp(25);
 
-        Log.d(MithrilAC.getDebugTag(), "Permission: "+permissionInfo.name+" opcode: "+AppOpsManager.permissionToOpCode(permissionInfo.name));
+        Log.d(MithrilAC.getDebugTag(), "Permission: " + permissionInfo.name + " opcode: " + AppOpsManager.permissionToOpCode(permissionInfo.name));
 
         return tempPermData;
     }
@@ -1276,7 +1276,6 @@ public class MithrilDBHelper extends SQLiteOpenHelper {
     }
 
     /**
-     *
      * @param db
      * @param appCategory
      * @return
