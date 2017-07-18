@@ -254,4 +254,19 @@ public class SemanticTime extends SemanticUserContext implements Parcelable, Com
         } else
             return levelComparison;
     }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof SemanticTime)) return false;
+
+        SemanticTime that = (SemanticTime) o;
+
+        return getInferredTime().equals(that.getInferredTime());
+    }
+
+    @Override
+    public int hashCode() {
+        return getInferredTime().hashCode();
+    }
 }

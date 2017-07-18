@@ -93,4 +93,19 @@ public class SemanticActivity extends SemanticUserContext implements Parcelable 
     public String toString() {
         return "In activity " + inferredActivity;
     }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof SemanticActivity)) return false;
+
+        SemanticActivity that = (SemanticActivity) o;
+
+        return getInferredActivity().equals(that.getInferredActivity());
+    }
+
+    @Override
+    public int hashCode() {
+        return getInferredActivity().hashCode();
+    }
 }
