@@ -3000,7 +3000,8 @@ public class MithrilDBHelper extends SQLiteOpenHelper {
         String[] args = new String[]{
                 String.valueOf(aViolation.getAppId()),
                 String.valueOf(aViolation.getPolicyId()),
-                String.valueOf(aViolation.getOprId())
+                String.valueOf(aViolation.getOprId()),
+                String.valueOf(aViolation.getCtxtIdString())
         };
 
         try {
@@ -3008,7 +3009,8 @@ public class MithrilDBHelper extends SQLiteOpenHelper {
                     values,
                     VIOLATIONAPPID + " = ? AND " +
                             VIOLATIONPOLICYID + " = ? AND " +
-                            VIOLATIONOPERATION + " = ? ",
+                            VIOLATIONOPERATION + " = ? AND " +
+                            VIOLATIONCTXTIDS + " = ? ",
                     args);
         } catch (SQLException e) {
             throw new SQLException("Exception " + e + " error updating violation: " + aViolation.getPolicyId());
