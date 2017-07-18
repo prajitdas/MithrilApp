@@ -6,7 +6,6 @@ import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
 import android.graphics.BitmapFactory;
 import android.location.Address;
@@ -40,10 +39,8 @@ import com.google.gson.JsonSyntaxException;
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 import java.util.Timer;
 import java.util.TimerTask;
 
@@ -58,13 +55,11 @@ import edu.umbc.ebiquity.mithril.data.model.rules.context.SemanticActivity;
 import edu.umbc.ebiquity.mithril.data.model.rules.context.SemanticLocation;
 import edu.umbc.ebiquity.mithril.data.model.rules.context.SemanticNearActor;
 import edu.umbc.ebiquity.mithril.data.model.rules.context.SemanticTime;
-import edu.umbc.ebiquity.mithril.data.model.rules.context.SemanticUserContext;
 import edu.umbc.ebiquity.mithril.ui.activities.CoreActivity;
 import edu.umbc.ebiquity.mithril.ui.activities.InstanceCreationActivity;
 import edu.umbc.ebiquity.mithril.util.specialtasks.detect.context.DetectTemporalContext;
 import edu.umbc.ebiquity.mithril.util.specialtasks.detect.runningapps.AppLaunchDetector;
 import edu.umbc.ebiquity.mithril.util.specialtasks.errorsnexceptions.AddressKeyMissingError;
-import edu.umbc.ebiquity.mithril.util.specialtasks.errorsnexceptions.ContextImplementationMissingException;
 import edu.umbc.ebiquity.mithril.util.specialtasks.permissions.PermissionHelper;
 
 public class ViolationDetectionService extends Service implements
@@ -207,19 +202,19 @@ public class ViolationDetectionService extends Service implements
             String retrieveDataJson;
             Pair<String, String> contextTypeLabel = MithrilDBHelper.getHelper(context).findContextByID(mithrilDB, policyRule.getCtxId());
             if (contextTypeLabel.first.equals(MithrilAC.getPrefKeyContextTypeTemporal())) {
-                retrieveDataJson = sharedPrefs.getString(contextTypeLabel.first+contextTypeLabel.second, "");
+                retrieveDataJson = sharedPrefs.getString(contextTypeLabel.first + contextTypeLabel.second, "");
                 SemanticTime tempSemanticTime = retrieveDataGson.fromJson(retrieveDataJson, SemanticTime.class);
                 boolean temporalApplicable = false;
                 for (SemanticTime time : getSemanticTimes()) {
                     if (time.getLabel().equals(tempSemanticTime.getLabel()))
                         temporalApplicable = true;
                 }
-                if(temporalApplicable)
+                if (temporalApplicable)
                     policyApplicable = true;
                 else
                     policyApplicable = false;
             } else if (contextTypeLabel.first.equals(MithrilAC.getPrefKeyContextTypeLocation())) {
-                retrieveDataJson= sharedPrefs.getString(contextTypeLabel.first+contextTypeLabel.second, "");
+                retrieveDataJson = sharedPrefs.getString(contextTypeLabel.first + contextTypeLabel.second, "");
                 SemanticLocation tempSemanticLocation = retrieveDataGson.fromJson(retrieveDataJson, SemanticLocation.class);
                 boolean locationApplicable = false;
                 for (SemanticLocation location : getSemanticLocations()) {
@@ -228,31 +223,31 @@ public class ViolationDetectionService extends Service implements
                     if (location.getLabel().equals(tempSemanticLocation.getLabel()))
                         locationApplicable = true;
                 }
-                if(locationApplicable)
+                if (locationApplicable)
                     policyApplicable = true;
                 else
                     policyApplicable = false;
             } else if (contextTypeLabel.first.equals(MithrilAC.getPrefKeyContextTypeTemporal())) {
-                retrieveDataJson = sharedPrefs.getString(contextTypeLabel.first+contextTypeLabel.second, "");
+                retrieveDataJson = sharedPrefs.getString(contextTypeLabel.first + contextTypeLabel.second, "");
                 SemanticNearActor tempSemanticNearActor = retrieveDataGson.fromJson(retrieveDataJson, SemanticNearActor.class);
                 boolean presenceApplicable = false;
                 for (SemanticNearActor nearActor : getSemanticNearActors()) {
                     if (nearActor.getLabel().equals(tempSemanticNearActor.getLabel()))
                         presenceApplicable = true;
                 }
-                if(presenceApplicable)
+                if (presenceApplicable)
                     policyApplicable = true;
                 else
                     policyApplicable = false;
             } else if (contextTypeLabel.first.equals(MithrilAC.getPrefKeyContextTypeTemporal())) {
-                retrieveDataJson = sharedPrefs.getString(contextTypeLabel.first+contextTypeLabel.second, "");
+                retrieveDataJson = sharedPrefs.getString(contextTypeLabel.first + contextTypeLabel.second, "");
                 SemanticActivity tempSemanticActivity = retrieveDataGson.fromJson(retrieveDataJson, SemanticActivity.class);
                 boolean activityApplicable = false;
                 for (SemanticActivity activity : getSemanticActivities()) {
                     if (activity.getLabel().equals(tempSemanticActivity.getLabel()))
                         activityApplicable = true;
                 }
-                if(activityApplicable)
+                if (activityApplicable)
                     policyApplicable = true;
                 else
                     policyApplicable = false;
@@ -483,9 +478,9 @@ public class ViolationDetectionService extends Service implements
                 }
             }
         } catch (NullPointerException e) {
-            Log.d(MithrilAC.getDebugTag(), "Prefs empty somehow?!: "+e.getMessage());
+            Log.d(MithrilAC.getDebugTag(), "Prefs empty somehow?!: " + e.getMessage());
         } catch (Exception e) {
-            Log.d(MithrilAC.getDebugTag(), "got exception: "+e.getMessage());
+            Log.d(MithrilAC.getDebugTag(), "got exception: " + e.getMessage());
         }
         /**
          * We are parsing all known locations and we know the current location's distance to them.

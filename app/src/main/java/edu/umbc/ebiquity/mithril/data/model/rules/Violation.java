@@ -36,7 +36,18 @@ public class Violation implements Parcelable {
     private List<Long> ctxtIds = new ArrayList<>();
     private int count;
 
-    public Violation(long policyId, long appId, int oprId, String appStr, String opStr, boolean asked, boolean tvfv, Timestamp detectedAtTime, List<Long> ctxtIds, int count, Resource resource) {
+    public Violation(
+            long policyId,
+            long appId,
+            int oprId,
+            String appStr,
+            String opStr,
+            boolean asked,
+            boolean tvfv,
+            Timestamp detectedAtTime,
+            List<Long> ctxtIds,
+            int count,
+            Resource resource) {
         this.policyId = policyId;
         this.appId = appId;
         this.oprId = oprId;
