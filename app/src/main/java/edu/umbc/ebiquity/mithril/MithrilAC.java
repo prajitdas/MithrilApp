@@ -11,6 +11,8 @@ import android.text.format.DateUtils;
 import android.util.Pair;
 
 import java.sql.Timestamp;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by Prajit Kumar Das on 5/1/2016.
@@ -85,6 +87,43 @@ public class MithrilAC extends Application {
     private static final String FEEDBACK_URL = "http://104.154.36.223/bot/feedback/";
     private static final String RANDOM_USER_ID = "randomUserId";
     private static final String APP_CATEGORY_UNKNOWN = "unknownAppCategory";
+
+    public static List<String> getAppCatsForTest() {
+        return APP_CATS_FOR_TEST;
+    }
+
+    public static List<String> getAPPS() {
+        return APPS;
+    }
+
+    private static final List<String> APPS = new ArrayList<String>() {
+        {
+            add(new String("com.augmentedminds.waveAlarm"));
+            add(new String("com.anrapps.pixelbatterysaver"));
+            add(new String("org.ab.x48"));
+            add(new String("com.google.android.apps.meetings"));
+            add(new String("com.whatsapp"));
+            add(new String("com.facebook.orca"));
+            add(new String("com.rain.liteforfacebook2017"));
+            add(new String("com.instagram.android"));
+            add(new String("com.redstamp.android"));
+            add(new String("com.google.android.apps.photos"));
+        }
+    };
+    private static final List<String> APP_CATS_FOR_TEST = new ArrayList<String>() {
+        {
+            add(new String("tools"));
+            add(new String("productivity"));
+            add(new String("communication"));
+            add(new String("personalization"));
+            add(new String("entertainment"));
+            add(new String("finance"));
+            add(new String("lifestyle"));
+            add(new String("news_n_magazines"));
+            add(new String("social"));
+            add(new String("photography"));
+        }
+    };
     private static final String PERMISSION_PROTECTION_LEVEL_UNKNOWN = "unknown";
     private static final String PERMISSION_PROTECTION_LEVEL_NORMAL = "normal";
     private static final String PERMISSION_PROTECTION_LEVEL_DANGEROUS = "dangerous";

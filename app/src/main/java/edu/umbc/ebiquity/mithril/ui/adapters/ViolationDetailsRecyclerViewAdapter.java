@@ -58,16 +58,13 @@ public class ViolationDetailsRecyclerViewAdapter extends RecyclerView.Adapter<Vi
         holder.mViolatingAppIcon.setImageBitmap(violatingApp.getIcon());
         holder.mViolationAppLaunch.setText(violatingApp.getAppName());
 
-        holder.mViolationOpDetail.setText("Used: " +
-                mValues.get(position).getOpStr().replace("_", " ") +
-                " " +
-                MithrilAC.getTimeText(true, mValues.get(position).getDetectedAtTime()) +
-                "\nallowed: " +
-                mValues.get(position).getResource().getAllowedCount() +
-                " times & ignored: " +
-                mValues.get(position).getResource().getIgnoredCount() +
-                " times, running for: " +
-                mValues.get(position).getResource().getDuration()
+        holder.mViolationOpDetail.setText("an app from the " + violatingApp.getAppCategory() + " category\n" +
+                "with risk: " + violatingApp.getRisk() + " \n" +
+                "used: " + mValues.get(position).getOpStr().replace("_", " ") +
+                " " + MithrilAC.getTimeText(true, mValues.get(position).getDetectedAtTime()) + "\n" +
+                "allowed: " + mValues.get(position).getResource().getAllowedCount() + " times & ignored: " + mValues.get(position).getResource().getIgnoredCount() +
+                " times"//, running for: " +
+                //mValues.get(position).getResource().getDuration()
         );
 
         holder.mViolationContext.setText("In context: " +

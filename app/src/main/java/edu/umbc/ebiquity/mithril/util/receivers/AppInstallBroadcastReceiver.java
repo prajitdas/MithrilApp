@@ -74,6 +74,7 @@ public class AppInstallBroadcastReceiver extends BroadcastReceiver {
 
                         //App permissions
                         if (packageInfo.requestedPermissions != null) {
+                            tempAppData.setRisk(getRiskValue(context, packageInfo.requestedPermissions));
                             Map<String, Boolean> requestedPermissions = new HashMap<String, Boolean>();
                             String[] packageUsesPermissions = packageInfo.requestedPermissions;
                             for (int permCount = 0; permCount < packageUsesPermissions.length; permCount++) {
@@ -166,6 +167,17 @@ public class AppInstallBroadcastReceiver extends BroadcastReceiver {
          * Don't send data on update for now
          */
 //        }
+    }
+
+    private double getRiskValue(Context context, String[] requestedPermissions) {
+        double dangerCount = 0.0;
+        double totalCount = 0.0;
+        for (String packagePermission : requestedPermissions) {
+            if(MithrilDBHelper.getHelper(context).findPermissionsProtectionLevelByName(mithrilDB, packagePermission) == "dangerous")
+                dangerCount += 1.0;
+            totalCount += 1.0;
+        }
+        return dangerCount/totalCount;
     }
 
     private void initDB(Context context) {

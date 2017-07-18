@@ -102,6 +102,7 @@ public class MithrilDBHelper extends SQLiteOpenHelper {
     private final static String APPINSTALLED = "installed"; // boolean value that represents whether an app is installed or not
     private final static String APPTYPE = "type";
     private final static String APPINSTALLTIME = "installdate";
+    private final static String APPRISK = "risk";
     private final static String CREATE_APPS_TABLE = " CREATE TABLE " + getAppsTableName() + " (" +
             APPID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
             APPUID + " INTEGER NOT NULL, " +
@@ -115,6 +116,7 @@ public class MithrilDBHelper extends SQLiteOpenHelper {
             APPINSTALLED + " BOOL NOT NULL DEFAULT 1, " +
             APPTYPE + " TEXT NOT NULL," +
             APPINSTALLTIME + " timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP," +
+            APPRISK + " DOUBLE NOT NULL DEFAULT 0.0," +
             "CONSTRAINT apps_unique_key UNIQUE(" + APPPACKAGENAME + ") ON CONFLICT REPLACE);";
     /**
      * -- Table 2: permissions
@@ -660,7 +662,7 @@ public class MithrilDBHelper extends SQLiteOpenHelper {
 //    }
 
     private void loadDB(SQLiteDatabase db) {
-        insertHardcodedGooglePermissions(db);
+        loadHardcodedGooglePermissions(db);
         //Load all the permissions that are known for Android into the database. We will refer to them in the future.
         loadAndroidPermissionsIntoDB(db);
         loadDefaultPoliciesFromBackgroundKnowledge(db);
@@ -679,9 +681,18 @@ public class MithrilDBHelper extends SQLiteOpenHelper {
     }
 
     public void loadPoliciesForApps(SQLiteDatabase db) throws SemanticInconsistencyException {
+        /**
+         * For testing purposes we will work with 10 app categories and 2 apps in each category
+         * If the user has installed these apps we will ask them for policies for these apps and observe the amount of deviation that occurs.
+         * tools -> com.augmentedminds.waveAlarm, com.anrapps.pixelbatterysaver
+         * productivity -> org.ab.x48, com.google.android.apps.meetings
+         * social -> com.rain.liteforfacebook2017, com.instagram.android
+         * photography -> com.redstamp.android, com.google.android.apps.photos
+         * communication -> com.whatsapp, com.facebook.orca
+         */
         List<AppData> apps = findAllApps(db);
         for (AppData app : apps) {
-            if (!app.getAppCategory().equals(MithrilAC.getAppCategoryUnknown())) {
+            if (MithrilAC.getAPPS().contains(app.getPackageName())) {
                 DataGenerator.setPolicy(db, context, app);
             }
         }
@@ -692,7 +703,7 @@ public class MithrilDBHelper extends SQLiteOpenHelper {
         // Load data from server
     }
 
-    private void insertHardcodedGooglePermissions(SQLiteDatabase db) {
+    private void loadHardcodedGooglePermissions(SQLiteDatabase db) {
         try {
             db.execSQL(MithrilAC.getInsertStatementGooglePermissions());
         } catch (SQLException sqlException) {
@@ -802,6 +813,7 @@ public class MithrilDBHelper extends SQLiteOpenHelper {
 
                         //App permissions
                         if (pack.requestedPermissions != null) {
+                            tempAppData.setRisk(getRiskValue(db, pack.requestedPermissions));
                             Map<String, Boolean> requestedPermissionsMap = new HashMap<>();
                             for (String packagePermission : pack.requestedPermissions) {
                                 requestedPermissionsMap.put(packagePermission, true
@@ -849,6 +861,17 @@ public class MithrilDBHelper extends SQLiteOpenHelper {
                 }
             }
         }
+    }
+
+    private double getRiskValue(SQLiteDatabase db, String[] requestedPermissions) {
+        double dangerCount = 0.0;
+        double totalCount = 0.0;
+        for (String packagePermission : requestedPermissions) {
+            if(findPermissionsProtectionLevelByName(db, packagePermission) == "dangerous")
+                dangerCount += 1.0;
+            totalCount += 1.0;
+        }
+        return dangerCount/totalCount;
     }
 
     private PermData getPermData(PackageManager packageManager, String groupName, PermissionInfo permissionInfo) {
@@ -972,6 +995,7 @@ public class MithrilDBHelper extends SQLiteOpenHelper {
             values.put(APPINSTALLED, 0);
         values.put(APPTYPE, anAppData.getAppType());
         values.put(APPUID, anAppData.getUid());
+        values.put(APPRISK, anAppData.getRisk());
 
         try {
             insertedRowId = db.insertWithOnConflict(getAppsTableName(), null, values, SQLiteDatabase.CONFLICT_REPLACE);
@@ -1403,7 +1427,8 @@ public class MithrilDBHelper extends SQLiteOpenHelper {
                 getAppsTableName() + "." + APPPACKAGENAME + ", " +
                 getAppsTableName() + "." + APPVERSIONINFO + ", " +
                 getAppsTableName() + "." + APPTYPE + ", " +
-                getAppsTableName() + "." + APPUID +
+                getAppsTableName() + "." + APPUID + ", " +
+                getAppsTableName() + "." + APPRISK +
                 " FROM " + getAppsTableName() + ";";
 
         List<AppData> apps = new ArrayList<>();
@@ -1415,13 +1440,14 @@ public class MithrilDBHelper extends SQLiteOpenHelper {
                             new AppData(
                                     cursor.getString(0),
                                     cursor.getString(1),
-                                    Integer.parseInt(cursor.getString(2)),
+                                    cursor.getInt(2),
                                     BitmapFactory.decodeByteArray(cursor.getBlob(3), 0, cursor.getBlob(3).length),
                                     cursor.getString(4),
                                     cursor.getString(5),
                                     cursor.getString(6),
                                     cursor.getString(7),
-                                    Integer.parseInt(cursor.getString(8))
+                                    cursor.getInt(8),
+                                    cursor.getDouble(9)
                             )
                     );
                 } while (cursor.moveToNext());
@@ -1478,7 +1504,8 @@ public class MithrilDBHelper extends SQLiteOpenHelper {
                 getAppsTableName() + "." + APPINSTALLED + ", " +
                 getAppsTableName() + "." + APPINSTALLED + ", " +
                 getAppsTableName() + "." + APPTYPE + ", " +
-                getAppsTableName() + "." + APPUID +
+                getAppsTableName() + "." + APPUID + ", " +
+                getAppsTableName() + "." + APPRISK +
                 " FROM " + getAppsTableName() +
                 " WHERE " + getAppsTableName() + "." + APPPACKAGENAME + " = '" + appPkgName + "';";
 
@@ -1489,13 +1516,14 @@ public class MithrilDBHelper extends SQLiteOpenHelper {
                 app = new AppData(
                         cursor.getString(0),
                         cursor.getString(1),
-                        Integer.parseInt(cursor.getString(2)),
+                        cursor.getInt(2),
                         BitmapFactory.decodeByteArray(cursor.getBlob(3), 0, cursor.getBlob(3).length),
                         cursor.getString(4),
                         cursor.getString(5),
                         cursor.getString(6),
                         cursor.getString(7),
-                        Integer.parseInt(cursor.getString(8))
+                        cursor.getInt(8),
+                        cursor.getDouble(9)
                 );
                 app.setPermissions(findGrantedAppPermissionsByAppPackageName(db, appPkgName));
             }
@@ -1524,7 +1552,8 @@ public class MithrilDBHelper extends SQLiteOpenHelper {
                 getAppsTableName() + "." + APPPACKAGENAME + ", " +
                 getAppsTableName() + "." + APPVERSIONINFO + ", " +
                 getAppsTableName() + "." + APPTYPE + ", " +
-                getAppsTableName() + "." + APPUID +
+                getAppsTableName() + "." + APPUID + ", " +
+                getAppsTableName() + "." + APPRISK +
                 " FROM " + getAppsTableName() +
                 " WHERE " + getAppsTableName() + "." + APPID +
                 " = " + appId +
@@ -1537,13 +1566,14 @@ public class MithrilDBHelper extends SQLiteOpenHelper {
                 app = new AppData(
                         cursor.getString(0),
                         cursor.getString(1),
-                        Integer.parseInt(cursor.getString(2)),
+                        cursor.getInt(2),
                         BitmapFactory.decodeByteArray(cursor.getBlob(3), 0, cursor.getBlob(3).length),
                         cursor.getString(4),
                         cursor.getString(5),
                         cursor.getString(6),
                         cursor.getString(7),
-                        cursor.getInt(8)
+                        cursor.getInt(8),
+                        cursor.getDouble(9)
                 );
             }
         } catch (SQLException e) {
@@ -1710,7 +1740,7 @@ public class MithrilDBHelper extends SQLiteOpenHelper {
         Cursor cursor = db.rawQuery(selectQuery, null);
         try {
             if (cursor.moveToFirst()) {
-                permId = Integer.parseInt(cursor.getString(0));
+                permId = cursor.getInt(0);
             }
         } catch (SQLException e) {
             throw new SQLException("Could not find " + e);
@@ -1720,6 +1750,34 @@ public class MithrilDBHelper extends SQLiteOpenHelper {
 //      if (permId == -1)
 //          Log.d(MithrilAC.getDebugTag(), permissionName);
         return permId;
+    }
+
+    /**
+     * Finds permissions by name
+     *
+     * @param db database instance
+     * @return permissionName
+     */
+    public String findPermissionsProtectionLevelByName(SQLiteDatabase db, String permissionName) {
+        // Select AppData Query
+        String selectQuery = "SELECT " +
+                getPermissionsTableName() + "." + PERMPROTECTIONLEVEL +
+                " FROM " + getPermissionsTableName() +
+                " WHERE " + getPermissionsTableName() + "." + PERMNAME +
+                " = '" + permissionName +
+                "';";
+
+        Cursor cursor = db.rawQuery(selectQuery, null);
+        try {
+            if (cursor.moveToFirst()) {
+                return cursor.getString(0);
+            }
+        } catch (SQLException e) {
+            throw new SQLException("Could not find " + e);
+        } finally {
+            cursor.close();
+        }
+        return null;
     }
 
     /**
