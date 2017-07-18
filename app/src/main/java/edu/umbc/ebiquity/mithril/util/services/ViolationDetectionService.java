@@ -101,99 +101,6 @@ public class ViolationDetectionService extends Service implements
     private AddressResultReceiver mAddressResultReceiver;
     private Map<String, SemanticLocation> currentSemanticLocations = new HashMap<>();
 
-    private static void handleViolation(Context context,
-                                        SQLiteDatabase mithrilDB,
-                                        long polId,
-                                        long appId,
-                                        int op,
-                                        String appname,
-                                        String operationName,
-                                        boolean asked,
-                                        boolean tvfv,
-                                        Timestamp detectTime,
-                                        List<Long> contextList,
-                                        int violationCount,
-                                        Resource resource) {
-        Violation violation = new Violation(polId, appId, op, appname, operationName, asked, tvfv, detectTime, contextList, violationCount, resource);
-        try {
-            MithrilDBHelper.getHelper(context).addViolation(mithrilDB, violation);
-        } catch (SQLException e) {
-            Log.d(MithrilAC.getDebugTag(), violation.toString());
-            Violation foundViolation = MithrilDBHelper.getHelper(context).findViolationByPolicyAppOpPolId(mithrilDB, violation.getAppId(), violation.getOprId(), violation.getPolicyId());
-            foundViolation.setCount(foundViolation.getCount() + 1);
-            MithrilDBHelper.getHelper(context).updateViolation(mithrilDB, foundViolation);
-        }
-    }
-
-    private static Set<Long> populateCurrentContext(SQLiteDatabase mithrilDB, Context context, List<SemanticUserContext> semanticUserContexts) {
-        Set<Long> currentContextIds = new HashSet<>();
-        try {
-            for (SemanticUserContext semanticUserContext : semanticUserContexts) {
-                if (semanticUserContext == null)
-                    Log.d(MithrilAC.getDebugTag(), "got null");
-                Log.d(MithrilAC.getDebugTag(), semanticUserContext.getLabel() + semanticUserContext.getType());
-                long contextId = MithrilDBHelper.getHelper(context).findContextIdByLabelAndType(mithrilDB, semanticUserContext.getLabel(), semanticUserContext.getType());
-                //We found an unknown context, let's add that to the KB.
-                if (contextId == -1)
-                    contextId = MithrilDBHelper.getHelper(context).addContext(
-                            mithrilDB,
-                            semanticUserContext.getType(),
-                            semanticUserContext.getLabel(),
-                            true,
-                            semanticUserContext.getLevel());
-                currentContextIds.add(contextId);
-                Log.d(MithrilAC.getDebugTag(), "got contextid" + contextId);
-            }
-        } catch (ContextImplementationMissingException e) {
-            Log.e(MithrilAC.getDebugTag(), e.getMessage());
-        }
-        return currentContextIds;
-    }
-
-    private static long[] setLowestLevelCurrentContext(SQLiteDatabase mithrilDB,
-                                                       Context context,
-                                                       List<SemanticUserContext> semanticUserContexts,
-                                                       Set<Long> contextIds) {
-        long[] currentContextIds = new long[4];
-        int lowestTemporal = Integer.MAX_VALUE;
-        int lowestLocation = Integer.MAX_VALUE;
-        int lowestPresence = Integer.MAX_VALUE;
-        int lowestActivity = Integer.MAX_VALUE;
-        try {
-            for (Long contextId : contextIds) {
-                Pair<String, String> labelType = MithrilDBHelper.getHelper(context).findContextByID(mithrilDB, contextId);
-                for (SemanticUserContext semanticUserContext : semanticUserContexts) {
-                    if (labelType.first.equals(semanticUserContext.getType()) && labelType.second.equals(semanticUserContext.getLabel())) {
-                        if (semanticUserContext.getType().equals(MithrilAC.getPrefKeyContextTypeTemporal())) {
-                            if (semanticUserContext.getLevel() < lowestTemporal) {
-                                currentContextIds[0] = contextId;
-                                lowestTemporal = semanticUserContext.getLevel();
-                            }
-                        } else if (semanticUserContext.getType().equals(MithrilAC.getPrefKeyContextTypeLocation())) {
-                            if (semanticUserContext.getLevel() < lowestLocation) {
-                                currentContextIds[1] = contextId;
-                                lowestLocation = semanticUserContext.getLevel();
-                            }
-                        } else if (semanticUserContext.getType().equals(MithrilAC.getPrefKeyContextTypePresence())) {
-                            if (semanticUserContext.getLevel() < lowestPresence) {
-                                currentContextIds[2] = contextId;
-                                lowestPresence = semanticUserContext.getLevel();
-                            }
-                        } else if (semanticUserContext.getType().equals(MithrilAC.getPrefKeyContextTypeActivity())) {
-                            if (semanticUserContext.getLevel() < lowestActivity) {
-                                currentContextIds[3] = contextId;
-                                lowestActivity = semanticUserContext.getLevel();
-                            }
-                        }
-                    }
-                }
-            }
-        } catch (ContextImplementationMissingException e) {
-            Log.e(MithrilAC.getDebugTag(), e.getMessage());
-        }
-        return currentContextIds;
-    }
-
     /**
      * Algorithm for violation detection:
      * Design assumption: Given a policy, a policy rule, has
@@ -240,37 +147,6 @@ public class ViolationDetectionService extends Service implements
      * since C=A. The set D={1,4} is not even a subset of A, since 4 is not an element of A.
      */
     public void detectViolation(String currentPackageName, List<Resource> resourcesUsed) {
-//        if (semanticUserContexts.size() == 0) {
-//            Log.e(MithrilAC.getDebugTag(), "Houston, we have a problem! We can't detect current context");
-//            return;
-//        }
-//        if (resources.size() == 0) {
-//            if (PermissionHelper.isPermissionGranted(context, Manifest.permission.GET_APP_OPS_STATS) != PackageManager.PERMISSION_GRANTED)
-//                Log.e(MithrilAC.getDebugTag(), "We do not have GET_APP_OPS_STATS permission!");
-
-//            return;
-//        }
-//        if (resources.get(0).getOp() == AppOpsManager.OP_NONE) {
-//            Log.e(MithrilAC.getDebugTag(), "Houston, we have another problem! We couldn't figure out the operation for " + currentPackageName);
-//            return;
-//        }
-
-//        Set<Long> currentContextSet = populateCurrentContext(mithrilDB, context, semanticUserContexts);
-//        List<Long> currentContextList = new ArrayList<>(currentContextSet);
-//        Collections.sort(currentContextList);
-//            Action actionForCurrentOperationAndApp = Action.DENY;
-//            int newPolicyId = MithrilDBHelper.getHelper(context).findMaxPolicyId(mithrilDB) + 1;
-
-        //                for (Map.Entry<Long, List<PolicyRule>> policyRuleMapEntry : policyRuleMap.entrySet()) {
-//                    Log.d(MithrilAC.getDebugTag(), "detect violation: "+policyRuleMapEntry.getValue().size());
-//                    for (int i = 0; i < policyRuleMapEntry.getValue().size(); i++)
-//                        Log.d(MithrilAC.getDebugTag(), "looped detect violation: id" + policyRuleMapEntry.getKey() + ", context: " + policyRuleMapEntry.getValue().get(i).toString());
-//                }
-//                    Log.d(MithrilAC.getDebugTag(), "detect violation: "+currentPackageName+lastOperationPerformed+" key "+policyRuleMapEntry.getKey()+" value "+policyRuleMapEntry.getValue().get(0).getCtxStr());
-        //Found some policies let's group them by policy Id
-//                    Set<Long> policyContextSet = new HashSet<>();
-//                    List<Long> policyContextList = new ArrayList<>(policyContextSet);
-//                    Collections.sort(policyContextList);
         // Let's test the rules we found
         for (Resource currentResource : resourcesUsed) {
             int lastOperationPerformed = currentResource.getOp();
@@ -301,22 +177,22 @@ public class ViolationDetectionService extends Service implements
                              * We have a violation! All violations start as a false violation and they are
                              * deemed true by user feedback. They may also be explicitly defined as false.
                              * In which case we need to change the policy... We ask for more feedback.
+                             * Handle Violation
                              */
-                            handleViolation(
-                                    context,
+                            MithrilDBHelper.getHelper(context).addViolation(
                                     mithrilDB,
-                                    rules.get(0).getPolicyId(),
-                                    rules.get(0).getAppId(),
-                                    rules.get(0).getOp(),
-                                    rules.get(0).getAppStr(),
-                                    rules.get(0).getOpStr(),
-                                    false,
-                                    true,
-                                    new Timestamp(System.currentTimeMillis()),
-                                    contextIds,
-                                    1,
-                                    currentResource
-                            );
+                                    new Violation(
+                                            rules.get(0).getPolicyId(),
+                                            rules.get(0).getAppId(),
+                                            rules.get(0).getOp(),
+                                            rules.get(0).getAppStr(),
+                                            rules.get(0).getOpStr(),
+                                            false,
+                                            true,
+                                            new Timestamp(System.currentTimeMillis()),
+                                            contextIds,
+                                            1,
+                                            currentResource));
                         }
                     }
                 }
@@ -343,7 +219,7 @@ public class ViolationDetectionService extends Service implements
                 else
                     policyApplicable = false;
             } else if (contextTypeLabel.first.equals(MithrilAC.getPrefKeyContextTypeLocation())) {
-                retrieveDataJson = sharedPrefs.getString(contextTypeLabel.first+contextTypeLabel.second, "");
+                retrieveDataJson= sharedPrefs.getString(contextTypeLabel.first+contextTypeLabel.second, "");
                 SemanticLocation tempSemanticLocation = retrieveDataGson.fromJson(retrieveDataJson, SemanticLocation.class);
                 boolean locationApplicable = false;
                 for (SemanticLocation location : getSemanticLocations()) {
@@ -392,245 +268,6 @@ public class ViolationDetectionService extends Service implements
         return policyIds;
     }
 
-    /**
-     * If current context is a subset of policy context or they are equal then we get true for the following test
-     * We have assumed a closed world. Explicit access has to be defined.
-     * Although a deny rule may be used in a closed world, it may also create policy conflicts.
-     * For example:
-     * 1) Rule A states allow access to camera during lunch hours
-     * 2) Rule B states deny access to camera at work
-     * The conflict arises from the fact that we might be at work during lunch hours, what happens then?
-     * We can ask the user about this. As in, should we allow camera access at work during lunch hours?
-     * But now we have a new problem. Suppose that we have a rule that states that in presence of a
-     * supervisor don't allow access to camera. Another rule states that in presence of a colleague
-     * allow access to camera. A third rule states that allow access at a restaurant. What happens
-     * if we are at a restaurant in our work place and having a team lunch with our colleagues and bosses?
-     * There are too many conflicting rules to handle and the system will become increasingly difficult
-     * to handle or use because we will be asking the users too many questions.
-     * However, a safe bet is that if there is any rule that states when every one of these contextual
-     * situations apply only then allow access then we are using a restrictive but safe access principle.
-     * <p>
-     * //                    if (MithrilCollections.isExactMatchSet(policyContextSet, currentContextSet)) {
-     * //                        /**
-     * //                         * We have an exact context match! Current context is an exact match for rule context.
-     * //                         * We have to do something...
-     * //                         *
-     * //                        Log.d(MithrilAC.getDebugTag(), "Exact match. Do something! operation:" + lastOperationPerformed + " policy:" + policyContextSet + " current context:" + currentContextSet);
-     * //                        for (PolicyRule rule : policyRules) {
-     * //                            //Rule has an deny action, we have a violation to ask questions about
-     * //                            if (rule.getAction().equals(Action.DENY)) {
-     * //                                if (actionForCurrentOperationAndApp.equals(Action.ALLOW))
-     * //                                    throw new SemanticInconsistencyException("Same policy has conflicting actions for different context");
-     * //                                else
-     * //                                    actionForCurrentOperationAndApp = Action.DENY;
-     * //                                //Rule has a deny action, we have a violation
-     * //                                Log.d(MithrilAC.getDebugTag(),
-     * //                                        "This is a scenario where we have deny rules in the KB. " +
-     * //                                                "We were not supposed to have this Something is wrong!");
-     * //                                /**
-     * //                                 * We have a violation! All violations start as a false violation and they are
-     * //                                 * deemed true by user feedback. They may also be explicitly defined as false.
-     * //                                 * In which case we need to change the policy... We ask for more feedback.
-     * //                                 *
-     * //                                handleViolation(
-     * //                                        context,
-     * //                                        mithrilDB,
-     * //                                        rule.getPolicyId(),
-     * //                                        rule.getAppId(),
-     * //                                        rule.getOp(),
-     * //                                        rule.getAppStr(),
-     * //                                        rule.getOpStr(),
-     * //                                        false,
-     * //                                        true,
-     * //                                        new Timestamp(System.currentTimeMillis()),
-     * //                                        policyContextList,
-     * //                                        1,
-     * //                                        currentResource
-     * //                                );
-     * //                            } else {
-     * //                                if (actionForCurrentOperationAndApp.equals(Action.DENY))
-     * //                                    throw new SemanticInconsistencyException("Same policy has conflicting actions for different context");
-     * //                                else
-     * //                                    actionForCurrentOperationAndApp = Action.ALLOW;
-     * //                            }
-     * //                        }
-     * }
-     * //                    else if (MithrilCollections.isSubset(policyContextSet, currentContextSet)) {
-     * //                        /**
-     * //                         * We have a subset context match! Policy context is a proper subset match for rule context.
-     * //                         * We have to do something...
-     * //                         *
-     * //                        Log.d(MithrilAC.getDebugTag(), "Subset match. Do something! operation:" + lastOperationPerformed + " policy:" + policyContextSet + " current context:" + currentContextSet);
-     * //                        for (PolicyRule rule : policyRules) {
-     * //                            //Rule has an deny action, we have a violation to ask questions about
-     * //                            if (rule.getAction().equals(Action.DENY)) {
-     * //                                if (actionForCurrentOperationAndApp.equals(Action.ALLOW))
-     * //                                    throw new SemanticInconsistencyException("Same policy has conflicting actions for different context");
-     * //                                else
-     * //                                    actionForCurrentOperationAndApp = Action.DENY;
-     * //                                //Rule has a deny action, we have a violation
-     * //                                Log.d(MithrilAC.getDebugTag(),
-     * //                                        "This is a scenario where we have deny rules in the KB. " +
-     * //                                                "We were not supposed to have this Something is wrong!");
-     * //                                /**
-     * //                                 * We have a violation! All violations start as a false violation and they are
-     * //                                 * deemed true by user feedback. They may also be explicitly defined as false.
-     * //                                 * In which case we need to change the policy... We ask for more feedback.
-     * //                                 *
-     * //                                handleViolation(
-     * //                                        context,
-     * //                                        mithrilDB,
-     * //                                        rule.getPolicyId(),
-     * //                                        rule.getAppId(),
-     * //                                        rule.getOp(),
-     * //                                        rule.getAppStr(),
-     * //                                        rule.getOpStr(),
-     * //                                        false,
-     * //                                        true,
-     * //                                        new Timestamp(System.currentTimeMillis()),
-     * //                                        policyContextList,
-     * //                                        1,
-     * //                                        currentResource
-     * //                                );
-     * //                            } else {
-     * //                                if (actionForCurrentOperationAndApp.equals(Action.DENY))
-     * //                                    throw new SemanticInconsistencyException("Same policy has conflicting actions for different context");
-     * //                                else
-     * //                                    actionForCurrentOperationAndApp = Action.ALLOW;
-     * //                            }
-     * //                        }
-     * //                    } else {
-     * //                        /**
-     * //                         * Neither did we have an exact context match nor did we have a subset of policy context match.
-     * //                         * Therefore, one of the following conditions hold true:
-     * //                         *      a) Current context is a superset of policy context
-     * //                         *      b) Current context is disjoint from policy context may or may not be unknown contexts
-     * //                         *      c) Current context has an intersection with policy context but has additional
-     * //                         *      conditions not in policy.
-     * //                         * This means we have a violation scenario. We could have a scenario here such that the current context is unknown.
-     * //                         * Are we looking at too specific a context? We don't know what to do in
-     * //                         * this context and maybe we could use some ML here too? However, right now we ask user feedback...
-     * //                         *
-     * //                         * We should add the context to the context table, the policy to the policy table and keep it disabled until user enables it
-     * //                         * Context are by default enabled.
-     * //                         * PolicyRules are by default disabled.
-     * //                         * Violations are by default marked true.
-     * //                         *
-     * //                        Log.d(MithrilAC.getDebugTag(), "No match. Perhaps it's a superset or complete mismatch.. we don't know what to do, ask user operation:" + lastOperationPerformed + " policy:" + policyContextSet + " current context:" + currentContextSet);
-     * //                        long[] currentContextArray = setLowestLevelCurrentContext(mithrilDB, context, semanticUserContexts, currentContextSet);
-     * //                        List<Long> lowestContextList = new ArrayList<>();
-     * //                        for (int i = 0; i < currentContextArray.length; i++)
-     * //                            if (currentContextArray[i] != 0)
-     * //                                lowestContextList.add(currentContextArray[i]);
-     * //                        for (int i = 0; i < currentContextArray.length; i++) {
-     * //                            Pair<String, String> ctxtTypeLabel = MithrilDBHelper.getHelper(context).findContextByID(mithrilDB, currentContextArray[i]);
-     * //                            AppData app = MithrilDBHelper.getHelper(context).findAppByAppPkgName(mithrilDB, currentPackageName);
-     * //                            long appId = MithrilDBHelper.getHelper(context).findAppIdByAppPkgName(mithrilDB, currentPackageName);
-     * ////                            MithrilDBHelper.getHelper(context).addPolicyRule(mithrilDB, DataGenerator.createPolicyRule(
-     * ////                                    newPolicyId,
-     * ////                                    currentPackageName,
-     * ////                                    app.getAppName(), // the name returned is not correct we have find the method that fixes that
-     * ////                                    lastOperationPerformed, // Manifest.permission.ACCESS_FINE_LOCATION,
-     * ////                                    ctxtTypeLabel.second,
-     * ////                                    ctxtTypeLabel.first,
-     * ////                                    Action.ALLOW,
-     * ////                                    mithrilDB, context)
-     * ////                            );
-     * //                            handleViolation(
-     * //                                    context,
-     * //                                    mithrilDB,
-     * //                                    newPolicyId,
-     * //                                    appId,
-     * //                                    lastOperationPerformed,
-     * //                                    app.getAppName(), // the name returned is not correct we have find the method that fixes that
-     * //                                    AppOpsManager.opToName(lastOperationPerformed),
-     * //                                    false,
-     * //                                    true,
-     * //                                    new Timestamp(System.currentTimeMillis()),
-     * //                                    lowestContextList,
-     * //                                    1,
-     * //                                    currentResource
-     * //                            );
-     * //                        }
-     * //                    }
-     * //                }
-     * <p>
-     * /**
-     * PolicyConflictDetector object to be created and sent the requester, resource, context combo to receive a decision!!!
-     * TODO if an app is launched at a certain Semantic location, does the location we know match any policy?
-     * TODO If it does then, can we determine if this is a violation?
-     * TODO if this is a violation, then insert the information into the violation table.
-     * TODO if it is not a violation, then what do we do? **DECIDE**
-     * TODO !!!!DUMMY POLICY!!!!
-     * REMOVE THIS AFTER DEMO
-     * com.google.android.youtube launch is not allowed in US!
-     * change policy to allowed in
-     * <p>
-     * //            mithrilDB.close();
-     * }
-     * /**
-     * We are not doing the default deny violation detection any more
-     * /
-     * else {
-     * /**
-     * No rules were found... for the app and operation combo! We perhaps have a default violation...
-     * Since we are using a Closed World Assumption, we are stating that explicit permissions
-     * have to be defined. So anything that is not explicitly allowed we consider to be denied.
-     * Perhaps we have opportunity for ML here? For example if we have seen that user allows
-     * Social media apps access to certain things in certain context before, we may make an
-     * assumption that user will allow a new social media app. This is an extrapolation but
-     * this is where we could have a RL system with a goal of predicting users' preferred policy
-     * and use user feedback as +ve or -ve reinforcement.
-     * /
-     * Log.d(MithrilAC.getDebugTag(), "Default violation match scenario. Do something!");
-     * long[] currentContextArray = setLowestLevelCurrentContext(mithrilDB, context, semanticUserContexts, currentContextSet);
-     * List<Long> lowestContextList = new ArrayList<>();
-     * for (int i = 0; i < currentContextArray.length; i++)
-     * if (currentContextArray[i] != 0)
-     * lowestContextList.add(currentContextArray[i]);
-     * for (int i = 0; i < currentContextArray.length; i++) {
-     * Pair<String, String> ctxtTypeLabel = MithrilDBHelper.getHelper(context).findContextByID(mithrilDB, currentContextArray[i]);
-     * AppData app = MithrilDBHelper.getHelper(context).findAppByAppPkgName(mithrilDB, currentPackageName);
-     * long appId = MithrilDBHelper.getHelper(context).findAppIdByAppPkgName(mithrilDB, currentPackageName);
-     * Log.d(MithrilAC.getDebugTag(),
-     * Integer.toString(newPolicyId) +
-     * currentPackageName +
-     * app.getAppName() +
-     * lastOperationPerformed +
-     * ctxtTypeLabel.second +
-     * ctxtTypeLabel.first);
-     * MithrilDBHelper.getHelper(context).addPolicyRule(mithrilDB, DataGenerator.createPolicyRule(
-     * newPolicyId,
-     * currentPackageName,
-     * app.getAppName(), // the name returned is not correct we have find the method that fixes that
-     * AppOpsManager.opToPermission(lastOperationPerformed), // Manifest.permission.ACCESS_FINE_LOCATION,
-     * ctxtTypeLabel.second,
-     * ctxtTypeLabel.first,
-     * Action.ALLOW,
-     * false,
-     * mithrilDB, context)
-     * );
-     * handleViolation(
-     * context,
-     * mithrilDB,
-     * newPolicyId,
-     * appId,
-     * lastOperationPerformed,
-     * app.getAppName(), // the name returned is not correct we have find the method that fixes that
-     * AppOpsManager.opToName(lastOperationPerformed), // Manifest.permission.ACCESS_FINE_LOCATION,
-     * false,
-     * true,
-     * new Timestamp(System.currentTimeMillis()),
-     * lowestContextList,
-     * 1,
-     * currentResource
-     * );
-     * }
-     * }*
-     * }
-     * }
-     */
-
     @Override
     public IBinder onBind(Intent intent) {
         // TODO: Return the communication channel to the service.
@@ -640,6 +277,7 @@ public class ViolationDetectionService extends Service implements
     @Override
     public void onCreate() {
         context = this;
+        initData();
     }
 
     @Override
@@ -652,8 +290,6 @@ public class ViolationDetectionService extends Service implements
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
         super.onStartCommand(intent, flags, startId);
-
-        initData();
 
         if (!servicesAvailable || mGoogleApiClient.isConnected() || mInProgress)
             return START_STICKY;
@@ -761,35 +397,6 @@ public class ViolationDetectionService extends Service implements
         mCurrentLocation = location;
     }
 
-//    private List<SemanticUserContext> getSemanticContexts() {
-//        List<SemanticUserContext> semanticUserContextList = new ArrayList<>();
-//
-//        //We are always at some location... where are we now? Also we are only in one place at a time
-//        if (mGoogleApiClient.isConnected()) {
-//            for (SemanticLocation semanticLocation : getSemanticLocations())
-//                semanticUserContextList.add(semanticLocation);
-//
-//            //Do we know the semantic temporal contexts?
-//            for (SemanticTime semanticTime : getSemanticTimes())
-//                semanticUserContextList.add(semanticTime);
-//
-//            //Do we detect any presence?
-//            for (SemanticNearActor semanticNearActor : getSemanticNearActors())
-//                semanticUserContextList.add(semanticNearActor);
-//
-//            //Do we know of any activity significant to the user?
-//            for (SemanticActivity semanticActivity : getSemanticActivities())
-//                semanticUserContextList.add(semanticActivity);
-//
-//            for (SemanticUserContext semanticUserContext : semanticUserContextList)
-//                Log.d(MithrilAC.getDebugTag(), semanticUserContext.getClass().getName());
-//
-////            Log.d(MithrilAC.getDebugTag(), "Size" + semanticUserContextList.size());
-//            return semanticUserContextList;
-//        }
-//        return new ArrayList<>();
-//    }
-
     /**
      * Creates an intent, adds location data to it as an extra, and starts the intent service for
      * fetching an address.
@@ -848,9 +455,6 @@ public class ViolationDetectionService extends Service implements
     private void requestLastLocation() {
         try {
             mCurrentLocation = LocationServices.FusedLocationApi.getLastLocation(mGoogleApiClient);
-//            Log.d(MithrilAC.getDebugTag(), "Location found: "
-//                    + String.valueOf(mCurrentLocation.getLatitude())
-//                    + String.valueOf(mCurrentLocation.getLongitude()));
             if (mGooglePlacesApiClient.isConnected())
                 guessCurrentPlace();
             else if (!mGooglePlacesApiClient.isConnected() || !mGooglePlacesApiClient.isConnecting() && !mPlacesInProgress) {
@@ -1044,69 +648,6 @@ public class ViolationDetectionService extends Service implements
         }
     }
 
-//    private class LaunchedAppDetectTimerTask extends TimerTask {
-//        @Override
-//        public void run() {
-//            // run on another thread
-//            mHandler.post(new Runnable() {
-//                @Override
-//                public void run() {
-//                    pkgOpPair = appLaunchDetector.getForegroundApp(context);
-//                    if (pkgOpPair != null) {
-//                        if (sharedPrefs.contains(MithrilAC.getPrefKeyLastRunningApp())) {
-//                            if (!sharedPrefs.getString(MithrilAC.getPrefKeyLastRunningApp(), "").equals(pkgOpPair.first)) {
-//                                //last running app is not same as currently running one
-//                                //detect violation, if any
-//                                //no need to change sharedprefs
-//                                editor.putString(MithrilAC.getPrefKeyLastRunningApp(), pkgOpPair.first);
-//                                editor.apply();
-//
-//                                requestLastLocation();
-//                                guessCurrentPlace();
-//
-//                                try {
-//                                    ViolationDetector.detectViolation(
-//                                            context,
-//                                            pkgOpPair.first,
-//                                            pkgOpPair.second,
-//                                            getSemanticContexts());
-//                                } catch (SemanticInconsistencyException e) {
-//                                    Log.e(MithrilAC.getDebugTag(), e.getMessage());
-//                                }
-//                                /**
-//                                 * Once we receive the result of the address search, we can detect violation
-//                                 */
-//                            } else {
-//                                //currently running app is same as previously detected app
-//                                //nothing to do
-//                            }
-//                        } else {
-//                            //there's no known last running app
-//                            //add to sharedprefs currently running app and detect violation, if any
-//                            editor.putString(MithrilAC.getPrefKeyLastRunningApp(), pkgOpPair.first);
-//                            editor.apply();
-//
-//                            requestLastLocation();
-//                            guessCurrentPlace();
-//
-//                            try {
-//                                ViolationDetector.detectViolation(
-//                                        context,
-//                                        pkgOpPair.first,
-//                                        pkgOpPair.second,
-//                                        getSemanticContexts());
-//                            } catch (SemanticInconsistencyException e) {
-//                                Log.e(MithrilAC.getDebugTag(), e.getMessage());
-//                            }
-//                        }
-//                    } else {
-//                        //null! nothing to do
-//                    }
-//                }
-//            });
-//        }
-//    }
-
     private class AddressResultReceiver extends ResultReceiver {
         private Context context;
         /**
@@ -1188,3 +729,463 @@ public class ViolationDetectionService extends Service implements
         }
     }
 }
+//    private List<SemanticUserContext> getSemanticContexts() {
+//        List<SemanticUserContext> semanticUserContextList = new ArrayList<>();
+//
+//        //We are always at some location... where are we now? Also we are only in one place at a time
+//        if (mGoogleApiClient.isConnected()) {
+//            for (SemanticLocation semanticLocation : getSemanticLocations())
+//                semanticUserContextList.add(semanticLocation);
+//
+//            //Do we know the semantic temporal contexts?
+//            for (SemanticTime semanticTime : getSemanticTimes())
+//                semanticUserContextList.add(semanticTime);
+//
+//            //Do we detect any presence?
+//            for (SemanticNearActor semanticNearActor : getSemanticNearActors())
+//                semanticUserContextList.add(semanticNearActor);
+//
+//            //Do we know of any activity significant to the user?
+//            for (SemanticActivity semanticActivity : getSemanticActivities())
+//                semanticUserContextList.add(semanticActivity);
+//
+//            for (SemanticUserContext semanticUserContext : semanticUserContextList)
+//                Log.d(MithrilAC.getDebugTag(), semanticUserContext.getClass().getName());
+//
+////            Log.d(MithrilAC.getDebugTag(), "Size" + semanticUserContextList.size());
+//            return semanticUserContextList;
+//        }
+//        return new ArrayList<>();
+//    }//            Log.d(MithrilAC.getDebugTag(), "Location found: "
+//                    + String.valueOf(mCurrentLocation.getLatitude())
+//                    + String.valueOf(mCurrentLocation.getLongitude()));
+//    private class LaunchedAppDetectTimerTask extends TimerTask {
+//        @Override
+//        public void run() {
+//            // run on another thread
+//            mHandler.post(new Runnable() {
+//                @Override
+//                public void run() {
+//                    pkgOpPair = appLaunchDetector.getForegroundApp(context);
+//                    if (pkgOpPair != null) {
+//                        if (sharedPrefs.contains(MithrilAC.getPrefKeyLastRunningApp())) {
+//                            if (!sharedPrefs.getString(MithrilAC.getPrefKeyLastRunningApp(), "").equals(pkgOpPair.first)) {
+//                                //last running app is not same as currently running one
+//                                //detect violation, if any
+//                                //no need to change sharedprefs
+//                                editor.putString(MithrilAC.getPrefKeyLastRunningApp(), pkgOpPair.first);
+//                                editor.apply();
+//
+//                                requestLastLocation();
+//                                guessCurrentPlace();
+//
+//                                try {
+//                                    ViolationDetector.detectViolation(
+//                                            context,
+//                                            pkgOpPair.first,
+//                                            pkgOpPair.second,
+//                                            getSemanticContexts());
+//                                } catch (SemanticInconsistencyException e) {
+//                                    Log.e(MithrilAC.getDebugTag(), e.getMessage());
+//                                }
+//                                /**
+//                                 * Once we receive the result of the address search, we can detect violation
+//                                 */
+//                            } else {
+//                                //currently running app is same as previously detected app
+//                                //nothing to do
+//                            }
+//                        } else {
+//                            //there's no known last running app
+//                            //add to sharedprefs currently running app and detect violation, if any
+//                            editor.putString(MithrilAC.getPrefKeyLastRunningApp(), pkgOpPair.first);
+//                            editor.apply();
+//
+//                            requestLastLocation();
+//                            guessCurrentPlace();
+//
+//                            try {
+//                                ViolationDetector.detectViolation(
+//                                        context,
+//                                        pkgOpPair.first,
+//                                        pkgOpPair.second,
+//                                        getSemanticContexts());
+//                            } catch (SemanticInconsistencyException e) {
+//                                Log.e(MithrilAC.getDebugTag(), e.getMessage());
+//                            }
+//                        }
+//                    } else {
+//                        //null! nothing to do
+//                    }
+//                }
+//            });
+//        }
+//    }
+//    private static void handleViolation(Context context,
+//                                        SQLiteDatabase mithrilDB,
+//                                        long polId,
+//                                        long appId,
+//                                        int op,
+//                                        String appname,
+//                                        String operationName,
+//                                        boolean asked,
+//                                        boolean tvfv,
+//                                        Timestamp detectTime,
+//                                        List<Long> contextList,
+//                                        int violationCount,
+//                                        Resource resource) {
+//        MithrilDBHelper.getHelper(context).addViolation(
+//                mithrilDB,
+//                new Violation(
+//                        polId,
+//                        appId,
+//                        op,
+//                        appname,
+//                        operationName,
+//                        asked,
+//                        tvfv,
+//                        detectTime,
+//                        contextList,
+//                        violationCount,
+//                        resource));
+//    }
+
+//    private static Set<Long> populateCurrentContext(SQLiteDatabase mithrilDB, Context context, List<SemanticUserContext> semanticUserContexts) {
+//        Set<Long> currentContextIds = new HashSet<>();
+//        try {
+//            for (SemanticUserContext semanticUserContext : semanticUserContexts) {
+//                if (semanticUserContext == null)
+//                    Log.d(MithrilAC.getDebugTag(), "got null");
+//                Log.d(MithrilAC.getDebugTag(), semanticUserContext.getLabel() + semanticUserContext.getType());
+//                long contextId = MithrilDBHelper.getHelper(context).findContextIdByLabelAndType(mithrilDB, semanticUserContext.getLabel(), semanticUserContext.getType());
+//                //We found an unknown context, let's add that to the KB.
+//                if (contextId == -1)
+//                    contextId = MithrilDBHelper.getHelper(context).addContext(
+//                            mithrilDB,
+//                            semanticUserContext.getType(),
+//                            semanticUserContext.getLabel(),
+//                            true,
+//                            semanticUserContext.getLevel());
+//                currentContextIds.add(contextId);
+//                Log.d(MithrilAC.getDebugTag(), "got contextid" + contextId);
+//            }
+//        } catch (ContextImplementationMissingException e) {
+//            Log.e(MithrilAC.getDebugTag(), e.getMessage());
+//        }
+//        return currentContextIds;
+//    }
+//
+//    private static long[] setLowestLevelCurrentContext(SQLiteDatabase mithrilDB,
+//                                                       Context context,
+//                                                       List<SemanticUserContext> semanticUserContexts,
+//                                                       Set<Long> contextIds) {
+//        long[] currentContextIds = new long[4];
+//        int lowestTemporal = Integer.MAX_VALUE;
+//        int lowestLocation = Integer.MAX_VALUE;
+//        int lowestPresence = Integer.MAX_VALUE;
+//        int lowestActivity = Integer.MAX_VALUE;
+//        try {
+//            for (Long contextId : contextIds) {
+//                Pair<String, String> labelType = MithrilDBHelper.getHelper(context).findContextByID(mithrilDB, contextId);
+//                for (SemanticUserContext semanticUserContext : semanticUserContexts) {
+//                    if (labelType.first.equals(semanticUserContext.getType()) && labelType.second.equals(semanticUserContext.getLabel())) {
+//                        if (semanticUserContext.getType().equals(MithrilAC.getPrefKeyContextTypeTemporal())) {
+//                            if (semanticUserContext.getLevel() < lowestTemporal) {
+//                                currentContextIds[0] = contextId;
+//                                lowestTemporal = semanticUserContext.getLevel();
+//                            }
+//                        } else if (semanticUserContext.getType().equals(MithrilAC.getPrefKeyContextTypeLocation())) {
+//                            if (semanticUserContext.getLevel() < lowestLocation) {
+//                                currentContextIds[1] = contextId;
+//                                lowestLocation = semanticUserContext.getLevel();
+//                            }
+//                        } else if (semanticUserContext.getType().equals(MithrilAC.getPrefKeyContextTypePresence())) {
+//                            if (semanticUserContext.getLevel() < lowestPresence) {
+//                                currentContextIds[2] = contextId;
+//                                lowestPresence = semanticUserContext.getLevel();
+//                            }
+//                        } else if (semanticUserContext.getType().equals(MithrilAC.getPrefKeyContextTypeActivity())) {
+//                            if (semanticUserContext.getLevel() < lowestActivity) {
+//                                currentContextIds[3] = contextId;
+//                                lowestActivity = semanticUserContext.getLevel();
+//                            }
+//                        }
+//                    }
+//                }
+//            }
+//        } catch (ContextImplementationMissingException e) {
+//            Log.e(MithrilAC.getDebugTag(), e.getMessage());
+//        }
+//        return currentContextIds;
+//    }
+
+//        if (semanticUserContexts.size() == 0) {
+//            Log.e(MithrilAC.getDebugTag(), "Houston, we have a problem! We can't detect current context");
+//            return;
+//        }
+//        if (resources.size() == 0) {
+//            if (PermissionHelper.isPermissionGranted(context, Manifest.permission.GET_APP_OPS_STATS) != PackageManager.PERMISSION_GRANTED)
+//                Log.e(MithrilAC.getDebugTag(), "We do not have GET_APP_OPS_STATS permission!");
+
+//            return;
+//        }
+//        if (resources.get(0).getOp() == AppOpsManager.OP_NONE) {
+//            Log.e(MithrilAC.getDebugTag(), "Houston, we have another problem! We couldn't figure out the operation for " + currentPackageName);
+//            return;
+//        }
+
+//        Set<Long> currentContextSet = populateCurrentContext(mithrilDB, context, semanticUserContexts);
+//        List<Long> currentContextList = new ArrayList<>(currentContextSet);
+//        Collections.sort(currentContextList);
+//            Action actionForCurrentOperationAndApp = Action.DENY;
+//            int newPolicyId = MithrilDBHelper.getHelper(context).findMaxPolicyId(mithrilDB) + 1;
+
+//                for (Map.Entry<Long, List<PolicyRule>> policyRuleMapEntry : policyRuleMap.entrySet()) {
+//                    Log.d(MithrilAC.getDebugTag(), "detect violation: "+policyRuleMapEntry.getValue().size());
+//                    for (int i = 0; i < policyRuleMapEntry.getValue().size(); i++)
+//                        Log.d(MithrilAC.getDebugTag(), "looped detect violation: id" + policyRuleMapEntry.getKey() + ", context: " + policyRuleMapEntry.getValue().get(i).toString());
+//                }
+//                    Log.d(MithrilAC.getDebugTag(), "detect violation: "+currentPackageName+lastOperationPerformed+" key "+policyRuleMapEntry.getKey()+" value "+policyRuleMapEntry.getValue().get(0).getCtxStr());
+//Found some policies let's group them by policy Id
+//                    Set<Long> policyContextSet = new HashSet<>();
+//                    List<Long> policyContextList = new ArrayList<>(policyContextSet);
+//                    Collections.sort(policyContextList);
+
+/**
+ * If current context is a subset of policy context or they are equal then we get true for the following test
+ * We have assumed a closed world. Explicit access has to be defined.
+ * Although a deny rule may be used in a closed world, it may also create policy conflicts.
+ * For example:
+ * 1) Rule A states allow access to camera during lunch hours
+ * 2) Rule B states deny access to camera at work
+ * The conflict arises from the fact that we might be at work during lunch hours, what happens then?
+ * We can ask the user about this. As in, should we allow camera access at work during lunch hours?
+ * But now we have a new problem. Suppose that we have a rule that states that in presence of a
+ * supervisor don't allow access to camera. Another rule states that in presence of a colleague
+ * allow access to camera. A third rule states that allow access at a restaurant. What happens
+ * if we are at a restaurant in our work place and having a team lunch with our colleagues and bosses?
+ * There are too many conflicting rules to handle and the system will become increasingly difficult
+ * to handle or use because we will be asking the users too many questions.
+ * However, a safe bet is that if there is any rule that states when every one of these contextual
+ * situations apply only then allow access then we are using a restrictive but safe access principle.
+ * <p>
+ * //                    if (MithrilCollections.isExactMatchSet(policyContextSet, currentContextSet)) {
+ * //                        /**
+ * //                         * We have an exact context match! Current context is an exact match for rule context.
+ * //                         * We have to do something...
+ * //                         *
+ * //                        Log.d(MithrilAC.getDebugTag(), "Exact match. Do something! operation:" + lastOperationPerformed + " policy:" + policyContextSet + " current context:" + currentContextSet);
+ * //                        for (PolicyRule rule : policyRules) {
+ * //                            //Rule has an deny action, we have a violation to ask questions about
+ * //                            if (rule.getAction().equals(Action.DENY)) {
+ * //                                if (actionForCurrentOperationAndApp.equals(Action.ALLOW))
+ * //                                    throw new SemanticInconsistencyException("Same policy has conflicting actions for different context");
+ * //                                else
+ * //                                    actionForCurrentOperationAndApp = Action.DENY;
+ * //                                //Rule has a deny action, we have a violation
+ * //                                Log.d(MithrilAC.getDebugTag(),
+ * //                                        "This is a scenario where we have deny rules in the KB. " +
+ * //                                                "We were not supposed to have this Something is wrong!");
+ * //                                /**
+ * //                                 * We have a violation! All violations start as a false violation and they are
+ * //                                 * deemed true by user feedback. They may also be explicitly defined as false.
+ * //                                 * In which case we need to change the policy... We ask for more feedback.
+ * //                                 *
+ * //                                handleViolation(
+ * //                                        context,
+ * //                                        mithrilDB,
+ * //                                        rule.getPolicyId(),
+ * //                                        rule.getAppId(),
+ * //                                        rule.getOp(),
+ * //                                        rule.getAppStr(),
+ * //                                        rule.getOpStr(),
+ * //                                        false,
+ * //                                        true,
+ * //                                        new Timestamp(System.currentTimeMillis()),
+ * //                                        policyContextList,
+ * //                                        1,
+ * //                                        currentResource
+ * //                                );
+ * //                            } else {
+ * //                                if (actionForCurrentOperationAndApp.equals(Action.DENY))
+ * //                                    throw new SemanticInconsistencyException("Same policy has conflicting actions for different context");
+ * //                                else
+ * //                                    actionForCurrentOperationAndApp = Action.ALLOW;
+ * //                            }
+ * //                        }
+ * }
+ * //                    else if (MithrilCollections.isSubset(policyContextSet, currentContextSet)) {
+ * //                        /**
+ * //                         * We have a subset context match! Policy context is a proper subset match for rule context.
+ * //                         * We have to do something...
+ * //                         *
+ * //                        Log.d(MithrilAC.getDebugTag(), "Subset match. Do something! operation:" + lastOperationPerformed + " policy:" + policyContextSet + " current context:" + currentContextSet);
+ * //                        for (PolicyRule rule : policyRules) {
+ * //                            //Rule has an deny action, we have a violation to ask questions about
+ * //                            if (rule.getAction().equals(Action.DENY)) {
+ * //                                if (actionForCurrentOperationAndApp.equals(Action.ALLOW))
+ * //                                    throw new SemanticInconsistencyException("Same policy has conflicting actions for different context");
+ * //                                else
+ * //                                    actionForCurrentOperationAndApp = Action.DENY;
+ * //                                //Rule has a deny action, we have a violation
+ * //                                Log.d(MithrilAC.getDebugTag(),
+ * //                                        "This is a scenario where we have deny rules in the KB. " +
+ * //                                                "We were not supposed to have this Something is wrong!");
+ * //                                /**
+ * //                                 * We have a violation! All violations start as a false violation and they are
+ * //                                 * deemed true by user feedback. They may also be explicitly defined as false.
+ * //                                 * In which case we need to change the policy... We ask for more feedback.
+ * //                                 *
+ * //                                handleViolation(
+ * //                                        context,
+ * //                                        mithrilDB,
+ * //                                        rule.getPolicyId(),
+ * //                                        rule.getAppId(),
+ * //                                        rule.getOp(),
+ * //                                        rule.getAppStr(),
+ * //                                        rule.getOpStr(),
+ * //                                        false,
+ * //                                        true,
+ * //                                        new Timestamp(System.currentTimeMillis()),
+ * //                                        policyContextList,
+ * //                                        1,
+ * //                                        currentResource
+ * //                                );
+ * //                            } else {
+ * //                                if (actionForCurrentOperationAndApp.equals(Action.DENY))
+ * //                                    throw new SemanticInconsistencyException("Same policy has conflicting actions for different context");
+ * //                                else
+ * //                                    actionForCurrentOperationAndApp = Action.ALLOW;
+ * //                            }
+ * //                        }
+ * //                    } else {
+ * //                        /**
+ * //                         * Neither did we have an exact context match nor did we have a subset of policy context match.
+ * //                         * Therefore, one of the following conditions hold true:
+ * //                         *      a) Current context is a superset of policy context
+ * //                         *      b) Current context is disjoint from policy context may or may not be unknown contexts
+ * //                         *      c) Current context has an intersection with policy context but has additional
+ * //                         *      conditions not in policy.
+ * //                         * This means we have a violation scenario. We could have a scenario here such that the current context is unknown.
+ * //                         * Are we looking at too specific a context? We don't know what to do in
+ * //                         * this context and maybe we could use some ML here too? However, right now we ask user feedback...
+ * //                         *
+ * //                         * We should add the context to the context table, the policy to the policy table and keep it disabled until user enables it
+ * //                         * Context are by default enabled.
+ * //                         * PolicyRules are by default disabled.
+ * //                         * Violations are by default marked true.
+ * //                         *
+ * //                        Log.d(MithrilAC.getDebugTag(), "No match. Perhaps it's a superset or complete mismatch.. we don't know what to do, ask user operation:" + lastOperationPerformed + " policy:" + policyContextSet + " current context:" + currentContextSet);
+ * //                        long[] currentContextArray = setLowestLevelCurrentContext(mithrilDB, context, semanticUserContexts, currentContextSet);
+ * //                        List<Long> lowestContextList = new ArrayList<>();
+ * //                        for (int i = 0; i < currentContextArray.length; i++)
+ * //                            if (currentContextArray[i] != 0)
+ * //                                lowestContextList.add(currentContextArray[i]);
+ * //                        for (int i = 0; i < currentContextArray.length; i++) {
+ * //                            Pair<String, String> ctxtTypeLabel = MithrilDBHelper.getHelper(context).findContextByID(mithrilDB, currentContextArray[i]);
+ * //                            AppData app = MithrilDBHelper.getHelper(context).findAppByAppPkgName(mithrilDB, currentPackageName);
+ * //                            long appId = MithrilDBHelper.getHelper(context).findAppIdByAppPkgName(mithrilDB, currentPackageName);
+ * ////                            MithrilDBHelper.getHelper(context).addPolicyRule(mithrilDB, DataGenerator.createPolicyRule(
+ * ////                                    newPolicyId,
+ * ////                                    currentPackageName,
+ * ////                                    app.getAppName(), // the name returned is not correct we have find the method that fixes that
+ * ////                                    lastOperationPerformed, // Manifest.permission.ACCESS_FINE_LOCATION,
+ * ////                                    ctxtTypeLabel.second,
+ * ////                                    ctxtTypeLabel.first,
+ * ////                                    Action.ALLOW,
+ * ////                                    mithrilDB, context)
+ * ////                            );
+ * //                            handleViolation(
+ * //                                    context,
+ * //                                    mithrilDB,
+ * //                                    newPolicyId,
+ * //                                    appId,
+ * //                                    lastOperationPerformed,
+ * //                                    app.getAppName(), // the name returned is not correct we have find the method that fixes that
+ * //                                    AppOpsManager.opToName(lastOperationPerformed),
+ * //                                    false,
+ * //                                    true,
+ * //                                    new Timestamp(System.currentTimeMillis()),
+ * //                                    lowestContextList,
+ * //                                    1,
+ * //                                    currentResource
+ * //                            );
+ * //                        }
+ * //                    }
+ * //                }
+ * <p>
+ * /**
+ * PolicyConflictDetector object to be created and sent the requester, resource, context combo to receive a decision!!!
+ * TODO if an app is launched at a certain Semantic location, does the location we know match any policy?
+ * TODO If it does then, can we determine if this is a violation?
+ * TODO if this is a violation, then insert the information into the violation table.
+ * TODO if it is not a violation, then what do we do? **DECIDE**
+ * TODO !!!!DUMMY POLICY!!!!
+ * REMOVE THIS AFTER DEMO
+ * com.google.android.youtube launch is not allowed in US!
+ * change policy to allowed in
+ * <p>
+ * //            mithrilDB.close();
+ * }
+ * /**
+ * We are not doing the default deny violation detection any more
+ * /
+ * else {
+ * /**
+ * No rules were found... for the app and operation combo! We perhaps have a default violation...
+ * Since we are using a Closed World Assumption, we are stating that explicit permissions
+ * have to be defined. So anything that is not explicitly allowed we consider to be denied.
+ * Perhaps we have opportunity for ML here? For example if we have seen that user allows
+ * Social media apps access to certain things in certain context before, we may make an
+ * assumption that user will allow a new social media app. This is an extrapolation but
+ * this is where we could have a RL system with a goal of predicting users' preferred policy
+ * and use user feedback as +ve or -ve reinforcement.
+ * /
+ * Log.d(MithrilAC.getDebugTag(), "Default violation match scenario. Do something!");
+ * long[] currentContextArray = setLowestLevelCurrentContext(mithrilDB, context, semanticUserContexts, currentContextSet);
+ * List<Long> lowestContextList = new ArrayList<>();
+ * for (int i = 0; i < currentContextArray.length; i++)
+ * if (currentContextArray[i] != 0)
+ * lowestContextList.add(currentContextArray[i]);
+ * for (int i = 0; i < currentContextArray.length; i++) {
+ * Pair<String, String> ctxtTypeLabel = MithrilDBHelper.getHelper(context).findContextByID(mithrilDB, currentContextArray[i]);
+ * AppData app = MithrilDBHelper.getHelper(context).findAppByAppPkgName(mithrilDB, currentPackageName);
+ * long appId = MithrilDBHelper.getHelper(context).findAppIdByAppPkgName(mithrilDB, currentPackageName);
+ * Log.d(MithrilAC.getDebugTag(),
+ * Integer.toString(newPolicyId) +
+ * currentPackageName +
+ * app.getAppName() +
+ * lastOperationPerformed +
+ * ctxtTypeLabel.second +
+ * ctxtTypeLabel.first);
+ * MithrilDBHelper.getHelper(context).addPolicyRule(mithrilDB, DataGenerator.createPolicyRule(
+ * newPolicyId,
+ * currentPackageName,
+ * app.getAppName(), // the name returned is not correct we have find the method that fixes that
+ * AppOpsManager.opToPermission(lastOperationPerformed), // Manifest.permission.ACCESS_FINE_LOCATION,
+ * ctxtTypeLabel.second,
+ * ctxtTypeLabel.first,
+ * Action.ALLOW,
+ * false,
+ * mithrilDB, context)
+ * );
+ * handleViolation(
+ * context,
+ * mithrilDB,
+ * newPolicyId,
+ * appId,
+ * lastOperationPerformed,
+ * app.getAppName(), // the name returned is not correct we have find the method that fixes that
+ * AppOpsManager.opToName(lastOperationPerformed), // Manifest.permission.ACCESS_FINE_LOCATION,
+ * false,
+ * true,
+ * new Timestamp(System.currentTimeMillis()),
+ * lowestContextList,
+ * 1,
+ * currentResource
+ * );
+ * }
+ * }*
+ * }
+ * }
+ */

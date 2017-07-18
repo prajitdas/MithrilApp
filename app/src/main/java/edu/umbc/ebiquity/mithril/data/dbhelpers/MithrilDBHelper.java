@@ -1242,6 +1242,7 @@ public class MithrilDBHelper extends SQLiteOpenHelper {
         else
             values.put(VIOLATIONTRUEFALSE, 0);
         values.put(VIOLATIONCTXTIDS, aViolation.getCtxtIdString());
+        values.put(VIOLATIONCOUNT, aViolation.getCount());
         values.put(VIOLATIONIGNOREDCOUNT, aViolation.getResource().getIgnoredCount());
         values.put(VIOLATIONALLOWEDCOUNT, aViolation.getResource().getAllowedCount());
         values.put(VIOLATIONDURATION, aViolation.getResource().getDuration());
@@ -1251,7 +1252,17 @@ public class MithrilDBHelper extends SQLiteOpenHelper {
         /**
          * If there is a new violation just replace and update violation count
          */
-        insertedRowId = db.insertOrThrow(getViolationsLogTableName(), null, values);
+        try {
+            insertedRowId = db.insertOrThrow(getViolationsLogTableName(), null, values);
+        } catch (SQLException e) {
+            Violation foundViolation = MithrilDBHelper.getHelper(context).findViolationByPolicyAppOpPolId(
+                    db,
+                    aViolation.getAppId(),
+                    aViolation.getOprId(),
+                    aViolation.getPolicyId());
+            foundViolation.setCount(foundViolation.getCount() + 1);
+            insertedRowId = MithrilDBHelper.getHelper(context).updateViolation(db, foundViolation);
+        }
         return insertedRowId;
     }
 
@@ -2980,6 +2991,7 @@ public class MithrilDBHelper extends SQLiteOpenHelper {
         else
             values.put(VIOLATIONTRUEFALSE, 0);
         values.put(VIOLATIONCTXTIDS, aViolation.getCtxtIdString());
+        values.put(VIOLATIONCOUNT, aViolation.getCount());
         values.put(VIOLATIONIGNOREDCOUNT, aViolation.getResource().getIgnoredCount());
         values.put(VIOLATIONALLOWEDCOUNT, aViolation.getResource().getAllowedCount());
         values.put(VIOLATIONDURATION, aViolation.getResource().getDuration());

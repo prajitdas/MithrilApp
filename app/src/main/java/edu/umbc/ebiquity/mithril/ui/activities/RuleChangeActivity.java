@@ -202,10 +202,6 @@ public class RuleChangeActivity extends AppCompatActivity implements RuleChangeF
                 "Perhaps you should create one through menu option \"Manage context info\"");
     }
 
-    private void loadNewRuleFragment() {
-
-    }
-
     private void loadRuleChangeFragment() {
         Bundle data = new Bundle();
         data.putParcelable("rule", currentViolation);
