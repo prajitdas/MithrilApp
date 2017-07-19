@@ -867,7 +867,8 @@ public class MithrilDBHelper extends SQLiteOpenHelper {
         double dangerCount = 0.0;
         double totalCount = 0.0;
         for (String packagePermission : requestedPermissions) {
-            if(findPermissionsProtectionLevelByName(db, packagePermission) == "dangerous")
+            Log.d(MithrilAC.getDebugTag(), "protection level"+findPermissionsProtectionLevelByName(db, packagePermission));
+            if(findPermissionsProtectionLevelByName(db, packagePermission).equals("dangerous"))
                 dangerCount += 1.0;
             totalCount += 1.0;
         }
