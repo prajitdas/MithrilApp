@@ -745,16 +745,18 @@ public class MithrilDBHelper extends SQLiteOpenHelper {
                 PackageManager.GET_PERMISSIONS;
 
         for (PackageInfo pack : packageManager.getInstalledPackages(flags)) {
+            Log.d(MithrilAC.getDebugTag(), "data"+pack.packageName+pack.applicationInfo.flags);
             if ((pack.applicationInfo.flags) != 1) {
                 try {
                     AppData tempAppData = new AppData();
                     if (pack.packageName != null) {
                         //App description
-                        if (pack.applicationInfo.loadDescription(packageManager) != null)
+                        try {
                             tempAppData.setAppDescription(pack.applicationInfo.loadDescription(packageManager).toString());
-                        else
+                        } catch (Exception e) {
+                            Log.d(MithrilAC.getDebugTag(), e.getMessage());
                             tempAppData.setAppDescription(MithrilAC.getDefaultDescription());
-
+                        }
                         //App target SDK version
                         tempAppData.setTargetSdkVersion(pack.applicationInfo.targetSdkVersion);
 
@@ -816,36 +818,38 @@ public class MithrilDBHelper extends SQLiteOpenHelper {
                             tempAppData.setRisk(getRiskValue(db, pack.requestedPermissions));
                             Map<String, Boolean> requestedPermissionsMap = new HashMap<>();
                             for (String packagePermission : pack.requestedPermissions) {
-                                requestedPermissionsMap.put(packagePermission, true
+                                requestedPermissionsMap.put(packagePermission, true);
 //                                        appOpsManager.checkOpNoThrow(
 //                                                packagePermission,
 //                                                packageManager.getApplicationInfo(pack.packageName, PackageManager.GET_META_DATA).uid,
 //                                                pack.packageName) != 0
-                                );
-                                /*
-                                 * The following fix is no longer required. There was a flaw in insert permission we should have used insertWithOnConflict
-                                 * - PKD, Dec 27, 2016. Carrie Fisher AKA Princess Leia Organa (Skywalker) passed away today at 0855 PST. The world will miss her. :(
-                                 * ---------------------------------------------------------------------------------------------------------------------------------------------
-                                 * The following shell script may be used to extract exact permission data.
-                                 * However, that will require root access and adb shell code execution.
-                                 * Perhaps we should avoid that for now.
-                                 * ---------------------------------------------------------------------------------------------------------------------------------------------
-                                 findRequestedLineStart=`adb shell dumpsys package com.google.android.youtube | grep -n "requested permissions:" | cut -f1 -d ':'`
-                                 findRequestedLineEnd=`adb shell dumpsys package com.google.android.youtube | grep -n "install permissions:" | cut -f1 -d ':'`
-                                 findInstallLineStart=`adb shell dumpsys package com.google.android.youtube | grep -n "install permissions:" | cut -f1 -d ':'`
-                                 findInstallLineEnd=`adb shell dumpsys package com.google.android.youtube | grep -n "installed=true" | cut -f1 -d ':'`
-
-                                 numLinesRequestedPermission=$((findRequestedLineEnd-findRequestedLineStart-1))
-                                 adb shell dumpsys package com.google.android.youtube | grep -A $numLinesRequestedPermission "requested permissions:" | tr -d ' '
-
-                                 numLinesInstalledPermission=$((findInstallLineEnd-findInstallLineStart-1))
-                                 adb shell dumpsys package com.google.android.youtube | grep -A $numLinesInstalledPermission "install permissions:" | cut -f1 -d"=" | tr -d ' '
-                                 * ---------------------------------------------------------------------------------------------------------------------------------------------
-                                 */
-                                tempAppData.setPermissions(requestedPermissionsMap);
+//                                );
                             }
+                            /*
+                             * The following fix is no longer required. There was a flaw in insert permission we should have used insertWithOnConflict
+                             * - PKD, Dec 27, 2016. Carrie Fisher AKA Princess Leia Organa (Skywalker) passed away today at 0855 PST. The world will miss her. :(
+                             * ---------------------------------------------------------------------------------------------------------------------------------------------
+                             * The following shell script may be used to extract exact permission data.
+                             * However, that will require root access and adb shell code execution.
+                             * Perhaps we should avoid that for now.
+                             * ---------------------------------------------------------------------------------------------------------------------------------------------
+                             findRequestedLineStart=`adb shell dumpsys package com.google.android.youtube | grep -n "requested permissions:" | cut -f1 -d ':'`
+                             findRequestedLineEnd=`adb shell dumpsys package com.google.android.youtube | grep -n "install permissions:" | cut -f1 -d ':'`
+                             findInstallLineStart=`adb shell dumpsys package com.google.android.youtube | grep -n "install permissions:" | cut -f1 -d ':'`
+                             findInstallLineEnd=`adb shell dumpsys package com.google.android.youtube | grep -n "installed=true" | cut -f1 -d ':'`
+
+                             numLinesRequestedPermission=$((findRequestedLineEnd-findRequestedLineStart-1))
+                             adb shell dumpsys package com.google.android.youtube | grep -A $numLinesRequestedPermission "requested permissions:" | tr -d ' '
+
+                             numLinesInstalledPermission=$((findInstallLineEnd-findInstallLineStart-1))
+                             adb shell dumpsys package com.google.android.youtube | grep -A $numLinesInstalledPermission "install permissions:" | cut -f1 -d"=" | tr -d ' '
+                             * ---------------------------------------------------------------------------------------------------------------------------------------------
+                             */
+                            tempAppData.setPermissions(requestedPermissionsMap);
                         }
                     }
+                    Log.d(MithrilAC.getDebugTag(), "data"+pack.packageName+pack.applicationInfo.flags);
+
                     //Insert an app into database
                     long appId = addApp(db, tempAppData);
 
@@ -857,6 +861,7 @@ public class MithrilDBHelper extends SQLiteOpenHelper {
 //				} catch (ClassCastException e){
 //					Log.d(MithrilAC.getDebugTag(), e.getMessage());
                 } catch (Exception e) {
+                    Log.d(MithrilAC.getDebugTag(), "data"+pack.packageName+pack.applicationInfo.flags);
                     Log.d(MithrilAC.getDebugTag(), e.getMessage());
                 }
             }
@@ -988,6 +993,7 @@ public class MithrilDBHelper extends SQLiteOpenHelper {
         values.put(APPTARGETSDKVERSION, anAppData.getTargetSdkVersion());
         values.put(APPICON, getBitmapAsByteArray(anAppData.getIcon()));
         values.put(APPNAME, anAppData.getAppName());
+        Log.d(MithrilAC.getDebugTag(), anAppData.getAppName());
         values.put(APPPACKAGENAME, anAppData.getPackageName());
         values.put(APPVERSIONINFO, anAppData.getVersionInfo());
         if (anAppData.isInstalled())
@@ -1764,9 +1770,7 @@ public class MithrilDBHelper extends SQLiteOpenHelper {
         String selectQuery = "SELECT " +
                 getPermissionsTableName() + "." + PERMPROTECTIONLEVEL +
                 " FROM " + getPermissionsTableName() +
-                " WHERE " + getPermissionsTableName() + "." + PERMNAME +
-                " = '" + permissionName +
-                "';";
+                " WHERE " + getPermissionsTableName() + "." + PERMNAME + " = '" + permissionName + "';";
 
         Cursor cursor = db.rawQuery(selectQuery, null);
         try {
@@ -1778,7 +1782,7 @@ public class MithrilDBHelper extends SQLiteOpenHelper {
         } finally {
             cursor.close();
         }
-        return null;
+        return "unknown";
     }
 
     /**
