@@ -487,10 +487,8 @@ public class MithrilDBHelper extends SQLiteOpenHelper {
             " AND " +
             getAppPermTableName() + "." + APPPERMGRANTED + " = 1;";
     private static MithrilDBHelper instance;
-    private AppOpsManager appOpsManager;
+    //    private AppOpsManager appOpsManager;
     private Context context;
-    private String feedbackTableName;
-    private String defaultPoliciesTableName;
 
     /**
      * -------------------------------------------------------------------------------------------------------------------------------------------------------------------
@@ -503,7 +501,7 @@ public class MithrilDBHelper extends SQLiteOpenHelper {
     private MithrilDBHelper(Context aContext) {
         super(aContext, DATABASE_NAME, null, DATABASE_VERSION);
         setContext(aContext);
-        appOpsManager = (AppOpsManager) context.getSystemService(Context.APP_OPS_SERVICE);
+//        appOpsManager = (AppOpsManager) context.getSystemService(Context.APP_OPS_SERVICE);
     }
 
     public static synchronized MithrilDBHelper getHelper(Context context) {
@@ -871,11 +869,11 @@ public class MithrilDBHelper extends SQLiteOpenHelper {
         double totalCount = 0.0;
         for (String packagePermission : requestedPermissions) {
 //            Log.d(MithrilAC.getDebugTag(), "protection level"+findPermissionsProtectionLevelByName(db, packagePermission));
-            if(findPermissionsProtectionLevelByName(db, packagePermission).equals("dangerous"))
+            if (findPermissionsProtectionLevelByName(db, packagePermission).equals("dangerous"))
                 dangerCount += 1.0;
             totalCount += 1.0;
         }
-        return dangerCount/totalCount;
+        return dangerCount / totalCount;
     }
 
     private PermData getPermData(PackageManager packageManager, String groupName, PermissionInfo permissionInfo) {
@@ -1399,9 +1397,9 @@ public class MithrilDBHelper extends SQLiteOpenHelper {
                     feedbackList.add(
                             new Feedback(
                                     new Timestamp(cursor.getLong(0)),
-                                    cursor.getInt(0),
                                     cursor.getInt(1),
-                                    cursor.getInt(2)
+                                    cursor.getInt(2),
+                                    cursor.getInt(3)
                             )
                     );
                 } while (cursor.moveToNext());
@@ -3262,6 +3260,59 @@ public class MithrilDBHelper extends SQLiteOpenHelper {
         } catch (SQLException e) {
             throw new SQLException("Exception " + e + " error updating Context: " + policyRule.getPolicyId());
         }
+    }
+
+    public Pair<Integer, Integer> findAllViolationsCreatedAfterTime(SQLiteDatabase db, Timestamp uploadTime) {
+        // Select Violation Query
+        String selectQuery = "SELECT " +
+                getViolationsLogTableName() + "." + VIOLATIONASKED + ", " +
+                getViolationsLogTableName() + "." + VIOLATIONTRUEFALSE +
+                " FROM " + getViolationsLogTableName() +
+                " WHERE " + getViolationsLogTableName() + "." + VIOLATIONDETECTTIME + " > " + uploadTime.getTime() +
+                " ORDER BY " + getViolationsLogTableName() + "." + VIOLATIONDETECTTIME + " DESC  " +
+                ";";
+
+        int tvcnt = 0;
+        int fvcnt = 0;
+        Cursor cursor = db.rawQuery(selectQuery, null);
+        try {
+            if (cursor.moveToFirst()) {
+                do {
+                    if(cursor.getInt(0) == 1) {
+                        if (cursor.getInt(1) == 1)
+                            tvcnt++;
+                        else
+                            fvcnt++;
+                    }
+                } while (cursor.moveToNext());
+            }
+        } catch (SQLException e) {
+            throw new SQLException("Could not find " + e);
+        } finally {
+            cursor.close();
+        }
+        return new Pair<>(tvcnt, fvcnt);
+    }
+
+    public Timestamp findLastFeedbackTime(SQLiteDatabase db) {
+        // Select AppData Query
+        String selectQuery = "SELECT " +
+                getFeedbackStatsTableName() + "." + FEEDBACKTIME +
+                " FROM " + getFeedbackStatsTableName() +
+                " ORDER BY " + getFeedbackStatsTableName() + "." + FEEDBACKTIME +
+                " DESC LIMIT 1;";
+
+        Cursor cursor = db.rawQuery(selectQuery, null);
+        try {
+            if (cursor.moveToFirst()) {
+                return new Timestamp(cursor.getLong(0));
+            }
+        } catch (SQLException e) {
+            throw new SQLException("Could not find " + e);
+        } finally {
+            cursor.close();
+        }
+        return new Timestamp(0);
     }
     //-----------------------------------------------------------------------------------------------------------------------------------------------------------------
     // End of CRUD methods

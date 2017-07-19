@@ -9,6 +9,7 @@ import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.util.Pair;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.inputmethod.EditorInfo;
@@ -42,7 +43,10 @@ import java.util.Map;
 import edu.umbc.ebiquity.mithril.MithrilAC;
 import edu.umbc.ebiquity.mithril.R;
 import edu.umbc.ebiquity.mithril.data.dbhelpers.MithrilDBHelper;
+import edu.umbc.ebiquity.mithril.data.model.Feedback;
 import edu.umbc.ebiquity.mithril.data.model.Upload;
+import edu.umbc.ebiquity.mithril.data.model.rules.PolicyRule;
+import edu.umbc.ebiquity.mithril.data.model.rules.Violation;
 
 public class FeedbackActivity extends AppCompatActivity {
     private RadioGroup fq1RadioGroup;
@@ -412,20 +416,41 @@ public class FeedbackActivity extends AppCompatActivity {
         feedbackDataUploaderMap.put(questionId, String.valueOf(rating));
     }
 
+
     private void startUpload() {
         if (getUid() != null) {
-            saveTheDataWeAreUploading();
-            databaseReference.child(MithrilAC.getMithrilFirebaseServerKeyUsers()).child(getUid()).child(String.valueOf(System.currentTimeMillis())).setValue(feedbackDataUploaderMap);
+            Timestamp uploadTime = new Timestamp(System.currentTimeMillis());
+            saveTheDataWeAreUploading(uploadTime);
+            saveFeedbackInfo(uploadTime);
+
+            addToDataUploader(MithrilDBHelper.getHelper(this).findAllFeedbacks(mithrilDB), "feedbackstats");
+            databaseReference.child(MithrilAC.getMithrilFirebaseServerKeyUsers()).child(getUid()).child(String.valueOf(uploadTime)).setValue(feedbackDataUploaderMap);
         } else {
             signInAnonymously();//databaseReference.child(getUid()).child(String.valueOf(System.currentTimeMillis())).setValue(feedbackDataUploaderMap));
         }
     }
 
-    private void saveTheDataWeAreUploading() {
+    private void saveFeedbackInfo(Timestamp uploadTime) {
+        Timestamp afterTime = MithrilDBHelper.getHelper(this).findLastFeedbackTime(mithrilDB);
+        Pair<Integer, Integer> violationTVFVCnts = MithrilDBHelper.getHelper(this).findAllViolationsCreatedAfterTime(mithrilDB, afterTime);
+        MithrilDBHelper.getHelper(this).addFeedback(
+                mithrilDB,
+                new Feedback(
+                        uploadTime,
+                        violationTVFVCnts.first,
+                        violationTVFVCnts.second,
+                        MithrilDBHelper.getHelper(this).findEveryPolicy(mithrilDB).size()
+                )
+        );
+    }
+
+    private void saveTheDataWeAreUploading(Timestamp uploadTime) {
         //Store the uploaded data in the database
         try {
-            JSONRequest feedbackJsonRequest = new JSONRequest(feedbackDataUploaderMap, getUid() + System.currentTimeMillis());
-            MithrilDBHelper.getHelper(this).addUpload(mithrilDB, new Upload(new Timestamp(System.currentTimeMillis()),
+            JSONRequest feedbackJsonRequest = new JSONRequest(feedbackDataUploaderMap, getUid() + uploadTime);
+            MithrilDBHelper.getHelper(this).addUpload(
+                    mithrilDB,
+                    new Upload(uploadTime,
                     feedbackJsonRequest.getRequest().toString()));
         } catch (JSONException aJSONException) {
             Log.e(MithrilAC.getDebugTag(), "Exception in creating JSON " + aJSONException.getMessage());
