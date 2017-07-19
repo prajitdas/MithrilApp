@@ -745,7 +745,7 @@ public class MithrilDBHelper extends SQLiteOpenHelper {
                 PackageManager.GET_PERMISSIONS;
 
         for (PackageInfo pack : packageManager.getInstalledPackages(flags)) {
-            Log.d(MithrilAC.getDebugTag(), "data"+pack.packageName+pack.applicationInfo.flags);
+//            Log.d(MithrilAC.getDebugTag(), "data"+pack.packageName+pack.applicationInfo.flags);
             if ((pack.applicationInfo.flags) != 1) {
                 try {
                     AppData tempAppData = new AppData();
@@ -754,7 +754,7 @@ public class MithrilDBHelper extends SQLiteOpenHelper {
                         try {
                             tempAppData.setAppDescription(pack.applicationInfo.loadDescription(packageManager).toString());
                         } catch (Exception e) {
-                            Log.d(MithrilAC.getDebugTag(), e.getMessage());
+//                            Log.d(MithrilAC.getDebugTag(), e.getMessage());
                             tempAppData.setAppDescription(MithrilAC.getDefaultDescription());
                         }
                         //App target SDK version
@@ -848,7 +848,7 @@ public class MithrilDBHelper extends SQLiteOpenHelper {
                             tempAppData.setPermissions(requestedPermissionsMap);
                         }
                     }
-                    Log.d(MithrilAC.getDebugTag(), "data"+pack.packageName+pack.applicationInfo.flags);
+//                    Log.d(MithrilAC.getDebugTag(), "data"+pack.packageName+pack.applicationInfo.flags);
 
                     //Insert an app into database
                     long appId = addApp(db, tempAppData);
@@ -861,8 +861,8 @@ public class MithrilDBHelper extends SQLiteOpenHelper {
 //				} catch (ClassCastException e){
 //					Log.d(MithrilAC.getDebugTag(), e.getMessage());
                 } catch (Exception e) {
-                    Log.d(MithrilAC.getDebugTag(), "data"+pack.packageName+pack.applicationInfo.flags);
-                    Log.d(MithrilAC.getDebugTag(), e.getMessage());
+//                    Log.d(MithrilAC.getDebugTag(), "data"+pack.packageName+pack.applicationInfo.flags);
+//                    Log.d(MithrilAC.getDebugTag(), e.getMessage());
                 }
             }
         }
@@ -872,7 +872,7 @@ public class MithrilDBHelper extends SQLiteOpenHelper {
         double dangerCount = 0.0;
         double totalCount = 0.0;
         for (String packagePermission : requestedPermissions) {
-            Log.d(MithrilAC.getDebugTag(), "protection level"+findPermissionsProtectionLevelByName(db, packagePermission));
+//            Log.d(MithrilAC.getDebugTag(), "protection level"+findPermissionsProtectionLevelByName(db, packagePermission));
             if(findPermissionsProtectionLevelByName(db, packagePermission).equals("dangerous"))
                 dangerCount += 1.0;
             totalCount += 1.0;
@@ -932,7 +932,7 @@ public class MithrilDBHelper extends SQLiteOpenHelper {
         else if (permissionInfo.name.equals(Manifest.permission.ACCESS_NOTIFICATIONS))
             tempPermData.setOp(25);
 
-        Log.d(MithrilAC.getDebugTag(), "Permission: " + permissionInfo.name + " opcode: " + AppOpsManager.permissionToOpCode(permissionInfo.name));
+//        Log.d(MithrilAC.getDebugTag(), "Permission: " + permissionInfo.name + " opcode: " + AppOpsManager.permissionToOpCode(permissionInfo.name));
 
         return tempPermData;
     }
@@ -993,7 +993,6 @@ public class MithrilDBHelper extends SQLiteOpenHelper {
         values.put(APPTARGETSDKVERSION, anAppData.getTargetSdkVersion());
         values.put(APPICON, getBitmapAsByteArray(anAppData.getIcon()));
         values.put(APPNAME, anAppData.getAppName());
-        Log.d(MithrilAC.getDebugTag(), anAppData.getAppName());
         values.put(APPPACKAGENAME, anAppData.getPackageName());
         values.put(APPVERSIONINFO, anAppData.getVersionInfo());
         if (anAppData.isInstalled())
@@ -1648,7 +1647,7 @@ public class MithrilDBHelper extends SQLiteOpenHelper {
                 } while (cursor.moveToNext());
             }
         } catch (SQLException e) {
-            Log.d(MithrilAC.getDebugTag(), "Could not find " + e.getMessage());
+            Log.e(MithrilAC.getDebugTag(), "Could not find " + e.getMessage());
             return null;
         } finally {
             cursor.close();
@@ -1689,7 +1688,7 @@ public class MithrilDBHelper extends SQLiteOpenHelper {
                 } while (cursor.moveToNext());
             }
         } catch (SQLException e) {
-            Log.d(MithrilAC.getDebugTag(), "Could not find " + e.getMessage());
+            Log.e(MithrilAC.getDebugTag(), "Could not find " + e.getMessage());
             return null;
         } finally {
             cursor.close();
@@ -2130,7 +2129,6 @@ public class MithrilDBHelper extends SQLiteOpenHelper {
                 getViolationsLogTableName() + "." + VIOLATIONDETECTTIME + " DESC  " +
                 ";";
 
-        Log.d(MithrilAC.getDebugTag(), selectQuery);
         List<Violation> violations = new ArrayList<>();
         Cursor cursor = db.rawQuery(selectQuery, null);
         try {
@@ -3110,7 +3108,7 @@ public class MithrilDBHelper extends SQLiteOpenHelper {
                 String.valueOf(aPolicyRule.getOp())
         };
 
-        Log.d(MithrilAC.getDebugTag(), "policy:" + aPolicyRule.getPolicyId() + " " + aPolicyRule.getAppId() + " " + oldid + " " + aPolicyRule.getOp());
+//        Log.d(MithrilAC.getDebugTag(), "policy:" + aPolicyRule.getPolicyId() + " " + aPolicyRule.getAppId() + " " + oldid + " " + aPolicyRule.getOp());
         try {
             return db.update(getPolicyRulesTableName(),
                     values,

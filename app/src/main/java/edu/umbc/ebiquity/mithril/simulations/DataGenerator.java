@@ -24,7 +24,8 @@ public class DataGenerator {
 
     public static void setPolicy(SQLiteDatabase mithrilDB, Context context, AppData app) throws SemanticInconsistencyException {
         Log.d(MithrilAC.getDebugTag(), "app name:"+app.getAppName());
-        permValues = MithrilDBHelper.getHelper(context).findDefaultRulesForAppCategory(mithrilDB, app.getAppCategory());
+        if(permValues.size() == 0)
+            permValues = MithrilDBHelper.getHelper(context).findDefaultRulesForAppCategory(mithrilDB, app.getAppCategory());
         getPoliciesForCategory();
         int policyId = MithrilDBHelper.getHelper(context).findMaxPolicyId(mithrilDB);
         if (policyId == -1)
@@ -155,7 +156,7 @@ public class DataGenerator {
     }
 
     private static void getPoliciesForCategory() {
-        permActionMap.clear();
+//        permActionMap.clear();
         getMessagesPolicies();
         getContactsPolicies();
         getMediaPolicies();
