@@ -27,6 +27,16 @@ public class MithrilAC extends Application {
     public static final int SYSTEM_ALERT_WINDOW_PERMISSION_REQUEST_CODE = 4;
     public static final int SUCCESS_RESULT = 6;
     public static final int FAILURE_RESULT = 7;
+    public static final int APP_INSTALL_REQUEST_CODES_1 = 1;
+    public static final int APP_INSTALL_REQUEST_CODES_2 = 2;
+    public static final int APP_INSTALL_REQUEST_CODES_3 = 3;
+    public static final int APP_INSTALL_REQUEST_CODES_4 = 4;
+    public static final int APP_INSTALL_REQUEST_CODES_5 = 5;
+    public static final int APP_INSTALL_REQUEST_CODES_6 = 6;
+    public static final int APP_INSTALL_REQUEST_CODES_7 = 7;
+    public static final int APP_INSTALL_REQUEST_CODES_8 = 8;
+    public static final int APP_INSTALL_REQUEST_CODES_9 = 9;
+    public static final int APP_INSTALL_REQUEST_CODES_10 = 10;
     public static final String MITHRIL_APP_PACKAGE_NAME = "edu.umbc.ebiquity.mithril";
     public static final String PHONE_NOT_ROOTED_MITHRIL_BYE_BYE_MESSAGE = "Your phone is not rooted\nMithril won't work on this device\nSorry and thanks for participating in our survey";
     public static final String MITHRIL_BYE_BYE_MESSAGE = "Bye! Thanks for helping with our survey...";
@@ -87,16 +97,8 @@ public class MithrilAC extends Application {
     private static final String FEEDBACK_URL = "http://104.154.36.223/bot/feedback/";
     private static final String RANDOM_USER_ID = "randomUserId";
     private static final String APP_CATEGORY_UNKNOWN = "unknownAppCategory";
-
-    public static List<String> getAppCatsForTest() {
-        return APP_CATS_FOR_TEST;
-    }
-
-    public static List<String> getAPPS() {
-        return APPS;
-    }
-
-    private static final List<String> APPS = new ArrayList<String>() {
+    private static final String APPS_INSTALLED = "appsInstalled";
+    private static final List<String> APP_PACKAGE_NAMES = new ArrayList<String>() {
         {
             add(new String("com.augmentedminds.waveAlarm"));
             add(new String("com.anrapps.pixelbatterysaver"));
@@ -108,6 +110,20 @@ public class MithrilAC extends Application {
             add(new String("com.instagram.android"));
             add(new String("com.redstamp.android"));
             add(new String("com.google.android.apps.photos"));
+        }
+    };
+    private static final List<String> APP_NAMES = new ArrayList<String>() {
+        {
+            add(new String("Wave Alarm - Alarm Clock"));
+            add(new String("Pixel OFF Save Battery AMOLED"));
+            add(new String("Droid48"));
+            add(new String("Hangouts Meet"));
+            add(new String("WhatsApp Messenger"));
+            add(new String("Messenger"));
+            add(new String("Messenger for Facebook"));
+            add(new String("Instagram"));
+            add(new String("Red Stamp Cards"));
+            add(new String("Google Photos"));
         }
     };
     private static final List<String> APP_CATS_FOR_TEST = new ArrayList<String>() {
@@ -1185,6 +1201,22 @@ public class MithrilAC extends Application {
     private static final String USED_RESOURCES = "usedResources";
     private static final String CURRENT_PACKAGE_NAME = "currentPackageName";
     private static int POLICY_ID;
+
+    public static List<String> getAppPackageNames() {
+        return APP_PACKAGE_NAMES;
+    }
+
+    public static List<String> getAppNames() {
+        return APP_NAMES;
+    }
+
+    public static String getAppsInstalled() {
+        return APPS_INSTALLED;
+    }
+
+    public static List<String> getAppCatsForTest() {
+        return APP_CATS_FOR_TEST;
+    }
 
     public static String getPrefBossPresenceKey() {
         return PREF_BOSS_PRESENCE_KEY;

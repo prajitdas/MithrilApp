@@ -1,0 +1,129 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:theme="@style/FullscreenTheme"
+    tools:context=".ui.activities.InstallAppsActivity">
+
+    <TextView
+        android:id="@+id/genericAppInstallTextView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentTop="true"
+        android:layout_marginBottom="@dimen/fab_margin"
+        android:layout_marginTop="@dimen/fab_margin"
+        android:text="@string/please_install"
+        android:textAlignment="center"
+        android:textAppearance="@android:style/TextAppearance.Holo.Medium"
+        android:textColor="@color/colorPrimaryDark"
+        android:textSize="20sp"
+        android:textStyle="italic" />
+
+    <Button
+        android:id="@+id/installApp1Button"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/genericAppInstallTextView"
+        android:textSize="14sp"
+        android:theme="@style/AppTheme.Button" />
+
+    <Button
+        android:id="@+id/installApp2Button"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/installApp1Button"
+        android:textSize="14sp"
+        android:theme="@style/AppTheme.Button" />
+
+    <Button
+        android:id="@+id/installApp3Button"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/installApp2Button"
+        android:textSize="14sp"
+        android:theme="@style/AppTheme.Button" />
+
+    <Button
+        android:id="@+id/installApp4Button"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/installApp3Button"
+        android:textSize="14sp"
+        android:theme="@style/AppTheme.Button" />
+
+    <Button
+        android:id="@+id/installApp5Button"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/installApp4Button"
+        android:textSize="14sp"
+        android:theme="@style/AppTheme.Button" />
+
+    <Button
+        android:id="@+id/installApp6Button"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/installApp5Button"
+        android:textSize="14sp"
+        android:theme="@style/AppTheme.Button" />
+
+    <Button
+        android:id="@+id/installApp7Button"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/installApp6Button"
+        android:textSize="14sp"
+        android:theme="@style/AppTheme.Button" />
+
+    <Button
+        android:id="@+id/installApp8Button"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/installApp7Button"
+        android:textSize="14sp"
+        android:theme="@style/AppTheme.Button" />
+
+    <Button
+        android:id="@+id/installApp9Button"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/installApp8Button"
+        android:textSize="14sp"
+        android:theme="@style/AppTheme.Button" />
+
+    <Button
+        android:id="@+id/installApp10Button"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/installApp9Button"
+        android:textSize="14sp"
+        android:theme="@style/AppTheme.Button" />
+
+    <Button
+        android:id="@+id/doneButtonInstallApps"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/quitAppButtonInInstallApps"
+        android:background="@color/colorButton"
+        android:text="@string/done_installing_label"
+        android:theme="@style/AppTheme.Button" />
+
+    <Button
+        android:id="@+id/quitAppButtonInInstallApps"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:background="@color/colorButton"
+        android:text="@string/quit_app_label"
+        android:theme="@style/AppTheme.Button" />
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_above="@+id/quitAppButtonInInstallApps"
+        android:background="@color/colorDivider" />
+
+</RelativeLayout>

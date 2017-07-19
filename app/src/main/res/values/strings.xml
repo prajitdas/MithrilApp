@@ -68,6 +68,7 @@
     <string name="dialog_resp_delete">Yes</string>
     <string name="dialog_resp_NO">No</string>
 
+    <string name="please_install">Please install below apps for our user-study</string>
     <string name="mithrilac_requires">Mithril requires access to</string>
     <string name="allow_generic_permissions">Location, Storage and Calendar</string>
     <string name="allow_special_usage_stats_permission">App usage stats</string>
@@ -282,20 +283,21 @@
     <string name="title_activity_setup_timefences">Timefences setup&#8230;</string>
     <string name="title_activity_feedback">Request for feedback</string>
     <string name="title_activity_display_upload_data">Uploaded data</string>
-
+    <string name="title_activity_install_apps">Install apps</string>
     <string name="title_bottom_navigation_location">Location</string>
+    <string name="title_bottom_navigation_temporal">Temporal</string>
+    <string name="title_bottom_navigation_presence_related">Presence</string>
+    <string name="title_bottom_navigation_activity">Activity</string>
+
     <string name="text_instance_creation_location">location context</string>
     <string name="tooltip_location">Add locations that are vital to your policies, like home and work locations</string>
 
-    <string name="title_bottom_navigation_temporal">Temporal</string>
     <string name="text_instance_creation_temporal">temporal context</string>
     <string name="tooltip_temporal">Add temporal constraints based on which your policies might change, like do-not-disturb hours or work hours</string>
 
-    <string name="title_bottom_navigation_presence_related">Presence</string>
     <string name="text_instance_creation_presence_related">presence context</string>
     <string name="tooltip_presence_related">Add people with respect to whom you want to add some policies, like your supervisor or colleague</string>
 
-    <string name="title_bottom_navigation_activity">Activity</string>
     <string name="text_instance_creation_activity">activity context</string>
     <string name="tooltip_activity">Add activities for which you want to add some policies, like watching movies or in gym</string>
 
@@ -336,6 +338,7 @@
     <string name="app_name_label">App</string>
     <string name="user_accepts_button_label">Accept</string>
     <string name="user_declines_button_label">Decline</string>
+    <string name="done_installing_label">Done installing</string>
     <string name="quit_app_label">Quit app</string>
     <string name="fullscreen_user_agreement_consent_text">Welcome!\nPlease click \"Continue\" to read the user agreement &amp; study details&#8230;</string>
     <string name="user_agreement_information_text">We collect anonymous feedback about your privacy preferences.</string>
@@ -428,5 +431,5 @@
     <string name="app_ops_running">Running</string>
     <!-- [CHAR LIMIT=NONE] Time label for an operation that has never executed. -->
     <string name="app_ops_never_used">(Never used)</string>
-    <string name="section_format">Hello World from section: %1$d</string>
+    <!--<string name="section_format">Hello World from section: %1$d</string>-->
 </resources>

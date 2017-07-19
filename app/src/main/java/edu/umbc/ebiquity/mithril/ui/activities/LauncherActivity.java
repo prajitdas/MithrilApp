@@ -57,16 +57,21 @@ public class LauncherActivity extends AppCompatActivity {
                     sharedPreferences.contains(MithrilAC.getPrefKeyPresInstancesCreated()) &&
                     sharedPreferences.contains(MithrilAC.getPrefKeyActiInstancesCreated()) &&
                     sharedPreferences.contains(MithrilAC.getPrefKeyTimeInstancesCreated()) &&
+                    sharedPreferences.contains(MithrilAC.getAppsInstalled()) &&
                     sharedPreferences.getBoolean(MithrilAC.getPrefKeyLocaInstancesCreated(), false) &&
                     sharedPreferences.getBoolean(MithrilAC.getPrefKeyPresInstancesCreated(), false) &&
                     sharedPreferences.getBoolean(MithrilAC.getPrefKeyActiInstancesCreated(), false) &&
-                    sharedPreferences.getBoolean(MithrilAC.getPrefKeyTimeInstancesCreated(), false))
+                    sharedPreferences.getBoolean(MithrilAC.getPrefKeyTimeInstancesCreated(), false) &&
+                    sharedPreferences.getBoolean(MithrilAC.getAppsInstalled(), false))
                 startNextActivity(this, CoreActivity.class);
             else
                 startNextActivity(this, InstanceCreationActivity.class);
-        } else if (sharedPreferences.contains(MithrilAC.getPrefKeyUserConsent()) &&
-                sharedPreferences.getBoolean(MithrilAC.getPrefKeyUserConsent(), false))
+        } else if (sharedPreferences.contains(MithrilAC.getAppsInstalled()) &&
+                sharedPreferences.getBoolean(MithrilAC.getAppsInstalled(), false))
             startNextActivity(this, PermissionAcquisitionActivity.class);
+        else if (sharedPreferences.contains(MithrilAC.getPrefKeyUserConsent()) &&
+                sharedPreferences.getBoolean(MithrilAC.getPrefKeyUserConsent(), false))
+            startNextActivity(this, InstallAppsActivity.class);
         else if (sharedPreferences.contains(MithrilAC.getPrefKeyUserContinueClicked()) &&
                 sharedPreferences.getBoolean(MithrilAC.getPrefKeyUserContinueClicked(), false))
             startNextActivity(this, ShowUserAgreementActivity.class);

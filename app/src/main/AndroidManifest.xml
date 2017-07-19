@@ -138,6 +138,10 @@
             android:label="@string/title_activity_show_user_agreement"
             android:theme="@style/FullscreenTheme" />
         <activity
+            android:name=".ui.activities.InstallAppsActivity"
+            android:label="@string/title_activity_install_apps"
+            android:theme="@style/FullscreenTheme" />
+        <activity
             android:name=".ui.activities.PermissionAcquisitionActivity"
             android:label="@string/title_activity_permission_acquisition"
             android:theme="@style/FullscreenTheme" />
@@ -276,12 +280,12 @@
             android:enabled="true"
             android:exported="false" />
 
-        <service
-            android:name=".util.services.AppLaunchDetectorService"
-            android:enabled="true"
-            android:exported="false"
-            android:icon="@mipmap/ic_launcher"
-            android:label="@string/mithril_service_name" />
+        <!--<service-->
+        <!--android:name=".util.services.AppLaunchDetectorService"-->
+        <!--android:enabled="true"-->
+        <!--android:exported="false"-->
+        <!--android:icon="@mipmap/ic_launcher"-->
+        <!--android:label="@string/mithril_service_name" />-->
         <!-- <service -->
         <!-- android:name=".util.services.LocationUpdateService" -->
         <!-- android:enabled="true" -->
@@ -295,11 +299,11 @@
             android:exported="false" />
         <service
             android:name=".util.services.ExecuteRulesIntentService"
+            android:enabled="true"
             android:exported="false" />
         <service
             android:name=".util.services.ViolationDetectionService"
             android:enabled="true"
-            android:exported="true"></service>
+            android:exported="false" />
     </application>
-
 </manifest>

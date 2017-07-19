@@ -133,7 +133,7 @@ public class ShowUserAgreementActivity extends AppCompatActivity {
                 editor.putBoolean(MithrilAC.getPrefKeyUserConsent(), true);
                 editor.apply();
                 // User has agreed, ask for permissions
-                startNextActivity(v.getContext(), PermissionAcquisitionActivity.class);
+                startNextActivity(v.getContext(), InstallAppsActivity.class);
             }
         });
         mIDisagreeBtn.setOnClickListener(new View.OnClickListener() {

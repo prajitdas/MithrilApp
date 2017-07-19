@@ -691,11 +691,9 @@ public class MithrilDBHelper extends SQLiteOpenHelper {
          * communication -> com.whatsapp, com.facebook.orca
          */
         List<AppData> apps = findAllApps(db);
-        for (AppData app : apps) {
-            if (MithrilAC.getAPPS().contains(app.getPackageName())) {
+        for (AppData app : apps)
+            if (MithrilAC.getAppPackageNames().contains(app.getPackageName()))
                 DataGenerator.setPolicy(db, context, app);
-            }
-        }
         //We have to get the policies from somewhere. The best case scenario would be a server that gives us the policies.
 //        if (BuildConfig.DEBUG)
 //            loadDefaultDataIntoDB(db);
