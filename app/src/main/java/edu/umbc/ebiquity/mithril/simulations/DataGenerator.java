@@ -23,6 +23,7 @@ public class DataGenerator {
     private static Map<String, Action> permActionMap = new HashMap<>();
 
     public static void setPolicy(SQLiteDatabase mithrilDB, Context context, AppData app) throws SemanticInconsistencyException {
+        Log.d(MithrilAC.getDebugTag(), "app name:"+app.getAppName());
         permValues = MithrilDBHelper.getHelper(context).findDefaultRulesForAppCategory(mithrilDB, app.getAppCategory());
         getPoliciesForCategory();
         int policyId = MithrilDBHelper.getHelper(context).findMaxPolicyId(mithrilDB);
