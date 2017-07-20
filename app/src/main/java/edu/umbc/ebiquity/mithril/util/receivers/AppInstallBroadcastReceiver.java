@@ -173,11 +173,11 @@ public class AppInstallBroadcastReceiver extends BroadcastReceiver {
         double dangerCount = 0.0;
         double totalCount = 0.0;
         for (String packagePermission : requestedPermissions) {
-            if(MithrilDBHelper.getHelper(context).findPermissionsProtectionLevelByName(mithrilDB, packagePermission) == "dangerous")
+            if (MithrilDBHelper.getHelper(context).findPermissionsProtectionLevelByName(mithrilDB, packagePermission) == "dangerous")
                 dangerCount += 1.0;
             totalCount += 1.0;
         }
-        return dangerCount/totalCount;
+        return dangerCount / totalCount;
     }
 
     private void initDB(Context context) {

@@ -3278,7 +3278,7 @@ public class MithrilDBHelper extends SQLiteOpenHelper {
         try {
             if (cursor.moveToFirst()) {
                 do {
-                    if(cursor.getInt(0) == 1) {
+                    if (cursor.getInt(0) == 1) {
                         if (cursor.getInt(1) == 1)
                             tvcnt++;
                         else

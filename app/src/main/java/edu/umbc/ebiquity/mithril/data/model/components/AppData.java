@@ -19,15 +19,6 @@ public class AppData implements Comparable<AppData> {
     private String versionInfo;
     private boolean installed;
     private String appType;
-
-    public double getRisk() {
-        return risk;
-    }
-
-    public void setRisk(double risk) {
-        this.risk = risk;
-    }
-
     private double risk;
     private int uid;
     private boolean adLibraryUsed; // This information should either come from PrivacyGrade or it should be extracted
@@ -40,7 +31,6 @@ public class AppData implements Comparable<AppData> {
     private String requesterReviewCount; // review_count
     private String requesterReviewRating; // review_rating
     private String requesterUsageCount;    // installs
-
     public AppData(String appDescription,
                    String appCategory,
                    int targetSdkVersion,
@@ -63,8 +53,15 @@ public class AppData implements Comparable<AppData> {
         setRisk(risk);
         permissions = new HashMap<>();
     }
-
     public AppData() {
+    }
+
+    public double getRisk() {
+        return risk;
+    }
+
+    public void setRisk(double risk) {
+        this.risk = risk;
     }
 
     public String getAppDescription() {

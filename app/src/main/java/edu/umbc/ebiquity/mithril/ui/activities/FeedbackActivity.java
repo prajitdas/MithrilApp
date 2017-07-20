@@ -45,8 +45,6 @@ import edu.umbc.ebiquity.mithril.R;
 import edu.umbc.ebiquity.mithril.data.dbhelpers.MithrilDBHelper;
 import edu.umbc.ebiquity.mithril.data.model.Feedback;
 import edu.umbc.ebiquity.mithril.data.model.Upload;
-import edu.umbc.ebiquity.mithril.data.model.rules.PolicyRule;
-import edu.umbc.ebiquity.mithril.data.model.rules.Violation;
 
 public class FeedbackActivity extends AppCompatActivity {
     private RadioGroup fq1RadioGroup;
@@ -451,7 +449,7 @@ public class FeedbackActivity extends AppCompatActivity {
             MithrilDBHelper.getHelper(this).addUpload(
                     mithrilDB,
                     new Upload(uploadTime,
-                    feedbackJsonRequest.getRequest().toString()));
+                            feedbackJsonRequest.getRequest().toString()));
         } catch (JSONException aJSONException) {
             Log.e(MithrilAC.getDebugTag(), "Exception in creating JSON " + aJSONException.getMessage());
         }

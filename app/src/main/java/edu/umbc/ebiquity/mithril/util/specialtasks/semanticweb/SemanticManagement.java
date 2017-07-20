@@ -20,7 +20,6 @@ import org.semanticweb.owlapi.model.OWLOntology;
 import org.semanticweb.owlapi.model.OWLOntologyChange;
 import org.semanticweb.owlapi.model.OWLOntologyCreationException;
 import org.semanticweb.owlapi.model.OWLOntologyManager;
-import org.semanticweb.owlapi.model.RemoveAxiom;
 import org.semanticweb.owlapi.reasoner.InferenceType;
 import org.semanticweb.owlapi.reasoner.Node;
 import org.semanticweb.owlapi.reasoner.NodeSet;
@@ -222,26 +221,6 @@ public class SemanticManagement {
         manager.applyChanges(changeList);
     }
 
-    public void doTest(int reasoner_type, int ontology_id) throws Exception {
-
-        // String aQuery = "yearValue value 1998";
-        // String aQuery =
-        // "hasDateTime some dateTime[>=\"2002-10-10T17:10:00Z\"^^dateTime]";
-        // String aQuery = "hasDate some date[>=\"2002-10-10+13:00\"^^date]";
-        // Log.i(Mithril.getDebugTag(), String.format("Querying [%s]...", aQuery));
-        // startTime = System.nanoTime();
-        // for (OWLClass clase : queryEngine.getSuperClasses(aQuery, false)) {
-        // Log.i(Mithril.getDebugTag(), clase.toString());
-        // }
-        // for (OWLNamedIndividual individual : queryEngine.getInstances(aQuery,
-        // false)) {
-        // Log.i(Mithril.getDebugTag(), individual.toString());
-        // }
-        // finishTime = System.nanoTime();
-        // Log.i(Mithril.getDebugTag(), "... has runned for " + (finishTime - startTime) / 1e9 +
-        // " seconds");
-    }
-
     public void finish() {
         queryEngine.dispose();
         queryEngine = null;
@@ -268,13 +247,33 @@ public class SemanticManagement {
         return new DLQueryEngine(reasoner, new SimpleShortFormProvider());
     }
 
+//    public void doTest(int reasoner_type, int ontology_id) throws Exception {
+//
+//        String aQuery = "yearValue value 1998";
+//        String aQuery =
+//                "hasDateTime some dateTime[>=\"2002-10-10T17:10:00Z\"^^dateTime]";
+//        String aQuery = "hasDate some date[>=\"2002-10-10+13:00\"^^date]";
+//        Log.i(MithrilAC.getDebugTag(), String.format("Querying [%s]...", aQuery));
+//        startTime = System.nanoTime();
+//        for (OWLClass clase : queryEngine.getSuperClasses(aQuery, false)) {
+//            Log.i(MithrilAC.getDebugTag(), clase.toString());
+//        }
+//        for (OWLNamedIndividual individual : queryEngine.getInstances(aQuery,
+//                false)) {
+//            Log.i(MithrilAC.getDebugTag(), individual.toString());
+//        }
+//        finishTime = System.nanoTime();
+//        Log.i(MithrilAC.getDebugTag(), "... has runned for " + (finishTime - startTime) / 1e9 +
+//                " seconds");
+//    }
+//
 //	public UserContextInformation enrichContext(UserContextInformation info,
 //			String BTContext) {
 //
 //		UserContextInformation newContext = new UserContextInformation();
 //		newContext.id = info.id;
 //
-//		Log.d(Mithril.getDebugTag(), "*-*-*-*-" + info.toString());
+//		Log.d(MithrilAC.getDebugTag(), "*-*-*-*-" + info.toString());
 //
 //		if (info.location == null) {
 //			info.location = "";
@@ -291,13 +290,13 @@ public class SemanticManagement {
 //		StrictMode.setThreadPolicy(policy);
 //
 //		// first I extract facts from my ontology
-////		Log("--> 0.1)Extracting facts from ontology", newContext);
+//		Log.d(MithrilAC.getDebugTag()+"--> 0.1)Extracting facts from ontology", newContext);
 //
-////		FactCollection fcOwn = extractFactsOntology();
+//		FactCollection fcOwn = extractFactsOntology();
 //
 //		// let me show you the result
-////		Log("\nThis is the content of the json file:", newContext);
-////		Log(fcOwn.toString(), newContext);
+//		Log(MithrilAC.getDebugTag()+"\nThis is the content of the json file:", newContext);
+//		Log(MithrilAC.getDebugTag()+fcOwn.toString(), newContext);
 //
 //		// I can even send this facts to other users with JSON
 //		// we use gson for JSON management
@@ -345,12 +344,12 @@ public class SemanticManagement {
 //		Log(fcBT.toString(), newContext);
 //
 //		List<ContextFact> finalcfs= new ArrayList<ContextFact>();
-//		
+//
 ////		// adding my own contextfact from ontology
 ////		cfs.addAll(fcOwn.contextFacts);
 ////		// adding my own contextfact from GUI
 ////		cfs.addAll(fcGUI.contextFacts);
-//		
+//
 //		// adding contextfact from URL
 ////		finalcfs.addAll(cfs);
 //		// adding my own contextfact from ontology
@@ -387,7 +386,7 @@ public class SemanticManagement {
 //				if(!f.subject.equalsIgnoreCase(user)){
 //					pen=2.0;
 //				}
-//				
+//
 //				// is this a location fact?
 //				if (f.predicate.equalsIgnoreCase("hasLocation")) {
 ////				if (f.subject.equalsIgnoreCase(user)
@@ -494,7 +493,7 @@ public class SemanticManagement {
 //
 //		return newContext;
 //	}
-
+//
 //	public FactCollection extractFactsGUI(UserContextInformation infoUser) {
 //
 //		FactCollection fc = new FactCollection();
@@ -560,13 +559,13 @@ public class SemanticManagement {
 //
 //	public static void Log(String text, UserContextInformation infoUser) {
 //
-//		Log.e(Mithril.getDebugTag(), text);
+//		Log.e(MithrilAC.getDebugTag(), text);
 //
 //		infoUser.info += text;
 //
 //	}
-
-    @SuppressWarnings("unused")
+//
+//    @SuppressWarnings("unused")
 //	private InputStream retrieveStream(String url) {
 //
 //		DefaultHttpClient client = new DefaultHttpClient();
@@ -595,36 +594,219 @@ public class SemanticManagement {
 //		return null;
 //
 //	}
-
-    /**
-     * Adds a fact to the ontology
-     *
-     * @param f
-     */
-    // public void addFact(Fact f){
-    //
-    // //for now we consider that the subject and object are individuals
-    // //and the predicate is an object property
-    //
-    // OWLIndividual Individual_subject = factory.getOWLNamedIndividual(IRI
-    // .create(ontology.toString() + "#"+f.subject));
-    //
-    // OWLObjectProperty Objectproperty_predicate = factory
-    // .getOWLObjectProperty(IRI.create(ontology.toString()
-    // + "#"+f.predicate));
-    //
-    // OWLIndividual Individual_object = factory.getOWLNamedIndividual(IRI
-    // .create(ontology.toString() + "#"+f.object));
-    //
-    //
-    // List<OWLOntologyChange> changeList = new ArrayList<OWLOntologyChange>();
-    //
-    // changeList.add(new AddAxiom(ontology, factory
-    // .getOWLObjectPropertyAssertionAxiom(Objectproperty_predicate,
-    // Individual_subject, Individual_object)));
-    //
-    // manager.applyChanges(changeList);
-    // }
+//
+//    /**
+//     * Adds a fact to the ontology
+//     *
+//     * @param f
+//     */
+//     public void addFact(Fact f){
+//
+//     //for now we consider that the subject and object are individuals
+//     //and the predicate is an object property
+//
+//     OWLIndividual Individual_subject = factory.getOWLNamedIndividual(IRI
+//     .create(ontology.toString() + "#"+f.subject));
+//
+//     OWLObjectProperty Objectproperty_predicate = factory
+//     .getOWLObjectProperty(IRI.create(ontology.toString()
+//     + "#"+f.predicate));
+//
+//     OWLIndividual Individual_object = factory.getOWLNamedIndividual(IRI
+//     .create(ontology.toString() + "#"+f.object));
+//
+//
+//     List<OWLOntologyChange> changeList = new ArrayList<OWLOntologyChange>();
+//
+//     changeList.add(new AddAxiom(ontology, factory
+//     .getOWLObjectPropertyAssertionAxiom(Objectproperty_predicate,
+//     Individual_subject, Individual_object)));
+//
+//     manager.applyChanges(changeList);
+//     }
+//
+//    public FactCollection extractFactsOntology() {
+//
+//        FactCollection fc = new FactCollection();
+//        fc.contextFacts = new ArrayList<ContextFact>();
+//
+//        // extracting users in the ontology
+//        List<String> users = getUsers();
+//
+//        Log.i(MithrilAC.getDebugTag(), users.toString());
+//
+//        for (String user : users) {
+//
+//            // extracting location facts
+//            try {
+//                ContextFact cf = new ContextFact();
+//                cf.source = "I";
+//                cf.confidence = 1.0;
+//                cf.device_name = "myDevice";
+//
+//                String locUser = bidiShortFormProvider.getShortForm(queryEngine
+//                        .getInstances("holds value " + user, true).iterator()
+//                        .next());
+//                Fact f = new Fact();
+//                f.subject = user;
+//                f.predicate = "hasLocation";
+//                f.object = locUser;
+//                cf.facts = new ArrayList<Fact>();
+//                cf.facts.add(f);
+//
+//                // add support
+//                Support s = new Support();
+//                s.confidence = 0.5;
+//
+//                cf.support = new ArrayList<Support>();
+//                cf.support.add(s);
+//
+//                fc.contextFacts.add(cf);
+//
+//            } catch (Exception e) {
+//                Log.i(MithrilAC.getDebugTag(), "I don't have location facts for user: " + user);
+//            }
+//
+//            // extracting activity facts
+//            try {
+//                ContextFact cf = new ContextFact();
+//                cf.source = "I";
+//                cf.confidence = 1.0;
+//                cf.device_name = "myDevice";
+//
+//                String actUser = bidiShortFormProvider.getShortForm(queryEngine
+//                        .getInstances("isPerformedBy value " + user, true)
+//                        .iterator().next());
+//                Fact f = new Fact();
+//                f.subject = user;
+//                f.predicate = "hasActivity";
+//                f.object = actUser;
+//                cf.facts = new ArrayList<Fact>();
+//                cf.facts.add(f);
+//
+//                // add support
+//                Support s = new Support();
+//                s.confidence = 0.5;
+//
+//                cf.support = new ArrayList<Support>();
+//                cf.support.add(s);
+//
+//                fc.contextFacts.add(cf);
+//
+//            } catch (Exception e) {
+//                Log.i(MithrilAC.getDebugTag(), "I don't have activity facts for user: " + user);
+//            }
+//        }
+//
+//        return fc;
+//    }
+//
+//    public String checkConsistencyLocation(TreeMap<String, Double> tm,
+//                                           String subject, String predicate) {
+//
+//        // first we generate the axioms for subject and predicate
+//        OWLIndividual Individual_subject = (OWLIndividual) bidiShortFormProvider
+//                .getEntity(subject);
+//        OWLObjectProperty Objectproperty_predicate = (OWLObjectProperty) bidiShortFormProvider
+//                .getEntity(predicate);
+//
+//        // now we try the object with the highest confidence
+//        String obj = tm.firstKey();
+//
+//        // Create axioms and materialize them in the ontology
+//        // then use reasoner to check consistency
+//        // **We are not using this right now...
+//        OWLIndividual Individual_object = (OWLIndividual)
+//                bidiShortFormProvider.getEntity(obj);
+//
+//        List<OWLOntologyChange> changeList = new
+//                ArrayList<OWLOntologyChange>();
+//
+//        changeList.add(new AddAxiom(ontology,
+//                factory.getOWLObjectPropertyAssertionAxiom(Objectproperty_predicate,
+//                        Individual_subject, Individual_object)));
+//
+//        Log.i(MithrilAC.getDebugTag(), changeList.toString());
+//
+//        manager.applyChanges(changeList);
+//
+////         Pellet can explain inconsistencies but we are using Jfact...
+//        if(!checkConsistency()){
+//
+//            GlassBoxExplanation.setup();
+//            SingleExplanationGenerator eg = new GlassBoxExplanation(ontology,
+//                    PelletReasonerFactory.getInstance());
+//            try {
+//                for (OWLAxiom ax : eg.getExplanation(factory.getOWLThing())) {
+//                    System.out.println(ax);
+//                }
+//            } catch (OWLRuntimeException ex) {
+//                System.out.println("cannot explain: " + ex.getMessage());
+//            }
+//        }
+//
+//        // remove the axiom
+//        manager.removeAxiom(ontology, changeList.get(0).getAxiom());
+//
+//        // **Instead we ''manually'' check consistency using the reasoner to
+//        // obtain
+//        // **if a location is inside another one
+//        List<OWLOntologyChange> finalChangeList = new ArrayList<OWLOntologyChange>();
+//        Set<OWLNamedIndividual> containers = queryEngine.getInstances(
+//                "isIn value " + obj, false);
+//        containers.addAll(queryEngine.getInstances("contains value " + obj,
+//                false));
+//
+//        String newLoc = obj;
+//
+//        for (String obj2 : tm.descendingKeySet()) {
+//            OWLIndividual Individual_object = (OWLIndividual) bidiShortFormProvider
+//                    .getEntity(obj2);
+//            if (obj.equalsIgnoreCase(obj2)) {
+//                // we check if this object is consistent with the current
+//                // ontology
+//                OWLNamedIndividual prevLoc = null;
+//                try {
+//                    prevLoc = queryEngine
+//                            .getInstances("holds value " + subject, true)
+//                            .iterator().next();
+//                } catch (Exception e) {
+//
+//                }
+//                if (prevLoc != null) {
+//                    Log.i(MithrilAC.getDebugTag(), "-*-*-*-*>>PrevLoc:" + prevLoc);
+//                    if (!isIn(bidiShortFormProvider.getShortForm(prevLoc),
+//                            containers)) {
+//                        // it was not consistent so we have to remove the
+//                        // previous axiom
+//                        // from ontology
+//                        finalChangeList.add(new RemoveAxiom(ontology, factory
+//                                .getOWLObjectPropertyAssertionAxiom(
+//                                        Objectproperty_predicate,
+//                                        Individual_subject, prevLoc)));
+//                    }
+//                }
+//
+//                finalChangeList.add(new AddAxiom(ontology, factory
+//                        .getOWLObjectPropertyAssertionAxiom(
+//                                Objectproperty_predicate, Individual_subject,
+//                                Individual_object)));
+//
+//            } else if (isIn(obj2, containers)) {
+//                // we check if obj and obj2 are consistent (that is obj2
+//                // contains obj1)
+//                finalChangeList.add(new AddAxiom(ontology, factory
+//                        .getOWLObjectPropertyAssertionAxiom(
+//                                Objectproperty_predicate, Individual_subject,
+//                                Individual_object)));
+//                newLoc = obj2;
+//            }
+//        }
+//
+//        return newLoc;
+//
+//        // return finalChangeList;
+//    }
 
     public TreeMap<String, Double> checkLocationFacts(
             ArrayList<String> locations, ArrayList<Double> confidences,
@@ -738,189 +920,6 @@ public class SemanticManagement {
         return sorted_map;
     }
 
-    public String checkConsistencyLocation(TreeMap<String, Double> tm,
-                                           String subject, String predicate) {
-
-        // first we generate the axioms for subject and predicate
-        OWLIndividual Individual_subject = (OWLIndividual) bidiShortFormProvider
-                .getEntity(subject);
-        OWLObjectProperty Objectproperty_predicate = (OWLObjectProperty) bidiShortFormProvider
-                .getEntity(predicate);
-
-        // now we try the object with the highest confidence
-        String obj = tm.firstKey();
-
-        // Create axioms and materialize them in the ontology
-        // then use reasoner to check consistency
-        // **We are not using this right now...
-        // OWLIndividual Individual_object = (OWLIndividual)
-        // bidiShortFormProvider.getEntity(obj);
-        //
-        // List<OWLOntologyChange> changeList = new
-        // ArrayList<OWLOntologyChange>();
-        //
-        // changeList.add(new AddAxiom(ontology,
-        // factory.getOWLObjectPropertyAssertionAxiom(Objectproperty_predicate,
-        // Individual_subject, Individual_object)));
-        //
-        // Log.i(Mithril.getDebugTag(), changeList.toString());
-        //
-        // manager.applyChanges(changeList);
-
-        // Pellet can explain inconsistencies but we are using Jfact...
-        // if(!checkConsistency()){
-        //
-        // GlassBoxExplanation.setup();
-        // SingleExplanationGenerator eg = new GlassBoxExplanation(ontology,
-        // PelletReasonerFactory.getInstance());
-        // try {
-        // for (OWLAxiom ax : eg.getExplanation(factory.getOWLThing())) {
-        // System.out.println(ax);
-        // }
-        // } catch (OWLRuntimeException ex) {
-        // System.out.println("cannot explain: " + ex.getMessage());
-        // }
-        // }
-
-        // remove the axiom
-        // manager.removeAxiom(ontology, changeList.get(0).getAxiom());
-
-        // **Instead we ''manually'' check consistency using the reasoner to
-        // obtain
-        // **if a location is inside another one
-        List<OWLOntologyChange> finalChangeList = new ArrayList<OWLOntologyChange>();
-        Set<OWLNamedIndividual> containers = queryEngine.getInstances(
-                "isIn value " + obj, false);
-        containers.addAll(queryEngine.getInstances("contains value " + obj,
-                false));
-
-        String newLoc = obj;
-
-        for (String obj2 : tm.descendingKeySet()) {
-            OWLIndividual Individual_object = (OWLIndividual) bidiShortFormProvider
-                    .getEntity(obj2);
-            if (obj.equalsIgnoreCase(obj2)) {
-                // we check if this object is consistent with the current
-                // ontology
-                OWLNamedIndividual prevLoc = null;
-                try {
-                    prevLoc = queryEngine
-                            .getInstances("holds value " + subject, true)
-                            .iterator().next();
-                } catch (Exception e) {
-
-                }
-                if (prevLoc != null) {
-                    Log.i(MithrilAC.getDebugTag(), "-*-*-*-*>>PrevLoc:" + prevLoc);
-                    if (!isIn(bidiShortFormProvider.getShortForm(prevLoc),
-                            containers)) {
-                        // it was not consistent so we have to remove the
-                        // previous axiom
-                        // from ontology
-                        finalChangeList.add(new RemoveAxiom(ontology, factory
-                                .getOWLObjectPropertyAssertionAxiom(
-                                        Objectproperty_predicate,
-                                        Individual_subject, prevLoc)));
-                    }
-                }
-
-                finalChangeList.add(new AddAxiom(ontology, factory
-                        .getOWLObjectPropertyAssertionAxiom(
-                                Objectproperty_predicate, Individual_subject,
-                                Individual_object)));
-
-            } else if (isIn(obj2, containers)) {
-                // we check if obj and obj2 are consistent (that is obj2
-                // contains obj1)
-                finalChangeList.add(new AddAxiom(ontology, factory
-                        .getOWLObjectPropertyAssertionAxiom(
-                                Objectproperty_predicate, Individual_subject,
-                                Individual_object)));
-                newLoc = obj2;
-            }
-        }
-
-        return newLoc;
-
-        // return finalChangeList;
-    }
-
-//	public FactCollection extractFactsOntology() {
-//
-//		FactCollection fc = new FactCollection();
-//		fc.contextFacts = new ArrayList<ContextFact>();
-//
-//		// extracting users in the ontology
-//		List<String> users = getUsers();
-//
-//		Log.i(Mithril.getDebugTag(), users.toString());
-//
-//		for (String user : users) {
-//
-//			// extracting location facts
-//			try {
-//				ContextFact cf = new ContextFact();
-//				cf.source = "I";
-//				cf.confidence = 1.0;
-//				cf.device_name = "myDevice";
-//
-//				String locUser = bidiShortFormProvider.getShortForm(queryEngine
-//						.getInstances("holds value " + user, true).iterator()
-//						.next());
-//				Fact f = new Fact();
-//				f.subject = user;
-//				f.predicate = "hasLocation";
-//				f.object = locUser;
-//				cf.facts = new ArrayList<Fact>();
-//				cf.facts.add(f);
-//
-//				// add support
-//				Support s = new Support();
-//				s.confidence = 0.5;
-//
-//				cf.support = new ArrayList<Support>();
-//				cf.support.add(s);
-//
-//				fc.contextFacts.add(cf);
-//
-//			} catch (Exception e) {
-//				Log.i(Mithril.getDebugTag(), "I don't have location facts for user: " + user);
-//			}
-//
-//			// extracting activity facts
-//			try {
-//				ContextFact cf = new ContextFact();
-//				cf.source = "I";
-//				cf.confidence = 1.0;
-//				cf.device_name = "myDevice";
-//
-//				String actUser = bidiShortFormProvider.getShortForm(queryEngine
-//						.getInstances("isPerformedBy value " + user, true)
-//						.iterator().next());
-//				Fact f = new Fact();
-//				f.subject = user;
-//				f.predicate = "hasActivity";
-//				f.object = actUser;
-//				cf.facts = new ArrayList<Fact>();
-//				cf.facts.add(f);
-//
-//				// add support
-//				Support s = new Support();
-//				s.confidence = 0.5;
-//
-//				cf.support = new ArrayList<Support>();
-//				cf.support.add(s);
-//
-//				fc.contextFacts.add(cf);
-//
-//			} catch (Exception e) {
-//				Log.i(Mithril.getDebugTag(), "I don't have activity facts for user: " + user);
-//			}
-//		}
-//
-//		return fc;
-//	}
-
     public List<String> getUsers() {
         List<String> users = new ArrayList<String>();
         for (OWLNamedIndividual aux : queryEngine.getInstances("User", true)) {
@@ -937,9 +936,9 @@ public class SemanticManagement {
         OWLIndividual individualValue = (OWLIndividual) bidiShortFormProvider
                 .getEntity(value);
 
-        // Log.i(Mithril.getDebugTag(), individualValue.toString());
-        // Log.i(Mithril.getDebugTag(), individuals.toString());
-        // Log.i(Mithril.getDebugTag(), individuals.iterator().next().toString());
+        // Log.i(MithrilAC.getDebugTag(), individualValue.toString());
+        // Log.i(MithrilAC.getDebugTag(), individuals.toString());
+        // Log.i(MithrilAC.getDebugTag(), individuals.iterator().next().toString());
 
         return individuals.contains(individualValue);
     }
