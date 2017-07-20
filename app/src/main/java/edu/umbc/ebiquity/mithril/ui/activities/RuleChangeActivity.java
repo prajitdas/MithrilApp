@@ -153,7 +153,8 @@ public class RuleChangeActivity extends AppCompatActivity implements RuleChangeF
                             currentViolation.getPolicyId(),
                             appPkgName,
                             app.getAppName(), // the name returned is not correct we have find the method that fixes that
-                            AppOpsManager.opToPermission(currentViolation.getOprId()), // Manifest.permission.ACCESS_FINE_LOCATION,
+                            AppOpsManager.opToPermission(currentViolation.getOprId()),
+                            MithrilAC.getPermCatMap().get(AppOpsManager.opToPermission(currentViolation.getOprId())), // Manifest.permission.ACCESS_FINE_LOCATION,
                             semanticLocationLabel,
                             semanticLocationType,
                             currentAction,
@@ -232,7 +233,13 @@ public class RuleChangeActivity extends AppCompatActivity implements RuleChangeF
                         policyRule.setAction(Action.DENY);
                         policyRule.setActStr("Deny");
                     }
-                    int retval = MithrilDBHelper.getHelper(this).updatePolicyRule(mithrilDB, oldId, policyRule);
+                    MithrilDBHelper.getHelper(this).deletePolicyRuleByAppCtxOpPolId(mithrilDB, policyRule.getPolicyId(), policyRule.getAppId(), policyRule.getCtxId(), policyRule.getOp());
+                    long retval = 0;
+                    try {
+                        retval = MithrilDBHelper.getHelper(this).addPolicyRule(mithrilDB, policyRule);
+                    } catch (SemanticInconsistencyException e) {
+                        Log.d(MithrilAC.getDebugTag(), "retval" + e.getMessage());
+                    }
                     Log.d(MithrilAC.getDebugTag(), "retval" + retval);
                 }
             }

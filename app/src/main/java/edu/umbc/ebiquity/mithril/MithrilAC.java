@@ -1,5 +1,6 @@
 package edu.umbc.ebiquity.mithril;
 
+import android.Manifest;
 import android.app.Application;
 import android.content.Context;
 import android.content.Intent;
@@ -12,7 +13,9 @@ import android.util.Pair;
 
 import java.sql.Timestamp;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Created by Prajit Kumar Das on 5/1/2016.
@@ -98,6 +101,39 @@ public class MithrilAC extends Application {
     private static final String RANDOM_USER_ID = "randomUserId";
     private static final String APP_CATEGORY_UNKNOWN = "unknownAppCategory";
     private static final String APPS_INSTALLED = "appsInstalled";
+    private static final Map<String, String> PERM_CAT_MAP = new HashMap<String, String>() {
+        {
+            put(Manifest.permission.ADD_VOICEMAIL, "messages");
+            put(Manifest.permission.READ_SMS, "messages");
+
+            put(Manifest.permission.READ_CONTACTS, "contacts");
+            put(Manifest.permission.WRITE_CONTACTS, "contacts");
+
+            put(Manifest.permission.CAMERA, "media");
+            put(Manifest.permission.RECORD_AUDIO, "media");
+
+            put(Manifest.permission.SYSTEM_ALERT_WINDOW, "overlay");
+
+            put(Manifest.permission.READ_EXTERNAL_STORAGE, "storage");
+            put(Manifest.permission.WRITE_EXTERNAL_STORAGE, "storage");
+
+            put(Manifest.permission.CALL_PHONE, "calling");
+            put(Manifest.permission.SEND_SMS, "calling");
+            put(Manifest.permission.RECEIVE_SMS, "calling");
+            put(Manifest.permission.READ_CALL_LOG, "calling");
+            put(Manifest.permission.WRITE_CALL_LOG, "calling");
+
+            put(Manifest.permission.ACCESS_NOTIFICATIONS, "notifications");
+
+            put(Manifest.permission.GET_ACCOUNTS, "identification");
+
+            put(Manifest.permission.ACCESS_COARSE_LOCATION, "location");
+            put(Manifest.permission.ACCESS_FINE_LOCATION, "location");
+
+            put(Manifest.permission.READ_CALENDAR, "calendar");
+            put(Manifest.permission.WRITE_CALENDAR, "calendar");
+        }
+    };
     private static final List<String> APP_PACKAGE_NAMES = new ArrayList<String>() {
         {
             add(new String("com.augmentedminds.waveAlarm"));
@@ -1201,6 +1237,10 @@ public class MithrilAC extends Application {
     private static final String USED_RESOURCES = "usedResources";
     private static final String CURRENT_PACKAGE_NAME = "currentPackageName";
     private static int POLICY_ID;
+
+    public static Map<String, String> getPermCatMap() {
+        return PERM_CAT_MAP;
+    }
 
     public static List<String> getAppPackageNames() {
         return APP_PACKAGE_NAMES;

@@ -232,6 +232,7 @@ public class MithrilDBHelper extends SQLiteOpenHelper {
     private final static String POLRULAPPID = "appid"; // App id that sent the request
     private final static String POLRULCTXID = "ctxid"; // context id in which requested
     private final static String POLRULOPID = "op"; // operation
+    private final static String POLRULOPGRP = "opgrp"; // operation group
     private final static String POLRULACTSTR = "actstr"; // Action string
     private final static String POLRULAPPSTR = "appstr"; // App string
     private final static String POLRULCTXSTR = "ctxstr"; // context string
@@ -251,6 +252,7 @@ public class MithrilDBHelper extends SQLiteOpenHelper {
             POLRULAPPSTR + " TEXT NOT NULL, " +
             POLRULCTXSTR + " TEXT NOT NULL, " +
             POLRULOPSTR + " TEXT NOT NULL, " +
+            POLRULOPGRP + " TEXT NOT NULL DEFAULT 'unknown', " +
             POLRULDELETED + " INTEGER NOT NULL DEFAULT 0, " +
             "PRIMARY KEY(" + POLRULID + ", " + POLRULAPPID + ", " + POLRULCTXID + ", " + POLRULOPID + "), " +
             "FOREIGN KEY(" + POLRULAPPID + ") REFERENCES " + getAppsTableName() + "(" + APPID + ") ON DELETE CASCADE, " +
@@ -2246,6 +2248,7 @@ public class MithrilDBHelper extends SQLiteOpenHelper {
                 getPolicyRulesTableName() + "." + POLRULAPPSTR + ", " +
                 getPolicyRulesTableName() + "." + POLRULCTXSTR + ", " +
                 getPolicyRulesTableName() + "." + POLRULOPSTR + ", " +
+                getPolicyRulesTableName() + "." + POLRULOPGRP + ", " +
                 getPolicyRulesTableName() + "." + POLRULENABLED +
                 " FROM " +
                 getPolicyRulesTableName() + ", " + getContextTableName() +
@@ -2271,7 +2274,8 @@ public class MithrilDBHelper extends SQLiteOpenHelper {
                             cursor.getString(6),
                             cursor.getString(7),
                             cursor.getString(8),
-                            cursor.getInt(9) == 1));
+                            cursor.getString(9),
+                            cursor.getInt(10) == 1));
                 } while (cursor.moveToNext());
             }
         } catch (SQLException e) {
@@ -2302,6 +2306,7 @@ public class MithrilDBHelper extends SQLiteOpenHelper {
                 getPolicyRulesTableName() + "." + POLRULAPPSTR + ", " +
                 getPolicyRulesTableName() + "." + POLRULCTXSTR + ", " +
                 getPolicyRulesTableName() + "." + POLRULOPSTR + ", " +
+                getPolicyRulesTableName() + "." + POLRULOPGRP + ", " +
                 getPolicyRulesTableName() + "." + POLRULENABLED +
                 " FROM " +
                 getPolicyRulesTableName() + ", " + getContextTableName() +
@@ -2327,7 +2332,66 @@ public class MithrilDBHelper extends SQLiteOpenHelper {
                             cursor.getString(6),
                             cursor.getString(7),
                             cursor.getString(8),
-                            cursor.getInt(9) == 1));
+                            cursor.getString(9),
+                            cursor.getInt(10) == 1));
+                } while (cursor.moveToNext());
+            }
+        } catch (SQLException e) {
+            throw new SQLException("Could not find " + e);
+        } finally {
+            cursor.close();
+        }
+        // return policy rules list
+        return policyRules;
+    }
+
+    /**
+     * Getting all policies
+     *
+     * @param db database instance
+     * @return all policies
+     */
+    public ArrayList<PolicyRule> findEveryPolicyGroupBy(SQLiteDatabase db) {
+        ArrayList<PolicyRule> policyRules = new ArrayList<>();
+        // Select All Query
+        String selectQuery = "SELECT " +
+                getPolicyRulesTableName() + "." + POLRULID + ", " +
+                getPolicyRulesTableName() + "." + POLRULAPPID + ", " +
+                getPolicyRulesTableName() + "." + POLRULCTXID + ", " +
+                getPolicyRulesTableName() + "." + POLRULOPID + ", " +
+                getPolicyRulesTableName() + "." + POLRULACTIN + ", " +
+                getPolicyRulesTableName() + "." + POLRULACTSTR + ", " +
+                getPolicyRulesTableName() + "." + POLRULAPPSTR + ", " +
+                getPolicyRulesTableName() + "." + POLRULCTXSTR + ", " +
+                getPolicyRulesTableName() + "." + POLRULOPSTR + ", " +
+                getPolicyRulesTableName() + "." + POLRULOPGRP + ", " +
+                getPolicyRulesTableName() + "." + POLRULENABLED +
+                " FROM " +
+                getPolicyRulesTableName() + ", " + getContextTableName() +
+                " WHERE " +
+                getPolicyRulesTableName() + "." + POLRULCTXID + " = " + getContextTableName() + "." + CONTEXTID +
+                " AND " +
+                getContextTableName() + "." + CONTEXTENABLED + " = 1;";
+
+        Cursor cursor = db.rawQuery(selectQuery, null);
+        try {
+
+            // looping through all rows and adding to list
+            if (cursor.moveToFirst()) {
+                do {
+                    // Adding policies to list
+                    policyRules.add(new PolicyRule(
+                            cursor.getInt(0),
+                            cursor.getLong(1),
+                            cursor.getLong(2),
+                            cursor.getInt(3),
+                            cursor.getInt(4) == 1 ? Action.ALLOW : Action.DENY,
+                            cursor.getString(5),
+                            cursor.getString(6),
+                            cursor.getString(7),
+                            cursor.getString(8),
+                            cursor.getString(9),
+                            cursor.getInt(10) == 1));
                 } while (cursor.moveToNext());
             }
         } catch (SQLException e) {
@@ -2358,6 +2422,7 @@ public class MithrilDBHelper extends SQLiteOpenHelper {
                 getPolicyRulesTableName() + "." + POLRULAPPSTR + ", " +
                 getPolicyRulesTableName() + "." + POLRULCTXSTR + ", " +
                 getPolicyRulesTableName() + "." + POLRULOPSTR + ", " +
+                getPolicyRulesTableName() + "." + POLRULOPGRP + ", " +
                 getPolicyRulesTableName() + "." + POLRULENABLED +
                 " FROM " +
                 getPolicyRulesTableName() + ", " + getContextTableName() +
@@ -2385,7 +2450,8 @@ public class MithrilDBHelper extends SQLiteOpenHelper {
                             cursor.getString(6),
                             cursor.getString(7),
                             cursor.getString(8),
-                            cursor.getInt(9) == 1));
+                            cursor.getString(9),
+                            cursor.getInt(10) == 1));
                 } while (cursor.moveToNext());
             }
         } catch (SQLException e) {
@@ -2416,6 +2482,7 @@ public class MithrilDBHelper extends SQLiteOpenHelper {
                 getPolicyRulesTableName() + "." + POLRULAPPSTR + ", " +
                 getPolicyRulesTableName() + "." + POLRULCTXSTR + ", " +
                 getPolicyRulesTableName() + "." + POLRULOPSTR + ", " +
+                getPolicyRulesTableName() + "." + POLRULOPGRP + ", " +
                 getPolicyRulesTableName() + "." + POLRULENABLED +
                 " FROM " +
                 getPolicyRulesTableName() + ", " + getContextTableName() +
@@ -2445,7 +2512,8 @@ public class MithrilDBHelper extends SQLiteOpenHelper {
                             cursor.getString(6),
                             cursor.getString(7),
                             cursor.getString(8),
-                            cursor.getInt(9) == 1));
+                            cursor.getString(9),
+                            cursor.getInt(10) == 1));
                 } while (cursor.moveToNext());
             }
         } catch (SQLException e) {
@@ -2475,6 +2543,7 @@ public class MithrilDBHelper extends SQLiteOpenHelper {
                 getPolicyRulesTableName() + "." + POLRULAPPSTR + ", " +
                 getPolicyRulesTableName() + "." + POLRULCTXSTR + ", " +
                 getPolicyRulesTableName() + "." + POLRULOPSTR + ", " +
+                getPolicyRulesTableName() + "." + POLRULOPGRP + ", " +
                 getPolicyRulesTableName() + "." + POLRULENABLED +
                 " FROM " +
                 getPolicyRulesTableName() +
@@ -2505,7 +2574,8 @@ public class MithrilDBHelper extends SQLiteOpenHelper {
                         cursor.getString(6),
                         cursor.getString(7),
                         cursor.getString(8),
-                        cursor.getInt(9) == 1);
+                        cursor.getString(9),
+                        cursor.getInt(10) == 1);
             }
         } catch (SQLException e) {
             throw new SQLException("Could not find " + e);
@@ -2561,6 +2631,7 @@ public class MithrilDBHelper extends SQLiteOpenHelper {
                 getPolicyRulesTableName() + "." + POLRULAPPSTR + ", " +
                 getPolicyRulesTableName() + "." + POLRULCTXSTR + ", " +
                 getPolicyRulesTableName() + "." + POLRULOPSTR + ", " +
+                getPolicyRulesTableName() + "." + POLRULOPGRP + ", " +
                 getPolicyRulesTableName() + "." + POLRULENABLED +
                 " FROM " +
                 getPolicyRulesTableName() + ", " + getAppsTableName() + ", " + getContextTableName() +
@@ -2592,7 +2663,8 @@ public class MithrilDBHelper extends SQLiteOpenHelper {
                             cursor.getString(6),
                             cursor.getString(7),
                             cursor.getString(8),
-                            cursor.getInt(9) == 1));
+                            cursor.getString(9),
+                            cursor.getInt(10) == 1));
                 } while (cursor.moveToNext());
             }
         } catch (SQLException e) {
@@ -2623,6 +2695,7 @@ public class MithrilDBHelper extends SQLiteOpenHelper {
                 getPolicyRulesTableName() + "." + POLRULAPPSTR + ", " +
                 getPolicyRulesTableName() + "." + POLRULCTXSTR + ", " +
                 getPolicyRulesTableName() + "." + POLRULOPSTR + ", " +
+                getPolicyRulesTableName() + "." + POLRULOPGRP + ", " +
                 getPolicyRulesTableName() + "." + POLRULENABLED +
                 " FROM " +
                 getPolicyRulesTableName() + ", " + getAppsTableName() + ", " + getContextTableName() +
@@ -2656,7 +2729,8 @@ public class MithrilDBHelper extends SQLiteOpenHelper {
                             cursor.getString(6),
                             cursor.getString(7),
                             cursor.getString(8),
-                            cursor.getInt(9) == 1));
+                            cursor.getString(9),
+                            cursor.getInt(10) == 1));
                 } while (cursor.moveToNext());
             }
         } catch (SQLException e) {
@@ -2687,6 +2761,7 @@ public class MithrilDBHelper extends SQLiteOpenHelper {
                 getPolicyRulesTableName() + "." + POLRULAPPSTR + ", " +
                 getPolicyRulesTableName() + "." + POLRULCTXSTR + ", " +
                 getPolicyRulesTableName() + "." + POLRULOPSTR + ", " +
+                getPolicyRulesTableName() + "." + POLRULOPGRP + ", " +
                 getPolicyRulesTableName() + "." + POLRULENABLED +
                 " FROM " +
                 getPolicyRulesTableName() + ", " + getAppsTableName() + ", " + getContextTableName() +
@@ -2723,7 +2798,8 @@ public class MithrilDBHelper extends SQLiteOpenHelper {
                             cursor.getString(6),
                             cursor.getString(7),
                             cursor.getString(8),
-                            cursor.getInt(9) == 1)
+                            cursor.getString(9),
+                            cursor.getInt(10) == 1)
                     );
                 } while (cursor.moveToNext());
             }

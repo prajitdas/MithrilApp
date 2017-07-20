@@ -25,6 +25,7 @@ public class PolicyRule implements Parcelable {
     private Action action; // Action will be denoted as: 0 for to deny, 1 for allow
     private String actStr; // Action string
     private boolean enabled; // policy enabled or not
+    private String opGrp; //operation group
 
     protected PolicyRule(Parcel in) {
         policyId = in.readInt();
@@ -35,10 +36,11 @@ public class PolicyRule implements Parcelable {
         appStr = in.readString();
         ctxStr = in.readString();
         opStr = in.readString();
+        opGrp = in.readString();
         enabled = in.readByte() != 0;
     }
 
-    public PolicyRule(long policyId, long appId, long ctxId, int op, Action action, String actStr, String appStr, String ctxStr, String opStr, boolean enabled) {
+    public PolicyRule(long policyId, long appId, long ctxId, int op, Action action, String actStr, String appStr, String ctxStr, String opStr, String opGrp, boolean enabled) {
         this.policyId = policyId;
         this.appId = appId;
         this.ctxId = ctxId;
@@ -48,6 +50,7 @@ public class PolicyRule implements Parcelable {
         this.appStr = appStr;
         this.ctxStr = ctxStr;
         this.opStr = opStr;
+        this.opGrp = opGrp;
         this.enabled = enabled;
     }
 
@@ -61,6 +64,7 @@ public class PolicyRule implements Parcelable {
         dest.writeString(appStr);
         dest.writeString(ctxStr);
         dest.writeString(opStr);
+        dest.writeString(opGrp);
         dest.writeByte((byte) (enabled ? 1 : 0));
     }
 
