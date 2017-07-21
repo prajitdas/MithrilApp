@@ -86,21 +86,21 @@
         android:textSize="14sp"
         android:theme="@style/AppTheme.Button" />
 
-    <Button
-        android:id="@+id/installApp9Button"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/installApp8Button"
-        android:textSize="14sp"
-        android:theme="@style/AppTheme.Button" />
+    <!--<Button-->
+    <!--android:id="@+id/installApp9Button"-->
+    <!--android:layout_width="match_parent"-->
+    <!--android:layout_height="wrap_content"-->
+    <!--android:layout_below="@+id/installApp8Button"-->
+    <!--android:textSize="14sp"-->
+    <!--android:theme="@style/AppTheme.Button" />-->
 
-    <Button
-        android:id="@+id/installApp10Button"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/installApp9Button"
-        android:textSize="14sp"
-        android:theme="@style/AppTheme.Button" />
+    <!--<Button-->
+    <!--android:id="@+id/installApp10Button"-->
+    <!--android:layout_width="match_parent"-->
+    <!--android:layout_height="wrap_content"-->
+    <!--android:layout_below="@+id/installApp9Button"-->
+    <!--android:textSize="14sp"-->
+    <!--android:theme="@style/AppTheme.Button" />-->
 
     <Button
         android:id="@+id/doneButtonInstallApps"

@@ -31,6 +31,7 @@ public class AppData implements Comparable<AppData> {
     private String requesterReviewCount; // review_count
     private String requesterReviewRating; // review_rating
     private String requesterUsageCount;    // installs
+
     public AppData(String appDescription,
                    String appCategory,
                    int targetSdkVersion,
@@ -53,6 +54,7 @@ public class AppData implements Comparable<AppData> {
         setRisk(risk);
         permissions = new HashMap<>();
     }
+
     public AppData() {
     }
 

@@ -76,7 +76,7 @@ public class RuleChangeActivity extends AppCompatActivity implements RuleChangeF
                 else
                     buttonView.setChecked(true);
                 allowDenyToggle.toggle();
-                if(allowDenyToggle.isChecked())
+                if (allowDenyToggle.isChecked())
                     currentViolation.setTvfv(false);
                 else
                     currentViolation.setTvfv(true);
