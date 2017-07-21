@@ -76,34 +76,64 @@ public class InstallAppsActivity extends AppCompatActivity {
         mDoneBtn = (Button) findViewById(R.id.doneButtonInstallApps);
 
         mInstallApp1Btn = (Button) findViewById(R.id.installApp1Button);
-        mInstallApp1Btn.setText(MithrilAC.getAppNames().get(0));
+        if (!isAppInstalled(MithrilAC.getAppPackageNames().get(0)))
+            mInstallApp1Btn.setText(MithrilAC.getAppNames().get(0));
+        else
+            mInstallApp1Btn.setVisibility(View.GONE);
 
         mInstallApp2Btn = (Button) findViewById(R.id.installApp2Button);
-        mInstallApp2Btn.setText(MithrilAC.getAppNames().get(1));
+        if (!isAppInstalled(MithrilAC.getAppPackageNames().get(1)))
+            mInstallApp2Btn.setText(MithrilAC.getAppNames().get(1));
+        else
+            mInstallApp2Btn.setVisibility(View.GONE);
 
         mInstallApp3Btn = (Button) findViewById(R.id.installApp3Button);
-        mInstallApp3Btn.setText(MithrilAC.getAppNames().get(2));
+        if (!isAppInstalled(MithrilAC.getAppPackageNames().get(2)))
+            mInstallApp3Btn.setText(MithrilAC.getAppNames().get(2));
+        else
+            mInstallApp3Btn.setVisibility(View.GONE);
 
         mInstallApp4Btn = (Button) findViewById(R.id.installApp4Button);
-        mInstallApp4Btn.setText(MithrilAC.getAppNames().get(3));
+        if (!isAppInstalled(MithrilAC.getAppPackageNames().get(3)))
+            mInstallApp4Btn.setText(MithrilAC.getAppNames().get(3));
+        else
+            mInstallApp4Btn.setVisibility(View.GONE);
 
         mInstallApp5Btn = (Button) findViewById(R.id.installApp5Button);
-        mInstallApp5Btn.setText(MithrilAC.getAppNames().get(4));
+        if (!isAppInstalled(MithrilAC.getAppPackageNames().get(4)))
+            mInstallApp5Btn.setText(MithrilAC.getAppNames().get(4));
+        else
+            mInstallApp5Btn.setVisibility(View.GONE);
 
         mInstallApp6Btn = (Button) findViewById(R.id.installApp6Button);
-        mInstallApp6Btn.setText(MithrilAC.getAppNames().get(5));
+        if (!isAppInstalled(MithrilAC.getAppPackageNames().get(5)))
+            mInstallApp6Btn.setText(MithrilAC.getAppNames().get(5));
+        else
+            mInstallApp6Btn.setVisibility(View.GONE);
 
         mInstallApp7Btn = (Button) findViewById(R.id.installApp7Button);
-        mInstallApp7Btn.setText(MithrilAC.getAppNames().get(6));
+        if (!isAppInstalled(MithrilAC.getAppPackageNames().get(6)))
+            mInstallApp7Btn.setText(MithrilAC.getAppNames().get(6));
+        else
+            mInstallApp7Btn.setVisibility(View.GONE);
 
         mInstallApp8Btn = (Button) findViewById(R.id.installApp8Button);
-        mInstallApp8Btn.setText(MithrilAC.getAppNames().get(7));
+        if (!isAppInstalled(MithrilAC.getAppPackageNames().get(7)))
+            mInstallApp8Btn.setText(MithrilAC.getAppNames().get(7));
+        else
+            mInstallApp8Btn.setVisibility(View.GONE);
 
         mInstallApp9Btn = (Button) findViewById(R.id.installApp9Button);
-        mInstallApp9Btn.setText(MithrilAC.getAppNames().get(8));
+        if (!isAppInstalled(MithrilAC.getAppPackageNames().get(8)))
+            mInstallApp9Btn.setText(MithrilAC.getAppNames().get(8));
+        else
+            mInstallApp9Btn.setVisibility(View.GONE);
 
         mInstallApp10Btn = (Button) findViewById(R.id.installApp10Button);
-        mInstallApp10Btn.setText(MithrilAC.getAppNames().get(9));
+        if (!isAppInstalled(MithrilAC.getAppPackageNames().get(9)))
+            mInstallApp10Btn.setText(MithrilAC.getAppNames().get(9));
+        else
+            mInstallApp10Btn.setVisibility(View.GONE);
 
         setOnClickListeners();
     }
