@@ -50,6 +50,7 @@ public class FeedbackActivity extends AppCompatActivity {
     private RadioGroup fq1RadioGroup;
     private RadioGroup fq2RadioGroup;
     private RadioGroup fq3RadioGroup;
+    private RadioGroup fqextraRadioGroup;
     private RadioGroup fq4RadioGroup;
     private RadioGroup fq5RadioGroup;
     private RadioGroup fq6RadioGroup;
@@ -184,6 +185,8 @@ public class FeedbackActivity extends AppCompatActivity {
         fq2RadioGroup.check(R.id.fq2radio_strongly_agree);
         fq3RadioGroup = (RadioGroup) findViewById(R.id.fq3RadioGroup);
         fq3RadioGroup.check(R.id.fq3radio_strongly_agree);
+        fqextraRadioGroup = (RadioGroup) findViewById(R.id.fqextraRadioGroup);
+        fqextraRadioGroup.check(R.id.fqextraradio_strongly_agree);
         fq4RadioGroup = (RadioGroup) findViewById(R.id.fq4RadioGroup);
         fq4RadioGroup.check(R.id.fq4radio_strongly_agree);
         fq5RadioGroup = (RadioGroup) findViewById(R.id.fq5RadioGroup);
@@ -218,6 +221,7 @@ public class FeedbackActivity extends AppCompatActivity {
                     addToDataUploader(getResources().getString(R.string.strongly_agree), MithrilAC.getFeedbackQuestion1());
                     addToDataUploader(getResources().getString(R.string.strongly_agree), MithrilAC.getFeedbackQuestion2());
                     addToDataUploader(getResources().getString(R.string.strongly_agree), MithrilAC.getFeedbackQuestion3());
+                    addToDataUploader(getResources().getString(R.string.strongly_agree), MithrilAC.getFeedbackQuestionExtra());
                     addToDataUploader(getResources().getString(R.string.extremely_confident), MithrilAC.getFeedbackQuestion4());
                     addToDataUploader(getResources().getString(R.string.strongly_agree), MithrilAC.getFeedbackQuestion5());
                     addToDataUploader(getResources().getString(R.string.strongly_agree), MithrilAC.getFeedbackQuestion6());
@@ -230,6 +234,7 @@ public class FeedbackActivity extends AppCompatActivity {
                     addToDataUploader("", MithrilAC.getFeedbackQuestion1());
                     addToDataUploader("", MithrilAC.getFeedbackQuestion2());
                     addToDataUploader("", MithrilAC.getFeedbackQuestion3());
+                    addToDataUploader("", MithrilAC.getFeedbackQuestionExtra());
                     addToDataUploader("", MithrilAC.getFeedbackQuestion4());
                     addToDataUploader("", MithrilAC.getFeedbackQuestion5());
                     addToDataUploader("", MithrilAC.getFeedbackQuestion6());
@@ -289,6 +294,23 @@ public class FeedbackActivity extends AppCompatActivity {
                     addToDataUploader(getResources().getString(R.string.disagree), MithrilAC.getFeedbackQuestion3());
                 else if (checkedId == R.id.fq3radio_strongly_disagree)
                     addToDataUploader(getResources().getString(R.string.strongly_disagree), MithrilAC.getFeedbackQuestion3());
+            }
+        });
+
+        fqextraRadioGroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(RadioGroup group, int checkedId) {
+                // find which radio button is selected
+                if (checkedId == R.id.fqextraradio_strongly_agree)
+                    addToDataUploader(getResources().getString(R.string.strongly_agree), MithrilAC.getFeedbackQuestionExtra());
+                else if (checkedId == R.id.fqextraradio_agree)
+                    addToDataUploader(getResources().getString(R.string.agree), MithrilAC.getFeedbackQuestionExtra());
+                else if (checkedId == R.id.fqextraradio_neutral)
+                    addToDataUploader(getResources().getString(R.string.neutral), MithrilAC.getFeedbackQuestionExtra());
+                else if (checkedId == R.id.fqextraradio_disagree)
+                    addToDataUploader(getResources().getString(R.string.disagree), MithrilAC.getFeedbackQuestionExtra());
+                else if (checkedId == R.id.fqextraradio_strongly_disagree)
+                    addToDataUploader(getResources().getString(R.string.strongly_disagree), MithrilAC.getFeedbackQuestionExtra());
             }
         });
 
@@ -465,6 +487,7 @@ public class FeedbackActivity extends AppCompatActivity {
             request.put(MithrilAC.getFeedbackQuestion1(), feedback.get(MithrilAC.getFeedbackQuestion1()));
             request.put(MithrilAC.getFeedbackQuestion2(), feedback.get(MithrilAC.getFeedbackQuestion2()));
             request.put(MithrilAC.getFeedbackQuestion3(), feedback.get(MithrilAC.getFeedbackQuestion3()));
+            request.put(MithrilAC.getFeedbackQuestion3(), feedback.get(MithrilAC.getFeedbackQuestionExtra()));
             request.put(MithrilAC.getFeedbackQuestion4(), feedback.get(MithrilAC.getFeedbackQuestion4()));
             request.put(MithrilAC.getFeedbackQuestion5(), feedback.get(MithrilAC.getFeedbackQuestion5()));
             request.put(MithrilAC.getFeedbackQuestion6(), feedback.get(MithrilAC.getFeedbackQuestion6()));

@@ -88,6 +88,7 @@ public class MithrilAC extends Application {
     private static final String FEEDBACK_QUESTION_1 = "fq1";
     private static final String FEEDBACK_QUESTION_2 = "fq2";
     private static final String FEEDBACK_QUESTION_3 = "fq3";
+    private static final String FEEDBACK_QUESTION_EXTRA = "fqextra";
     private static final String FEEDBACK_QUESTION_4 = "fq4";
     private static final String FEEDBACK_QUESTION_5 = "fq5";
     private static final String FEEDBACK_QUESTION_6 = "fq6";
@@ -1334,6 +1335,10 @@ public class MithrilAC extends Application {
 
     public static String getFeedbackQuestion3() {
         return FEEDBACK_QUESTION_3;
+    }
+
+    public static String getFeedbackQuestionExtra() {
+        return FEEDBACK_QUESTION_EXTRA;
     }
 
     public static String getFeedbackQuestion4() {
