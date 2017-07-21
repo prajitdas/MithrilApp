@@ -76,6 +76,10 @@ public class RuleChangeActivity extends AppCompatActivity implements RuleChangeF
                 else
                     buttonView.setChecked(true);
                 allowDenyToggle.toggle();
+                if(allowDenyToggle.isChecked())
+                    currentViolation.setTvfv(false);
+                else
+                    currentViolation.setTvfv(true);
             }
         });
 
@@ -86,14 +90,12 @@ public class RuleChangeActivity extends AppCompatActivity implements RuleChangeF
                 if (!ruleAdded) {
                     currentViolation.setAsked(true);
                     currentViolation.setFeedbackTime(new Timestamp(System.currentTimeMillis()));
-                    currentViolation.setTvfv(true);
                     MithrilDBHelper.getHelper(v.getContext()).updateViolation(mithrilDB, currentViolation);
                     finish();
                 } else {
                     if (rulesdeleted) {
                         currentViolation.setAsked(true);
                         currentViolation.setFeedbackTime(new Timestamp(System.currentTimeMillis()));
-                        currentViolation.setTvfv(false);
                         MithrilDBHelper.getHelper(v.getContext()).updateViolation(mithrilDB, currentViolation);
                         finish();
                     } else
