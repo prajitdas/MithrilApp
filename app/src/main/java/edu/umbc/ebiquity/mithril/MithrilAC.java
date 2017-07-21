@@ -136,43 +136,37 @@ public class MithrilAC extends Application {
     };
     private static final List<String> APP_PACKAGE_NAMES = new ArrayList<String>() {
         {
-            add(new String("com.augmentedminds.waveAlarm"));
             add(new String("com.anrapps.pixelbatterysaver"));
             add(new String("org.ab.x48"));
-            add(new String("com.google.android.apps.meetings"));
+            add(new String("com.augmentedminds.waveAlarm"));
+            add(new String("com.android2.calculator3"));
+            add(new String("com.groupme.android"));
             add(new String("com.whatsapp"));
-            add(new String("com.facebook.orca"));
-            add(new String("com.rain.liteforfacebook2017"));
-            add(new String("com.instagram.android"));
-            add(new String("com.redstamp.android"));
             add(new String("com.google.android.apps.photos"));
+            add(new String("com.google.android.GoogleCamera"));
         }
     };
     private static final List<String> APP_NAMES = new ArrayList<String>() {
         {
-            add(new String("Wave Alarm - Alarm Clock"));
-            add(new String("Pixel OFF Save Battery AMOLED"));
-            add(new String("Droid48"));
-            add(new String("Hangouts Meet"));
-            add(new String("WhatsApp Messenger"));
-            add(new String("Messenger"));
-            add(new String("Messenger for Facebook"));
-            add(new String("Instagram"));
-            add(new String("Red Stamp Cards"));
-            add(new String("Google Photos"));
+            add(new String("Pixel OFF Save Battery AMOLED")); // Battery saver
+            add(new String("Droid48")); // Scientific calculator
+            add(new String("Wave Alarm - Alarm Clock")); // Alarm clock
+            add(new String("Calculator")); // Scientific calculator
+            add(new String("GroupMe")); // unknown
+            add(new String("WhatsApp Messenger")); // unknown
+            add(new String("Google Photos")); // unknown
+            add(new String("Google Camera")); // unknown
         }
     };
     private static final List<String> APP_CATS_FOR_TEST = new ArrayList<String>() {
         {
-            add(new String("tools"));
             add(new String("productivity"));
+            add(new String("productivity"));
+            add(new String("tools"));
+            add(new String("tools"));
             add(new String("communication"));
-            add(new String("personalization"));
-            add(new String("entertainment"));
-            add(new String("finance"));
-            add(new String("lifestyle"));
-            add(new String("news_n_magazines"));
-            add(new String("social"));
+            add(new String("communication"));
+            add(new String("photography"));
             add(new String("photography"));
         }
     };
