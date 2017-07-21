@@ -137,26 +137,26 @@ public class MithrilAC extends Application {
     };
     private static final List<String> APP_PACKAGE_NAMES = new ArrayList<String>() {
         {
-            add(new String("com.anrapps.pixelbatterysaver"));
-            add(new String("org.ab.x48"));
+            add(new String("com.adobe.reader"));
+			add(new String("com.xodo.pdf.reader"))
             add(new String("com.augmentedminds.waveAlarm"));
-            add(new String("com.android2.calculator3"));
+            add(new String("com.google.android.deskclock"));
             add(new String("com.groupme.android"));
             add(new String("com.whatsapp"));
-            add(new String("com.google.android.apps.photos"));
+            add(new String("net.sourceforge.opencamera"));
             add(new String("com.google.android.GoogleCamera"));
         }
     };
     private static final List<String> APP_NAMES = new ArrayList<String>() {
         {
-            add(new String("Pixel OFF Save Battery AMOLED")); // Battery saver
-            add(new String("Droid48")); // Scientific calculator
+            add(new String("Adobe Acrobat Reader")); // PDF reader
+            add(new String("Xodo PDF Reader & Editor")); // PDF reader
             add(new String("Wave Alarm - Alarm Clock")); // Alarm clock
-            add(new String("Calculator")); // Scientific calculator
-            add(new String("GroupMe")); // unknown
-            add(new String("WhatsApp Messenger")); // unknown
-            add(new String("Google Photos")); // unknown
-            add(new String("Google Camera")); // unknown
+            add(new String("Clock")); // Alarm clock
+            add(new String("GroupMe")); // communication
+            add(new String("WhatsApp Messenger")); // communication
+            add(new String("Open Camera")); // photography
+            add(new String("Google Camera")); // photography
         }
     };
     private static final List<String> APP_CATS_FOR_TEST = new ArrayList<String>() {
