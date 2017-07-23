@@ -1,0 +1,84 @@
+package edu.umbc.ebiquity.mithril.util.specialtasks.semanticweb;
+
+import java.util.ArrayList;
+
+import android.app.Activity;
+import android.os.Bundle;
+import android.view.Gravity;
+import android.view.Menu;
+import android.view.View;
+import android.view.WindowManager;
+import android.widget.Button;
+import android.widget.EditText;
+import android.widget.Toast;
+
+public class AddSupportingFactsActivity extends Activity {
+	
+	private ArrayList<Double> supportingFactList = new ArrayList<Double>();
+	private Button mAddSupportingFacts, mAddSupportingFactsDone;
+	private EditText mSupportingFactField, mSupportingFactConfidenceField;
+	private String callingActivity;
+	private static final String FACT_DEFAULT_VALUE = "This is a Fact!";
+	
+	@Override
+	protected void onCreate(Bundle savedInstanceState) {
+		super.onCreate(savedInstanceState);
+		setContentView(R.layout.activity_add_supporting_facts);
+		
+		callingActivity = getIntent().getStringExtra("callingActivity"); 
+		
+		mAddSupportingFacts = (Button) findViewById(R.id.supportingFactAddButton);
+		mAddSupportingFactsDone = (Button) findViewById(R.id.supportingFactDoneButton);
+
+		mSupportingFactField = (EditText) findViewById(R.id.supportingFactField);
+		mSupportingFactField.setText(FACT_DEFAULT_VALUE);
+		mSupportingFactField.setSelectAllOnFocus(true);
+
+		mSupportingFactConfidenceField = (EditText) findViewById(R.id.supportingFactConfidenceField);
+		getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_VISIBLE);
+		
+	    mAddSupportingFacts.setOnClickListener(new View.OnClickListener() {
+	        public void onClick(View view) {
+	        	try{
+	        		Double confidenceValue = Double.parseDouble(mSupportingFactConfidenceField.getText().toString());
+		        	if(confidenceValue < 0.0 || confidenceValue > 1.0) {
+		        		Toast confidenceValueToast = Toast.makeText(getApplicationContext(),
+		        				"The confidence value has to be\nin the range [0, 1]", Toast.LENGTH_LONG);
+		        		confidenceValueToast.setGravity(Gravity.TOP|Gravity.CENTER_HORIZONTAL, 0, 200);
+		        		confidenceValueToast.show();
+		        	}
+		        	else {
+			            supportingFactList.add(confidenceValue);
+						Toast factEntryToast = Toast.makeText(getApplicationContext(),"The fact was added!", Toast.LENGTH_LONG);
+						factEntryToast.setGravity(Gravity.TOP|Gravity.CENTER_HORIZONTAL, 0, 200);
+						factEntryToast.show();
+		        	}
+	        	}
+	        	catch(NumberFormatException aNumberFormatException) {
+	        		Toast confidenceValueToast = Toast.makeText(getApplicationContext(),
+	        				"Please enter a confidence value", Toast.LENGTH_LONG);
+	        		confidenceValueToast.setGravity(Gravity.TOP|Gravity.CENTER_HORIZONTAL, 0, 200);
+	        		confidenceValueToast.show();
+	        	}
+	        }
+	    });            
+
+		mAddSupportingFactsDone.setOnClickListener(new View.OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				if(callingActivity == "LocationActivity")
+					MainActivity.userContextInformationForActivities.setListOfSupportingFactsLocation(supportingFactList);
+				else
+					MainActivity.userContextInformationForActivities.setListOfSupportingFactsActivity(supportingFactList);
+				finish();
+			}
+		});
+	}
+
+	@Override
+	public boolean onCreateOptionsMenu(Menu menu) {
+		// Inflate the menu; this adds items to the action bar if it is present.
+		getMenuInflater().inflate(R.menu.add_supporting_facts, menu);
+		return true;
+	}
+}

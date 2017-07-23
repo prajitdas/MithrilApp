@@ -1,0 +1,31 @@
+package edu.umbc.ebiquity.mithril.util.specialtasks.semanticweb;
+
+import android.app.Activity;
+import android.os.Bundle;
+import android.view.Menu;
+import android.widget.TextView;
+
+public class EnrichedContextActivity extends Activity {
+
+	@Override
+	protected void onCreate(Bundle savedInstanceState) {
+		super.onCreate(savedInstanceState);
+		setContentView(R.layout.activity_enriched_context);
+		
+		TextView identity = (TextView) findViewById(R.id.enrichedContextIdentityView);
+		TextView activity = (TextView) findViewById(R.id.enrichedContextActivityView);
+		TextView location = (TextView) findViewById(R.id.enrichedContextLocationView);
+
+		identity.setText(getIntent().getStringExtra("Identity"));
+		activity.setText(getIntent().getStringExtra("Activity"));
+		location.setText(getIntent().getStringExtra("Location"));
+	}
+
+	@Override
+	public boolean onCreateOptionsMenu(Menu menu) {
+		// Inflate the menu; this adds items to the action bar if it is present.
+		getMenuInflater().inflate(R.menu.enriched_context, menu);
+		return true;
+	}
+
+}

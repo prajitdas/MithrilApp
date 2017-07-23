@@ -2,8 +2,16 @@ package edu.umbc.ebiquity.mithril.util.specialtasks.semanticweb;
 
 import android.content.Context;
 import android.content.res.Resources.NotFoundException;
+import android.os.StrictMode;
 import android.util.Log;
 
+import com.google.gson.Gson;
+
+import org.apache.http.HttpEntity;
+import org.apache.http.HttpResponse;
+import org.apache.http.HttpStatus;
+import org.apache.http.client.methods.HttpGet;
+import org.apache.http.impl.client.DefaultHttpClient;
 import org.semanticweb.owlapi.apibinding.OWLManager;
 import org.semanticweb.owlapi.model.AddAxiom;
 import org.semanticweb.owlapi.model.IRI;
@@ -20,6 +28,7 @@ import org.semanticweb.owlapi.model.OWLOntology;
 import org.semanticweb.owlapi.model.OWLOntologyChange;
 import org.semanticweb.owlapi.model.OWLOntologyCreationException;
 import org.semanticweb.owlapi.model.OWLOntologyManager;
+import org.semanticweb.owlapi.model.RemoveAxiom;
 import org.semanticweb.owlapi.reasoner.InferenceType;
 import org.semanticweb.owlapi.reasoner.Node;
 import org.semanticweb.owlapi.reasoner.NodeSet;
@@ -28,6 +37,10 @@ import org.semanticweb.owlapi.util.BidirectionalShortFormProvider;
 import org.semanticweb.owlapi.util.BidirectionalShortFormProviderAdapter;
 import org.semanticweb.owlapi.util.SimpleShortFormProvider;
 
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.Reader;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.HashMap;
@@ -37,934 +50,942 @@ import java.util.Map;
 import java.util.Set;
 import java.util.TreeMap;
 
-import edu.umbc.ebiquity.mithril.MithrilAC;
 import edu.umbc.ebiquity.mithril.R;
+import edu.umbc.ebiquity.mithril.util.specialtasks.semanticweb.data.ContextFact;
+import edu.umbc.ebiquity.mithril.util.specialtasks.semanticweb.data.Fact;
+import edu.umbc.ebiquity.mithril.util.specialtasks.semanticweb.data.FactCollection;
+import edu.umbc.ebiquity.mithril.util.specialtasks.semanticweb.data.Support;
+import edu.umbc.ebiquity.mithril.util.specialtasks.semanticweb.data.UserContextInformation;
 import es.unizar.semantic.DLQueryEngine;
 import uk.ac.manchester.cs.jfact.JFactFactory;
 
 /**
- * @author Roberto
+ * @author PC2
+ * 
  */
-@SuppressWarnings("deprecation")
 public class SemanticManagement {
-    public static final int ontology_id = R.raw.context;
 
-    public OWLOntologyManager manager;
-    public OWLDataFactory factory;
-    public OWLOntology ontology;
-    public OWLReasoner reasoner;
-    public DLQueryEngine queryEngine;
+	public static final String TAG = "AAA";
+	public static final int ontology_id = R.raw.context;
+	// a sample json file
+	public static String url = "http://webdiis.unizar.es/~ryus/other/sample2.json";
+	public OWLOntologyManager manager;
+	public OWLDataFactory factory;
+	public OWLOntology ontology;
+	public OWLReasoner reasoner;
+	public DLQueryEngine queryEngine;
+	private BidirectionalShortFormProvider bidiShortFormProvider;
+//	public static String url = "http://ec2-50-19-197-237.compute-1.amazonaws.com/all";
 
-    private BidirectionalShortFormProvider bidiShortFormProvider;
+	// doTest(REASONER_SNOROCKET, R.raw.galenheart);
 
-    public SemanticManagement(Context context) {
-        // Creating OWLManager and OWLDataFactory
-        manager = OWLManager.createOWLOntologyManager();
-        factory = OWLManager.getOWLDataFactory();
+	public SemanticManagement(Context context) {
 
-        Log.i(MithrilAC.getDebugTag(), "Starting...");
-        try {
-            Log.i(MithrilAC.getDebugTag(), String.format("Loading ontology [%s] ...", context
-                    .getResources().getResourceName(ontology_id)));
-            ontology = manager.loadOntologyFromOntologyDocument(context
-                    .getResources().openRawResource(ontology_id));
+		// Creating OWLManager and OWLDataFactory
+		manager = OWLManager.createOWLOntologyManager();
+		factory = OWLManager.getOWLDataFactory();
 
-            Log.i(MithrilAC.getDebugTag(), "Creating reasoner...");
-            reasoner = createOWLReasoner(ontology);
+		Log.i(TAG, "Starting...");
+		try {
+			Log.i(TAG, String.format("Loading ontology [%s] ...", context
+					.getResources().getResourceName(ontology_id)));
+			ontology = manager.loadOntologyFromOntologyDocument(context
+					.getResources().openRawResource(ontology_id));
 
-            Log.i(MithrilAC.getDebugTag(), "Creating DLQueryEngine...");
-            queryEngine = createDLQueryEngine(reasoner);
+			Log.i(TAG, "Creating reasoner...");
+			reasoner = createOWLReasoner(ontology);
 
-            Set<OWLOntology> importsClosure = ontology.getImportsClosure();
-            // Create a bidirectional short form provider to do the actual
-            // mapping.
-            // It will generate names using the input
-            // short form provider.
-            bidiShortFormProvider = new BidirectionalShortFormProviderAdapter(
-                    manager, importsClosure, queryEngine.getShortFormProvider());
+			Log.i(TAG, "Creating DLQueryEngine...");
+			queryEngine = createDLQueryEngine(reasoner);
 
-            Log.i(MithrilAC.getDebugTag(), "Precomputing inferences...");
-            queryEngine.getReasoner().precomputeInferences(
-                    InferenceType.CLASS_HIERARCHY);
+			Set<OWLOntology> importsClosure = ontology.getImportsClosure();
+			// Create a bidirectional short form provider to do the actual
+			// mapping.
+			// It will generate names using the input
+			// short form provider.
+			bidiShortFormProvider = new BidirectionalShortFormProviderAdapter(
+					manager, importsClosure, queryEngine.getShortFormProvider());
 
-        } catch (OWLOntologyCreationException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
-        } catch (NotFoundException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
-        }
-    }
+			Log.i(TAG, "Precomputing inferences...");
+			queryEngine.getReasoner().precomputeInferences(
+					InferenceType.CLASS_HIERARCHY);
 
-    /**
-     * Gets the name of the subclasses of a given class
-     *
-     * @param SuperClass
-     * @return list of names
-     */
-    public List<String> getNamesSubClasses(String SuperClass) {
+		} catch (OWLOntologyCreationException e) {
+			e.printStackTrace();
+		} catch (NotFoundException e) {
+			e.printStackTrace();
+		}
+	}
 
-        Set<OWLClass> subclasses = queryEngine.getSubClasses(SuperClass, false);
+	public static void Log(String text, UserContextInformation infoUser) {
 
-        List<String> names = new ArrayList<String>();
-        for (OWLClass aux : subclasses) {
-            names.add(aux.getIRI().getFragment());
-        }
+		Log.e(SemanticManagement.TAG, text);
 
-        return names;
-    }
+		infoUser.info += text;
 
-    /**
-     * Gets the name of the properties that have the given class in their domain
-     *
-     * @param Class
-     * @return list of names
-     */
-    public List<String> getNamesProperties(String Class) {
+	}
 
-        NodeSet<OWLDataProperty> topDP = reasoner.getSubDataProperties(reasoner
-                .getTopDataPropertyNode().getRepresentativeElement(), false);
+	/**
+	 * Gets the name of the subclasses of a given class
+	 *
+	 * @param SuperClass
+	 * @return list of names
+	 */
+	public List<String> getNamesSubClasses(String SuperClass) {
 
-        List<String> names = new ArrayList<String>();
+		Set<OWLClass> subclasses = queryEngine.getSubClasses(SuperClass, false);
 
-        for (Node<OWLDataProperty> aux : topDP) {
-            for (OWLClassExpression auxCE : aux.getRepresentativeElement()
-                    .getDomains(ontology)) {
-                // auxCE is the domain of the property
-                for (OWLClass auxCl : reasoner.getEquivalentClasses(auxCE)) {
-                    // check if the domain is equivalent to the given
-                    if (queryEngine.getShortFormProvider().getShortForm(auxCl)
-                            .equals(Class)) {
-                        // the domain is equivalent to the given
-                        names.add(queryEngine.getShortFormProvider()
-                                .getShortForm(
-                                        aux
-                                                .getRepresentativeElement()));
-                    }
-                }
-            }
-        }
+		List<String> names = new ArrayList<String>();
+		for (OWLClass aux : subclasses) {
+			names.add(aux.getIRI().getFragment());
+		}
 
-        NodeSet<OWLObjectPropertyExpression> topOP = reasoner
-                .getSubObjectProperties(reasoner.getTopObjectPropertyNode()
-                        .getRepresentativeElement(), false);
+		return names;
+	}
 
-        for (Node<OWLObjectPropertyExpression> aux : topOP) {
-            for (OWLClassExpression auxCE : aux.getRepresentativeElement()
-                    .getDomains(ontology)) {
-                // auxCE is the domain of the property
-                for (OWLClass auxCl : reasoner.getEquivalentClasses(auxCE)) {
-                    // check if the domain is equivalent to the given
-                    if (queryEngine.getShortFormProvider().getShortForm(auxCl)
-                            .equals(Class)) {
-                        // the domain is equivalent to the given
-                        names.add(queryEngine.getShortFormProvider()
-                                .getShortForm(
-                                        (OWLEntity) aux
-                                                .getRepresentativeElement()));
-                    }
-                }
-            }
-        }
+	/**
+	 * Gets the name of the properties that have the given class in their domain
+	 *
+	 * @param Class
+	 * @return list of names
+	 */
+	public List<String> getNamesProperties(String Class) {
 
-        return names;
-    }
+		NodeSet<OWLDataProperty> topDP = reasoner.getSubDataProperties(reasoner
+				.getTopDataPropertyNode().getRepresentativeElement(), false);
 
-    /**
-     * Gets instances of the given class
-     *
-     * @param Class
-     * @return list of names
-     */
-    public List<String> getNamesInstances(String Class) {
-        Set<OWLNamedIndividual> instances = queryEngine.getInstances(Class,
-                false);
-        List<String> names = new ArrayList<String>();
+		List<String> names = new ArrayList<String>();
 
-        for (OWLNamedIndividual aux : instances) {
-            names.add(queryEngine.getShortFormProvider().getShortForm(aux));
-        }
+		for (Node<OWLDataProperty> aux : topDP) {
+			for (OWLClassExpression auxCE : aux.getRepresentativeElement()
+					.getDomains(ontology)) {
+				// auxCE is the domain of the property
+				for (OWLClass auxCl : reasoner.getEquivalentClasses(auxCE)) {
+					// check if the domain is equivalent to the given
+					if (queryEngine.getShortFormProvider().getShortForm(auxCl)
+							.equals(Class)) {
+						// the domain is equivalent to the given
+						names.add(queryEngine.getShortFormProvider()
+								.getShortForm(
+										aux
+												.getRepresentativeElement()));
+					}
+				}
+			}
+		}
 
-        return names;
-    }
+		NodeSet<OWLObjectPropertyExpression> topOP = reasoner
+				.getSubObjectProperties(reasoner.getTopObjectPropertyNode()
+						.getRepresentativeElement(), false);
 
-    /**
-     * Checks the consistency of the ontology
-     *
-     * @return boolean (true if consistent)
-     */
-    public Boolean checkConsistency() {
-        return reasoner.isConsistent();
-    }
+		for (Node<OWLObjectPropertyExpression> aux : topOP) {
+			for (OWLClassExpression auxCE : aux.getRepresentativeElement()
+					.getDomains(ontology)) {
+				// auxCE is the domain of the property
+				for (OWLClass auxCl : reasoner.getEquivalentClasses(auxCE)) {
+					// check if the domain is equivalent to the given
+					if (queryEngine.getShortFormProvider().getShortForm(auxCl)
+							.equals(Class)) {
+						// the domain is equivalent to the given
+						names.add(queryEngine.getShortFormProvider()
+								.getShortForm(
+										(OWLEntity) aux
+												.getRepresentativeElement()));
+					}
+				}
+			}
+		}
 
-    @SuppressWarnings("unused")
-    public void test() {
-        OWLClass Class_user = factory.getOWLClass(IRI.create(ontology
-                .toString() + "#User"));
-        OWLIndividual Individual_Prajit = factory.getOWLNamedIndividual(IRI
-                .create(ontology.toString() + "#Prajit"));
-        OWLIndividual Individual_context = factory.getOWLNamedIndividual(IRI
-                .create(ontology.toString() + "#Context_Prajit"));
-        // http://www.semanticweb.org/ontologies/2012/10/zaragoza.owl#user
-        OWLDataProperty Dataproperty_hasName = factory.getOWLDataProperty(IRI
-                .create(ontology.toString() + "#hasName"));
-        OWLObjectProperty Objectproperty_hasContext = factory
-                .getOWLObjectProperty(IRI.create(ontology.toString()
-                        + "#hasContext"));
+		return names;
+	}
 
-        List<OWLOntologyChange> changeList = new ArrayList<OWLOntologyChange>();
-        changeList.add(new AddAxiom(ontology, factory
-                .getOWLClassAssertionAxiom(Class_user, Individual_Prajit)));
-        // changeList.add(new AddAxiom(ontology, factory
-        // .getOWLObjectPropertyAssertionAxiom(Objectproperty_hasContext,
-        // Individual_Prajit, Individual_context)));
-        manager.applyChanges(changeList);
-    }
+	/**
+	 * Gets instances of the given class
+	 *
+	 * @param Class
+	 * @return list of names
+	 */
+	public List<String> getNamesInstances(String Class) {
+		Set<OWLNamedIndividual> instances = queryEngine.getInstances(Class,
+				false);
+		List<String> names = new ArrayList<String>();
 
-    public void finish() {
-        queryEngine.dispose();
-        queryEngine = null;
-    }
+		for (OWLNamedIndividual aux : instances) {
+			names.add(queryEngine.getShortFormProvider().getShortForm(aux));
+		}
 
-    public Set<OWLClass> querySubClasses(DLQueryEngine queryEngine, String query)
-            throws Exception {
-        return queryEngine.getSubClasses(query, true);
-    }
+		return names;
+	}
 
-    public OWLReasoner createOWLReasoner(OWLOntology ontology)
-            throws IllegalArgumentException {
-        // jFact-1.0
-        // return new JFactReasoner(ontology, new
-        // JFactReasonerConfiguration(), BufferingMode.NON_BUFFERING);
-        return new JFactFactory().createNonBufferingReasoner(ontology);
-    }
+	/**
+	 * Checks the consistency of the ontology
+	 *
+	 * @return boolean (true if consistent)
+	 */
+	public Boolean checkConsistency() {
+		return reasoner.isConsistent();
+	}
 
-    public DLQueryEngine createDLQueryEngine(OWLReasoner reasoner)
-            throws IllegalArgumentException {
-        if (reasoner == null) {
-            throw new IllegalArgumentException("OWLReasoner is null");
-        }
-        return new DLQueryEngine(reasoner, new SimpleShortFormProvider());
-    }
+	@SuppressWarnings("unused")
+	public void test() {
+		OWLClass Class_user = factory.getOWLClass(IRI.create(ontology
+				.toString() + "#User"));
+		OWLIndividual Individual_Prajit = factory.getOWLNamedIndividual(IRI
+				.create(ontology.toString() + "#Prajit"));
+		OWLIndividual Individual_context = factory.getOWLNamedIndividual(IRI
+				.create(ontology.toString() + "#Context_Prajit"));
+		// http://www.semanticweb.org/ontologies/2012/10/zaragoza.owl#user
+		OWLDataProperty Dataproperty_hasName = factory.getOWLDataProperty(IRI
+				.create(ontology.toString() + "#hasName"));
+		OWLObjectProperty Objectproperty_hasContext = factory
+				.getOWLObjectProperty(IRI.create(ontology.toString()
+						+ "#hasContext"));
 
-//    public void doTest(int reasoner_type, int ontology_id) throws Exception {
-//
-//        String aQuery = "yearValue value 1998";
-//        String aQuery =
-//                "hasDateTime some dateTime[>=\"2002-10-10T17:10:00Z\"^^dateTime]";
-//        String aQuery = "hasDate some date[>=\"2002-10-10+13:00\"^^date]";
-//        Log.i(MithrilAC.getDebugTag(), String.format("Querying [%s]...", aQuery));
-//        startTime = System.nanoTime();
-//        for (OWLClass clase : queryEngine.getSuperClasses(aQuery, false)) {
-//            Log.i(MithrilAC.getDebugTag(), clase.toString());
-//        }
-//        for (OWLNamedIndividual individual : queryEngine.getInstances(aQuery,
-//                false)) {
-//            Log.i(MithrilAC.getDebugTag(), individual.toString());
-//        }
-//        finishTime = System.nanoTime();
-//        Log.i(MithrilAC.getDebugTag(), "... has runned for " + (finishTime - startTime) / 1e9 +
-//                " seconds");
-//    }
-//
-//	public UserContextInformation enrichContext(UserContextInformation info,
-//			String BTContext) {
-//
-//		UserContextInformation newContext = new UserContextInformation();
-//		newContext.id = info.id;
-//
-//		Log.d(MithrilAC.getDebugTag(), "*-*-*-*-" + info.toString());
-//
-//		if (info.location == null) {
-//			info.location = "";
-//		}
-//		if (info.activity == null) {
-//			info.activity = "";
-//		} else {
-//			info.activity += "Ind";
-//		}
-//
-//		// you cannot run network methods on the main thread but I don't care
-//		StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder()
-//				.permitAll().build();
-//		StrictMode.setThreadPolicy(policy);
-//
-//		// first I extract facts from my ontology
-//		Log.d(MithrilAC.getDebugTag()+"--> 0.1)Extracting facts from ontology", newContext);
-//
+		List<OWLOntologyChange> changeList = new ArrayList<OWLOntologyChange>();
+		changeList.add(new AddAxiom(ontology, factory
+				.getOWLClassAssertionAxiom(Class_user, Individual_Prajit)));
+		// changeList.add(new AddAxiom(ontology, factory
+		// .getOWLObjectPropertyAssertionAxiom(Objectproperty_hasContext,
+		// Individual_Prajit, Individual_context)));
+		manager.applyChanges(changeList);
+	}
+
+	public void doTest(int reasoner_type, int ontology_id) throws Exception {
+
+		// String aQuery = "yearValue value 1998";
+		// String aQuery =
+		// "hasDateTime some dateTime[>=\"2002-10-10T17:10:00Z\"^^dateTime]";
+		// String aQuery = "hasDate some date[>=\"2002-10-10+13:00\"^^date]";
+		// Log.i(TAG, String.format("Querying [%s]...", aQuery));
+		// startTime = System.nanoTime();
+		// for (OWLClass clase : queryEngine.getSuperClasses(aQuery, false)) {
+		// Log.i(TAG, clase.toString());
+		// }
+		// for (OWLNamedIndividual individual : queryEngine.getInstances(aQuery,
+		// false)) {
+		// Log.i(TAG, individual.toString());
+		// }
+		// finishTime = System.nanoTime();
+		// Log.i(TAG, "... has runned for " + (finishTime - startTime) / 1e9 +
+		// " seconds");
+	}
+
+	public void finish() {
+		queryEngine.dispose();
+		queryEngine = null;
+	}
+
+	public Set<OWLClass> querySubClasses(DLQueryEngine queryEngine, String query)
+			throws Exception {
+		return queryEngine.getSubClasses(query, true);
+	}
+
+	public OWLReasoner createOWLReasoner(OWLOntology ontology)
+			throws IllegalArgumentException {
+		// jFact-1.0
+		// return new JFactReasoner(ontology, new
+		// JFactReasonerConfiguration(), BufferingMode.NON_BUFFERING);
+		return new JFactFactory().createNonBufferingReasoner(ontology);
+	}
+
+	public DLQueryEngine createDLQueryEngine(OWLReasoner reasoner)
+			throws IllegalArgumentException {
+		if (reasoner == null) {
+			throw new IllegalArgumentException("OWLReasoner is null");
+		}
+		return new DLQueryEngine(reasoner, new SimpleShortFormProvider());
+	}
+
+	@SuppressWarnings("rawtypes")
+	public UserContextInformation enrichContext(UserContextInformation info,
+												String BTContext) {
+
+		UserContextInformation newContext = new UserContextInformation();
+		newContext.id = info.id;
+
+		Log.d(TAG, "*-*-*-*-" + info.toString());
+
+		if (info.location == null) {
+			info.location = "";
+		}
+		if (info.activity == null) {
+			info.activity = "";
+		} else {
+			info.activity += "Ind";
+		}
+
+		// you cannot run network methods on the main thread but I don't care
+		StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder()
+				.permitAll().build();
+		StrictMode.setThreadPolicy(policy);
+
+		// first I extract facts from my ontology
+//		Log("--> 0.1)Extracting facts from ontology", newContext);
+
 //		FactCollection fcOwn = extractFactsOntology();
-//
-//		// let me show you the result
-//		Log(MithrilAC.getDebugTag()+"\nThis is the content of the json file:", newContext);
-//		Log(MithrilAC.getDebugTag()+fcOwn.toString(), newContext);
-//
-//		// I can even send this facts to other users with JSON
-//		// we use gson for JSON management
-//		Gson gson = new Gson();
-//
-//		// String jsonGenerated = gson.toJson(fcOwn);
-//		// Log("JSON Generated:\n" + jsonGenerated, newContext);
-//
-//		// now I add the facts from the interface
-//		Log("--> 0.2)Extracting facts from GUI", newContext);
-//
-//		FactCollection fcGUI = extractFactsGUI(info);
-//
-//		// let me show you the result
+
+		// let me show you the result
 //		Log("\nThis is the content of the json file:", newContext);
-//		Log(fcGUI.toString(), newContext);
-//
-//		// jsonGenerated = gson.toJson(fcOwn);
-//		// Log("JSON Generated:\n" + jsonGenerated, newContext);
-//
-//		// now I will get more facts from the network
-//
-//		Log("\n--> 1)Parsing json file: " + url, newContext);
-//
-//		InputStream source = retrieveStream(url);
-//		Reader reader = new InputStreamReader(source);
-//
-//		FactCollection r = gson.fromJson(reader, FactCollection.class);
-//
-//		@SuppressWarnings("unused")
-//		List<ContextFact> cfs = r.contextFacts;
-//
-//		// let me show you the result
-//		Log("\nThis is the content of the json file:", newContext);
-//		Log(r.toString(), newContext);
-//
-//		// now I will get more facts from BT
-//
-//		Log("\n--> 1)Parsing json file: " + "Bluetooth", newContext);
-//
-//		FactCollection fcBT = gson.fromJson(BTContext, FactCollection.class);
-//
-//		// let me show you the result
-//		Log("\nThis is the content of the json file:", newContext);
-//		Log(fcBT.toString(), newContext);
-//
-//		List<ContextFact> finalcfs= new ArrayList<ContextFact>();
-//
-////		// adding my own contextfact from ontology
-////		cfs.addAll(fcOwn.contextFacts);
-////		// adding my own contextfact from GUI
-////		cfs.addAll(fcGUI.contextFacts);
-//
-//		// adding contextfact from URL
-////		finalcfs.addAll(cfs);
+//		Log(fcOwn.toString(), newContext);
+
+		// I can even send this facts to other users with JSON
+		// we use gson for JSON management
+		Gson gson = new Gson();
+
+		// String jsonGenerated = gson.toJson(fcOwn);
+		// Log("JSON Generated:\n" + jsonGenerated, newContext);
+
+		// now I add the facts from the interface
+		Log("--> 0.2)Extracting facts from GUI", newContext);
+
+		FactCollection fcGUI = extractFactsGUI(info);
+
+		// let me show you the result
+		Log("\nThis is the content of the json file:", newContext);
+		Log(fcGUI.toString(), newContext);
+
+		// jsonGenerated = gson.toJson(fcOwn);
+		// Log("JSON Generated:\n" + jsonGenerated, newContext);
+
+		// now I will get more facts from the network
+
+		Log("\n--> 1)Parsing json file: " + url, newContext);
+
+		InputStream source = retrieveStream(url);
+		Reader reader = new InputStreamReader(source);
+
+		FactCollection r = gson.fromJson(reader, FactCollection.class);
+
+		@SuppressWarnings("unused")
+		List<ContextFact> cfs = r.contextFacts;
+
+		// let me show you the result
+		Log("\nThis is the content of the json file:", newContext);
+		Log(r.toString(), newContext);
+
+		// now I will get more facts from BT
+
+		Log("\n--> 1)Parsing json file: " + "Bluetooth", newContext);
+
+		FactCollection fcBT = gson.fromJson(BTContext, FactCollection.class);
+
+		// let me show you the result
+		Log("\nThis is the content of the json file:", newContext);
+		Log(fcBT.toString(), newContext);
+
+		List<ContextFact> finalcfs= new ArrayList<ContextFact>();
+
 //		// adding my own contextfact from ontology
-////		finalcfs.addAll(fcOwn.contextFacts);
+//		cfs.addAll(fcOwn.contextFacts);
 //		// adding my own contextfact from GUI
-//		finalcfs.addAll(fcGUI.contextFacts);
-//		// adding contextfacts from BT
-//		finalcfs.addAll(fcBT.contextFacts);
-//
-//		Log("\n--> 2)Extracting locations and confidences from json...",
-//				newContext);
-//
-//		// lets do some magic with the facts parsed
-//
-//		// first extract some locations
-//		ArrayList<String> locations = new ArrayList<String>();
-//		ArrayList<Double> confidencesLoc = new ArrayList<Double>();
-//
-//		// and some activities
-//		ArrayList<String> activities = new ArrayList<String>();
-//		ArrayList<Double> confidencesAct = new ArrayList<Double>();
-//
-//		String user = info.id;
-//		// for every user we check first facts related to his location and
-//		// activity
-//
-//		Log("\n\tChecking facts for: " + user, newContext);
-//		for (ContextFact cf : finalcfs) {
-//			List<Fact> facts = cf.facts;
-//			for (Fact f : facts) {
-//				//is this a fact about the user??
-//				//otherwise I will lower the confidence
-//				double pen=1.0;
-//				if(!f.subject.equalsIgnoreCase(user)){
-//					pen=2.0;
-//				}
-//
-//				// is this a location fact?
-//				if (f.predicate.equalsIgnoreCase("hasLocation")) {
-////				if (f.subject.equalsIgnoreCase(user)
-////						&& f.predicate.equalsIgnoreCase("hasLocation")) {
-//
-//					locations.add(f.object);
-//
-//					// for now the confidence is the average of the confidence
-//					// of
-//					// supporting facts
-//					List<Support> support = cf.support;
-//
-//					double confidence = 0.0;
-//					if (!support.isEmpty()) {
-//						for (Support s : support) {
-//							confidence += s.confidence;
-//						}
-//						confidence /= support.size();
-//					}
-//
-//					// lets use also the confidence on the source
-//					confidence += cf.confidence;
-//					confidence /= 2;
-//
-//					confidencesLoc.add(confidence/pen);
-////				} else if (f.subject.equalsIgnoreCase(user)
-////						&& f.predicate.equalsIgnoreCase("hasActivity")) {
-//				} else if (f.predicate.equalsIgnoreCase("hasActivity")) {
-//					// is this an activity fact about the user?
-//					activities.add(f.object);
-//
-//					// for now the confidence is the average of the confidence
-//					// of
-//					// supporting facts
-//					List<Support> support = cf.support;
-//
-//					double confidence = 0.0;
-//					if (!support.isEmpty()) {
-//						for (Support s : support) {
-//							confidence += s.confidence;
-//						}
-//						confidence /= support.size();
-//					}
-//
-//					// lets use also the confidence on the source
-//					confidence += cf.confidence;
-//					confidence /= 2;
-//
-//					confidencesAct.add(confidence/pen);
-//				}
-//			}
-//		}
-//
-//		Log(locations.toString(), newContext);
-//		Log(confidencesLoc.toString(), newContext);
-//
-//		Log(activities.toString(), newContext);
-//		Log(confidencesAct.toString(), newContext);
-//
-//		if (!locations.isEmpty()) {
-//
-//			Log("\n--> 3)Computing the confidence for locations taking semantics into account...",
-//					newContext);
-//			// lets compute the confidence taking into account semantics
-//			TreeMap<String, Double> tm = checkLocationFacts(locations,
-//					confidencesLoc, user);
-//			Log(tm.toString(), newContext);
-//
-//			// lets check for inconsistencies
-//			Log("\nI will add the following axioms:\n", newContext);
-//			String aux = checkConsistencyLocation(tm, user, "hasLocation");
-//			Log(aux, newContext);
-//
-//			newContext.location = aux;
-//		}
-//
-//		if (!activities.isEmpty()) {
-//			Log("\n--> 3)Computing the confidence for activities taking semantics into account...",
-//					newContext);
-//			// lets compute the confidence taking into account semantics
-//			TreeMap<String, Double> tm = checkActivityFacts(activities,
-//					confidencesAct, user);
-//			Log(tm.toString(), newContext);
-//
-//			// for now we do not check inconsistencies with activities
-//			int i = 0;
-//
-//			for (Map.Entry e : tm.entrySet()) {
-//				if (i != 0)
-//					newContext.activity += " & ";
-//				newContext.activity += e.getKey() + "("
-//						+ Double.toString((Double) e.getValue()) + ")";
-//				i++;
-//			}
-//
-//			// for now we do not check inconsistencies with activities
-//			// for (int i = 0; i < activities.size(); i++) {
-//			// if (i != 0)
-//			// newContext.activity += " & ";
-//			// newContext.activity += activities.get(i) + "(" +
-//			// confidencesAct.get(i) + ")";
-//			// }
-//		}
-//
-//		return newContext;
-//	}
-//
-//	public FactCollection extractFactsGUI(UserContextInformation infoUser) {
-//
-//		FactCollection fc = new FactCollection();
-//
-//		fc.contextFacts = new ArrayList<ContextFact>();
-//
-//		if (!infoUser.location.equalsIgnoreCase("")) {
-//			// extracting location facts
-//			ContextFact loccf = new ContextFact();
-//			loccf.source = "I";
-//			loccf.confidence = 1.0;
-//			loccf.device_name = "myDevice";
-//
-//			Fact locf = new Fact();
-//			locf.subject = infoUser.id;
-//			locf.predicate = "hasLocation";
-//			locf.object = infoUser.location;
-//			loccf.facts = new ArrayList<Fact>();
-//			loccf.facts.add(locf);
-//
-//			loccf.support = new ArrayList<Support>();
-//
-//			// add supports
-//			for (Double aux : infoUser.sfLocation) {
-//				Support s = new Support();
-//				s.confidence = aux;
-//
-//				loccf.support.add(s);
-//			}
-//
-//			fc.contextFacts.add(loccf);
-//		}
-//
-//		if (!infoUser.activity.equalsIgnoreCase("")) {
-//			// extracting activity facts
-//			ContextFact actcf = new ContextFact();
-//			actcf.source = "I";
-//			actcf.confidence = 1.0;
-//			actcf.device_name = "myDevice";
-//
-//			Fact f = new Fact();
-//			f.subject = infoUser.id;
-//			f.predicate = "hasActivity";
-//			f.object = infoUser.activity;
-//			actcf.facts = new ArrayList<Fact>();
-//			actcf.facts.add(f);
-//
-//			actcf.support = new ArrayList<Support>();
-//
-//			// add supports
-//			for (Double aux : infoUser.sfActivity) {
-//				Support s = new Support();
-//				s.confidence = aux;
-//
-//				actcf.support.add(s);
-//			}
-//
-//			fc.contextFacts.add(actcf);
-//		}
-//
-//		return fc;
-//	}
-//
-//	public static void Log(String text, UserContextInformation infoUser) {
-//
-//		Log.e(MithrilAC.getDebugTag(), text);
-//
-//		infoUser.info += text;
-//
-//	}
-//
-//    @SuppressWarnings("unused")
-//	private InputStream retrieveStream(String url) {
-//
-//		DefaultHttpClient client = new DefaultHttpClient();
-//
-//		HttpGet getRequest = new HttpGet(url);
-//
-//		try {
-//
-//			HttpResponse getResponse = client.execute(getRequest);
-//			final int statusCode = getResponse.getStatusLine().getStatusCode();
-//
-//			if (statusCode != HttpStatus.SC_OK) {
-//				Log.w(getClass().getSimpleName(), "Error " + statusCode
-//						+ " for URL " + url);
-//				return null;
-//			}
-//
-//			HttpEntity getResponseEntity = getResponse.getEntity();
-//			return getResponseEntity.getContent();
-//
-//		} catch (IOException e) {
-//			getRequest.abort();
-//			Log.w(getClass().getSimpleName(), "Error for URL " + url, e);
-//		}
-//
-//		return null;
-//
-//	}
-//
-//    /**
-//     * Adds a fact to the ontology
-//     *
-//     * @param f
-//     */
-//     public void addFact(Fact f){
-//
-//     //for now we consider that the subject and object are individuals
-//     //and the predicate is an object property
-//
-//     OWLIndividual Individual_subject = factory.getOWLNamedIndividual(IRI
-//     .create(ontology.toString() + "#"+f.subject));
-//
-//     OWLObjectProperty Objectproperty_predicate = factory
-//     .getOWLObjectProperty(IRI.create(ontology.toString()
-//     + "#"+f.predicate));
-//
-//     OWLIndividual Individual_object = factory.getOWLNamedIndividual(IRI
-//     .create(ontology.toString() + "#"+f.object));
-//
-//
-//     List<OWLOntologyChange> changeList = new ArrayList<OWLOntologyChange>();
-//
-//     changeList.add(new AddAxiom(ontology, factory
-//     .getOWLObjectPropertyAssertionAxiom(Objectproperty_predicate,
-//     Individual_subject, Individual_object)));
-//
-//     manager.applyChanges(changeList);
-//     }
-//
-//    public FactCollection extractFactsOntology() {
-//
-//        FactCollection fc = new FactCollection();
-//        fc.contextFacts = new ArrayList<ContextFact>();
-//
-//        // extracting users in the ontology
-//        List<String> users = getUsers();
-//
-//        Log.i(MithrilAC.getDebugTag(), users.toString());
-//
-//        for (String user : users) {
-//
-//            // extracting location facts
-//            try {
-//                ContextFact cf = new ContextFact();
-//                cf.source = "I";
-//                cf.confidence = 1.0;
-//                cf.device_name = "myDevice";
-//
-//                String locUser = bidiShortFormProvider.getShortForm(queryEngine
-//                        .getInstances("holds value " + user, true).iterator()
-//                        .next());
-//                Fact f = new Fact();
-//                f.subject = user;
-//                f.predicate = "hasLocation";
-//                f.object = locUser;
-//                cf.facts = new ArrayList<Fact>();
-//                cf.facts.add(f);
-//
-//                // add support
-//                Support s = new Support();
-//                s.confidence = 0.5;
-//
-//                cf.support = new ArrayList<Support>();
-//                cf.support.add(s);
-//
-//                fc.contextFacts.add(cf);
-//
-//            } catch (Exception e) {
-//                Log.i(MithrilAC.getDebugTag(), "I don't have location facts for user: " + user);
-//            }
-//
-//            // extracting activity facts
-//            try {
-//                ContextFact cf = new ContextFact();
-//                cf.source = "I";
-//                cf.confidence = 1.0;
-//                cf.device_name = "myDevice";
-//
-//                String actUser = bidiShortFormProvider.getShortForm(queryEngine
-//                        .getInstances("isPerformedBy value " + user, true)
-//                        .iterator().next());
-//                Fact f = new Fact();
-//                f.subject = user;
-//                f.predicate = "hasActivity";
-//                f.object = actUser;
-//                cf.facts = new ArrayList<Fact>();
-//                cf.facts.add(f);
-//
-//                // add support
-//                Support s = new Support();
-//                s.confidence = 0.5;
-//
-//                cf.support = new ArrayList<Support>();
-//                cf.support.add(s);
-//
-//                fc.contextFacts.add(cf);
-//
-//            } catch (Exception e) {
-//                Log.i(MithrilAC.getDebugTag(), "I don't have activity facts for user: " + user);
-//            }
-//        }
-//
-//        return fc;
-//    }
-//
-//    public String checkConsistencyLocation(TreeMap<String, Double> tm,
-//                                           String subject, String predicate) {
-//
-//        // first we generate the axioms for subject and predicate
-//        OWLIndividual Individual_subject = (OWLIndividual) bidiShortFormProvider
-//                .getEntity(subject);
-//        OWLObjectProperty Objectproperty_predicate = (OWLObjectProperty) bidiShortFormProvider
-//                .getEntity(predicate);
-//
-//        // now we try the object with the highest confidence
-//        String obj = tm.firstKey();
-//
-//        // Create axioms and materialize them in the ontology
-//        // then use reasoner to check consistency
-//        // **We are not using this right now...
-//        OWLIndividual Individual_object = (OWLIndividual)
-//                bidiShortFormProvider.getEntity(obj);
-//
-//        List<OWLOntologyChange> changeList = new
-//                ArrayList<OWLOntologyChange>();
-//
-//        changeList.add(new AddAxiom(ontology,
-//                factory.getOWLObjectPropertyAssertionAxiom(Objectproperty_predicate,
-//                        Individual_subject, Individual_object)));
-//
-//        Log.i(MithrilAC.getDebugTag(), changeList.toString());
-//
-//        manager.applyChanges(changeList);
-//
-////         Pellet can explain inconsistencies but we are using Jfact...
-//        if(!checkConsistency()){
-//
-//            GlassBoxExplanation.setup();
-//            SingleExplanationGenerator eg = new GlassBoxExplanation(ontology,
-//                    PelletReasonerFactory.getInstance());
-//            try {
-//                for (OWLAxiom ax : eg.getExplanation(factory.getOWLThing())) {
-//                    System.out.println(ax);
-//                }
-//            } catch (OWLRuntimeException ex) {
-//                System.out.println("cannot explain: " + ex.getMessage());
-//            }
-//        }
-//
-//        // remove the axiom
-//        manager.removeAxiom(ontology, changeList.get(0).getAxiom());
-//
-//        // **Instead we ''manually'' check consistency using the reasoner to
-//        // obtain
-//        // **if a location is inside another one
-//        List<OWLOntologyChange> finalChangeList = new ArrayList<OWLOntologyChange>();
-//        Set<OWLNamedIndividual> containers = queryEngine.getInstances(
-//                "isIn value " + obj, false);
-//        containers.addAll(queryEngine.getInstances("contains value " + obj,
-//                false));
-//
-//        String newLoc = obj;
-//
-//        for (String obj2 : tm.descendingKeySet()) {
-//            OWLIndividual Individual_object = (OWLIndividual) bidiShortFormProvider
-//                    .getEntity(obj2);
-//            if (obj.equalsIgnoreCase(obj2)) {
-//                // we check if this object is consistent with the current
-//                // ontology
-//                OWLNamedIndividual prevLoc = null;
-//                try {
-//                    prevLoc = queryEngine
-//                            .getInstances("holds value " + subject, true)
-//                            .iterator().next();
-//                } catch (Exception e) {
-//
-//                }
-//                if (prevLoc != null) {
-//                    Log.i(MithrilAC.getDebugTag(), "-*-*-*-*>>PrevLoc:" + prevLoc);
-//                    if (!isIn(bidiShortFormProvider.getShortForm(prevLoc),
-//                            containers)) {
-//                        // it was not consistent so we have to remove the
-//                        // previous axiom
-//                        // from ontology
-//                        finalChangeList.add(new RemoveAxiom(ontology, factory
-//                                .getOWLObjectPropertyAssertionAxiom(
-//                                        Objectproperty_predicate,
-//                                        Individual_subject, prevLoc)));
-//                    }
-//                }
-//
-//                finalChangeList.add(new AddAxiom(ontology, factory
-//                        .getOWLObjectPropertyAssertionAxiom(
-//                                Objectproperty_predicate, Individual_subject,
-//                                Individual_object)));
-//
-//            } else if (isIn(obj2, containers)) {
-//                // we check if obj and obj2 are consistent (that is obj2
-//                // contains obj1)
-//                finalChangeList.add(new AddAxiom(ontology, factory
-//                        .getOWLObjectPropertyAssertionAxiom(
-//                                Objectproperty_predicate, Individual_subject,
-//                                Individual_object)));
-//                newLoc = obj2;
-//            }
-//        }
-//
-//        return newLoc;
-//
-//        // return finalChangeList;
-//    }
+//		cfs.addAll(fcGUI.contextFacts);
 
-    public TreeMap<String, Double> checkLocationFacts(
-            ArrayList<String> locations, ArrayList<Double> confidences,
-            String user) {
+		// adding contextfact from URL
+//		finalcfs.addAll(cfs);
+		// adding my own contextfact from ontology
+//		finalcfs.addAll(fcOwn.contextFacts);
+		// adding my own contextfact from GUI
+		finalcfs.addAll(fcGUI.contextFacts);
+		// adding contextfacts from BT
+		finalcfs.addAll(fcBT.contextFacts);
 
-        // Creating a set of Locations (without repetitions)
-        HashSet<String> locationsSet = new HashSet<String>(locations);
+		Log("\n--> 2)Extracting locations and confidences from json...",
+				newContext);
 
-        // and a map for the voting system
-        HashMap<String, Double> locationsVote = new HashMap<String, Double>();
-        ValueComparator bvc = new ValueComparator(locationsVote);
+		// lets do some magic with the facts parsed
 
-        for (String locSet : locationsSet) {
-            // Who is supporting this location?
-            Double supValue = 0.0;
-            Set<OWLNamedIndividual> containers = queryEngine.getInstances(
-                    "isIn value " + locSet, false);
-            int i = 0;
-            for (String locNew : locations) {
-                // if the location is equivalent or a subclass then is a
-                // supporter
-                Log.i(MithrilAC.getDebugTag(), "--CHECKING: " + locSet + " vs " + locNew);
-                if (locSet == locNew) {
-                    Log.i(MithrilAC.getDebugTag(), "-->Equivalent!");
-                    if (supValue != 0.0)
-                        supValue = (supValue + confidences.get(i)) / 2.0;
-                    else
-                        supValue = supValue + confidences.get(i);
-                } else if (isIn(locNew, containers)) {
-                    Log.i(MithrilAC.getDebugTag(), "-->is In!");
-                    if (supValue != 0.0)
-                        supValue = (supValue + confidences.get(i)) / 2.0;
-                    else
-                        supValue = supValue + confidences.get(i);
-                }
-                i++;
-            }
-            locationsVote.put(locSet, supValue);
-        }
+		// first extract some locations
+		ArrayList<String> locations = new ArrayList<String>();
+		ArrayList<Double> confidencesLoc = new ArrayList<Double>();
 
-        // sorting the map
-        TreeMap<String, Double> sorted_map = new TreeMap<String, Double>(bvc);
-        sorted_map.putAll(locationsVote);
+		// and some activities
+		ArrayList<String> activities = new ArrayList<String>();
+		ArrayList<Double> confidencesAct = new ArrayList<Double>();
 
-        Log.i(MithrilAC.getDebugTag(), "results: " + sorted_map);
+		String user = info.id;
+		// for every user we check first facts related to his location and
+		// activity
 
-        return sorted_map;
-    }
+		Log("\n\tChecking facts for: " + user, newContext);
+		for (ContextFact cf : finalcfs) {
+			List<Fact> facts = cf.facts;
+			for (Fact f : facts) {
+				//is this a fact about the user??
+				//otherwise I will lower the confidence
+				double pen = 1.0;
+				if (!f.subject.equalsIgnoreCase(user)) {
+					pen = 2.0;
+				}
 
-    public TreeMap<String, Double> checkActivityFacts(
-            ArrayList<String> activities, ArrayList<Double> confidences,
-            String user) {
+				// is this a location fact?
+				if (f.predicate.equalsIgnoreCase("hasLocation")) {
+//				if (f.subject.equalsIgnoreCase(user)
+//						&& f.predicate.equalsIgnoreCase("hasLocation")) {
 
-        // Creating a set of Locations (without repetitions)
-        HashSet<String> activitiesSet = new HashSet<String>(activities);
+					locations.add(f.object);
 
-        // and a map for the voting system
-        HashMap<String, Double> activitiesVote = new HashMap<String, Double>();
-        ValueComparator bvc = new ValueComparator(activitiesVote);
+					// for now the confidence is the average of the confidence
+					// of
+					// supporting facts
+					List<Support> support = cf.support;
 
-        for (String actSet : activitiesSet) {
-            // Who is supporting this activity?
-            Double supValue = 0.0;
+					double confidence = 0.0;
+					if (!support.isEmpty()) {
+						for (Support s : support) {
+							confidence += s.confidence;
+						}
+						confidence /= support.size();
+					}
 
-            Log.i(MithrilAC.getDebugTag(), "*-*-*-" + actSet);
-            OWLNamedIndividual indvA = (OWLNamedIndividual) bidiShortFormProvider
-                    .getEntity(actSet);
-            Log.d(MithrilAC.getDebugTag(), "-*-*-*-*" + actSet + ", " + indvA);
-            OWLClass classA = indvA.getTypes(ontology).iterator().next()
-                    .asOWLClass();
-            String nameClassA = bidiShortFormProvider.getShortForm(classA);
+					// lets use also the confidence on the source
+					confidence += cf.confidence;
+					confidence /= 2;
 
-            List<String> containers = getNamesSubClasses(nameClassA);
+					confidencesLoc.add(confidence / pen);
+//				} else if (f.subject.equalsIgnoreCase(user)
+//						&& f.predicate.equalsIgnoreCase("hasActivity")) {
+				} else if (f.predicate.equalsIgnoreCase("hasActivity")) {
+					// is this an activity fact about the user?
+					activities.add(f.object);
 
-            int i = 0;
-            for (String actNew : activities) {
-                // if the activity is equivalent or a subclass then is a
-                // supporter
+					// for now the confidence is the average of the confidence
+					// of
+					// supporting facts
+					List<Support> support = cf.support;
 
-                OWLNamedIndividual indvB = (OWLNamedIndividual) bidiShortFormProvider
-                        .getEntity(actNew);
-                OWLClass classB = indvB.getTypes(ontology).iterator().next()
-                        .asOWLClass();
-                String nameClassB = bidiShortFormProvider.getShortForm(classB);
+					double confidence = 0.0;
+					if (!support.isEmpty()) {
+						for (Support s : support) {
+							confidence += s.confidence;
+						}
+						confidence /= support.size();
+					}
 
-                Log.i(MithrilAC.getDebugTag(), "--CHECKING: " + actSet + " vs " + actNew);
-                if (nameClassA == nameClassB) {
-                    Log.i(MithrilAC.getDebugTag(), "-->Equivalent!");
-                    if (supValue != 0.0)
-                        supValue = (supValue + confidences.get(i)) / 2.0;
-                    else
-                        supValue = supValue + confidences.get(i);
-                } else if (isIn(nameClassB, containers)) {
-                    Log.i(MithrilAC.getDebugTag(), "-->is In!");
-                    if (supValue != 0.0)
-                        supValue = (supValue + confidences.get(i)) / 2.0;
-                    else
-                        supValue = supValue + confidences.get(i);
-                }
-                i++;
-            }
-            activitiesVote.put(actSet, supValue);
-        }
+					// lets use also the confidence on the source
+					confidence += cf.confidence;
+					confidence /= 2;
 
-        // sorting the map
-        TreeMap<String, Double> sorted_map = new TreeMap<String, Double>(bvc);
-        sorted_map.putAll(activitiesVote);
+					confidencesAct.add(confidence / pen);
+				}
+			}
+		}
 
-        Log.i(MithrilAC.getDebugTag(), "results: " + sorted_map);
+		Log(locations.toString(), newContext);
+		Log(confidencesLoc.toString(), newContext);
 
-        return sorted_map;
-    }
+		Log(activities.toString(), newContext);
+		Log(confidencesAct.toString(), newContext);
 
-    public List<String> getUsers() {
-        List<String> users = new ArrayList<String>();
-        for (OWLNamedIndividual aux : queryEngine.getInstances("User", true)) {
-            users.add(bidiShortFormProvider.getShortForm(aux));
-        }
+		if (!locations.isEmpty()) {
 
-        return users;
-    }
+			Log("\n--> 3)Computing the confidence for locations taking semantics into account...",
+					newContext);
+			// lets compute the confidence taking into account semantics
+			TreeMap<String, Double> tm = checkLocationFacts(locations,
+					confidencesLoc, user);
+			Log(tm.toString(), newContext);
 
-    public boolean isIn(String value, Set<OWLNamedIndividual> individuals) {
-        if (individuals.isEmpty())
-            return false;
+			// lets check for inconsistencies
+			Log("\nI will add the following axioms:\n", newContext);
+			String aux = checkConsistencyLocation(tm, user, "hasLocation");
+			Log(aux, newContext);
 
-        OWLIndividual individualValue = (OWLIndividual) bidiShortFormProvider
-                .getEntity(value);
+			newContext.location = aux;
+		}
 
-        // Log.i(MithrilAC.getDebugTag(), individualValue.toString());
-        // Log.i(MithrilAC.getDebugTag(), individuals.toString());
-        // Log.i(MithrilAC.getDebugTag(), individuals.iterator().next().toString());
+		if (!activities.isEmpty()) {
+			Log("\n--> 3)Computing the confidence for activities taking semantics into account...",
+					newContext);
+			// lets compute the confidence taking into account semantics
+			TreeMap<String, Double> tm = checkActivityFacts(activities,
+					confidencesAct, user);
+			Log(tm.toString(), newContext);
 
-        return individuals.contains(individualValue);
-    }
+			// for now we do not check inconsistencies with activities
+			int i = 0;
 
-    public boolean isIn(String value, List<String> containers) {
+			for (Map.Entry e : tm.entrySet()) {
+				if (i != 0)
+					newContext.activity += " & ";
+				newContext.activity += e.getKey() + "("
+						+ Double.toString((Double) e.getValue()) + ")";
+				i++;
+			}
 
-        return containers.contains(value);
-    }
+			// for now we do not check inconsistencies with activities
+			// for (int i = 0; i < activities.size(); i++) {
+			// if (i != 0)
+			// newContext.activity += " & ";
+			// newContext.activity += activities.get(i) + "(" +
+			// confidencesAct.get(i) + ")";
+			// }
+		}
 
-    class ValueComparator implements Comparator<String> {
+		return newContext;
+	}
 
-        Map<String, Double> base;
+	public FactCollection extractFactsGUI(UserContextInformation infoUser) {
 
-        public ValueComparator(Map<String, Double> base) {
-            this.base = base;
-        }
+		FactCollection fc = new FactCollection();
 
-        // Note: this comparator imposes orderings that are inconsistent with
-        // equals.
-        public int compare(String a, String b) {
-            if (base.get(a) >= base.get(b)) {
-                return -1;
-            } else {
-                return 1;
-            } // returning 0 would merge keys
-        }
-    }
+		fc.contextFacts = new ArrayList<ContextFact>();
+
+		if (!infoUser.location.equalsIgnoreCase("")) {
+			// extracting location facts
+			ContextFact loccf = new ContextFact();
+			loccf.source = "I";
+			loccf.confidence = 1.0;
+			loccf.device_name = "myDevice";
+
+			Fact locf = new Fact();
+			locf.subject = infoUser.id;
+			locf.predicate = "hasLocation";
+			locf.object = infoUser.location;
+			loccf.facts = new ArrayList<Fact>();
+			loccf.facts.add(locf);
+
+			loccf.support = new ArrayList<Support>();
+
+			// add supports
+			for (Double aux : infoUser.sfLocation) {
+				Support s = new Support();
+				s.confidence = aux;
+
+				loccf.support.add(s);
+			}
+
+			fc.contextFacts.add(loccf);
+		}
+
+		if (!infoUser.activity.equalsIgnoreCase("")) {
+			// extracting activity facts
+			ContextFact actcf = new ContextFact();
+			actcf.source = "I";
+			actcf.confidence = 1.0;
+			actcf.device_name = "myDevice";
+
+			Fact f = new Fact();
+			f.subject = infoUser.id;
+			f.predicate = "hasActivity";
+			f.object = infoUser.activity;
+			actcf.facts = new ArrayList<Fact>();
+			actcf.facts.add(f);
+
+			actcf.support = new ArrayList<Support>();
+
+			// add supports
+			for (Double aux : infoUser.sfActivity) {
+				Support s = new Support();
+				s.confidence = aux;
+
+				actcf.support.add(s);
+			}
+
+			fc.contextFacts.add(actcf);
+		}
+
+		return fc;
+	}
+
+	private InputStream retrieveStream(String url) {
+
+		DefaultHttpClient client = new DefaultHttpClient();
+
+		HttpGet getRequest = new HttpGet(url);
+
+		try {
+
+			HttpResponse getResponse = client.execute(getRequest);
+			final int statusCode = getResponse.getStatusLine().getStatusCode();
+
+			if (statusCode != HttpStatus.SC_OK) {
+				Log.w(getClass().getSimpleName(), "Error " + statusCode
+						+ " for URL " + url);
+				return null;
+			}
+
+			HttpEntity getResponseEntity = getResponse.getEntity();
+			return getResponseEntity.getContent();
+
+		} catch (IOException e) {
+			getRequest.abort();
+			Log.w(getClass().getSimpleName(), "Error for URL " + url, e);
+		}
+
+		return null;
+
+	}
+
+	/**
+	 * Adds a fact to the ontology
+	 *
+	 * @param f
+	 */
+	public void addFact(Fact f) {
+
+		//for now we consider that the subject and object are individuals
+		//and the predicate is an object property
+
+		OWLIndividual Individual_subject = factory.getOWLNamedIndividual(IRI
+				.create(ontology.toString() + "#" + f.subject));
+
+		OWLObjectProperty Objectproperty_predicate = factory
+				.getOWLObjectProperty(IRI.create(ontology.toString()
+						+ "#" + f.predicate));
+
+		OWLIndividual Individual_object = factory.getOWLNamedIndividual(IRI
+				.create(ontology.toString() + "#" + f.object));
+
+
+		List<OWLOntologyChange> changeList = new ArrayList<OWLOntologyChange>();
+
+		changeList.add(new AddAxiom(ontology, factory
+				.getOWLObjectPropertyAssertionAxiom(Objectproperty_predicate,
+						Individual_subject, Individual_object)));
+
+		manager.applyChanges(changeList);
+	}
+
+	public TreeMap<String, Double> checkLocationFacts(
+			ArrayList<String> locations, ArrayList<Double> confidences,
+			String user) {
+
+		// Creating a set of Locations (without repetitions)
+		HashSet<String> locationsSet = new HashSet<String>(locations);
+
+		// and a map for the voting system
+		HashMap<String, Double> locationsVote = new HashMap<String, Double>();
+		ValueComparator bvc = new ValueComparator(locationsVote);
+
+		for (String locSet : locationsSet) {
+			// Who is supporting this location?
+			Double supValue = 0.0;
+			Set<OWLNamedIndividual> containers = queryEngine.getInstances(
+					"isIn value " + locSet, false);
+			int i = 0;
+			for (String locNew : locations) {
+				// if the location is equivalent or a subclass then is a
+				// supporter
+				Log.i(TAG, "--CHECKING: " + locSet + " vs " + locNew);
+				if (locSet == locNew) {
+					Log.i(TAG, "-->Equivalent!");
+					if (supValue != 0.0)
+						supValue = (supValue + confidences.get(i)) / 2.0;
+					else
+						supValue = supValue + confidences.get(i);
+				} else if (isIn(locNew, containers)) {
+					Log.i(TAG, "-->is In!");
+					if (supValue != 0.0)
+						supValue = (supValue + confidences.get(i)) / 2.0;
+					else
+						supValue = supValue + confidences.get(i);
+				}
+				i++;
+			}
+			locationsVote.put(locSet, supValue);
+		}
+
+		// sorting the map
+		TreeMap<String, Double> sorted_map = new TreeMap<String, Double>(bvc);
+		sorted_map.putAll(locationsVote);
+
+		Log.i(TAG, "results: " + sorted_map);
+
+		return sorted_map;
+	}
+
+	public TreeMap<String, Double> checkActivityFacts(
+			ArrayList<String> activities, ArrayList<Double> confidences,
+			String user) {
+
+		// Creating a set of Locations (without repetitions)
+		HashSet<String> activitiesSet = new HashSet<String>(activities);
+
+		// and a map for the voting system
+		HashMap<String, Double> activitiesVote = new HashMap<String, Double>();
+		ValueComparator bvc = new ValueComparator(activitiesVote);
+
+		for (String actSet : activitiesSet) {
+			// Who is supporting this activity?
+			Double supValue = 0.0;
+
+			Log.i(TAG, "*-*-*-" + actSet);
+			OWLNamedIndividual indvA = (OWLNamedIndividual) bidiShortFormProvider
+					.getEntity(actSet);
+			Log.d(TAG, "-*-*-*-*" + actSet + ", " + indvA);
+			OWLClass classA = indvA.getTypes(ontology).iterator().next()
+					.asOWLClass();
+			String nameClassA = bidiShortFormProvider.getShortForm(classA);
+
+			List<String> containers = getNamesSubClasses(nameClassA);
+
+			int i = 0;
+			for (String actNew : activities) {
+				// if the activity is equivalent or a subclass then is a
+				// supporter
+
+				OWLNamedIndividual indvB = (OWLNamedIndividual) bidiShortFormProvider
+						.getEntity(actNew);
+				OWLClass classB = indvB.getTypes(ontology).iterator().next()
+						.asOWLClass();
+				String nameClassB = bidiShortFormProvider.getShortForm(classB);
+
+				Log.i(TAG, "--CHECKING: " + actSet + " vs " + actNew);
+				if (nameClassA == nameClassB) {
+					Log.i(TAG, "-->Equivalent!");
+					if (supValue != 0.0)
+						supValue = (supValue + confidences.get(i)) / 2.0;
+					else
+						supValue = supValue + confidences.get(i);
+				} else if (isIn(nameClassB, containers)) {
+					Log.i(TAG, "-->is In!");
+					if (supValue != 0.0)
+						supValue = (supValue + confidences.get(i)) / 2.0;
+					else
+						supValue = supValue + confidences.get(i);
+				}
+				i++;
+			}
+			activitiesVote.put(actSet, supValue);
+		}
+
+		// sorting the map
+		TreeMap<String, Double> sorted_map = new TreeMap<String, Double>(bvc);
+		sorted_map.putAll(activitiesVote);
+
+		Log.i(TAG, "results: " + sorted_map);
+
+		return sorted_map;
+	}
+
+	public String checkConsistencyLocation(TreeMap<String, Double> tm,
+										   String subject, String predicate) {
+
+		// first we generate the axioms for subject and predicate
+		OWLIndividual Individual_subject = (OWLIndividual) bidiShortFormProvider
+				.getEntity(subject);
+		OWLObjectProperty Objectproperty_predicate = (OWLObjectProperty) bidiShortFormProvider
+				.getEntity(predicate);
+
+		// now we try the object with the highest confidence
+		String obj = tm.firstKey();
+
+		// Create axioms and materialize them in the ontology
+		// then use reasoner to check consistency
+		// **We are not using this right now...
+		// OWLIndividual Individual_object = (OWLIndividual)
+		// bidiShortFormProvider.getEntity(obj);
+		//
+		// List<OWLOntologyChange> changeList = new
+		// ArrayList<OWLOntologyChange>();
+		//
+		// changeList.add(new AddAxiom(ontology,
+		// factory.getOWLObjectPropertyAssertionAxiom(Objectproperty_predicate,
+		// Individual_subject, Individual_object)));
+		//
+		// Log.i(TAG, changeList.toString());
+		//
+		// manager.applyChanges(changeList);
+
+		// Pellet can explain inconsistencies but we are using Jfact...
+		// if(!checkConsistency()){
+		//
+		// GlassBoxExplanation.setup();
+		// SingleExplanationGenerator eg = new GlassBoxExplanation(ontology,
+		// PelletReasonerFactory.getInstance());
+		// try {
+		// for (OWLAxiom ax : eg.getExplanation(factory.getOWLThing())) {
+		// System.out.println(ax);
+		// }
+		// } catch (OWLRuntimeException ex) {
+		// System.out.println("cannot explain: " + ex.getMessage());
+		// }
+		// }
+
+		// remove the axiom
+		// manager.removeAxiom(ontology, changeList.get(0).getAxiom());
+
+		// **Instead we ''manually'' check consistency using the reasoner to
+		// obtain
+		// **if a location is inside another one
+		List<OWLOntologyChange> finalChangeList = new ArrayList<OWLOntologyChange>();
+		Set<OWLNamedIndividual> containers = queryEngine.getInstances(
+				"isIn value " + obj, false);
+		containers.addAll(queryEngine.getInstances("contains value " + obj,
+				false));
+
+		String newLoc = obj;
+
+		for (String obj2 : tm.descendingKeySet()) {
+			OWLIndividual Individual_object = (OWLIndividual) bidiShortFormProvider
+					.getEntity(obj2);
+			if (obj.equalsIgnoreCase(obj2)) {
+				// we check if this object is consistent with the current
+				// ontology
+				OWLNamedIndividual prevLoc = null;
+				try {
+					prevLoc = queryEngine
+							.getInstances("holds value " + subject, true)
+							.iterator().next();
+				} catch (Exception e) {
+
+				}
+				if (prevLoc != null) {
+					Log.i(TAG, "-*-*-*-*>>PrevLoc:" + prevLoc);
+					if (!isIn(bidiShortFormProvider.getShortForm(prevLoc),
+							containers)) {
+						// it was not consistent so we have to remove the
+						// previous axiom
+						// from ontology
+						finalChangeList.add(new RemoveAxiom(ontology, factory
+								.getOWLObjectPropertyAssertionAxiom(
+										Objectproperty_predicate,
+										Individual_subject, prevLoc)));
+					}
+				}
+
+				finalChangeList.add(new AddAxiom(ontology, factory
+						.getOWLObjectPropertyAssertionAxiom(
+								Objectproperty_predicate, Individual_subject,
+								Individual_object)));
+
+			} else if (isIn(obj2, containers)) {
+				// we check if obj and obj2 are consistent (that is obj2
+				// contains obj1)
+				finalChangeList.add(new AddAxiom(ontology, factory
+						.getOWLObjectPropertyAssertionAxiom(
+								Objectproperty_predicate, Individual_subject,
+								Individual_object)));
+				newLoc = obj2;
+			}
+		}
+
+		return newLoc;
+
+		// return finalChangeList;
+	}
+
+	public FactCollection extractFactsOntology() {
+
+		FactCollection fc = new FactCollection();
+		fc.contextFacts = new ArrayList<ContextFact>();
+
+		// extracting users in the ontology
+		List<String> users = getUsers();
+
+		Log.i(TAG, users.toString());
+
+		for (String user : users) {
+
+			// extracting location facts
+			try {
+				ContextFact cf = new ContextFact();
+				cf.source = "I";
+				cf.confidence = 1.0;
+				cf.device_name = "myDevice";
+
+				String locUser = bidiShortFormProvider.getShortForm(queryEngine
+						.getInstances("holds value " + user, true).iterator()
+						.next());
+				Fact f = new Fact();
+				f.subject = user;
+				f.predicate = "hasLocation";
+				f.object = locUser;
+				cf.facts = new ArrayList<Fact>();
+				cf.facts.add(f);
+
+				// add support
+				Support s = new Support();
+				s.confidence = 0.5;
+
+				cf.support = new ArrayList<Support>();
+				cf.support.add(s);
+
+				fc.contextFacts.add(cf);
+
+			} catch (Exception e) {
+				Log.i(TAG, "I don't have location facts for user: " + user);
+			}
+
+			// extracting activity facts
+			try {
+				ContextFact cf = new ContextFact();
+				cf.source = "I";
+				cf.confidence = 1.0;
+				cf.device_name = "myDevice";
+
+				String actUser = bidiShortFormProvider.getShortForm(queryEngine
+						.getInstances("isPerformedBy value " + user, true)
+						.iterator().next());
+				Fact f = new Fact();
+				f.subject = user;
+				f.predicate = "hasActivity";
+				f.object = actUser;
+				cf.facts = new ArrayList<Fact>();
+				cf.facts.add(f);
+
+				// add support
+				Support s = new Support();
+				s.confidence = 0.5;
+
+				cf.support = new ArrayList<Support>();
+				cf.support.add(s);
+
+				fc.contextFacts.add(cf);
+
+			} catch (Exception e) {
+				Log.i(TAG, "I don't have activity facts for user: " + user);
+			}
+		}
+
+		return fc;
+	}
+
+	public List<String> getUsers() {
+		List<String> users = new ArrayList<String>();
+		for (OWLNamedIndividual aux : queryEngine.getInstances("User", true)) {
+			users.add(bidiShortFormProvider.getShortForm(aux));
+		}
+
+		return users;
+	}
+
+	public boolean isIn(String value, Set<OWLNamedIndividual> individuals) {
+		if (individuals.isEmpty())
+			return false;
+
+		OWLIndividual individualValue = (OWLIndividual) bidiShortFormProvider
+				.getEntity(value);
+
+		// Log.i(TAG, individualValue.toString());
+		// Log.i(TAG, individuals.toString());
+		// Log.i(TAG, individuals.iterator().next().toString());
+
+		return individuals.contains(individualValue);
+	}
+
+	public boolean isIn(String value, List<String> containers) {
+
+		return containers.contains(value);
+	}
+
+	class ValueComparator implements Comparator<String> {
+
+		Map<String, Double> base;
+
+		public ValueComparator(Map<String, Double> base) {
+			this.base = base;
+		}
+
+		// Note: this comparator imposes orderings that are inconsistent with
+		// equals.
+		public int compare(String a, String b) {
+			if (base.get(a) >= base.get(b)) {
+				return -1;
+			} else {
+				return 1;
+			} // returning 0 would merge keys
+		}
+	}
 
 }

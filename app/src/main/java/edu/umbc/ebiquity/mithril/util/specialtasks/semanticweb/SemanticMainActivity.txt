@@ -1,0 +1,264 @@
+package edu.umbc.ebiquity.mithril.util.specialtasks.semanticweb;
+
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.Reader;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.TreeMap;
+
+import org.apache.http.HttpEntity;
+import org.apache.http.HttpResponse;
+import org.apache.http.HttpStatus;
+import org.apache.http.client.methods.HttpGet;
+import org.apache.http.impl.client.DefaultHttpClient;
+
+import com.google.gson.Gson;
+
+import edu.umbc.cs.ebiquity.contextmatters.data.ContextFact;
+import edu.umbc.cs.ebiquity.contextmatters.data.Fact;
+import edu.umbc.cs.ebiquity.contextmatters.data.FactCollection;
+import edu.umbc.cs.ebiquity.contextmatters.data.Support;
+
+import android.os.Bundle;
+import android.os.StrictMode;
+import android.app.Activity;
+import android.content.Context;
+import android.graphics.Color;
+import android.text.Spannable;
+import android.text.style.ForegroundColorSpan;
+import android.util.Log;
+import android.view.Menu;
+import android.widget.TextView;
+
+public class SemanticMainActivity extends Activity {
+
+	static TextView textView;
+	static int colorText = Color.BLUE;
+	private static Context context;
+	public static String owner = "Joe";
+
+	@Override
+	protected void onCreate(Bundle savedInstanceState) {
+		super.onCreate(savedInstanceState);
+		setContentView(R.layout.activity_main);
+		SemanticMainActivity.setContext(getApplicationContext());
+
+		// SemanticManagement sm = new SemanticManagement(this);
+		// Log.i(SemanticManagement.TAG, "------------------------------");
+		// Log.i(SemanticManagement.TAG, "Testing the extraction of info from Ontology:");
+		// Log.i(SemanticManagement.TAG, "------------------------------");
+		//
+		// Log.i(SemanticManagement.TAG, "1) Subclasses and Instances of Activity:");
+		// for(String aux:sm.getNamesSubClasses("Activity")){
+		// Log.i(SemanticManagement.TAG, aux);
+		// }
+		//
+		// for(String aux:sm.getInstances("Activity")){
+		// Log.i(SemanticManagement.TAG, aux);
+		// }
+		//
+		// Log.i(SemanticManagement.TAG, "1.1) Properties with Activity as Domain:");
+		// for(String aux:sm.getNamesProperties("Context")){
+		// Log.i(SemanticManagement.TAG, aux);
+		// }
+		//
+		// Log.i(SemanticManagement.TAG, "2) Subclasses and Instances of Location:");
+		// for(String aux:sm.getNamesSubClasses("Location")){
+		// Log.i(SemanticManagement.TAG, aux);
+		// }
+		//
+		// for(String aux:sm.getInstances("Location")){
+		// Log.i(SemanticManagement.TAG, aux);
+		// }
+		//
+		// Log.i(SemanticManagement.TAG, "------------------------------");
+		// Log.i(SemanticManagement.TAG, "Testing the creation of facts for the ontology:");
+		// Log.i(SemanticManagement.TAG, "------------------------------");
+		//
+		// Log.i(SemanticManagement.TAG, "A) Instances of user?");
+		// for(String aux:sm.getInstances("User")){
+		// Log.i(SemanticManagement.TAG, aux);
+		// }
+		// Log.i(SemanticManagement.TAG, "------>Adding facts");
+		// sm.test();
+		// Log.i(SemanticManagement.TAG, "B) Instances of user?");
+		// for(String aux:sm.getInstances("User")){
+		// Log.i(SemanticManagement.TAG, aux);
+		// }
+
+		// you cannot run network methods on the main thread but I don't care
+		StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
+		StrictMode.setThreadPolicy(policy);
+
+		textView = (TextView) findViewById(R.id.log);
+
+		// first I extract facts from my ontology
+		Log("--> 0)Extracting facts from ontology");
+
+		SemanticManagement sm = new SemanticManagement(this);
+
+		FactCollection fcOwn = sm.extractFactsOntology();
+
+		// let me show you the result
+		Log("\nThis is the content of the json file:");
+		Log(fcOwn.toString());
+		Log.i(SemanticManagement.TAG, fcOwn.toString());
+
+		// I can even send this facts to other users with JSON
+		// we use gson for JSON management
+		Gson gson = new Gson();
+
+		String jsonGenerated = gson.toJson(fcOwn);
+		Log.i(SemanticManagement.TAG, "JSON Generated:\n" + jsonGenerated);
+
+		// now I will get more facts from the network
+
+		// a sample json file
+		String url = "http://webdiis.unizar.es/~ryus/other/sample2.json";
+
+		Log("\n--> 1)Parsing json file: " + url);
+
+		InputStream source = retrieveStream(url);
+		Reader reader = new InputStreamReader(source);
+
+		FactCollection r = gson.fromJson(reader, FactCollection.class);
+
+		List<ContextFact> cfs = r.contextFacts;
+
+		// let me show you the result
+		Log("\nThis is the content of the json file:");
+		Log(r.toString());
+		Log.i(SemanticManagement.TAG, r.toString());
+
+		// adding my own contextfact
+		cfs.addAll(fcOwn.contextFacts);
+
+		Log("\n--> 2)Extracting locations and confidences from json...");
+
+		// lets do some magic with the facts parsed
+
+		// first extract some locations
+		ArrayList<String> locations = new ArrayList<String>();
+		ArrayList<Double> confidences = new ArrayList<Double>();
+
+		List<String> users = sm.getUsers();
+
+		// for every user we check first facts related to his location
+		for (String user : users) {
+			Log("\n\tChecking location facts for: " + user);
+			for (ContextFact cf : cfs) {
+				List<Fact> facts = cf.facts;
+				for (Fact f : facts) {
+					// is this a location fact about the user?
+					if (f.subject.equalsIgnoreCase(user) && f.predicate.equalsIgnoreCase("hasLocation")) {
+
+						locations.add(f.object);
+
+						// for now the confidence is the average of the confidence of
+						// supporting facts
+						List<Support> support = cf.support;
+
+						double confidence = 0.0;
+						for (Support s : support) {
+							confidence += s.confidence;
+						}
+						confidence /= support.size();
+
+						// lets use also the confidence on the source
+						confidence += cf.confidence;
+						confidence /= 2;
+
+						confidences.add(confidence);
+					}
+				}
+			}
+
+			Log(locations.toString());
+			Log.i(SemanticManagement.TAG, "-*-*Locations: " + locations.toString());
+			Log(confidences.toString());
+			Log.i(SemanticManagement.TAG, "-*-*Confidences: " + confidences.toString());
+
+			if (!locations.isEmpty()) {
+
+				Log("\n--> 3)Computing the confidence for locations taking semantics into account...");
+				// lets compute the confidence taking into account semantics
+				TreeMap<String, Double> tm = sm.checkLocationFacts(locations, confidences, user);
+				Log(tm.toString());
+
+				// lets check for inconsistencies
+				Log("\nI will add the following axioms:\n");
+				String aux = sm.checkConsistencyLocation(tm, user, "hasLocation").toString();
+				Log(aux);
+				Log.i(SemanticManagement.TAG, "-*-*Axioms to add: " + aux);
+
+				locations = new ArrayList<String>();
+				confidences = new ArrayList<Double>();
+			}
+		}
+
+	}
+
+	private InputStream retrieveStream(String url) {
+
+		DefaultHttpClient client = new DefaultHttpClient();
+
+		HttpGet getRequest = new HttpGet(url);
+
+		try {
+
+			HttpResponse getResponse = client.execute(getRequest);
+			final int statusCode = getResponse.getStatusLine().getStatusCode();
+
+			if (statusCode != HttpStatus.SC_OK) {
+				Log.w(getClass().getSimpleName(), "Error " + statusCode + " for URL " + url);
+				return null;
+			}
+
+			HttpEntity getResponseEntity = getResponse.getEntity();
+			return getResponseEntity.getContent();
+
+		} catch (IOException e) {
+			getRequest.abort();
+			Log.w(getClass().getSimpleName(), "Error for URL " + url, e);
+		}
+
+		return null;
+
+	}
+
+	public static void Log(String text) {
+
+		Log.e(SemanticManagement.TAG, text);
+
+		if (colorText == Color.BLUE)
+			colorText = Color.RED;
+		else
+			colorText = Color.BLUE;
+
+		int start = textView.getText().length();
+		textView.append("\n" + text);
+		int end = textView.getText().length();
+
+		Spannable spannableText = (Spannable) textView.getText();
+		spannableText.setSpan(new ForegroundColorSpan(colorText), start, end, 0);
+	}
+
+	@Override
+	public boolean onCreateOptionsMenu(Menu menu) {
+		// Inflate the menu; this adds items to the action bar if it is present.
+//		getMenuInflater().inflate(R.menu.main, menu);
+
+		return true;
+	}
+
+	public static Context getContext() {
+		return context;
+	}
+
+	public static void setContext(Context context) {
+		SemanticMainActivity.context = context;
+	}
+
+}

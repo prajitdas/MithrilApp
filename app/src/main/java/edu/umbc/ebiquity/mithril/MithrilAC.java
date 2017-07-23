@@ -138,7 +138,7 @@ public class MithrilAC extends Application {
     private static final List<String> APP_PACKAGE_NAMES = new ArrayList<String>() {
         {
             add(new String("com.adobe.reader"));
-			add(new String("com.xodo.pdf.reader"))
+            add(new String("com.xodo.pdf.reader"));
             add(new String("com.augmentedminds.waveAlarm"));
             add(new String("com.google.android.deskclock"));
             add(new String("com.groupme.android"));
