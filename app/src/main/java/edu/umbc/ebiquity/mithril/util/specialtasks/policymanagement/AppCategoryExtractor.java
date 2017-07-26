@@ -286,6 +286,12 @@ public class AppCategoryExtractor {
         else if (packageName.equals("com.cardinalblue.piccollage.google")) return "photography";
         else if (packageName.equals("com.genina.android.blackjack.view")) return "game_casino";
         else if (packageName.equals("com.adobe.reader")) return "productivity";
+        else if (packageName.equals("com.xodo.pdf.reader")) return "productivity";
+        else if (packageName.equals("com.augmentedminds.waveAlarm")) return "tools";
+        else if (packageName.equals("com.google.android.deskclock")) return "tools";
+        else if (packageName.equals("com.groupme.android")) return "communication";
+        else if (packageName.equals("net.sourceforge.opencamera")) return "photography";
+        else if (packageName.equals("com.google.android.GoogleCamera")) return "photography";
         else if (packageName.equals("com.drweb")) return "tools";
         else if (packageName.equals("com.cg.tennis")) return "sports";
         else if (packageName.equals("com.game.JewelsStar")) return "game_casual";
