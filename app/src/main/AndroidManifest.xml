@@ -101,6 +101,7 @@
 
     <application
         android:name=".MithrilAC"
+        android:icon="@mipmap/ic_launcher"
         android:supportsRtl="true"
         android:theme="@style/AppTheme.NoActionBar">
 
