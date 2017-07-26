@@ -100,8 +100,10 @@
         android:required="true" />
 
     <application
+        android:allowBackup="true"
         android:name=".MithrilAC"
         android:icon="@mipmap/ic_launcher"
+        android:label="@string/short_app_name"
         android:supportsRtl="true"
         android:theme="@style/AppTheme.NoActionBar">
 
@@ -124,7 +126,6 @@
 
         <activity
             android:name=".ui.activities.LauncherActivity"
-            android:label="@string/short_app_name"
             android:theme="@style/FullscreenTheme">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
