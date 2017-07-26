@@ -21,7 +21,7 @@
         android:textSize="25sp" />
 
     <ProgressBar
-        android:id="@+id/progressBar"
+        android:id="@+id/progressBarDLPolicies"
         style="@android:style/Widget.Material.ProgressBar.Horizontal"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -36,7 +36,7 @@
     <ImageView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_above="@+id/progressBar"
+        android:layout_above="@+id/progressBarDLPolicies"
         android:layout_centerHorizontal="true"
         android:adjustViewBounds="true"
         android:elevation="200dp"
