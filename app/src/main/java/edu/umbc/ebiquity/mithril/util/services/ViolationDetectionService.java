@@ -196,7 +196,6 @@ public class ViolationDetectionService extends Service implements
     }
 
     private boolean isPolicyApplicable(List<PolicyRule> policyRules) {
-        boolean policyApplicable = false;
         for (PolicyRule policyRule : policyRules) {
             Gson retrieveDataGson = new Gson();
             String retrieveDataJson;
@@ -209,37 +208,32 @@ public class ViolationDetectionService extends Service implements
                     if (time.getLabel().equals(tempSemanticTime.getLabel()))
                         temporalApplicable = true;
                 }
-                if (temporalApplicable)
-                    policyApplicable = true;
-                else
-                    policyApplicable = false;
+                if (!temporalApplicable)
+                    return false;
             } else if (contextTypeLabel.first.equals(MithrilAC.getPrefKeyContextTypeLocation())) {
                 retrieveDataJson = sharedPrefs.getString(contextTypeLabel.first + contextTypeLabel.second, "");
                 SemanticLocation tempSemanticLocation = retrieveDataGson.fromJson(retrieveDataJson, SemanticLocation.class);
                 boolean locationApplicable = false;
                 for (SemanticLocation location : getSemanticLocations()) {
-                    Log.d(MithrilAC.getDebugTag(), "looped detect violation: " + tempSemanticLocation.getName() + " compareTo: " + location.getName());
-                    Log.d(MithrilAC.getDebugTag(), "looped detect violation: " + tempSemanticLocation.getLabel() + " compareTo: " + location.getLabel());
+//                    Log.d(MithrilAC.getDebugTag(), "looped detect violation: " + tempSemanticLocation.getName() + " compareTo: " + location.getName());
+//                    Log.d(MithrilAC.getDebugTag(), "looped detect violation: " + tempSemanticLocation.getLabel() + " compareTo: " + location.getLabel());
                     if (location.getLabel().equals(tempSemanticLocation.getLabel()))
                         locationApplicable = true;
                 }
-                if (locationApplicable)
-                    policyApplicable = true;
-                else
-                    policyApplicable = false;
-            } else if (contextTypeLabel.first.equals(MithrilAC.getPrefKeyContextTypeTemporal())) {
+                if (!locationApplicable)
+                    return false;
+            } else if (contextTypeLabel.first.equals(MithrilAC.getPrefKeyContextTypePresence())) {
                 retrieveDataJson = sharedPrefs.getString(contextTypeLabel.first + contextTypeLabel.second, "");
                 SemanticNearActor tempSemanticNearActor = retrieveDataGson.fromJson(retrieveDataJson, SemanticNearActor.class);
                 boolean presenceApplicable = false;
                 for (SemanticNearActor nearActor : getSemanticNearActors()) {
+                    Log.d(MithrilAC.getDebugTag(), "looped detect violation: " + tempSemanticNearActor.getLabel() + " compareTo: " + nearActor.getLabel());
                     if (nearActor.getLabel().equals(tempSemanticNearActor.getLabel()))
                         presenceApplicable = true;
                 }
-                if (presenceApplicable)
-                    policyApplicable = true;
-                else
-                    policyApplicable = false;
-            } else if (contextTypeLabel.first.equals(MithrilAC.getPrefKeyContextTypeTemporal())) {
+                if (!presenceApplicable)
+                    return false;
+            } else if (contextTypeLabel.first.equals(MithrilAC.getPrefKeyContextTypeActivity())) {
                 retrieveDataJson = sharedPrefs.getString(contextTypeLabel.first + contextTypeLabel.second, "");
                 SemanticActivity tempSemanticActivity = retrieveDataGson.fromJson(retrieveDataJson, SemanticActivity.class);
                 boolean activityApplicable = false;
@@ -247,13 +241,11 @@ public class ViolationDetectionService extends Service implements
                     if (activity.getLabel().equals(tempSemanticActivity.getLabel()))
                         activityApplicable = true;
                 }
-                if (activityApplicable)
-                    policyApplicable = true;
-                else
-                    policyApplicable = false;
+                if (!activityApplicable)
+                    return false;
             }
         }
-        return policyApplicable;
+        return true;
     }
 
     private List<Long> pickPolicyIds(List<PolicyRule> policyRules) {
