@@ -43,9 +43,9 @@ public class MithrilAC extends Application {
     public static final String MITHRIL_APP_PACKAGE_NAME = "edu.umbc.ebiquity.mithril";
     public static final String PHONE_NOT_ROOTED_MITHRIL_BYE_BYE_MESSAGE = "Your phone is not rooted\nMithril won't work on this device\nSorry and thanks for participating in our survey";
     public static final String MITHRIL_BYE_BYE_MESSAGE = "Bye! Thanks for helping with our survey...";
-    private static final String MITHRIL_FIREBASE_SERVER_KEY_USERS = "users";
-    private static final String MITHRIL_FIREBASE_SERVER_KEY_POLICIES = "policies";
-    private static final String MITHRIL_FIREBASE_SERVER_KEY_APPS = "apps";
+//    private static final String MITHRIL_FIREBASE_SERVER_KEY_USERS = "users";
+//    private static final String MITHRIL_FIREBASE_SERVER_KEY_POLICIES = "policies";
+//    private static final String MITHRIL_FIREBASE_SERVER_KEY_APPS = "apps";
     private static final String APP_RECEIVER = MITHRIL_APP_PACKAGE_NAME + ".APP_RECEIVER";
     private static final String RESULT_DATA_KEY = MITHRIL_APP_PACKAGE_NAME + ".RESULT_DATA_KEY";
     private static final String ADDRESS_REQUESTED_EXTRA = "ADDRESS_REQUESTED_EXTRA";
@@ -1293,17 +1293,17 @@ public class MithrilAC extends Application {
         return APP_CATEGORY_UNKNOWN;
     }
 
-    public static String getMithrilFirebaseServerKeyUsers() {
-        return MITHRIL_FIREBASE_SERVER_KEY_USERS;
-    }
-
-    public static String getMithrilFirebaseServerKeyPolicies() {
-        return MITHRIL_FIREBASE_SERVER_KEY_POLICIES;
-    }
-
-    public static String getMithrilFirebaseServerKeyApps() {
-        return MITHRIL_FIREBASE_SERVER_KEY_APPS;
-    }
+//    public static String getMithrilFirebaseServerKeyUsers() {
+//        return MITHRIL_FIREBASE_SERVER_KEY_USERS;
+//    }
+//
+//    public static String getMithrilFirebaseServerKeyPolicies() {
+//        return MITHRIL_FIREBASE_SERVER_KEY_POLICIES;
+//    }
+//
+//    public static String getMithrilFirebaseServerKeyApps() {
+//        return MITHRIL_FIREBASE_SERVER_KEY_APPS;
+//    }
 
     public static String getFeedbackUploadResultKey() {
         return FEEDBACK_UPLOAD_RESULT_KEY;

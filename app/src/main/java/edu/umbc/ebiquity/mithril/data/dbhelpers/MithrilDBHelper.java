@@ -377,7 +377,7 @@ public class MithrilDBHelper extends SQLiteOpenHelper {
             ACTIONID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
             ACTIONAPPID + " INTEGER NOT NULL, " +
             ACTIONCTXID + " INTEGER NOT NULL, " +
-            ACTIONTIME + " INTEGER NOT NULL  DEFAULT CURRENT_TIMESTAMP, " +
+            ACTIONTIME + " INTEGER NOT NULL DEFAULT CURRENT_TIMESTAMP, " +
             ACTION + " INTEGER NOT NULL, " +
             "FOREIGN KEY(" + ACTIONAPPID + ") REFERENCES " + getAppsTableName() + "(" + APPID + ") ON DELETE CASCADE, " +
             "FOREIGN KEY(" + ACTIONCTXID + ") REFERENCES " + getContextTableName() + "(" + CONTEXTID + "));";
@@ -419,9 +419,9 @@ public class MithrilDBHelper extends SQLiteOpenHelper {
     private final static String CREATE_FEEDBACK_STATS_TABLE = "CREATE TABLE " + getFeedbackStatsTableName() + " (" +
             FEEDBACKID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
             FEEDBACKTIME + " timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP, " +
-            FEEDBACKTV + " INTEGER NOT NULL, " +
-            FEEDBACKFV + " INTEGER NOT NULL, " +
-            FEEDBACKPOLCNT + " INTEGER NOT NULL);";
+            FEEDBACKTV + " INTEGER NOT NULL DEFAULT 0, " +
+            FEEDBACKFV + " INTEGER NOT NULL DEFAULT 0, " +
+            FEEDBACKPOLCNT + " INTEGER NOT NULL DEFAULT 0);";
     /**
      * -- Table 11: defpol
      * CREATE TABLE defpol (
@@ -439,9 +439,9 @@ public class MithrilDBHelper extends SQLiteOpenHelper {
     private final static String DEFPOLVAL = "value";
     private final static String CREATE_DEFAULT_POLICIES_TABLE = "CREATE TABLE " + getDefaultPoliciesTableName() + " (" +
             DEFPOLID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
-            DEFPOLAPPCAT + " TEXT NOT NULL, " +
-            DEFPOLPERM + " TEXT NOT NULL, " +
-            DEFPOLVAL + " DOUBLE NOT NULL);";
+            DEFPOLAPPCAT + " TEXT NOT NULL DEFAULT -1, " +
+            DEFPOLPERM + " TEXT NOT NULL DEFAULT -1, " +
+            DEFPOLVAL + " DOUBLE NOT NULL DEFAULT 0.0);";
     /**
      * -- views
      * -- View: apppermview

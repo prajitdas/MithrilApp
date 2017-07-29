@@ -15,6 +15,46 @@
       },
       "oauth_client": [
         {
+          "client_id": "867865841470-a2588u7tja6fhj5ler200t6bfl6vp3a4.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "edu.umbc.ebiquity.mithril",
+            "certificate_hash": "61cb261af443e2682020433f41e0a8c20b87ef30"
+          }
+        },
+        {
+          "client_id": "867865841470-he278ns338rchlokn428db2m6u8tvr5t.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "edu.umbc.ebiquity.mithril",
+            "certificate_hash": "dd004fbf79789345900a971dd6e1d1c1a9eeb857"
+          }
+        },
+        {
+          "client_id": "867865841470-leojt48hd5od0qpkaobkir2cke5aqbkh.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "edu.umbc.ebiquity.mithril",
+            "certificate_hash": "27196e386b875e76adf700e7ea84e4c6eee33dfa"
+          }
+        },
+        {
+          "client_id": "867865841470-023ke3vellj7tnj5ccafivtpej061jh3.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "edu.umbc.ebiquity.mithril",
+            "certificate_hash": "68a990f52f497149246c26cf0a74a825ed93844c"
+          }
+        },
+        {
+          "client_id": "867865841470-mfccekc334bjhb8kpt72mnsr6fasdfpn.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "edu.umbc.ebiquity.mithril",
+            "certificate_hash": "f7fa9f925e73e7db52c936f7ba9e5cd98d433703"
+          }
+        },
+        {
           "client_id": "867865841470-476dgolr52o91283rtrumiqej2v8jhmk.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {

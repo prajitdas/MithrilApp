@@ -444,9 +444,10 @@ public class FeedbackActivity extends AppCompatActivity {
             saveFeedbackInfo(uploadTime);
 
             addToDataUploader(MithrilDBHelper.getHelper(this).findAllFeedbacks(mithrilDB), "feedbackstats");
-            databaseReference.child(MithrilAC.getMithrilFirebaseServerKeyUsers()).child(getUid()).child(String.valueOf(uploadTime)).setValue(feedbackDataUploaderMap);
+            databaseReference.child(getUid()).child(String.valueOf(System.currentTimeMillis())).setValue(feedbackDataUploaderMap);
+//            databaseReference.child(MithrilAC.getMithrilFirebaseServerKeyUsers()).child(getUid()).child(String.valueOf(uploadTime)).setValue(feedbackDataUploaderMap);
         } else {
-            signInAnonymously();//databaseReference.child(getUid()).child(String.valueOf(System.currentTimeMillis())).setValue(feedbackDataUploaderMap));
+            signInAnonymously();
         }
     }
 
